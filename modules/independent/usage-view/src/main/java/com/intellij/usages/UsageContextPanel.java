@@ -29,8 +29,11 @@ import java.util.List;
  * Examples: Preview, Data flow, Call hierarchy
  */
 public interface UsageContextPanel extends Disposable {
-  // usage selection changes, panel should update its view for the newly select usages
-  void updateLayout(@Nullable("null means there are no usages to show") List<UsageInfo> infos);
+  /**
+   * usage selection changes, panel should update its view for the newly select usages
+   * @param infos null means there are no usages to show
+   */
+  void updateLayout(@Nullable List<UsageInfo> infos);
 
   @Nonnull
   JComponent createComponent();

@@ -21,8 +21,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.search.GlobalSearchScope;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 public abstract class RefResolveService extends AbstractProjectComponent {
@@ -39,7 +40,12 @@ public abstract class RefResolveService extends AbstractProjectComponent {
     return project.getComponent(RefResolveService.class);
   }
 
-  @javax.annotation.Nullable("null means the service has not resolved all files and is not ready yet")
+  /**
+   *
+   * @param file
+   * @return null means the service has not resolved all files and is not ready yet
+   */
+  @Nullable
   public abstract int[] getBackwardIds(@Nonnull VirtualFileWithId file);
 
   /**

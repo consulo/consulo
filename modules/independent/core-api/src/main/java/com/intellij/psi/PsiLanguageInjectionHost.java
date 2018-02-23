@@ -51,7 +51,10 @@ public interface PsiLanguageInjectionHost extends PsiElement {
   }
 
   interface Shred {
-    @Nullable("returns null when the host document marker is invalid")
+    /**
+     * @return returns null when the host document marker is invalid
+     */
+    @Nullable
     Segment getHostRangeMarker();
 
     @Nonnull

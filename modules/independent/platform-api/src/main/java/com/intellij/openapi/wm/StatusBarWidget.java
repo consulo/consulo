@@ -19,10 +19,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.MouseEvent;
@@ -72,7 +72,11 @@ public interface StatusBarWidget extends Disposable {
   }
 
   interface MultipleTextValuesPresentation extends WidgetPresentation {
-    @Nullable("null means the widget is unable to show the popup")
+    /**
+     *
+     * @return null means the widget is unable to show the popup
+     */
+    @Nullable
     ListPopup getPopupStep();
 
     @Nullable

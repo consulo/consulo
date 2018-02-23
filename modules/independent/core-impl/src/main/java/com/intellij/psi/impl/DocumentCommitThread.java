@@ -54,11 +54,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSetQueue;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -736,8 +736,13 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     }
   }
 
-  // public for Upsource
-  @Nullable("returns runnable to execute under write action in AWT to finish the commit")
+  /**
+   * @param task
+   * @param file
+   * @param oldFileNode
+   * @return returns runnable to execute under write action in AWT to finish the commit
+   */
+  @Nullable
   public Processor<Document> doCommit(@Nonnull final CommitTask task,
                                       @Nonnull final PsiFile file,
                                       @Nonnull final FileASTNode oldFileNode) {

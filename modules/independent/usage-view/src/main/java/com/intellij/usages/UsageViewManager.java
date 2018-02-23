@@ -42,7 +42,10 @@ public abstract class UsageViewManager {
   @Nonnull
   public abstract UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation);
 
-  @javax.annotation.Nullable("returns null in case of no usages found or usage view not shown for one usage")
+  /**
+   * @return returns null in case of no usages found or usage view not shown for one usage
+   */
+  @javax.annotation.Nullable
   public abstract UsageView searchAndShowUsages(@Nonnull UsageTarget[] searchFor,
                                                 @Nonnull Factory<UsageSearcher> searcherFactory,
                                                 boolean showPanelIfOnlyOneUsage,

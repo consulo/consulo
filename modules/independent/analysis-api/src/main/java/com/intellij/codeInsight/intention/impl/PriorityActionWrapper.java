@@ -42,7 +42,7 @@ public abstract class PriorityActionWrapper extends LocalQuickFixAndIntentionAct
   @Override
   public void invoke(@Nonnull Project project,
                      @Nonnull PsiFile file,
-                     @Nullable("is null when called from inspection") Editor editor,
+                     @Nullable Editor editor,
                      @Nonnull PsiElement startElement,
                      @Nonnull PsiElement endElement) {
     fix.invoke(project, file, editor, startElement, endElement);

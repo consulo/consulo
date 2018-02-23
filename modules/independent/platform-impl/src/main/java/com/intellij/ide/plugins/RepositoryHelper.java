@@ -97,10 +97,17 @@ public class RepositoryHelper {
     return loadPluginsFromRepository(indicator, channel, null);
   }
 
+  /**
+   * @param indicator
+   * @param channel
+   * @param buildNumber if null used app build number
+   * @return
+   * @throws Exception
+   */
   @Nonnull
   public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
                                                                      @Nonnull UpdateChannel channel,
-                                                                     @Nullable("if null used app build number") String buildNumber) throws Exception {
+                                                                     @Nullable String buildNumber) throws Exception {
     if (buildNumber == null) {
       ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
       buildNumber = appInfo.getBuild().asString();

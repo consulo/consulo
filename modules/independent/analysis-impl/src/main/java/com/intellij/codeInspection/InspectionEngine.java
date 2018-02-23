@@ -48,6 +48,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InspectionEngine {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.InspectionEngine");
 
+  /**
+   *
+   * @param tool
+   * @param holder
+   * @param isOnTheFly
+   * @param session
+   * @param elements
+   * @param elementDialectIds
+   * @param dialectIdsSpecifiedForTool null means all accepted
+   * @return
+   */
   @Nonnull
   public static PsiElementVisitor createVisitorAndAcceptElements(@Nonnull LocalInspectionTool tool,
                                                                  @Nonnull ProblemsHolder holder,
@@ -55,7 +66,7 @@ public class InspectionEngine {
                                                                  @Nonnull LocalInspectionToolSession session,
                                                                  @Nonnull List<PsiElement> elements,
                                                                  @Nonnull Set<String> elementDialectIds,
-                                                                 @javax.annotation.Nullable("null means all accepted") Set<String> dialectIdsSpecifiedForTool) {
+                                                                 @Nullable Set<String> dialectIdsSpecifiedForTool) {
     PsiElementVisitor visitor = tool.buildVisitor(holder, isOnTheFly, session);
     //noinspection ConstantConditions
     if(visitor == null) {
@@ -69,10 +80,16 @@ public class InspectionEngine {
     return visitor;
   }
 
+  /**
+   * @param elements
+   * @param elementVisitor
+   * @param elementDialectIds
+   * @param dialectIdsSpecifiedForTool null means all accepted
+   */
   public static void acceptElements(@Nonnull List<PsiElement> elements,
                                     @Nonnull PsiElementVisitor elementVisitor,
                                     @Nonnull Set<String> elementDialectIds,
-                                    @javax.annotation.Nullable("null means all accepted") Set<String> dialectIdsSpecifiedForTool) {
+                                    @Nullable Set<String> dialectIdsSpecifiedForTool) {
     if (dialectIdsSpecifiedForTool != null && !intersect(elementDialectIds, dialectIdsSpecifiedForTool)) return;
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0, elementsSize = elements.size(); i < elementsSize; i++) {
@@ -267,7 +284,12 @@ public class InspectionEngine {
     return toolToLanguages;
   }
 
-  @Nullable("null means not specified")
+  /**
+   *
+   * @param wrapper
+   * @return null means not specified
+   */
+  @Nullable
   public static Set<String> getDialectIdsSpecifiedForTool(@Nonnull LocalInspectionToolWrapper wrapper) {
     String langId = wrapper.getLanguage();
     if (langId == null) {

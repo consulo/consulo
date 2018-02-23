@@ -16,8 +16,9 @@
 package com.intellij.usages;
 
 import com.intellij.usageView.UsageViewBundle;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,11 @@ public class UsageViewPresentation {
     myUsagesString = usagesString;
   }
 
-  @javax.annotation.Nullable("null means the targets node must not be visible")
+  /**
+   *
+   * @return null means the targets node must not be visible
+   */
+  @Nullable
   public String getTargetsNodeText() {
     return myTargetsNodeText;
   }

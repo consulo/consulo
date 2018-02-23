@@ -27,10 +27,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
@@ -39,9 +39,19 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     return (DaemonCodeAnalyzerEx)project.getComponent(DaemonCodeAnalyzer.class);
   }
 
+  /**
+   *
+   * @param document
+   * @param project
+   * @param minSeverity null means all
+   * @param startOffset
+   * @param endOffset
+   * @param processor
+   * @return
+   */
   public static boolean processHighlights(@Nonnull Document document,
                                           @Nonnull Project project,
-                                          @javax.annotation.Nullable("null means all") final HighlightSeverity minSeverity,
+                                          @javax.annotation.Nullable final HighlightSeverity minSeverity,
                                           final int startOffset,
                                           final int endOffset,
                                           @Nonnull final Processor<HighlightInfo> processor) {
@@ -59,9 +69,19 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     });
   }
 
+  /**
+   *
+   * @param document
+   * @param project
+   * @param minSeverity null means all
+   * @param startOffset
+   * @param endOffset
+   * @param processor
+   * @return
+   */
   static boolean processHighlightsOverlappingOutside(@Nonnull Document document,
                                                      @Nonnull Project project,
-                                                     @Nullable("null means all") final HighlightSeverity minSeverity,
+                                                     @Nullable final HighlightSeverity minSeverity,
                                                      final int startOffset,
                                                      final int endOffset,
                                                      @Nonnull final Processor<HighlightInfo> processor) {

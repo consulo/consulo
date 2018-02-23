@@ -998,7 +998,11 @@ public class FindPopupPanel extends JBPanel implements FindUI {
     return mask;
   }
 
-  @Nullable("null means OK")
+  /**
+   * @param model
+   * @return null means OK
+   */
+  @Nullable
   private ValidationInfo getValidationInfo(@Nonnull FindModel model) {
     ValidationInfo scopeValidationInfo = myScopeUI.validate(model, mySelectedScope);
     if (scopeValidationInfo != null) {

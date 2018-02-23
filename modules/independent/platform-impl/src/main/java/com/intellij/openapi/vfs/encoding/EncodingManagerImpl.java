@@ -46,10 +46,10 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import gnu.trove.Equality;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -149,7 +149,12 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     firePropertyChange(document, PROP_CACHED_ENCODING_CHANGED, oldCached, charset);
   }
 
-  @Nullable("returns null if charset set cannot be determined from content")
+  /**
+   *
+   * @param virtualFile
+   * @return returns null if charset set cannot be determined from content
+   */
+  @Nullable
   Charset computeCharsetFromContent(@Nonnull final VirtualFile virtualFile) {
     final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
     if (document == null) {

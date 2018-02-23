@@ -154,7 +154,14 @@ public final class LoadTextUtil {
 
   private static final boolean GUESS_UTF = Boolean.parseBoolean(System.getProperty("idea.guess.utf.encoding", "true"));
 
-  @Nullable("null means no luck, otherwise it's tuple(guessed encoding, hint about content if was unable to guess, BOM)")
+  /**
+   *
+   * @param virtualFile
+   * @param content
+   * @param length
+   * @return null means no luck, otherwise it's tuple(guessed encoding, hint about content if was unable to guess, BOM)
+   */
+  @Nullable
   public static Trinity<Charset, CharsetToolkit.GuessedEncoding, byte[]> guessFromContent(@Nonnull VirtualFile virtualFile, @Nonnull byte[] content, int length) {
     Charset defaultCharset = ObjectUtils.notNull(EncodingManager.getInstance().getEncoding(virtualFile, true), CharsetToolkit.getDefaultSystemCharset());
     CharsetToolkit toolkit = GUESS_UTF ? new CharsetToolkit(content, defaultCharset) : null;
@@ -303,7 +310,13 @@ public final class LoadTextUtil {
     return charset == null ? text.getBytes() : text.getBytes(charset);
   }
 
-  @Nullable("null means not supported, otherwise it is converted byte stream")
+  /**
+   *
+   * @param charset
+   * @param str
+   * @return null means not supported, otherwise it is converted byte stream
+   */
+  @Nullable
   private static byte[] isSupported(@Nonnull Charset charset, @Nonnull String str) {
     try {
       if (!charset.canEncode()) return null;
@@ -324,7 +337,14 @@ public final class LoadTextUtil {
     return ObjectUtils.notNull(charsetFromContentOrNull(project, virtualFile, text), virtualFile.getCharset());
   }
 
-  @Nullable("returns null if cannot determine from content")
+  /**
+   *
+   * @param project
+   * @param virtualFile
+   * @param text
+   * @return returns null if cannot determine from content
+   */
+  @Nullable
   public static Charset charsetFromContentOrNull(@Nullable Project project, @Nonnull VirtualFile virtualFile, @Nonnull CharSequence text) {
     return CharsetUtil.extractCharsetFromFileContent(project, virtualFile, virtualFile.getFileType(), text);
   }
@@ -471,13 +491,22 @@ public final class LoadTextUtil {
   }
 
   private static final Key<String> CHARSET_WAS_DETECTED_FROM_BYTES = Key.create("CHARSET_WAS_DETECTED_FROM_BYTES");
-  @Nullable("null if was not detected, otherwise the reason it was")
+
+  /**
+   * @param virtualFile
+   * @return null if was not detected, otherwise the reason it was
+   */
+  @Nullable
   public static String wasCharsetDetectedFromBytes(@Nonnull VirtualFile virtualFile) {
     return virtualFile.getUserData(CHARSET_WAS_DETECTED_FROM_BYTES);
   }
 
+  /**
+   * @param virtualFile
+   * @param reason null if was not detected, otherwise the reason it was
+   */
   public static void setCharsetWasDetectedFromBytes(@Nonnull VirtualFile virtualFile,
-                                                    @Nullable("null if was not detected, otherwise the reason it was") String reason) {
+                                                    @Nullable String reason) {
     virtualFile.putUserData(CHARSET_WAS_DETECTED_FROM_BYTES, reason);
   }
 }

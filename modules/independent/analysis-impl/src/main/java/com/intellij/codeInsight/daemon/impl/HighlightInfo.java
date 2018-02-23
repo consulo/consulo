@@ -413,7 +413,10 @@ public class HighlightInfo implements Segment {
     @Nonnull
     Builder navigationShift(int navigationShift);
 
-    @javax.annotation.Nullable("null means filtered out")
+    /**
+     * @return null means filtered out
+     */
+    @Nullable
     HighlightInfo create();
 
     @Nonnull

@@ -46,9 +46,16 @@ public class DefaultJDOMExternalizer {
     writeExternal(data, parentNode, null);
   }
 
+  /**
+   *
+   * @param data
+   * @param parentNode
+   * @param filter null means all elements accepted
+   * @throws WriteExternalException
+   */
   public static void writeExternal(@Nonnull Object data,
                                    @Nonnull Element parentNode,
-                                   @Nullable("null means all elements accepted") JDOMFilter filter) throws WriteExternalException {
+                                   @Nullable JDOMFilter filter) throws WriteExternalException {
     Field[] fields = data.getClass().getFields();
 
     for (Field field : fields) {

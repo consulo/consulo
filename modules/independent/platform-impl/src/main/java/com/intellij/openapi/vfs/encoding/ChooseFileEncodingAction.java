@@ -30,10 +30,10 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
@@ -114,8 +114,14 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
   };
   protected abstract void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset);
 
+  /**
+   * @param clearItemText null means do not show 'clear' text
+   * @param alreadySelected
+   * @param charsetFilter
+   * @return
+   */
   @Nonnull
-  protected DefaultActionGroup createCharsetsActionGroup(@Nullable("null means do not show 'clear' text") String clearItemText,
+  protected DefaultActionGroup createCharsetsActionGroup(@Nullable String clearItemText,
                                                       Charset alreadySelected,
                                                       @Nonnull Function<Charset, String> charsetFilter) {
     DefaultActionGroup group = new DefaultActionGroup();

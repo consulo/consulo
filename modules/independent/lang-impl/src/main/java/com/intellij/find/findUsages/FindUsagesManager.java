@@ -200,11 +200,19 @@ public class FindUsagesManager {
     return null;
   }
 
+  /**
+   *
+   * @param psiElement
+   * @param scopeFile
+   * @param editor
+   * @param showDialog
+   * @param searchScope null means default (stored in options)
+   */
   public void findUsages(@Nonnull PsiElement psiElement,
                          final PsiFile scopeFile,
                          final FileEditor editor,
                          boolean showDialog,
-                         @Nullable("null means default (stored in options)") SearchScope searchScope) {
+                         @Nullable SearchScope searchScope) {
     FindUsagesHandler handler = getFindUsagesHandler(psiElement, false);
     if (handler == null) return;
 

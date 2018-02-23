@@ -22,11 +22,10 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakHashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -51,7 +50,12 @@ public final class ObjectTree<T> {
     return myObject2NodeMap.get(object);
   }
 
-  ObjectNode<T> putNode(@Nonnull T object, @Nullable("null means remove") ObjectNode<T> node) {
+  /**
+   * @param object
+   * @param node null means remove
+   * @return
+   */
+  ObjectNode<T> putNode(@Nonnull T object, @Nullable ObjectNode<T> node) {
     return node == null ? myObject2NodeMap.remove(object) : myObject2NodeMap.put(object, node);
   }
 

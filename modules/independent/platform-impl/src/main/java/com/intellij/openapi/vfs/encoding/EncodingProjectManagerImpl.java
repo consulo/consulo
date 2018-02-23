@@ -340,7 +340,12 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     };
   }
 
-  private boolean processSubFiles(@Nullable("null means all in the project") VirtualFile file, @Nonnull final Processor<VirtualFile> processor) {
+  /**
+   * @param file null means all in the project
+   * @param processor
+   * @return
+   */
+  private boolean processSubFiles(@Nullable VirtualFile file, @Nonnull final Processor<VirtualFile> processor) {
     if (file == null) {
       for (VirtualFile virtualFile : ProjectRootManager.getInstance(myProject).getContentRoots()) {
         if (!processSubFiles(virtualFile, processor)) return false;

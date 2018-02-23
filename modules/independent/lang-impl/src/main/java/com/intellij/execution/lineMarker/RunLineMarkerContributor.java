@@ -50,7 +50,13 @@ public abstract class RunLineMarkerContributor {
   @RequiredReadAction
   public abstract Info getInfo(PsiElement element);
 
-  @Nullable("null means disabled")
+  /**
+   *
+   * @param action
+   * @param element
+   * @return null means disabled
+   */
+  @Nullable
   protected static String getText(@Nonnull AnAction action, @Nonnull PsiElement element) {
     DataContext parent = DataManager.getInstance().getDataContext();
     DataContext dataContext = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, parent);

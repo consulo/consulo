@@ -276,7 +276,13 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
     return true;
   }
 
-  @Nullable("null means invalid")
+  /**
+   *
+   * @param documentWindow
+   * @param startOffset
+   * @return null means invalid
+   */
+  @Nullable
   private static TextRange getFixedTextRange(@Nonnull DocumentWindow documentWindow, int startOffset) {
     final TextRange fixedTextRange;
     TextRange textRange = documentWindow.getHostRange(startOffset);
@@ -341,8 +347,14 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
     }
   }
 
+  /**
+   *
+   * @param documentWindow
+   * @param startOffset
+   * @return null means invalid
+   */
   // finds the first nearest text range
-  @Nullable("null means invalid")
+  @Nullable
   private static TextRange findNearestTextRange(final DocumentWindow documentWindow, final int startOffset) {
     TextRange textRange = null;
     for (Segment marker : documentWindow.getHostRanges()) {

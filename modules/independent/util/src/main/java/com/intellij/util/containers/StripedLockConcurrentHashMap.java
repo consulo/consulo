@@ -516,7 +516,7 @@ public class StripedLockConcurrentHashMap<K, V> extends _CHMSegment<K, V> implem
       return lastReturned.key;
     }
 
-    @Nullable("null means the entry has just been removed")
+    @Nullable
     public V getValue() {
       if (lastReturned == null) {
         throw new IllegalStateException("Entry was removed");
@@ -1074,7 +1074,7 @@ class _CHMSegment<K, V> {
   /*
    * Remove; match on key only if value null, else match both.
    */
-  V remove(@Nonnull K key, int hash, @Nullable("null means don't care") Object value) {
+  V remove(@Nonnull K key, int hash, @Nullable Object value) {
     try {
       lock();
       int c = count - 1;

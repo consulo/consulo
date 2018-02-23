@@ -66,7 +66,12 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
     mySuffixLineCount = Math.max(1, 1 + StringUtil.countNewLines(shreds.get(shreds.size()- 1).getSuffix()));
   }
 
-  @Nullable("null means we were unable to calculate")
+  /**
+   *
+   * @param hPos
+   * @return null means we were unable to calculate
+   */
+  @Nullable
   LogicalPosition hostToInjectedInVirtualSpace(@Nonnull LogicalPosition hPos) {
     // beware the virtual space
     int hLineStartOffset = hPos.line >= myDelegate.getLineCount() ? myDelegate.getTextLength() : myDelegate.getLineStartOffset(hPos.line);

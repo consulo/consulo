@@ -32,7 +32,13 @@ public interface FindPopupScopeUI {
   void applyTo(@Nonnull FindSettings findSettings, @Nonnull FindPopupScopeUI.ScopeType selectedScope);
   void applyTo(@Nonnull FindModel findModel, @Nonnull FindPopupScopeUI.ScopeType selectedScope);
 
-  @Nullable("null means OK")
+  /**
+   *
+   * @param model
+   * @param selectedScope
+   * @return null means OK
+   */
+  @Nullable
   default ValidationInfo validate(@Nonnull FindModel model, FindPopupScopeUI.ScopeType selectedScope) {
     return null;
   }

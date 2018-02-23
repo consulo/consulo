@@ -19,8 +19,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public interface ElementPreviewProvider {
@@ -30,5 +31,9 @@ public interface ElementPreviewProvider {
 
   void show(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull Point point, boolean keyTriggered);
 
-  void hide(@javax.annotation.Nullable("if disposed") PsiElement element, @Nonnull Editor editor);
+  /**
+   * @param element if disposed
+   * @param editor
+   */
+  void hide(@Nullable PsiElement element, @Nonnull Editor editor);
 }

@@ -90,7 +90,13 @@ public class SelectWordHandler extends EditorActionHandler {
     return editables.size() == 1 && range.equals(editables.get(0));
   }
 
-  @Nullable("null means unable to select")
+  /**
+   *
+   * @param editor
+   * @param project
+   * @return null means unable to select
+   */
+  @Nullable
   private static TextRange selectWord(@Nonnull Editor editor, @Nonnull Project project) {
     Document document = editor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);

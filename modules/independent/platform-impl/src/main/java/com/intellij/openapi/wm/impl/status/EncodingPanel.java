@@ -96,7 +96,12 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
     myComponent.setBorder(WidgetBorder.WIDE);
   }
 
-  @Nullable("returns null if charset set cannot be determined from content")
+  /**
+   *
+   * @param virtualFile
+   * @return returns null if charset set cannot be determined from content
+   */
+  @Nullable
   private static Charset cachedCharsetFromContent(final VirtualFile virtualFile) {
     if (virtualFile == null) return null;
     final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
@@ -171,13 +176,19 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
     }, this);
   }
 
-  private void updateForDocument(@Nullable("null means update anyway") Document document) {
+  /**
+   * @param document null means update anyway
+   */
+  private void updateForDocument(@Nullable Document document) {
     Editor selectedEditor = myEditor.get();
     if (document != null && (selectedEditor == null || selectedEditor.getDocument() != document)) return;
     update();
   }
 
-  private void updateForFile(@Nullable("null means update anyway") VirtualFile file) {
+  /**
+   * @param file null means update anyway
+   */
+  private void updateForFile(@Nullable VirtualFile file) {
     if (file == null) {
       update();
     }

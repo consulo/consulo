@@ -61,9 +61,12 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
   @Nonnull
   PsiPackage[] getSubPackages(@Nonnull GlobalSearchScope scope);
 
+  /**
+   * @return null means default package
+   */
   @RequiredReadAction
   @Override
-  @Nullable("default package")
+  @Nullable
   @NonNls
   String getName();
 

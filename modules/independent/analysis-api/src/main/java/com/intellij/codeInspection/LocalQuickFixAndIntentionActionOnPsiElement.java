@@ -54,9 +54,16 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
            isAvailable(project, file, startElement, endElement);
   }
 
+  /**
+   * @param project
+   * @param file
+   * @param editor is null when called from inspection
+   * @param startElement
+   * @param endElement
+   */
   public abstract void invoke(@Nonnull Project project,
                               @Nonnull PsiFile file,
-                              @Nullable("is null when called from inspection") Editor editor,
+                              @Nullable Editor editor,
                               @Nonnull PsiElement startElement,
                               @Nonnull PsiElement endElement);
 

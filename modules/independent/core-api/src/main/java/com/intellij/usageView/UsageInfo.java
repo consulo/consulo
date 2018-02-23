@@ -161,9 +161,9 @@ public class UsageInfo {
   }
 
   /**
-   * @return range in element
+   * @return null means range is invalid
    */
-  @Nullable("null means range is invalid")
+  @Nullable
   public ProperTextRange getRangeInElement() {
     PsiElement element = getElement();
     if (element == null) return null;
@@ -331,8 +331,11 @@ public class UsageInfo {
     return myDynamicUsage;
   }
 
-  // creates new smart pointers
-  @Nullable("null means could not copy because info is no longer valid")
+  /**
+   * creates new smart pointers
+   * @return null means could not copy because info is no longer valid
+   */
+  @Nullable
   public UsageInfo copy() {
     PsiElement element = mySmartPointer.getElement();
     SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(getProject());

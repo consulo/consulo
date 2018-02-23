@@ -798,7 +798,14 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     }
   }
 
-  @Nullable("null means we did not find common container files")
+  /**
+   *
+   * @param commonScope
+   * @param data
+   * @param keys
+   * @return null means we did not find common container files
+   */
+  @Nullable
   private Set<VirtualFile> intersectionWithContainerNameFiles(@Nonnull GlobalSearchScope commonScope,
                                                               @Nonnull Collection<RequestWithProcessor> data,
                                                               @Nonnull Set<IdIndexEntry> keys) {

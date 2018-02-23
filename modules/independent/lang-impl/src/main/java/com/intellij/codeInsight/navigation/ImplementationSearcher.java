@@ -73,7 +73,13 @@ public class ImplementationSearcher {
     return ApplicationManager.getApplication().runReadAction((Computable<SearchScope>)() -> TargetElementUtil.getSearchScope(editor, element));
   }
 
-  @Nullable("For the case the search has been cancelled")
+  /**
+   *
+   * @param element
+   * @param editor
+   * @return For the case the search has been cancelled
+   */
+  @Nullable
   protected PsiElement[] searchDefinitions(PsiElement element, Editor editor) {
     PsiElement[][] result = new PsiElement[1][];
     if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {

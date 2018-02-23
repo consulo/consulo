@@ -729,7 +729,12 @@ public class FindDialog extends DialogWrapper implements FindUI {
     }
   }
 
-  @Nullable("null means OK")
+  /**
+   *
+   * @param model
+   * @return null means OK
+   */
+  @Nullable
   private ValidationInfo getValidationInfo(@Nonnull FindModel model) {
     if (myRbDirectory != null && myRbDirectory.isEnabled() && myRbDirectory.isSelected()) {
       VirtualFile directory = FindInProjectUtil.getDirectory(model);

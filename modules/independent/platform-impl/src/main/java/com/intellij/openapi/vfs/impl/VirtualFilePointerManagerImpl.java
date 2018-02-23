@@ -39,10 +39,10 @@ import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -151,9 +151,16 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
     return create(file, null, parent, listener);
   }
 
+  /**
+   * @param file null means the pointer will be created from the (not null) url
+   * @param url null means url has to be computed from the (not-null) file path
+   * @param parentDisposable
+   * @param listener
+   * @return
+   */
   @Nonnull
-  private VirtualFilePointer create(@Nullable("null means the pointer will be created from the (not null) url") VirtualFile file,
-                                    @Nullable("null means url has to be computed from the (not-null) file path") String url,
+  private VirtualFilePointer create(@Nullable VirtualFile file,
+                                    @Nullable String url,
                                     @Nonnull Disposable parentDisposable,
                                     @Nullable VirtualFilePointerListener listener) {
     VirtualFileSystem fileSystem;

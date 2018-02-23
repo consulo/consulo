@@ -24,7 +24,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileType;
-import consulo.fileTypes.FileTypeWithPredefinedCharset;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.ui.Messages;
@@ -36,10 +35,11 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.fileTypes.FileTypeWithPredefinedCharset;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -224,7 +224,10 @@ public class EncodingUtil {
     return Pair.create(virtualFile.getCharset(), null);
   }
 
-  @Nullable("null means enabled, notnull means disabled and contains error message")
+  /**
+   * @return null means enabled, notnull means disabled and contains error message
+   */
+  @Nullable
   public static String checkCanConvert(@Nonnull VirtualFile virtualFile) {
     if (virtualFile.isDirectory()) {
       return "file is a directory";

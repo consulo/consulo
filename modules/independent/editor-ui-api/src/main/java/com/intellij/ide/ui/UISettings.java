@@ -36,8 +36,9 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -70,7 +71,11 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return settings == null ? new UISettings() : settings;
   }
 
-  @javax.annotation.Nullable("null if application is not initialized")
+  /**
+   *
+   * @return null if application is not initialized
+   */
+  @Nullable
   public static UISettings getInstanceOrNull() {
     if (ourInstance != null) {
       return ourInstance;

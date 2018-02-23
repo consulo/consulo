@@ -73,9 +73,19 @@ public abstract class InspectionManager {
                                                             boolean onTheFly,
                                                             LocalQuickFix... fixes);
 
+  /**
+   *
+   * @param psiElement
+   * @param rangeInElement null means the text range of the element
+   * @param descriptionTemplate
+   * @param highlightType
+   * @param onTheFly
+   * @param fixes
+   * @return
+   */
   @Nonnull
   public abstract ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
-                                                            @Nullable("null means the text range of the element") TextRange rangeInElement,
+                                                            @Nullable TextRange rangeInElement,
                                                             @Nonnull final String descriptionTemplate,
                                                             @Nonnull ProblemHighlightType highlightType,
                                                             boolean onTheFly,

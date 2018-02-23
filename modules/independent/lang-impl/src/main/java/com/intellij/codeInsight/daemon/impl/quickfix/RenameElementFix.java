@@ -69,7 +69,7 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
   @Override
   public void invoke(@Nonnull final Project project,
                      @Nonnull final PsiFile file,
-                     @Nullable("is null when called from inspection") Editor editor,
+                     @Nullable Editor editor,
                      @Nonnull final PsiElement startElement,
                      @Nonnull PsiElement endElement) {
     if (isAvailable(project, null, file)) {

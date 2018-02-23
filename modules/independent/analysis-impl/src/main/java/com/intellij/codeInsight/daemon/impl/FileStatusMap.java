@@ -35,10 +35,10 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.WeakHashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,7 +63,13 @@ public class FileStatusMap implements Disposable {
     markAllFilesDirty("FileStatusMap dispose");
   }
 
-  @javax.annotation.Nullable("null means the file is clean")
+  /**
+   * null means the file is clean
+   * @param editor
+   * @param passId
+   * @return
+   */
+  @Nullable
   // used in scala
   public static TextRange getDirtyTextRange(@Nonnull Editor editor, int passId) {
     Document document = editor.getDocument();

@@ -161,7 +161,7 @@ public class ReflectionUtil {
   }
 
   @Nonnull
-  public static Field findAssignableField(@Nonnull Class<?> clazz, @Nullable("null means any type") final Class<?> fieldType, @Nonnull final String fieldName) throws NoSuchFieldException {
+  public static Field findAssignableField(@Nonnull Class<?> clazz, @Nullable final Class<?> fieldType, @Nonnull final String fieldName) throws NoSuchFieldException {
     Field result = processFields(clazz, new Condition<Field>() {
       @Override
       public boolean value(Field field) {
@@ -183,7 +183,7 @@ public class ReflectionUtil {
     return null;
   }
 
-  public static void resetField(@Nonnull Class clazz, @Nullable("null means of any type") Class type, @Nonnull String name)  {
+  public static void resetField(@Nonnull Class clazz, @Nullable Class type, @Nonnull String name)  {
     try {
       resetField(null, findField(clazz, type, name));
     }
@@ -192,7 +192,7 @@ public class ReflectionUtil {
     }
   }
 
-  public static void resetField(@Nonnull Object object, @Nullable("null means any type") Class type, @Nonnull String name)  {
+  public static void resetField(@Nonnull Object object, @Nullable Class type, @Nonnull String name)  {
     try {
       resetField(object, findField(object.getClass(), type, name));
     }
@@ -317,7 +317,7 @@ public class ReflectionUtil {
     return method == null ? null : method.getDeclaringClass();
   }
 
-  public static <T> T getField(@Nonnull Class objectClass, @Nullable Object object, @Nullable("null means any type") Class<T> fieldType, @Nonnull @NonNls String fieldName) {
+  public static <T> T getField(@Nonnull Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
       return (T)field.get(object);
@@ -332,7 +332,7 @@ public class ReflectionUtil {
     }
   }
 
-  public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable("null means any type") Class<T> fieldType, @Nonnull @NonNls String fieldName) {
+  public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
       if (!Modifier.isStatic(field.getModifiers())) {
@@ -353,7 +353,7 @@ public class ReflectionUtil {
   // returns true if value was set
   public static <T> boolean setField(@Nonnull Class objectClass,
                                      Object object,
-                                     @Nullable("null means any type") Class<T> fieldType,
+                                     @Nullable Class<T> fieldType,
                                      @Nonnull @NonNls String fieldName,
                                      T value) {
     try {

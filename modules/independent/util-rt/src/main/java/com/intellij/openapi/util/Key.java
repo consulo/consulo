@@ -105,7 +105,13 @@ public class Key<T> {
     }
   }
 
-  @Nullable("can become null if the key has been gc-ed")
+  /**
+   *
+   * @param index
+   * @param <T>
+   * @return can become null if the key has been gc-ed
+   */
+  @Nullable
   public static <T> Key<T> getKeyByIndex(int index) {
     return ourRegistry.getKeyByIndex(index);
   }

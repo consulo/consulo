@@ -49,9 +49,17 @@ public abstract class EncodingRegistry {
   @Deprecated // return true always
   public abstract boolean isUseUTFGuessing(VirtualFile virtualFile);
 
-  public abstract void setEncoding(@Nullable("null means project") VirtualFile virtualFileOrDir, @Nullable("null means remove mapping") Charset charset);
+  /**
+   * @param virtualFileOrDir null means project
+   * @param charset null means remove mapping
+   */
+  public abstract void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset);
 
-  @Nullable("null means 'use system-default'")
+  /**
+   * @param virtualFile
+   * @return null means 'use system-default'
+   */
+  @Nullable
   public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
     return null;
   }
