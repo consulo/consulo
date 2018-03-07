@@ -15,9 +15,13 @@
  */
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 public abstract class PushedFilePropertiesUpdater {
   @Nonnull
@@ -26,8 +30,20 @@ public abstract class PushedFilePropertiesUpdater {
   }
 
   public abstract void initializeProperties();
-  public abstract void pushAll(final FilePropertyPusher... pushers);
-  public abstract void filePropertiesChanged(@Nonnull final VirtualFile file);
+
+  @Deprecated
+  @DeprecationInfo("Use #pushForProject()")
+  public void pushAll(FilePropertyPusher... pushers) {
+    pushForProject(pushers);
+  }
+
+  public abstract void pushForProject(FilePropertyPusher... pushers);
+
+  public abstract void pushForModules(@Nonnull Collection<Module> modules, FilePropertyPusher... pushers);
+
+  public abstract void filePropertiesChanged(@Nonnull VirtualFile file);
+
   public abstract void pushAllPropertiesNow();
-  public abstract <T> void findAndUpdateValue(final VirtualFile fileOrDir, final FilePropertyPusher<T> pusher, final T moduleValue);
+
+  public abstract <T> void findAndUpdateValue(VirtualFile fileOrDir, final FilePropertyPusher<T> pusher, T moduleValue);
 }

@@ -30,10 +30,10 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -169,7 +169,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         oldFile.putUserData(pusher.getFileDataKey(), null);
       }
       if (!project.isDefault()) {
-        PushedFilePropertiesUpdater.getInstance(project).pushAll(pusher);
+        PushedFilePropertiesUpdater.getInstance(project).pushForProject(pusher);
       }
     }
     if (shouldReparseFiles()) {
