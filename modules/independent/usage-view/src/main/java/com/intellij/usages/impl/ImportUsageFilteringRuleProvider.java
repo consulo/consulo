@@ -41,7 +41,7 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
   @Override
   @Nonnull
   public UsageFilteringRule[] getActiveRules(@Nonnull final Project project) {
-    final List<UsageFilteringRule> rules = new ArrayList<UsageFilteringRule>();
+    final List<UsageFilteringRule> rules = new ArrayList<>();
     if (!ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS) {
       ContainerUtil.addAll(rules, Extensions.getExtensions(ImportFilteringRule.EP_NAME));
     }
@@ -51,10 +51,9 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
   @Override
   @Nonnull
   public AnAction[] createFilteringActions(@Nonnull final UsageView view) {
-    final UsageViewImpl impl = (UsageViewImpl)view;
     if (view.getPresentation().isCodeUsages()) {
       final JComponent component = view.getComponent();
-      final ShowImportsAction showImportsAction = new ShowImportsAction(impl);
+      final ShowImportsAction showImportsAction = new ShowImportsAction(view);
       showImportsAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK)), component, view);
       return new AnAction[] { showImportsAction };
     }
@@ -64,7 +63,7 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
   }
 
   private static class ShowImportsAction extends RuleAction {
-    private ShowImportsAction(UsageViewImpl view) {
+    private ShowImportsAction(UsageView view) {
       super(view, UsageViewBundle.message("action.show.import.statements"), AllIcons.Actions.ShowImportStatements);
     }
 

@@ -56,17 +56,16 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
   @Override
   @Nonnull
   public AnAction[] createFilteringActions(@Nonnull UsageView view) {
-    final UsageViewImpl impl = (UsageViewImpl)view;
     if (!view.getPresentation().isCodeUsages()) {
       return AnAction.EMPTY_ARRAY;
     }
     final JComponent component = view.getComponent();
 
     final ShowReadAccessUsagesAction read = new ShowReadAccessUsagesAction();
-    read.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK)), component, impl);
+    read.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK)), component, view);
 
     final ShowWriteAccessUsagesAction write = new ShowWriteAccessUsagesAction();
-    write.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK)), component, impl);
+    write.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK)), component, view);
     return new AnAction[] {read, write};
   }
 

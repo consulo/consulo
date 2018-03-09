@@ -20,16 +20,17 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.usages.UsageView;
 import com.intellij.util.messages.Topic;
+
 import javax.annotation.Nonnull;
 
 public interface UsageFilteringRuleProvider {
   ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageFilteringRuleProvider");
+
+  Topic<Runnable> RULES_CHANGED = new Topic<Runnable>("usave view rules changed", Runnable.class);
 
   @Nonnull
   UsageFilteringRule[] getActiveRules(@Nonnull Project project);
 
   @Nonnull
   AnAction[] createFilteringActions(@Nonnull UsageView view);
-
-  Topic<Runnable> RULES_CHANGED = new Topic<Runnable>("usave view rules changed", Runnable.class);
 }

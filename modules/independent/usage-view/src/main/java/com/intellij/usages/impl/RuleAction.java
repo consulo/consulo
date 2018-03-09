@@ -30,11 +30,11 @@ import javax.swing.*;
  * @author Eugene Zhuravlev
  *         Date: Jan 19, 2005
  */
-abstract class RuleAction extends ToggleAction implements DumbAware {
+public abstract class RuleAction extends ToggleAction implements DumbAware {
   private final UsageViewImpl myView;
   private boolean myState;
 
-  RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Icon icon) {
+  public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Icon icon) {
     super(text, null, icon);
     myView = (UsageViewImpl)view;
     myState = getOptionValue();
