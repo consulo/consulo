@@ -37,11 +37,11 @@ import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import sun.java2d.SunGraphicsEnvironment;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.border.Border;
@@ -2165,7 +2165,7 @@ public class UIUtil {
   }
 
   @Nullable
-  public static Component findNearestOpaque(Component c) {
+  public static Component findNearestOpaque(@Nullable Component c) {
     Component eachParent = c;
     while (eachParent != null) {
       if (eachParent.isOpaque()) return eachParent;
@@ -2176,7 +2176,7 @@ public class UIUtil {
   }
 
   @Nullable
-  public static Component findParentByCondition(@Nonnull Component c, Condition<Component> condition) {
+  public static Component findParentByCondition(@Nullable Component c, Condition<Component> condition) {
     Component eachParent = c;
     while (eachParent != null) {
       if (condition.value(eachParent)) return eachParent;
