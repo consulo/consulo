@@ -29,12 +29,11 @@ import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.changes.actions.OpenRepositoryVersionAction;
 import com.intellij.openapi.vcs.changes.actions.RevertSelectedChangesAction;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
-import com.intellij.openapi.vcs.history.ShowDiffWithLocalAction;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +63,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
   protected void buildToolBar(final DefaultActionGroup toolBarGroup) {
     super.buildToolBar(toolBarGroup);
 
-    toolBarGroup.add(new ShowDiffWithLocalAction());
+    toolBarGroup.add(ActionManager.getInstance().getAction("Vcs.ShowDiffWithLocal"));
     myEditSourceAction = new MyEditSourceAction();
     myEditSourceAction.registerCustomShortcutSet(CommonShortcuts.getEditSource(), this);
     toolBarGroup.add(myEditSourceAction);
