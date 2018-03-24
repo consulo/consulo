@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class JBSwingUtilities {
 
-  private static final boolean LEGACY_JDK = !SystemInfo.isJavaVersionAtLeast("1.8");
+  private static final boolean LEGACY_JDK = !SystemInfo.isJavaVersionAtLeast(8, 0, 0);
 
   /**
    * Replaces SwingUtilities#isLeftMouseButton() for consistency with other button-related methods

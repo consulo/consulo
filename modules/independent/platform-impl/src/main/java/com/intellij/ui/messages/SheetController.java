@@ -464,7 +464,7 @@ public class SheetController {
     myOffScreenFrame.add(mySheetPanel);
     myOffScreenFrame.getRootPane().setDefaultButton(myDefaultButton);
 
-    final BufferedImage image = (SystemInfo.isJavaVersionAtLeast("1.7")) ?
+    final BufferedImage image = SystemInfo.isJavaVersionAtLeast(7, 0, 0) ?
                                 UIUtil.createImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT, BufferedImage.TYPE_INT_ARGB) :
                                 GraphicsUtilities.createCompatibleTranslucentImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT);
 

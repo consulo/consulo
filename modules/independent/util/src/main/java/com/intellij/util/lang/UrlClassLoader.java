@@ -45,7 +45,7 @@ public class UrlClassLoader extends ClassLoader {
   private static final Set<Class<?>> ourParallelCapableLoaders;
   static {
     boolean capable =
-            SystemInfo.isJavaVersionAtLeast("1.7") && !SystemInfo.isIbmJvm && SystemProperties.getBooleanProperty("use.parallel.class.loading", true);
+            SystemInfo.isJavaVersionAtLeast(7, 0, 0) && !SystemInfo.isIbmJvm && SystemProperties.getBooleanProperty("use.parallel.class.loading", true);
     if (capable) {
       ourParallelCapableLoaders = Collections.synchronizedSet(new HashSet<Class<?>>());
       try {

@@ -42,7 +42,7 @@ public class DesktopSplash extends JDialog implements StartupProgress {
     super((Frame)null, false);
 
     setUndecorated(true);
-    if (!(SystemInfo.isLinux && SystemInfo.isJavaVersionAtLeast("1.7"))) {
+    if (!(SystemInfo.isLinux && SystemInfo.isJavaVersionAtLeast(7, 0, 0))) {
       setResizable(false);
     }
     setFocusableWindowState(false);

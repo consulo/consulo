@@ -147,7 +147,7 @@ public class MnemonicHelper extends ComponentTreeWatcher {
    */
   public static CustomShortcutSet createShortcut(char ch) {
     Character mnemonic = Character.valueOf(ch);
-    String shortcut = SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast("1.7") ?
+    String shortcut = SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast(7, 0, 0) ?
                       "control alt pressed " + mnemonic :
                       "alt pressed " + mnemonic;
     return CustomShortcutSet.fromString(shortcut);

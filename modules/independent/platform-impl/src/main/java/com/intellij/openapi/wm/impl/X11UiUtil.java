@@ -15,16 +15,15 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.Patches;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
-import javax.annotation.Nullable;
 import sun.awt.AWTAccessor;
 import sun.misc.Unsafe;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.peer.ComponentPeer;
@@ -32,7 +31,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import static com.intellij.util.ArrayUtil.newLongArray;
-import static com.intellij.util.containers.ContainerUtil.newHashSet;
 
 public class X11UiUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.X11UiUtil");
@@ -294,14 +292,6 @@ public class X11UiUtil {
 
   public static boolean isFullScreenSupported() {
     if (X11 == null) return false;
-
-    if (Patches.SUN_BUG_ID_8013359) {
-      String wmName = getWmName();
-      if (wmName != null &&
-          (wmName.startsWith("Mutter") || newHashSet("Metacity", "GNOME Shell", "Muffin", "Marco").contains(wmName))) {
-        return false;  // Metacity clones suffer from child window placement bug
-      }
-    }
 
     IdeFrame[] frames = WindowManager.getInstance().getAllProjectFrames();
     if (frames.length == 0) return true;  // no frame to check the property so be optimistic here

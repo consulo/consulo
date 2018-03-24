@@ -1484,7 +1484,7 @@ public class Messages {
           }
         });
         animate();
-        if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+        if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
           try {
             Method method = Class.forName("java.awt.Window").getDeclaredMethod("setOpacity", float.class);
             if (method != null) method.invoke(getPeer().getWindow(), .8f);

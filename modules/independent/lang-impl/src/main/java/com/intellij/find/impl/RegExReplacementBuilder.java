@@ -16,10 +16,8 @@
 package com.intellij.find.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.SystemInfo;
-import javax.annotation.Nonnull;
 
-import java.lang.reflect.Method;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -35,26 +33,6 @@ import java.util.regex.Matcher;
  */
 public class RegExReplacementBuilder {
   private static final Logger LOGGER = Logger.getInstance(RegExReplacementBuilder.class);
-
-  private static Method ourNamedGroupValueRetriever;
-
-  static {
-    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
-      try {
-        Method method = Matcher.class.getMethod("group", String.class);
-        Class<?> returnType = method.getReturnType();
-        if (String.class.equals(returnType)) {
-          ourNamedGroupValueRetriever = method;
-        }
-        else {
-          throw new RuntimeException("Unexpected method return value: " + returnType);
-        }
-      }
-      catch (Exception e) {
-        LOGGER.warn("Error accessing method java.util.regex.Matcher.group(java.lang.String)", e);
-      }
-    }
-  }
 
   @Nonnull
   private final Matcher myMatcher;
@@ -155,7 +133,7 @@ public class RegExReplacementBuilder {
         throw new IllegalArgumentException("capturing group name {" + gname + "} starts with digit character");
       }
       myCursor++;
-      group = getNamedGroupValue(myMatcher, gname);
+      group = myMatcher.group(gname);
     } else {
       // The first number is always a group
       int refNum = (int)nextChar - '0';
@@ -240,18 +218,6 @@ public class RegExReplacementBuilder {
       else if (lastRegion.end == -1) {
         lastRegion.end = currentOffset;
       }
-    }
-  }
-
-  private static String getNamedGroupValue(Matcher matcher, String groupName) {
-    // Support for named capturing groups was added to Matcher's API only in Java 7,
-    // so we need to use reflection to access corresponding method
-    if (ourNamedGroupValueRetriever == null) throw new IllegalArgumentException("Illegal group reference");
-    try {
-      return (String)ourNamedGroupValueRetriever.invoke(matcher, groupName);
-    }
-    catch (Exception e) {
-      throw new RuntimeException("Illegal group reference", e);
     }
   }
 

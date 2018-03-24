@@ -138,7 +138,7 @@ public class ToolkitBugsProcessor {
     public boolean process(Throwable e, StackTraceElement[] stack) {
       if (e instanceof NullPointerException && stack.length > 3) {
         //bombed for possible future fix
-        if (SystemInfo.isJavaVersionAtLeast("1.7")) return false;
+        if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) return false;
 
         return stack[0].getClassName().equals("java.util.Hashtable")
                && stack[0].getMethodName().equals("put")

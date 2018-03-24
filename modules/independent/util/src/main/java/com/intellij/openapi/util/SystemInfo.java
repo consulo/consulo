@@ -19,9 +19,10 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.lang.JavaVersion;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -51,7 +52,18 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean isJetbrainsJvm = isJetbrainsJvm();
   public static final boolean isSunJvm = isSunJvm();
   public static final boolean isIbmJvm = isIbmJvm();
-  public static final boolean IS_AT_LEAST_JAVA9 = isJavaVersionAtLeast("9");
+  public static final boolean IS_AT_LEAST_JAVA9 = isModularJava();
+
+  @SuppressWarnings("JavaReflectionMemberAccess")
+  private static boolean isModularJava() {
+    try {
+      Class.class.getMethod("getModule");
+      return true;
+    }
+    catch (Throwable t) {
+      return false;
+    }
+  }
 
   public static boolean isOsVersionAtLeast(@Nonnull String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
@@ -213,6 +225,11 @@ public class SystemInfo extends SystemInfoRt {
     }
   }
 
+  public static boolean isJavaVersionAtLeast(int major, int minor, int update) {
+    return JavaVersion.current().compareTo(JavaVersion.compose(major, minor, update, 0, false)) >= 0;
+  }
+
+  /** @deprecated use {@link #isJavaVersionAtLeast(int, int, int)} (to be removed in IDEA 2020) */
   public static boolean isJavaVersionAtLeast(String v) {
     return StringUtil.compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
   }

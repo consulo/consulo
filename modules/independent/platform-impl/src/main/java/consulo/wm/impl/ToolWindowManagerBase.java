@@ -981,7 +981,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       }
     }
     //todo[kb] it's just a temporary solution due a number of focus issues in JDK 7
-    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+    if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
       if (hasOpenEditorFiles()) {
         activateEditorComponentImpl(commandList, false);
       }

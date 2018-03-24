@@ -16,9 +16,10 @@
 package com.intellij.util;
 
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 /**
  * Utility wrappers for accessing system properties.
@@ -78,7 +79,7 @@ public class SystemProperties {
 
   /**
    * Returns the value of the java.version system property. If you need to compare java version with some value use
-   * {@link com.intellij.openapi.util.SystemInfo#isJavaVersionAtLeast(String)} instead
+   * {@link com.intellij.openapi.util.SystemInfo#isJavaVersionAtLeast(int, int, int)} instead
    *
    * @return the property value
    */

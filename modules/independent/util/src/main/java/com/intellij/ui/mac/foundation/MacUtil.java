@@ -21,10 +21,10 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import sun.awt.AWTAccessor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -155,7 +155,7 @@ public class MacUtil {
   @SuppressWarnings("deprecation")
   public static ID findWindowFromJavaWindow(final Window w) {
     ID windowId = null;
-    if (SystemInfo.isJavaVersionAtLeast("1.7") && Registry.is("skip.untitled.windows.for.mac.messages")) {
+    if (SystemInfo.isJavaVersionAtLeast(7, 0, 0) && Registry.is("skip.untitled.windows.for.mac.messages")) {
       try {
         ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(w);
         Class <?> cWindowPeerClass = peer.getClass();

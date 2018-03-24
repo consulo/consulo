@@ -16,7 +16,6 @@
 package com.intellij.ui.mac;
 
 import com.apple.eawt.*;
-import com.intellij.Patches;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.application.ApplicationManager;
@@ -36,12 +35,10 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.Function;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EventListener;
@@ -142,7 +139,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
       HAS_FULLSCREEN_UTILITIES = false;
     }
   }
-  public static final boolean FULL_SCREEN_AVAILABLE = SystemInfo.isJavaVersionAtLeast("1.6.0_29") && HAS_FULLSCREEN_UTILITIES;
+  public static final boolean FULL_SCREEN_AVAILABLE = HAS_FULLSCREEN_UTILITIES;
 
   private static boolean SHOWN = false;
 
@@ -217,16 +214,6 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     //}
 
     int v = UNIQUE_COUNTER.incrementAndGet();
-    if (Patches.APPLE_BUG_ID_10514018) {
-      frame.addWindowListener(new WindowAdapter() {
-        @Override
-        public void windowDeiconified(WindowEvent e) {
-          if (e.getWindow() == frame && frame.getState() == Frame.ICONIFIED) {
-            frame.setState(Frame.NORMAL);
-          }
-        }
-      });
-    }
 
     try {
       if (SystemInfo.isMacOSLion) {

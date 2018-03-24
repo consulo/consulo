@@ -234,6 +234,6 @@ public class NetUtils {
   }
 
   public static boolean isSniEnabled() {
-    return SystemInfo.isJavaVersionAtLeast("1.7") && SystemProperties.getBooleanProperty("jsse.enableSNIExtension", true);
+    return SystemProperties.getBooleanProperty("jsse.enableSNIExtension", true);
   }
 }

@@ -240,7 +240,7 @@ public class MacMessagesImpl extends MacMessages {
       }
       registerObjcClassPair(delegateClass);
 
-      if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+      if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
 
         ID awtWindow = getObjcClass("AWTWindow");
 

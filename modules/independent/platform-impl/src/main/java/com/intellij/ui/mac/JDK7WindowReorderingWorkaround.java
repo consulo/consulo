@@ -44,7 +44,7 @@ public class JDK7WindowReorderingWorkaround {
   };
 
   static {
-    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+    if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
       ID awtWindow = Foundation.getObjcClass("AWTWindow");
 
       Pointer windowWillEnterFullScreenMethod = Foundation.createSelector("windowDidBecomeMain:");
@@ -57,13 +57,13 @@ public class JDK7WindowReorderingWorkaround {
   }
 
   static void disableReordering() {
-    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+    if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
       requestorCount.incrementAndGet();
     }
   }
 
   static void enableReordering () {
-    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+    if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
       requestorCount.decrementAndGet();
     }
   }

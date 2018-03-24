@@ -101,7 +101,7 @@ public class SheetMessage {
     myParent.addComponentListener(myPositionListener);
     myWindow.setFocusable(true);
     myWindow.setFocusableWindowState(true);
-    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+    if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
       myWindow.setSize(myController.SHEET_NC_WIDTH, 0);
 
       setWindowOpacity(0.0f);

@@ -39,7 +39,7 @@ public class FileAttributesNio2ReadingTest extends FileAttributesReadingTest {
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    assumeTrue(SystemInfo.isJavaVersionAtLeast("1.7"));
+    assumeTrue(SystemInfo.isJavaVersionAtLeast(7, 0, 0));
 
     System.setProperty(FORCE_USE_NIO_2_KEY, "true");
     FileSystemUtil.resetMediator();

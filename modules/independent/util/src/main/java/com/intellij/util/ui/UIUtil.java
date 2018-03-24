@@ -568,12 +568,7 @@ public class UIUtil {
   }
 
   public static boolean isRetina(Graphics2D graphics) {
-    if (SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast("1.7")) {
-      return DetectRetinaKit.isMacRetina(graphics);
-    }
-    else {
-      return isRetina();
-    }
+    return SystemInfo.isMac ? DetectRetinaKit.isMacRetina(graphics) : isRetina();
   }
 
   public static boolean isRetina() {
@@ -592,27 +587,17 @@ public class UIUtil {
         if (ourRetina.isNull()) {
           ourRetina.set(false); // in case HiDPIScaledImage.drawIntoImage is not called for some reason
 
-          if (SystemInfo.isJavaVersionAtLeast("1.6.0_33") && SystemInfo.isAppleJvm) {
-            if (!"false".equals(System.getProperty("ide.mac.retina"))) {
-              ourRetina.set(IsRetina.isRetina());
-              return ourRetina.get();
+          try {
+            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            final GraphicsDevice device = env.getDefaultScreenDevice();
+            Integer scale = ReflectionUtil.getField(device.getClass(), device, int.class, "scale");
+            if (scale != null && scale.intValue() == 2) {
+              ourRetina.set(true);
+              return true;
             }
           }
-          else if (SystemInfo.isJavaVersionAtLeast("1.7.0_40") /*&& !SystemInfo.isOracleJvm*/) {
-            try {
-              GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-              final GraphicsDevice device = env.getDefaultScreenDevice();
-              Integer scale = ReflectionUtil.getField(device.getClass(), device, int.class, "scale");
-              if (scale != null && scale.intValue() == 2) {
-                ourRetina.set(true);
-                return true;
-              }
-            }
-            catch (AWTError ignore) {
-            }
-            catch (Exception ignore) {
-            }
-          }
+          catch (AWTError ignore) { }
+          catch (Exception ignore) { }
           ourRetina.set(false);
         }
 
@@ -3415,21 +3400,13 @@ public class UIUtil {
   }
 
   public static void setAutoRequestFocus(final Window onWindow, final boolean set) {
-    if (SystemInfo.isMac) return;
-    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+    if (!SystemInfo.isMac) {
       try {
-        Method setAutoRequestFocusMethod = onWindow.getClass().getMethod("setAutoRequestFocus", new Class[]{boolean.class});
-        setAutoRequestFocusMethod.invoke(onWindow, set);
+        onWindow.getClass().getMethod("setAutoRequestFocus", boolean.class).invoke(onWindow, set);
       }
-      catch (NoSuchMethodException e) {
-        LOG.debug(e);
-      }
-      catch (InvocationTargetException e) {
-        LOG.debug(e);
-      }
-      catch (IllegalAccessException e) {
-        LOG.debug(e);
-      }
+      catch (NoSuchMethodException e) { LOG.debug(e); }
+      catch (InvocationTargetException e) { LOG.debug(e); }
+      catch (IllegalAccessException e) { LOG.debug(e); }
     }
   }
 
