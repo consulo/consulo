@@ -57,7 +57,7 @@ public class JobUtilTest extends MockApplicationTestCase {
     });
     assertTrue(b);
     long elapsed = System.currentTimeMillis() - start;
-    int expected = 2 * (9950 + 50 * 1000) / JobSchedulerImpl.CORES_COUNT;
+    int expected = 2 * (9950 + 50 * 1000) / JobSchedulerImpl.getCPUCoresCount();
     String message = "Elapsed: " + elapsed + "; expected: " + expected;
     System.out.println(message);
     assertTrue(message, elapsed < expected);
@@ -166,7 +166,7 @@ public class JobUtilTest extends MockApplicationTestCase {
       @Override
       public boolean process(Object o) {
         try {
-          if (objects.size() <= 1 || JobSchedulerImpl.CORES_COUNT <= 2) {
+          if (objects.size() <= 1 || JobSchedulerImpl.getCPUCoresCount() <= 2) {
             assertTrue(ApplicationManager.getApplication().isDispatchThread());
           }
           else {

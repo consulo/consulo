@@ -23,8 +23,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,9 +47,9 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   private final boolean runInReadAction;
   private final boolean failFastOnAcquireReadAction;
   private final ProgressIndicator progressIndicator;
-  @Nonnull
+  @NotNull
   private final List<T> array;
-  @Nonnull
+  @NotNull
   private final Processor<? super T> processor;
   private final int lo;
   private final int hi;
@@ -71,12 +71,12 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   ApplierCompleter(ApplierCompleter<T> parent,
                    boolean runInReadAction,
                    boolean failFastOnAcquireReadAction,
-                   @Nonnull ProgressIndicator progressIndicator,
-                   @Nonnull List<T> array,
-                   @Nonnull Processor<? super T> processor,
+                   @NotNull ProgressIndicator progressIndicator,
+                   @NotNull List<T> array,
+                   @NotNull Processor<? super T> processor,
                    int lo,
                    int hi,
-                   @Nonnull Collection<ApplierCompleter<T>> failedSubTasks,
+                   @NotNull Collection<ApplierCompleter<T>> failedSubTasks,
                    ApplierCompleter<T> next) {
     super(parent);
     this.runInReadAction = runInReadAction;
@@ -93,14 +93,14 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   @Override
   public void compute() {
     if (failFastOnAcquireReadAction) {
-      ((ApplicationImpl)ApplicationManager.getApplication()).executeByImpatientReader(()-> wrapInReadActionAndIndicator(this::execAndForkSubTasks));
+      ((ApplicationImpl)ApplicationManager.getApplication()).executeByImpatientReader(() -> wrapInReadActionAndIndicator(this::execAndForkSubTasks));
     }
     else {
       wrapInReadActionAndIndicator(this::execAndForkSubTasks);
     }
   }
 
-  private void wrapInReadActionAndIndicator(@Nonnull final Runnable process) {
+  private void wrapInReadActionAndIndicator(@NotNull final Runnable process) {
     Runnable toRun = runInReadAction ? () -> {
       if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(process)) {
         failedSubTasks.add(this);
@@ -117,7 +117,9 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     }
   }
 
-  static class ComputationAbortedException extends RuntimeException {}
+  static class ComputationAbortedException extends RuntimeException {
+  }
+
   // executes tasks one by one and forks right halves if it takes too much time
   // returns the linked list of forked halves - they all need to be joined; null means all tasks have been executed, nothing was forked
   @Nullable
@@ -129,13 +131,13 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
 
     try {
       for (int i = lo; i < hi; ++i) {
-        progressIndicator.checkCanceled();
+        ProgressManager.checkCanceled();
         if (!processor.process(array.get(i))) {
           throw new ComputationAbortedException();
         }
         long finish = System.currentTimeMillis();
         long elapsed = finish - start;
-        if (elapsed > 5 && hi - i >= 2 && getSurplusQueuedTaskCount() <= JobSchedulerImpl.CORES_COUNT) {
+        if (elapsed > 5 && hi - i >= 2 && getSurplusQueuedTaskCount() <= JobSchedulerImpl.getJobPoolParallelism()) {
           int mid = i + hi >>> 1;
           right = new ApplierCompleter<>(this, runInReadAction, failFastOnAcquireReadAction, progressIndicator, array, processor, mid, hi, failedSubTasks, right);
           //children.add(right);
@@ -186,7 +188,8 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
       do {
         oldThrowable = a.throwable;
         newThrowable = moreImportant(oldThrowable, throwable);
-      } while (oldThrowable != newThrowable && !throwableUpdater.compareAndSet(a, oldThrowable, newThrowable));
+      }
+      while (oldThrowable != newThrowable && !throwableUpdater.compareAndSet(a, oldThrowable, newThrowable));
       throwable = newThrowable;
       if (a.getPendingCount() == 0) {
         // currently avoid using onExceptionalCompletion since it leaks exceptions via ForkJoinTask.exceptionTable
@@ -218,6 +221,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     ApplierCompleter<T> right = this;
     Throwable result = throwable;
     while (right != null) {
+      ProgressManager.checkCanceled();
       if (right.tryUnfork()) {
         right.execAndForkSubTasks();
         result = moreImportant(result, right.throwable);
@@ -231,21 +235,22 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     final boolean[] result = {true};
     // these tasks could not be executed in the other thread; do them here
     for (final ApplierCompleter<T> task : failedSubTasks) {
-      ApplicationManager.getApplication().runReadAction(() ->
-                                                                task.wrapInReadActionAndIndicator(() -> {
-                                                                  for (int i = task.lo; i < task.hi; ++i) {
-                                                                    if (!task.processor.process(task.array.get(i))) {
-                                                                      result[0] = false;
-                                                                      break;
-                                                                    }
-                                                                  }
-                                                                }));
+      ProgressManager.checkCanceled();
+      ApplicationManager.getApplication().runReadAction(() -> task.wrapInReadActionAndIndicator(() -> {
+        for (int i = task.lo; i < task.hi; ++i) {
+          ProgressManager.checkCanceled();
+          if (!task.processor.process(task.array.get(i))) {
+            result[0] = false;
+            break;
+          }
+        }
+      }));
     }
     return result[0];
   }
 
   @Override
   public String toString() {
-    return "("+lo+"-"+hi+")"+(getCompleter() == null ? "" : " parent: "+getCompleter());
+    return "(" + lo + "-" + hi + ")" + (getCompleter() == null ? "" : " parent: " + getCompleter());
   }
 }

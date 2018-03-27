@@ -65,13 +65,6 @@ public abstract class JobLauncher {
                                                               boolean failFastOnAcquireReadAction,
                                                               @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException;
 
-  @Nonnull
-  @Deprecated // use invokeConcurrentlyUnderProgress() instead
-  public abstract <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@Nonnull List<T> things,
-                                                                                ProgressIndicator progress,
-                                                                                boolean failFastOnAcquireReadAction,
-                                                                                @Nonnull Processor<? super T> thingProcessor);
-
   /**
    * NEVER EVER submit runnable which can lock itself for indeterminate amount of time.
    * This will cause deadlock since this thread pool is an easily exhaustible resource.

@@ -18,6 +18,7 @@ package com.intellij.concurrency;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -40,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author cdr
  */
 public class JobLauncherImpl extends JobLauncher {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.concurrency.JobLauncherImpl");
   static final int CORES_FORK_THRESHOLD = 1;
 
   @Override
@@ -58,8 +60,7 @@ public class JobLauncherImpl extends JobLauncher {
     HeavyProcessLatch.INSTANCE.stopThreadPrioritizing();
 
     List<ApplierCompleter<T>> failedSubTasks = Collections.synchronizedList(new ArrayList<>());
-    ApplierCompleter<T> applier =
-            new ApplierCompleter<>(null, runInReadAction, failFastOnAcquireReadAction, wrapper, things, thingProcessor, 0, things.size(), failedSubTasks, null);
+    ApplierCompleter<T> applier = new ApplierCompleter<>(null, runInReadAction, failFastOnAcquireReadAction, wrapper, things, thingProcessor, 0, things.size(), failedSubTasks, null);
     try {
       ForkJoinPool.commonPool().invoke(applier);
       if (applier.throwable != null) throw applier.throwable;
@@ -73,6 +74,9 @@ public class JobLauncherImpl extends JobLauncher {
       throw e;
     }
     catch (ProcessCanceledException e) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(e);
+      }
       // task1.processor returns false and the task cancels the indicator
       // then task2 calls checkCancel() and get here
       return false;
@@ -100,8 +104,9 @@ public class JobLauncherImpl extends JobLauncher {
     if (things.isEmpty()) return true;
 
     if (things.size() <= 1 ||
-        JobSchedulerImpl.CORES_COUNT <= CORES_FORK_THRESHOLD ||
-        runInReadAction && ApplicationManager.getApplication().isWriteAccessAllowed()) {
+        JobSchedulerImpl.getJobPoolParallelism() <= CORES_FORK_THRESHOLD ||
+        runInReadAction && ApplicationManager.getApplication().isWriteAccessAllowed()
+            ) {
       final AtomicBoolean result = new AtomicBoolean(true);
       Runnable runnable = () -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
         //noinspection ForLoopReplaceableByForEach
@@ -114,7 +119,7 @@ public class JobLauncherImpl extends JobLauncher {
         }
       }, progress);
       if (runInReadAction) {
-        if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(runnable)) return false;
+        ApplicationManagerEx.getApplicationEx().runReadAction(runnable);
       }
       else {
         runnable.run();
@@ -128,15 +133,6 @@ public class JobLauncherImpl extends JobLauncher {
 
   @Nonnull
   @Override
-  public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@Nonnull List<T> things,
-                                                                       ProgressIndicator progress,
-                                                                       boolean failFastOnAcquireReadAction,
-                                                                       @Nonnull Processor<? super T> thingProcessor) {
-    return AsyncUtil.wrapBoolean(invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor));
-  }
-
-  @Nonnull
-  @Override
   public Job<Void> submitToJobThread(@Nonnull final Runnable action, @Nullable Consumer<Future> onDoneCallback) {
     VoidForkJoinTask task = new VoidForkJoinTask(action, onDoneCallback);
     task.submit();
@@ -146,12 +142,7 @@ public class JobLauncherImpl extends JobLauncher {
   private static class VoidForkJoinTask implements Job<Void> {
     private final Runnable myAction;
     private final Consumer<Future> myOnDoneCallback;
-
-    private enum Status {
-      STARTED,
-      EXECUTED
-    } // null=not yet executed, STARTED=started execution, EXECUTED=finished
-
+    private enum Status { STARTED, EXECUTED } // null=not yet executed, STARTED=started execution, EXECUTED=finished
     private volatile Status myStatus;
     private final ForkJoinTask<Void> myForkJoinTask = new ForkJoinTask<Void>() {
       @Override
@@ -267,7 +258,6 @@ public class JobLauncherImpl extends JobLauncher {
    * Processing happens concurrently maintaining {@code JobSchedulerImpl.CORES_COUNT} parallelism.
    * Stop when {@code tombStone} element is occurred.
    * If was unable to process some element, add it back to the {@code failedToProcess} queue.
-   *
    * @return true if all elements processed successfully, false if at least one processor returned false or exception occurred
    */
   public <T> boolean processQueue(@Nonnull final BlockingQueue<T> things,
@@ -288,7 +278,7 @@ public class JobLauncherImpl extends JobLauncher {
         ProgressManager.getInstance().executeProcessUnderProgress(() -> {
           try {
             while (true) {
-              progress.checkCanceled();
+              ProgressManager.checkCanceled();
               T element = failedToProcess.poll();
               if (element == null) element = things.take();
 
@@ -318,10 +308,10 @@ public class JobLauncherImpl extends JobLauncher {
 
       @Override
       public String toString() {
-        return super.toString() + " seq=" + mySeq;
+        return super.toString() + " seq="+mySeq;
       }
     }
-
+    progress.checkCanceled(); // do not start up expensive threads if there's no need to
     boolean isSmallEnough = things.contains(tombStone);
     if (isSmallEnough) {
       try {
@@ -337,7 +327,7 @@ public class JobLauncherImpl extends JobLauncher {
     }
 
     List<ForkJoinTask<Boolean>> tasks = new ArrayList<>();
-    for (int i = 0; i < JobSchedulerImpl.CORES_COUNT; i++) {
+    for (int i = 0; i < JobSchedulerImpl.getJobPoolParallelism(); i++) {
       tasks.add(ForkJoinPool.commonPool().submit(new MyTask(i)));
     }
 
