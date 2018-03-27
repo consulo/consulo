@@ -16,15 +16,9 @@
 package com.intellij.core;
 
 import com.intellij.codeInsight.folding.CodeFoldingSettings;
-import com.intellij.concurrency.AsyncFuture;
-import com.intellij.concurrency.AsyncUtil;
 import com.intellij.concurrency.Job;
 import com.intellij.concurrency.JobLauncher;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiBuilderFactory;
+import com.intellij.lang.*;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import com.intellij.mock.MockApplication;
 import com.intellij.mock.MockApplicationEx;
@@ -75,9 +69,9 @@ import consulo.psi.tree.ASTLeafFactory;
 import consulo.psi.tree.impl.DefaultASTCompositeFactory;
 import consulo.psi.tree.impl.DefaultASTLazyFactory;
 import consulo.psi.tree.impl.DefaultASTLeafFactory;
-import javax.annotation.Nonnull;
 import org.picocontainer.MutablePicoContainer;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -167,15 +161,6 @@ public class CoreApplicationEnvironment {
             return false;
         }
         return true;
-      }
-
-      @Nonnull
-      @Override
-      public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@Nonnull List<T> things,
-                                                                           ProgressIndicator progress,
-                                                                           boolean failFastOnAcquireReadAction,
-                                                                           @Nonnull Processor<? super T> thingProcessor) {
-        return AsyncUtil.wrapBoolean(invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor));
       }
 
       @Nonnull
