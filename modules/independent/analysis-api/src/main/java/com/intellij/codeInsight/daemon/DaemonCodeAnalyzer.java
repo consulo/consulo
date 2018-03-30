@@ -27,7 +27,8 @@ import javax.annotation.Nonnull;
  * Manages the background highlighting and auto-import for files displayed in editors.
  */
 public abstract class DaemonCodeAnalyzer {
-  public static DaemonCodeAnalyzer getInstance(Project project) {
+  @Nonnull
+  public static DaemonCodeAnalyzer getInstance(@Nonnull Project project) {
     return project.getComponent(DaemonCodeAnalyzer.class);
   }
 
