@@ -23,8 +23,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,9 +47,9 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   private final boolean runInReadAction;
   private final boolean failFastOnAcquireReadAction;
   private final ProgressIndicator progressIndicator;
-  @NotNull
+  @Nonnull
   private final List<T> array;
-  @NotNull
+  @Nonnull
   private final Processor<? super T> processor;
   private final int lo;
   private final int hi;
@@ -71,12 +71,12 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   ApplierCompleter(ApplierCompleter<T> parent,
                    boolean runInReadAction,
                    boolean failFastOnAcquireReadAction,
-                   @NotNull ProgressIndicator progressIndicator,
-                   @NotNull List<T> array,
-                   @NotNull Processor<? super T> processor,
+                   @Nonnull ProgressIndicator progressIndicator,
+                   @Nonnull List<T> array,
+                   @Nonnull Processor<? super T> processor,
                    int lo,
                    int hi,
-                   @NotNull Collection<ApplierCompleter<T>> failedSubTasks,
+                   @Nonnull Collection<ApplierCompleter<T>> failedSubTasks,
                    ApplierCompleter<T> next) {
     super(parent);
     this.runInReadAction = runInReadAction;
@@ -100,7 +100,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     }
   }
 
-  private void wrapInReadActionAndIndicator(@NotNull final Runnable process) {
+  private void wrapInReadActionAndIndicator(@Nonnull final Runnable process) {
     Runnable toRun = runInReadAction ? () -> {
       if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(process)) {
         failedSubTasks.add(this);
