@@ -368,10 +368,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     ActionToolbarImpl.updateAllToolbarsImmediately();
   }
 
-  public void setLookAndFeelAfterRestart(UIManager.LookAndFeelInfo lookAndFeelInfo) {
-    myCurrentLaf = lookAndFeelInfo;
-  }
-
   @Nullable
   private static Icon getAquaMenuDisabledIcon() {
     final Icon arrowIcon = (Icon)UIManager.get("Menu.arrowIcon");
