@@ -680,11 +680,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
             boolean isDarcula = ui instanceof DarculaButtonUI && UIUtil.isUnderDarcula();
             if (isDarcula) {
               ui = new DarculaButtonUI() {
+                @Nonnull
                 @Override
                 protected Color getButtonColor1() {
                   return new ColorUIResource(0x464b4c);
                 }
 
+                @Nonnull
                 @Override
                 protected Color getButtonColor2() {
                   return new ColorUIResource(0x383c3d);
