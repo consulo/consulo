@@ -45,10 +45,10 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -59,15 +59,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.DocumentImpl");
 
-  private final LockFreeCOWSortedArray<DocumentListener> myDocumentListeners =
-          new LockFreeCOWSortedArray<>(PrioritizedDocumentListener.COMPARATOR, DocumentListener.ARRAY_FACTORY);
+  private final LockFreeCOWSortedArray<DocumentListener> myDocumentListeners = new LockFreeCOWSortedArray<>(PrioritizedDocumentListener.COMPARATOR, DocumentListener.ARRAY_FACTORY);
   private final List<DocumentBulkUpdateListener> myBulkDocumentInternalListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final RangeMarkerTree<RangeMarkerEx> myRangeMarkers = new RangeMarkerTree<>(this);
   private final RangeMarkerTree<RangeMarkerEx> myPersistentRangeMarkers = new RangeMarkerTree<>(this);
   private final List<RangeMarker> myGuardedBlocks = new ArrayList<>();
   private ReadonlyFragmentModificationHandler myReadonlyFragmentModificationHandler;
 
-  @SuppressWarnings("RedundantStringConstructorCall") private final Object myLineSetLock = new String("line set lock");
+  @SuppressWarnings("RedundantStringConstructorCall")
+  private final Object myLineSetLock = new String("line set lock");
   private volatile LineSet myLineSet;
   private volatile ImmutableCharSequence myText;
   private volatile SoftReference<String> myTextString;
@@ -192,10 +192,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   /**
    * @return true if stripping was completed successfully, false if the document prevented stripping by e.g. caret(s) being in the way
    */
-  boolean stripTrailingSpaces(@Nullable final Project project,
-                              boolean inChangedLinesOnly,
-                              boolean skipCaretLines,
-                              @Nonnull int[] caretOffsets) {
+  boolean stripTrailingSpaces(@Nullable final Project project, boolean inChangedLinesOnly, boolean skipCaretLines, @Nonnull int[] caretOffsets) {
     if (!isStripTrailingSpacesEnabled) {
       return true;
     }
@@ -294,11 +291,11 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   private static int getMaxSpacesToLeave(int line, @Nonnull List<StripTrailingSpacesFilter> filters) {
-    for (StripTrailingSpacesFilter filter :  filters) {
+    for (StripTrailingSpacesFilter filter : filters) {
       if (filter instanceof SmartStripTrailingSpacesFilter) {
         return ((SmartStripTrailingSpacesFilter)filter).getTrailingSpacesToLeave(line);
       }
-      else  if (!filter.isStripSpacesAllowedForLine(line)) {
+      else if (!filter.isStripSpacesAllowedForLine(line)) {
         return -1;
       }
     }
@@ -329,18 +326,14 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   private RangeMarkerTree<RangeMarkerEx> treeFor(@Nonnull RangeMarkerEx rangeMarker) {
     return rangeMarker instanceof PersistentRangeMarker ? myPersistentRangeMarkers : myRangeMarkers;
   }
+
   @Override
   public boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker) {
     return treeFor(rangeMarker).removeInterval(rangeMarker);
   }
 
   @Override
-  public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
-                                  int start,
-                                  int end,
-                                  boolean greedyToLeft,
-                                  boolean greedyToRight,
-                                  int layer) {
+  public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
     treeFor(rangeMarker).addInterval(rangeMarker, start, end, greedyToLeft, greedyToRight, layer);
   }
 
@@ -351,7 +344,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
   @TestOnly
   int getRangeMarkersNodeSize() {
-    return myRangeMarkers.nodeSize()+myPersistentRangeMarkers.nodeSize();
+    return myRangeMarkers.nodeSize() + myPersistentRangeMarkers.nodeSize();
   }
 
   @Override
@@ -388,8 +381,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   @Override
   public RangeMarker getRangeGuard(int start, int end) {
     for (RangeMarker block : myGuardedBlocks) {
-      if (rangesIntersect(start, end, true, true,
-                          block.getStartOffset(), block.getEndOffset(), block.isGreedyToLeft(), block.isGreedyToRight())) {
+      if (rangesIntersect(start, end, true, true, block.getStartOffset(), block.getEndOffset(), block.isGreedyToLeft(), block.isGreedyToRight())) {
         return block;
       }
     }
@@ -412,8 +404,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     return start <= offset && offset < end;
   }
 
-  private static boolean rangesIntersect(int start0, int end0, boolean start0Inclusive, boolean end0Inclusive,
-                                         int start1, int end1, boolean start1Inclusive, boolean end1Inclusive) {
+  private static boolean rangesIntersect(int start0, int end0, boolean start0Inclusive, boolean end0Inclusive, int start1, int end1, boolean start1Inclusive, boolean end1Inclusive) {
     if (start0 > start1 || start0 == start1 && !start0Inclusive) {
       if (end1 == start0) return start0Inclusive && end1Inclusive;
       return end1 > start0;
@@ -434,9 +425,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     if (!(0 <= startOffset && startOffset <= endOffset && endOffset <= getTextLength())) {
       LOG.error("Incorrect offsets: startOffset=" + startOffset + ", endOffset=" + endOffset + ", text length=" + getTextLength());
     }
-    return surviveOnExternalChange
-           ? new PersistentRangeMarker(this, startOffset, endOffset, true)
-           : new RangeMarkerImpl(this, startOffset, endOffset, true);
+    return surviveOnExternalChange ? new PersistentRangeMarker(this, startOffset, endOffset, true) : new RangeMarkerImpl(this, startOffset, endOffset, true);
   }
 
   @Override
@@ -459,9 +448,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   public void insertString(int offset, @Nonnull CharSequence s) {
     if (offset < 0) throw new IndexOutOfBoundsException("Wrong offset: " + offset);
     if (offset > getTextLength()) {
-      throw new IndexOutOfBoundsException(
-              "Wrong offset: " + offset + "; documentLength: " + getTextLength() + "; " + s.subSequence(Math.max(0, s.length() - 20), s.length())
-      );
+      throw new IndexOutOfBoundsException("Wrong offset: " + offset + "; documentLength: " + getTextLength() + "; " + s.subSequence(Math.max(0, s.length() - 20), s.length()));
     }
     assertWriteAccess();
     assertValidSeparators(s);
@@ -509,7 +496,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     assertBounds(srcStart, srcEnd);
     if (dstOffset == srcEnd) return;
     ProperTextRange srcRange = new ProperTextRange(srcStart, srcEnd);
-    assert !srcRange.containsOffset(dstOffset) : "Can't perform text move from range [" +srcStart+ "; " + srcEnd+ ") to offset "+dstOffset;
+    assert !srcRange.containsOffset(dstOffset) : "Can't perform text move from range [" + srcStart + "; " + srcEnd + ") to offset " + dstOffset;
 
     String replacement = getCharsSequence().subSequence(srcStart, srcEnd).toString();
 
@@ -552,17 +539,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     final int newStringLength = s.length();
     final CharSequence chars = myText;
     int newStartInString = 0;
-    while (newStartInString < newStringLength &&
-           startOffset < endOffset &&
-           s.charAt(newStartInString) == chars.charAt(startOffset)) {
+    while (newStartInString < newStringLength && startOffset < endOffset && s.charAt(newStartInString) == chars.charAt(startOffset)) {
       startOffset++;
       newStartInString++;
     }
 
     int newEndInString = newStringLength;
-    while (endOffset > startOffset &&
-           newEndInString > newStartInString &&
-           s.charAt(newEndInString - 1) == chars.charAt(endOffset - 1)) {
+    while (endOffset > startOffset && newEndInString > newStartInString && s.charAt(newEndInString - 1) == chars.charAt(endOffset - 1)) {
       newEndInString--;
       endOffset--;
     }
@@ -598,8 +581,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       throw new IndexOutOfBoundsException("Wrong endOffset: " + endOffset + "; documentLength: " + getTextLength());
     }
     if (endOffset < startOffset) {
-      throw new IllegalArgumentException(
-              "endOffset < startOffset: " + endOffset + " < " + startOffset + "; documentLength: " + getTextLength());
+      throw new IllegalArgumentException("endOffset < startOffset: " + endOffset + " < " + startOffset + "; documentLength: " + getTextLength());
     }
   }
 
@@ -636,12 +618,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
    *   </li>
    * </ol>
    * </pre>
-   * <p/>
+   * <p>
    * There is a possible case that {@code 'before change'} notification produces new change. We have a problem then - imagine
    * that initial change was {@code 'replace particular range at document end'} and {@code 'nested change'} was to
    * {@code 'remove text at document end'}. That means that when initial change will be actually performed, the document may be
    * not long enough to contain target range.
-   * <p/>
+   * <p>
    * Current method allows to check if document change is a {@code 'nested call'}.
    *
    * @throws IllegalStateException if this method is called during a {@code 'nested document modification'}
@@ -736,7 +718,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       FileDocumentManager manager = FileDocumentManager.getInstance();
       VirtualFile file = manager.getFile(this);
       if (file != null && !file.isValid()) {
-        LOG.error("File of this document has been deleted: "+file);
+        LOG.error("File of this document has been deleted: " + file);
       }
     }
     assertInsideCommand();
@@ -761,9 +743,9 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   private void assertInsideCommand() {
     if (!myAssertThreading) return;
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    if (!commandProcessor.isUndoTransparentActionInProgress() &&
-        commandProcessor.getCurrentCommand() == null) {
-      throw new IncorrectOperationException("Must not change document outside command or undo-transparent action. See com.intellij.openapi.command.WriteCommandAction or com.intellij.openapi.command.CommandProcessor");
+    if (!commandProcessor.isUndoTransparentActionInProgress() && !commandProcessor.hasCurrentCommand()) {
+      throw new IncorrectOperationException(
+              "Must not change document outside command or undo-transparent action. See com.intellij.openapi.command.WriteCommandAction or com.intellij.openapi.command.CommandProcessor");
     }
   }
 
@@ -771,12 +753,19 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     try {
       if (LOG.isDebugEnabled()) LOG.debug(event.toString());
 
-      assert event.getOldFragment().length() ==  event.getOldLength() : "event.getOldFragment().length() = " + event.getOldFragment().length()+"; event.getOldLength() = " + event.getOldLength();
-      assert event.getNewFragment().length() ==  event.getNewLength() : "event.getNewFragment().length() = " + event.getNewFragment().length()+"; event.getNewLength() = " + event.getNewLength();
-      assert prevText.length() + event.getNewLength() - event.getOldLength() == getTextLength() : "prevText.length() = " + prevText.length()+ "; event.getNewLength() = " + event.getNewLength()+ "; event.getOldLength() = " + event.getOldLength()+ "; getTextLength() = " + getTextLength();
+      assert event.getOldFragment().length() == event.getOldLength() : "event.getOldFragment().length() = " + event.getOldFragment().length() + "; event.getOldLength() = " + event.getOldLength();
+      assert event.getNewFragment().length() == event.getNewLength() : "event.getNewFragment().length() = " + event.getNewFragment().length() + "; event.getNewLength() = " + event.getNewLength();
+      assert prevText.length() + event.getNewLength() - event.getOldLength() == getTextLength() : "prevText.length() = " +
+                                                                                                  prevText.length() +
+                                                                                                  "; event.getNewLength() = " +
+                                                                                                  event.getNewLength() +
+                                                                                                  "; event.getOldLength() = " +
+                                                                                                  event.getOldLength() +
+                                                                                                  "; getTextLength() = " +
+                                                                                                  getTextLength();
 
       myLineSet = getLineSet().update(prevText, event.getOffset(), event.getOffset() + event.getOldLength(), event.getNewFragment(), event.isWholeTextReplaced());
-      assert getTextLength() == myLineSet.getLength() : "getTextLength() = " + getTextLength()+ "; myLineSet.getLength() = " + myLineSet.getLength();
+      assert getTextLength() == myLineSet.getLength() : "getTextLength() = " + getTextLength() + "; myLineSet.getLength() = " + myLineSet.getLength();
 
       myFrozen = null;
       setModificationStamp(newModificationStamp);
@@ -824,8 +813,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   @Nonnull
   @Override
   public String getText(@Nonnull final TextRange range) {
-    return ApplicationManager.getApplication().runReadAction(
-            (Computable<String>)() -> myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString());
+    return ApplicationManager.getApplication().runReadAction((Computable<String>)() -> myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString());
   }
 
   @Override
@@ -1039,8 +1027,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   private static class DocumentBulkUpdateListenerHolder {
-    private static final DocumentBulkUpdateListener ourBulkChangePublisher =
-            ApplicationManager.getApplication().getMessageBus().syncPublisher(DocumentBulkUpdateListener.TOPIC);
+    private static final DocumentBulkUpdateListener ourBulkChangePublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(DocumentBulkUpdateListener.TOPIC);
   }
 
   @Nonnull
@@ -1056,8 +1043,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   @Override
   public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
     TextRangeInterval interval = new TextRangeInterval(start, end);
-    MarkupIterator<RangeMarkerEx> iterator = IntervalTreeImpl
-            .mergingOverlappingIterator(myRangeMarkers, interval, myPersistentRangeMarkers, interval, RangeMarker.BY_START_OFFSET);
+    MarkupIterator<RangeMarkerEx> iterator = IntervalTreeImpl.mergingOverlappingIterator(myRangeMarkers, interval, myPersistentRangeMarkers, interval, RangeMarker.BY_START_OFFSET);
     try {
       return ContainerUtil.process(iterator, processor);
     }
@@ -1071,8 +1057,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     @NonNls StringBuilder result = new StringBuilder();
     result.append(", intervals:\n");
     for (int line = 0; line < getLineCount(); line++) {
-      result.append(line).append(": ").append(getLineStartOffset(line)).append("-")
-              .append(getLineEndOffset(line)).append(", ");
+      result.append(line).append(": ").append(getLineStartOffset(line)).append("-").append(getLineEndOffset(line)).append(", ");
     }
     if (result.length() > 0) {
       result.setLength(result.length() - 1);
@@ -1107,8 +1092,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     private final Attachment[] myAttachments;
 
     private UnexpectedBulkUpdateStateException(Throwable enteringTrace) {
-      myAttachments = enteringTrace == null ? Attachment.EMPTY_ARRAY
-                                            : new Attachment[] {new Attachment("enteringTrace.txt", enteringTrace)};
+      myAttachments = enteringTrace == null ? Attachment.EMPTY_ARRAY : new Attachment[]{new Attachment("enteringTrace.txt", enteringTrace)};
     }
 
     @Nonnull

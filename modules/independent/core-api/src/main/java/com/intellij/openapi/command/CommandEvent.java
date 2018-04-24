@@ -17,12 +17,15 @@ package com.intellij.openapi.command;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 
 import java.util.EventObject;
+import java.util.function.Supplier;
 
 public class CommandEvent extends EventObject {
-  private final Runnable myCommand;
+  private final Supplier<AsyncResult<Void>> myCommand;
   private final Project myProject;
   private final String myCommandName;
   private final Object myCommandGroupId;
@@ -30,12 +33,12 @@ public class CommandEvent extends EventObject {
   private final boolean myShouldRecordActionForActiveDocument;
   private final Document myDocument;
 
-  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Runnable command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
+  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Supplier<AsyncResult<Void>> command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
     this(processor, command, null, null, project, undoConfirmationPolicy);
   }
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Runnable command,
+                      @Nonnull Supplier<AsyncResult<Void>> command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
@@ -43,7 +46,7 @@ public class CommandEvent extends EventObject {
     this(processor, command, commandName, commandGroupId, project, undoConfirmationPolicy, true, null);
   }
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Runnable command,
+                      @Nonnull Supplier<AsyncResult<Void>> command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
@@ -66,7 +69,7 @@ public class CommandEvent extends EventObject {
   }
 
   @Nonnull
-  public Runnable getCommand() {
+  public Supplier<AsyncResult<Void>> getCommand() {
     return myCommand;
   }
 

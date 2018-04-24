@@ -353,7 +353,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         throw new IllegalStateException("Attempt to modify PSI for non-committed Document!");
       }
       CommandProcessor commandProcessor = CommandProcessor.getInstance();
-      if (!commandProcessor.isUndoTransparentActionInProgress() && commandProcessor.getCurrentCommand() == null) {
+      if (!commandProcessor.isUndoTransparentActionInProgress() && !commandProcessor.hasCurrentCommand()) {
         throw new IncorrectOperationException(
                 "Must not change PSI outside command or undo-transparent action. See com.intellij.openapi.command.WriteCommandAction or com.intellij.openapi.command.CommandProcessor");
       }

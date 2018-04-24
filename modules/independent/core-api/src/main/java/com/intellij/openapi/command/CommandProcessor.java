@@ -19,9 +19,15 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public abstract class CommandProcessor {
   @Nonnull
@@ -32,26 +38,13 @@ public abstract class CommandProcessor {
   /**
    * @deprecated use {@link #executeCommand(com.intellij.openapi.project.Project, java.lang.Runnable, java.lang.String, java.lang.Object)}
    */
-  public abstract void executeCommand(@Nonnull Runnable runnable,
-                                      @Nullable String name,
-                                      @Nullable Object groupId);
+  public abstract void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId);
 
-  public abstract void executeCommand(@Nullable Project project,
-                                      @Nonnull Runnable runnable,
-                                      @Nullable String name,
-                                      @Nullable Object groupId);
+  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId);
 
-  public abstract void executeCommand(@Nullable Project project,
-                                      @Nonnull Runnable runnable,
-                                      @Nullable String name,
-                                      @Nullable Object groupId,
-                                      @Nullable Document document);
+  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document);
 
-  public abstract void executeCommand(@Nullable Project project,
-                                      @Nonnull Runnable runnable,
-                                      @Nullable String name,
-                                      @Nullable Object groupId,
-                                      @Nonnull UndoConfirmationPolicy confirmationPolicy);
+  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy);
 
   public abstract void executeCommand(@Nullable Project project,
                                       @Nonnull Runnable command,
@@ -72,12 +65,52 @@ public abstract class CommandProcessor {
                                       @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                       boolean shouldRecordCommandForActiveDocument);
 
+  @RequiredUIAccess
+  public abstract void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId);
+
+  @RequiredUIAccess
+  public abstract void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document);
+
+  @RequiredUIAccess
+  public abstract void executeCommandAsync(@Nullable Project project,
+                                           @Nonnull Supplier<AsyncResult<Void>> runnable,
+                                           @Nullable String name,
+                                           @Nullable Object groupId,
+                                           @Nonnull UndoConfirmationPolicy confirmationPolicy);
+
+  @RequiredUIAccess
+  public abstract void executeCommandAsync(@Nullable Project project,
+                                           @Nonnull Supplier<AsyncResult<Void>> command,
+                                           @Nullable String name,
+                                           @Nullable Object groupId,
+                                           @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                           @Nullable Document document);
+
+  /**
+   * @param shouldRecordCommandForActiveDocument false if the action is not supposed to be recorded into the currently open document's history.
+   *                                             Examples of such actions: Create New File, Change Project Settings etc.
+   *                                             Default is true.
+   */
+  @RequiredUIAccess
+  public abstract void executeCommandAsync(@Nullable Project project,
+                                           @Nonnull Supplier<AsyncResult<Void>> command,
+                                           @Nullable String name,
+                                           @Nullable Object groupId,
+                                           @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                           boolean shouldRecordCommandForActiveDocument);
+
   public abstract void setCurrentCommandName(@Nullable String name);
 
   public abstract void setCurrentCommandGroupId(@Nullable Object groupId);
 
   @Nullable
-  public abstract Runnable getCurrentCommand();
+  @Deprecated
+  @DeprecationInfo("Use #hasCurrentCommand()")
+  public final Runnable getCurrentCommand() {
+    return hasCurrentCommand() ? EmptyRunnable.getInstance() : null;
+  }
+
+  public abstract boolean hasCurrentCommand();
 
   @Nullable
   public abstract String getCurrentCommandName();

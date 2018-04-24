@@ -6,10 +6,13 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class MockCommandProcessor extends CommandProcessor {
   @Override
@@ -38,6 +41,50 @@ public class MockCommandProcessor extends CommandProcessor {
                              boolean shouldRecordCommandForActiveDocument) {
   }
 
+  @RequiredDispatchThread
+  @Override
+  public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId) {
+
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document) {
+
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void executeCommandAsync(@Nullable Project project,
+                                  @Nonnull Supplier<AsyncResult<Void>> runnable,
+                                  @Nullable String name,
+                                  @Nullable Object groupId,
+                                  @Nonnull UndoConfirmationPolicy confirmationPolicy) {
+
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void executeCommandAsync(@Nullable Project project,
+                                  @Nonnull Supplier<AsyncResult<Void>> command,
+                                  @Nullable String name,
+                                  @Nullable Object groupId,
+                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                  @Nullable Document document) {
+
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void executeCommandAsync(@Nullable Project project,
+                                  @Nonnull Supplier<AsyncResult<Void>> command,
+                                  @Nullable String name,
+                                  @Nullable Object groupId,
+                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                  boolean shouldRecordCommandForActiveDocument) {
+
+  }
+
   @Override
   public void setCurrentCommandName(String name) {
   }
@@ -47,8 +94,8 @@ public class MockCommandProcessor extends CommandProcessor {
   }
 
   @Override
-  public Runnable getCurrentCommand() {
-    return null;
+  public boolean hasCurrentCommand() {
+    return false;
   }
 
   @Override
