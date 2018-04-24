@@ -3,15 +3,14 @@ package com.intellij.compiler.artifacts;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.packaging.impl.elements.DirectoryPackagingElement;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,19 @@ import static junit.framework.Assert.assertNotNull;
  * @author nik
  */
 public class ArtifactsTestUtil {
+  @Nonnull
+  public static Artifact addArtifact(Project project, String name, ArtifactType type, CompositePackagingElement<?> root) {
+    return WriteAction.compute(() -> {
+      final ModifiableArtifactModel model = ArtifactManager.getInstance(project).createModifiableModel();
+      final ModifiableArtifact artifact = model.addArtifact(name, type);
+      if (root != null) {
+        artifact.setRootElement(root);
+      }
+      model.commit();
+      return artifact;
+    });
+  }
+
   public static String printToString(PackagingElement element, int level) {
     StringBuilder builder = new StringBuilder(StringUtil.repeatSymbol(' ', level));
     if (element instanceof ArchivePackagingElement) {

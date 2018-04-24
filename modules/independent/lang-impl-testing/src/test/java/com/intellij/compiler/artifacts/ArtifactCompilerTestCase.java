@@ -45,7 +45,7 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
   }
 
   protected Artifact addArtifact(final String name, final ArtifactType type, final CompositePackagingElement<?> root) {
-    return getArtifactManager().addArtifact(name, type, root);
+    return ArtifactsTestUtil.addArtifact(myProject, name, type, root);
   }
 
   protected Library addProjectLibrary(final @Nullable Module module, final String name, final VirtualFile... jars) {

@@ -18,13 +18,11 @@ package com.intellij.packaging.artifacts;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
-import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -38,21 +36,13 @@ public abstract class ArtifactManager implements ArtifactModel {
   }
 
   public static final Topic<ArtifactListener> TOPIC = Topic.create("artifacts changes", ArtifactListener.class);
-  public static final Comparator<Artifact> ARTIFACT_COMPARATOR = new Comparator<Artifact>() {
-    @Override
-    public int compare(Artifact o1, Artifact o2) {
-      return o1.getName().compareToIgnoreCase(o2.getName());
-    }
-  };
+  public static final Comparator<Artifact> ARTIFACT_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 
   public abstract Artifact[] getSortedArtifacts();
 
   public abstract ModifiableArtifactModel createModifiableModel();
 
   public abstract PackagingElementResolvingContext getResolvingContext();
-
-  @Nonnull
-  public abstract Artifact addArtifact(@NonNls @Nonnull String name, @Nonnull ArtifactType type, @javax.annotation.Nullable CompositePackagingElement<?> root);
 
   public abstract void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath,
                                               @Nonnull Collection<? extends PackagingElement<?>> elements);

@@ -38,6 +38,7 @@ import com.intellij.packaging.impl.artifacts.state.ArtifactState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -312,12 +313,14 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     return myModel.myArtifactsList;
   }
 
+  @RequiredWriteAction
   public void commit(ArtifactModelImpl artifactModel) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     doCommit(artifactModel);
   }
 
+  @RequiredWriteAction
   private void doCommit(ArtifactModelImpl artifactModel) {
     boolean hasChanges;
     LOG.assertTrue(!myInsideCommit, "Recursive commit");
@@ -374,20 +377,6 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
   public Project getProject() {
     return myProject;
-  }
-
-  @Override
-  @Nonnull
-  public Artifact addArtifact(@Nonnull final String name, @Nonnull final ArtifactType type, final CompositePackagingElement<?> root) {
-    return WriteAction.compute(() -> {
-      final ModifiableArtifactModel model = createModifiableModel();
-      final ModifiableArtifact artifact = model.addArtifact(name, type);
-      if (root != null) {
-        artifact.setRootElement(root);
-      }
-      model.commit();
-      return artifact;
-    });
   }
 
   @Override

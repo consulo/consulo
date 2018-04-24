@@ -16,7 +16,10 @@
 package com.intellij.packaging.artifacts;
 
 import com.intellij.packaging.elements.CompositePackagingElement;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -34,16 +37,16 @@ public interface ModifiableArtifactModel extends ArtifactModel {
   @Nonnull
   ModifiableArtifact getOrCreateModifiableArtifact(@Nonnull Artifact artifact);
 
-  @javax.annotation.Nullable
+  @Nullable
   Artifact getModifiableCopy(Artifact artifact);
 
   void addListener(@Nonnull ArtifactListener listener);
 
   void removeListener(@Nonnull ArtifactListener listener);
 
-
   boolean isModified();
 
+  @RequiredWriteAction
   void commit();
 
   void dispose();

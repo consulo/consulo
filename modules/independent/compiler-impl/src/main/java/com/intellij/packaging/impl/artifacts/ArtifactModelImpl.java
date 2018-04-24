@@ -18,10 +18,12 @@ package com.intellij.packaging.impl.artifacts;
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.util.EventDispatcher;
+import consulo.annotations.RequiredWriteAction;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +50,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     });
   }
 
+  @Override
   protected List<? extends Artifact> getArtifactsList() {
     final List<ArtifactImpl> list = new ArrayList<ArtifactImpl>();
     for (ArtifactImpl artifact : myOriginalArtifacts) {
@@ -62,11 +65,13 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     return list;
   }
 
+  @Override
   @Nonnull
   public ModifiableArtifact addArtifact(@Nonnull final String name, @Nonnull ArtifactType artifactType) {
     return addArtifact(name, artifactType, artifactType.createRootElement(name));
   }
 
+  @Override
   @Nonnull
   public ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType, CompositePackagingElement<?> rootElement) {
     final String uniqueName = generateUniqueName(name);
@@ -92,14 +97,17 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     }
   }
 
+  @Override
   public void addListener(@Nonnull ArtifactListener listener) {
     myDispatcher.addListener(listener);
   }
 
+  @Override
   public void removeListener(@Nonnull ArtifactListener listener) {
     myDispatcher.addListener(listener);
   }
 
+  @Override
   public void removeArtifact(@Nonnull Artifact artifact) {
     final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     ArtifactImpl original = myModifiable2Original.remove(artifactImpl);
@@ -115,6 +123,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     myDispatcher.getMulticaster().artifactRemoved(original);
   }
 
+  @Override
   @Nonnull
   public ModifiableArtifact getOrCreateModifiableArtifact(@Nonnull Artifact artifact) {
     final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
@@ -133,12 +142,14 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     return modifiableCopy;
   }
 
+  @Override
   @Nonnull
   public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
     final ArtifactImpl original = myModifiable2Original.get(artifact);
     return original != null ? original : artifact;
   }
 
+  @Override
   @Nonnull
   public ArtifactImpl getArtifactByOriginal(@Nonnull Artifact artifact) {
     final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
@@ -146,14 +157,18 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     return copy != null ? copy : artifactImpl;
   }
 
+  @Override
   public boolean isModified() {
     return !myOriginalArtifacts.equals(myArtifactManager.getArtifactsList()) || !myArtifact2ModifiableCopy.isEmpty();
   }
 
+  @Override
+  @RequiredWriteAction
   public void commit() {
     myArtifactManager.commit(this);
   }
 
+  @Override
   public void dispose() {
     List<Artifact> artifacts = new ArrayList<Artifact>();
     for (ArtifactImpl artifact : myModifiable2Original.keySet()) {
@@ -164,7 +179,8 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     ((ArtifactPointerManagerImpl)ArtifactPointerUtil.getPointerManager(myArtifactManager.getProject())).unregisterPointers(artifacts);
   }
 
-  @javax.annotation.Nullable
+  @Override
+  @Nullable
   public ArtifactImpl getModifiableCopy(Artifact artifact) {
     //noinspection SuspiciousMethodCalls
     return myArtifact2ModifiableCopy.get(artifact);

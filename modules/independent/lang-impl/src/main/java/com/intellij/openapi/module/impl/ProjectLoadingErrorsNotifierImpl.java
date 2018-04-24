@@ -31,8 +31,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
 import java.util.Collections;
@@ -94,25 +94,20 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
       final String invalidElements = getInvalidElementsString(type, descriptions);
       final String errorText = ProjectBundle.message("error.message.configuration.cannot.load") + " " + invalidElements + " <a href=\"\">Details...</a>";
 
-      Notifications.Bus.notify(new Notification("Project Loading Error", "Error Loading Project", errorText, NotificationType.ERROR,
-                                                new NotificationListener() {
-                                                  @Override
-                                                  public void hyperlinkUpdate(@Nonnull Notification notification,
-                                                                              @Nonnull HyperlinkEvent event) {
-                                                    final List<ConfigurationErrorDescription> validDescriptions =
-                                                      ContainerUtil.findAll(descriptions, new Condition<ConfigurationErrorDescription>() {
-                                                        @Override
-                                                        public boolean value(ConfigurationErrorDescription errorDescription) {
-                                                          return errorDescription.isValid();
-                                                        }
-                                                      });
-                                                    RemoveInvalidElementsDialog
-                                                      .showDialog(myProject, CommonBundle.getErrorTitle(), type, invalidElements,
-                                                                  validDescriptions);
+      Notifications.Bus.notify(new Notification("Project Loading Error", "Error Loading Project", errorText, NotificationType.ERROR, new NotificationListener() {
+        @Override
+        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+          final List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, new Condition<ConfigurationErrorDescription>() {
+            @Override
+            public boolean value(ConfigurationErrorDescription errorDescription) {
+              return errorDescription.isValid();
+            }
+          });
+          RemoveInvalidElementsDialog.showDialog(myProject, CommonBundle.getErrorTitle(), type, invalidElements, validDescriptions);
 
-                                                    notification.expire();
-                                                  }
-                                                }), myProject);
+          notification.expire();
+        }
+      }), myProject);
     }
 
   }

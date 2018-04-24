@@ -70,7 +70,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
   }
 
   protected Artifact addArtifact(final String name, final ArtifactType type, final CompositePackagingElement<?> root) {
-    return getArtifactManager().addArtifact(name, type, root);
+    return ArtifactsTestUtil.addArtifact(myProject, name, type, root);
   }
 
   protected PackagingElementResolvingContext getContext() {
