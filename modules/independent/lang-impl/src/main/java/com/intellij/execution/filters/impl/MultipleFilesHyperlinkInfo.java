@@ -19,8 +19,6 @@ import com.intellij.execution.filters.FileHyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoBase;
 import com.intellij.execution.filters.OpenFileHyperlinkInfo;
 import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -33,9 +31,10 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +56,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
   public void navigate(@Nonnull final Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
     List<PsiFile> currentFiles = new ArrayList<PsiFile>();
 
-    AccessToken accessToken = ReadAction.start();
-    try {
+    AccessRule.read(() -> {
       for (VirtualFile file : myVirtualFiles) {
         if (!file.isValid()) continue;
 
@@ -72,10 +70,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
           currentFiles.add(psiFile);
         }
       }
-    }
-    finally {
-      accessToken.finish();
-    }
+    });
 
     if (currentFiles.isEmpty()) return;
 

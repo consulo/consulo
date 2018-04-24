@@ -35,6 +35,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
@@ -48,6 +49,7 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
+import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -152,7 +154,8 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   @Override
   public void pushAllPropertiesNow() {
     performPushTasks();
-    doPushAll(ReadAction.compute(() -> ModuleManager.getInstance(myProject).getModules()), myPushers);
+    ThrowableComputable<Module[], RuntimeException> action = () -> ModuleManager.getInstance(myProject).getModules();
+    doPushAll(AccessRule.read(action), myPushers);
   }
 
   @Nullable
@@ -246,7 +249,10 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
 
   @Override
   public void pushForProject(final FilePropertyPusher... pushers) {
-    queueTasks(Collections.singletonList(() -> doPushAll(ReadAction.compute(() -> ModuleManager.getInstance(myProject).getModules()), pushers)));
+    queueTasks(Collections.singletonList(() -> {
+      ThrowableComputable<Module[], RuntimeException> action = () -> ModuleManager.getInstance(myProject).getModules();
+      doPushAll(AccessRule.read(action), pushers);
+    }));
   }
 
   @Override
@@ -258,7 +264,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     List<Runnable> tasks = new ArrayList<>();
 
     for (final Module module : modules) {
-      Runnable iteration = ReadAction.compute(() -> {
+      ThrowableComputable<Runnable,RuntimeException> action = () -> {
         if (module.isDisposed()) return EmptyRunnable.INSTANCE;
         ProgressManager.checkCanceled();
 
@@ -272,7 +278,8 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
           applyPushersToFile(fileOrDir, pushers, moduleValues);
           return true;
         });
-      });
+      };
+      Runnable iteration = AccessRule.read(action);
       tasks.add(iteration);
     }
 

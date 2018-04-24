@@ -33,7 +33,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.AnSeparator;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -41,7 +40,10 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -123,7 +125,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
       final VirtualFile file1 = ((FileContent)contents.get(0)).getFile();
       final VirtualFile file2 = ((FileContent)contents.get(1)).getFile();
 
-      final JComponent notification = ReadAction.compute(() -> {
+      ThrowableComputable<JPanel,RuntimeException> action = () -> {
         if (!file1.isValid() || !file2.isValid()) {
           return DiffNotifications.createError();
         }
@@ -140,7 +142,8 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
           LOG.warn(e);
           return null;
         }
-      });
+      };
+      final JComponent notification = AccessRule.read(action);
 
       return applyNotification(notification);
     }

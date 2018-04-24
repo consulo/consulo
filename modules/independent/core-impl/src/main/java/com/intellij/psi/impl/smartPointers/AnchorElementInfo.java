@@ -16,17 +16,15 @@
 package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.lang.LanguageUtil;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.*;
 import com.intellij.psi.PsiAnchor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -90,7 +88,8 @@ class AnchorElementInfo extends SelfElementInfo {
         return packed1 == packed2;
       }
       if (packed1 != -1 || packed2 != -1) {
-        return ReadAction.compute(() -> Comparing.equal(restoreElement(), other.restoreElement()));
+        ThrowableComputable<Boolean,RuntimeException> action = () -> Comparing.equal(restoreElement(), other.restoreElement());
+        return AccessRule.read(action);
       }
     }
     return super.pointsToTheSameElementAs(other);

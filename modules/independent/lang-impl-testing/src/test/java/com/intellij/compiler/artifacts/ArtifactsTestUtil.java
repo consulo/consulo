@@ -1,6 +1,5 @@
 package com.intellij.compiler.artifacts;
 
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -77,26 +76,20 @@ public class ArtifactsTestUtil {
   }
 
   public static void setOutput(final Project project, final String artifactName, final String outputPath) {
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        final ModifiableArtifactModel model = ArtifactManager.getInstance(project).createModifiableModel();
-        model.getOrCreateModifiableArtifact(findArtifact(project, artifactName)).setOutputPath(outputPath);
-        model.commit();
-      }
-    }.execute();
+    WriteAction.run(() -> {
+      final ModifiableArtifactModel model = ArtifactManager.getInstance(project).createModifiableModel();
+      model.getOrCreateModifiableArtifact(findArtifact(project, artifactName)).setOutputPath(outputPath);
+      model.commit();
+    });
   }
 
   public static void addArtifactToLayout(final Project project, final Artifact parent, final Artifact toAdd) {
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        final ModifiableArtifactModel model = ArtifactManager.getInstance(project).createModifiableModel();
-        final PackagingElement<?> artifactElement = PackagingElementFactory.getInstance().createArtifactElement(toAdd, project);
-        model.getOrCreateModifiableArtifact(parent).getRootElement().addOrFindChild(artifactElement);
-        model.commit();
-      }
-    }.execute();
+    WriteAction.run(() -> {
+      final ModifiableArtifactModel model = ArtifactManager.getInstance(project).createModifiableModel();
+      final PackagingElement<?> artifactElement = PackagingElementFactory.getInstance().createArtifactElement(toAdd, project);
+      model.getOrCreateModifiableArtifact(parent).getRootElement().addOrFindChild(artifactElement);
+      model.commit();
+    });
   }
 
   public static Artifact findArtifact(Project project, String artifactName) {

@@ -16,13 +16,14 @@
 
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;
+import consulo.application.AccessRule;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -122,10 +123,11 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   @Override
   @Nonnull
   public Module[] getModules() {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<Module[],RuntimeException> action = () -> {
       final Module module = getConfigurationModule().getModule();
       return module == null ? Module.EMPTY_ARRAY : new Module[]{module};
-    });
+    };
+    return AccessRule.read(action);
   }
 
   public void restoreOriginalModule(final Module originalModule) {

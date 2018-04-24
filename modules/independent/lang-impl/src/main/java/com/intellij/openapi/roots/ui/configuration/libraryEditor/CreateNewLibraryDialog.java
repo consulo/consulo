@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
@@ -25,9 +23,10 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.FormBuilder;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -75,12 +74,7 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
     final Library library = modifiableModel.createLibrary(myLibraryEditor.getName(), type != null ? type.getKind() : null);
     final LibraryEx.ModifiableModelEx model = (LibraryEx.ModifiableModelEx)library.getModifiableModel();
     myLibraryEditor.applyTo(model);
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        model.commit();
-      }
-    }.execute();
+    WriteAction.run(model::commit);
     return library;
   }
 

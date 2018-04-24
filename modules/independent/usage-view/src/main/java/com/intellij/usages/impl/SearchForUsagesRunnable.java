@@ -21,7 +21,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
@@ -56,11 +55,13 @@ import com.intellij.util.Processors;
 import com.intellij.util.ui.RangeBlinker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.Action;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.event.ActionEvent;
@@ -213,7 +214,7 @@ class SearchForUsagesRunnable implements Runnable {
 
   @Nonnull
   private static String getPresentablePath(@Nonnull final VirtualFile virtualFile) {
-    return "'" + ReadAction.compute(virtualFile::getPresentableUrl) + "'";
+    return "'" + AccessRule.read(virtualFile::getPresentableUrl) + "'";
   }
 
   @Nonnull
@@ -247,7 +248,7 @@ class SearchForUsagesRunnable implements Runnable {
   private static PsiElement getPsiElement(@Nonnull UsageTarget[] searchFor) {
     final UsageTarget target = searchFor[0];
     if (!(target instanceof PsiElementUsageTarget)) return null;
-    return ReadAction.compute(((PsiElementUsageTarget)target)::getElement);
+    return AccessRule.read(((PsiElementUsageTarget)target)::getElement);
   }
 
   private static void flashUsageScriptaculously(@Nonnull final Usage usage) {

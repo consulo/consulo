@@ -17,11 +17,11 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -35,6 +35,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.application.AccessRule;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
@@ -201,10 +202,11 @@ public class ChangesUtil {
 
   public static FilePath getLocalPath(@Nonnull Project project, FilePath filePath) {
     // check if the file has just been renamed (IDEADEV-15494)
-    Change change = ReadAction.compute(() -> {
+    ThrowableComputable<Change, RuntimeException> action = () -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
       return ChangeListManager.getInstance(project).getChange(filePath);
-    });
+    };
+    Change change = AccessRule.read(action);
     if (change != null) {
       ContentRevision beforeRevision = change.getBeforeRevision();
       ContentRevision afterRevision = change.getAfterRevision();
@@ -238,7 +240,7 @@ public class ChangesUtil {
 
   @javax.annotation.Nullable
   private static VirtualFile getValidParentUnderReadAction(@Nonnull FilePath filePath) {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<VirtualFile,RuntimeException> action = () -> {
       VirtualFile result = null;
       FilePath parent = filePath;
       LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -249,7 +251,8 @@ public class ChangesUtil {
       }
 
       return result;
-    });
+    };
+    return AccessRule.read(action);
   }
 
   @javax.annotation.Nullable

@@ -20,7 +20,6 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -38,6 +37,7 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.rules.*;
 import com.intellij.util.*;
+import consulo.application.AccessRule;
 import consulo.ide.IconDescriptorUpdaters;
 import javax.annotation.Nonnull;
 
@@ -69,7 +69,7 @@ public class UsageInfo2UsageAdapter
     myUsageInfo = usageInfo;
     myMergedUsageInfos = usageInfo;
 
-    Point data = ReadAction.compute(() -> {
+    ThrowableComputable<Point, RuntimeException> action = () -> {
       PsiElement element = getElement();
       PsiFile psiFile = usageInfo.getFile();
       Document document = psiFile == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
@@ -93,7 +93,8 @@ public class UsageInfo2UsageAdapter
         }
       }
       return new Point(offset, lineNumber);
-    });
+    };
+    Point data = AccessRule.read(action);
     myOffset = data.x;
     myLineNumber = data.y;
     myModificationStamp = getCurrentModificationStamp();

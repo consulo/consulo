@@ -21,7 +21,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -46,9 +45,9 @@ import com.intellij.util.ListWithSelection;
 import com.intellij.util.ui.UIUtil;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -74,8 +73,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
         if (myActionEnabled && getText() != null) {
           final Rectangle r = getBounds();
           final Insets insets = getInsets();
-          AllIcons.Ide.Statusbar_arrows.paintIcon(this, g, r.width - insets.right - AllIcons.Ide.Statusbar_arrows.getIconWidth() - 2,
-                                                  r.height / 2 - AllIcons.Ide.Statusbar_arrows.getIconHeight() / 2);
+          AllIcons.Ide.Statusbar_arrows.paintIcon(this, g, r.width - insets.right - AllIcons.Ide.Statusbar_arrows.getIconWidth() - 2, r.height / 2 - AllIcons.Ide.Statusbar_arrows.getIconHeight() / 2);
         }
       }
     };
@@ -107,11 +105,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
       }
 
       @Override
-      public void currentLayerChanged(@Nonnull Module module,
-                                      @Nonnull String oldName,
-                                      @Nonnull ModuleRootLayer oldLayer,
-                                      @Nonnull String newName,
-                                      @Nonnull ModuleRootLayer newLayer) {
+      public void currentLayerChanged(@Nonnull Module module, @Nonnull String oldName, @Nonnull ModuleRootLayer oldLayer, @Nonnull String newName, @Nonnull ModuleRootLayer newLayer) {
         update();
       }
     });
@@ -146,19 +140,12 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
 
           ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(moduleForFile).getModifiableModel();
           modifiableModel.setCurrentLayer(profile);
-          new WriteAction<Object>() {
-
-            @Override
-            protected void run(Result<Object> result) throws Throwable {
-              modifiableModel.commit();
-            }
-          }.execute();
+          WriteAction.run(() -> modifiableModel.commit());
         }
       });
     }
 
-    ListPopup popup =
-            JBPopupFactory.getInstance().createActionGroupPopup("Module layer", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup("Module layer", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     Dimension dimension = popup.getContent().getPreferredSize();
     Point at = new Point(0, -dimension.height);
     popup.show(new RelativePoint(e.getComponent(), at));
@@ -170,8 +157,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
     return SimpleDataContext.getSimpleContext(PlatformDataKeys.VIRTUAL_FILE_ARRAY, new VirtualFile[]{getSelectedFile()}, SimpleDataContext
-            .getSimpleContext(CommonDataKeys.PROJECT, getProject(), SimpleDataContext
-                    .getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent)));
+            .getSimpleContext(CommonDataKeys.PROJECT, getProject(), SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent)));
   }
 
   @Nullable

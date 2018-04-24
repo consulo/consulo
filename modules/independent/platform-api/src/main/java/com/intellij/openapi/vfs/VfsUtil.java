@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.vfs;
 
-import consulo.fileTypes.ArchiveFileType;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
@@ -31,12 +29,13 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
+import consulo.fileTypes.ArchiveFileType;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -67,8 +66,7 @@ public class VfsUtil extends VfsUtilCore {
    * @param filter    {@link VirtualFileFilter}
    * @throws IOException if files failed to be copied
    */
-  public static void copyDirectory(Object requestor, @Nonnull VirtualFile fromDir, @Nonnull VirtualFile toDir, @Nullable VirtualFileFilter filter)
-          throws IOException {
+  public static void copyDirectory(Object requestor, @Nonnull VirtualFile fromDir, @Nonnull VirtualFile toDir, @Nullable VirtualFileFilter filter) throws IOException {
     @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = fromDir.getChildren();
     for (VirtualFile child : children) {
       if (!child.is(VFileProperty.SYMLINK) && !child.is(VFileProperty.SPECIAL) && (filter == null || filter.accept(child))) {
@@ -237,8 +235,7 @@ public class VfsUtil extends VfsUtilCore {
     return virtualFile;
   }
 
-  public static VirtualFile copyFileRelative(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String relativePath)
-          throws IOException {
+  public static VirtualFile copyFileRelative(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String relativePath) throws IOException {
     StringTokenizer tokenizer = new StringTokenizer(relativePath, "/");
     VirtualFile curDir = toDir;
 
@@ -390,8 +387,7 @@ public class VfsUtil extends VfsUtilCore {
     }
   }
 
-  public static VirtualFile createChildSequent(Object requestor, @Nonnull VirtualFile dir, @Nonnull String prefix, @Nonnull String extension)
-          throws IOException {
+  public static VirtualFile createChildSequent(Object requestor, @Nonnull VirtualFile dir, @Nonnull String prefix, @Nonnull String extension) throws IOException {
     String dotExt = PathUtil.makeFileName("", extension);
     String fileName = prefix + dotExt;
     int i = 1;
@@ -425,13 +421,10 @@ public class VfsUtil extends VfsUtilCore {
   }
 
   public static VirtualFile createDirectories(@Nonnull final String directoryPath) throws IOException {
-    return new WriteAction<VirtualFile>() {
-      @Override
-      protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
-        VirtualFile res = createDirectoryIfMissing(directoryPath);
-        result.setResult(res);
-      }
-    }.execute().throwException().getResultObject();
+    return WriteAction.compute(() -> {
+      VirtualFile res = createDirectoryIfMissing(directoryPath);
+      return res;
+    });
   }
 
   public static VirtualFile createDirectoryIfMissing(VirtualFile parent, String relativePath) throws IOException {

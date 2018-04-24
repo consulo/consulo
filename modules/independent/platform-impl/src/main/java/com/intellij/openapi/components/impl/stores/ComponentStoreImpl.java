@@ -35,6 +35,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.JDOMXIncluder;
+import consulo.application.AccessRule;
 import consulo.components.impl.stores.StateComponentInfo;
 import gnu.trove.THashMap;
 import org.jdom.Element;
@@ -61,21 +62,17 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
 
     StateComponentInfo<?> componentInfo = StateComponentInfo.of(component, getProject());
     if (componentInfo == null) {
-      return;
+      return;Ro
     }
 
-    AccessToken token = ReadAction.start();
     try {
-      initComponent(componentInfo, null, false);
+      AccessRule.read(() -> initComponent(componentInfo, null, false));
     }
     catch (StateStorageException | ProcessCanceledException e) {
       throw e;
     }
     catch (Exception e) {
       LOG.error(e);
-    }
-    finally {
-      token.finish();
     }
   }
 

@@ -17,11 +17,13 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.util.treeView.TreeAnchorizer;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -33,10 +35,11 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
   public Object createAnchor(Object element) {
     if (element instanceof PsiElement) {
       PsiElement psi = (PsiElement)element;
-      return ReadAction.compute(() -> {
+      ThrowableComputable<Object, RuntimeException> action = () -> {
         if (!psi.isValid()) return psi;
         return new SmartPointerWrapper(SmartPointerManager.getInstance(psi.getProject()).createSmartPsiElementPointer(psi));
-      });
+      };
+      return AccessRule.read(action);
     }
     return super.createAnchor(element);
   }
@@ -44,7 +47,8 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
   @Nullable
   public Object retrieveElement(final Object pointer) {
     if (pointer instanceof SmartPointerWrapper) {
-      return ReadAction.compute(() -> ((SmartPointerWrapper)pointer).myPointer.getElement());
+      ThrowableComputable<PsiElement,RuntimeException> action = () -> ((SmartPointerWrapper)pointer).myPointer.getElement();
+      return AccessRule.read(action);
     }
 
     return super.retrieveElement(pointer);

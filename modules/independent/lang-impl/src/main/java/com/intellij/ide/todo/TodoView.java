@@ -20,7 +20,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -46,9 +45,10 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.psi.PsiPackageSupportProviders;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.beans.PropertyChangeEvent;
@@ -128,7 +128,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   public void loadState(State state) {
     this.state = state;
 
-    ReadAction.run(this::validateSettings);
+    AccessRule.read(this::validateSettings);
   }
 
   @Override

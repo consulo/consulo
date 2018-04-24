@@ -18,12 +18,13 @@ package consulo.web.ui;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.AccessRule;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.function.Function;
 
 /**
@@ -49,7 +50,8 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
 
   @Override
   public void fetchChildren(@Nonnull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
-    for (Object o : ReadAction.compute(() -> myStructure.getChildElements(parentValue))) {
+    ThrowableComputable<Object[],RuntimeException> action = () -> myStructure.getChildElements(parentValue);
+    for (Object o : AccessRule.read(action)) {
       T element = (T)o;
       TreeNode<T> apply = nodeFactory.apply(element);
 
@@ -63,7 +65,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
 
         itemPresentation.append(descriptor.toString());
         try {
-          ReadAction.run(() -> itemPresentation.setIcon((consulo.ui.image.Image)descriptor.getIcon()));
+          AccessRule.read(() -> itemPresentation.setIcon((consulo.ui.image.Image)descriptor.getIcon()));
         }
         catch (Exception e) {
           e.printStackTrace();

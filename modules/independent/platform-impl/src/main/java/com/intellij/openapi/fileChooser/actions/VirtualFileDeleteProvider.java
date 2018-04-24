@@ -20,8 +20,6 @@ import com.intellij.ide.DeleteProvider;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.RunResult;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -33,8 +31,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -74,25 +73,23 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
             indicator.setFraction((double)i / files.length);
             i++;
 
-            RunResult result = new WriteAction() {
-              @Override
-              protected void run(@Nonnull Result result) throws Throwable {
-                file.delete(this);
-              }
-            }.execute();
-
-            if (result.hasException()) {
-              LOG.info("Error when deleting " + file, result.getThrowable());
+            try {
+              WriteAction.run(() -> file.delete(this));
+            }
+            catch (Exception e) {
+              LOG.info("Error when deleting " + file, e);
               problems.add(file.getName());
             }
           }
         }
 
+        @RequiredDispatchThread
         @Override
         public void onSuccess() {
           reportProblems();
         }
 
+        @RequiredDispatchThread
         @Override
         public void onCancel() {
           reportProblems();

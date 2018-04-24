@@ -18,8 +18,6 @@ package com.intellij.packaging.impl.compiler;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.packagingCompiler.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
@@ -32,6 +30,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -43,22 +42,22 @@ import com.intellij.packaging.artifacts.ArtifactPropertiesProvider;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.artifacts.ArtifactSortingUtil;
-import consulo.packaging.impl.util.DeploymentUtilImpl;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
+import consulo.packaging.impl.util.DeploymentUtilImpl;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.*;
 
 /**
  * @author nik
  */
-public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactBuildTarget, ArtifactCompilerCompileItem,
-  String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> {
+public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactBuildTarget, ArtifactCompilerCompileItem, String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.compiler.ArtifactsCompilerInstance");
   public static final Logger FULL_LOG = Logger.getInstance("#com.intellij.full-artifacts-compiler-log");
   private ArtifactsProcessingItemsBuilderContext myBuilderContext;
@@ -81,35 +80,31 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
   private List<ArtifactBuildTarget> getArtifactTargets(final boolean selectedOnly) {
     final List<ArtifactBuildTarget> targets = new ArrayList<ArtifactBuildTarget>();
-    new ReadAction() {
-      @Override
-      protected void run(final Result result) {
-        final Set<Artifact> artifacts;
-        if (selectedOnly) {
-          artifacts = ArtifactCompileScope.getArtifactsToBuild(getProject(), myContext.getCompileScope(), true);
-        }
-        else {
-          artifacts = new HashSet<Artifact>(Arrays.asList(ArtifactManager.getInstance(getProject()).getArtifacts()));
-        }
+    AccessRule.read(() -> {
+      final Set<Artifact> artifacts;
+      if (selectedOnly) {
+        artifacts = ArtifactCompileScope.getArtifactsToBuild(getProject(), myContext.getCompileScope(), true);
+      }
+      else {
+        artifacts = new HashSet<Artifact>(Arrays.asList(ArtifactManager.getInstance(getProject()).getArtifacts()));
+      }
 
-        Map<String, Artifact> artifactsMap = new HashMap<String, Artifact>();
-        for (Artifact artifact : artifacts) {
-          artifactsMap.put(artifact.getName(), artifact);
-        }
-        for (String name : ArtifactSortingUtil.getInstance(getProject()).getArtifactsSortedByInclusion()) {
-          Artifact artifact = artifactsMap.get(name);
-          if (artifact != null) {
-            targets.add(new ArtifactBuildTarget(artifact));
-          }
+      Map<String, Artifact> artifactsMap = new HashMap<String, Artifact>();
+      for (Artifact artifact : artifacts) {
+        artifactsMap.put(artifact.getName(), artifact);
+      }
+      for (String name : ArtifactSortingUtil.getInstance(getProject()).getArtifactsSortedByInclusion()) {
+        Artifact artifact = artifactsMap.get(name);
+        if (artifact != null) {
+          targets.add(new ArtifactBuildTarget(artifact));
         }
       }
-    }.execute();
+    });
     return targets;
   }
 
   @Override
-  public void processObsoleteTarget(@Nonnull String targetId,
-                                    @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems) {
+  public void processObsoleteTarget(@Nonnull String targetId, @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems) {
     deleteFiles(obsoleteItems, Collections.<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>>emptyList());
   }
 
@@ -119,12 +114,8 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     myBuilderContext = new ArtifactsProcessingItemsBuilderContext(myContext);
     final Artifact artifact = target.getArtifact();
 
-    final Map<String, String> selfIncludingArtifacts = new ReadAction<Map<String, String>>() {
-      @Override
-      protected void run(final Result<Map<String, String>> result) {
-        result.setResult(ArtifactSortingUtil.getInstance(getProject()).getArtifactToSelfIncludingNameMap());
-      }
-    }.execute().getResultObject();
+    ThrowableComputable<Map<String,String>,RuntimeException> action = () -> ArtifactSortingUtil.getInstance(getProject()).getArtifactToSelfIncludingNameMap();
+    final Map<String, String> selfIncludingArtifacts = AccessRule.read(action);
     final String selfIncludingName = selfIncludingArtifacts.get(artifact.getName());
     if (selfIncludingName != null) {
       String name = selfIncludingName.equals(artifact.getName()) ? "it" : "'" + selfIncludingName + "' artifact";
@@ -134,18 +125,14 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     final String outputPath = artifact.getOutputPath();
     if (outputPath == null || outputPath.length() == 0) {
-      myContext.addMessage(CompilerMessageCategory.ERROR, "Cannot build '" + artifact.getName() + "' artifact: output path is not specified",
-                      null, -1, -1);
+      myContext.addMessage(CompilerMessageCategory.ERROR, "Cannot build '" + artifact.getName() + "' artifact: output path is not specified", null, -1, -1);
       return Collections.emptyList();
     }
 
     DumbService.getInstance(getProject()).waitForSmartMode();
-    new ReadAction() {
-      @Override
-      protected void run(final Result result) {
-        collectItems(artifact, outputPath);
-      }
-    }.execute();
+    AccessRule.read(() -> {
+      collectItems(artifact, outputPath);
+    });
     return new ArrayList<ArtifactCompilerCompileItem>(myBuilderContext.getProcessingItems());
   }
 
@@ -169,7 +156,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     final FileFilter fileFilter = new IgnoredFileFilter();
     final Set<ArchivePackageInfo> changedJars = new THashSet<ArchivePackageInfo>();
     for (String deletedJar : deletedJars) {
-      ContainerUtil.addIfNotNull(myBuilderContext.getJarInfo(deletedJar), changedJars);
+      ContainerUtil.addIfNotNull(changedJars, myBuilderContext.getJarInfo(deletedJar));
     }
 
     try {
@@ -183,43 +170,30 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         final ArtifactCompilerCompileItem sourceItem = item.getItem();
         myContext.getProgressIndicator().checkCanceled();
 
-        final Ref<IOException> exception = Ref.create(null);
-        new ReadAction() {
-          @Override
-          protected void run(final Result result) {
-            final VirtualFile sourceFile = sourceItem.getFile();
-            for (DestinationInfo destination : sourceItem.getDestinations()) {
-              if (destination instanceof ExplodedDestinationInfo) {
-                final ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo)destination;
-                File toFile = new File(FileUtil.toSystemDependentName(explodedDestination.getOutputPath()));
-                try {
-                  if (sourceFile.isInLocalFileSystem()) {
-                    final File ioFromFile = VfsUtilCore.virtualToIoFile(sourceFile);
-                    if (ioFromFile.exists()) {
-                      DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
-                    }
-                    else {
-                      LOG.debug("Cannot copy " + ioFromFile.getAbsolutePath() + ": file doesn't exist");
-                    }
-                  }
-                  else {
-                    extractFile(sourceFile, toFile, writtenPaths, fileFilter);
-                  }
+        AccessRule.read(() -> {
+          final VirtualFile sourceFile = sourceItem.getFile();
+          for (DestinationInfo destination : sourceItem.getDestinations()) {
+            if (destination instanceof ExplodedDestinationInfo) {
+              final ExplodedDestinationInfo explodedDestination = (ExplodedDestinationInfo)destination;
+              File toFile = new File(FileUtil.toSystemDependentName(explodedDestination.getOutputPath()));
+              if (sourceFile.isInLocalFileSystem()) {
+                final File ioFromFile = VfsUtilCore.virtualToIoFile(sourceFile);
+                if (ioFromFile.exists()) {
+                  DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
                 }
-                catch (IOException e) {
-                  exception.set(e);
-                  return;
+                else {
+                  LOG.debug("Cannot copy " + ioFromFile.getAbsolutePath() + ": file doesn't exist");
                 }
               }
               else {
-                changedJars.add(((ArchiveDestinationInfo)destination).getArchivePackageInfo());
+                extractFile(sourceFile, toFile, writtenPaths, fileFilter);
               }
             }
+            else {
+              changedJars.add(((ArchiveDestinationInfo)destination).getArchivePackageInfo());
+            }
           }
-        }.execute();
-        if (exception.get() != null) {
-          throw exception.get();
-        }
+        });
 
         myContext.getProgressIndicator().setFraction(++i * 1.0 / changedItems.size());
         processedItems.add(sourceItem);
@@ -302,7 +276,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
   @Override
   public void processItems(@Nonnull final ArtifactBuildTarget target,
-                           @Nonnull final List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem,VirtualFilePersistentState,ArtifactPackagingItemOutputState>> changedItems,
+                           @Nonnull final List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
                            @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
                            @Nonnull OutputConsumer<ArtifactCompilerCompileItem> consumer) {
 
@@ -373,39 +347,39 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
       String filePath = isJar ? fullPath.substring(0, end) : fullPath;
       boolean deleted = false;
       if (isJar) {
-      if (notDeletedJars.contains(filePath)) {
-        continue;
+        if (notDeletedJars.contains(filePath)) {
+          continue;
+        }
+        deleted = deletedJars.contains(filePath);
       }
-      deleted = deletedJars.contains(filePath);
-    }
 
       File file = new File(FileUtil.toSystemDependentName(filePath));
       if (!deleted) {
-      filesToRefresh.add(file);
-      deleted = FileUtil.delete(file);
-    }
+        filesToRefresh.add(file);
+        deleted = FileUtil.delete(file);
+      }
 
       if (deleted) {
-      if (isJar) {
-        deletedJars.add(filePath);
+        if (isJar) {
+          deletedJars.add(filePath);
+        }
+        if (testMode) {
+          //FIXME [VISTALL] CompilerManagerImpl.addDeletedPath(file.getAbsolutePath());
+        }
       }
-      if (testMode) {
-        //FIXME [VISTALL] CompilerManagerImpl.addDeletedPath(file.getAbsolutePath());
+      else {
+        if (isJar) {
+          notDeletedJars.add(filePath);
+        }
+        if (notDeletedFilesCount++ > 50) {
+          myContext.addMessage(CompilerMessageCategory.WARNING, "Deletion of outdated files stopped because too many files cannot be deleted", null, -1, -1);
+          break;
+        }
+        myContext.addMessage(CompilerMessageCategory.WARNING, "Cannot delete file '" + filePath + "'", null, -1, -1);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Cannot delete file " + file);
+        }
       }
-    }
-    else {
-      if (isJar) {
-        notDeletedJars.add(filePath);
-      }
-      if (notDeletedFilesCount++ > 50) {
-        myContext.addMessage(CompilerMessageCategory.WARNING, "Deletion of outdated files stopped because too many files cannot be deleted", null, -1, -1);
-        break;
-      }
-      myContext.addMessage(CompilerMessageCategory.WARNING, "Cannot delete file '" + filePath + "'", null, -1, -1);
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Cannot delete file " + file);
-      }
-    }
     }
 
     CompilerUtil.refreshIOFiles(filesToRefresh);

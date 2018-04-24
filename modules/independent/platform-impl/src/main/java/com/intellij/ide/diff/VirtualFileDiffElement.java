@@ -18,7 +18,6 @@ package com.intellij.ide.diff;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -34,9 +33,9 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.PlatformIcons;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -195,14 +194,11 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
       }
 
       if (!docsToSave.isEmpty()) {
-        new WriteAction() {
-          @Override
-          protected void run(@Nonnull Result result) throws Throwable {
-            for (Document document : docsToSave) {
-              manager.saveDocument(document);
-            }
+        WriteAction.run(() -> {
+          for (Document document : docsToSave) {
+            manager.saveDocument(document);
           }
-        }.execute();
+        });
       }
 
       ModalityState modalityState = ProgressManager.getInstance().getProgressIndicator().getModalityState();

@@ -18,7 +18,6 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
@@ -47,8 +46,8 @@ import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.LibraryElementType;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -325,12 +324,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
 
     final ModifiableArtifactModel modifiableModel = myPackagingEditorContext.getActualModifiableModel();
     if (modifiableModel != null) {
-      new WriteAction() {
-        @Override
-        protected void run(final Result result) {
-          modifiableModel.commit();
-        }
-      }.execute();
+      WriteAction.run(() -> modifiableModel.commit());
       myPackagingEditorContext.resetModifiableModel();
     }
 

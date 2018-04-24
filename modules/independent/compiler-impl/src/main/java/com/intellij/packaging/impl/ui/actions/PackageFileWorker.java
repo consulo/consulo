@@ -19,8 +19,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.deployment.DeploymentUtil;
 import com.intellij.openapi.diagnostic.Logger;
@@ -44,8 +42,9 @@ import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.util.PathUtil;
 import com.intellij.util.io.zip.JBZipEntry;
 import com.intellij.util.io.zip.JBZipFile;
-import javax.annotation.Nonnull;
+import consulo.application.AccessRule;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,17 +82,15 @@ public class PackageFileWorker {
         try {
           for (final VirtualFile file : files) {
             indicator.checkCanceled();
-            new ReadAction() {
-              protected void run(final Result result) {
-                try {
-                  packageFile(file, project, artifacts);
-                }
-                catch (IOException e) {
-                  String message = CompilerBundle.message("message.tect.package.file.io.error", e.toString());
-                  Notifications.Bus.notify(new Notification("Package File", "Cannot package file", message, NotificationType.ERROR));
-                }
+            AccessRule.read(() -> {
+              try {
+                packageFile(file, project, artifacts);
               }
-            }.execute();
+              catch (IOException e) {
+                String message = CompilerBundle.message("message.tect.package.file.io.error", e.toString());
+                Notifications.Bus.notify(new Notification("Package File", "Cannot package file", message, NotificationType.ERROR));
+              }
+            });
             callback.setDone();
           }
         }

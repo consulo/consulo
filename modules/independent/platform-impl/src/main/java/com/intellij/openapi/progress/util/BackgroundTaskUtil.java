@@ -19,7 +19,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
@@ -30,6 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
@@ -38,6 +38,8 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -249,7 +251,7 @@ public class BackgroundTaskUtil {
   }
 
   private static boolean registerIfParentNotDisposed(@Nonnull Disposable parent, @Nonnull Disposable disposable) {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<Boolean, RuntimeException> action = () -> {
       if (Disposer.isDisposed(parent)) return false;
       try {
         Disposer.register(parent, disposable);
@@ -259,7 +261,8 @@ public class BackgroundTaskUtil {
         LOG.error(ioe);
         return false;
       }
-    });
+    };
+    return AccessRule.read(action);
   }
 
   /**
@@ -271,10 +274,11 @@ public class BackgroundTaskUtil {
    */
   @Nonnull
   public static <L> L syncPublisher(@Nonnull Project project, @Nonnull Topic<L> topic) throws ProcessCanceledException {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<L, RuntimeException> action = () -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
       return project.getMessageBus().syncPublisher(topic);
-    });
+    };
+    return AccessRule.read(action);
   }
 
   /**
@@ -286,10 +290,11 @@ public class BackgroundTaskUtil {
    */
   @Nonnull
   public static <L> L syncPublisher(@Nonnull Topic<L> topic) throws ProcessCanceledException {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<L,RuntimeException> action = () -> {
       if (ApplicationManager.getApplication().isDisposed()) throw new ProcessCanceledException();
       return ApplicationManager.getApplication().getMessageBus().syncPublisher(topic);
-    });
+    };
+    return AccessRule.read(action);
   }
 
 

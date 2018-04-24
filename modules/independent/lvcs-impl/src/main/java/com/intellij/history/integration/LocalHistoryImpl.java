@@ -24,11 +24,11 @@ import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -38,6 +38,8 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.application.AccessRule;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -178,7 +180,8 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
 
       @Override
       public ByteContent getByteContent(final String path) {
-        return ReadAction.compute(() -> impl.getByteContent(myGateway.createTransientRootEntryForPathOnly(path), path));
+        ThrowableComputable<ByteContent, RuntimeException> action = () -> impl.getByteContent(myGateway.createTransientRootEntryForPathOnly(path), path);
+        return AccessRule.read(action);
       }
     };
   }
@@ -188,7 +191,8 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   public byte[] getByteContent(final VirtualFile f, final FileRevisionTimestampComparator c) {
     if (!isInitialized()) return null;
     if (!myGateway.areContentChangesVersioned(f)) return null;
-    return ReadAction.compute(() -> new ByteContentRetriever(myGateway, myVcs, f, c).getResult());
+    ThrowableComputable<byte[],RuntimeException> action = () -> new ByteContentRetriever(myGateway, myVcs, f, c).getResult();
+    return AccessRule.read(action);
   }
 
   @Override

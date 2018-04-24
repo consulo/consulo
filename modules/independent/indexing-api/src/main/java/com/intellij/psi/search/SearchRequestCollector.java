@@ -16,7 +16,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.codeInsight.ContainerProvider;
-import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
@@ -24,6 +24,8 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -89,10 +91,11 @@ public class SearchRequestCollector {
   }
 
   private static String getContainerName(@Nonnull final PsiElement target) {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<String,RuntimeException> action = () -> {
       PsiElement container = getContainer(target);
       return container instanceof PsiNamedElement ? ((PsiNamedElement)container).getName() : null;
-    });
+    };
+    return AccessRule.read(action);
   }
 
   private static PsiElement getContainer(@Nonnull PsiElement refElement) {

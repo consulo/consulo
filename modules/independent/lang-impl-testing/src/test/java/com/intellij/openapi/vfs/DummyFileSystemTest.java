@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.vfs.ex.dummy.DummyFileSystem;
 import consulo.testFramework.MockApplicationTestCase;
+
 import javax.annotation.Nonnull;
 
 public class DummyFileSystemTest extends MockApplicationTestCase {
@@ -32,13 +32,10 @@ public class DummyFileSystemTest extends MockApplicationTestCase {
 
   public void testDeletionEvents() throws Exception {
     final VirtualFile root = fs.createRoot("root");
-    VirtualFile f = new WriteAction<VirtualFile>() {
-      @Override
-      protected void run(Result<VirtualFile> result) throws Throwable {
-        VirtualFile res = root.createChildData(this, "f");
-        result.setResult(res);
-      }
-    }.execute().getResultObject();
+    VirtualFile f = WriteAction.compute(() -> {
+      VirtualFile res = root.createChildData(this, "f");
+      return res;
+    });
 
     final VirtualFileEvent[] events = new VirtualFileEvent[2];
     fs.addVirtualFileListener(new VirtualFileListener() {

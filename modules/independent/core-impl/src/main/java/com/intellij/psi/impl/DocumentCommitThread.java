@@ -53,6 +53,7 @@ import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSetQueue;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -399,7 +400,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       final Document finalDocument = document;
       Object finalFailureReason = failureReason;
       CommitTask finalTask = task;
-      ReadAction.run(() -> {
+      AccessRule.read(() -> {
         if (finalProject.isDisposed()) return;
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(finalProject);
         if (documentManager.isCommitted(finalDocument)) return; // sync commit hasn't intervened

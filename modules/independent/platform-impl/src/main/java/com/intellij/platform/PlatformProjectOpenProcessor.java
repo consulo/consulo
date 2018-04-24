@@ -20,7 +20,6 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
@@ -32,6 +31,7 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
@@ -42,6 +42,7 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
@@ -285,7 +286,8 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
       AsyncResult<Project> anotherResult = new AsyncResult<>();
       anotherResult.doWhenDone((project) -> {
-        final Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(project).getModules());
+        ThrowableComputable<Module[],RuntimeException> action = () -> ModuleManager.getInstance(project).getModules();
+        final Module[] modules = AccessRule.read(action);
         if (modules.length > 0) {
           runConfigurators.set(false);
         }

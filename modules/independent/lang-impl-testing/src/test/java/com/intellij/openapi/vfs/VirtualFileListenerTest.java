@@ -15,12 +15,11 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.util.Ref;
 import com.intellij.testFramework.PlatformLangTestCase;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -38,16 +37,15 @@ public class VirtualFileListenerTest extends PlatformLangTestCase {
         eventFired.set(true);
       }
     }, myTestRootDisposable);
-    new WriteAction() {
-      protected void run(final Result result) {
-        try {
-          dir.createChildData(this, "x.txt");
-        }
-        catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+
+    WriteAction.run(() -> {
+      try {
+        dir.createChildData(this, "x.txt");
       }
-    }.execute();
+      catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
 
     assertTrue(eventFired.get());
   }

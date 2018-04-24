@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
@@ -25,9 +24,9 @@ import com.intellij.openapi.vfs.VfsBundle;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +40,9 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
   private final Object myLock = new Object();
   private final String myUrl;
   private final RemoteFileManagerImpl myManager;
-  private @Nullable RemoteContentProvider myContentProvider;
+  private
+  @Nullable
+  RemoteContentProvider myContentProvider;
   private File myLocalFile;
   private VirtualFile myLocalVirtualFile;
   private VirtualFile myPrevLocalFile;
@@ -136,16 +137,13 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
       localIOFile = myLocalFile;
     }
 
-    VirtualFile localFile = new WriteAction<VirtualFile>() {
-      @Override
-      protected void run(final Result<VirtualFile> result) {
-        final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(localIOFile);
-        if (file != null) {
-          file.refresh(false, false);
-        }
-        result.setResult(file);
+    VirtualFile localFile = WriteAction.compute(() -> {
+      final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(localIOFile);
+      if (file != null) {
+        file.refresh(false, false);
       }
-    }.execute().getResultObject();
+      return file;
+    });
     LOG.assertTrue(localFile != null, "Virtual local file not found for " + localIOFile.getAbsolutePath());
     LOG.debug("Virtual local file: " + localFile + ", size = " + localFile.getLength());
     synchronized (myLock) {
@@ -209,10 +207,7 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
   @Override
   public String toString() {
     final String errorMessage = getErrorMessage();
-    return "state=" + getState()
-           + ", local file=" + myLocalFile
-           + (errorMessage != null ? ", error=" + errorMessage : "")
-           + (isCancelled() ? ", cancelled" : "");
+    return "state=" + getState() + ", local file=" + myLocalFile + (errorMessage != null ? ", error=" + errorMessage : "") + (isCancelled() ? ", cancelled" : "");
   }
 
   public RemoteFileState getState() {

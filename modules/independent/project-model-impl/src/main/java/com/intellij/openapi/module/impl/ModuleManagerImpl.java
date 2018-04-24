@@ -18,7 +18,6 @@ package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
@@ -54,14 +53,15 @@ import com.intellij.util.messages.MessageBus;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.module.ModuleDirIsNotExistsException;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -557,7 +557,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     collapseOrExpandMacros(module, moduleLoadItem.getElement(), false);
 
     final ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(module);
-    ReadAction.run(() -> moduleRootManager.loadState(moduleLoadItem.getElement(), progressIndicator));
+    AccessRule.read(() -> moduleRootManager.loadState(moduleLoadItem.getElement(), progressIndicator));
 
     return module;
   }

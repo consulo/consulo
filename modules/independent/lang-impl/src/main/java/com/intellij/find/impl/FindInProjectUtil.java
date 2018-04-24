@@ -23,7 +23,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -46,10 +45,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
@@ -67,6 +63,7 @@ import com.intellij.util.Function;
 import com.intellij.util.PatternUtil;
 import com.intellij.util.Processor;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -255,13 +252,15 @@ public class FindInProjectUtil {
   // returns number of hits
   static int processUsagesInFile(@Nonnull final PsiFile psiFile, @Nonnull final VirtualFile virtualFile, @Nonnull final FindModel findModel, @Nonnull final Processor<UsageInfo> consumer) {
     if (findModel.getStringToFind().isEmpty()) {
-      if (!ReadAction.compute(() -> consumer.process(new UsageInfo(psiFile)))) {
+      ThrowableComputable<Boolean, RuntimeException> action = () -> consumer.process(new UsageInfo(psiFile));
+      if (!AccessRule.read(action)) {
         throw new ProcessCanceledException();
       }
       return 1;
     }
     if (virtualFile.getFileType().isBinary()) return 0; // do not decompile .class files
-    final Document document = ReadAction.compute(() -> virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null);
+    ThrowableComputable<Document, RuntimeException> action1 = () -> virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null;
+    final Document document = AccessRule.read(action1);
     if (document == null) return 0;
     final int[] offset = {0};
     int count = 0;
@@ -270,10 +269,11 @@ public class FindInProjectUtil {
     TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.getFrom(indicator);
     do {
       tooManyUsagesStatus.pauseProcessingIfTooManyUsages(); // wait for user out of read action
-      found = ReadAction.compute(() -> {
+      ThrowableComputable<Integer, RuntimeException> action = () -> {
         if (!psiFile.isValid()) return 0;
         return addToUsages(document, consumer, findModel, psiFile, offset, USAGES_PER_READ_ACTION);
-      });
+      };
+      found = AccessRule.read(action);
       count += found;
     }
     while (found != 0);
@@ -418,7 +418,7 @@ public class FindInProjectUtil {
   static String buildStringToFindForIndicesFromRegExp(@Nonnull String stringToFind, @Nonnull Project project) {
     if (!Registry.is("idea.regexp.search.uses.indices")) return "";
 
-    return ReadAction.compute(() -> {
+    ThrowableComputable<String,RuntimeException> action = () -> {
       final List<PsiElement> topLevelRegExpChars = getTopLevelRegExpChars("a", project);
       if (topLevelRegExpChars.size() != 1) return "";
 
@@ -435,7 +435,8 @@ public class FindInProjectUtil {
           return " ";
         }
       }, "");
-    });
+    };
+    return AccessRule.read(action);
   }
 
   public static void initStringToFindFromDataContext(FindModel findModel, @Nonnull DataContext dataContext) {

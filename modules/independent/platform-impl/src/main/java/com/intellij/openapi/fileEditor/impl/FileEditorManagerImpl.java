@@ -26,7 +26,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -81,6 +80,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.application.AccessRule;
 import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
@@ -799,13 +799,14 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Persis
         try {
           final FileEditorProvider provider = newProviders[i];
           LOG.assertTrue(provider != null, "Provider for file " + file + " is null. All providers: " + Arrays.asList(newProviders));
-          builders[i] = ReadAction.compute(() -> {
+          ThrowableComputable<AsyncFileEditorProvider.Builder, RuntimeException> action = () -> {
             if (myProject.isDisposed() || !file.isValid()) {
               return null;
             }
             LOG.assertTrue(provider.accept(myProject, file), "Provider " + provider + " doesn't accept file " + file);
             return provider instanceof AsyncFileEditorProvider ? ((AsyncFileEditorProvider)provider).createEditorAsync(myProject, file) : null;
-          });
+          };
+          builders[i] = AccessRule.read(action);
         }
         catch (ProcessCanceledException e) {
           throw e;

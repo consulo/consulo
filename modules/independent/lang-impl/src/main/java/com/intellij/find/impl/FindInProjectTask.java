@@ -23,7 +23,6 @@ import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.ngrams.TrigramIndex;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -39,6 +38,7 @@ import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.TrigramBuilder;
@@ -64,6 +64,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexImpl;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -105,7 +107,8 @@ class FindInProjectTask {
     myPsiManager = PsiManager.getInstance(project);
 
     final String moduleName = findModel.getModuleName();
-    myModule = moduleName == null ? null : ReadAction.compute(() -> ModuleManager.getInstance(project).findModuleByName(moduleName));
+    ThrowableComputable<Module, RuntimeException> action = () -> ModuleManager.getInstance(project).findModuleByName(moduleName);
+    myModule = moduleName == null ? null : AccessRule.read(action);
     myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     myFileIndex = myModule == null ? myProjectFileIndex : ModuleRootManager.getInstance(myModule).getFileIndex();
 
@@ -129,7 +132,7 @@ class FindInProjectTask {
     try {
       myProgress.setIndeterminate(true);
       myProgress.setText("Scanning indexed files...");
-      Set<VirtualFile> filesForFastWordSearch = ReadAction.compute(this::getFilesForFastWordSearch);
+      Set<VirtualFile> filesForFastWordSearch = AccessRule.read(this::getFilesForFastWordSearch);
       myProgress.setIndeterminate(false);
       if (LOG.isDebugEnabled()) {
         LOG.debug("Searching for " + myFindModel.getStringToFind() + " in " + filesForFastWordSearch.size() + " indexed files");
@@ -224,7 +227,8 @@ class FindInProjectTask {
       myProgress.setText(text);
       myProgress.setText2(FindBundle.message("find.searching.for.string.in.file.occurrences.progress", occurrenceCount));
 
-      Pair.NonNull<PsiFile, VirtualFile> pair = ReadAction.compute(() -> findFile(virtualFile));
+      ThrowableComputable<Pair.NonNull<PsiFile, VirtualFile>, RuntimeException> action = () -> findFile(virtualFile);
+      Pair.NonNull<PsiFile, VirtualFile> pair = AccessRule.read(action);
       if (pair == null) return true;
       PsiFile psiFile = pair.first;
       VirtualFile sourceVirtualFile = pair.second;
@@ -342,10 +346,11 @@ class FindInProjectTask {
     else {
       boolean success = myFileIndex.iterateContent(iterator);
       if (success && globalCustomScope != null && globalCustomScope.isSearchInLibraries()) {
-        final VirtualFile[] librarySources = ReadAction.compute(() -> {
+        ThrowableComputable<VirtualFile[],RuntimeException> action = () -> {
           OrderEnumerator enumerator = myModule == null ? OrderEnumerator.orderEntries(myProject) : OrderEnumerator.orderEntries(myModule);
           return enumerator.withoutModuleSourceEntries().withoutDepModules().getSourceRoots();
-        });
+        };
+        final VirtualFile[] librarySources = AccessRule.read(action);
         iterateAll(librarySources, globalCustomScope, iterator);
       }
     }

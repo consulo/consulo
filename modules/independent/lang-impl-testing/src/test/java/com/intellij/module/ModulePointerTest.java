@@ -16,7 +16,6 @@
 package com.intellij.module;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -107,11 +106,6 @@ public class ModulePointerTest extends PlatformTestCase {
   }
 
   private static void commitModel(final ModifiableModuleModel model) {
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        model.commit();
-      }
-    }.execute();
+    WriteAction.run(() -> model.commit());
   }
 }

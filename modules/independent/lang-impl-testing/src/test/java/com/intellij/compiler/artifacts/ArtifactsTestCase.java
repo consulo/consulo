@@ -1,6 +1,5 @@
 package com.intellij.compiler.artifacts;
 
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -21,9 +20,9 @@ import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.ui.ArtifactEditor;
 import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.PsiTestUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,12 +51,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
   }
 
   protected static void commitModel(final ModifiableArtifactModel model) {
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        model.commit();
-      }
-    }.execute();
+    WriteAction.run(() -> model.commit());
   }
 
   protected Artifact rename(Artifact artifact, String newName) {
@@ -84,33 +78,26 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
   }
 
   public static void renameFile(final VirtualFile file, final String newName) {
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        try {
-          file.rename(IdeaTestCase.class, newName);
-        }
-        catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+    WriteAction.run(() -> {
+      try {
+        file.rename(IdeaTestCase.class, newName);
       }
-    }.execute();
+      catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
   }
 
   protected Module addModule(final String moduleName, final @Nullable VirtualFile sourceRoot) {
-    return new WriteAction<Module>() {
-      @Override
-      protected void run(final Result<Module> result) {
-        final Module module = createModule(moduleName);
-        if (sourceRoot != null) {
-          PsiTestUtil.addSourceContentToRoots(module, sourceRoot);
-        }
-        //   ModuleRootModificationUtil.setModuleSdk(module, getTestProjectJdk());
-        result.setResult(module);
+    return WriteAction.compute(() -> {
+      final Module module = createModule(moduleName);
+      if (sourceRoot != null) {
+        PsiTestUtil.addSourceContentToRoots(module, sourceRoot);
       }
-    }.execute().getResultObject();
+      //   ModuleRootModificationUtil.setModuleSdk(module, getTestProjectJdk());
+      return module;
+    });
   }
-
 
   public class MockArtifactsStructureConfigurableContext implements ArtifactsStructureConfigurableContext {
     private ModifiableArtifactModel myModifiableModel;

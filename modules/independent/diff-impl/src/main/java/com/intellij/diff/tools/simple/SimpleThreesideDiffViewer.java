@@ -32,17 +32,18 @@ import com.intellij.diff.tools.util.side.ThreesideTextDiffViewer;
 import com.intellij.diff.util.*;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnSeparator;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,10 +122,11 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
       final List<DiffContent> contents = myRequest.getContents();
       final List<Document> documents = ContainerUtil.map(contents, content -> ((DocumentContent)content).getDocument());
 
-      final List<CharSequence> sequences = ReadAction.compute(() -> {
+      ThrowableComputable<List<CharSequence>, RuntimeException> action2 = () -> {
         indicator.checkCanceled();
         return ContainerUtil.map(documents, Document::getImmutableCharSequence);
-      });
+      };
+      final List<CharSequence> sequences = AccessRule.read(action2);
 
       final ComparisonPolicy comparisonPolicy = getIgnorePolicy().getComparisonPolicy();
 
@@ -132,10 +134,11 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
       List<MergeLineFragment> lineFragments = manager.compareLines(sequences.get(0), sequences.get(1), sequences.get(2),
                                                                    comparisonPolicy, indicator);
 
-      List<MergeConflictType> conflictTypes = ReadAction.compute(() -> {
+      ThrowableComputable<List<MergeConflictType>, RuntimeException> action1 = () -> {
         indicator.checkCanceled();
         return ContainerUtil.map(lineFragments, (fragment) -> DiffUtil.getLineMergeType(fragment, documents, comparisonPolicy));
-      });
+      };
+      List<MergeConflictType> conflictTypes = AccessRule.read(action1);
 
       List<MergeInnerDifferences> innerFragments = null;
       if (getHighlightPolicy().isFineFragments()) {
@@ -145,13 +148,14 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
           final MergeLineFragment fragment = lineFragments.get(i);
           final MergeConflictType conflictType = conflictTypes.get(i);
 
-          List<CharSequence> chunks = ReadAction.compute(() -> {
+          ThrowableComputable<List<CharSequence>,RuntimeException> action = () -> {
             indicator.checkCanceled();
             return ThreeSide.map(side -> {
               if (!conflictType.isChange(side)) return null;
               return getChunkContent(fragment, documents, side);
             });
-          });
+          };
+          List<CharSequence> chunks = AccessRule.read(action);
 
           innerFragments.add(DiffUtil.compareThreesideInner(chunks, comparisonPolicy, indicator));
         }

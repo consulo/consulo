@@ -16,10 +16,8 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
@@ -34,10 +32,11 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
+import consulo.application.AccessRule;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -282,15 +281,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     super.doSave(saveSessions, readonlyFiles);
 
     if (!readonlyFiles.isEmpty()) {
-      ReadonlyStatusHandler.OperationStatus status;
-      AccessToken token = ReadAction.start();
-      try {
-        status = ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(getFilesList(readonlyFiles));
-      }
-      finally {
-        token.finish();
-      }
-
+      ReadonlyStatusHandler.OperationStatus status = AccessRule.read(() -> ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(getFilesList(readonlyFiles)));
       if (status.hasReadonlyFiles()) {
         ProjectImpl.dropUnableToSaveProjectNotification(myProject, status.getReadonlyFiles());
         throw new SaveCancelledException();

@@ -1,17 +1,17 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.MultiValuesMap;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import javax.annotation.Nonnull;
+import consulo.application.AccessRule;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
@@ -52,17 +52,15 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
 
   private void doCheck(final ProjectStructureElement element) {
     final ProjectStructureProblemsHolderImpl problemsHolder = new ProjectStructureProblemsHolderImpl();
-    new ReadAction() {
-      @Override
-      protected void run(final Result result) {
-        if (myStopped.get()) return;
+    AccessRule.read(() -> {
+      if (myStopped.get()) return;
 
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("checking " + element);
-        }
-        ProjectStructureValidator.check(element, problemsHolder);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("checking " + element);
       }
-    }.execute();
+      ProjectStructureValidator.check(element, problemsHolder);
+    });
+
     invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -72,8 +70,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
           LOG.debug("updating problems for " + element);
         }
         final ProjectStructureProblemDescription warning = myWarningsAboutUnused.get(element);
-        if (warning != null)
-          problemsHolder.registerProblem(warning);
+        if (warning != null) problemsHolder.registerProblem(warning);
         myProblemHolders.put(element, problemsHolder);
         myDispatcher.getMulticaster().problemsChanged(element);
       }
@@ -81,17 +78,15 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
   }
 
   private void doCollectUsages(final ProjectStructureElement element) {
-    final List<ProjectStructureElementUsage> usages = new ReadAction<List<ProjectStructureElementUsage>>() {
-      @Override
-      protected void run(final Result<List<ProjectStructureElementUsage>> result) {
-        if (myStopped.get()) return;
+    ThrowableComputable<List<ProjectStructureElementUsage>,RuntimeException> action = () -> {
+      if (myStopped.get()) return null;
 
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("collecting usages in " + element);
-        }
-        result.setResult(getUsagesInElement(element));
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("collecting usages in " + element);
       }
-    }.execute().getResultObject();
+      return getUsagesInElement(element);
+    };
+    final List<ProjectStructureElementUsage> usages = AccessRule.read(action);
 
     invokeLater(new Runnable() {
       @Override

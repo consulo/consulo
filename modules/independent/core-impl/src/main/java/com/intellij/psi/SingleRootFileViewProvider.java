@@ -18,7 +18,6 @@ package com.intellij.psi;
 import com.google.common.util.concurrent.Atomics;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.*;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.undo.UndoConstants;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
@@ -32,6 +31,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.NonPhysicalFileSystem;
 import com.intellij.openapi.vfs.PersistentFSConstants;
@@ -52,6 +52,7 @@ import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -653,7 +654,8 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     public CharSequence getText() {
       String content = myContent;
       if (content == null) {
-        myContent = content = ReadAction.compute(() -> myFile.calcTreeElement().getText());
+        ThrowableComputable<String,RuntimeException> action = () -> myFile.calcTreeElement().getText();
+        myContent = content = AccessRule.read(action);
       }
       return content;
     }

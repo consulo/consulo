@@ -23,7 +23,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -65,9 +64,9 @@ import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.ui.UIUtil;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -114,7 +113,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     boolean firstTime = ourApplication == null;
 
     ourApplication = ApplicationStarter.getInstance();
-   // ourApplication.setDataProvider(this);
+    // ourApplication.setDataProvider(this);
 
     if (firstTime) {
       cleanPersistedVFSContent();
@@ -198,8 +197,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   @Nonnull
   public static Project createProject(File projectDir, String creationPlace) {
     try {
-      Project project =
-        ProjectManagerEx.getInstanceEx().newProject(FileUtil.getNameWithoutExtension(projectDir), projectDir.getPath(), false, false);
+      Project project = ProjectManagerEx.getInstanceEx().newProject(FileUtil.getNameWithoutExtension(projectDir), projectDir.getPath(), false, false);
       assert project != null;
 
       project.putUserData(CREATION_PLACE, creationPlace);
@@ -270,15 +268,12 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     final File moduleFile = new File(baseDir.getPath().replace('/', File.separatorChar), moduleName);
     FileUtil.createIfDoesntExist(moduleFile);
     myFilesToDelete.add(moduleFile);
-    return new WriteAction<Module>() {
-      @Override
-      protected void run(Result<Module> result) throws Throwable {
-        final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(moduleFile);
-        Module module = ModuleManager.getInstance(project).newModule(moduleName, virtualFile.getPath());
-        module.getModuleDir();
-        result.setResult(module);
-      }
-    }.execute().getResultObject();
+    return WriteAction.compute(() -> {
+      final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(moduleFile);
+      Module module = ModuleManager.getInstance(project).newModule(moduleName, virtualFile.getPath());
+      module.getModuleDir();
+      return module;
+    });
   }
 
   public static void cleanupApplicationCaches(Project project) {
@@ -715,8 +710,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
   }
 
-  public static VirtualFile createTempFile(@NonNls String ext, @javax.annotation.Nullable byte[] bom, @NonNls String content, Charset charset)
-    throws IOException {
+  public static VirtualFile createTempFile(@NonNls String ext, @javax.annotation.Nullable byte[] bom, @NonNls String content, Charset charset) throws IOException {
     File temp = FileUtil.createTempFile("copy", "." + ext);
     setContentOnDisk(temp, bom, content, charset);
 
@@ -737,33 +731,30 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   }
 
   protected static VirtualFile createChildData(@Nonnull final VirtualFile dir, @Nonnull @NonNls final String name) {
-    return new WriteAction<VirtualFile>() {
-      @Override
-      protected void run(Result<VirtualFile> result) throws Throwable {
-        result.setResult(dir.createChildData(null, name));
-      }
-    }.execute().throwException().getResultObject();
+    try {
+      return WriteAction.compute(() -> dir.createChildData(null, name));
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   protected static VirtualFile createChildDirectory(@Nonnull final VirtualFile dir, @Nonnull @NonNls final String name) {
-    return new WriteAction<VirtualFile>() {
-      @Override
-      protected void run(Result<VirtualFile> result) throws Throwable {
-        result.setResult(dir.createChildDirectory(null, name));
-      }
-    }.execute().throwException().getResultObject();
+    try {
+      return WriteAction.compute(() -> dir.createChildDirectory(null, name));
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   protected static void delete(@Nonnull final VirtualFile file) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          file.delete(null);
-        }
-        catch (IOException e) {
-          fail();
-        }
+    WriteAction.run(() -> {
+      try {
+        file.delete(null);
+      }
+      catch (IOException e) {
+        fail();
       }
     });
   }

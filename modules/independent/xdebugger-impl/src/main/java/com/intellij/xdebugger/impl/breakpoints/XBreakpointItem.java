@@ -15,7 +15,6 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -29,9 +28,8 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 class XBreakpointItem extends BreakpointItem {
@@ -57,8 +55,7 @@ class XBreakpointItem extends BreakpointItem {
     if (plainView) {
       renderer.setIcon(getIcon());
     }
-    final SimpleTextAttributes attributes =
-            myBreakpoint.isEnabled() ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : SimpleTextAttributes.GRAYED_ATTRIBUTES;
+    final SimpleTextAttributes attributes = myBreakpoint.isEnabled() ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : SimpleTextAttributes.GRAYED_ATTRIBUTES;
     renderer.append(StringUtil.notNullize(getDisplayText()), attributes);
     String description = getUserDescription();
     if (!StringUtil.isEmpty(description)) {
@@ -162,12 +159,9 @@ class XBreakpointItem extends BreakpointItem {
   @Override
   public void removed(Project project) {
     final XBreakpointManagerImpl breakpointManager = getManager();
-    new WriteAction() {
-      @Override
-      protected void run(@Nonnull final Result result) {
-        breakpointManager.removeBreakpoint(myBreakpoint);
-      }
-    }.execute();
+    WriteAction.run(() -> {
+      breakpointManager.removeBreakpoint(myBreakpoint);
+    });
   }
 
   @Override

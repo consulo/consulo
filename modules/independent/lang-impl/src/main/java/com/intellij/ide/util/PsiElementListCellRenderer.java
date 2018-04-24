@@ -19,7 +19,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
@@ -28,6 +27,7 @@ import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -45,6 +45,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.AccessRule;
 import consulo.ide.IconDescriptorUpdaters;
 import javax.annotation.Nonnull;
 
@@ -264,11 +265,12 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
 
   @Nonnull
   public Comparable getComparingObject(T element) {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<String,RuntimeException> action = () -> {
       String elementText = getElementText(element);
       String containerText = getContainerText(element, elementText);
       return containerText != null ? elementText + " " + containerText : elementText;
-    });
+    };
+    return AccessRule.read(action);
   }
 
   public void installSpeedSearch(PopupChooserBuilder builder) {

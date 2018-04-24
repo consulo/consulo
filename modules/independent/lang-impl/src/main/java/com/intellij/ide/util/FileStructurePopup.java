@@ -41,7 +41,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -78,6 +77,7 @@ import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -952,11 +952,12 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     // NB!: this point is achievable if the following method returns null
     // see com.intellij.ide.util.treeView.NodeDescriptor.toString
     if (userObject instanceof StructureViewComponent.StructureViewTreeElementWrapper) {
-      return ReadAction.compute(() -> {
+      ThrowableComputable<String, RuntimeException> action = () -> {
         final ItemPresentation presentation =
                 ((StructureViewComponent.StructureViewTreeElementWrapper)userObject).getValue().getPresentation();
         return presentation.getPresentableText();
-      });
+      };
+      return AccessRule.read(action);
     }
 
     return null;

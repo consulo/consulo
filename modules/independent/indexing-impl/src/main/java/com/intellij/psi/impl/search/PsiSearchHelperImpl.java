@@ -20,7 +20,6 @@ import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.ReadActionProcessor;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
@@ -54,6 +53,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.text.StringSearcher;
+import consulo.application.AccessRule;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
@@ -473,12 +473,13 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     int dollarIndex = qName.lastIndexOf('$');
     int maxIndex = Math.max(dotIndex, dollarIndex);
     final String wordToSearch = maxIndex >= 0 ? qName.substring(maxIndex + 1) : qName;
-    final GlobalSearchScope theSearchScope = ReadAction.compute(() -> {
+    ThrowableComputable<GlobalSearchScope, RuntimeException> action1 = () -> {
       if (originalElement != null && myManager.isInProject(originalElement) && initialScope.isSearchInLibraries()) {
         return initialScope.intersectWith(GlobalSearchScope.projectScope(myManager.getProject()));
       }
       return initialScope;
-    });
+    };
+    final GlobalSearchScope theSearchScope = AccessRule.read(action1);
     PsiFile[] files = myDumbService.runReadActionInSmartMode(() -> CacheManager.getInstance(myManager.getProject()).getFilesWithWord(wordToSearch, UsageSearchContext.IN_PLAIN_TEXT, theSearchScope, true));
 
     final StringSearcher searcher = new StringSearcher(qName, true, true, false);
@@ -496,7 +497,8 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
         final PsiFile psiFile = files[i];
         if (psiFile instanceof PsiBinaryFile) continue;
 
-        final CharSequence text = ReadAction.compute(() -> psiFile.getViewProvider().getContents());
+        ThrowableComputable<CharSequence, RuntimeException> action = () -> psiFile.getViewProvider().getContents();
+        final CharSequence text = AccessRule.read(action);
 
         LowLevelSearchUtil.processTextOccurrences(text, 0, text.length(), searcher, progress, index -> {
           boolean isReferenceOK = myDumbService.runReadActionInSmartMode(() -> {
@@ -976,11 +978,13 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                                @Nonnull GlobalSearchScope searchScope,
                                                @Nonnull final Processor<UsageInfo> processor,
                                                @Nonnull final UsageInfoFactory factory) {
-    PsiSearchHelper helper = ReadAction.compute(() -> SERVICE.getInstance(element.getProject()));
+    ThrowableComputable<PsiSearchHelper, RuntimeException> action1 = () -> SERVICE.getInstance(element.getProject());
+    PsiSearchHelper helper = AccessRule.read(action1);
 
     return helper.processUsagesInNonJavaFiles(element, stringToSearch, (psiFile, startOffset, endOffset) -> {
       try {
-        UsageInfo usageInfo = ReadAction.compute(() -> factory.createUsageInfo(psiFile, startOffset, endOffset));
+        ThrowableComputable<UsageInfo, RuntimeException> action = () -> factory.createUsageInfo(psiFile, startOffset, endOffset);
+        UsageInfo usageInfo = AccessRule.read(action);
         return usageInfo == null || processor.process(usageInfo);
       }
       catch (ProcessCanceledException e) {

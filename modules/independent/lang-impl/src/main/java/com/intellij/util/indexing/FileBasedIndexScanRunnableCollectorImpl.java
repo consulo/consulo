@@ -15,8 +15,6 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
@@ -27,11 +25,12 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
+import consulo.application.AccessRule;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +57,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
 
   @Override
   public List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator) {
-    try (AccessToken ignore = ReadAction.start()) {
+    return AccessRule.read(() -> {
       if (myProject.isDisposed()) {
         return Collections.emptyList();
       }
@@ -111,6 +110,6 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
         }
       }
       return tasks;
-    }
+    });
   }
 }

@@ -39,7 +39,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.Caret;
@@ -54,12 +53,14 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.application.AccessRule;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,6 +68,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
+import javax.swing.Action;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -369,18 +371,20 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         List<DocumentContent> contents = myMergeRequest.getContents();
         List<Document> documents = ContainerUtil.map(contents, DocumentContent::getDocument);
-        List<CharSequence> sequences = ReadAction.compute(() -> {
+        ThrowableComputable<List<CharSequence>, RuntimeException> action1 = () -> {
           return ContainerUtil.map(documents, Document::getImmutableCharSequence);
-        });
+        };
+        List<CharSequence> sequences = AccessRule.read(action1);
 
         ComparisonManager manager = ComparisonManager.getInstance();
         List<MergeLineFragment> lineFragments = manager.compareLines(sequences.get(0), sequences.get(1), sequences.get(2),
                                                                      ComparisonPolicy.DEFAULT, indicator);
 
-        List<MergeConflictType> conflictTypes = ReadAction.compute(() -> {
+        ThrowableComputable<List<MergeConflictType>,RuntimeException> action = () -> {
           indicator.checkCanceled();
           return ContainerUtil.map(lineFragments, (fragment -> DiffUtil.getLineMergeType(fragment, documents, ComparisonPolicy.DEFAULT)));
-        });
+        };
+        List<MergeConflictType> conflictTypes = AccessRule.read(action);
 
         return apply(lineFragments, conflictTypes);
       }

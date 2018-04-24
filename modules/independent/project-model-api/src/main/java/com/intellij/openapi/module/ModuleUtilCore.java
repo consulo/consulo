@@ -16,8 +16,6 @@
 package com.intellij.openapi.module;
 
 import com.google.common.base.Predicates;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
@@ -30,13 +28,14 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.pointers.NamedPointer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class ModuleUtilCore {
@@ -59,12 +58,7 @@ public class ModuleUtilCore {
   }
 
   public static String getModuleNameInReadAction(@Nonnull final Module module) {
-    return new ReadAction<String>() {
-      @Override
-      protected void run(final Result<String> result) throws Throwable {
-        result.setResult(module.getName());
-      }
-    }.execute().getResultObject();
+    return AccessRule.read(module::getName);
   }
 
   public static boolean isModuleDisposed(PsiElement element) {

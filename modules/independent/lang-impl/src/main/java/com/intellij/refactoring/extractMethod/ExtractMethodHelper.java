@@ -19,7 +19,6 @@ import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.find.FindManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -41,6 +40,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.ReplacePromptDialog;
 import com.intellij.util.Consumer;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -98,7 +99,8 @@ public class ExtractMethodHelper {
       return ProgressManager.getInstance().runProcessWithProgressSynchronously(
               (ThrowableComputable<List<SimpleMatch>, RuntimeException>)() -> {
                 ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
-                return ReadAction.compute(() -> finder.findDuplicates(searchScopes, generatedMethod));
+                ThrowableComputable<List<SimpleMatch>, RuntimeException> action = () -> finder.findDuplicates(searchScopes, generatedMethod);
+                return AccessRule.read(action);
               }, RefactoringBundle.message("searching.for.duplicates"), true, project);
     }
     catch (ProcessCanceledException e) {

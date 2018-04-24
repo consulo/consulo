@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -51,6 +50,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
@@ -67,10 +67,11 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
+import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
@@ -291,11 +292,12 @@ public class FindUsagesManager {
     Task.Backgroundable task = new Task.Backgroundable(handler.getProject(), "Finding Usages") {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
-        UsageSearcher usageSearcher = ReadAction.compute(() -> {
+        ThrowableComputable<UsageSearcher, RuntimeException> action = () -> {
           PsiElement2UsageTargetAdapter[] primaryTargets = PsiElement2UsageTargetAdapter.convert(primaryElements);
           PsiElement2UsageTargetAdapter[] secondaryTargets = PsiElement2UsageTargetAdapter.convert(secondaryElements);
           return createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, null);
-        });
+        };
+        UsageSearcher usageSearcher = AccessRule.read(action);
         usageSearcher.generate(processor);
       }
     };
@@ -337,7 +339,7 @@ public class FindUsagesManager {
                                                    @Nonnull final FindUsagesHandler handler,
                                                    @Nonnull FindUsagesOptions options,
                                                    final PsiFile scopeFile) throws PsiInvalidElementAccessException {
-    ReadAction.run(() -> {
+    AccessRule.read(() -> {
       PsiElement[] primaryElements = PsiElement2UsageTargetAdapter.convertToPsiElements(primaryTargets);
       PsiElement[] secondaryElements = PsiElement2UsageTargetAdapter.convertToPsiElements(secondaryTargets);
 
@@ -348,17 +350,21 @@ public class FindUsagesManager {
 
     FindUsagesOptions optionsClone = options.clone();
     return processor -> {
-      PsiElement[] primaryElements = ReadAction.compute(() -> PsiElement2UsageTargetAdapter.convertToPsiElements(primaryTargets));
-      PsiElement[] secondaryElements = ReadAction.compute(() -> PsiElement2UsageTargetAdapter.convertToPsiElements(secondaryTargets));
+      ThrowableComputable<PsiElement[], RuntimeException> action3 = () -> PsiElement2UsageTargetAdapter.convertToPsiElements(primaryTargets);
+      PsiElement[] primaryElements = AccessRule.read(action3);
+      ThrowableComputable<PsiElement[], RuntimeException> action2 = () -> PsiElement2UsageTargetAdapter.convertToPsiElements(secondaryTargets);
+      PsiElement[] secondaryElements = AccessRule.read(action2);
 
-      Project project = ReadAction.compute(() -> scopeFile != null ? scopeFile.getProject() : primaryElements[0].getProject());
+      ThrowableComputable<Project, RuntimeException> action1 = () -> scopeFile != null ? scopeFile.getProject() : primaryElements[0].getProject();
+      Project project = AccessRule.read(action1);
       dropResolveCacheRegularly(ProgressManager.getInstance().getProgressIndicator(), project);
 
       if (scopeFile != null) {
         optionsClone.searchScope = new LocalSearchScope(scopeFile);
       }
       final Processor<UsageInfo> usageInfoProcessor = new CommonProcessors.UniqueProcessor<>(usageInfo -> {
-        Usage usage = ReadAction.compute(() -> UsageInfoToUsageConverter.convert(primaryElements, usageInfo));
+        ThrowableComputable<Usage, RuntimeException> action = () -> UsageInfoToUsageConverter.convert(primaryElements, usageInfo);
+        Usage usage = AccessRule.read(action);
         return processor.process(usage);
       });
       final Iterable<PsiElement> elements = ContainerUtil.concat(primaryElements, secondaryElements);
@@ -388,10 +394,11 @@ public class FindUsagesManager {
         }
 
         PsiSearchHelper.SERVICE.getInstance(project).processRequests(optionsClone.fastTrack, ref -> {
-          UsageInfo info = ReadAction.compute(() -> {
+          ThrowableComputable<UsageInfo,RuntimeException> action = () -> {
             if (!ref.getElement().isValid()) return null;
             return new UsageInfo(ref);
-          });
+          };
+          UsageInfo info = AccessRule.read(action);
           return info == null || usageInfoProcessor.process(info);
         });
       }

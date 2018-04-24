@@ -22,7 +22,6 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.diagnostic.Logger;
@@ -41,9 +40,9 @@ import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,12 +142,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
 
           final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
           if (fileByPath != null) {
-            new WriteAction<Object>() {
-              @Override
-              protected void run(Result<Object> result) throws Throwable {
-                fileByPath.refresh(false, true);
-              }
-            }.execute();
+            WriteAction.run(() -> fileByPath.refresh(false, true));
           }
         }
       });

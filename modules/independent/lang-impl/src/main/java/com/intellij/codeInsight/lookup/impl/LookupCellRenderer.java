@@ -20,8 +20,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.codeInsight.lookup.LookupValueWithUIHint;
 import com.intellij.codeInsight.lookup.RealLookupElementPresentation;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -43,9 +41,10 @@ import com.intellij.util.containers.FList;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -142,8 +141,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     FontMetrics boldMetrics = getRealFontMetrics(item, true);
     final LookupElementPresentation presentation = new RealLookupElementPresentation(isSelected ? getMaxWidth() : allowedWidth,
                                                                                      normalMetrics, boldMetrics, myLookup);
-    AccessToken token = ReadAction.start();
-    try {
+    AccessRule.read(() -> {
       if (item.isValid()) {
         try {
           item.renderElement(presentation);
@@ -160,10 +158,7 @@ public class LookupCellRenderer implements ListCellRenderer {
         presentation.setItemTextForeground(JBColor.RED);
         presentation.setItemText("Invalid");
       }
-    }
-    finally {
-      token.finish();
-    }
+    });
 
     myNameComponent.clear();
     myNameComponent.setBackground(background);

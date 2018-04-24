@@ -39,8 +39,8 @@ import com.intellij.testFramework.PlatformLangTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBusConnection;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -56,17 +56,21 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
 
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(myTestRootDisposable);
     connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
-      @Override public void before(@Nonnull List<? extends VFileEvent> events) { checkFiles(events, true); }
+      @Override
+      public void before(@Nonnull List<? extends VFileEvent> events) {
+        checkFiles(events, true);
+      }
 
-      @Override public void after(@Nonnull List<? extends VFileEvent> events) { checkFiles(events, false); }
+      @Override
+      public void after(@Nonnull List<? extends VFileEvent> events) {
+        checkFiles(events, false);
+      }
 
       private void checkFiles(List<? extends VFileEvent> events, boolean before) {
         for (VFileEvent event : events) {
           VirtualFile file = event.getFile();
           if (file != null) {
-            boolean shouldBeInvalid =
-                    event instanceof VFileCreateEvent && before && !((VFileCreateEvent)event).isReCreation() ||
-                    event instanceof VFileDeleteEvent && !before;
+            boolean shouldBeInvalid = event instanceof VFileCreateEvent && before && !((VFileCreateEvent)event).isReCreation() || event instanceof VFileDeleteEvent && !before;
             assertEquals(event.toString(), !shouldBeInvalid, file.isValid());
           }
         }
@@ -276,7 +280,8 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
 
     final boolean safeWrite = GeneralSettings.getInstance().isUseSafeWrite();
     final File dir = FileUtil.createTempDirectory("hardlinks.", ".dir", false);
-    final SafeWriteRequestor requestor = new SafeWriteRequestor() { };
+    final SafeWriteRequestor requestor = new SafeWriteRequestor() {
+    };
     try {
       GeneralSettings.getInstance().setUseSafeWrite(false);
 
@@ -585,42 +590,36 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
     }
   }
 
-  public void testInvalidFileName() {
-    new WriteAction() {
-      @Override
-      protected void run(@Nonnull Result result) throws Throwable {
-        VirtualFile tempDir = myFS.refreshAndFindFileByIoFile(createTempDirectory());
-        assertNotNull(tempDir);
-        try {
-          tempDir.createChildData(this, "a/b");
-          fail("invalid file name should have been rejected");
-        }
-        catch (IOException e) {
-          assertEquals(VfsBundle.message("file.invalid.name.error", "a/b"), e.getMessage());
-        }
+  public void testInvalidFileName() throws Exception {
+    WriteAction.run(() -> {
+      VirtualFile tempDir = myFS.refreshAndFindFileByIoFile(createTempDirectory());
+      assertNotNull(tempDir);
+      try {
+        tempDir.createChildData(this, "a/b");
+        fail("invalid file name should have been rejected");
       }
-    }.execute();
+      catch (IOException e) {
+        assertEquals(VfsBundle.message("file.invalid.name.error", "a/b"), e.getMessage());
+      }
+    });
   }
 
-  public void testDuplicateViaRename() {
-    new WriteAction() {
-      @Override
-      protected void run(@Nonnull Result result) throws Throwable {
-        VirtualFile tempDir = myFS.refreshAndFindFileByIoFile(createTempDirectory());
-        assertNotNull(tempDir);
+  public void testDuplicateViaRename() throws Exception {
+    WriteAction.run(() -> {
+      VirtualFile tempDir = myFS.refreshAndFindFileByIoFile(createTempDirectory());
+      assertNotNull(tempDir);
 
-        VirtualFile file1 = tempDir.createChildData(this, "a.txt");
-        FileUtil.delete(VfsUtilCore.virtualToIoFile(file1));
+      VirtualFile file1 = tempDir.createChildData(this, "a.txt");
+      FileUtil.delete(VfsUtilCore.virtualToIoFile(file1));
 
-        VirtualFile file2 = tempDir.createChildData(this, "b.txt");
-        try {
-          file2.rename(this, "a.txt");
-          fail("duplicate file name should have been rejected");
-        }
-        catch (IOException e) {
-          assertEquals(VfsBundle.message("vfs.target.already.exists.error", file1.getPath()), e.getMessage());
-        }
+      VirtualFile file2 = tempDir.createChildData(this, "b.txt");
+      try {
+        file2.rename(this, "a.txt");
+        fail("duplicate file name should have been rejected");
       }
-    }.execute();
+      catch (IOException e) {
+        assertEquals(VfsBundle.message("vfs.target.already.exists.error", file1.getPath()), e.getMessage());
+      }
+    });
   }
 }

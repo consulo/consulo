@@ -266,6 +266,11 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
+  public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
+    return s != null && s.length() != 0 && s.charAt(0) == prefix;
+  }
+
+  @Contract(pure = true)
   public static boolean endsWithChar(@javax.annotation.Nullable CharSequence s, char suffix) {
     return s != null && s.length() != 0 && s.charAt(s.length() - 1) == suffix;
   }

@@ -16,7 +16,6 @@
 package com.intellij.testFramework.fixtures.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -25,8 +24,8 @@ import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.testFramework.fixtures.TempDirTestFixture;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 
@@ -41,12 +40,12 @@ public class LightTempDirTestFixtureImpl extends BaseFixture implements TempDirT
   public LightTempDirTestFixtureImpl() {
     final VirtualFile fsRoot = VirtualFileManager.getInstance().findFileByUrl("temp:///");
     assertNotNull(fsRoot);
-    mySourceRoot = new WriteAction<VirtualFile>() {
-      @Override
-      protected void run(final Result<VirtualFile> result) throws Throwable {
-        result.setResult(fsRoot.createChildDirectory(this, "root"));
-      }
-    }.execute().getResultObject();
+    try {
+      mySourceRoot = WriteAction.compute(() -> fsRoot.createChildDirectory(this, "root"));
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     myUsePlatformSourceRoot = false;
   }
 

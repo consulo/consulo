@@ -32,8 +32,6 @@ import com.intellij.navigation.ChooseByNameRegistry;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -50,9 +48,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,8 +89,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
       @Override
       public void elementChosen(ChooseByNamePopup popup, Object element) {
-        AccessToken token = ReadAction.start();
-        try {
+        AccessRule.read(() -> {
           if (element instanceof PsiElement) {
             final PsiElement psiElement = getElement(((PsiElement)element), popup);
             final VirtualFile file = PsiUtilCore.getVirtualFile(psiElement);
@@ -116,10 +114,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
           else {
             EditSourceUtil.navigate(((NavigationItem)element), true, popup.isOpenInCurrentWindowRequested());
           }
-        }
-        finally {
-          token.finish();
-        }
+        });
       }
     }, "Classes matching pattern", true);
   }

@@ -1114,7 +1114,7 @@ public class StringUtil extends StringUtilRt {
 
   @Contract(pure = true)
   public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
-    return s != null && s.length() != 0 && s.charAt(0) == prefix;
+    return StringUtilRt.startsWithChar(s, prefix);
   }
 
   @Contract(pure = true)

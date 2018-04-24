@@ -17,7 +17,6 @@ package com.intellij.packaging.impl.artifacts;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
@@ -42,8 +41,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -380,18 +379,15 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   @Override
   @Nonnull
   public Artifact addArtifact(@Nonnull final String name, @Nonnull final ArtifactType type, final CompositePackagingElement<?> root) {
-    return new WriteAction<Artifact>() {
-      @Override
-      protected void run(final Result<Artifact> result) {
-        final ModifiableArtifactModel model = createModifiableModel();
-        final ModifiableArtifact artifact = model.addArtifact(name, type);
-        if (root != null) {
-          artifact.setRootElement(root);
-        }
-        model.commit();
-        result.setResult(artifact);
+    return WriteAction.compute(() -> {
+      final ModifiableArtifactModel model = createModifiableModel();
+      final ModifiableArtifact artifact = model.addArtifact(name, type);
+      if (root != null) {
+        artifact.setRootElement(root);
       }
-    }.execute().getResultObject();
+      model.commit();
+      return artifact;
+    });
   }
 
   @Override
@@ -404,12 +400,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     final ModifiableArtifactModel model = createModifiableModel();
     final CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
     PackagingElementFactory.getInstance().getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        model.commit();
-      }
-    }.execute();
+    WriteAction.run(model::commit);
   }
 
   @Override

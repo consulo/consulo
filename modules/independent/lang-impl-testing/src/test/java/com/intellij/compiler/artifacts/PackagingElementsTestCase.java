@@ -1,7 +1,6 @@
 package com.intellij.compiler.artifacts;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -9,17 +8,17 @@ import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.PathUtil;
+import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
 import junit.framework.Assert;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -97,28 +96,23 @@ public abstract class PackagingElementsTestCase extends ArtifactsTestCase {
     return addProjectLibrary(module, name, DependencyScope.COMPILE, jars);
   }
 
-  protected Library addProjectLibrary(final @Nullable Module module, final String name, final DependencyScope scope,
-                                      final VirtualFile... jars) {
+  protected Library addProjectLibrary(final @Nullable Module module, final String name, final DependencyScope scope, final VirtualFile... jars) {
     return addProjectLibrary(myProject, module, name, scope, jars);
   }
 
-  static Library addProjectLibrary(final Project project, final @javax.annotation.Nullable Module module, final String name, final DependencyScope scope,
-                                   final VirtualFile[] jars) {
-    return new WriteAction<Library>() {
-      @Override
-      protected void run(final Result<Library> result) {
-        final Library library = LibraryTablesRegistrar.getInstance().getLibraryTable(project).createLibrary(name);
-        final Library.ModifiableModel libraryModel = library.getModifiableModel();
-        for (VirtualFile jar : jars) {
-          libraryModel.addRoot(jar, BinariesOrderRootType.getInstance());
-        }
-        libraryModel.commit();
-        if (module != null) {
-          ModuleRootModificationUtil.addDependency(module, library, scope, false);
-        }
-        result.setResult(library);
+  static Library addProjectLibrary(final Project project, final @javax.annotation.Nullable Module module, final String name, final DependencyScope scope, final VirtualFile[] jars) {
+    return WriteAction.compute(() -> {
+      final Library library = LibraryTablesRegistrar.getInstance().getLibraryTable(project).createLibrary(name);
+      final Library.ModifiableModel libraryModel = library.getModifiableModel();
+      for (VirtualFile jar : jars) {
+        libraryModel.addRoot(jar, BinariesOrderRootType.getInstance());
       }
-    }.execute().getResultObject();
+      libraryModel.commit();
+      if (module != null) {
+        ModuleRootModificationUtil.addDependency(module, library, scope, false);
+      }
+      return library;
+    });
   }
 
   protected static void addModuleLibrary(final Module module, final VirtualFile jar) {

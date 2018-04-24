@@ -34,7 +34,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.DiffBundle;
@@ -52,12 +51,10 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UserDataHolder;
+import com.intellij.openapi.util.*;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
 import gnu.trove.TIntFunction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
@@ -274,9 +271,10 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       final Document document1 = getContent1().getDocument();
       final Document document2 = getContent2().getDocument();
 
-      final CharSequence[] texts = ReadAction.compute(() -> {
+      ThrowableComputable<CharSequence[], RuntimeException> action1 = () -> {
         return new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-      });
+      };
+      final CharSequence[] texts = AccessRule.read(action1);
 
       final List<LineFragment> fragments = DiffUtil.compare(myRequest, texts[0], texts[1], getDiffConfig(), indicator);
 
@@ -284,7 +282,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       final DocumentContent content2 = getContent2();
 
       indicator.checkCanceled();
-      TwosideDocumentData data = ReadAction.compute(() -> {
+      ThrowableComputable<TwosideDocumentData,RuntimeException> action = () -> {
         indicator.checkCanceled();
         UnifiedFragmentBuilder builder = new UnifiedFragmentBuilder(fragments, document1, document2, myMasterSide);
         builder.exec();
@@ -299,7 +297,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                                                                                            builder.getRanges());
 
         return new TwosideDocumentData(builder, highlighter, rangeHighlighter);
-      });
+      };
+      TwosideDocumentData data = AccessRule.read(action);
       UnifiedFragmentBuilder builder = data.getBuilder();
 
       FileType fileType = content2.getContentType() == null ? content1.getContentType() : content2.getContentType();

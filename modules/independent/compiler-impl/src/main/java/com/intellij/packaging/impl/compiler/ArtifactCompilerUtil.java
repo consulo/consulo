@@ -15,8 +15,6 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.diagnostic.Logger;
@@ -36,9 +34,10 @@ import com.intellij.packaging.impl.elements.FileOrDirectoryCopyPackagingElement;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
+import consulo.application.AccessRule;
 import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -129,19 +128,14 @@ public class ArtifactCompilerUtil {
         return new THashMap<String, Collection<Artifact>>(FileUtil.PATH_HASHING_STRATEGY);
       }
     };
-    new ReadAction() {
-      @Override
-      protected void run(final Result r) {
-        for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
-          String outputPath = artifact.getOutputFilePath();
-          if (!StringUtil.isEmpty(outputPath)) {
-            result.putValue(outputPath, artifact);
-          }
+    AccessRule.read(() -> {
+      for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
+        String outputPath = artifact.getOutputFilePath();
+        if (!StringUtil.isEmpty(outputPath)) {
+          result.putValue(outputPath, artifact);
         }
       }
-    }.execute();
-
-
+    });
     return result;
   }
 }

@@ -26,7 +26,9 @@ import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.diagnostic.PluginException;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
@@ -78,6 +80,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.OrderedSet;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerSorter;
 import consulo.compiler.ModuleCompilerPathsManager;
@@ -92,10 +95,9 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
@@ -888,39 +890,37 @@ public class CompileDriver {
   }
 
   private void clearAffectedOutputPathsIfPossible(final CompileContextEx context) {
-    final List<File> scopeOutputs = new ReadAction<List<File>>() {
-      @Override
-      protected void run(final Result<List<File>> result) {
-        final MultiMap<File, Module> outputToModulesMap = new MultiMap<>();
-        for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-          ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
-          for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider
-            .filter(ContentFolderScopes.productionAndTest())) {
-            final String outputPathUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
-            if (outputPathUrl != null) {
-              final String path = VirtualFileManager.extractPath(outputPathUrl);
-              outputToModulesMap.putValue(new File(path), module);
-            }
+    ThrowableComputable<List<File>, RuntimeException> action = () -> {
+      final MultiMap<File, Module> outputToModulesMap = new MultiMap<>();
+      for (Module module : ModuleManager.getInstance(myProject).getModules()) {
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider
+                .filter(ContentFolderScopes.productionAndTest())) {
+          final String outputPathUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+          if (outputPathUrl != null) {
+            final String path = VirtualFileManager.extractPath(outputPathUrl);
+            outputToModulesMap.putValue(new File(path), module);
           }
         }
-        final Set<Module> affectedModules = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
-        List<File> scopeOutputs = new ArrayList<>(affectedModules.size() * 2);
-        for (File output : outputToModulesMap.keySet()) {
-          if (affectedModules.containsAll(outputToModulesMap.get(output))) {
-            scopeOutputs.add(output);
-          }
-        }
-
-        final Set<Artifact> artifactsToBuild = ArtifactCompileScope.getArtifactsToBuild(myProject, context.getCompileScope(), true);
-        for (Artifact artifact : artifactsToBuild) {
-          final String outputFilePath = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
-          if (outputFilePath != null) {
-            scopeOutputs.add(new File(FileUtil.toSystemDependentName(outputFilePath)));
-          }
-        }
-        result.setResult(scopeOutputs);
       }
-    }.execute().getResultObject();
+      final Set<Module> affectedModules = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
+      List<File> result = new ArrayList<>(affectedModules.size() * 2);
+      for (File output : outputToModulesMap.keySet()) {
+        if (affectedModules.containsAll(outputToModulesMap.get(output))) {
+          result.add(output);
+        }
+      }
+
+      final Set<Artifact> artifactsToBuild = ArtifactCompileScope.getArtifactsToBuild(myProject, context.getCompileScope(), true);
+      for (Artifact artifact : artifactsToBuild) {
+        final String outputFilePath = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
+        if (outputFilePath != null) {
+          result.add(new File(FileUtil.toSystemDependentName(outputFilePath)));
+        }
+      }
+      return result;
+    };
+    final List<File> scopeOutputs = AccessRule.read(action);
     if (scopeOutputs.size() > 0) {
       CompilerUtil.runInContext(context, CompilerBundle.message("progress.clearing.output"), () -> CompilerUtil.clearOutputDirectories(scopeOutputs));
     }
@@ -2109,20 +2109,17 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
             return false;
           }
         }
-        final Boolean refreshSuccess = new WriteAction<Boolean>() {
-          @Override
-          protected void run(Result<Boolean> result) throws Throwable {
-            LocalFileSystem.getInstance().refreshIoFiles(nonExistingOutputPaths);
-            Boolean res = Boolean.TRUE;
-            for (File file : nonExistingOutputPaths) {
-              if (LocalFileSystem.getInstance().findFileByIoFile(file) == null) {
-                res = Boolean.FALSE;
-                break;
-              }
+        final Boolean refreshSuccess = WriteAction.compute(() -> {
+          LocalFileSystem.getInstance().refreshIoFiles(nonExistingOutputPaths);
+          Boolean res = Boolean.TRUE;
+          for (File file : nonExistingOutputPaths) {
+            if (LocalFileSystem.getInstance().findFileByIoFile(file) == null) {
+              res = Boolean.FALSE;
+              break;
             }
-            result.setResult(res);
           }
-        }.execute().getResultObject();
+          return res;
+        });
 
         if (!refreshSuccess.booleanValue()) {
           return false;

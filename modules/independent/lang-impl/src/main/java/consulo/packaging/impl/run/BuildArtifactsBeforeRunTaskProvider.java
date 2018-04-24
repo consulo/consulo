@@ -24,8 +24,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.project.Project;
@@ -41,9 +39,10 @@ import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTask;
 import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTaskProvider;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,8 @@ import java.util.List;
  * @since 15:11/14.06.13
  */
 public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBeforeRunTaskProvider<BuildArtifactsBeforeRunTask> {
-  @NonNls public static final String BUILD_ARTIFACTS_ID = "BuildArtifacts";
+  @NonNls
+  public static final String BUILD_ARTIFACTS_ID = "BuildArtifacts";
   public static final Key<BuildArtifactsBeforeRunTask> ID = Key.create(BUILD_ARTIFACTS_ID);
 
   public BuildArtifactsBeforeRunTaskProvider(Project project) {
@@ -86,22 +86,16 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
   }
 
   @Override
-  public boolean executeTask(DataContext context,
-                             RunConfiguration configuration,
-                             ExecutionEnvironment env,
-                             final BuildArtifactsBeforeRunTask task) {
+  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, final BuildArtifactsBeforeRunTask task) {
     final Ref<Boolean> result = Ref.create(false);
     final Semaphore finished = new Semaphore();
 
     final List<Artifact> artifacts = new ArrayList<Artifact>();
-    new ReadAction() {
-      @Override
-      protected void run(final Result result) {
-        for (ArtifactPointer pointer : task.getArtifactPointers()) {
-          ContainerUtil.addIfNotNull(pointer.get(), artifacts);
-        }
+    AccessRule.read(() -> {
+      for (ArtifactPointer pointer : task.getArtifactPointers()) {
+        ContainerUtil.addIfNotNull(artifacts, pointer.get());
       }
-    }.execute();
+    });
 
     final CompileStatusNotification callback = new CompileStatusNotification() {
       @Override
@@ -113,8 +107,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     final Condition<Compiler> compilerFilter = new Condition<Compiler>() {
       @Override
       public boolean value(com.intellij.openapi.compiler.Compiler compiler) {
-        return compiler instanceof ArtifactsCompiler ||
-               compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
+        return compiler instanceof ArtifactsCompiler || compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
       }
     };
 
@@ -131,10 +124,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     return result.get();
   }
 
-  public static void setBuildArtifactBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent,
-                                                     Project project,
-                                                     @Nonnull Artifact artifact,
-                                                     final boolean enable) {
+  public static void setBuildArtifactBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent, Project project, @Nonnull Artifact artifact, final boolean enable) {
     final DataContext dataContext = DataManager.getInstance().getDataContext(runConfigurationEditorComponent);
     final ConfigurationSettingsEditorWrapper editor = dataContext.getData(ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY);
     if (editor != null) {
@@ -168,9 +158,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     }
   }
 
-  public static void setBuildArtifactBeforeRun(@Nonnull Project project,
-                                               @Nonnull RunConfiguration configuration,
-                                               @Nonnull Artifact artifact) {
+  public static void setBuildArtifactBeforeRun(@Nonnull Project project, @Nonnull RunConfiguration configuration, @Nonnull Artifact artifact) {
     RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
     final List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, ID);
     if (buildArtifactsTasks.isEmpty()) { //Add new task if absent

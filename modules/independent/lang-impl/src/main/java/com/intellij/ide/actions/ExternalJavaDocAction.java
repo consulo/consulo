@@ -26,19 +26,20 @@ import com.intellij.lang.documentation.ExternalDocumentationProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
 import consulo.codeInsight.TargetElementUtil;
 import javax.annotation.Nullable;
 
@@ -92,7 +93,8 @@ public class ExternalJavaDocAction extends AnAction {
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       List<String> urls;
       if (StringUtil.isEmptyOrSpaces(docUrl)) {
-        urls = ReadAction.compute(() -> provider.getUrlFor(element, originalElement));
+        ThrowableComputable<List<String>,RuntimeException> action = () -> provider.getUrlFor(element, originalElement);
+        urls = AccessRule.read(action);
       }
       else {
         urls = Collections.singletonList(docUrl);

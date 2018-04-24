@@ -1,11 +1,13 @@
 package com.intellij.dvcs.repo;
 
-import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -110,7 +112,7 @@ public abstract class AbstractRepositoryManager<T extends Repository>
   @javax.annotation.Nullable
   private T validateAndGetRepository(@javax.annotation.Nullable Repository repository) {
     if (repository == null || !myVcs.equals(repository.getVcs())) return null;
-    return ReadAction.compute(() -> {
+    ThrowableComputable<T,RuntimeException> action = () -> {
       VirtualFile root = repository.getRoot();
       if (root.isValid()) {
         VirtualFile vcsDir = root.findChild(myRepoDirName);
@@ -118,7 +120,8 @@ public abstract class AbstractRepositoryManager<T extends Repository>
         return vcsDir != null && vcsDir.exists() ? (T)repository : null;
       }
       return null;
-    });
+    };
+    return AccessRule.read(action);
   }
 
   @Override

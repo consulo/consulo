@@ -18,41 +18,33 @@ package com.intellij.openapi.application;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
+import consulo.annotations.DeprecationInfo;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use consulo.application.Action#read()")
 public abstract class ReadAction<T> extends BaseActionRunnable<T> {
   @Nonnull
   @Override
   public RunResult<T> execute() {
     final RunResult<T> result = new RunResult<T>(this);
-    return ApplicationManager.getApplication().runReadAction(new Computable<RunResult<T>>() {
-      @Override
-      public RunResult<T> compute() {
-        return result.run();
-      }
-    });
+    return ApplicationManager.getApplication().runReadAction((Computable<RunResult<T>>)result::run);
   }
 
+  @Deprecated
   public static AccessToken start() {
     return ApplicationManager.getApplication().acquireReadActionLock();
   }
 
+  @Deprecated
   public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
-    AccessToken token = start();
-    try {
-      action.run();
-    } finally {
-      token.finish();
-    }
+    AccessRule.read(action);
   }
 
+  @Deprecated
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
-    AccessToken token = start();
-    try {
-      return action.compute();
-    } finally {
-      token.finish();
-    }
+    return AccessRule.read(action);
   }
-
 }

@@ -30,6 +30,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.HyperlinkAdapter;
@@ -42,6 +43,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import consulo.application.AccessRule;
 import consulo.start.CommandLineArgs;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
@@ -217,7 +219,8 @@ public class SystemHealthMonitor implements ApplicationComponent {
             ourFreeSpaceCalculation.set(null);
 
             if (fileUsableSpace < LOW_DISK_SPACE_THRESHOLD) {
-              if (ReadAction.compute(() -> NotificationsConfiguration.getNotificationsConfiguration()) == null) {
+              ThrowableComputable<NotificationsConfiguration,RuntimeException> action = () -> NotificationsConfiguration.getNotificationsConfiguration();
+              if (AccessRule.read(action) == null) {
                 ourFreeSpaceCalculation.set(future);
                 restart(1);
                 return;

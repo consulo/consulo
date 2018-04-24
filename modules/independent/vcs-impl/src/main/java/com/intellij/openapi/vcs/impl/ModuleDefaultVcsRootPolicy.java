@@ -17,7 +17,6 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.lifecycle.PeriodicalTasksCloser;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -37,6 +36,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.project.ProjectKt;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -82,7 +83,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
       }
     }
     // assertion for read access inside
-    Module[] modules = ReadAction.compute(myModuleManager::getModules);
+    Module[] modules = AccessRule.read(myModuleManager::getModules);
     for (Module module : modules) {
       final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
       for (VirtualFile file : files) {
@@ -168,7 +169,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
 
   @Nonnull
   private Collection<VirtualFile> getContentRoots() {
-    Module[] modules = ReadAction.compute(myModuleManager::getModules);
+    Module[] modules = AccessRule.read(myModuleManager::getModules);
     return Arrays.stream(modules)
             .map(module -> ModuleRootManager.getInstance(module).getContentRoots())
             .flatMap(Arrays::stream)

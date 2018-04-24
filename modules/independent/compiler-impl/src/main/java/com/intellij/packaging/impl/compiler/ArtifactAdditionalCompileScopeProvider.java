@@ -16,14 +16,15 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.AdditionalCompileScopeProvider;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
+import com.intellij.compiler.impl.ModuleCompileScope;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.packaging.artifacts.Artifact;
-import javax.annotation.Nonnull;
+import consulo.application.AccessRule;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -31,9 +32,7 @@ import java.util.Set;
  */
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
   @Override
-  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope,
-                                         @Nonnull Condition<com.intellij.openapi.compiler.Compiler> filter,
-                                         @Nonnull final Project project) {
+  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope, @Nonnull Condition<com.intellij.openapi.compiler.Compiler> filter, @Nonnull final Project project) {
     if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
       return null;
     }
@@ -41,12 +40,10 @@ public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileSco
     if (compiler == null || !filter.value(compiler)) {
       return null;
     }
-    return new ReadAction<CompileScope>() {
-      @Override
-      protected void run(final Result<CompileScope> result) {
-        final Set<Artifact> artifacts = ArtifactCompileScope.getArtifactsToBuild(project, baseScope, false);
-        result.setResult(ArtifactCompileScope.createScopeForModulesInArtifacts(project, artifacts));
-      }
-    }.execute().getResultObject();
+    ThrowableComputable<ModuleCompileScope,RuntimeException> action = () -> {
+      final Set<Artifact> artifacts = ArtifactCompileScope.getArtifactsToBuild(project, baseScope, false);
+      return ArtifactCompileScope.createScopeForModulesInArtifacts(project, artifacts);
+    };
+    return AccessRule.read(action);
   }
 }

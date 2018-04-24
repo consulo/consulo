@@ -28,7 +28,6 @@ import com.intellij.diff.contents.FileDocumentContentImpl;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
@@ -40,6 +39,7 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -53,6 +53,7 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.LightColors;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
+import consulo.application.AccessRule;
 import consulo.fileTypes.ArchiveFileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -193,9 +194,10 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   public DocumentContent createDocument(@javax.annotation.Nullable Project project, @Nonnull final VirtualFile file) {
     // TODO: add notification, that file is decompiled ?
     if (file.isDirectory()) return null;
-    Document document = ReadAction.compute(() -> {
+    ThrowableComputable<Document, RuntimeException> action = () -> {
       return FileDocumentManager.getInstance().getDocument(file);
-    });
+    };
+    Document document = AccessRule.read(action);
     if (document == null) return null;
     return new FileDocumentContentImpl(project, document, file);
   }
@@ -431,7 +433,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
                                             @Nonnull FileType fileType,
                                             @Nonnull String fileName,
                                             boolean readOnly) {
-    return ReadAction.compute(() -> {
+    ThrowableComputable<Document,RuntimeException> action = () -> {
       LightVirtualFile file = new LightVirtualFile(fileName, fileType, content);
       file.setWritable(!readOnly);
 
@@ -443,6 +445,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
       PsiDocumentManager.getInstance(project).getPsiFile(document);
 
       return document;
-    });
+    };
+    return AccessRule.read(action);
   }
 }

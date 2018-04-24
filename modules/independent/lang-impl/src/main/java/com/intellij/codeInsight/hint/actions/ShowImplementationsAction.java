@@ -25,7 +25,6 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -40,6 +39,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.*;
@@ -51,6 +51,7 @@ import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupPositionManager;
 import com.intellij.ui.popup.PopupUpdateProcessor;
 import com.intellij.usages.UsageView;
+import consulo.application.AccessRule;
 import consulo.codeInsight.TargetElementUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -369,7 +370,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     final PsiElement[] handlerImplementations = handler.searchImplementations(element, editor, includeSelfAlways, true);
     if (handlerImplementations.length > 0) return handlerImplementations;
 
-    return ReadAction.compute(() -> {
+    ThrowableComputable<PsiElement[],RuntimeException> action = () -> {
       PsiElement psiElement = element;
       PsiFile psiFile = psiElement.getContainingFile();
       if (psiFile == null) {
@@ -384,7 +385,8 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         return new PsiElement[]{psiElement};
       }
       return PsiElement.EMPTY_ARRAY;
-    });
+    };
+    return AccessRule.read(action);
   }
 
   @Nonnull

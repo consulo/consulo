@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -34,9 +33,9 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -139,16 +138,13 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   @Override
   public void editLayout(@Nonnull final Artifact artifact, final Runnable action) {
     final Artifact originalArtifact = getOriginalArtifact(artifact);
-    new WriteAction() {
-      @Override
-      protected void run(final Result result) {
-        final ModifiableArtifact modifiableArtifact = getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(originalArtifact);
-        if (modifiableArtifact.getRootElement() == originalArtifact.getRootElement()) {
-          modifiableArtifact.setRootElement(getOrCreateModifiableRootElement(originalArtifact));
-        }
-        action.run();
+    WriteAction.run(() -> {
+      final ModifiableArtifact modifiableArtifact = getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(originalArtifact);
+      if (modifiableArtifact.getRootElement() == originalArtifact.getRootElement()) {
+        modifiableArtifact.setRootElement(getOrCreateModifiableRootElement(originalArtifact));
       }
-    }.execute();
+      action.run();
+    });
     myContext.getDaemonAnalyzer().queueUpdate(getOrCreateArtifactElement(originalArtifact));
   }
 

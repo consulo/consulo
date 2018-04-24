@@ -17,7 +17,6 @@ package com.intellij.ide.impl.util;
 
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -34,6 +33,7 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 
 public class NewProjectUtilPlatform {
@@ -55,12 +55,7 @@ public class NewProjectUtilPlatform {
 
   @Nonnull
   public static Module doCreate(@Nonnull NewProjectPanel projectPanel, @Nonnull final ModifiableModuleModel modifiableModel, @Nonnull final VirtualFile baseDir, final boolean requireModelCommit) {
-    return new WriteAction<Module>() {
-      @Override
-      protected void run(Result<Module> result) throws Throwable {
-        result.setResult(doCreateImpl(projectPanel, modifiableModel, baseDir, requireModelCommit));
-      }
-    }.execute().getResultObject();
+    return WriteAction.compute(() -> doCreateImpl(projectPanel, modifiableModel, baseDir, requireModelCommit));
   }
 
   @SuppressWarnings("unchecked")

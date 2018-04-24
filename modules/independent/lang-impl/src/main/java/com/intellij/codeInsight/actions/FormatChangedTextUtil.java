@@ -15,8 +15,6 @@
  */
 package com.intellij.codeInsight.actions;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -27,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,8 +35,9 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import javax.annotation.Nonnull;
+import consulo.application.AccessRule;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -56,8 +56,8 @@ public class FormatChangedTextUtil {
   /**
    * Allows to answer if given file has changes in comparison with VCS.
    *
-   * @param file  target file
-   * @return      <code>true</code> if given file has changes; <code>false</code> otherwise
+   * @param file target file
+   * @return <code>true</code> if given file has changes; <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull PsiFile file) {
     final Project project = file.getProject();
@@ -72,9 +72,9 @@ public class FormatChangedTextUtil {
   /**
    * Allows to answer if any file below the given directory (any level of nesting) has changes in comparison with VCS.
    *
-   * @param directory  target directory to check
-   * @return           <code>true</code> if any file below the given directory has changes in comparison with VCS;
-   *                   <code>false</code> otherwise
+   * @param directory target directory to check
+   * @return <code>true</code> if any file below the given directory has changes in comparison with VCS;
+   * <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull PsiDirectory directory) {
     return hasChanges(directory.getVirtualFile(), directory.getProject());
@@ -83,10 +83,10 @@ public class FormatChangedTextUtil {
   /**
    * Allows to answer if given file or any file below the given directory (any level of nesting) has changes in comparison with VCS.
    *
-   * @param file     target directory to check
-   * @param project  target project
-   * @return         <code>true</code> if given file or any file below the given directory has changes in comparison with VCS;
-   *                 <code>false</code> otherwise
+   * @param file    target directory to check
+   * @param project target project
+   * @return <code>true</code> if given file or any file below the given directory has changes in comparison with VCS;
+   * <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull VirtualFile file, @Nonnull Project project) {
     final Collection<Change> changes = ChangeListManager.getInstance(project).getChangesIn(file);
@@ -100,8 +100,7 @@ public class FormatChangedTextUtil {
 
   public static boolean hasChanges(@Nonnull VirtualFile[] files, @Nonnull Project project) {
     for (VirtualFile file : files) {
-      if (hasChanges(file, project))
-        return true;
+      if (hasChanges(file, project)) return true;
     }
     return false;
   }
@@ -109,9 +108,9 @@ public class FormatChangedTextUtil {
   /**
    * Allows to answer if any file that belongs to the given module has changes in comparison with VCS.
    *
-   * @param module  target module to check
-   * @return        <code>true</code> if any file that belongs to the given module has changes in comparison with VCS
-   *                <code>false</code> otherwise
+   * @param module target module to check
+   * @return <code>true</code> if any file that belongs to the given module has changes in comparison with VCS
+   * <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull Module module) {
     final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
@@ -126,17 +125,14 @@ public class FormatChangedTextUtil {
   /**
    * Allows to answer if any file that belongs to the given project has changes in comparison with VCS.
    *
-   * @param project  target project to check
-   * @return         <code>true</code> if any file that belongs to the given project has changes in comparison with VCS
-   *                 <code>false</code> otherwise
+   * @param project target project to check
+   * @return <code>true</code> if any file that belongs to the given project has changes in comparison with VCS
+   * <code>false</code> otherwise
    */
   public static boolean hasChanges(@Nonnull final Project project) {
-    final ModifiableModuleModel moduleModel = new ReadAction<ModifiableModuleModel>() {
-      @Override
-      protected void run(@Nonnull Result<ModifiableModuleModel> result) throws Throwable {
-        result.setResult(ModuleManager.getInstance(project).getModifiableModel());
-      }
-    }.execute().getResultObject();
+    ThrowableComputable<ModifiableModuleModel,RuntimeException> action = () -> ModuleManager.getInstance(project).getModifiableModel();
+    final ModifiableModuleModel moduleModel = AccessRule.read(action);
+
     try {
       for (Module module : moduleModel.getModules()) {
         if (hasChanges(module)) {
@@ -151,7 +147,7 @@ public class FormatChangedTextUtil {
   }
 
   @Nonnull
-  public static List<PsiFile> getChangedFilesFromDirs(@Nonnull Project project, @Nonnull List<PsiDirectory> dirs)  {
+  public static List<PsiFile> getChangedFilesFromDirs(@Nonnull Project project, @Nonnull List<PsiDirectory> dirs) {
     ChangeListManager changeListManager = ChangeListManager.getInstance(project);
     Collection<Change> changes = ContainerUtil.newArrayList();
 

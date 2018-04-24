@@ -23,7 +23,6 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
@@ -43,6 +42,7 @@ import com.intellij.openapi.ui.ex.MessagesEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.psi.PsiBundle;
@@ -55,6 +55,8 @@ import com.intellij.util.SequentialTask;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -527,7 +529,7 @@ public abstract class AbstractLayoutCodeProcessor {
 
     @Nonnull
     private PsiFile nextFile(FileTreeIterator it) {
-      return ReadAction.compute(it::next);
+      return AccessRule.read(it::next);
     }
 
     private boolean hasFilesToProcess(FileTreeIterator it) {
@@ -541,7 +543,8 @@ public abstract class AbstractLayoutCodeProcessor {
 
     private void performFileProcessing(@Nonnull PsiFile file) {
       for (AbstractLayoutCodeProcessor processor : myProcessors) {
-        FutureTask<Boolean> writeTask = ReadAction.compute(() -> processor.prepareTask(file, myProcessChangedTextOnly));
+        ThrowableComputable<FutureTask<Boolean>,RuntimeException> action = () -> processor.prepareTask(file, myProcessChangedTextOnly);
+        FutureTask<Boolean> writeTask = AccessRule.read(action);
 
         ProgressIndicatorProvider.checkCanceled();
 
