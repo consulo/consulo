@@ -19,8 +19,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
@@ -31,9 +29,15 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SynchronizeCurrentFileAction extends AnAction implements DumbAware {
-  public void update(AnActionEvent e) {
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     VirtualFile[] files = getFiles(e);
 
     if (getEventProject(e) == null || files == null || files.length == 0) {
@@ -51,27 +55,22 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
                              : IdeBundle.message("action.synchronize.selected.files");
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = getEventProject(e);
     final VirtualFile[] files = getFiles(e);
     if (project == null || files == null || files.length == 0) return;
 
-    final AccessToken token = WriteAction.start(getClass());
-    try {
+    AccessRule.write(() -> {
       for (VirtualFile file : files) {
         final VirtualFileSystem fs = file.getFileSystem();
         if (fs instanceof LocalFileSystem && file instanceof NewVirtualFile) {
           ((NewVirtualFile)file).markDirtyRecursively();
         }
       }
-    }
-    finally {
-      token.finish();
-    }
-
-    final Runnable postRefreshAction = new Runnable() {
-      @Override
-      public void run() {
+    }).doWhenDone(() -> {
+      final Runnable postRefreshAction = () -> {
         final VcsDirtyScopeManager dirtyScopeManager = VcsDirtyScopeManager.getInstance(project);
         for (VirtualFile f : files) {
           if (f.isDirectory()) {
@@ -87,13 +86,13 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
           final String message = IdeBundle.message("action.sync.completed.successfully", getMessage(files));
           statusBar.setInfo(message);
         }
-      }
-    };
+      };
 
-    RefreshQueue.getInstance().refresh(true, true, postRefreshAction, files);
+      RefreshQueue.getInstance().refresh(true, true, postRefreshAction, files);
+    });
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static VirtualFile[] getFiles(AnActionEvent e) {
     return e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
   }

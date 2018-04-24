@@ -17,7 +17,11 @@ package consulo.application;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
 
 import javax.annotation.Nonnull;
@@ -41,5 +45,44 @@ public final class AccessRule {
     try (AccessToken ignored = Application.get().acquireReadActionLock()) {
       return action.compute();
     }
+  }
+
+  @SuppressWarnings("deprecation")
+  public static AsyncResult<Void> write(@Nonnull ThrowableRunnable<Throwable> action) {
+    AsyncResult<Void> result = new AsyncResult<>();
+
+    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+
+    // noinspection RequiredXAction
+    try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
+      try {
+        action.run();
+        result.setDone();
+      }
+      catch (Throwable throwable) {
+        result.rejectWithThrowable(throwable);
+      }
+    }
+
+    return result;
+  }
+
+  @SuppressWarnings("deprecation")
+  public static <T> AsyncResult<T> write(@Nonnull ThrowableComputable<T, Throwable> action) {
+    AsyncResult<T> result = new AsyncResult<>();
+
+    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+
+    // noinspection RequiredXAction
+    try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
+      try {
+        result.setDone(action.compute());
+      }
+      catch (Throwable throwable) {
+        result.rejectWithThrowable(throwable);
+      }
+    }
+
+    return result;
   }
 }
