@@ -158,7 +158,7 @@ public class AbstractTreeUi {
   private TreePath mySilentExpand;
   private TreePath mySilentSelect;
 
-  private final ActionCallback myInitialized = new ActionCallback();
+  private final AsyncResult<Void> myInitialized = new AsyncResult<Void>();
   private final BusyObject.Impl myBusyObject = new BusyObject.Impl() {
     @Override
     public boolean isReady() {
@@ -2253,15 +2253,15 @@ public class AbstractTreeUi {
   }
 
   @Nonnull
-  public ActionCallback getInitialized() {
+  public AsyncResult<Void> getInitialized() {
     return myInitialized;
   }
 
-  public ActionCallback getReady(@Nonnull Object requestor) {
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
     return myBusyObject.getReady(requestor);
   }
 
-  private ActionCallback _getReady() {
+  private AsyncResult<Void> _getReady() {
     return getReady(this);
   }
 

@@ -392,7 +392,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
   }
 
   @Override
-  public ActionCallback detachTo(int window, GridCell cell) {
+  public AsyncResult<Void> detachTo(int window, GridCell cell) {
     if (myOriginal != null) {
       return myOriginal.detachTo(window, cell);
     }
@@ -427,7 +427,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
       location.translate(size.width / 2, size.height / 2);
       getDockManager().createNewDockContainerFor(content, new RelativePoint(location));
     }
-    return ActionCallback.DONE;
+    return AsyncResult.done(null);
   }
 
   private void storeDefaultIndices(@Nonnull Content[] contents) {

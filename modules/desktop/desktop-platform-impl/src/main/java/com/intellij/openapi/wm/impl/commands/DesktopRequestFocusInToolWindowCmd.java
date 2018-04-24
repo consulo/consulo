@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.wm.impl.commands;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusWatcher;
@@ -29,8 +31,8 @@ import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.DesktopWindowWatcher;
 import com.intellij.util.Alarm;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -142,11 +144,15 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
 
 
   @Nonnull
-  private ActionCallback requestFocus(@Nonnull final Component c) {
-    final ActionCallback result = new ActionCallback();
-    final Alarm checkerAlarm = new Alarm(result);
+  private AsyncResult<Void> requestFocus(@Nonnull final Component c) {
+    final AsyncResult<Void> result = new AsyncResult<>();
+    Disposable disposable = Disposer.newDisposable("requestFocus");
+    final Alarm checkerAlarm = new Alarm(disposable);
+    result.doWhenProcessed(() -> Disposer.dispose(disposable));
+
     Runnable checker = new Runnable() {
       final long startTime = System.currentTimeMillis();
+
       @Override
       public void run() {
         if (System.currentTimeMillis() - startTime > 10000) {
@@ -159,15 +165,14 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
             myManager.getFocusManager().requestFocus(new FocusCommand() {
               @Override
               @Nonnull
-              public ActionCallback run() {
-                return ActionCallback.DONE;
+              public AsyncResult<Void> run() {
+                return AsyncResult.resolved();
               }
             }, false).doWhenProcessed(() -> updateToolWindow(c)).notify(result);
           }
           else {
-            myManager.getFocusManager().requestFocus(new FocusCommand.ByComponent(c, myToolWindow.getComponent(), myProject, new Exception()),
-                                                     false)
-                    .doWhenProcessed(() -> updateToolWindow(c)).notify(result);
+            myManager.getFocusManager().requestFocus(new FocusCommand.ByComponent(c, myToolWindow.getComponent(), myProject, new Exception()), false).doWhenProcessed(() -> updateToolWindow(c))
+                    .notify(result);
           }
         }
         else {
@@ -200,7 +205,7 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
 
   /**
    * @return first active window from hierarchy with specified roots. Returns <code>null</code>
-   *         if there is no active window in the hierarchy.
+   * if there is no active window in the hierarchy.
    */
   private static Window getActiveWindow(final Window[] windows) {
     for (Window window : windows) {

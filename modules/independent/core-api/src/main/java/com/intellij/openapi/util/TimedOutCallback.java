@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.util;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 
 import javax.swing.*;
@@ -23,7 +24,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings({"UnusedDeclaration", "SSBasedInspection"})
-public class TimedOutCallback extends ActionCallback implements Runnable {
+public class TimedOutCallback extends ActionCallback implements Runnable, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.ActionCallback.TimedOutCallback");
 
   private Throwable myAllocation;
@@ -88,8 +89,12 @@ public class TimedOutCallback extends ActionCallback implements Runnable {
 
   @Override
   public void dispose() {
-    super.dispose();
     myTask.cancel();
+  }
+
+  @Override
+  protected void freeResources() {
+    Disposer.dispose(this);
   }
 
   protected void onTimeout() {

@@ -27,7 +27,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -42,8 +41,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.application.DefaultPaths;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
@@ -184,13 +183,13 @@ public class ProjectUtil {
     FocusCommand cmd = new FocusCommand() {
       @Nonnull
       @Override
-      public ActionCallback run() {
+      public AsyncResult<Void> run() {
         JFrame f = WindowManager.getInstance().getFrame(p);
         if (f != null) {
           f.toFront();
           //f.requestFocus();
         }
-        return new ActionCallback.Done();
+        return AsyncResult.resolved();
       }
     };
 

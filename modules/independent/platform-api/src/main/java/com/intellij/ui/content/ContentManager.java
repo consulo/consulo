@@ -18,13 +18,13 @@ package com.intellij.ui.content;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public interface ContentManager extends Disposable, BusyObject {
@@ -39,25 +39,25 @@ public interface ContentManager extends Disposable, BusyObject {
   boolean removeContent(@Nonnull Content content, final boolean dispose);
 
   @Nonnull
-  ActionCallback removeContent(@Nonnull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
+  AsyncResult<Void> removeContent(@Nonnull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
 
   void setSelectedContent(@Nonnull Content content);
 
   @Nonnull
-  ActionCallback setSelectedContentCB(@Nonnull Content content);
+  AsyncResult<Void> setSelectedContentCB(@Nonnull Content content);
 
   void setSelectedContent(@Nonnull Content content, boolean requestFocus);
 
   @Nonnull
-  ActionCallback setSelectedContentCB(@Nonnull Content content, boolean requestFocus);
+  AsyncResult<Void> setSelectedContentCB(@Nonnull Content content, boolean requestFocus);
 
   void setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
 
   @Nonnull
-  ActionCallback setSelectedContentCB(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
+  AsyncResult<Void> setSelectedContentCB(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
 
   @Nonnull
-  ActionCallback setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit);
+  AsyncResult<Void> setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit);
 
   void addSelectedContent(@Nonnull Content content);
 
@@ -87,9 +87,9 @@ public interface ContentManager extends Disposable, BusyObject {
 
   boolean canCloseAllContents();
 
-  ActionCallback selectPreviousContent();
+  AsyncResult<Void> selectPreviousContent();
 
-  ActionCallback selectNextContent();
+  AsyncResult<Void> selectNextContent();
 
   void addContentManagerListener(@Nonnull ContentManagerListener l);
 
@@ -117,7 +117,7 @@ public interface ContentManager extends Disposable, BusyObject {
   boolean isSelected(@Nonnull Content content);
 
   @Nonnull
-  ActionCallback requestFocus(@Nullable Content content, boolean forced);
+  AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced);
 
   void addDataProvider(@Nonnull DataProvider provider);
 

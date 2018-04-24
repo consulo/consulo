@@ -21,13 +21,13 @@ import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowId;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -70,9 +70,9 @@ public class ProjectViewSelectInGroupTarget implements CompositeSelectInTarget, 
           IdeFocusManager.getInstance(context.getProject()).requestFocus(new FocusCommand() {
             @Nonnull
             @Override
-            public ActionCallback run() {
+            public AsyncResult<Void> run() {
               target.selectIn(context, requestFocus);
-              return new ActionCallback.Done();
+              return AsyncResult.resolved();
             }
           }, true);
         }

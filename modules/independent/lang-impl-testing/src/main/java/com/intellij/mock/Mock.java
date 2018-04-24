@@ -147,8 +147,8 @@ public class Mock {
     }
 
     @Override
-    public ActionCallback getReady(@Nonnull Object requestor) {
-      return new ActionCallback.Done();
+    public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+      return AsyncResult.resolved();
     }
 
     @Nonnull

@@ -20,7 +20,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
@@ -283,7 +283,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     super.dispose();
   }
 
-  public void queueTypeAheadDone(final ActionCallback done) {
+  public void queueTypeAheadDone(final AsyncResult<Void> done) {
     queue(new AfterModelUpdate(ID.TYPE_AHEAD_FINISHED) {
       @Override
       protected void after() {

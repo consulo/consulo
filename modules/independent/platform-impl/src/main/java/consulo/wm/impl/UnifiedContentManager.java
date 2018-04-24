@@ -18,12 +18,13 @@ package consulo.wm.impl;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentUI;
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,7 +42,7 @@ public class UnifiedContentManager extends ContentManagerBase {
 
   @Nonnull
   @Override
-  protected ActionCallback requestFocusForComponent() {
+  protected AsyncResult<Void> requestFocusForComponent() {
     return getFocusManager().requestFocus(myComponent, true);
   }
 
@@ -52,8 +53,8 @@ public class UnifiedContentManager extends ContentManagerBase {
 
   @Nonnull
   @Override
-  public ActionCallback requestFocus(@Nullable Content content, boolean forced) {
-    return ActionCallback.DONE;  //TODO [VISTALL]
+  public AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced) {
+    return AsyncResult.resolved();  //TODO [VISTALL]
   }
 
   @RequiredUIAccess

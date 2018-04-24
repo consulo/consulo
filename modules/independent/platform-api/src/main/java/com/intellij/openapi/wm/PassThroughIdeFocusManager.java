@@ -17,11 +17,11 @@ package com.intellij.openapi.wm;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -36,14 +36,14 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
 
   @Override
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull Component c, boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
     c.requestFocus();
-    return ActionCallback.DONE;
+    return AsyncResult.done(null);
   }
 
   @Override
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull FocusCommand command, boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull FocusCommand command, boolean forced) {
     return command.run();
   }
 
@@ -86,8 +86,8 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
 
   @Override
   @Nonnull
-  public ActionCallback requestDefaultFocus(boolean forced) {
-    return ActionCallback.DONE;
+  public AsyncResult<Void> requestDefaultFocus(boolean forced) {
+    return AsyncResult.done(null);
   }
 
   @Override

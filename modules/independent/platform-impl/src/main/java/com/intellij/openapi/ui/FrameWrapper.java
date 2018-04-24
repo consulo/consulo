@@ -73,7 +73,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   private FocusTrackback myFocusTrackback;
   private FocusWatcher myFocusWatcher;
 
-  private ActionCallback myFocusedCallback;
+  private AsyncResult<Void> myFocusedCallback;
   private boolean myDisposing;
   private boolean myDisposed;
 
@@ -117,7 +117,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public void show(boolean restoreBounds) {
-    myFocusedCallback = new ActionCallback();
+    myFocusedCallback = new AsyncResult<>();
 
     if (myProject != null) {
       IdeFocusManager.getInstance(myProject).typeAheadUntil(myFocusedCallback);

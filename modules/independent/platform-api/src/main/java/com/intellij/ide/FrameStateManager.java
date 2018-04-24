@@ -17,7 +17,8 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -57,5 +58,5 @@ public abstract class FrameStateManager {
   /**
    * @return action callback for application's active state
    */
-  public abstract ActionCallback getApplicationActive();
+  public abstract AsyncResult<Void> getApplicationActive();
 }

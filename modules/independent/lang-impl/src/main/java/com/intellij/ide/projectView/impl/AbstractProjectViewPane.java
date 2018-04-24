@@ -778,8 +778,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Nonnull
   @Override
-  public ActionCallback getReady(@Nonnull Object requestor) {
-    if (myTreeBuilder == null || myTreeBuilder.isDisposed()) return ActionCallback.REJECTED;
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    if (myTreeBuilder == null || myTreeBuilder.isDisposed()) return AsyncResult.rejected();
     return myTreeBuilder.getUi().getReady(requestor);
   }
 }

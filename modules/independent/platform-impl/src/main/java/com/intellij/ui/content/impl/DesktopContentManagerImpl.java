@@ -19,7 +19,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.FocusCommand;
@@ -31,8 +31,8 @@ import com.intellij.ui.content.ContentUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.wm.impl.ContentManagerBase;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +56,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
 
   @Nonnull
   @Override
-  protected ActionCallback requestFocusForComponent() {
+  protected AsyncResult<Void> requestFocusForComponent() {
     return getFocusManager().requestFocus(myComponent, true);
   }
 
@@ -101,28 +101,28 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
 
   @Nonnull
   @Override
-  public ActionCallback requestFocus(final Content content, final boolean forced) {
+  public AsyncResult<Void> requestFocus(final Content content, final boolean forced) {
     final Content toSelect = content == null ? getSelectedContent() : content;
-    if (toSelect == null) return new ActionCallback.Rejected();
+    if (toSelect == null) return AsyncResult.rejected();
     assert myContents.contains(toSelect);
 
     return getFocusManager().requestFocus(new FocusCommand(content, toSelect.getPreferredFocusableComponent()) {
       @Nonnull
       @Override
-      public ActionCallback run() {
+      public AsyncResult<Void> run() {
         return doRequestFocus(toSelect);
       }
     }, forced);
   }
 
-  private static ActionCallback doRequestFocus(final Content toSelect) {
+  private static AsyncResult<Void> doRequestFocus(final Content toSelect) {
     JComponent toFocus = computeWillFocusComponent(toSelect);
 
     if (toFocus != null) {
       IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(toFocus);
     }
 
-    return ActionCallback.DONE;
+    return AsyncResult.done(null);
   }
 
   private static JComponent computeWillFocusComponent(Content toSelect) {

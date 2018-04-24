@@ -19,8 +19,9 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
+
 import javax.annotation.Nonnull;
 
 public interface ModalityInvokator {
@@ -31,9 +32,9 @@ public interface ModalityInvokator {
    *
    * @param runnable the runnable to execute.
    */
-  ActionCallback invokeLater(Runnable runnable);
+  AsyncResult<Void> invokeLater(Runnable runnable);
 
-  ActionCallback invokeLater(Runnable runnable, @Nonnull Condition expired);
+  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull Condition expired);
 
   /**
    * Causes <i>runnable.run()</i> to be executed asynchronously on the
@@ -43,7 +44,7 @@ public interface ModalityInvokator {
    * @param runnable the runnable to execute.
    * @param state the state in which the runnable will be executed.
    */
-  ActionCallback invokeLater(Runnable runnable, @Nonnull ModalityState state);
+  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull ModalityState state);
 
-  ActionCallback invokeLater(Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired);
+  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired);
 }

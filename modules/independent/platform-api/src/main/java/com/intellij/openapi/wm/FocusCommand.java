@@ -22,11 +22,12 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.registry.Registry;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -177,7 +178,7 @@ public abstract class FocusCommand extends ActiveRunnable implements Expirable {
     }
 
     @Nonnull
-    public final ActionCallback run() {
+    public final AsyncResult<Void> run() {
 
       boolean shouldLogFocuses = Registry.is("ide.log.focuses");
 
@@ -218,7 +219,7 @@ public abstract class FocusCommand extends ActiveRunnable implements Expirable {
       }
 
       clear();
-      return ActionCallback.DONE;
+      return AsyncResult.done(null);
     }
 
     private void clear() {

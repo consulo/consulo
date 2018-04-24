@@ -51,6 +51,7 @@ import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatusListener;
@@ -78,9 +79,9 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
@@ -169,7 +170,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
   private final MergingUpdateQueue myUpdateQueue = new MergingUpdateQueue("ScopeViewUpdate", 300, isTreeShowing(), myTree);
   private ScopeTreeViewPanel.MyChangesListListener myChangesListListener = new MyChangesListListener();
-  protected ActionCallback myActionCallback;
+  protected AsyncResult<Void> myActionCallback;
 
   public ScopeTreeViewPanel(final Project project) {
     super(new BorderLayout());
@@ -339,7 +340,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     myTree.setPaintBusy(true);
     myBuilder.setTree(myTree);
     myTree.getEmptyText().setText("Loading...");
-    myActionCallback = new ActionCallback();
+    myActionCallback = new AsyncResult<>();
     myTree.putClientProperty(TreeState.CALLBACK, new WeakReference<ActionCallback>(myActionCallback));
     myTree.setModel(myBuilder.build(myProject, true, new Runnable(){
       @Override
@@ -494,7 +495,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     myTreeExpansionMonitor.restore();
   }
 
-  ActionCallback getActionCallback() {
+  AsyncResult<Void> getActionCallback() {
     return myActionCallback;
   }
 

@@ -971,15 +971,15 @@ public class AbstractPopup implements JBPopup {
       getFocusManager().requestFocus(new FocusCommand() {
         @Nonnull
         @Override
-        public ActionCallback run() {
+        public AsyncResult<Void> run() {
           if (isDisposed()) {
             removeActivity();
-            return ActionCallback.DONE;
+            return AsyncResult.done(null);
           }
 
           _requestFocus();
 
-          final ActionCallback result = new ActionCallback();
+          final AsyncResult<Void> result = new AsyncResult<>();
 
           final Runnable afterShowRunnable = new Runnable() {
             @Override
@@ -1002,16 +1002,16 @@ public class AbstractPopup implements JBPopup {
                 furtherRequestor.requestFocus(new FocusCommand() {
                   @Nonnull
                   @Override
-                  public ActionCallback run() {
+                  public AsyncResult<Void> run() {
                     if (isDisposed()) {
-                      return ActionCallback.REJECTED;
+                      return AsyncResult.rejected();
                     }
 
                     _requestFocus();
 
                     afterShowRunnable.run();
 
-                    return ActionCallback.DONE;
+                    return AsyncResult.done(null);
                   }
                 }, true).notify(result).doWhenProcessed(new Runnable() {
                   @Override
@@ -1225,9 +1225,9 @@ public class AbstractPopup implements JBPopup {
     getFocusManager().requestFocus(new FocusCommand() {
       @Nonnull
       @Override
-      public ActionCallback run() {
+      public AsyncResult<Void> run() {
         _requestFocus();
-        return ActionCallback.DONE;
+        return AsyncResult.done(null);
       }
     }, true);
 
@@ -1416,7 +1416,7 @@ public class AbstractPopup implements JBPopup {
     resetWindow();
 
     if (myFinalRunnable != null) {
-      final ActionCallback typeAheadDone = new ActionCallback();
+      final AsyncResult<Void> typeAheadDone = new AsyncResult<>();
       IdeFocusManager.getInstance(myProject).typeAheadUntil(typeAheadDone);
 
       final ModalityState modalityState = ModalityState.current();

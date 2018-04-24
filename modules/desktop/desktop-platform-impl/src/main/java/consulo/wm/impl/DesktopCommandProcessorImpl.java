@@ -18,10 +18,11 @@ package consulo.wm.impl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -31,7 +32,7 @@ import javax.annotation.Nonnull;
 public class DesktopCommandProcessorImpl extends CommandProcessorBase {
   @Nonnull
   @Override
-  protected ActionCallback invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> expire) {
+  protected AsyncResult<Void> invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> expire) {
     Application application = ApplicationManager.getApplication();
     ModalityState modalityState = ModalityPerProjectEAPDescriptor.is() ? ModalityState.current() : ModalityState.NON_MODAL;
     return application.getInvokator().invokeLater(command, modalityState, expire);

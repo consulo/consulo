@@ -15,12 +15,13 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,8 +38,8 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
   }
 
   @Override
-  public ActionCallback getReady(@Nonnull Object requestor) {
-    return ActionCallback.DONE;
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    return AsyncResult.done(null);
   }
 
   @RequiredUIAccess

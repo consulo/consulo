@@ -17,13 +17,13 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +106,7 @@ public abstract class CommandProcessorBase implements Runnable {
   }
 
   @Nonnull
-  protected abstract ActionCallback invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> condition);
+  protected abstract AsyncResult<Void> invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> condition);
 
   @Nullable
   private CommandGroup getNextCommandGroup() {

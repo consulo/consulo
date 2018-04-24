@@ -26,7 +26,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.INativeFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.PersistentFSConstants;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
@@ -239,9 +239,9 @@ public abstract class AutoScrollToSourceHandler {
     }
   }
 
-  private ActionCallback getReady(DataContext context) {
+  private AsyncResult<Void> getReady(DataContext context) {
     ToolWindow toolWindow = context.getData(PlatformDataKeys.TOOL_WINDOW);
-    return toolWindow != null ? toolWindow.getReady(this) : new ActionCallback.Done();
+    return toolWindow != null ? toolWindow.getReady(this) : AsyncResult.done(null);
   }
 }
 

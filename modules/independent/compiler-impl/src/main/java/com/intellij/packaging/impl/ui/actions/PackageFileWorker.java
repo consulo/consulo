@@ -26,7 +26,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -74,8 +74,8 @@ public class PackageFileWorker {
     });
   }
 
-  public static ActionCallback startPackagingFiles(final Project project, final List<VirtualFile> files, final Artifact[] artifacts) {
-    final ActionCallback callback = new ActionCallback();
+  public static AsyncResult<Void> startPackagingFiles(final Project project, final List<VirtualFile> files, final Artifact[] artifacts) {
+    final AsyncResult<Void> callback = new AsyncResult<>();
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Packaging Files") {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {

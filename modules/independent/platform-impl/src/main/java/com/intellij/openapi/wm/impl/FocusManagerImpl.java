@@ -188,25 +188,25 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     return myLastFocusedFrame;
   }
 
-  public ActionCallback requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
+  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
     return requestFocus(new FocusCommand.ByComponent(c, c, project, new Exception()), false);
   }
 
   @Override
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull final Component c, final boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
     return requestFocus(new FocusCommand.ByComponent(c, new Exception()), forced);
   }
 
   @Override
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
     assertDispatchThread();
 
     if (isInternalMode) {
       recordCommand(command, new Throwable(), forced);
     }
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = new AsyncResult<Void>();
 
     myActivityMonitor.addActivity(FOCUS, ModalityState.any());
     if (!forced) {
@@ -981,8 +981,8 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
 
     @Nonnull
     @Override
-    public ActionCallback requestFocus(@Nonnull Component c, boolean forced) {
-      final ActionCallback result = isExpired() ? ActionCallback.REJECTED : myManager.requestFocus(c, forced);
+    public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
+      final AsyncResult<Void> result = isExpired() ? AsyncResult.rejected() : myManager.requestFocus(c, forced);
       result.doWhenProcessed(() -> Disposer.dispose(this));
       return result;
     }
@@ -993,8 +993,8 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
 
     @Nonnull
     @Override
-    public ActionCallback requestFocus(@Nonnull FocusCommand command, boolean forced) {
-      return isExpired() ? ActionCallback.REJECTED : myManager.requestFocus(command, forced);
+    public AsyncResult<Void> requestFocus(@Nonnull FocusCommand command, boolean forced) {
+      return isExpired() ? AsyncResult.rejected() : myManager.requestFocus(command, forced);
     }
 
     @Override
@@ -1116,7 +1116,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
 
   @Nonnull
   @Override
-  public ActionCallback requestDefaultFocus(boolean forced) {
+  public AsyncResult<Void> requestDefaultFocus(boolean forced) {
     Component toFocus = null;
     if (myLastFocusedFrame != null) {
       toFocus = myLastFocused.get(myLastFocusedFrame);
@@ -1147,7 +1147,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     }
 
 
-    return ActionCallback.DONE;
+    return AsyncResult.done(null);
   }
 
   @Override

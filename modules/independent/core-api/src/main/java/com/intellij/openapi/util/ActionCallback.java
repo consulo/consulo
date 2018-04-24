@@ -15,17 +15,16 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ActionCallback implements Disposable {
+public class ActionCallback {
   public static final ActionCallback DONE = new Done();
   public static final ActionCallback REJECTED = new Rejected();
 
@@ -69,7 +68,7 @@ public class ActionCallback implements Disposable {
   public void setDone() {
     if (myDone.setExecuted()) {
       myRejected.clear();
-      Disposer.dispose(this);
+      freeResources();
     }
   }
 
@@ -88,8 +87,11 @@ public class ActionCallback implements Disposable {
   public void setRejected() {
     if (myRejected.setExecuted()) {
       myDone.clear();
-      Disposer.dispose(this);
+      freeResources();
     }
+  }
+
+  protected void freeResources() {
   }
 
   @Nonnull
@@ -150,7 +152,7 @@ public class ActionCallback implements Disposable {
   }
 
   @Nonnull
-  public final ActionCallback doWhenProcessed(@Nonnull final Runnable runnable) {
+  public ActionCallback doWhenProcessed(@Nonnull final Runnable runnable) {
     doWhenDone(runnable);
     doWhenRejected(runnable);
     return this;
@@ -229,10 +231,6 @@ public class ActionCallback implements Disposable {
       }
       return result;
     }
-  }
-
-  @Override
-  public void dispose() {
   }
 
   @Nonnull

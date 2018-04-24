@@ -128,7 +128,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     myUpdateQueue.queueModelUpdateFromFocus();
     myUpdateQueue.queueRebuildUi();
     if (!docked) {
-      final ActionCallback typeAheadDone = new ActionCallback();
+      final AsyncResult<Void> typeAheadDone = new AsyncResult<>();
       IdeFocusManager.getInstance(project).typeAheadUntil(typeAheadDone);
       myUpdateQueue.queueTypeAheadDone(typeAheadDone);
     }

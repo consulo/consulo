@@ -530,8 +530,8 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
   @Nonnull
   @Override
-  public ActionCallback getReady(@Nonnull Object requestor) {
-    return ActionCallback.DONE;
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    return AsyncResult.resolved();
   }
 
   @Override

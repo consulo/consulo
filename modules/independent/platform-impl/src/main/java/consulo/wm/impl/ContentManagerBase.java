@@ -83,11 +83,11 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
 
   @Nonnull
   @Override
-  public ActionCallback getReady(@Nonnull Object requestor) {
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
     Content selected = getSelectedContent();
-    if (selected == null) return new ActionCallback.Done();
+    if (selected == null) return AsyncResult.done(null);
     BusyObject busyObject = selected.getBusyObject();
-    return busyObject != null ? busyObject.getReady(requestor) : new ActionCallback.Done();
+    return busyObject != null ? busyObject.getReady(requestor) : AsyncResult.done(null);
   }
 
   @Override
@@ -138,8 +138,8 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
 
   @Nonnull
   @Override
-  public ActionCallback removeContent(@Nonnull Content content, boolean dispose, final boolean trackFocus, final boolean forcedFocus) {
-    final ActionCallback result = new ActionCallback();
+  public AsyncResult<Void> removeContent(@Nonnull Content content, boolean dispose, final boolean trackFocus, final boolean forcedFocus) {
+    final AsyncResult<Void> result = new AsyncResult<Void>();
     removeContent(content, true, dispose).doWhenDone(() -> {
       if (trackFocus) {
         Content current = getSelectedContent();
@@ -389,7 +389,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
 
   @Nonnull
   @Override
-  public ActionCallback setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus) {
+  public AsyncResult<Void> setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus) {
     return setSelectedContentCB(content, requestFocus, true);
   }
 
@@ -400,13 +400,13 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
 
   @Nonnull
   @Override
-  public ActionCallback setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus) {
+  public AsyncResult<Void> setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus) {
     return setSelectedContent(content, requestFocus, forcedFocus, false);
   }
 
   @Nonnull
   @Override
-  public ActionCallback setSelectedContent(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus, boolean implicit) {
+  public AsyncResult<Void> setSelectedContent(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus, boolean implicit) {
     mySelectionHistory.remove(content);
     mySelectionHistory.add(0, content);
     if (isSelected(content) && requestFocus) {
@@ -414,7 +414,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
 
     if (!checkSelectionChangeShouldBeProcessed(content, implicit)) {
-      return ActionCallback.REJECTED;
+      return AsyncResult.rejected();
     }
     if (!myContents.contains(content)) {
       throw new IllegalArgumentException("Cannot find content:" + content.getDisplayName());
@@ -427,8 +427,8 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     final ActiveRunnable selection = new ActiveRunnable() {
       @Nonnull
       @Override
-      public ActionCallback run() {
-        if (myDisposed || getIndexOfContent(content) == -1) return ActionCallback.REJECTED;
+      public AsyncResult<Void> run() {
+        if (myDisposed || getIndexOfContent(content) == -1) return AsyncResult.rejected();
 
         for (Content each : old) {
           removeFromSelection(each);
@@ -439,11 +439,11 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
         if (requestFocus) {
           return requestFocus(content, forcedFocus);
         }
-        return ActionCallback.DONE;
+        return AsyncResult.done(null);
       }
     };
 
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = new AsyncResult<Void>();
     boolean enabledFocus = getFocusManager().isFocusTransferEnabled();
     if (focused || requestFocus) {
       if (enabledFocus) {
@@ -457,13 +457,13 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Nonnull
-  protected abstract ActionCallback requestFocusForComponent();
+  protected abstract AsyncResult<Void> requestFocusForComponent();
 
   protected abstract boolean isSelectionHoldsFocus();
 
   @Nonnull
   @Override
-  public ActionCallback setSelectedContentCB(@Nonnull Content content) {
+  public AsyncResult<Void> setSelectedContentCB(@Nonnull Content content) {
     return setSelectedContentCB(content, false);
   }
 
@@ -473,7 +473,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public ActionCallback selectPreviousContent() {
+  public AsyncResult<Void> selectPreviousContent() {
     int contentCount = getContentCount();
     LOG.assertTrue(contentCount > 1);
     Content selectedContent = getSelectedContent();
@@ -487,7 +487,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public ActionCallback selectNextContent() {
+  public AsyncResult<Void> selectNextContent() {
     int contentCount = getContentCount();
     LOG.assertTrue(contentCount > 1);
     Content selectedContent = getSelectedContent();

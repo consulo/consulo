@@ -833,7 +833,7 @@ public abstract class JBTabsImpl extends JComponent
       return mySelectionChangeHandler.execute(info, requestFocus, new ActiveRunnable() {
         @Nonnull
         @Override
-        public ActionCallback run() {
+        public AsyncResult<Void> run() {
           return executeSelectionChange(info, requestFocus);
         }
       });
@@ -844,17 +844,17 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   @Nonnull
-  private ActionCallback executeSelectionChange(TabInfo info, boolean requestFocus) {
+  private AsyncResult<Void> executeSelectionChange(TabInfo info, boolean requestFocus) {
     if (mySelectedInfo != null && mySelectedInfo.equals(info)) {
       if (!requestFocus) {
-        return new ActionCallback.Done();
+        return AsyncResult.done(null);
       }
       else {
         Component owner = myFocusManager.getFocusOwner();
         JComponent c = info.getComponent();
         if (c != null && owner != null) {
           if (c == owner || SwingUtilities.isDescendingFrom(owner, c)) {
-            return new ActionCallback.Done();
+            return AsyncResult.done(null);
           }
         }
         return requestFocus(getToFocus());
@@ -880,7 +880,7 @@ public abstract class JBTabsImpl extends JComponent
     if (requestFocus) {
       final JComponent toFocus = getToFocus();
       if (myProject != null && toFocus != null) {
-        final ActionCallback result = new ActionCallback();
+        final AsyncResult<Void> result = new AsyncResult<Void>();
         requestFocus(toFocus).doWhenProcessed(() -> {
           if (myDisposed) {
             result.setRejected();
@@ -943,14 +943,14 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   @Nonnull
-  private ActionCallback requestFocus(final JComponent toFocus) {
-    if (toFocus == null) return new ActionCallback.Done();
+  private AsyncResult<Void> requestFocus(final JComponent toFocus) {
+    if (toFocus == null) return AsyncResult.done(null);
 
     if (myTestMode) {
       getGlobalInstance().doWhenFocusSettlesDown(() -> {
         getGlobalInstance().requestFocus(toFocus, true);
       });
-      return new ActionCallback.Done();
+      return AsyncResult.done(null);
     }
 
 
@@ -958,7 +958,7 @@ public abstract class JBTabsImpl extends JComponent
       return myFocusManager.requestFocus(new FocusCommand.ByComponent(toFocus, new Exception()), true);
     }
     else {
-      final ActionCallback result = new ActionCallback();
+      final AsyncResult<Void> result = new AsyncResult<>();
       final FocusRequestor requestor = myFocusManager.getFurtherRequestor();
       final Ref<Boolean> queued = new Ref<>(false);
       Disposer.register(requestor, () -> {
@@ -975,8 +975,8 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   @Nonnull
-  private ActionCallback removeDeferred() {
-    final ActionCallback callback = new ActionCallback();
+  private AsyncResult<Void> removeDeferred() {
+    final AsyncResult<Void> callback = new AsyncResult<>();
 
     final long executionRequest = ++myRemoveDeferredRequest;
 

@@ -15,10 +15,11 @@
  */
 package consulo.web.wm.impl;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import consulo.web.application.WebApplication;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,8 +29,8 @@ import javax.annotation.Nonnull;
 public class WebCommandProcessorImpl extends CommandProcessorBase {
   @Nonnull
   @Override
-  protected ActionCallback invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> condition) {
-    ActionCallback actionCallback = new ActionCallback();
+  protected AsyncResult<Void> invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> condition) {
+    AsyncResult<Void> actionCallback = new AsyncResult<>();
 
     WebApplication.invokeOnCurrentSession(() -> {
       try {

@@ -161,23 +161,23 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Nonnull
-  public ActionCallback select(Object element, VirtualFile file, final boolean requestFocus) {
+  public AsyncResult<Void> select(Object element, VirtualFile file, final boolean requestFocus) {
     return _select(element, file, requestFocus, Conditions.<AbstractTreeNode>alwaysTrue());
   }
 
-  public ActionCallback selectInWidth(final Object element,
+  public AsyncResult<Void> selectInWidth(final Object element,
                                       final boolean requestFocus,
                                       final Condition<AbstractTreeNode> nonStopCondition) {
     return _select(element, null, requestFocus, nonStopCondition);
   }
 
   @Nonnull
-  private ActionCallback _select(final Object element,
+  private AsyncResult<Void> _select(final Object element,
                                  final VirtualFile file,
                                  final boolean requestFocus,
                                  final Condition<AbstractTreeNode> nonStopCondition) {
 
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = new AsyncResult<Void>();
 
     final FocusRequestor requestor = IdeFocusManager.getInstance(myProject).getFurtherRequestor();
 

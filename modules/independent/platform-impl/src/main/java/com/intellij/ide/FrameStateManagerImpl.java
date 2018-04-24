@@ -17,18 +17,18 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
-import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ex.ApplicationEx2;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class FrameStateManagerImpl extends FrameStateManager implements ApplicationComponent {
@@ -80,7 +80,7 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   }
 
   @Override
-  public ActionCallback getApplicationActive() {
+  public AsyncResult<Void> getApplicationActive() {
     return myActive.getReady(this);
   }
 

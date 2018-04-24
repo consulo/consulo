@@ -23,7 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.FocusCommand;
@@ -32,8 +32,8 @@ import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.containers.WeakKeyWeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -236,16 +236,16 @@ public class FocusTrackback {
     }
   }
 
-  private ActionCallback _restoreFocus() {
-    if (isConsumed()) return ActionCallback.REJECTED;
+  private AsyncResult<Void> _restoreFocus() {
+    if (isConsumed()) return AsyncResult.rejected();
 
     List<FocusTrackback> stack = getCleanStack();
 
-    if (!stack.contains(this)) return ActionCallback.REJECTED;
+    if (!stack.contains(this)) return AsyncResult.resolved();
 
     Component toFocus = queryToFocus(stack, this, true);
 
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = new AsyncResult<>();
     if (toFocus != null) {
       final Component ownerBySwing = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       if (ownerBySwing != null) {
@@ -543,7 +543,7 @@ public class FocusTrackback {
   private class MyFocusCommand extends FocusCommand {
 
     @Nonnull
-    public ActionCallback run() {
+    public AsyncResult<Void> run() {
       return _restoreFocus();
     }
 

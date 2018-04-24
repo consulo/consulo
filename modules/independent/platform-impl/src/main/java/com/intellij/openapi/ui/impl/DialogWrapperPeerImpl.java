@@ -82,11 +82,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
   private final ActionCallback myWindowFocusedCallback = new ActionCallback("DialogFocusedCallback");
   private final ActionCallback myTypeAheadDone = new ActionCallback("DialogTypeAheadDone");
-  private ActionCallback myTypeAheadCallback;
+  private AsyncResult<Void> myTypeAheadCallback;
 
   protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
-    myTypeAheadCallback = myWrapper.isTypeAheadEnabled() ? new ActionCallback() : null;
+    myTypeAheadCallback = myWrapper.isTypeAheadEnabled() ? new AsyncResult<Void>() : null;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
     if (application != null && application.hasComponent(WindowManager.class)) {

@@ -119,7 +119,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
   private final Map<Class, JCheckBox> myCheckBoxes = new HashMap<>();
   private final List<JCheckBox> myAutoClicked = new ArrayList<>();
   private String myTestSearchFilter;
-  private final ActionCallback myTreeHasBuilt = new ActionCallback();
+  private final AsyncResult<Void> myTreeHasBuilt = new AsyncResult<>();
   private boolean myInitialNodeIsLeaf;
   private final List<Pair<String, JCheckBox>> myTriggeredCheckboxes = new ArrayList<>();
   private final TreeExpander myTreeExpander;

@@ -62,7 +62,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
 
     StateComponentInfo<?> componentInfo = StateComponentInfo.of(component, getProject());
     if (componentInfo == null) {
-      return;Ro
+      return;
     }
 
     try {

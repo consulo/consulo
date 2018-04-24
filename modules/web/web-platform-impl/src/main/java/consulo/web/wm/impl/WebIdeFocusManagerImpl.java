@@ -17,15 +17,15 @@ package consulo.web.wm.impl;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusRequestor;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -37,15 +37,15 @@ import java.awt.event.KeyEvent;
 public class WebIdeFocusManagerImpl extends IdeFocusManager {
   @Override
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull final Component c, final boolean forced) {
-    return ActionCallback.DONE;
+  public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
+    return AsyncResult.done(null);
   }
 
   @Override
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
     command.run();
-    return ActionCallback.DONE;
+    return AsyncResult.done(null);
   }
 
   @Override
@@ -87,8 +87,8 @@ public class WebIdeFocusManagerImpl extends IdeFocusManager {
 
   @Override
   @Nonnull
-  public ActionCallback requestDefaultFocus(boolean forced) {
-    return ActionCallback.DONE;
+  public AsyncResult<Void> requestDefaultFocus(boolean forced) {
+    return AsyncResult.done(null);
   }
 
   @Override

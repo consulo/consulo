@@ -22,12 +22,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -52,7 +53,7 @@ import java.awt.event.KeyEvent;
 
 public abstract class IdeFocusManager implements FocusRequestor {
 
-  public ActionCallback requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
+  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
     return requestFocus(c, false);
   }
 
@@ -101,7 +102,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
   @Deprecated
   // use #typeAheadUntil(ActionCallback, String) instead
-  public void typeAheadUntil(ActionCallback done) {
+  public void typeAheadUntil(AsyncResult<Void> done) {
     typeAheadUntil(done, "No cause has been provided");
   }
 
@@ -122,7 +123,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
    * Requests default focus. The method should not be called by the user code.
    */
   @Nonnull
-  public abstract ActionCallback requestDefaultFocus(boolean forced);
+  public abstract AsyncResult<Void> requestDefaultFocus(boolean forced);
 
   /**
    * Reports of focus transfer is enabled right now. It can be disabled if app is inactive. In this case
@@ -156,7 +157,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
   /**
    * Enables or disables typeahead
    *
-   * @see #typeAheadUntil(com.intellij.openapi.util.ActionCallback)
+   * @see #typeAheadUntil(AsyncResult)
    */
   public abstract void setTypeaheadEnabled(boolean enabled);
 

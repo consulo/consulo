@@ -46,6 +46,17 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
+  public static <R> AsyncResult<R> resolved() {
+    return resolved(null);
+  }
+
+  @Nonnull
+  public static <R> AsyncResult<R> resolved(@Nullable R result) {
+    return new AsyncResult<R>().setDone(result);
+  }
+
+  @Nonnull
+  @Deprecated
   public static <R> AsyncResult<R> done(@Nullable R result) {
     return new AsyncResult<R>().setDone(result);
   }
@@ -135,6 +146,14 @@ public class AsyncResult<T> extends ActionCallback {
   @Nonnull
   public AsyncResult<T> doWhenRejected(@Nonnull final PairConsumer<T, String> consumer) {
     doWhenRejected(() -> consumer.consume(myResult, myError));
+    return this;
+  }
+
+  @Override
+  @Nonnull
+  public AsyncResult<T> doWhenProcessed(@Nonnull final Runnable runnable) {
+    doWhenDone(runnable);
+    doWhenRejected(runnable);
     return this;
   }
 

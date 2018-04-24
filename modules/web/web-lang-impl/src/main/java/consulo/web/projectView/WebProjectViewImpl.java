@@ -32,7 +32,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
@@ -46,9 +46,9 @@ import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.WrappedLayout;
 import consulo.web.ui.TreeStructureWrappenModel;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
@@ -324,8 +324,8 @@ public class WebProjectViewImpl implements ProjectViewEx {
 
   @Nonnull
   @Override
-  public ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus) {
-    return ActionCallback.DONE;
+  public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
+    return AsyncResult.done(null);
   }
 
   @RequiredUIAccess
@@ -392,8 +392,8 @@ public class WebProjectViewImpl implements ProjectViewEx {
 
   @Nonnull
   @Override
-  public ActionCallback changeViewCB(@Nonnull String viewId, String subId) {
-    return ActionCallback.DONE;
+  public AsyncResult<Void> changeViewCB(@Nonnull String viewId, String subId) {
+    return AsyncResult.done(null);
   }
 
   @Nullable

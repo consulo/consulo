@@ -21,6 +21,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ScrollingUtil;
@@ -32,9 +33,9 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
@@ -334,12 +335,12 @@ public final class TreeUtil {
   }
 
   @Nonnull
-  public static ActionCallback selectPath(@Nonnull final JTree tree, final TreePath path) {
+  public static AsyncResult<Void> selectPath(@Nonnull final JTree tree, final TreePath path) {
     return selectPath(tree, path, true);
   }
 
   @Nonnull
-  public static ActionCallback selectPath(@Nonnull final JTree tree, final TreePath path, boolean center) {
+  public static AsyncResult<Void> selectPath(@Nonnull final JTree tree, final TreePath path, boolean center) {
     tree.makeVisible(path);
     if (center) {
       return showRowCentred(tree, tree.getRowForPath(path));
@@ -410,17 +411,17 @@ public final class TreeUtil {
   }
 
   @Nonnull
-  private static ActionCallback showRowCentred(@Nonnull final JTree tree, final int row) {
+  private static AsyncResult<Void> showRowCentred(@Nonnull final JTree tree, final int row) {
     return showRowCentered(tree, row, true);
   }
 
   @Nonnull
-  public static ActionCallback showRowCentered(@Nonnull final JTree tree, final int row, final boolean centerHorizontally) {
+  public static AsyncResult<Void> showRowCentered(@Nonnull final JTree tree, final int row, final boolean centerHorizontally) {
     return showRowCentered(tree, row, centerHorizontally, true);
   }
 
   @Nonnull
-  public static ActionCallback showRowCentered(@Nonnull final JTree tree, final int row, final boolean centerHorizontally, boolean scroll) {
+  public static AsyncResult<Void> showRowCentered(@Nonnull final JTree tree, final int row, final boolean centerHorizontally, boolean scroll) {
     final int visible = getVisibleRowCount(tree);
 
     final int top = visible > 0 ? row - (visible - 1)/ 2 : row;
@@ -429,30 +430,30 @@ public final class TreeUtil {
   }
 
   @Nonnull
-  public static ActionCallback showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous) {
+  public static AsyncResult<Void> showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous) {
     return showAndSelect(tree, top, bottom, row, previous, false);
   }
 
   @Nonnull
-  public static ActionCallback showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous, boolean addToSelection) {
+  public static AsyncResult<Void> showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous, boolean addToSelection) {
     return showAndSelect(tree, top, bottom, row, previous, addToSelection, true, false);
   }
 
   @Nonnull
-  public static ActionCallback showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous, final boolean addToSelection, final boolean scroll) {
+  public static AsyncResult<Void> showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous, final boolean addToSelection, final boolean scroll) {
     return showAndSelect(tree, top, bottom, row, previous, addToSelection, scroll, false);
   }
 
   @Nonnull
-  public static ActionCallback showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous, final boolean addToSelection, final boolean scroll, final boolean resetSelection) {
+  public static AsyncResult<Void> showAndSelect(@Nonnull final JTree tree, int top, int bottom, final int row, final int previous, final boolean addToSelection, final boolean scroll, final boolean resetSelection) {
     final TreePath path = tree.getPathForRow(row);
 
-    if (path == null) return ActionCallback.DONE;
+    if (path == null) return AsyncResult.resolved();
 
     final int size = tree.getRowCount();
     if (size == 0) {
       tree.clearSelection();
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     }
     if (top < 0){
       top = 0;
@@ -461,7 +462,7 @@ public final class TreeUtil {
       bottom = size - 1;
     }
 
-    if (row >= tree.getRowCount()) return ActionCallback.DONE;
+    if (row >= tree.getRowCount()) return AsyncResult.resolved();
 
     boolean okToScroll = true;
     if (tree.isShowing()) {
@@ -492,12 +493,12 @@ public final class TreeUtil {
 
     if (!okToScroll || !scroll) {
       selectRunnable.run();
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     }
 
 
     final Rectangle rowBounds = tree.getRowBounds(row);
-    if (rowBounds == null) return ActionCallback.DONE;
+    if (rowBounds == null) return AsyncResult.resolved();
 
     Rectangle topBounds = tree.getRowBounds(top);
     if (topBounds == null) {
@@ -516,7 +517,7 @@ public final class TreeUtil {
     final Rectangle visible = tree.getVisibleRect();
     if (visible.contains(bounds)) {
       selectRunnable.run();
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     } else {
       final Component comp =
               tree.getCellRenderer().getTreeCellRendererComponent(tree, path.getLastPathComponent(), true, true, false, row, false);
@@ -528,8 +529,7 @@ public final class TreeUtil {
       }
     }
 
-    final ActionCallback callback = new ActionCallback();
-
+    final AsyncResult<Void> callback = new AsyncResult<>();
 
     selectRunnable.run();
 
@@ -793,13 +793,13 @@ public final class TreeUtil {
   }
 
   @Nonnull
-  public static ActionCallback selectInTree(DefaultMutableTreeNode node, boolean requestFocus, @Nonnull JTree tree) {
+  public static AsyncResult<Void> selectInTree(DefaultMutableTreeNode node, boolean requestFocus, @Nonnull JTree tree) {
     return selectInTree(node, requestFocus, tree, true);
   }
 
   @Nonnull
-  public static ActionCallback selectInTree(@Nullable DefaultMutableTreeNode node, boolean requestFocus, @Nonnull JTree tree, boolean center) {
-    if (node == null) return ActionCallback.DONE;
+  public static AsyncResult<Void> selectInTree(@Nullable DefaultMutableTreeNode node, boolean requestFocus, @Nonnull JTree tree, boolean center) {
+    if (node == null) return AsyncResult.resolved();
 
     final TreePath treePath = new TreePath(node.getPath());
     tree.expandPath(treePath);

@@ -27,10 +27,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
@@ -45,8 +42,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
@@ -56,7 +53,8 @@ import java.util.List;
  * @author cdr
  */
 public class ScopeViewPane extends AbstractProjectViewPane {
-  @NonNls public static final String ID = "Scope";
+  @NonNls
+  public static final String ID = "Scope";
   private final ProjectView myProjectView;
   private ScopeTreeViewPanel myViewPanel;
   private final DependencyValidationManager myDependencyValidationManager;
@@ -70,11 +68,12 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     myNamedScopeManager = namedScopeManager;
     myScopeListener = new NamedScopesHolder.ScopeListener() {
       Alarm refreshProjectViewAlarm = new Alarm();
+
       @Override
       public void scopesChanged() {
         // amortize batch scope changes
         refreshProjectViewAlarm.cancelAllRequests();
-        refreshProjectViewAlarm.addRequest(new Runnable(){
+        refreshProjectViewAlarm.addRequest(new Runnable() {
           @Override
           public void run() {
             if (myProject.isDisposed()) return;
@@ -85,12 +84,13 @@ public class ScopeViewPane extends AbstractProjectViewPane {
             if (id != null) {
               if (Comparing.strEqual(id, getId())) {
                 myProjectView.changeView(id, subId);
-              } else {
+              }
+              else {
                 myProjectView.changeView(id);
               }
             }
           }
-        },10);
+        }, 10);
       }
     };
     myDependencyValidationManager.addScopeListener(myScopeListener);
@@ -157,7 +157,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   @Override
   public void addToolbarActions(DefaultActionGroup actionGroup) {
     actionGroup.add(ActionManager.getInstance().getAction("ScopeView.EditScopes"));
-    actionGroup.addAction(new ShowModulesAction(myProject){
+    actionGroup.addAction(new ShowModulesAction(myProject) {
       @Override
       protected String getId() {
         return ScopeViewPane.this.getId();
@@ -176,8 +176,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   @Override
   public void select(Object element, VirtualFile file, boolean requestFocus) {
     if (file == null) return;
-    PsiFileSystemItem psiFile = file.isDirectory() ? PsiManager.getInstance(myProject).findDirectory(file)
-                                                   : PsiManager.getInstance(myProject).findFile(file);
+    PsiFileSystemItem psiFile = file.isDirectory() ? PsiManager.getInstance(myProject).findDirectory(file) : PsiManager.getInstance(myProject).findFile(file);
     if (psiFile == null) return;
     if (!(element instanceof PsiElement)) return;
 
@@ -202,7 +201,11 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
   }
 
-  private boolean changeView(final PackageSet packageSet, final PsiElement element, final PsiFileSystemItem psiFileSystemItem, final String name, final NamedScopesHolder holder,
+  private boolean changeView(final PackageSet packageSet,
+                             final PsiElement element,
+                             final PsiFileSystemItem psiFileSystemItem,
+                             final String name,
+                             final NamedScopesHolder holder,
                              boolean requestFocus) {
     if ((packageSet instanceof PackageSetBase && ((PackageSetBase)packageSet).contains(psiFileSystemItem.getVirtualFile(), holder)) ||
         (psiFileSystemItem instanceof PsiFile && packageSet.contains((PsiFile)psiFileSystemItem, holder))) {
@@ -214,7 +217,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }
     return false;
   }
-
 
 
   @Override
@@ -251,9 +253,8 @@ public class ScopeViewPane extends AbstractProjectViewPane {
 
   @Nonnull
   @Override
-  public ActionCallback getReady(@Nonnull Object requestor) {
-    final ActionCallback callback = myViewPanel.getActionCallback();
-    return myViewPanel == null ? new ActionCallback.Rejected() :
-           callback != null ? callback : new ActionCallback.Done();
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    final AsyncResult<Void> callback = myViewPanel.getActionCallback();
+    return myViewPanel == null ? AsyncResult.rejected() : callback != null ? callback : AsyncResult.resolved();
   }
 }

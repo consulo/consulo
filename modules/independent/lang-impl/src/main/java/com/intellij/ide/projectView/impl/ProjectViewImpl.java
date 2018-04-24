@@ -936,7 +936,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   @Nonnull
   @Override
-  public ActionCallback changeViewCB(@Nonnull String viewId, String subId) {
+  public AsyncResult<Void> changeViewCB(@Nonnull String viewId, String subId) {
     AbstractProjectViewPane pane = getProjectViewPaneById(viewId);
     LOG.assertTrue(pane != null, "Project view pane not found: " + viewId + "; subId:" + subId + "; project: " + myProject);
     if (!viewId.equals(getCurrentViewId()) || subId != null && !subId.equals(pane.getSubId())) {
@@ -946,7 +946,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         }
       }
     }
-    return ActionCallback.REJECTED;
+    return AsyncResult.rejected();
   }
 
   private final class MyDeletePSIElementProvider implements DeleteProvider {
@@ -2041,11 +2041,11 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   @Nonnull
   @Override
-  public ActionCallback getReady(@Nonnull Object requestor) {
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
     AbstractProjectViewPane pane = myId2Pane.get(myCurrentViewSubId);
     if (pane == null) {
       pane = myId2Pane.get(myCurrentViewId);
     }
-    return pane != null ? pane.getReady(requestor) : ActionCallback.DONE;
+    return pane != null ? pane.getReady(requestor) : AsyncResult.done(null);
   }
 }

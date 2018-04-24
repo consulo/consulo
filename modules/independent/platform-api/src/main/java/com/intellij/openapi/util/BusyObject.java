@@ -25,11 +25,11 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public interface BusyObject {
-  ActionCallback getReady(@Nonnull Object requestor);
+  AsyncResult<Void> getReady(@Nonnull Object requestor);
 
   abstract class Impl implements BusyObject {
 
-    private final Map<Object, ActionCallback> myReadyCallbacks = new WeakHashMap<>();
+    private final Map<Object, AsyncResult<Void>> myReadyCallbacks = new WeakHashMap<>();
 
     public abstract boolean isReady();
 
@@ -41,15 +41,15 @@ public interface BusyObject {
       if (!isReady()) return;
 
       if (readyRequestor != null) {
-        Pair<ActionCallback, List<ActionCallback>> callbacks = getReadyCallbacks(readyRequestor);
+        Pair<AsyncResult<Void>, List<AsyncResult<Void>>> callbacks = getReadyCallbacks(readyRequestor);
         callbacks.getFirst().setDone();
-        for (ActionCallback each : callbacks.getSecond()) {
+        for (AsyncResult<Void> each : callbacks.getSecond()) {
           each.setRejected();
         }
       }
       else {
-        ActionCallback[] callbacks = getReadyCallbacks();
-        for (ActionCallback each : callbacks) {
+        AsyncResult<Void>[] callbacks = getReadyCallbacks();
+        for (AsyncResult<Void> each : callbacks) {
           each.setDone();
         }
       }
@@ -62,9 +62,9 @@ public interface BusyObject {
 
     @Override
     @Nonnull
-    public final ActionCallback getReady(@Nonnull Object requestor) {
+    public final AsyncResult<Void> getReady(@Nonnull Object requestor) {
       if (isReady()) {
-        return new ActionCallback.Done();
+        return AsyncResult.done(null);
       }
       else {
         return addReadyCallback(requestor);
@@ -72,11 +72,11 @@ public interface BusyObject {
     }
 
     @Nonnull
-    private ActionCallback addReadyCallback(Object requestor) {
+    private AsyncResult<Void> addReadyCallback(Object requestor) {
       synchronized (myReadyCallbacks) {
-        ActionCallback cb = myReadyCallbacks.get(requestor);
+        AsyncResult<Void> cb = myReadyCallbacks.get(requestor);
         if (cb == null) {
-          cb = new ActionCallback();
+          cb = new AsyncResult<>();
           myReadyCallbacks.put(requestor, cb);
         }
 
@@ -84,23 +84,23 @@ public interface BusyObject {
       }
     }
 
-    private ActionCallback[] getReadyCallbacks() {
+    private AsyncResult<Void>[] getReadyCallbacks() {
       synchronized (myReadyCallbacks) {
-        ActionCallback[] result = myReadyCallbacks.values().toArray(new ActionCallback[myReadyCallbacks.size()]);
+        AsyncResult<Void>[] result = myReadyCallbacks.values().toArray(new AsyncResult[myReadyCallbacks.size()]);
         myReadyCallbacks.clear();
         return result;
       }
     }
 
-    private Pair<ActionCallback, List<ActionCallback>> getReadyCallbacks(Object readyRequestor) {
+    private Pair<AsyncResult<Void>, List<AsyncResult<Void>>> getReadyCallbacks(Object readyRequestor) {
       synchronized (myReadyCallbacks) {
-        ActionCallback done = myReadyCallbacks.get(readyRequestor);
+        AsyncResult<Void> done = myReadyCallbacks.get(readyRequestor);
         if (done == null) {
-          done = new ActionCallback();
+          done = new AsyncResult<Void>();
         }
 
         myReadyCallbacks.remove(readyRequestor);
-        ArrayList<ActionCallback> rejected = new ArrayList<>();
+        ArrayList<AsyncResult<Void>> rejected = new ArrayList<>();
         rejected.addAll(myReadyCallbacks.values());
         myReadyCallbacks.clear();
         return new Pair<>(done, rejected);

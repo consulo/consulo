@@ -30,6 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.*;
@@ -43,13 +44,13 @@ import com.intellij.ui.content.ContentManagerListener;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
+import consulo.ui.shared.Rectangle2D;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.beans.PropertyChangeListener;
@@ -301,8 +302,8 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
     @Nonnull
     @Override
-    public ActionCallback getReady(@Nonnull Object requestor) {
-      return ActionCallback.DONE;
+    public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+      return AsyncResult.done(null);
     }
 
     @RequiredUIAccess
@@ -522,8 +523,8 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
     @Nonnull
     @Override
-    public ActionCallback getReady(@Nonnull Object requestor) {
-      return ActionCallback.DONE;
+    public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+      return AsyncResult.done(null);
     }
 
     @Override
@@ -692,9 +693,9 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
     @Nonnull
     @Override
-    public ActionCallback removeContent(@Nonnull Content content, boolean dispose, boolean trackFocus, boolean implicitFocus) {
+    public AsyncResult<Void> removeContent(@Nonnull Content content, boolean dispose, boolean trackFocus, boolean implicitFocus) {
       removeContent(content, dispose);
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     }
 
     @Override
@@ -709,13 +710,13 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
-    public ActionCallback selectNextContent() {
-      return ActionCallback.DONE;
+    public AsyncResult<Void> selectNextContent() {
+      return AsyncResult.resolved();
     }
 
     @Override
-    public ActionCallback selectPreviousContent() {
-      return ActionCallback.DONE;
+    public AsyncResult<Void> selectPreviousContent() {
+      return AsyncResult.resolved();
     }
 
     @Override
@@ -730,9 +731,9 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
     @Nonnull
     @Override
-    public ActionCallback setSelectedContentCB(@Nonnull Content content) {
+    public AsyncResult<Void> setSelectedContentCB(@Nonnull Content content) {
       setSelectedContent(content);
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     }
 
     @Override
@@ -742,7 +743,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
     @Nonnull
     @Override
-    public ActionCallback setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus) {
+    public AsyncResult<Void> setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus) {
       return setSelectedContentCB(content);
     }
 
@@ -753,20 +754,20 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
     @Nonnull
     @Override
-    public ActionCallback setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus) {
+    public AsyncResult<Void> setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus) {
       return setSelectedContentCB(content);
     }
 
     @Nonnull
     @Override
-    public ActionCallback setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit) {
+    public AsyncResult<Void> setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit) {
       return setSelectedContentCB(content);
     }
 
     @Nonnull
     @Override
-    public ActionCallback requestFocus(@Nullable final Content content, final boolean forced) {
-      return ActionCallback.DONE;
+    public AsyncResult<Void> requestFocus(@Nullable final Content content, final boolean forced) {
+      return AsyncResult.done(null);
     }
 
     @Override

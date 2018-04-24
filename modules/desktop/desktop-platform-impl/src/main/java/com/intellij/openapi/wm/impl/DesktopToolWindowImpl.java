@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -28,8 +28,8 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowBase;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
@@ -83,8 +83,8 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
 
   @Nonnull
   @Override
-  public ActionCallback getReady(@Nonnull final Object requestor) {
-    final ActionCallback result = new ActionCallback();
+  public AsyncResult<Void> getReady(@Nonnull final Object requestor) {
+    final AsyncResult<Void> result = new AsyncResult<>();
     myShowing.getReady(this).doWhenDone(() -> {
       ArrayList<FinalizableCommand> cmd = new ArrayList<>();
       cmd.add(new FinalizableCommand(null) {

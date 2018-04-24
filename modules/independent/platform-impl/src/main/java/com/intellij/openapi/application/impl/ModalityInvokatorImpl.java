@@ -19,7 +19,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityInvokator;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -31,25 +33,25 @@ class ModalityInvokatorImpl implements ModalityInvokator {
 
   @Nonnull
   @Override
-  public ActionCallback invokeLater(@Nonnull Runnable runnable) {
+  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable) {
     return invokeLater(runnable, ApplicationManager.getApplication().getDisposed());
   }
 
   @Nonnull
   @Override
-  public ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
+  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
     return LaterInvocator.invokeLater(runnable, expired);
   }
 
   @Nonnull
   @Override
-  public ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
+  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
     return LaterInvocator.invokeLater(runnable, state, expired);
   }
 
   @Nonnull
   @Override
-  public ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
     return invokeLater(runnable, state, ApplicationManager.getApplication().getDisposed());
   }
 }

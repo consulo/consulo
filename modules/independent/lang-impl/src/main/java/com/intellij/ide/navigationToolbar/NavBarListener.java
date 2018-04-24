@@ -30,7 +30,7 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -43,8 +43,8 @@ import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.PsiTreeChangeListener;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -316,7 +316,7 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
       }
 
       final IdeFocusManager focusManager = IdeFocusManager.getInstance(myPanel.getProject());
-      final ActionCallback firstCharTyped = new ActionCallback();
+      final AsyncResult<Void> firstCharTyped = new AsyncResult<>();
       focusManager.typeAheadUntil(firstCharTyped);
       myPanel.moveDown();
       //noinspection SSBasedInspection

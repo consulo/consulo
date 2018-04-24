@@ -19,7 +19,7 @@ package com.intellij.execution.ui.layout.impl;
 import com.intellij.execution.ui.layout.GridCell;
 import com.intellij.execution.ui.layout.ViewContext;
 import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 
 public interface ViewContextEx extends ViewContext {
   RunnerLayout getLayoutSettings();
@@ -30,5 +30,5 @@ public interface ViewContextEx extends ViewContext {
   
   int getWindow();
 
-  ActionCallback detachTo(int window, GridCell cell);
+  AsyncResult<Void> detachTo(int window, GridCell cell);
 }

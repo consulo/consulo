@@ -23,10 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ExceptionUtil;
@@ -37,10 +34,9 @@ import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -135,7 +131,7 @@ public class LaterInvocator {
   }
 
   @Nonnull
-  static ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull Condition<?> expired) {
+  static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull Condition<?> expired) {
     ModalityState modalityState = ModalityState.defaultModalityState();
     return invokeLater(runnable, modalityState, expired);
   }
@@ -146,9 +142,9 @@ public class LaterInvocator {
   }
 
   @Nonnull
-  static ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired) {
-    if (expired.value(null)) return ActionCallback.REJECTED;
-    final ActionCallback callback = new ActionCallback();
+  static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired) {
+    if (expired.value(null)) return AsyncResult.rejected();
+    final AsyncResult<Void> callback = new AsyncResult<>();
     RunnableInfo runnableInfo = new RunnableInfo(runnable, modalityState, expired, callback);
     synchronized (LOCK) {
       ourQueue.add(runnableInfo);

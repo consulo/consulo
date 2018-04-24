@@ -206,7 +206,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     }
   }
 
-  private ActionCallback getReady() {
+  private AsyncResult<Void> getReady() {
     return myBusyObject.getReady(this);
   }
 

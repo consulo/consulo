@@ -992,11 +992,11 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Persis
   @Override
   public ActionCallback notifyPublisher(@Nonnull final Runnable runnable) {
     final IdeFocusManager focusManager = IdeFocusManager.getInstance(myProject);
-    final ActionCallback done = new ActionCallback();
+    final AsyncResult<Void> done = new AsyncResult<>();
     return myBusyObject.execute(new ActiveRunnable() {
       @Nonnull
       @Override
-      public ActionCallback run() {
+      public AsyncResult<Void> run() {
         focusManager.doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
           @Override
           public void run() {
@@ -1944,7 +1944,7 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Persis
 
   @Nonnull
   @Override
-  public ActionCallback getReady(@Nonnull Object requestor) {
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
     return myBusyObject.getReady(requestor);
   }
 }

@@ -137,7 +137,7 @@ public abstract class ChooseByNameBase {
   private final ListUpdater myListUpdater = new ListUpdater();
 
   private boolean myDisposedFlag = false;
-  private ActionCallback myPostponedOkAction;
+  private AsyncResult<Void> myPostponedOkAction;
 
   private final String[][] myNames = new String[2][];
   private volatile CalcElementsThread myCalcElementsThread;
@@ -804,7 +804,7 @@ public abstract class ChooseByNameBase {
 
     final String text = getTrimmedText();
     if (ok && myCalcElementsThread != null && !text.isEmpty()) {
-      myPostponedOkAction = new ActionCallback();
+      myPostponedOkAction = new AsyncResult<Void>();
       IdeFocusManager.getInstance(myProject).typeAheadUntil(myPostponedOkAction);
       return true;
     }

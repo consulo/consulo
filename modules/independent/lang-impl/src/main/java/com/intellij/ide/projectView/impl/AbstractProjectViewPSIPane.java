@@ -40,6 +40,7 @@ import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
@@ -51,8 +52,8 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.OpenSourceUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -241,11 +242,11 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
     selectCB(element, file, requestFocus);
   }
 
-  public ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus) {
+  public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
     if (file != null) {
       return ((BaseProjectTreeBuilder)getTreeBuilder()).select(element, file, requestFocus);
     }
-    return new ActionCallback.Done();
+    return AsyncResult.done(null);
   }
 
   @Nonnull

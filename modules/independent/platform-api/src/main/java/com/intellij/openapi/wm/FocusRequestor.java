@@ -16,7 +16,8 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -32,8 +33,8 @@ public interface FocusRequestor extends Disposable {
    * @return action callback that either notifies when the focus was obtained or focus request was droppped
    */
   @Nonnull
-  default ActionCallback requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
-    return ActionCallback.DONE; //FIXME [VISTALL] stub
+  default AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+    return AsyncResult.done(null); //FIXME [VISTALL] stub
   }
 
   /**
@@ -43,7 +44,7 @@ public interface FocusRequestor extends Disposable {
    * @return action callback that either notifies when the focus was obtained or focus request was droppped
    */
   @Nonnull
-  ActionCallback requestFocus(@Nonnull FocusCommand command, boolean forced);
+  AsyncResult<Void> requestFocus(@Nonnull FocusCommand command, boolean forced);
 
   // TODO [VISTALL] AWT & Swing dependency
 
@@ -57,7 +58,7 @@ public interface FocusRequestor extends Disposable {
    * @return action callback that either notifies when the focus was obtained or focus request was droppped
    */
   @Nonnull
-  ActionCallback requestFocus(@Nonnull java.awt.Component c, boolean forced);
+  AsyncResult<Void> requestFocus(@Nonnull java.awt.Component c, boolean forced);
 
   // endregion
 }

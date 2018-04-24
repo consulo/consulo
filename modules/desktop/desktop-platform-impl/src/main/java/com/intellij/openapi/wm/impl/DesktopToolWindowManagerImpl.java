@@ -590,9 +590,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
           requestor.requestFocus(new FocusCommand() {
             @Nonnull
             @Override
-            public ActionCallback run() {
+            public AsyncResult<Void> run() {
               runnable.run();
-              return new ActionCallback.Done();
+              return AsyncResult.resolved();
             }
           }.setExpirable(runnable), forced);
         }
@@ -619,7 +619,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         getFocusManagerImpl(myProject).requestFocus(new FocusCommand() {
           @Nonnull
           @Override
-          public ActionCallback run() {
+          public AsyncResult<Void> run() {
             final ArrayList<FinalizableCommand> cmds = new ArrayList<>();
 
             final WindowInfoImpl toReactivate = getInfo(active);
@@ -639,7 +639,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 activateToolWindow(myActiveStack.peek(), false, true);
               }
             }
-            return new ActionCallback.Done();
+            return AsyncResult.resolved();
           }
         }, false);
       }
@@ -1272,11 +1272,11 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Nonnull
-  public ActionCallback requestDefaultFocus(final boolean forced) {
+  public AsyncResult<Void> requestDefaultFocus(final boolean forced) {
     return getFocusManagerImpl(myProject).requestFocus(new FocusCommand() {
       @Nonnull
       @Override
-      public ActionCallback run() {
+      public AsyncResult<Void> run() {
         return processDefaultFocusRequest(forced);
       }
     }, forced);
@@ -1311,7 +1311,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
   }
 
-  private ActionCallback processDefaultFocusRequest(boolean forced) {
+  private AsyncResult<Void> processDefaultFocusRequest(boolean forced) {
     if (ModalityState.NON_MODAL.equals(ModalityState.current())) {
       final String activeId = getActiveToolWindowId();
       if (isEditorComponentActive() || activeId == null || getToolWindow(activeId) == null) {
@@ -1321,7 +1321,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         activateToolWindow(activeId, forced, true);
       }
 
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     }
     Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
     if (activeWindow != null) {
@@ -1337,13 +1337,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         JComponent toFocus = IdeFocusTraversalPolicy.getPreferredFocusedComponent(root);
         if (toFocus != null) {
           if (DialogWrapper.findInstance(toFocus) != null) {
-            return ActionCallback.DONE; //IDEA-80929
+            return AsyncResult.resolved(); //IDEA-80929
           }
           return IdeFocusManager.findInstanceByComponent(toFocus).requestFocus(toFocus, forced);
         }
       }
     }
-    return ActionCallback.REJECTED;
+    return AsyncResult.rejected();
   }
 
 
@@ -1351,12 +1351,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
    * Delegate method for compatibility with older versions of IDEA
    */
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull Component c, boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
     return IdeFocusManager.getInstance(myProject).requestFocus(c, forced);
   }
 
   @Nonnull
-  public ActionCallback requestFocus(@Nonnull FocusCommand command, boolean forced) {
+  public AsyncResult<Void> requestFocus(@Nonnull FocusCommand command, boolean forced) {
     return IdeFocusManager.getInstance(myProject).requestFocus(command, forced);
   }
 
