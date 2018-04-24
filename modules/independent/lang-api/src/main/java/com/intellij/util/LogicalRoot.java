@@ -17,14 +17,16 @@
 package com.intellij.util;
 
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
  */
 public abstract class LogicalRoot {
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VirtualFile getVirtualFile();
 
   @Nonnull
