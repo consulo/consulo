@@ -24,16 +24,18 @@
  */
 package com.intellij.openapi.editor.actions;
 
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
+
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredWriteAction;
 
 public class DeleteToWordStartAction extends TextComponentEditorAction {
 
@@ -82,7 +84,7 @@ public class DeleteToWordStartAction extends TextComponentEditorAction {
 
     @RequiredWriteAction
     @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
       deleteToWordStart(editor);
     }

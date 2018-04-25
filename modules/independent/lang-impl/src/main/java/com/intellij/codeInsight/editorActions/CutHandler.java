@@ -30,6 +30,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +44,7 @@ public class CutHandler extends EditorWriteActionHandler {
     myOriginalHandler = originalHandler;
   }
 
+  @RequiredWriteAction
   @Override
   public void executeWriteAction(final Editor editor, Caret caret, DataContext dataContext) {
     assert caret == null : "Invocation of 'cut' operation for specific caret is not supported";

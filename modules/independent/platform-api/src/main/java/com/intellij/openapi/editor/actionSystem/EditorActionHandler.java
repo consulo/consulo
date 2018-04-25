@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -135,6 +136,7 @@ public abstract class EditorActionHandler {
     //noinspection deprecation
     return caret == null ? isEnabled(editor, dataContext) : isEnabledForCaret(editor, caret, dataContext);
   }
+
   /**
    * @deprecated To implement action logic, override
    * {@link #doExecute(Editor, Caret, DataContext)},
@@ -197,26 +199,13 @@ public abstract class EditorActionHandler {
       hostEditor = editor;
     }
     if (contextCaret == null && runForAllCarets()) {
-      hostEditor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          doIfEnabled(caret, dataContext, new CaretTask() {
-            @Override
-            public void perform(@Nonnull Caret caret, @Nullable DataContext dataContext) {
-              doExecute(caret.getEditor(), caret, dataContext);
-            }
-          });
-        }
+      hostEditor.getCaretModel().runForEachCaret(caret -> {
+        doIfEnabled(caret, dataContext, (itCaret, dataContext1) -> doExecute(itCaret.getEditor(), itCaret, dataContext1));
       });
     }
     else {
       if (contextCaret == null) {
-        doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, new CaretTask() {
-          @Override
-          public void perform(@Nonnull Caret caret, @Nullable DataContext dataContext) {
-            doExecute(caret.getEditor(), null, dataContext);
-          }
-        });
+        doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, (caret, context) -> doExecute(caret.getEditor(), null, context));
       }
       else {
         doExecute(editor, contextCaret, dataContext);

@@ -33,6 +33,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.util.Pair;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class DuplicateAction extends EditorAction {
@@ -47,12 +48,12 @@ public class DuplicateAction extends EditorAction {
 
     @RequiredWriteAction
     @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       duplicateLineOrSelectedBlockAtCaret(editor);
     }
 
     @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
+    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
       return !editor.isOneLineMode() || editor.getSelectionModel().hasSelection();
     }
   }
@@ -110,7 +111,7 @@ public class DuplicateAction extends EditorAction {
   public void update(final Editor editor, final Presentation presentation, final DataContext dataContext) {
     super.update(editor, presentation, dataContext);
     if (editor.getSelectionModel().hasSelection()) {
-      presentation.setText(EditorBundle.message("action.duplicate.block"), true);
+      presentation.setText(EditorBundle.message("action.duplicate.selection"), true);
     }
     else {
       presentation.setText(EditorBundle.message("action.duplicate.line"), true);

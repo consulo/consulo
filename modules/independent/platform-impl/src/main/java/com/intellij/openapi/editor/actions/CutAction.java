@@ -34,6 +34,8 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.registry.Registry;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.annotation.Nullable;
+
 public class CutAction extends EditorAction {
   public CutAction() {
     super(new Handler());
@@ -42,7 +44,7 @@ public class CutAction extends EditorAction {
   public static class Handler extends EditorWriteActionHandler {
     @RequiredWriteAction
     @Override
-    public void executeWriteAction(final Editor editor, DataContext dataContext) {
+    public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
       if(!editor.getSelectionModel().hasSelection(true)) {
         if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
           return;

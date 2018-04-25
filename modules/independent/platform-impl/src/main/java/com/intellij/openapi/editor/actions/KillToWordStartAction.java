@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.ide.KillRingTransferable;
@@ -30,7 +30,7 @@ import consulo.annotations.RequiredWriteAction;
  * it to the {@link KillRingTransferable kill ring}.
  * <p/>
  * Thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/19/11 4:18 PM
  */
@@ -39,22 +39,20 @@ public class KillToWordStartAction extends TextComponentEditorAction {
   public KillToWordStartAction() {
     super(new Handler());
   }
-  
+
   private static class Handler extends EditorWriteActionHandler {
     @RequiredWriteAction
     @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       CaretModel caretModel = editor.getCaretModel();
       int caretOffset = caretModel.getOffset();
-      Document document = editor.getDocument();
       if (caretOffset <= 0) {
         return;
       }
 
-      CharSequence text = document.getCharsSequence();
       boolean camel = editor.getSettings().isCamelWords();
       for (int i = caretOffset - 1; i >= 0; i--) {
-        if (EditorActionUtil.isWordStart(text, i, camel)) {
+        if (EditorActionUtil.isWordOrLexemeStart(editor, i, camel)) {
           KillRingUtil.cut(editor, i, caretOffset);
           return;
         }

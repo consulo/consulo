@@ -46,6 +46,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     ensureHandlersLoaded();
     EditorActionHandler tmp = myHandler;
     myHandler = newHandler;
+    myHandler.setWorksInInjected(isInInjectedContext());
     return tmp;
   }
 
@@ -63,9 +64,19 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         final EditorActionHandlerBean handlerBean = extensions[i];
         if (handlerBean.action.equals(id)) {
           myHandler = handlerBean.getHandler(myHandler);
+          myHandler.setWorksInInjected(isInInjectedContext());
         }
       }
     }
+  }
+
+  @Override
+  public void setInjectedContext(boolean worksInInjected) {
+    super.setInjectedContext(worksInInjected);
+    // we assume that this method is called in constructor at the point
+    // where the chain of handlers is not initialized yet
+    // and it's enough to pass the flag to the default handler only
+    myHandler.setWorksInInjected(isInInjectedContext());
   }
 
   @RequiredDispatchThread

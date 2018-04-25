@@ -22,6 +22,7 @@ import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -37,10 +38,10 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.util.PsiUtilBase;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class BackspaceHandler extends EditorWriteActionHandler {
@@ -53,13 +54,13 @@ public class BackspaceHandler extends EditorWriteActionHandler {
 
   @RequiredWriteAction
   @Override
-  public void executeWriteAction(Editor editor, DataContext dataContext) {
-    if (!handleBackspace(editor, dataContext, false)) {
-      myOriginalHandler.execute(editor, dataContext);
+  public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+    if (!handleBackspace(editor, caret, dataContext, false)) {
+      myOriginalHandler.execute(editor, caret, dataContext);
     }
   }
 
-  protected boolean handleBackspace(Editor editor, DataContext dataContext, boolean toWordStart) {
+  protected boolean handleBackspace(Editor editor, Caret caret, DataContext dataContext, boolean toWordStart) {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
 
@@ -98,7 +99,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     HighlighterIterator hiterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
     boolean wasClosingQuote = quoteHandler != null && quoteHandler.isClosingQuote(hiterator, offset);
 
-    myOriginalHandler.execute(originalEditor, dataContext);
+    myOriginalHandler.execute(originalEditor, caret, dataContext);
 
     if (!toWordStart) {
       for(BackspaceHandlerDelegate delegate: delegates) {

@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nullable;
 
@@ -103,6 +104,7 @@ public abstract class ConvertIndentsActionBase extends EditorAction {
   protected abstract int performAction(Editor editor, TextRange textRange);
 
   private class Handler extends EditorWriteActionHandler {
+    @RequiredWriteAction
     @Override
     public void executeWriteAction(final Editor editor, @Nullable Caret caret, DataContext dataContext) {
       final SelectionModel selectionModel = editor.getSelectionModel();

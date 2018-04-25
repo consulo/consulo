@@ -16,6 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -43,7 +44,7 @@ public class KillToWordEndAction extends TextComponentEditorAction {
   private static class Handler extends EditorWriteActionHandler {
     @RequiredWriteAction
     @Override
-    public void executeWriteAction(Editor editor, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       CaretModel caretModel = editor.getCaretModel();
       int caretOffset = caretModel.getOffset();
       Document document = editor.getDocument();
