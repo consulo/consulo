@@ -17,6 +17,7 @@ package com.intellij.application.options;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.*;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.LoadedModuleDescriptionImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
@@ -24,9 +25,9 @@ import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedComboBoxModel;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,10 +44,9 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
   private boolean myAllowEmptySelection;
 
   public ModuleDescriptionsComboBox() {
-    myModel = new SortedComboBoxModel<>(Comparator.comparing(description -> description != null ? description.getName() : "",
-                                                             String.CASE_INSENSITIVE_ORDER));
+    myModel = new SortedComboBoxModel<>(Comparator.comparing(description -> description != null ? description.getName() : "", String.CASE_INSENSITIVE_ORDER));
     setModel(myModel);
-    new ComboboxSpeedSearch(this){
+    new ComboboxSpeedSearch(this) {
       @Override
       protected String getElementText(Object element) {
         if (element instanceof ModuleDescription) {
