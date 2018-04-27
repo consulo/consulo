@@ -188,19 +188,29 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     try {
       UIAccess uiAccess = UIAccess.get();
 
-      myCurrentCommand = new CommandDescriptor(command, project, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, document);
+      CommandDescriptor descriptor = new CommandDescriptor(command, project, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, document);
+      
+      myCurrentCommand = descriptor;
 
       fireCommandStarted();
 
       AsyncResult<Void> result = command.get();
 
-      result.doWhenDone(() -> uiAccess.give(() -> finishCommand(project, myCurrentCommand, null)));
+      result.doWhenDone(() -> call(uiAccess, () -> finishCommand(project, descriptor, null)));
 
-      result.doWhenRejectedWithThrowable((t) -> uiAccess.give(() -> finishCommand(project, myCurrentCommand, t)));
+      result.doWhenRejectedWithThrowable((t) -> call(uiAccess, () -> finishCommand(project, descriptor, t)));
     }
     catch (Throwable th) {
       // in case error not from async result - finish action
       finishCommand(project, myCurrentCommand, th);
+    }
+  }
+
+  private static void call(UIAccess uiAccess, @RequiredUIAccess Runnable runnable) {
+    if(UIAccess.isUIThread()) {
+      runnable.run();
+    } else {
+      uiAccess.giveAndWait(runnable);
     }
   }
 
