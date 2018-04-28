@@ -1430,10 +1430,16 @@
     <projectService serviceInterface="consulo.psi.PsiPackageManager"
                     serviceImplementation="consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
+
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
 
+    <editorActionHandler action="EditorDelete" implementationClass="com.intellij.openapi.editor.actions.DeleteSelectionHandler"
+                         id="delete.for.selection"/>
+    <editorActionHandler action="EditorBackSpace" implementationClass="com.intellij.openapi.editor.actions.DeleteSelectionHandler"
+                         id="backspace.for.selection" order="after backspace.lookup"/>
 
-    <!-- <checkinHandlerFactory implementation="com.intellij.openapi.vcs.CheckRemoteStatusCheckinHandlerFactory"/> -->
+    <editorActionHandler action="EditorDelete" implementationClass="com.intellij.openapi.editor.actions.DeleteInColumnModeHandler"
+                         id="delete.in.column.mode"/>
 
     <statistics.usagesCollector implementation="com.intellij.ide.plugins.DisabledPluginsUsagesCollector"/>
     <statistics.usagesCollector implementation="com.intellij.ide.plugins.NonBundledPluginsUsagesCollector"/>
