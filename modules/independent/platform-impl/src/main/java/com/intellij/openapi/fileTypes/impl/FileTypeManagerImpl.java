@@ -172,7 +172,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   public FileTypeManagerImpl(MessageBus bus, SchemesManagerFactory schemesManagerFactory, PropertiesComponent propertiesComponent) {
     int fileTypeChangedCounter = StringUtilRt.parseInt(propertiesComponent.getValue("fileTypeChangedCounter"), 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);
-    autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter, true);
+    autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);
 
     myMessageBus = bus;
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<AbstractFileType>() {
@@ -704,7 +704,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   private void clearPersistentAttributes() {
     int count = fileTypeChangedCount.incrementAndGet();
-    autoDetectedAttribute = autoDetectedAttribute.newVersion(count);
+    autoDetectedAttribute = autoDetectedAttribute.newVersion(count + getVersionFromDetectors());
     PropertiesComponent.getInstance().setValue("fileTypeChangedCounter", Integer.toString(count));
     if (toLog()) {
       log("F: clearPersistentAttributes()");
@@ -1225,7 +1225,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     String counter = JDOMExternalizer.readString(state, "fileTypeChangedCounter");
     if (counter != null) {
       fileTypeChangedCount.set(StringUtilRt.parseInt(counter, 0));
-      autoDetectedAttribute = autoDetectedAttribute.newVersion(fileTypeChangedCount.get());
+      autoDetectedAttribute = autoDetectedAttribute.newVersion(fileTypeChangedCount.get() + getVersionFromDetectors());
     }
   }
 
@@ -1652,5 +1652,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Override
   public void dispose() {
     LOG.info("FileTypeManager: " + counterAutoDetect + " auto-detected files\nElapsed time on auto-detect: " + elapsedAutoDetect + " ms");
+  }
+
+  @TestOnly
+  public static int getVersionFromDetectors() {
+    int version = 0;
+    for (FileTypeDetector detector : FileTypeDetector.EP_NAME.getExtensions()) {
+      version += detector.getVersion();
+    }
+    return version;
   }
 }

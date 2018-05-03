@@ -20,6 +20,8 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -101,6 +103,9 @@ public abstract class FileTypeRegistry {
     @Nullable
     FileType detect(@Nonnull VirtualFile file, @Nonnull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
 
-    int getVersion();
+    @Nonnegative
+    default int getVersion() {
+      return 0;
+    }
   }
 }
