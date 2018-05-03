@@ -15,22 +15,22 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.components.ServiceManager;
-
 import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class ColorChooserService {
-  public static ColorChooserService getInstance() {
-    return ServiceManager.getService(ColorChooserService.class);
+public class DesktopColorChooserServiceImpl extends ColorChooserService {
+  @Nullable
+  @Override
+  public Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners) {
+    return DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, listeners, false);
   }
 
   @Nullable
-  public abstract Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners);
-
-  @Nullable
-  public abstract Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, boolean opacityInPercent);
+  @Override
+  public Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, boolean opacityInPercent) {
+    return DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent);
+  }
 }

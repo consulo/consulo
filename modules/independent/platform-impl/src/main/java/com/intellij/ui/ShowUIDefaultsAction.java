@@ -97,7 +97,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
           public boolean editCellAt(int row, int column, EventObject e) {
             if (isCellEditable(row, column) && e instanceof MouseEvent) {
               final Object color = getValueAt(row, column);
-              final Color newColor = ColorPicker.showDialog(this, "Choose Color", (Color)color, true, null, true);
+              final Color newColor = ColorChooser.chooseColor(this, "Choose Color", (Color)color, true, null, true);
               if (newColor != null) {
                 final ColorUIResource colorUIResource = new ColorUIResource(newColor);
                 final Object key = getValueAt(row, 0);

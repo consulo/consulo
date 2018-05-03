@@ -53,7 +53,11 @@ import java.util.List;
  * @author pegov
  * @author Konstantin Bulenkov
  */
-public class ColorPicker extends JPanel implements ColorListener, DocumentListener {
+class DesktopColorPicker extends JPanel implements DocumentListener {
+  public static interface ColorListener {
+    void colorChanged(Color color, Object source);
+  }
+
   private static final String COLOR_CHOOSER_COLORS_KEY = "ColorChooser.RecentColors";
   private static final String HSB_PROPERTY = "color.picker.is.hsb";
 
@@ -86,16 +90,11 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     }
   };
 
-  public ColorPicker(@Nonnull Disposable parent, @Nullable Color color, boolean enableOpacity) {
+  public DesktopColorPicker(@Nonnull Disposable parent, @Nullable Color color, boolean enableOpacity) {
     this(parent, color, true, enableOpacity, new ColorPickerListener[0], false);
   }
 
-  private ColorPicker(Disposable parent,
-                      @Nullable Color color,
-                      boolean restoreColors,
-                      boolean enableOpacity,
-                      ColorPickerListener[] listeners,
-                      boolean opacityInPercent) {
+  private DesktopColorPicker(Disposable parent, @Nullable Color color, boolean restoreColors, boolean enableOpacity, ColorPickerListener[] listeners, boolean opacityInPercent) {
     super(new BorderLayout());
     myUpdateQueue = new Alarm(Alarm.ThreadToUse.SWING_THREAD, parent);
     myRed = createColorField(false);
@@ -105,7 +104,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     myOpacityInPercent = opacityInPercent;
     setBorder(JBUI.Borders.empty(5, 5, 0, 5));
 
-    myColorWheelPanel = new ColorWheelPanel(this, enableOpacity, myOpacityInPercent);
+    myColorWheelPanel = new ColorWheelPanel(this::colorChanged, enableOpacity, myOpacityInPercent);
 
     myExternalListeners = listeners;
     myFormat.addActionListener(new ActionListener() {
@@ -262,8 +261,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     }
   }
 
-  @Override
-  public void colorChanged(Color color, Object source) {
+  private void colorChanged(Color color, Object source) {
     if (color != null && !color.equals(myColor)) {
       myColor = color;
 
@@ -466,7 +464,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
       myBrightnessComponent.repaint();
 
       myColorWheel.dropImage();
-      if (myOpacityComponent != null && source instanceof ColorPicker) {
+      if (myOpacityComponent != null && source instanceof DesktopColorPicker) {
         myOpacityComponent.setValue(color.getAlpha());
         myOpacityComponent.repaint();
       }
@@ -904,7 +902,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
 
     private final Color myPreselectedColor;
     private final ColorPickerListener[] myListeners;
-    private ColorPicker myColorPicker;
+    private DesktopColorPicker myColorPicker;
     private final boolean myEnableOpacity;
     private ColorPipette myPicker;
     private final boolean myOpacityInPercent;
@@ -941,8 +939,8 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     @Override
     protected JComponent createCenterPanel() {
       if (myColorPicker == null) {
-        myColorPicker = new ColorPicker(myDisposable, myPreselectedColor, true, myEnableOpacity, myListeners,
-                                        myOpacityInPercent);
+        myColorPicker = new DesktopColorPicker(myDisposable, myPreselectedColor, true, myEnableOpacity, myListeners,
+                                               myOpacityInPercent);
       }
 
       return myColorPicker;
@@ -1314,8 +1312,3 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     }
   }
 }
-
-interface ColorListener {
-  void colorChanged(Color color, Object source);
-}
-
