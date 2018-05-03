@@ -61,21 +61,22 @@ public class ColorPanel extends JComponent {
 
   public void onPressed() {
     if (myEditable && isEnabled()) {
-      Color color = ColorChooser.chooseColor(this, UIBundle.message("color.panel.select.color.dialog.description"), myColor);
-      if (color != null) {
-        setSelectedColor(color);
-        if (!myListeners.isEmpty() && (myEvent == null)) {
-          try {
-            myEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "colorPanelChanged");
-            for (ActionListener listener : myListeners) {
-              listener.actionPerformed(myEvent);
+      ColorChooser.chooseColor(this, UIBundle.message("color.panel.select.color.dialog.description"), myColor, color -> {
+        if (color != null) {
+          setSelectedColor(color);
+          if (!myListeners.isEmpty() && (myEvent == null)) {
+            try {
+              myEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "colorPanelChanged");
+              for (ActionListener listener : myListeners) {
+                listener.actionPerformed(myEvent);
+              }
+            }
+            finally {
+              myEvent = null;
             }
           }
-          finally {
-            myEvent = null;
-          }
         }
-      }
+      });
     }
   }
 

@@ -78,10 +78,11 @@ public class CheckBoxWithColorChooser extends JPanel {
         @Override
         public boolean onClick(MouseEvent e, int clickCount) {
           if (myCheckbox.isSelected()) {
-            final Color color = ColorChooser.chooseColor(myCheckbox, "Chose color", CheckBoxWithColorChooser.this.myColor);
-            if (color != null) {
-              myColor = color;
-            }
+            ColorChooser.chooseColor(myCheckbox, "Chose color", CheckBoxWithColorChooser.this.myColor, color -> {
+              if (color != null) {
+                myColor = color;
+              }
+            });
           }
           return true;
         }

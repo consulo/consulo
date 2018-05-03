@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ElementColorProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
@@ -31,8 +31,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TwoColorsIcon;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -55,10 +55,12 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
 
           final Editor editor = PsiUtilBase.findEditor(element);
           assert editor != null;
-          final Color c = ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true);
-          if (c != null) {
-            WriteAction.run(() -> colorProvider.setColorTo(element, c));
-          }
+
+          ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true, c -> {
+            if (c != null) {
+              WriteCommandAction.runWriteCommandAction(element.getProject(), () -> colorProvider.setColorTo(element, c));
+            }
+          });
         }
       }, GutterIconRenderer.Alignment.LEFT);
       myColor = color;

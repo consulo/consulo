@@ -21,21 +21,25 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ShowColorPickerAction extends AnAction {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();
     JComponent root = rootComponent(project);
     if (root != null) {
       ColorPickerListener[] listeners = ColorPickerListenerFactory.createListenersFor(e.getData(LangDataKeys.PSI_ELEMENT));
 
-      ColorChooser.chooseColor(root, "Color Picker", null, true, listeners, true);
+      ColorChooser.chooseColor(root, "Color Picker", null, true, listeners, true, color -> {
+      });
     }
   }
 

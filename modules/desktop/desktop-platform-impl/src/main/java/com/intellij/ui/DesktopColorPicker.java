@@ -29,9 +29,9 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -296,9 +296,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       final int g = Integer.parseInt(myGreen.getText());
       final int b = Integer.parseInt(myBlue.getText());
 
-      return isRGBMode()
-             ? new Color(r, g, b)
-             : new Color(Color.HSBtoRGB(((float)r) / 360f, ((float)g) / 100f, ((float)b) / 100f));
+      return isRGBMode() ? new Color(r, g, b) : new Color(Color.HSBtoRGB(((float)r) / 360f, ((float)g) / 100f, ((float)b) / 100f));
     }
     catch (Exception ignore) {
     }
@@ -331,21 +329,24 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     }
   }
 
-  @Nullable
-  public static Color showDialog(Component parent,
-                                 String caption,
-                                 Color preselectedColor,
-                                 boolean enableOpacity,
-                                 ColorPickerListener[] listeners,
-                                 boolean opacityInPercent) {
-    final ColorPickerDialog dialog =
-            new ColorPickerDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent);
-    dialog.show();
-    if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-      return dialog.getColor();
-    }
+  public static void showDialog(Component parent,
+                                String caption,
+                                Color preselectedColor,
+                                boolean enableOpacity,
+                                ColorPickerListener[] listeners,
+                                boolean opacityInPercent,
+                                @Nonnull java.util.function.Consumer<Color> colorConsumer) {
+    final ColorPickerDialog dialog = new ColorPickerDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent);
+    SwingUtilities.invokeLater(() -> {
+      dialog.show();
 
-    return null;
+      if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
+        colorConsumer.accept(dialog.getColor());
+      }
+      else {
+        colorConsumer.accept(null);
+      }
+    });
   }
 
   private JComponent buildTopPanel(boolean enablePipette) throws ParseException {
@@ -606,8 +607,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
       if (myImage == null) {
         int borderSize = JBUI.scale(5);
-        myImage =
-                createImage(new ColorWheelImageProducer(_size - borderSize * 2, _size - borderSize * 2, myBrightness));
+        myImage = createImage(new ColorWheelImageProducer(_size - borderSize * 2, _size - borderSize * 2, myBrightness));
         myWheel = new Rectangle(borderSize, borderSize, _size - borderSize * 2, _size - borderSize * 2);
       }
 
@@ -776,8 +776,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
           if (color.contains("-")) {
             List<String> components = StringUtil.split(color, "-");
             if (components.size() == 4) {
-              myRecentColors.add(new Color(Integer.parseInt(components.get(0)), Integer.parseInt(components.get(1)),
-                                           Integer.parseInt(components.get(2)), Integer.parseInt(components.get(3))));
+              myRecentColors.add(new Color(Integer.parseInt(components.get(0)), Integer.parseInt(components.get(1)), Integer.parseInt(components.get(2)), Integer.parseInt(components.get(3))));
             }
           }
           else {
@@ -791,8 +790,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     public String getToolTipText(MouseEvent event) {
       Color color = getColor(event);
       if (color != null) {
-        return String.format("R: %d G: %d B: %d A: %s", color.getRed(), color.getGreen(), color.getBlue(),
-                             String.format("%.2f", (float)(color.getAlpha() / 255.0)));
+        return String.format("R: %d G: %d B: %d A: %s", color.getRed(), color.getGreen(), color.getBlue(), String.format("%.2f", (float)(color.getAlpha() / 255.0)));
       }
 
       return super.getToolTipText(event);
@@ -815,8 +813,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       final List<String> values = new ArrayList<String>();
       for (Color recentColor : myRecentColors) {
         if (recentColor == null) break;
-        values.add(String.format("%d-%d-%d-%d", recentColor.getRed(), recentColor.getGreen(), recentColor.getBlue(),
-                                 recentColor.getAlpha()));
+        values.add(String.format("%d-%d-%d-%d", recentColor.getRed(), recentColor.getGreen(), recentColor.getBlue(), recentColor.getAlpha()));
       }
 
       PropertiesComponent.getInstance().setValue(COLOR_CHOOSER_COLORS_KEY, StringUtil.join(values, ",,,"));
@@ -828,8 +825,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       }
 
       if (myRecentColors.size() > 20) {
-        myRecentColors =
-                new ArrayList<Color>(myRecentColors.subList(myRecentColors.size() - 20, myRecentColors.size()));
+        myRecentColors = new ArrayList<Color>(myRecentColors.subList(myRecentColors.size() - 20, myRecentColors.size()));
       }
     }
 
@@ -875,15 +871,12 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       g.fillRect(left, top, getComponentWidth(), getComponentHeight());
 
       g.setColor(Color.GRAY);
-      g.drawLine(left + JBUI.scale(1), i.top + getComponentHeight() / 2, left + getComponentWidth() - JBUI.scale(3),
-                 i.top + getComponentHeight() / 2);
-      g.drawRect(left + JBUI.scale(1), top + JBUI.scale(1), getComponentWidth() - JBUI.scale(3),
-                 getComponentHeight() - JBUI.scale(3));
+      g.drawLine(left + JBUI.scale(1), i.top + getComponentHeight() / 2, left + getComponentWidth() - JBUI.scale(3), i.top + getComponentHeight() / 2);
+      g.drawRect(left + JBUI.scale(1), top + JBUI.scale(1), getComponentWidth() - JBUI.scale(3), getComponentHeight() - JBUI.scale(3));
 
 
       for (int k = 1; k < 10; k++) {
-        g.drawLine(left + JBUI.scale(1) + JBUI.scale(k * 31), top + JBUI.scale(1),
-                   left + JBUI.scale(1) + JBUI.scale(k * 31), top + getComponentHeight() - JBUI.scale(3));
+        g.drawLine(left + JBUI.scale(1) + JBUI.scale(k * 31), top + JBUI.scale(1), left + JBUI.scale(1) + JBUI.scale(k * 31), top + getComponentHeight() - JBUI.scale(3));
       }
 
       for (int r = 0; r < myRecentColors.size(); r++) {
@@ -891,8 +884,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         int col = r % 10;
         Color color = myRecentColors.get(r);
         g.setColor(color);
-        g.fillRect(left + JBUI.scale(2) + JBUI.scale(col * 30) + JBUI.scale(col) + JBUI.scale(1),
-                   top + JBUI.scale(2) + JBUI.scale(row * 30) + JBUI.scale(row) + JBUI.scale(1), JBUI.scale(28),
+        g.fillRect(left + JBUI.scale(2) + JBUI.scale(col * 30) + JBUI.scale(col) + JBUI.scale(1), top + JBUI.scale(2) + JBUI.scale(row * 30) + JBUI.scale(row) + JBUI.scale(1), JBUI.scale(28),
                    JBUI.scale(28));
       }
     }
@@ -907,12 +899,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     private ColorPipette myPicker;
     private final boolean myOpacityInPercent;
 
-    public ColorPickerDialog(Component parent,
-                             String caption,
-                             @Nullable Color preselectedColor,
-                             boolean enableOpacity,
-                             ColorPickerListener[] listeners,
-                             boolean opacityInPercent) {
+    public ColorPickerDialog(Component parent, String caption, @Nullable Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, boolean opacityInPercent) {
       super(parent, true);
       myListeners = listeners;
       setTitle(caption);
@@ -939,8 +926,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     @Override
     protected JComponent createCenterPanel() {
       if (myColorPicker == null) {
-        myColorPicker = new DesktopColorPicker(myDisposable, myPreselectedColor, true, myEnableOpacity, myListeners,
-                                               myOpacityInPercent);
+        myColorPicker = new DesktopColorPicker(myDisposable, myPreselectedColor, true, myEnableOpacity, myListeners, myOpacityInPercent);
       }
 
       return myColorPicker;
@@ -1172,8 +1158,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                  RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 
         graphics.setColor(Color.BLACK);
         //graphics.drawOval(1, 1, 30, 30);
@@ -1188,13 +1173,10 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
         graphics.dispose();
 
-        myImage = myParent.getGraphicsConfiguration()
-                .createCompatibleImage(myMagnifierImage.getWidth(), myMagnifierImage.getHeight(),
-                                       Transparency.TRANSLUCENT);
+        myImage = myParent.getGraphicsConfiguration().createCompatibleImage(myMagnifierImage.getWidth(), myMagnifierImage.getHeight(), Transparency.TRANSLUCENT);
 
         myGraphics = (Graphics2D)myImage.getGraphics();
-        myGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                    RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        myGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 
         myPickerFrame.addKeyListener(new KeyAdapter() {
           @Override
@@ -1244,8 +1226,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       if (myPickerFrame != null && myPickerFrame.isShowing()) {
         PointerInfo pointerInfo = MouseInfo.getPointerInfo();
         Point mouseLoc = pointerInfo.getLocation();
-        myPickerFrame
-                .setLocation(mouseLoc.x - myPickerFrame.getWidth() / 2, mouseLoc.y - myPickerFrame.getHeight() / 2);
+        myPickerFrame.setLocation(mouseLoc.x - myPickerFrame.getWidth() / 2, mouseLoc.y - myPickerFrame.getHeight() / 2);
 
         myPoint.x = mouseLoc.x + myPickOffset.x;
         myPoint.y = mouseLoc.y + myPickOffset.y;

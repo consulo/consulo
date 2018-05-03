@@ -15,16 +15,22 @@
  */
 package com.intellij.ui;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class DesktopColorChooserServiceImpl extends ColorChooserService {
-  @Nullable
   @Override
-  public Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, boolean opacityInPercent) {
-    return DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent);
+  public void showDialog(Component parent,
+                         String caption,
+                         Color preselectedColor,
+                         boolean enableOpacity,
+                         ColorPickerListener[] listeners,
+                         boolean opacityInPercent,
+                         @Nonnull Consumer<Color> colorConsumer) {
+    DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent, colorConsumer);
   }
 }
