@@ -24,12 +24,6 @@ import java.awt.*;
 public class DesktopColorChooserServiceImpl extends ColorChooserService {
   @Nullable
   @Override
-  public Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners) {
-    return DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, listeners, false);
-  }
-
-  @Nullable
-  @Override
   public Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, boolean opacityInPercent) {
     return DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent);
   }

@@ -29,7 +29,9 @@ public abstract class ColorChooserService {
   }
 
   @Nullable
-  public abstract Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners);
+  public Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners) {
+    return showDialog(parent, caption, preselectedColor, enableOpacity, listeners, false);
+  }
 
   @Nullable
   public abstract Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, boolean opacityInPercent);
