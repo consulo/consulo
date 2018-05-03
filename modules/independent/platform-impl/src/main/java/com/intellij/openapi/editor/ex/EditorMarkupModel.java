@@ -20,8 +20,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.ui.PopupHandler;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
+
+import javax.annotation.Nonnull;
 
 public interface EditorMarkupModel extends MarkupModel {
   @Nonnull
@@ -45,6 +46,8 @@ public interface EditorMarkupModel extends MarkupModel {
   ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider();
 
   void setMinMarkHeight(int minMarkHeight);
+
+  int getMinMarkHeight();
 
   boolean isErrorStripeVisible();
 }

@@ -43,7 +43,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * User: cdr
  */
-abstract class IntervalTreeImpl<T extends MutableInterval> extends RedBlackTree<T> implements IntervalTree<T> {
+public abstract class IntervalTreeImpl<T extends MutableInterval> extends RedBlackTree<T> implements IntervalTree<T> {
   static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.RangeMarkerTree");
   static final boolean DEBUG = LOG.isDebugEnabled() || ApplicationManager.getApplication() != null && (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isInternal());
   private int keySize; // number of all intervals, counting all duplicates, some of them maybe gced
@@ -1386,7 +1386,7 @@ abstract class IntervalTreeImpl<T extends MutableInterval> extends RedBlackTree<
   }
 
   @Nonnull
-  static <T extends MutableInterval> MarkupIterator<T> mergeIterators(@Nonnull final MarkupIterator<T> iterator1,
+  public static <T extends MutableInterval> MarkupIterator<T> mergeIterators(@Nonnull final MarkupIterator<T> iterator1,
                                                                       @Nonnull final MarkupIterator<T> iterator2,
                                                                       @Nonnull final Comparator<? super T> comparator) {
     return new MarkupIterator<T>() {

@@ -60,6 +60,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.editor.impl.EditorErrorPanel;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
 import javax.annotation.Nonnull;
@@ -86,7 +87,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   // null renderer means we should not show traffic light icon
   private ErrorStripeRenderer myErrorStripeRenderer;
   private final List<ErrorStripeListener> myErrorMarkerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private MyErrorPanel myErrorPanel;
+
+  private EditorErrorPanel myErrorPanel;
 
   private boolean dimensionsAreValid;
   private int myEditorScrollbarTop = -1;
@@ -138,7 +140,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   public void repaintTrafficLightIcon() {
-    MyErrorPanel errorPanel = getErrorPanel();
+    EditorErrorPanel errorPanel = getErrorPanel();
     if (errorPanel != null) {
       errorPanel.repaint();
       errorPanel.repaintTrafficTooltip();
@@ -278,7 +280,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   @RequiredDispatchThread
-  private void doClick(final MouseEvent e) {
+  public void doClick(final MouseEvent e) {
     RangeHighlighter marker = getNearestRangeHighlighter(e);
     int offset;
     LogicalPosition logicalPositionToScroll = null;
@@ -328,7 +330,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
         myErrorPanel.setPopupHandler(null);
       }
 
-      myErrorPanel = new MyErrorPanel();
+      myErrorPanel = new EditorErrorPanel(myEditor, this);
       myEditor.getPanel()
               .add(myErrorPanel, myEditor.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT ? BorderLayout.WEST : BorderLayout.EAST);
     }
@@ -339,7 +341,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   @Nullable
-  private MyErrorPanel getErrorPanel() {
+  private EditorErrorPanel getErrorPanel() {
     return myErrorPanel;
   }
 
@@ -347,7 +349,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   @Override
   public void setErrorPanelPopupHandler(@Nonnull PopupHandler handler) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    MyErrorPanel errorPanel = getErrorPanel();
+    EditorErrorPanel errorPanel = getErrorPanel();
     if (errorPanel != null) {
       errorPanel.setPopupHandler(handler);
     }
@@ -396,8 +398,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
   @Override
   public void dispose() {
-
-    final MyErrorPanel panel = getErrorPanel();
+    final EditorErrorPanel panel = getErrorPanel();
     if (panel != null) {
       panel.setPopupHandler(null);
     }
@@ -829,6 +830,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   @Override
+  public int getMinMarkHeight() {
+    return myMinMarkHeight;
+  }
+
+  @Override
   public boolean isErrorStripeVisible() {
     return getErrorPanel() != null;
   }
@@ -897,7 +903,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   @Nonnull
-  private ProperTextRange offsetsToYPositions(int start, int end) {
+  public ProperTextRange offsetsToYPositions(int start, int end) {
     if (!dimensionsAreValid) {
       recalcEditorDimensions();
     }
@@ -944,7 +950,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     return new ProperTextRange(startY, endY);
   }
 
-  private int yPositionToOffset(int y, boolean beginLine) {
+  public int yPositionToOffset(int y, boolean beginLine) {
     if (!dimensionsAreValid) {
       recalcEditorDimensions();
     }
