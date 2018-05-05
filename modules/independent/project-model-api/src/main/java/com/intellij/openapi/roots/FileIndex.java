@@ -18,11 +18,11 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
-import com.intellij.util.containers.Predicate;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * Provides information about files contained in a project or module. Should be used from a read action.
@@ -109,6 +109,6 @@ public interface FileIndex {
 
   default boolean isUnderContentFolderType(@Nonnull VirtualFile virtualFile, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     ContentFolderTypeProvider contentFolderTypeForFile = getContentFolderTypeForFile(virtualFile);
-    return contentFolderTypeForFile != null && predicate.apply(contentFolderTypeForFile);
+    return contentFolderTypeForFile != null && predicate.test(contentFolderTypeForFile);
   }
 }
