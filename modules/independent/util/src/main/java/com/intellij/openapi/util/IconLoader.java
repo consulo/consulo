@@ -273,7 +273,7 @@ public final class IconLoader {
    * @return <code>ImageIcon</code> constructed from disabled image of passed icon.
    */
   @Nullable
-  public static Icon getDisabledIcon(Icon icon) {
+  public static Icon getDisabledIcon(@Nullable Icon icon) {
     if (icon instanceof LazyIcon) icon = ((LazyIcon)icon).getOrComputeIcon();
     if (icon == null) return null;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -46,6 +47,11 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
 
   @Override
   public boolean isInProject() {
+    return false;
+  }
+
+  @Override
+  public boolean isInProject(@Nonnull VirtualFile file) {
     return false;
   }
 
@@ -97,12 +103,32 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
   }
 
   @Override
+  public boolean isInLibrarySource(@Nonnull VirtualFile file) {
+    return false;
+  }
+
+  @Override
   public boolean isExcluded() {
     return false;
   }
 
   @Override
+  public boolean isExcluded(@Nonnull VirtualFile file) {
+    return isExcluded();
+  }
+
+  @Override
+  public boolean isInModuleSource(@Nonnull VirtualFile file) {
+    return false;
+  }
+
+  @Override
   public Module getModule() {
+    return null;
+  }
+
+  @Override
+  public String getUnloadedModuleName() {
     return null;
   }
 

@@ -65,7 +65,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
       List<Runnable> tasks = new ArrayList<>();
       final Set<VirtualFile> visitedRoots = ContainerUtil.newConcurrentSet();
 
-      tasks.add(() -> myProjectFileIndex.iterateContent((file) -> (file.isDirectory() && !visitedRoots.add(file)) || processor.processFile(file)));
+      tasks.add(() -> myProjectFileIndex.iterateContent(processor, file -> !file.isDirectory() || visitedRoots.add(file)));
 
       JBIterable<VirtualFile> contributedRoots = JBIterable.empty();
       for (IndexableSetContributor contributor : Extensions.getExtensions(IndexableSetContributor.EP_NAME)) {
