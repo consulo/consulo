@@ -18,10 +18,11 @@ package consulo.psi.tree;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.containers.Predicate;
 import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -33,4 +34,15 @@ public interface PsiElementFactory extends Predicate<IElementType> {
   @Nullable
   @RequiredReadAction
   PsiElement createElement(@Nonnull ASTNode node);
+
+  @Deprecated
+  default boolean apply(IElementType elementType) {
+    return false;
+  }
+
+  @Override
+  @SuppressWarnings("deprecation")
+  default boolean test(IElementType elementType) {
+    return apply(elementType);
+  }
 }

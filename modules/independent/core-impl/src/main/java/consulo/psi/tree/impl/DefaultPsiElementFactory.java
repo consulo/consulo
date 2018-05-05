@@ -49,7 +49,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
   }
 
   @Override
-  public boolean apply(@Nonnull IElementType type) {
+  public boolean test(@Nonnull IElementType type) {
     return true;
   }
 }

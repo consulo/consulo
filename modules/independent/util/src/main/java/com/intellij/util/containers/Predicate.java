@@ -17,6 +17,7 @@ package com.intellij.util.containers;
 
 import javax.annotation.Nullable;
 
+@Deprecated
 public interface Predicate<T> {
   boolean apply(@Nullable T input);
 }

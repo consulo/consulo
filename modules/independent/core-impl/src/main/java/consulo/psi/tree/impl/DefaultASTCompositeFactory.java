@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 public class DefaultASTCompositeFactory implements ASTCompositeFactory {
   @Nonnull
   @Override
-  public CompositeElement createComposite(IElementType type) {
+  public CompositeElement createComposite(@Nonnull IElementType type) {
     if (type instanceof IFileElementType) {
       return new FileElement(type, null);
     }
@@ -42,7 +42,7 @@ public class DefaultASTCompositeFactory implements ASTCompositeFactory {
   }
 
   @Override
-  public boolean apply(@Nullable IElementType input) {
+  public boolean test(@Nullable IElementType input) {
     return true;
   }
 }
