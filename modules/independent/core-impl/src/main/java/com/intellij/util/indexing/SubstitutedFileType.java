@@ -61,8 +61,8 @@ public class SubstitutedFileType extends LanguageFileType{
 
   @Nonnull
   @Override
-  public String getName() {
-    return myFileType.getName();
+  public String getId() {
+    return myFileType.getId();
   }
 
   @Nonnull

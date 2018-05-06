@@ -17,6 +17,8 @@ package consulo.awt;
 
 import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
@@ -25,6 +27,7 @@ import consulo.ui.shared.Size;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -81,5 +84,18 @@ public class TargetAWT {
       return null;
     }
     return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
+  }
+
+  @Contract("null -> null")
+  public static Icon to(@Nullable Image uiImage) {
+    if(uiImage == null) {
+      return null;
+    }
+
+    if(uiImage instanceof SwingImageRef) {
+      return (Icon)uiImage;
+    }
+
+    throw new IllegalArgumentException();
   }
 }
