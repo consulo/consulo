@@ -50,6 +50,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
 import javax.annotation.Nonnull;
@@ -890,9 +891,7 @@ public class DesktopEditorWindow implements EditorWindow {
    */
   private Icon getFileIcon(@Nonnull final VirtualFile file) {
     if (!file.isValid()) {
-      Icon fakeIcon = UnknownFileType.INSTANCE.getIcon();
-      assert fakeIcon != null : "Can't find the icon for unknown file type";
-      return fakeIcon;
+      return TargetAWT.to(UnknownFileType.INSTANCE.getIcon());
     }
 
     final Icon baseIcon = VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());

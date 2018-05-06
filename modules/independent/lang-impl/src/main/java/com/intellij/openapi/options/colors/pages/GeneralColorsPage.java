@@ -25,7 +25,6 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
@@ -33,9 +32,8 @@ import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.util.io.FileUtil;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -165,11 +163,6 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   @Nonnull
   public String getDisplayName() {
     return DISPLAY_NAME;
-  }
-
-  @Override
-  public Icon getIcon() {
-    return PlainTextFileType.INSTANCE.getIcon();
   }
 
   @Override

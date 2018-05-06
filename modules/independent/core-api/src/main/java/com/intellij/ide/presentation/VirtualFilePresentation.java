@@ -3,6 +3,7 @@ package com.intellij.ide.presentation;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 
@@ -18,6 +19,6 @@ public class VirtualFilePresentation {
     if (vFile.isDirectory() && vFile.isInLocalFileSystem()) {
       return AllIcons.Nodes.Folder;
     }
-    return vFile.getFileType().getIcon();
+    return TargetAWT.to(vFile.getFileType().getIcon());
   }
 }

@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeFactory;
 import com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,7 +63,7 @@ public class MarkAsPlainTextAction extends AnAction {
       }
     }
     presentation.setVisible(true);
-    presentation.setIcon(EnforcedPlainTextFileTypeFactory.ENFORCED_PLAIN_TEXT_ICON);
+    presentation.setIcon(TargetAWT.to(EnforcedPlainTextFileTypeFactory.ENFORCED_PLAIN_TEXT_ICON));
   }
     
 }

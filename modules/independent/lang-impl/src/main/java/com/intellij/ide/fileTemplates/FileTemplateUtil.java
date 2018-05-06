@@ -38,6 +38,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.apache.velocity.VelocityContext;
@@ -378,7 +379,7 @@ public class FileTemplateUtil {
   @Nullable
   public static Icon getIcon(@Nonnull FileTemplate fileTemplate) {
     String extension = fileTemplate.getExtension();
-    return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
+    return TargetAWT.to(FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon());
   }
 
   @Deprecated

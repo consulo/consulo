@@ -16,27 +16,18 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
-import javax.swing.*;
-
 public class UnknownFileType implements FileType {
-  private static final NotNullLazyValue<Icon> ICON = new NotNullLazyValue<Icon>() {
-    @Nonnull
-    @Override
-    protected Icon compute() {
-      return AllIcons.FileTypes.Unknown;
-    }
-  };
   public static final FileType INSTANCE = new UnknownFileType();
 
   private UnknownFileType() {}
 
   @Override
   @Nonnull
-  public String getName() {
+  public String getId() {
     return "UNKNOWN";
   }
 
@@ -53,22 +44,7 @@ public class UnknownFileType implements FileType {
   }
 
   @Override
-  public Icon getIcon() {
-    return ICON.getValue();
-  }
-
-  @Override
-  public boolean isBinary() {
-    return true;
-  }
-
-  @Override
-  public boolean isReadOnly() {
-    return false;
-  }
-
-  @Override
-  public String getCharset(@Nonnull VirtualFile file, final byte[] content) {
-    return null;
+  public Image getIcon() {
+    return AllIcons.FileTypes.Unknown;
   }
 }

@@ -17,17 +17,15 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.vfs.VirtualFile;
-import consulo.util.pointers.Named;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
-import javax.swing.*;
-
-public abstract class UserFileType <T extends UserFileType> implements FileType, Named, Cloneable {
+public abstract class UserFileType <T extends UserFileType> implements FileType, Cloneable {
   @Nonnull
   private String myName = "";
   private String myDescription = "";
-  private Icon myIcon = AllIcons.FileTypes.Custom;
+  private Image myIcon = AllIcons.FileTypes.Custom;
 
   public abstract SettingsEditor<T> getEditor();
 
@@ -46,13 +44,6 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
   public String getId() {
     return myName;
   }
-
-  @Override
-  @Nonnull
-  public String getName() {
-    return myName;
-  }
-
   @Override
   @Nonnull
   public String getDescription() {
@@ -74,26 +65,16 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
-  @Override
-  public boolean isReadOnly() {
-    return false;
-  }
-
-  @Override
-  public String getCharset(@Nonnull VirtualFile file, final byte[] content) {
-    return null;
-  }
-
   public void copyFrom(UserFileType newType) {
-    myName = newType.getName();
+    myName = newType.getId();
     myDescription = newType.getDescription();
   }
 
-  public void setIcon(Icon icon) {
+  public void setIcon(Image icon) {
     myIcon = icon;
   }
 

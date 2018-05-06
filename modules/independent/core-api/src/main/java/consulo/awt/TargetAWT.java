@@ -25,6 +25,7 @@ import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -64,7 +65,7 @@ public class TargetAWT {
     if (component instanceof ToSwingWrapper) {
       return ((ToSwingWrapper)component).toAWT();
     }
-    else if(component instanceof java.awt.Component) {
+    else if (component instanceof java.awt.Component) {
       return (java.awt.Component)component;
     }
     throw new IllegalArgumentException(component + " is not ToSwingWrapper");
@@ -88,11 +89,11 @@ public class TargetAWT {
 
   @Contract("null -> null")
   public static Icon to(@Nullable Image uiImage) {
-    if(uiImage == null) {
+    if (uiImage == null) {
       return null;
     }
 
-    if(uiImage instanceof SwingImageRef) {
+    if (uiImage instanceof SwingImageRef) {
       return (Icon)uiImage;
     }
 

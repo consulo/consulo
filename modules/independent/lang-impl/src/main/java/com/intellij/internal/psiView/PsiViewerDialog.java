@@ -20,6 +20,7 @@ import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.openapi.util.*;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeRenderer;
@@ -185,7 +186,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
     @Nullable
     public Icon getIcon() {
-      return myFileType != null ? myFileType.getIcon() : myExtension.getIcon();
+      return myFileType != null ? TargetAWT.to(myFileType.getIcon()) : myExtension.getIcon();
     }
 
     @Override

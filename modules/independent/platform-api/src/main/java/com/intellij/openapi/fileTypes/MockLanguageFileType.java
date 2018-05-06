@@ -20,9 +20,9 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.lang.Language;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class MockLanguageFileType extends LanguageFileType {
   public static LanguageFileType INSTANCE = new MockLanguageFileType();
@@ -31,22 +31,26 @@ public class MockLanguageFileType extends LanguageFileType {
     super(Language.ANY);
   }
 
+  @Override
   @Nonnull
-  public String getName() {
+  public String getId() {
     return "Mock";
   }
 
+  @Override
   @Nonnull
   public String getDescription() {
     return "Mock";
   }
 
+  @Override
   @Nonnull
   public String getDefaultExtension() {
     return ".mockExtensionThatProbablyWon'tEverExist";
   }
 
-  public Icon getIcon() {
+  @Override
+  public Image getIcon() {
     return null;
   }
 }

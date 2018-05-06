@@ -21,15 +21,13 @@ import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
 import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nullable;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.util.Collections;
@@ -57,12 +55,7 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
     myTree.setCellRenderer(new MyTreeCellRenderer());
     myTree.expandRow(0);
 
-    myTree.addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        onTemplateSelected();
-      }
-    });
+    myTree.addTreeSelectionListener(e -> onTemplateSelected());
     new TreeSpeedSearch(myTree);
   }
 
@@ -73,15 +66,9 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
     private final String myTemplateName;
 
     FileTemplateNode(FileTemplateDescriptor descriptor) {
-      this(descriptor.getDisplayName(),
-           descriptor.getIcon(),
-           descriptor instanceof FileTemplateGroupDescriptor ? ContainerUtil.map2List(((FileTemplateGroupDescriptor)descriptor).getTemplates(), new Function<FileTemplateDescriptor, FileTemplateNode>() {
-             @Override
-             public FileTemplateNode fun(FileTemplateDescriptor s) {
-               return new FileTemplateNode(s);
-             }
-           }) : Collections.<FileTemplateNode>emptyList(),
-           descriptor instanceof FileTemplateGroupDescriptor ? null : descriptor.getFileName());
+      this(descriptor.getDisplayName(), TargetAWT.to(descriptor.getIcon()), descriptor instanceof FileTemplateGroupDescriptor
+                                                              ? ContainerUtil.map2List(((FileTemplateGroupDescriptor)descriptor).getTemplates(), FileTemplateNode::new)
+                                                              : Collections.<FileTemplateNode>emptyList(), descriptor instanceof FileTemplateGroupDescriptor ? null : descriptor.getFileName());
     }
 
     FileTemplateNode(String name, Icon icon, List<FileTemplateNode> children) {
@@ -120,7 +107,7 @@ abstract class FileTemplateTabAsTree extends FileTemplateTab {
 
       if (value instanceof FileTemplateNode) {
         final FileTemplateNode node = (FileTemplateNode)value;
-        setText((String) node.getUserObject());
+        setText((String)node.getUserObject());
         setIcon(node.getIcon());
         setFont(getFont().deriveFont(AllFileTemplatesConfigurable.isInternalTemplate(node.getTemplateName(), getTitle()) ? Font.BOLD : Font.PLAIN));
 

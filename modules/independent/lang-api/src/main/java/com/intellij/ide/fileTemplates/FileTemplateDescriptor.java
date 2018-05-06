@@ -16,24 +16,26 @@
 package com.intellij.ide.fileTemplates;
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public class FileTemplateDescriptor {
-  private final Icon myIcon;
+  private final Image myIcon;
   private final String myFileName;
 
   public FileTemplateDescriptor(@NonNls String fileName) {
     this(fileName, FileTypeManager.getInstance().getFileTypeByFileName(fileName).getIcon());
   }
 
-  public FileTemplateDescriptor(@NonNls String fileName, Icon icon) {
+  public FileTemplateDescriptor(@NonNls String fileName, Image icon) {
     myIcon = icon;
     myFileName = fileName;
   }
 
-  public Icon getIcon() {
+  @Nullable
+  public Image getIcon() {
     return myIcon;
   }
 

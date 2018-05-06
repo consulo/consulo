@@ -23,6 +23,8 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PlatformIcons;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import static com.intellij.util.FontUtil.spaceAndThinSpace;
@@ -64,7 +66,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
       else {
         renderer.append(getRelativePath(path), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
-      renderer.setIcon(path.getFileType().getIcon());
+      renderer.setIcon(TargetAWT.to(path.getFileType().getIcon()));
     }
   }
 

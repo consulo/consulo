@@ -26,6 +26,8 @@ import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PlatformIcons;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -101,7 +103,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     Icon result = change.getAdditionalIcon();
 
     if (result == null) {
-      result = filePath.isDirectory() || !isLeaf() ? PlatformIcons.DIRECTORY_CLOSED_ICON : filePath.getFileType().getIcon();
+      result = filePath.isDirectory() || !isLeaf() ? PlatformIcons.DIRECTORY_CLOSED_ICON : TargetAWT.to(filePath.getFileType().getIcon());
     }
 
     return result;

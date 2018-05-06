@@ -18,6 +18,8 @@ package com.intellij.psi.injection;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -92,7 +94,7 @@ public abstract class Injectable implements Comparable<Injectable> {
       public Icon getIcon() {
         final FileType ft = language.getAssociatedFileType();
         //noinspection ConstantConditions
-        return ft != null && ft.getIcon() != null ? ft.getIcon() : EmptyIcon.ICON_16;
+        return ft != null && ft.getIcon() != null ? TargetAWT.to(ft.getIcon()) : EmptyIcon.ICON_16;
       }
 
       @Override

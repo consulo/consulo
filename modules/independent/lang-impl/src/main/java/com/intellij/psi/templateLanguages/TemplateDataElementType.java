@@ -37,11 +37,11 @@ import com.intellij.util.CharTable;
 import com.intellij.util.LocalTimeCounter;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -267,14 +267,14 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
 
     @Override
     @Nullable
-    public Icon getIcon() {
+    public Image getIcon() {
       return null;
     }
 
     @Override
     @Nonnull
     @NonNls
-    public String getName() {
+    public String getId() {
       return myLanguage.getID();
     }
   }

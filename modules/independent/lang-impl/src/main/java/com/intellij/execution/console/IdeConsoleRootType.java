@@ -25,6 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -50,7 +52,7 @@ public class IdeConsoleRootType extends ConsoleRootType {
     if (fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE) {
       return AllIcons.Debugger.ToolConsole;
     }
-    Icon icon = fileType.getIcon();
+    Icon icon = TargetAWT.to(fileType.getIcon());
     Icon subscript = ((ScalableIcon)AllIcons.Debugger.ToolConsole).scale(.5f);
     LayeredIcon icons = new LayeredIcon(2);
     icons.setIcon(icon, 0);

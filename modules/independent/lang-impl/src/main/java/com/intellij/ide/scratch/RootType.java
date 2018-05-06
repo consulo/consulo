@@ -25,6 +25,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -96,7 +98,7 @@ public abstract class RootType {
     Language language = substituteLanguage(project, file);
     FileType fileType = LanguageUtil.getLanguageFileType(language);
     if (fileType == null) fileType = ScratchUtil.getFileTypeFromName(file);
-    return fileType != null ? fileType.getIcon() : null;
+    return fileType != null ? TargetAWT.to(fileType.getIcon()) : null;
   }
 
   @Nullable

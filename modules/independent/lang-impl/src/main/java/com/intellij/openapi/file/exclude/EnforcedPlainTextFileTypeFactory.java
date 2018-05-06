@@ -20,31 +20,27 @@ import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.LayeredIcon;
-import javax.annotation.Nonnull;
+import consulo.ui.image.FoldedImage;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * Registers text file type for particular virtual files rather than using .txt extension.
+ *
  * @author Rustam Vishnyakov
  */
 public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
 
-  public static final LayeredIcon ENFORCED_PLAIN_TEXT_ICON = new LayeredIcon(2);
+  public static final Image ENFORCED_PLAIN_TEXT_ICON;
 
   static {
-    ENFORCED_PLAIN_TEXT_ICON.setIcon(AllIcons.FileTypes.Text, 0);
-    ENFORCED_PLAIN_TEXT_ICON.setIcon(AllIcons.Nodes.ExcludedFromCompile, 1);
+    ENFORCED_PLAIN_TEXT_ICON = FoldedImage.create(AllIcons.FileTypes.Text, AllIcons.Nodes.ExcludedFromCompile);
   }
 
-  
   private final FileTypeIdentifiableByVirtualFile myFileType;
-  
-  
+
   public EnforcedPlainTextFileTypeFactory() {
-    
-    
     myFileType = new FileTypeIdentifiableByVirtualFile() {
 
       @Override
@@ -57,7 +53,7 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
 
       @Nonnull
       @Override
-      public String getName() {
+      public String getId() {
         return "Enforced Plain Text";
       }
 
@@ -74,23 +70,8 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
       }
 
       @Override
-      public Icon getIcon() {
+      public Image getIcon() {
         return ENFORCED_PLAIN_TEXT_ICON;
-      }
-
-      @Override
-      public boolean isBinary() {
-        return false;
-      }
-
-      @Override
-      public boolean isReadOnly() {
-        return true;
-      }
-
-      @Override
-      public String getCharset(@Nonnull VirtualFile file, byte[] content) {
-        return null;
       }
     };
   }
@@ -99,11 +80,10 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
   public void createFileTypes(final @Nonnull FileTypeConsumer consumer) {
     consumer.consume(myFileType, "");
   }
-  
+
   private static boolean isMarkedAsPlainText(VirtualFile file) {
     EnforcedPlainTextFileTypeManager typeManager = EnforcedPlainTextFileTypeManager.getInstance();
     if (typeManager == null) return false;
     return typeManager.isMarkedAsPlainText(file);
   }
-
 }

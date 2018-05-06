@@ -20,11 +20,14 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author yole
@@ -44,7 +47,7 @@ public class ChooseByNameLanguageFilter extends ChooseByNameFilter<Language> {
 
   @Nullable
   @Override
-  protected Icon iconForFilterValue(@Nonnull Language value) {
+  protected Image iconForFilterValue(@Nonnull Language value) {
     final LanguageFileType fileType = value.getAssociatedFileType();
     return fileType != null ? fileType.getIcon() : null;
   }

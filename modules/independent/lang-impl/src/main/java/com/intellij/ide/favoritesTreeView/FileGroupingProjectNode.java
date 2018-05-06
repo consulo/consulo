@@ -22,6 +22,8 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import java.io.File;
@@ -55,7 +57,7 @@ public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<Fil
       presentation.setIcon(AllIcons.Nodes.TreeClosed);
     }
     else if (myVirtualFile != null) {
-      presentation.setIcon(myVirtualFile.getFileType().getIcon());
+      presentation.setIcon(TargetAWT.to(myVirtualFile.getFileType().getIcon()));
     }
     else {
       presentation.setIcon(AllIcons.FileTypes.Unknown);

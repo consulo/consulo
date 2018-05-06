@@ -20,10 +20,10 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -59,7 +59,7 @@ public abstract class ArchiveFileType implements FileType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.FileTypes.Archive;
   }
 

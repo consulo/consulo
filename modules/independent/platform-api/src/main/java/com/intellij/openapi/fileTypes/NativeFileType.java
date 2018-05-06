@@ -20,9 +20,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class NativeFileType implements INativeFileType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.FileTypes.Custom;
   }
 

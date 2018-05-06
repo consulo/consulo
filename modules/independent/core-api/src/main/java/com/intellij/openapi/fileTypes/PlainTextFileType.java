@@ -16,9 +16,9 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.icons.AllIcons;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class PlainTextFileType extends LanguageFileType {
   public static final PlainTextFileType INSTANCE = new PlainTextFileType();
@@ -46,7 +46,7 @@ public class PlainTextFileType extends LanguageFileType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.FileTypes.Text;
   }
 }

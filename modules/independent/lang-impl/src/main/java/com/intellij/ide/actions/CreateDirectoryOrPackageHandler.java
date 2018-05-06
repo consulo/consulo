@@ -36,17 +36,19 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.psi.PsiPackageManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.StringTokenizer;
 
 public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
-  @Nullable private final Project myProject;
+  @Nullable
+  private final Project myProject;
   @Nonnull
   private final PsiDirectory myDirectory;
   private final boolean myIsDirectory;
@@ -58,18 +60,11 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   private final Component myDialogParent;
   private String myErrorText;
 
-  public CreateDirectoryOrPackageHandler(@Nullable Project project,
-                                         @Nonnull PsiDirectory directory,
-                                         boolean isDirectory,
-                                         @Nonnull final String delimiters) {
+  public CreateDirectoryOrPackageHandler(@Nullable Project project, @Nonnull PsiDirectory directory, boolean isDirectory, @Nonnull final String delimiters) {
     this(project, directory, isDirectory, delimiters, null);
   }
 
-  public CreateDirectoryOrPackageHandler(@Nullable Project project,
-                                         @Nonnull PsiDirectory directory,
-                                         boolean isDirectory,
-                                         @Nonnull final String delimiters,
-                                         @Nullable Component dialogParent) {
+  public CreateDirectoryOrPackageHandler(@Nullable Project project, @Nonnull PsiDirectory directory, boolean isDirectory, @Nonnull final String delimiters, @Nullable Component dialogParent) {
     myProject = project;
     myDirectory = directory;
     myIsDirectory = isDirectory;
@@ -105,7 +100,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
             return false;
           }
         }
-        else if (!".".equals(token)){
+        else if (!".".equals(token)) {
           final VirtualFile child = vFile.findChild(token);
           if (child != null) {
             if (!child.isDirectory()) {
@@ -121,8 +116,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         }
       }
       if (FileTypeManager.getInstance().isFileIgnored(token)) {
-        myErrorText = "Trying to create a " + (myIsDirectory ? "directory" : "package") +
-                      " with an ignored name, the result will not be visible";
+        myErrorText = "Trying to create a " + (myIsDirectory ? "directory" : "package") + " with an ignored name, the result will not be visible";
         return true;
       }
       if (!myIsDirectory && token.length() > 0 && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
@@ -176,12 +170,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
       FileType fileType = findFileTypeBoundToName(subDirName);
       if (fileType != null) {
         String message = "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?";
-        int ec = Messages.showYesNoCancelDialog(myProject, message,
-                                                "File Name Detected",
-                                                "&Yes, create file",
-                                                "&No, create " + (myIsDirectory ? "directory" : "packages"),
-                                                CommonBundle.getCancelButtonText(),
-                                                fileType.getIcon());
+        int ec = Messages.showYesNoCancelDialog(myProject, message, "File Name Detected", "&Yes, create file", "&No, create " + (myIsDirectory ? "directory" : "packages"),
+                                                CommonBundle.getCancelButtonText(), TargetAWT.to(fileType.getIcon()));
         if (ec == Messages.CANCEL) {
           createFile = null;
         }
@@ -209,7 +199,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
           if (createFile) {
             CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(subDirName, myDirectory);
             myCreatedElement = mkdirs.directory.createFile(mkdirs.newName);
-          } else {
+          }
+          else {
             createDirectories(subDirName);
           }
         }
@@ -222,10 +213,9 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
       };
       ApplicationManager.getApplication().runWriteAction(run);
     };
-    CommandProcessor.getInstance().executeCommand(myProject, command, createFile ? IdeBundle.message("command.create.file")
-                                                                                 : myIsDirectory
-                                                                                   ? IdeBundle.message("command.create.directory")
-                                                                                   : IdeBundle.message("command.create.package"), null);
+    CommandProcessor.getInstance().executeCommand(myProject, command, createFile
+                                                                      ? IdeBundle.message("command.create.file")
+                                                                      : myIsDirectory ? IdeBundle.message("command.create.directory") : IdeBundle.message("command.create.package"), null);
   }
 
   private void showErrorDialog(String message) {

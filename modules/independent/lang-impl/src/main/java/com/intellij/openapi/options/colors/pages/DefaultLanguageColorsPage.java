@@ -182,12 +182,6 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
           OptionsBundle.message("options.java.attribute.descriptor.inline.parameter.hint"),
           DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
 
-  @Nullable
-  @Override
-  public Icon getIcon() {
-    return PlainTextFileType.INSTANCE.getIcon();
-  }
-
   @Nonnull
   @Override
   public SyntaxHighlighter getHighlighter() {

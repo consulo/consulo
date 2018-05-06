@@ -28,6 +28,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ObjectUtils;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -54,7 +56,7 @@ public final class ScratchRootType extends RootType {
   @Nullable
   @Override
   public Icon substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
-    Icon icon = ObjectUtils.chooseNotNull(super.substituteIcon(project, file), ScratchFileType.INSTANCE.getIcon());
+    Icon icon = ObjectUtils.chooseNotNull(super.substituteIcon(project, file), TargetAWT.to(ScratchFileType.INSTANCE.getIcon()));
     return LayeredIcon.create(icon, AllIcons.Actions.Scratch);
   }
 

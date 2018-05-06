@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import consulo.lang.LanguageElementIcons;
@@ -40,7 +41,7 @@ public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
     if (element instanceof PsiFile) {
       if (iconDescriptor.getMainIcon() == null) {
         FileType fileType = ((PsiFile)element).getFileType();
-        iconDescriptor.setMainIcon(fileType.getIcon());
+        iconDescriptor.setMainIcon(TargetAWT.to(fileType.getIcon()));
       }
 
       VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();

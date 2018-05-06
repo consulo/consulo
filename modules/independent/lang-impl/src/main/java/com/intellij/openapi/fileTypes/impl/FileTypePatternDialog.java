@@ -20,6 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
 import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -59,7 +60,7 @@ public class FileTypePatternDialog {
           if (value != null) {
             final FileType type = ((Language)value).getAssociatedFileType();
             if (type != null) {
-              setIcon(type.getIcon());
+              setIcon(TargetAWT.to(type.getIcon()));
             }
           }
         }

@@ -28,6 +28,8 @@ import com.intellij.ui.RowIcon;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -111,7 +113,7 @@ public class IconDescriptorUpdaters {
     if (containingFile != null) {
       VirtualFile virtualFile = containingFile.getVirtualFile();
       if (virtualFile != null) {
-        Icon icon = virtualFile.getFileType().getIcon();
+        Icon icon = TargetAWT.to(virtualFile.getFileType().getIcon());
         if (icon != null) {
           return icon;
         }
