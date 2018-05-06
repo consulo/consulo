@@ -16,10 +16,10 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The type of a run configuration.
@@ -49,7 +49,8 @@ public interface ConfigurationType {
    *
    * @return the icon
    */
-  Icon getIcon();
+  @Nullable
+  Image getIcon();
 
   /**
    * Returns the ID of the configuration type. The ID is used to store run configuration settings in a project or workspace file and
@@ -57,7 +58,7 @@ public interface ConfigurationType {
    *
    * @return the configuration type ID.
    */
-  @NonNls @Nonnull
+  @Nonnull
   String getId();
 
   /**

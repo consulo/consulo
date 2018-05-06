@@ -17,6 +17,8 @@ import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.util.IconUtil;
 import com.intellij.util.text.UniqueNameGenerator;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -200,23 +202,20 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
   private class AddRemoteServerAction extends DumbAwareAction {
     private final ServerType<?> myServerType;
 
-    private AddRemoteServerAction(ServerType<?> serverType, final Icon icon) {
-      super(serverType.getPresentableName(), null, icon);
+    private AddRemoteServerAction(ServerType<?> serverType, final Image icon) {
+      super(serverType.getPresentableName(), null, TargetAWT.to(icon));
       myServerType = serverType;
     }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      String name = UniqueNameGenerator.generateUniqueName(myServerType.getPresentableName(), new Condition<String>() {
-        @Override
-        public boolean value(String s) {
-          for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
-            if (configurable.getDisplayName().equals(s)) {
-              return false;
-            }
+      String name = UniqueNameGenerator.generateUniqueName(myServerType.getPresentableName(), s -> {
+        for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
+          if (configurable.getDisplayName().equals(s)) {
+            return false;
           }
-          return true;
         }
+        return true;
       });
       MyNode node = addServerNode(myServersManager.createServer(myServerType, name), true);
       selectNodeInTree(node);

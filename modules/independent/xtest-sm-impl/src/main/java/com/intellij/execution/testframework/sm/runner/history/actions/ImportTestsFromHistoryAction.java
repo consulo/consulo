@@ -24,9 +24,11 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.DateFormatUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,11 +37,12 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
   private String myFileName;
 
   public ImportTestsFromHistoryAction(@javax.annotation.Nullable SMTRunnerConsoleProperties properties, Project project, String name) {
-    super(properties, getPresentableText(project, name), getPresentableText(project, name), getIcon(project, name));
+    super(properties, getPresentableText(project, name), getPresentableText(project, name), TargetAWT.to(getIcon(project, name)));
     myFileName = name;
   }
 
-  private static Icon getIcon(Project project, String name) {
+  @Nullable
+  private static Image getIcon(Project project, String name) {
     return TestHistoryConfiguration.getInstance(project).getIcon(name);
   }
 

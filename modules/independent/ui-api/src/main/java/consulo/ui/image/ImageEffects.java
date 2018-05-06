@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,29 @@
 package consulo.ui.image;
 
 import consulo.ui.UIInternal;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 2018-05-06
  */
-public interface FoldedImage extends Image {
+public final class ImageEffects {
   @Nonnull
-  static FoldedImage create(@Nonnull Image... images) {
-    if(images.length == 0) {
+  public static Image folded(@Nonnull Image... images) {
+    if (images.length == 0) {
       throw new IllegalArgumentException("empty array");
     }
-    return UIInternal.get()._Images_foldedImage(images);
+    return UIInternal.get()._ImageEffects_folded(images);
   }
 
   @Nonnull
-  Image[] getImages();
+  public static Image transparent(@Nonnull Image original) {
+    return transparent(original, .5f);
+  }
+
+  @Nonnull
+  public static Image transparent(@Nonnull Image original, float alpha) {
+    return UIInternal.get()._ImageEffects_transparent(original, alpha);
+  }
 }

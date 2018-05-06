@@ -32,6 +32,8 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -71,7 +73,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
           final String actionName = configuration instanceof LocatableConfiguration
                                     ? StringUtil.unquoteString(suggestRunActionName((LocatableConfiguration)configuration))
                                     : configurationType.getDisplayName();
-          final AnAction anAction = new AnAction(actionName, configurationType.getDisplayName(), configurationType.getIcon()) {
+          final AnAction anAction = new AnAction(actionName, configurationType.getDisplayName(), TargetAWT.to(configurationType.getIcon())) {
             @Override
             public void actionPerformed(AnActionEvent e) {
               perform(fromContext, context);
@@ -138,7 +140,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
 
                   @Override
                   public Icon getIconFor(final ConfigurationFromContext producer) {
-                    return producer.getConfigurationType().getIcon();
+                    return TargetAWT.to(producer.getConfigurationType().getIcon());
                   }
 
                   @Override

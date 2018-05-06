@@ -16,10 +16,11 @@
 package consulo.ui.internal.icon;
 
 import com.intellij.ui.LayeredIcon;
-import consulo.ui.image.FoldedImage;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.ui.internal.SwingIconWrapper;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 
@@ -27,24 +28,14 @@ import java.util.Arrays;
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class DesktopFoldedImageImpl extends LayeredIcon implements SwingIconWrapper, FoldedImage {
+public class DesktopFoldedImageImpl extends LayeredIcon implements SwingIconWrapper, Image {
   @Nonnull
   public static Icon[] remap(consulo.ui.image.Image[] icons) {
-    return Arrays.stream(icons).map(DesktopFoldedImageImpl::to).toArray(Icon[]::new);
+    return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
   }
-
-  public static Icon to(consulo.ui.image.Image icon) {
-    if(icon instanceof Icon) {
-      return (Icon)icon;
-    }
-    return ((SwingIconWrapper)icon).toSwingIcon();
-  }
-
-  private final consulo.ui.image.Image[] myImages;
 
   public DesktopFoldedImageImpl(@Nonnull consulo.ui.image.Image... images) {
     super(remap(images));
-    myImages = images;
   }
 
   @Nonnull
@@ -61,11 +52,5 @@ public class DesktopFoldedImageImpl extends LayeredIcon implements SwingIconWrap
   @Override
   public int getHeight() {
     return getIconHeight();
-  }
-
-  @Nonnull
-  @Override
-  public consulo.ui.image.Image[] getImages() {
-    return myImages;
   }
 }

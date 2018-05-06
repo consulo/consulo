@@ -20,8 +20,8 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.util.pointers.NamedPointer;
 
 import javax.annotation.Nonnull;
@@ -52,7 +52,7 @@ public class SdkUtil {
     SdkType sdkType = (SdkType)sdk.getSdkType();
     Image icon = ObjectUtil.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
     if(sdk.isPredefined()) {
-      return FoldedImage.create(icon, AllIcons.Nodes.Locked);
+      return ImageEffects.folded(icon, AllIcons.Nodes.Locked);
     }
     else {
       return icon;

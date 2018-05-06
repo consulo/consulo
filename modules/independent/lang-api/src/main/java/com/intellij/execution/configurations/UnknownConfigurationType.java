@@ -18,9 +18,9 @@ package com.intellij.execution.configurations;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -42,7 +42,7 @@ public class UnknownConfigurationType implements ConfigurationType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.RunConfigurations.Unknown;
   }
 

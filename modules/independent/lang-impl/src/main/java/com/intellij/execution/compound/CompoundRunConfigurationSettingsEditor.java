@@ -36,6 +36,8 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -60,7 +62,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
       @Override
       protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         RunConfiguration configuration = myModel.get(index);
-        setIcon(configuration.getType().getIcon());
+        setIcon(TargetAWT.to(configuration.getType().getIcon()));
         append(configuration.getType().getDisplayName() + " '" + configuration.getName() + "'");
       }
     });
@@ -143,7 +145,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
 
           @Override
           public Icon getIconFor(RunConfiguration value) {
-            return value.getType().getIcon();
+            return TargetAWT.to(value.getType().getIcon());
           }
 
           @Override

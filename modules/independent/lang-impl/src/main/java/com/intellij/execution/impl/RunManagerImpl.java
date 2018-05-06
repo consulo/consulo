@@ -39,6 +39,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakHashMap;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -1070,13 +1072,13 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
     Icon icon = myIdToIcon.get(uniqueID);
     if (icon == null) {
-      icon = IconDeferrer.getInstance().deferAutoUpdatable(settings.getConfiguration().getIcon(), myProject.hashCode() ^ settings.hashCode(), param -> {
+      icon = IconDeferrer.getInstance().deferAutoUpdatable(TargetAWT.to(settings.getConfiguration().getIcon()), myProject.hashCode() ^ settings.hashCode(), param -> {
         if (myProject.isDisposed()) return null;
 
         myIconCalcTime.remove(uniqueID);
         long startTime = System.currentTimeMillis();
 
-        Icon ico;
+        Image ico;
         try {
           DumbService.getInstance(myProject).setAlternativeResolveEnabled(true);
           settings.checkSettings();
@@ -1092,7 +1094,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
           DumbService.getInstance(myProject).setAlternativeResolveEnabled(false);
         }
         myIconCalcTime.put(uniqueID, System.currentTimeMillis() - startTime);
-        return ico;
+        return TargetAWT.to(ico);
       });
 
       myIdToIcon.put(uniqueID, icon);

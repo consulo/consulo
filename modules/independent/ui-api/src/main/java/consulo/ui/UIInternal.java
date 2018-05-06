@@ -16,14 +16,13 @@
 package consulo.ui;
 
 import consulo.annotations.Internal;
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.util.ServiceLoaderUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 
 /**
@@ -79,7 +78,9 @@ public abstract class UIInternal {
 
   public abstract Image _Images_image(URL url);
 
-  public abstract FoldedImage _Images_foldedImage(Image[] images);
+  public abstract Image _ImageEffects_folded(Image[] images);
+
+  public abstract Image _ImageEffects_transparent(@Nonnull Image original, float alpha);
 
   abstract MenuItem _MenuItems_item(String text);
 

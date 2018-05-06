@@ -22,6 +22,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -113,7 +115,7 @@ public class IconUtil {
     }
   }
 
-  public static Icon getAddIcon() {
+  public static SwingImageRef getAddIcon() {
     return getToolbarDecoratorIcon("add.png");
   }
 
@@ -175,7 +177,7 @@ public class IconUtil {
     icon.paintIcon(c, g, x, y);
   }
 
-  public static Icon getToolbarDecoratorIcon(String name) {
+  public static SwingImageRef getToolbarDecoratorIcon(String name) {
     return IconLoader.getIcon(getToolbarDecoratorIconsFolder() + name);
   }
 

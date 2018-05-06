@@ -17,9 +17,11 @@ package com.intellij.openapi.externalSystem.service.task.ui;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -32,11 +34,11 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
   @Nonnull
   private final String myDescription;
 
-  public ExternalSystemNodeDescriptor(@Nonnull T element, @Nonnull String name, @Nonnull String description, @javax.annotation.Nullable Icon icon) {
+  public ExternalSystemNodeDescriptor(@Nonnull T element, @Nonnull String name, @Nonnull String description, @Nullable Image icon) {
     super(null, null);
     myElement = element;
     myName = name;
-    setIcon(icon);
+    setIcon(TargetAWT.to(icon));
     myDescription = description;
     getPresentation().setTooltip(description);
   }

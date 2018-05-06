@@ -28,8 +28,8 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.localServer.LocalRunner;
 import com.intellij.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -39,11 +39,10 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
   private final ServerType<?> myServerType;
 
   public DeployToServerConfigurationType(ServerType<?> serverType) {
-    super(serverType.getId() + "-deploy", serverType.getPresentableName() + " Deployment",
-          "Deploy to " + serverType.getPresentableName() + " run configuration", serverType.getIcon());
+    super(serverType.getId() + "-deploy", serverType.getPresentableName() + " Deployment", "Deploy to " + serverType.getPresentableName() + " run configuration", serverType.getIcon());
     addFactory(new DeployToServerConfigurationFactory());
     LocalRunner localRunner = serverType.getLocalRunner();
-    if(localRunner != null) {
+    if (localRunner != null) {
       addFactory(new LocalServerConfigurationFactory(localRunner));
     }
     myServerType = serverType;
@@ -61,7 +60,7 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
 
     @Override
     public boolean isApplicable(@Nonnull Project project) {
-      return  myServerType.isConfigurationTypeIsAvailable(project);
+      return myServerType.isConfigurationTypeIsAvailable(project);
     }
 
     @Override
@@ -122,7 +121,7 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
 
     @Override
     public boolean isApplicable(@Nonnull Project project) {
-      return  myServerType.isConfigurationTypeIsAvailable(project);
+      return myServerType.isConfigurationTypeIsAvailable(project);
     }
 
     @Override

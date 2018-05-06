@@ -37,6 +37,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
 import org.jdom.Document;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -231,9 +232,9 @@ public abstract class AbstractImportTestsAction extends AnAction {
       return myImported && myConfiguration != null ? myConfiguration.getName() : myFile.getNameWithoutExtension();
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return myProperties != null ? myProperties.getConfiguration().getIcon() : null;
     }
 

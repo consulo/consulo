@@ -66,6 +66,7 @@ import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 
@@ -120,7 +121,7 @@ public class XDebugSessionImpl implements XDebugSession {
   private volatile boolean breakpointsInitialized;
 
   public XDebugSessionImpl(@Nonnull ExecutionEnvironment environment, @Nonnull XDebuggerManagerImpl debuggerManager) {
-    this(environment, debuggerManager, environment.getRunProfile().getName(), environment.getRunProfile().getIcon(), false, null);
+    this(environment, debuggerManager, environment.getRunProfile().getName(), TargetAWT.to(environment.getRunProfile().getIcon()), false, null);
   }
 
   public XDebugSessionImpl(@Nullable ExecutionEnvironment environment,

@@ -18,9 +18,9 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -40,12 +40,12 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   private final ConfigurationFactory[] myFactories = new ConfigurationFactory[1];
 
   @Nonnull
-  private final NotNullLazyValue<Icon> myIcon = new NotNullLazyValue<Icon>() {
+  private final NotNullLazyValue<Image> myIcon = new NotNullLazyValue<Image>() {
     @Nonnull
     @Override
-    protected Icon compute() {
+    protected Image compute() {
       ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
-      Icon result = null;
+      Image result = null;
       if (manager instanceof ExternalSystemUiAware) {
         result = ((ExternalSystemUiAware)manager).getProjectIcon();
       }
@@ -94,7 +94,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon.getValue();
   }
 

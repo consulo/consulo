@@ -17,11 +17,11 @@ package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.Internal;
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.internal.*;
 import consulo.ui.internal.icon.DesktopFoldedImageImpl;
 import consulo.ui.internal.icon.DesktopImageImpl;
+import consulo.ui.internal.icon.DesktopTransparentImageImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
@@ -46,8 +46,13 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public FoldedImage _Images_foldedImage(Image[] images) {
+  public Image _ImageEffects_folded(Image[] images) {
     return new DesktopFoldedImageImpl(images);
+  }
+
+  @Override
+  public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+    return new DesktopTransparentImageImpl(original, alpha);
   }
 
   @Override

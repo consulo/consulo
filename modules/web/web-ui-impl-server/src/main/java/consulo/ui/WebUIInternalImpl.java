@@ -18,7 +18,6 @@ package consulo.ui;
 import com.intellij.openapi.util.IconLoader;
 import com.vaadin.ui.UI;
 import consulo.annotations.Internal;
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
@@ -26,8 +25,8 @@ import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 
 /**
@@ -141,8 +140,13 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public FoldedImage _Images_foldedImage(Image[] images) {
+  public Image _ImageEffects_folded(Image[] images) {
     return new WGwtFoldedImageImpl(images);
+  }
+
+  @Override
+  public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+    return null;
   }
 
   @Override

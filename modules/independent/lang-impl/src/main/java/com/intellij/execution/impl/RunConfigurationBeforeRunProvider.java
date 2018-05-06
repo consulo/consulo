@@ -38,6 +38,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.awt.TargetAWT;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -80,7 +81,7 @@ public class RunConfigurationBeforeRunProvider
   public Icon getTaskIcon(RunConfigurableBeforeRunTask task) {
     if (task.getSettings() == null)
       return null;
-    return ProgramRunnerUtil.getConfigurationIcon(task.getSettings(), false);
+    return TargetAWT.to(ProgramRunnerUtil.getConfigurationIcon(task.getSettings(), false));
   }
 
   @Override

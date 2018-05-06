@@ -28,6 +28,7 @@ import com.intellij.remoteServer.runtime.deployment.DeploymentRuntime;
 import com.intellij.remoteServer.runtime.deployment.DeploymentStatus;
 import com.intellij.remoteServer.runtime.deployment.DeploymentTask;
 import com.intellij.ui.LayeredIcon;
+import consulo.awt.TargetAWT;
 import icons.RemoteServersIcons;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -142,7 +143,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       RemoteServer<?> server = getValue();
       ServerConnection connection = getConnection();
       presentation.setPresentableText(server.getName());
-      presentation.setIcon(getServerNodeIcon(server.getType().getIcon(), connection != null ? getStatusIcon(connection.getStatus()) : null));
+      presentation.setIcon(getServerNodeIcon(TargetAWT.to(server.getType().getIcon()), connection != null ? getStatusIcon(connection.getStatus()) : null));
       presentation.setTooltip(connection != null ? connection.getStatusText() : null);
     }
 

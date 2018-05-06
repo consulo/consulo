@@ -20,8 +20,8 @@ import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 
@@ -35,7 +35,7 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
   public static final Image ENFORCED_PLAIN_TEXT_ICON;
 
   static {
-    ENFORCED_PLAIN_TEXT_ICON = FoldedImage.create(AllIcons.FileTypes.Text, AllIcons.Nodes.ExcludedFromCompile);
+    ENFORCED_PLAIN_TEXT_ICON = ImageEffects.folded(AllIcons.FileTypes.Text, AllIcons.Nodes.ExcludedFromCompile);
   }
 
   private final FileTypeIdentifiableByVirtualFile myFileType;

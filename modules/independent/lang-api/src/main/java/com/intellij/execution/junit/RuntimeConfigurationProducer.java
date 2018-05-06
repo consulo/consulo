@@ -72,7 +72,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
         if (configuration != null) {
           result.myConfiguration = configuration;
         } else {
-          final ArrayList<String> currentNames = new ArrayList<String>();
+          final ArrayList<String> currentNames = new ArrayList<>();
           for (RunnerAndConfigurationSettings configurationSettings : configurations) {
             currentNames.add(configurationSettings.getName());
           }
@@ -201,7 +201,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
     @SuppressWarnings({"CloneDoesntCallSuperClone"})
     @Override
     public DelegatingRuntimeConfiguration<T> clone() {
-      return new DelegatingRuntimeConfiguration<T>((T)myConfig.clone());
+      return new DelegatingRuntimeConfiguration<>((T)myConfig.clone());
     }
 
     @Override

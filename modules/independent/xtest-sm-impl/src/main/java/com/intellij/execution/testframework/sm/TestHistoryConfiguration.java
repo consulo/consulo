@@ -24,16 +24,14 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@State(
-        name = "TestHistory",
-        storages = {@Storage(
-                file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "TestHistory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class TestHistoryConfiguration implements PersistentStateComponent<TestHistoryConfiguration.State> {
 
   public static class State {
@@ -85,7 +83,8 @@ public class TestHistoryConfiguration implements PersistentStateComponent<TestHi
     return bean != null ? bean.name : null;
   }
 
-  public Icon getIcon(String file) {
+  @Nullable
+  public Image getIcon(String file) {
     final ConfigurationBean bean = myState.getHistoryElements().get(file);
     if (bean != null) {
       ConfigurationType type = ConfigurationTypeUtil.findConfigurationType(bean.configurationId);

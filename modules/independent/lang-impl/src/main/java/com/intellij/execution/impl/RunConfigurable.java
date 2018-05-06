@@ -49,6 +49,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.util.ui.tree.TreeDecorationUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
@@ -159,7 +160,7 @@ class RunConfigurable extends BaseConfigurable {
           if (userObject instanceof ConfigurationType) {
             final ConfigurationType configurationType = (ConfigurationType)userObject;
             append(configurationType.getDisplayName(), parent.isRoot() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
-            setIcon(configurationType.getIcon());
+            setIcon(TargetAWT.to(configurationType.getIcon()));
           }
           else if (userObject == DEFAULTS) {
             append("Defaults", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
@@ -171,7 +172,7 @@ class RunConfigurable extends BaseConfigurable {
           }
           else if (userObject instanceof ConfigurationFactory) {
             append(((ConfigurationFactory)userObject).getName());
-            setIcon(((ConfigurationFactory)userObject).getIcon());
+            setIcon(TargetAWT.to(((ConfigurationFactory)userObject).getIcon()));
           }
           else {
             final RunManagerImpl runManager = getRunManager();
@@ -184,7 +185,7 @@ class RunConfigurable extends BaseConfigurable {
               configuration = configurationSettings;
               name = settings.getNameText();
               shared = settings.isStoreProjectConfiguration();
-              setIcon(ProgramRunnerUtil.getConfigurationIcon(configurationSettings, !settings.isValid()));
+              setIcon(TargetAWT.to(ProgramRunnerUtil.getConfigurationIcon(configurationSettings, !settings.isValid())));
             }
             else if (userObject instanceof RunnerAndConfigurationSettingsImpl) {
               RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings)userObject;
@@ -1160,7 +1161,7 @@ class RunConfigurable extends BaseConfigurable {
 
         @Override
         public Icon getIconFor(final ConfigurationType type) {
-          return type != null ? type.getIcon() : EmptyIcon.ICON_16;
+          return type != null ? TargetAWT.to(type.getIcon()) : EmptyIcon.ICON_16;
         }
 
         @Override
@@ -1209,7 +1210,7 @@ class RunConfigurable extends BaseConfigurable {
 
             @Override
             public Icon getIconFor(final ConfigurationFactory factory) {
-              return factory.getIcon();
+              return TargetAWT.to(factory.getIcon());
             }
 
             @Override

@@ -19,9 +19,10 @@ import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.RunManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Factory for run configuration instances.
@@ -79,11 +80,13 @@ public abstract class ConfigurationFactory {
     return myType.getDisplayName();
   }
 
-  public Icon getIcon(@Nonnull final RunConfiguration configuration) {
+  @Nullable
+  public Image getIcon(@Nonnull final RunConfiguration configuration) {
     return getIcon();
   }
 
-  public Icon getIcon() {
+  @Nullable
+  public Image getIcon() {
     return myType.getIcon();
   }
 

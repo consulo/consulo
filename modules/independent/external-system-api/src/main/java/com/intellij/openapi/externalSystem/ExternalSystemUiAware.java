@@ -16,10 +16,10 @@
 package com.intellij.openapi.externalSystem;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Denis Zhdanov
@@ -34,8 +34,8 @@ public interface ExternalSystemUiAware {
   FileChooserDescriptor getExternalProjectConfigDescriptor();
 
   @Nullable
-  Icon getProjectIcon();
+  Image getProjectIcon();
 
   @Nullable
-  Icon getTaskIcon();
+  Image getTaskIcon();
 }
