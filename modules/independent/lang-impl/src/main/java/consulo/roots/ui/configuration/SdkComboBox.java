@@ -42,17 +42,18 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.MutableModuleExtension;
-import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.MutableModuleInheritableNamedPointer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -145,7 +146,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
             Sdk sdk = value.getSdk();
             String sdkName = value.getSdkName();
             assert sdkName != null;
-            setIcon(sdk == null ? AllIcons.Toolbar.Unknown : SdkUtil.getIcon(sdk));
+            setIcon(sdk == null ? AllIcons.Toolbar.Unknown : TargetAWT.to(SdkUtil.getIcon(sdk)));
             append(sdkName, sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
             String version = sdk == null ? null : sdk.getVersionString();
             if(version != null) {

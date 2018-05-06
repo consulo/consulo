@@ -39,7 +39,9 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
@@ -257,17 +259,13 @@ public class ProjectSdksModel implements SdkModel {
 
       list.add(sdkType);
     }
-    Collections.sort(list, new Comparator<SdkType>() {
-      @Override
-      public int compare(SdkType o1, SdkType o2) {
-        return StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true);
-      }
-    });
+    Collections.sort(list, (o1, o2) -> StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true));
 
     for (final SdkType type : list) {
-      final AnAction addAction = new DumbAwareAction(type.getPresentableName(), null, type.getIcon()) {
+      final AnAction addAction = new DumbAwareAction(type.getPresentableName(), null, TargetAWT.to(type.getIcon())) {
+          @RequiredDispatchThread
           @Override
-          public void actionPerformed(AnActionEvent e) {
+          public void actionPerformed(@Nonnull AnActionEvent e) {
             doAdd(parent, type, updateTree);
           }
         };

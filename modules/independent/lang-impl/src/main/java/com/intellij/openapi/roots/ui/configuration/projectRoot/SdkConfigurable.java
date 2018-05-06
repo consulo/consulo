@@ -23,17 +23,17 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
-import consulo.bundle.ui.SdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
+import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
+import consulo.bundle.ui.SdkEditor;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -89,7 +89,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
 
   @Override
   public Icon getIcon(boolean open) {
-    return SdkUtil.getIcon(mySdk);
+    return TargetAWT.to(SdkUtil.getIcon(mySdk));
   }
 
   @Override

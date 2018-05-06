@@ -24,7 +24,6 @@ import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -39,12 +38,13 @@ import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
+import consulo.awt.TargetAWT;
+import consulo.bundle.SdkUtil;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.roots.types.BinariesOrderRootType;
+
 import javax.annotation.Nonnull;
-
-import consulo.bundle.SdkUtil;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -97,7 +97,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     String name = jdk.getName();
     CompositeAppearance appearance = new CompositeAppearance();
     SdkType sdkType = (SdkType)jdk.getSdkType();
-    appearance.setIcon(SdkUtil.getIcon(jdk));
+    appearance.setIcon(TargetAWT.to(SdkUtil.getIcon(jdk)));
     SimpleTextAttributes attributes = getTextAttributes(sdkType.sdkHasValidPath(jdk), selected);
     CompositeAppearance.DequeEnd ending = appearance.getEnding();
     ending.addText(name, attributes);

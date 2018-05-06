@@ -18,10 +18,10 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.SdkType;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,13 +70,13 @@ public class UnknownSdkType extends SdkType{
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Toolbar.Unknown;
   }
 
   @Nullable
   @Override
-  public Icon getGroupIcon() {
+  public Image getGroupIcon() {
     return AllIcons.Nodes.UnknownJdk;
   }
 }
