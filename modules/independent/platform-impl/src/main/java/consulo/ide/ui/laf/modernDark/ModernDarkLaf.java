@@ -26,9 +26,9 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.util.ui.BuildInLookAndFeel;
-import javax.annotation.Nonnull;
 import sun.awt.AppContext;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
@@ -40,7 +40,8 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -313,7 +314,7 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
 
   @Override
   public String getID() {
-    return getName();
+    return "modern-dark";
   }
 
   @Override

@@ -20,5 +20,7 @@ package consulo.util.ui;
  * @since 03.03.14
  */
 public interface BuildInLookAndFeel {
+  String getID();
+
   boolean isDark();
 }
