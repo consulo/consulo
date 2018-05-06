@@ -28,10 +28,11 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
+import consulo.awt.TargetAWT;
 import consulo.moduleImport.ModuleImportProvider;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -68,9 +69,9 @@ public class ImportChooserStep extends ProjectImportWizardStep {
                                                     final boolean cellHasFocus) {
         final Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         setText(((ModuleImportProvider)value).getName());
-        Icon icon = ((ModuleImportProvider)value).getIcon();
-        setIcon(icon);
-        setDisabledIcon(IconLoader.getDisabledIcon(icon));
+        consulo.ui.image.Image icon = ((ModuleImportProvider)value).getIcon();
+        setIcon(TargetAWT.to(icon));
+        setDisabledIcon(IconLoader.getDisabledIcon(TargetAWT.to(icon)));
         return rendererComponent;
       }
     });

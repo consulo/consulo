@@ -39,6 +39,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
@@ -117,7 +118,7 @@ public class ImportModuleAction extends AnAction {
       public Icon getIcon(VirtualFile file) {
         for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(true)) {
           if (importProvider.canImport(VfsUtilCore.virtualToIoFile(file))) {
-            return importProvider.getIcon();
+            return TargetAWT.to(importProvider.getIcon());
           }
         }
         Icon icon = myDelegate.getIcon(file);

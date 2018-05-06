@@ -23,7 +23,9 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -43,17 +45,17 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   @Override
   public Icon getIcon(final VirtualFile file) {
     if (isProjectDirectory(file)) {
-      return dressIcon(file, Application.get().getIcon());
+      return TargetAWT.to(dressIcon(file, Application.get().getIcon()));
     }
-    final Icon icon = getProcessorIcon(file);
+    final Image icon = getProcessorIcon(file);
     if (icon != null) {
-      return dressIcon(file, icon);
+      return TargetAWT.to(dressIcon(file, icon));
     }
     return super.getIcon(file);
   }
 
   @Nullable
-  private static Icon getProcessorIcon(final VirtualFile virtualFile) {
+  private static Image getProcessorIcon(final VirtualFile virtualFile) {
     final ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
     if (provider != null) {
       return provider.getIcon(virtualFile);

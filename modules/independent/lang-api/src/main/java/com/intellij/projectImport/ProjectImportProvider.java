@@ -26,13 +26,13 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
-
-import consulo.annotations.DeprecationInfo;
-
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 @Deprecated
 public abstract class ProjectImportProvider {
@@ -59,8 +59,8 @@ public abstract class ProjectImportProvider {
     return getBuilder().getName();
   }
 
-  @javax.annotation.Nullable
-  public Icon getIcon() {
+  @Nonnull
+  public Image getIcon() {
     return getBuilder().getIcon();
   }
 
@@ -103,8 +103,8 @@ public abstract class ProjectImportProvider {
     return getName();
   }
 
-  @javax.annotation.Nullable
-  public Icon getIconForFile(VirtualFile file) {
+  @Nullable
+  public Image getIconForFile(VirtualFile file) {
     return null;
   }
 }

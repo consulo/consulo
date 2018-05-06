@@ -46,6 +46,8 @@ import consulo.application.AccessRule;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -198,7 +200,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
   @Override
   @Nonnull
-  public Icon getIcon() {
+  public Image getIcon() {
     return Application.get().getIcon();
   }
 

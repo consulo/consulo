@@ -30,11 +30,11 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -58,7 +58,7 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myProvider.getIcon();
   }
 

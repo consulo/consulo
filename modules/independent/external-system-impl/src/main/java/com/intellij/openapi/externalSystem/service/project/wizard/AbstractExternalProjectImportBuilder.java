@@ -41,38 +41,33 @@ import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
 /**
  * GoF builder for gradle-backed projects.
- * 
+ *
  * @author Denis Zhdanov
  * @since 8/1/11 1:29 PM
  */
 @SuppressWarnings("MethodMayBeStatic")
 @Deprecated
-public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImportFromExternalSystemControl>
-  extends ProjectImportBuilder<DataNode<ProjectData>>
-{
+public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImportFromExternalSystemControl> extends ProjectImportBuilder<DataNode<ProjectData>> {
 
-  private static final Logger LOG = Logger.getInstance("#" + AbstractExternalProjectImportBuilder.class.getName());
+  private static final Logger LOG = Logger.getInstance(AbstractExternalProjectImportBuilder.class);
 
   @Nonnull
-  private final ProjectDataManager            myProjectDataManager;
+  private final ProjectDataManager myProjectDataManager;
   @Nonnull
-  private final C                             myControl;
+  private final C myControl;
   @Nonnull
-  private final ProjectSystemId               myExternalSystemId;
+  private final ProjectSystemId myExternalSystemId;
 
   private DataNode<ProjectData> myExternalProjectNode;
 
-  public AbstractExternalProjectImportBuilder(@Nonnull ProjectDataManager projectDataManager,
-                                              @Nonnull C control,
-                                              @Nonnull ProjectSystemId externalSystemId)
-  {
+  public AbstractExternalProjectImportBuilder(@Nonnull ProjectDataManager projectDataManager, @Nonnull C control, @Nonnull ProjectSystemId externalSystemId) {
     myProjectDataManager = projectDataManager;
     myControl = control;
     myExternalSystemId = externalSystemId;
@@ -112,11 +107,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
   protected abstract void doPrepare(@Nonnull WizardContext context);
 
   @Override
-  public List<Module> commit(final Project project,
-                             ModifiableModuleModel model,
-                             ModulesProvider modulesProvider,
-                             ModifiableArtifactModel artifactModel)
-  {
+  public List<Module> commit(final Project project, ModifiableModuleModel model, ModulesProvider modulesProvider, ModifiableArtifactModel artifactModel) {
     project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT, Boolean.TRUE);
     final DataNode<ProjectData> externalProjectNode = getExternalProjectNode();
     if (externalProjectNode != null) {
@@ -156,22 +147,20 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
             @Override
             public void run() {
               String progressText = ExternalSystemBundle.message("progress.resolve.libraries", myExternalSystemId.getReadableName());
-              ProgressManager.getInstance().run(
-                new Task.Backgroundable(project, progressText, false) {
-                  @Override
-                  public void run(@Nonnull final ProgressIndicator indicator) {
-                    if(project.isDisposed()) return;
-                    ExternalSystemResolveProjectTask task
-                      = new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
-                    task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
-                    DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
-                    if (projectWithResolvedLibraries == null) {
-                      return;
-                    }
-
-                    setupLibraries(projectWithResolvedLibraries, project);
+              ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText, false) {
+                @Override
+                public void run(@Nonnull final ProgressIndicator indicator) {
+                  if (project.isDisposed()) return;
+                  ExternalSystemResolveProjectTask task = new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
+                  task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
+                  DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
+                  if (projectWithResolvedLibraries == null) {
+                    return;
                   }
-                });
+
+                  setupLibraries(projectWithResolvedLibraries, project);
+                }
+              });
             }
           };
           UIUtil.invokeLaterIfNeeded(resolveDependenciesTask);
@@ -195,7 +184,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
 
   /**
    * The whole import sequence looks like below:
-   * <p/>
+   * <p>
    * <pre>
    * <ol>
    *   <li>Get project view from the gradle tooling api without resolving dependencies (downloading libraries);</li>
@@ -206,12 +195,12 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    *   <li>Configure library dependencies;</li>
    * </ol>
    * </pre>
-   * <p/>
+   * <p>
    *
-   * @param projectWithResolvedLibraries  gradle project with resolved libraries (libraries have already been downloaded and
-   *                                      are available at file system under gradle service directory)
-   * @param project                       current intellij project which should be configured by libraries and module library
-   *                                      dependencies information available at the given gradle project
+   * @param projectWithResolvedLibraries gradle project with resolved libraries (libraries have already been downloaded and
+   *                                     are available at file system under gradle service directory)
+   * @param project                      current intellij project which should be configured by libraries and module library
+   *                                     dependencies information available at the given gradle project
    */
   private void setupLibraries(@Nonnull final DataNode<ProjectData> projectWithResolvedLibraries, final Project project) {
     ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
@@ -225,10 +214,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
               // Clean existing libraries (if any).
               LibraryTable projectLibraryTable = ProjectLibraryTable.getInstance(project);
               if (projectLibraryTable == null) {
-                LOG.warn(
-                  "Can't resolve external dependencies of the target gradle project (" + project + "). Reason: project "
-                  + "library table is undefined"
-                );
+                LOG.warn("Can't resolve external dependencies of the target gradle project (" + project + "). Reason: project " + "library table is undefined");
                 return;
               }
               LibraryTable.ModifiableModel model = projectLibraryTable.getModifiableModel();
@@ -259,8 +245,8 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
   /**
    * Asks current builder to ensure that target external project is defined.
    *
-   * @param wizardContext             current wizard context
-   * @throws ConfigurationException   if gradle project is not defined and can't be constructed
+   * @param wizardContext current wizard context
+   * @throws ConfigurationException if gradle project is not defined and can't be constructed
    */
   @SuppressWarnings("unchecked")
   public void ensureProjectIsDefined(@Nonnull WizardContext wizardContext) throws ConfigurationException {
@@ -282,8 +268,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
         if (!StringUtil.isEmpty(errorDetails)) {
           LOG.warn(errorDetails);
         }
-        error.set(new ConfigurationException(ExternalSystemBundle.message("error.resolve.with.reason", errorMessage),
-                                             ExternalSystemBundle.message("error.resolve.generic")));
+        error.set(new ConfigurationException(ExternalSystemBundle.message("error.resolve.with.reason", errorMessage), ExternalSystemBundle.message("error.resolve.generic")));
       }
     };
 
@@ -295,18 +280,10 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
       @Override
       public void run() {
         try {
-          ExternalSystemUtil.refreshProject(
-            project,
-            myExternalSystemId,
-            externalProjectPath,
-            callback,
-            true,
-            ProgressExecutionMode.MODAL_SYNC
-          );
+          ExternalSystemUtil.refreshProject(project, myExternalSystemId, externalProjectPath, callback, true, ProgressExecutionMode.MODAL_SYNC);
         }
         catch (IllegalArgumentException e) {
-          exRef.set(
-            new ConfigurationException(e.getMessage(), ExternalSystemBundle.message("error.cannot.parse.project", externalSystemName)));
+          exRef.set(new ConfigurationException(e.getMessage(), ExternalSystemBundle.message("error.cannot.parse.project", externalSystemName)));
         }
       }
     });
@@ -355,12 +332,12 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
 
   /**
    * Allows to adjust external project config file to use on the basis of the given value.
-   * <p/>
+   * <p>
    * Example: a user might choose a directory which contains target config file and particular implementation expands
    * that to a particular file under the directory.
-   * 
-   * @param file  base external project config file
-   * @return      external project config file to use
+   *
+   * @param file base external project config file
+   * @return external project config file to use
    */
   @Nonnull
   protected abstract File getExternalProjectConfigToUse(@Nonnull File file);
@@ -372,8 +349,8 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
 
   /**
    * Applies external system-specific settings like project files location etc to the given context.
-   * 
-   * @param context  storage for the project/module settings.
+   *
+   * @param context storage for the project/module settings.
    */
   public void applyProjectSettings(@Nonnull WizardContext context) {
     if (myExternalProjectNode == null) {
@@ -392,8 +369,8 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    * {@link WizardContext#getProject() project from the current wizard context} and
    * {@link ProjectManager#getDefaultProject() default project}.
    *
-   * @param wizardContext   current wizard context
-   * @return                {@link Project} instance to use
+   * @param wizardContext current wizard context
+   * @return {@link Project} instance to use
    */
   @Nonnull
   public Project getProject(@Nonnull WizardContext wizardContext) {
