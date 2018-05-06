@@ -23,10 +23,10 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
+import consulo.ui.image.Image;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman Chernyatchik
@@ -80,7 +80,7 @@ public class MockRuntimeConfiguration extends RuntimeConfiguration {
     }
 
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return null;
     }
 
