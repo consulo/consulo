@@ -22,13 +22,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredReadAction;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import consulo.lang.LanguageElementIcons;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
     if (element instanceof PsiFile) {
       if (iconDescriptor.getMainIcon() == null) {
         FileType fileType = ((PsiFile)element).getFileType();
-        iconDescriptor.setMainIcon(TargetAWT.to(fileType.getIcon()));
+        iconDescriptor.setMainIcon(fileType.getIcon());
       }
 
       VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
@@ -50,7 +49,7 @@ public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
       }
     }
     else {
-      Icon languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
+      Image languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
       if (languageElementIcon == null) {
         return;
       }

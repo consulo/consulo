@@ -21,14 +21,13 @@ import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.ui.migration.SwingImageRef;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.jetbrains.ide.PooledThreadExecutor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -70,7 +69,7 @@ public class MockApplication extends MockComponentManager implements Application
 
   @Nonnull
   @Override
-  public SwingImageRef getIcon() {
+  public consulo.ui.image.Image getIcon() {
     throw new IllegalArgumentException();
   }
 

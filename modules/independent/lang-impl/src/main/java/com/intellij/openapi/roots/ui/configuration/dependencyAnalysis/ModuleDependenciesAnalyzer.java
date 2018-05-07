@@ -19,7 +19,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -27,13 +26,14 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.Processor;
 import consulo.compiler.ModuleCompilerPathsManager;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
+import consulo.roots.types.BinariesOrderRootType;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -475,7 +475,7 @@ public class ModuleDependenciesAnalyzer {
     @Nullable
     public Icon getIcon() {
       VirtualFile file = getLocalFile();
-      return file == null ? AllIcons.General.Error : VirtualFilePresentation.getIcon(file);
+      return file == null ? AllIcons.General.Error : VirtualFilePresentation.getAWTIcon(file);
     }
 
     /**

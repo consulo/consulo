@@ -17,10 +17,10 @@ package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.JBColor;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -34,7 +34,7 @@ public class UnknownContentFolderTypeProvider extends ContentFolderTypeProvider 
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Toolbar.Unknown;
   }
 

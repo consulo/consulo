@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -101,7 +102,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
   public void customizeRenderer(ColoredTreeCellRenderer renderer) {
     if (myMethod == null) return;
     int flags = Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS;
-    renderer.setIcon(IconDescriptorUpdaters.getIcon(myMethod, flags));
+    renderer.setIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon(myMethod, flags)));
 
     customizeRendererText(renderer);
   }

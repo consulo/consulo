@@ -16,9 +16,11 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
@@ -28,7 +30,7 @@ public abstract class NodeDescriptor<E> {
   private final NodeDescriptor myParentDescriptor;
 
   protected String myName;
-  protected Icon myClosedIcon;
+  protected consulo.ui.image.Image myIcon;
 
   protected Color myColor;
 
@@ -66,24 +68,9 @@ public abstract class NodeDescriptor<E> {
     return myName;
   }
 
-  /**
-   Use #getIcon() instead
-   */
-  @Deprecated
-  public final Icon getOpenIcon() {
-    return getIcon();
-  }
-
-  /**
-   Use #getIcon() instead
-   */
-  @Deprecated
-  public final Icon getClosedIcon() {
-    return getIcon();
-  }
-
-  public final Icon getIcon() {
-    return myClosedIcon;
+  @Nullable
+  public final Image getIcon() {
+    return myIcon;
   }
 
   public final Color getColor() {
@@ -102,7 +89,7 @@ public abstract class NodeDescriptor<E> {
   public int getWeight() {
     E element = getElement();
     if (element instanceof WeighedItem) {
-      return ((WeighedItem) element).getWeight();
+      return ((WeighedItem)element).getWeight();
     }
     return 30;
   }
@@ -138,8 +125,12 @@ public abstract class NodeDescriptor<E> {
     myColor = desc.myColor;
   }
 
+  public void setIcon(consulo.ui.image.Image closedIcon) {
+    myIcon = closedIcon;
+  }
+
   public void setIcon(Icon closedIcon) {
-    myClosedIcon = closedIcon;
+    myIcon = TargetAWT.from(closedIcon);
   }
 
   public abstract static class NodeComparator<T extends NodeDescriptor> implements Comparator<T> {

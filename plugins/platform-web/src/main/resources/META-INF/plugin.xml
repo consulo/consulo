@@ -58,5 +58,8 @@
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"
                     serviceImplementation="consulo.web.projectView.WebProjectViewImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
+                        serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
   </extensions>
 </idea-plugin>

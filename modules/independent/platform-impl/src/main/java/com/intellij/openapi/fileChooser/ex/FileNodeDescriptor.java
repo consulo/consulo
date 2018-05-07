@@ -18,23 +18,23 @@ package com.intellij.openapi.fileChooser.ex;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class FileNodeDescriptor extends NodeDescriptor {
 
   private FileElement myFileElement;
-  private final Icon myOriginalIcon;
+  private final Image myOriginalIcon;
   private final String myComment;
 
-  public FileNodeDescriptor(Project project, @Nonnull FileElement element, NodeDescriptor parentDescriptor, Icon closedIcon, String name, String comment) {
+  public FileNodeDescriptor(Project project, @Nonnull FileElement element, NodeDescriptor parentDescriptor, Image icon, String name, String comment) {
     super(project, parentDescriptor);
-    myOriginalIcon = closedIcon;
+    myOriginalIcon = icon;
     myComment = comment;
     myFileElement = element;
     myName = name;
@@ -44,6 +44,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
     return myName;
   }
 
+  @Override
   @RequiredDispatchThread
   public boolean update() {
     boolean changed = false;
@@ -60,13 +61,16 @@ public class FileNodeDescriptor extends NodeDescriptor {
     if (file == null) return true;
 
     setIcon(myOriginalIcon);
+
     if (myFileElement.isHidden()) {
-      setIcon(IconLoader.getTransparentIcon(getIcon()));
+      setIcon(ImageEffects.transparent(getIcon()));
     }
+
     myColor = myFileElement.isHidden() ? SimpleTextAttributes.DARK_TEXT.getFgColor() : null;
     return changed;
   }
 
+  @Override
   @Nonnull
   public final FileElement getElement() {
     return myFileElement;

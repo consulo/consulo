@@ -894,7 +894,7 @@ public class DesktopEditorWindow implements EditorWindow {
       return TargetAWT.to(UnknownFileType.INSTANCE.getIcon());
     }
 
-    final Icon baseIcon = VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
+    final Icon baseIcon = TargetAWT.to(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject()));
 
     int count = 1;
 

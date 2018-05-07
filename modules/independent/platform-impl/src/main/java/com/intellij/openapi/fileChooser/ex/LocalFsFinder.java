@@ -186,7 +186,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     @Override
     @Nullable
     public Icon getIcon() {
-      return myFile != null ? (myFile.isDirectory() ? AllIcons.Nodes.TreeClosed : VirtualFilePresentation.getIcon(myFile)) : null;
+      return myFile != null ? (myFile.isDirectory() ? AllIcons.Nodes.TreeClosed : VirtualFilePresentation.getAWTIcon(myFile)) : null;
     }
 
     @Override

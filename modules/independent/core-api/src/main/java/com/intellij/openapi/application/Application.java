@@ -25,9 +25,8 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.ui.migration.SwingImageRef;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -431,7 +430,7 @@ public interface Application extends ComponentManager {
    * @return Application icon. In sandbox icon maybe different
    */
   @Nonnull
-  SwingImageRef getIcon();
+  consulo.ui.image.Image getIcon();
 
   // region Deprecated stuff
   /**

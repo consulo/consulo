@@ -50,7 +50,7 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
   @Override
   protected void update(PresentationData presentation) {
     presentation.setPresentableText(myName);
-    presentation.setIcon(getIcon());
+    presentation.setIcon(TargetAWT.to(getIcon()));
     presentation.setTooltip(myDescription);
   }
   

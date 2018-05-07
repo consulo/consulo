@@ -25,12 +25,10 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.IOException;
 
 /**
@@ -94,11 +92,11 @@ public abstract class RootType {
   }
 
   @Nullable
-  public Icon substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
     Language language = substituteLanguage(project, file);
     FileType fileType = LanguageUtil.getLanguageFileType(language);
     if (fileType == null) fileType = ScratchUtil.getFileTypeFromName(file);
-    return fileType != null ? TargetAWT.to(fileType.getIcon()) : null;
+    return fileType != null ? fileType.getIcon() : null;
   }
 
   @Nullable

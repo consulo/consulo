@@ -18,11 +18,11 @@ package consulo.roots.impl.property;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
+import consulo.roots.ContentFolderPropertyProvider;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.roots.ContentFolderPropertyProvider;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -39,7 +39,7 @@ public class GeneratedContentFolderPropertyProvider extends ContentFolderPropert
 
   @Nullable
   @Override
-  public Icon getLayerIcon(@Nonnull Boolean value) {
+  public Image getLayerIcon(@Nonnull Boolean value) {
     return Comparing.equal(value, Boolean.TRUE) ? AllIcons.Modules.GeneratedMark : null;
   }
 

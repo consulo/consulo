@@ -25,6 +25,7 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.codeInspection.SuppressionUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -108,7 +109,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   public Icon getIcon(final boolean expanded) {
     final PsiElement element = getElement();
     if (element != null && element.isValid()) {
-      return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
+      return TargetAWT.to(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS));
     }
     return null;
   }

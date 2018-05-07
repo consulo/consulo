@@ -40,11 +40,10 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
-import consulo.ui.migration.SwingImageRef;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.picocontainer.MutablePicoContainer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -476,7 +475,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @Nonnull
   @Override
-  public SwingImageRef getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return null;
   }
 

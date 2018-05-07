@@ -74,16 +74,15 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.CommandLineArgs;
-import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 import org.picocontainer.MutablePicoContainer;
 import sun.awt.AWTAccessor;
 import sun.awt.AWTAutoShutdown;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -1429,7 +1428,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @Nonnull
   @Override
-  public SwingImageRef getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return ApplicationProperties.isInSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
   }
 

@@ -30,6 +30,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.StatusText;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -252,7 +253,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
       final Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       if (value instanceof NodeDescriptor) {
         NodeDescriptor descriptor = (NodeDescriptor)value;
-        setIcon(descriptor.getIcon());
+        setIcon(TargetAWT.to(descriptor.getIcon()));
         setText(descriptor.toString());
         if (!isSelected) setForeground(((CoverageListNode)descriptor).getFileStatus().getColor());
       }

@@ -20,6 +20,7 @@ import com.intellij.codeInsight.highlighting.HighlightUsagesHandler;
 import com.intellij.find.FindBundle;
 import com.intellij.find.FindManager;
 import com.intellij.find.impl.FindManagerImpl;
+import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.navigation.ItemPresentation;
@@ -42,7 +43,6 @@ import com.intellij.psi.meta.PsiPresentableMetaData;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.ui.ComputableIcon;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usageView.UsageViewUtil;
@@ -50,8 +50,8 @@ import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.PsiElementUsageTarget;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.impl.UsageViewImpl;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,6 +63,9 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   private final SmartPsiElementPointer myPointer;
   @Nonnull
   protected final FindUsagesOptions myOptions;
+
+  private String myPresentableText;
+  private Icon myIcon;
 
   public PsiElement2UsageTargetAdapter(@Nonnull PsiElement element, @Nonnull FindUsagesOptions options) {
     myOptions = options;
@@ -236,10 +239,6 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
   }
 
-  private String myPresentableText;
-  private ComputableIcon myIconOpen;
-  private ComputableIcon myIconClosed;
-
   @Override
   public void update() {
     update(getElement());
@@ -248,25 +247,22 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   private void update(PsiElement element) {
     if (element != null && element.isValid()) {
       final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
-      myIconOpen = presentation == null ? null : ComputableIcon.create(presentation, true);
-      myIconClosed = presentation == null ? null : ComputableIcon.create(presentation, false);
+      myIcon = presentation == null ? null : presentation.getIcon(false);
       myPresentableText = presentation == null ? UsageViewUtil.createNodeText(element) : presentation.getPresentableText();
-      if (myIconOpen == null || myIconClosed == null) {
+      if (myIcon == null) {
         if (element instanceof PsiMetaOwner) {
           final PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
           final PsiMetaData metaData = psiMetaOwner.getMetaData();
           if (metaData instanceof PsiPresentableMetaData) {
             final PsiPresentableMetaData psiPresentableMetaData = (PsiPresentableMetaData)metaData;
-            if (myIconOpen == null) myIconOpen = ComputableIcon.create(psiPresentableMetaData);
-            if (myIconClosed == null) myIconClosed = ComputableIcon.create(psiPresentableMetaData);
+            if (myIcon == null) myIcon = psiPresentableMetaData.getIcon();
           }
         }
         else if (element instanceof PsiFile) {
           final PsiFile psiFile = (PsiFile)element;
           final VirtualFile virtualFile = psiFile.getVirtualFile();
           if (virtualFile != null) {
-            myIconOpen = ComputableIcon.create(virtualFile);
-            myIconClosed = ComputableIcon.create(virtualFile);
+            myIcon = VirtualFilePresentation.getAWTIcon(virtualFile);
           }
         }
       }
@@ -285,7 +281,6 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
 
   @Override
   public Icon getIcon(boolean open) {
-    final ComputableIcon computableIcon = open ? myIconOpen : myIconClosed;
-    return computableIcon == null ? null : computableIcon.getIcon();
+    return myIcon;
   }
 }

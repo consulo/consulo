@@ -16,14 +16,13 @@
 package consulo.lang;
 
 import com.intellij.lang.LanguageExtension;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
  * @since 12:27/08.10.13
  */
-public class LanguageElementIcons extends LanguageExtension<Icon> {
+public class LanguageElementIcons extends LanguageExtension<Image> {
   public static final LanguageElementIcons INSTANCE = new LanguageElementIcons();
 
   public LanguageElementIcons() {

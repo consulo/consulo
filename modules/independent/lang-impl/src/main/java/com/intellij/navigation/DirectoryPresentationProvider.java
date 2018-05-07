@@ -25,6 +25,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import consulo.awt.TargetAWT;
 import consulo.roots.ContentFolderTypeProvider;
 
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {
@@ -35,7 +36,7 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     final String locationString = vFile.getPath();
 
     if (ProjectRootsUtil.isProjectHome(directory)) {
-      return new PresentationData(project.getName(), locationString, Application.get().getIcon(), null);
+      return new PresentationData(project.getName(), locationString, TargetAWT.to(Application.get().getIcon()), null);
     }
 
     if (ProjectRootsUtil.isModuleContentRoot(directory)) {
@@ -47,7 +48,7 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     ContentFolderTypeProvider contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(vFile);
     if(contentFolderTypeForFile != null) {
-      return new PresentationData(directory.getName(), locationString, contentFolderTypeForFile.getIcon(), null);
+      return new PresentationData(directory.getName(), locationString, TargetAWT.to(contentFolderTypeForFile.getIcon()), null);
     }
     return new PresentationData(directory.getName(), locationString, AllIcons.Nodes.TreeClosed, null);
   }

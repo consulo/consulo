@@ -87,15 +87,28 @@ public class TargetAWT {
   }
 
   @Contract("null -> null")
-  public static Icon to(@Nullable Image uiImage) {
-    if (uiImage == null) {
+  public static Icon to(@Nullable Image image) {
+    if (image == null) {
       return null;
     }
 
-    if(uiImage instanceof Icon) {
-      return (Icon)uiImage;
+    if (image instanceof Icon) {
+      return (Icon)image;
     }
 
-    throw new IllegalArgumentException();
+    throw new IllegalArgumentException(image + "' is not supported");
+  }
+
+  @Contract("null -> null")
+  public static Image from(@Nullable Icon icon) {
+    if (icon == null) {
+      return null;
+    }
+
+    if (icon instanceof Image) {
+      return (Image)icon;
+    }
+
+    throw new IllegalArgumentException(icon + "' is not supported");
   }
 }

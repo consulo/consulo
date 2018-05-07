@@ -2,6 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.coverage.CoverageSuitesBundle;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -69,7 +70,7 @@ public class CoverageListNode extends AbstractTreeNode {
           else {
             presentation.setPresentableText(((PsiNamedElement)value).getName());
           }
-          presentation.setIcon(IconDescriptorUpdaters.getIcon(((PsiElement)value), 0));
+          presentation.setIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon(((PsiElement)value), 0)));
         }
       }
     });

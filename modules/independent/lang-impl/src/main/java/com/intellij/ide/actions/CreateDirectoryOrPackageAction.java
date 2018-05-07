@@ -31,13 +31,14 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
-import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
   private enum ChildType {
@@ -142,14 +143,14 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       presentation.setText(info.getThird().getName());
 
       ContentFolderTypeProvider first = info.getFirst();
-      Icon childIcon;
+      Image childIcon;
       if (first == null) {
         childIcon = AllIcons.Nodes.TreeClosed;
       }
       else {
         childIcon = first.getChildPackageIcon() == null ? first.getChildDirectoryIcon() : first.getChildPackageIcon();
       }
-      presentation.setIcon(childIcon);
+      presentation.setIcon(TargetAWT.to(childIcon));
     }
   }
 
@@ -157,7 +158,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
   @RequiredDispatchThread
   private static Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> getInfo(PsiDirectory d) {
     Project project = d.getProject();
-    ProjectFileIndex projectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
+    ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(project);
 
     Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(d);
     if(moduleForPsiElement != null) {
@@ -176,7 +177,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       if(isPackageSupported) {
         ContentFolderTypeProvider contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
         if (contentFolderTypeForFile != null) {
-          Icon childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
+          Image childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
           return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? ChildType.Package : ChildType.Directory);
         }
       }

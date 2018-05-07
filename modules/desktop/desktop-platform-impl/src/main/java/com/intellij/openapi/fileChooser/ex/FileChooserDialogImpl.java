@@ -55,6 +55,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -258,7 +259,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         append(path);
         final VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(new File(path));
         if (file != null) {
-          setIcon(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null));
+          setIcon(TargetAWT.to(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null)));
         }
       }
     });

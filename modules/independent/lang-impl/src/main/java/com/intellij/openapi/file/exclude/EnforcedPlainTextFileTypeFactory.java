@@ -35,7 +35,7 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
   public static final Image ENFORCED_PLAIN_TEXT_ICON;
 
   static {
-    ENFORCED_PLAIN_TEXT_ICON = ImageEffects.folded(AllIcons.FileTypes.Text, AllIcons.Nodes.ExcludedFromCompile);
+    ENFORCED_PLAIN_TEXT_ICON = ImageEffects.layered(AllIcons.FileTypes.Text, AllIcons.Nodes.ExcludedFromCompile);
   }
 
   private final FileTypeIdentifiableByVirtualFile myFileType;

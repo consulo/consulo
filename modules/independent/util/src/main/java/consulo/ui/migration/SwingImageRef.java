@@ -1,10 +1,15 @@
 package consulo.ui.migration;
 
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.image.Image;
+
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 18-Jan-17
  */
-public interface SwingImageRef extends Icon, ToImageWrapper {
+@Deprecated
+@DeprecationInfo("Icon -> Image migration class. Do not use it. Use converter TargetAWT.to() or TargetAWT.from()")
+public interface SwingImageRef extends Icon, Image {
 }

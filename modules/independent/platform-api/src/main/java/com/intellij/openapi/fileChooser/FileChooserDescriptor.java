@@ -31,7 +31,6 @@ import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -289,13 +288,14 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return true;
   }
 
-  public Icon getIcon(final VirtualFile file) {
+  @Nullable
+  public Image getIcon(final VirtualFile file) {
     return VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null);
   }
 
   @Nonnull
   protected static Image dressIcon(final VirtualFile file, final Image baseIcon) {
-    return file.isValid() && file.is(VFileProperty.SYMLINK) ? ImageEffects.folded(baseIcon, AllIcons.Nodes.Symlink) : baseIcon;
+    return file.isValid() && file.is(VFileProperty.SYMLINK) ? ImageEffects.layered(baseIcon, AllIcons.Nodes.Symlink) : baseIcon;
   }
 
   public String getName(final VirtualFile file) {

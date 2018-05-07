@@ -140,12 +140,22 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _ImageEffects_folded(Image[] images) {
+  public Image _ImageEffects_layered(Image[] images) {
     return new WGwtFoldedImageImpl(images);
   }
 
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+    return null;
+  }
+
+  @Override
+  public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+    return null;
+  }
+
+  @Override
+  public Image _ImageEffects_empty(int width, int height) {
     return null;
   }
 

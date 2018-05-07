@@ -56,6 +56,7 @@ import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,7 +87,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
 
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false){
       @Override
-      public Icon getIcon(VirtualFile file) {
+      public Image getIcon(VirtualFile file) {
         if (file.isDirectory()) {
           if (file.findChild(InspectionApplication.DESCRIPTIONS + ".xml") != null) {
             return AllIcons.Nodes.InspectionResults;

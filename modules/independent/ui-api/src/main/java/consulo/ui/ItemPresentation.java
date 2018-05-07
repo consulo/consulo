@@ -17,13 +17,14 @@ package consulo.ui;
 
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface ItemPresentation {
-  void setIcon(@Nonnull Image image);
+  void setIcon(@Nullable Image image);
 
   void append(@Nonnull String text);
 

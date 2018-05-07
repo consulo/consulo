@@ -25,15 +25,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
-import com.intellij.util.ObjectUtils;
-import consulo.awt.TargetAWT;
+import com.intellij.util.ObjectUtil;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author gregsh
@@ -55,9 +53,9 @@ public final class ScratchRootType extends RootType {
 
   @Nullable
   @Override
-  public Icon substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
-    Icon icon = ObjectUtils.chooseNotNull(super.substituteIcon(project, file), TargetAWT.to(ScratchFileType.INSTANCE.getIcon()));
-    return LayeredIcon.create(icon, AllIcons.Actions.Scratch);
+  public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+    Image icon = ObjectUtil.chooseNotNull(super.substituteIcon(project, file), ScratchFileType.INSTANCE.getIcon());
+    return ImageEffects.layered(icon, AllIcons.Actions.Scratch);
   }
 
   @Nullable

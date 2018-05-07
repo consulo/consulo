@@ -18,7 +18,6 @@ package consulo.ui.internal.icon;
 import com.intellij.ui.RetrievableIcon;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -28,7 +27,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-05-06
  */
-public class DesktopTransparentImageImpl implements RetrievableIcon, Image, SwingImageRef {
+public class DesktopTransparentImageImpl implements RetrievableIcon, Image {
   private final consulo.ui.image.Image myImage;
   private final float myAlpha;
 
@@ -73,10 +72,5 @@ public class DesktopTransparentImageImpl implements RetrievableIcon, Image, Swin
   @Override
   public int getWidth() {
     return getIconWidth();
-  }
-
-  @Override
-  public Image toImage() {
-    return this;
   }
 }

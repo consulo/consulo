@@ -126,7 +126,7 @@ public class ProgramRunnerUtil {
 
     final Image configurationIcon = settings.isTemporary() ? getTemporaryIcon(icon) : icon;
     if (invalid) {
-      return ImageEffects.folded(configurationIcon, AllIcons.RunConfigurations.InvalidConfigurationLayer);
+      return ImageEffects.layered(configurationIcon, AllIcons.RunConfigurations.InvalidConfigurationLayer);
     }
 
     return configurationIcon;

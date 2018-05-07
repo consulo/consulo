@@ -30,7 +30,7 @@ public class CompoundRunConfigurationType extends ConfigurationTypeBase {
   }
 
   public CompoundRunConfigurationType() {
-    super("CompoundRunConfigurationType", "Compound", "It runs batch of run configurations at once", ImageEffects.folded(AllIcons.Nodes.Folder, AllIcons.Nodes.RunnableMark));
+    super("CompoundRunConfigurationType", "Compound", "It runs batch of run configurations at once", ImageEffects.layered(AllIcons.Nodes.Folder, AllIcons.Nodes.RunnableMark));
     addFactory(new ConfigurationFactory(this) {
       @Override
       public RunConfiguration createTemplateConfiguration(Project project) {

@@ -19,9 +19,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-import consulo.ui.migration.ToImageWrapper;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -29,7 +26,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class LayeredIcon extends JBUI.AuxScalableJBIcon implements ToImageWrapper{
+public class LayeredIcon extends JBUI.AuxScalableJBIcon {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.LayeredIcon");
   private final Icon[] myIcons;
   private Icon[] myScaledIcons;
@@ -299,26 +296,5 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon implements ToImageWrappe
   @Override
   public String toString() {
     return "Layered icon. myIcons=" + Arrays.asList(myIcons);
-  }
-
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
-
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
-
-  @Override
-  public Image toImage() {
-    Image[] images = new Image[myIcons.length];
-    for (int i = 0; i < myIcons.length; i++) {
-      Icon icon = myIcons[i];
-
-      images[i] = icon instanceof ToImageWrapper ? ((ToImageWrapper)icon).toImage() : (Image)icon;
-    }
-    return ImageEffects.folded(images);
   }
 }

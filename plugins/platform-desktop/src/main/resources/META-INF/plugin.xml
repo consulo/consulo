@@ -78,5 +78,8 @@
 
     <applicationService serviceInterface="com.intellij.ui.ColorChooserService"
                         serviceImplementation="com.intellij.ui.DesktopColorChooserServiceImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
+                        serviceImplementation="com.intellij.ui.DesktopIconDeferrerImpl"/>
   </extensions>
 </idea-plugin>

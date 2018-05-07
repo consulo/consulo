@@ -19,26 +19,10 @@
  */
 package com.intellij.ui;
 
-import com.intellij.icons.AllIcons;
-import consulo.ui.image.Image;
-import consulo.ui.migration.ToImageWrapper;
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
-public interface DeferredIcon extends Icon, ToImageWrapper {
+public interface DeferredIcon extends Icon {
   @Nonnull
   Icon evaluate();
-
-  @Override
-  default Image toImage() {
-    Icon evaluate = evaluate();
-    if(evaluate instanceof ToImageWrapper) {
-      return ((ToImageWrapper)evaluate).toImage();
-    }
-    if(evaluate instanceof Image) {
-      return (Image)evaluate;
-    }
-    return AllIcons.Nodes.EmptyNode;
-  }
 }

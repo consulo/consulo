@@ -17,19 +17,18 @@ package consulo.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
-import consulo.ide.IconDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDirectory;
+import consulo.annotations.RequiredReadAction;
+import consulo.ide.IconDescriptor;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +63,8 @@ public abstract class ContentFolderTypeProvider {
    */
   @Nullable
   @RequiredReadAction
-  public final Icon getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
-    Icon packageIcon = getChildPackageIcon();
+  public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
+    Image packageIcon = getChildPackageIcon();
     if(packageIcon == null) {
       return getChildDirectoryIcon();
     }
@@ -85,18 +84,18 @@ public abstract class ContentFolderTypeProvider {
     }
   }
 
-  public Icon getChildDirectoryIcon() {
+  public Image getChildDirectoryIcon() {
     return AllIcons.Nodes.TreeOpen;
   }
 
-  @javax.annotation.Nullable
-  public Icon getChildPackageIcon() {
+  @Nullable
+  public Image getChildPackageIcon() {
     return null;
   }
 
   @Nonnull
   @SuppressWarnings("unchecked")
-  public Icon getIcon(@Nonnull Map<Key, Object> map) {
+  public Image getIcon(@Nonnull Map<Key, Object> map) {
     if(map.isEmpty()) {
       return getIcon();
     }
@@ -108,7 +107,7 @@ public abstract class ContentFolderTypeProvider {
         continue;
       }
 
-      Icon layerIcon = propertyProvider.getLayerIcon(value);
+      Image layerIcon = propertyProvider.getLayerIcon(value);
       if(layerIcon == null) {
         continue;
       }
@@ -118,13 +117,13 @@ public abstract class ContentFolderTypeProvider {
   }
   
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   @Nonnull
   public abstract String getName();
 
   @Nonnull
-  public abstract Color getGroupColor();
+  public abstract java.awt.Color getGroupColor();
 
   @Override
   public boolean equals(Object o) {

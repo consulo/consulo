@@ -18,9 +18,9 @@ package consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import consulo.roots.ContentFolderTypeProvider;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -44,7 +44,7 @@ public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProv
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Modules.TestResourcesRoot;
   }
 

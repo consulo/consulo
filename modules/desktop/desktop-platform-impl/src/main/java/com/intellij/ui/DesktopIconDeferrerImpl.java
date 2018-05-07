@@ -26,25 +26,27 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class IconDeferrerImpl extends IconDeferrer {
+public class DesktopIconDeferrerImpl extends IconDeferrer {
+  private static final ThreadLocal<Boolean> ourEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
   private final Object LOCK = new Object();
-  private final Map<Object, Icon> myIconsCache = new LinkedHashMap<Object, Icon>() {
+
+  private final Map<Object, Image> myIconsCache = new LinkedHashMap<Object, Image>() {
     @Override
-    protected boolean removeEldestEntry(Map.Entry<Object, Icon> eldest) {
+    protected boolean removeEldestEntry(Map.Entry<Object, Image> eldest) {
       return size() > 100;
     }
   };
+
   private long myLastClearTimestamp;
 
-  protected IconDeferrerImpl() {}
-
-  public IconDeferrerImpl(MessageBus bus) {
+  public DesktopIconDeferrerImpl(MessageBus bus) {
     final MessageBusConnection connection = bus.connect();
     connection.subscribe(PsiModificationTracker.TOPIC, this::clear);
     connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
@@ -64,25 +66,25 @@ public class IconDeferrerImpl extends IconDeferrer {
   }
 
   @Override
-  public <T> Icon defer(final Icon base, final T param, @Nonnull final Function<T, Icon> evaluator) {
+  public <T> Image defer(final Image base, final T param, @Nonnull final Function<T, Image> evaluator) {
     return deferImpl(base, param, evaluator, false);
   }
 
   @Override
-  public <T> Icon deferAutoUpdatable(Icon base, T param, @Nonnull Function<T, Icon> evaluator) {
+  public <T> Image deferAutoUpdatable(Image base, T param, @Nonnull Function<T, Image> evaluator) {
     return deferImpl(base, param, evaluator, true);
   }
 
-  private <T> Icon deferImpl(Icon base, T param, @Nonnull Function<T, Icon> evaluator, final boolean autoUpdatable) {
-    if (myEvaluationIsInProgress.get().booleanValue()) {
+  private <T> Image deferImpl(Image base, T param, @Nonnull Function<T, Image> evaluator, final boolean autoUpdatable) {
+    if (ourEvaluationIsInProgress.get()) {
       return evaluator.fun(param);
     }
 
     synchronized (LOCK) {
-      Icon result = myIconsCache.get(param);
+      Image result = myIconsCache.get(param);
       if (result == null) {
         final long started = myLastClearTimestamp;
-        result = new DeferredIconImpl<>(base, param, evaluator, (DeferredIconImpl<T> source, T key, Icon r) -> {
+        result = new DesktopDeferredIconImpl<>(base, param, evaluator, (DesktopDeferredIconImpl<T> source, T key, Image r) -> {
           synchronized (LOCK) {
             // check if our results is not outdated yet
             if (started == myLastClearTimestamp) {
@@ -97,26 +99,24 @@ public class IconDeferrerImpl extends IconDeferrer {
     }
   }
 
-  protected void cacheIcon(Object key,Icon value) {
+  protected void cacheIcon(Object key, Image value) {
     synchronized (LOCK) {
       myIconsCache.put(key, value);
     }
   }
 
-  private static final ThreadLocal<Boolean> myEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
-
   static void evaluateDeferred(@Nonnull Runnable runnable) {
     try {
-      myEvaluationIsInProgress.set(Boolean.TRUE);
+      ourEvaluationIsInProgress.set(Boolean.TRUE);
       runnable.run();
     }
     finally {
-      myEvaluationIsInProgress.set(Boolean.FALSE);
+      ourEvaluationIsInProgress.set(Boolean.FALSE);
     }
   }
 
   @Override
-  public boolean equalIcons(Icon icon1, Icon icon2) {
-    return DeferredIconImpl.equalIcons(icon1, icon2);
+  public boolean equalIcons(Image icon1, Image icon2) {
+    return DesktopDeferredIconImpl.equalIcons(icon1, icon2);
   }
 }

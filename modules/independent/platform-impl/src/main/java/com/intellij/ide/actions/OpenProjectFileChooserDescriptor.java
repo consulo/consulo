@@ -23,12 +23,10 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.awt.TargetAWT;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   public OpenProjectFileChooserDescriptor(final boolean chooseFiles) {
@@ -43,13 +41,13 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   }
 
   @Override
-  public Icon getIcon(final VirtualFile file) {
+  public Image getIcon(final VirtualFile file) {
     if (isProjectDirectory(file)) {
-      return TargetAWT.to(dressIcon(file, Application.get().getIcon()));
+      return dressIcon(file, Application.get().getIcon());
     }
     final Image icon = getProcessorIcon(file);
     if (icon != null) {
-      return TargetAWT.to(dressIcon(file, icon));
+      return dressIcon(file, icon);
     }
     return super.getIcon(file);
   }

@@ -22,15 +22,12 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.LayeredIcon;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author gregsh
@@ -47,17 +44,20 @@ public class IdeConsoleRootType extends ConsoleRootType {
 
   @Nullable
   @Override
-  public Icon substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
     FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getName());
     if (fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE) {
       return AllIcons.Debugger.ToolConsole;
     }
-    Icon icon = TargetAWT.to(fileType.getIcon());
-    Icon subscript = ((ScalableIcon)AllIcons.Debugger.ToolConsole).scale(.5f);
-    LayeredIcon icons = new LayeredIcon(2);
-    icons.setIcon(icon, 0);
-    icons.setIcon(subscript, 1, 8, 8);
-    return icons;
+    //Icon icon = TargetAWT.to(fileType.getIcon());
+    //Icon subscript = ((ScalableIcon)AllIcons.Debugger.ToolConsole).scale(.5f);
+    //LayeredIcon icons = new LayeredIcon(2);
+    //icons.setIcon(icon, 0);
+    //icons.setIcon(subscript, 1, 8, 8);
+    //return icons;
+    Image icon = fileType.getIcon();
+    assert icon != null;
+    return ImageEffects.transparent(icon, .8f);
   }
 
   @Override

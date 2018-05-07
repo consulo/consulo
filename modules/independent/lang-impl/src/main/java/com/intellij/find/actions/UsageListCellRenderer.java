@@ -60,7 +60,7 @@ public class UsageListCellRenderer extends ColoredListCellRenderer {
       setIcon(TargetAWT.to(virtualFile.getFileType().getIcon()));
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
       if (psiFile != null) {
-        setIcon(IconDescriptorUpdaters.getIcon(psiFile, 0));
+        setIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon(psiFile, 0)));
       }
     }
 

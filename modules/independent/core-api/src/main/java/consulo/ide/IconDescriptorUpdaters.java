@@ -24,28 +24,26 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.ui.IconDeferrer;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredReadAction;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 0:25/19.07.13
  */
 public class IconDescriptorUpdaters {
-  private static final NotNullLazyValue<Icon> ourVisibilityIconPlaceholder = NotNullLazyValue.createValue(() -> EmptyIcon.create(AllIcons.Nodes.C_public));
+  private static final NotNullLazyValue<Image> ourVisibilityIconPlaceholder =
+          NotNullLazyValue.createValue(() -> ImageEffects.empty(AllIcons.Nodes.C_public.getHeight(), AllIcons.Nodes.C_public.getWidth()));
 
-  private static final NullableFunction<ElementIconRequest, Icon> ourIconCompute = request -> {
+  private static final NullableFunction<ElementIconRequest, Image> ourIconCompute = request -> {
     final PsiElement element = request.myPointer.getElement();
     if (element == null || !element.isValid() || element.getProject().isDisposed()) return null;
 
-    Icon icon = getIconWithoutCache(element, request.myFlags);
+    Image icon = getIconWithoutCache(element, request.myFlags);
     Iconable.LastComputedIcon.put(element, icon, request.myFlags);
     return icon;
   };
@@ -88,10 +86,10 @@ public class IconDescriptorUpdaters {
 
   @Nonnull
   @RequiredReadAction
-  public static Icon getIcon(@Nonnull final PsiElement element, @Iconable.IconFlags final int flags) {
+  public static Image getIcon(@Nonnull final PsiElement element, @Iconable.IconFlags final int flags) {
     if (!element.isValid()) return AllIcons.Nodes.NodePlaceholder;
 
-    Icon baseIcon = Iconable.LastComputedIcon.get(element, flags);
+    Image baseIcon = Iconable.LastComputedIcon.get(element, flags);
     if (baseIcon == null) {
       baseIcon = computeBaseIcon(element, flags);
     }
@@ -99,21 +97,21 @@ public class IconDescriptorUpdaters {
   }
 
   @Nonnull
-  private static Icon computeBaseIcon(@Nonnull PsiElement element, int flags) {
-    Icon icon = computeBaseIcon(element);
+  private static Image computeBaseIcon(@Nonnull PsiElement element, int flags) {
+    Image icon = computeBaseIcon(element);
     if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
-      return new RowIcon(icon, ourVisibilityIconPlaceholder.getValue());
+      return ImageEffects.appendRight(icon, ourVisibilityIconPlaceholder.getValue());
     }
     return icon;
   }
 
   @Nonnull
-  private static Icon computeBaseIcon(@Nonnull PsiElement element) {
+  private static Image computeBaseIcon(@Nonnull PsiElement element) {
     PsiFile containingFile = element.getContainingFile();
     if (containingFile != null) {
       VirtualFile virtualFile = containingFile.getVirtualFile();
       if (virtualFile != null) {
-        Icon icon = TargetAWT.to(virtualFile.getFileType().getIcon());
+        Image icon = virtualFile.getFileType().getIcon();
         if (icon != null) {
           return icon;
         }
@@ -124,7 +122,7 @@ public class IconDescriptorUpdaters {
 
   @Nonnull
   @RequiredReadAction
-  public static Icon getIconWithoutCache(@Nonnull PsiElement element, int flags) {
+  public static Image getIconWithoutCache(@Nonnull PsiElement element, int flags) {
     IconDescriptor iconDescriptor = new IconDescriptor(null);
     IconDescriptorUpdater.EP_NAME.composite().updateIcon(iconDescriptor, element, flags);
     return iconDescriptor.toIcon();

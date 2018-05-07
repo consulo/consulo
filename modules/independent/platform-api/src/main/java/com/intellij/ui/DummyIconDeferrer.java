@@ -20,18 +20,18 @@
 package com.intellij.ui;
 
 import com.intellij.util.Function;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
-import javax.swing.*;
-
-public class DefaultIconDeferrer extends IconDeferrer {
+public class DummyIconDeferrer extends IconDeferrer {
   @Override
-  public <T> Icon defer(final Icon base, final T param, @Nonnull final Function<T, Icon> f) {
+  public <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f) {
     return f.fun(param);
   }
 
   @Override
-  public <T> Icon deferAutoUpdatable(Icon base, T param, @Nonnull Function<T, Icon> f) {
+  public <T> Image deferAutoUpdatable(Image base, T param, @Nonnull Function<T, Image> f) {
     return f.fun(param);
   }
 }

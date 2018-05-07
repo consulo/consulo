@@ -52,7 +52,7 @@ public class SdkUtil {
     SdkType sdkType = (SdkType)sdk.getSdkType();
     Image icon = ObjectUtil.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
     if(sdk.isPredefined()) {
-      return ImageEffects.folded(icon, AllIcons.Nodes.Locked);
+      return ImageEffects.layered(icon, AllIcons.Nodes.Locked);
     }
     else {
       return icon;

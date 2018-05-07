@@ -30,6 +30,7 @@ import com.intellij.refactoring.classMembers.MemberInfoModel;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -410,7 +411,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   }
 
   protected Icon getMemberIcon(M memberInfo, @Iconable.IconFlags int flags) {
-    return IconDescriptorUpdaters.getIcon(memberInfo.getMember(), flags);
+    return TargetAWT.to(IconDescriptorUpdaters.getIcon(memberInfo.getMember(), flags));
   }
 
   private static class MyBooleanRenderer<T extends PsiElement, M extends MemberInfoBase<T>> extends BooleanTableCellRenderer {

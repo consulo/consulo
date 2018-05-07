@@ -19,6 +19,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -39,7 +41,7 @@ public class ExcludedRootElement extends LibraryTableTreeContentElement<Excluded
       myName = ItemElement.getPresentablePath(excludedUrl);
     }
     myColor = getForegroundColor(VirtualFileManager.getInstance().findFileByUrl(excludedUrl) != null);
-    setIcon(AllIcons.Modules.ExcludeRoot);
+    setIcon(TargetAWT.to(AllIcons.Modules.ExcludeRoot));
   }
 
   @Nonnull

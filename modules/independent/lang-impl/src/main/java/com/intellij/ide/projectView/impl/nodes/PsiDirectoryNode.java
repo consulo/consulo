@@ -47,6 +47,7 @@ import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
 import javax.annotation.Nonnull;
 
@@ -124,7 +125,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
   protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
-    final Icon icon = VfsIconUtil.getIcon(virtualFile, 0, myProject);
+    final Icon icon = TargetAWT.to(VfsIconUtil.getIcon(virtualFile, 0, myProject));
     data.setIcon(patchIcon(icon, virtualFile));
   }
 

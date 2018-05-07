@@ -35,7 +35,9 @@ import com.intellij.ui.treeStructure.treetable.TreeTableModel;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.image.*;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,8 +104,8 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
           setText(file.getPresentableUrl());
         }
 
-        Icon icon = file.isDirectory() ? AllIcons.Nodes.TreeClosed : VfsIconUtil.getIcon(file, 0, null);
-        setIcon(icon);
+        consulo.ui.image.Image icon = file.isDirectory() ? AllIcons.Nodes.TreeClosed : VfsIconUtil.getIcon(file, 0, null);
+        setIcon(TargetAWT.to(icon));
         return this;
       }
     });

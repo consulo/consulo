@@ -155,7 +155,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   }
 
   @Nonnull
-  private static CellAppearanceEx formatRelativePath(@Nonnull final ContentFolder folder, @Nonnull final Icon icon) {
+  private static CellAppearanceEx formatRelativePath(@Nonnull final ContentFolder folder, @Nonnull final consulo.ui.image.Image icon) {
     LightFilePointer folderFile = new LightFilePointer(folder.getUrl());
     VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(folder.getContentEntry().getUrl());
     if (file == null) return FileAppearanceService.getInstance().forInvalidUrl(folderFile.getPresentableUrl());
@@ -175,6 +175,6 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     }
 
     relativePath = StringUtil.isEmpty(relativePath) ? "." + File.separatorChar : relativePath;
-    return new SimpleTextCellAppearance(relativePath, icon, textAttributes);
+    return new SimpleTextCellAppearance(relativePath, TargetAWT.to(icon), textAttributes);
   }
 }

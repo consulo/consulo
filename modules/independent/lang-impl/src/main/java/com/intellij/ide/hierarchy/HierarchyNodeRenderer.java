@@ -17,6 +17,7 @@
 package com.intellij.ide.hierarchy;
 
 import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -47,7 +48,7 @@ public final class HierarchyNodeRenderer extends NodeRenderer {
       if (object instanceof HierarchyNodeDescriptor) {
         final HierarchyNodeDescriptor descriptor = (HierarchyNodeDescriptor)object;
         descriptor.getHighlightedText().customize(this);
-        setIcon(descriptor.getIcon());
+        setIcon(TargetAWT.to(descriptor.getIcon()));
       }
     }
   }

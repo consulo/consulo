@@ -18,10 +18,10 @@ package com.intellij.ide;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.NameUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author peter
@@ -33,13 +33,13 @@ public abstract class TypePresentationService {
   }
 
   @Nullable
-  public abstract Icon getIcon(Object o);
+  public abstract Image getIcon(Object o);
 
   @Nullable
   public abstract String getPresentableName(Object o);
 
   @Nullable
-  public abstract Icon getTypeIcon(Class type);
+  public abstract Image getTypeIcon(Class type);
 
   @Nullable
   public abstract String getTypePresentableName(Class type);

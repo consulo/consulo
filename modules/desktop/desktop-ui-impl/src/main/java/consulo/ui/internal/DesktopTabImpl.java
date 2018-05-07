@@ -30,7 +30,7 @@ import java.util.function.BiConsumer;
  */
 public class DesktopTabImpl implements Tab {
   @Override
-  public void setIcon(@Nonnull Image image) {
+  public void setIcon(@Nullable Image image) {
 
   }
 

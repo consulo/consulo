@@ -25,6 +25,8 @@ import java.net.URL;
  * @since 13-Jun-16
  */
 public interface Image {
+  Image[] EMPTY_ARRAY = new Image[0];
+
   @Nonnull
   static Image create(@Nonnull URL url) {
     return UIInternal.get()._Images_image(url);

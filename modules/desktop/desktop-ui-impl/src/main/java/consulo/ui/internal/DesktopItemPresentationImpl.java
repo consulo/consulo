@@ -21,6 +21,7 @@ import consulo.ui.ItemPresentation;
 import consulo.ui.TextStyle;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -37,7 +38,7 @@ public class DesktopItemPresentationImpl<E> implements ItemPresentation {
   }
 
   @Override
-  public void setIcon(@Nonnull consulo.ui.image.Image icon) {
+  public void setIcon(@Nullable consulo.ui.image.Image icon) {
     myRenderer.setIcon((Icon)icon);
   }
 

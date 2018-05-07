@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.lookup;
 
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
@@ -75,7 +76,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
     final PsiElement element = item.getPsiElement();
     if (element != null && element.isValid()) {
-      return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY);
+      return TargetAWT.to(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
     }
     return null;
   }

@@ -39,14 +39,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import consulo.awt.TargetAWT;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
@@ -115,13 +113,13 @@ public class ImportModuleAction extends AnAction {
       FileChooserDescriptor myDelegate = new OpenProjectFileChooserDescriptor(true);
 
       @Override
-      public Icon getIcon(VirtualFile file) {
+      public consulo.ui.image.Image getIcon(VirtualFile file) {
         for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(true)) {
           if (importProvider.canImport(VfsUtilCore.virtualToIoFile(file))) {
-            return TargetAWT.to(importProvider.getIcon());
+            return importProvider.getIcon();
           }
         }
-        Icon icon = myDelegate.getIcon(file);
+        consulo.ui.image.Image icon = myDelegate.getIcon(file);
         return icon == null ? super.getIcon(file) : icon;
       }
     };
@@ -162,10 +160,7 @@ public class ImportModuleAction extends AnAction {
   }
 
   @Nullable
-  public static AddModuleWizard createImportWizard(final Project project,
-                                                   @Nullable Component dialogParent,
-                                                   final VirtualFile file,
-                                                   List<ModuleImportProvider> providers) {
+  public static AddModuleWizard createImportWizard(final Project project, @Nullable Component dialogParent, final VirtualFile file, List<ModuleImportProvider> providers) {
     File ioFile = VfsUtilCore.virtualToIoFile(file);
     List<ModuleImportProvider> available = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
     if (available.isEmpty()) {

@@ -23,6 +23,8 @@ import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -230,7 +232,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
       } else if (myDelegate != null) {
         NodeDescriptor descriptor = myBaseStructure.createDescriptor(myDelegate, getParentDescriptor());
         descriptor.update();
-        setUniformIcon(descriptor.getIcon());
+        setIcon(TargetAWT.to(descriptor.getIcon()));
         setPlainText(myDelegate.toString());
       }
     }

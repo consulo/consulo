@@ -30,12 +30,11 @@ import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBUI.ScaleType;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.UIInternal;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -229,7 +228,7 @@ public final class IconLoader {
   }
 
   @Nullable
-  public static Icon findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
+  public static SwingImageRef findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
     String originalPath = path;
     Pair<String, Class> patchedPath = patchPath(path);
     path = patchedPath.first;
@@ -240,7 +239,7 @@ public final class IconLoader {
     if (!StringUtil.startsWithChar(path, '/')) return null;
 
     final URL url = classLoader.getResource(path.substring(1));
-    final Icon icon = findIcon(url);
+    final SwingImageRef icon = findIcon(url);
     if (icon instanceof CachedImageIcon) {
       ((CachedImageIcon)icon).myOriginalPath = originalPath;
       ((CachedImageIcon)icon).myClassLoader = classLoader;
@@ -356,7 +355,7 @@ public final class IconLoader {
     return icon;
   }
 
-  private static final class CachedImageIcon extends JBUI.AuxJBIcon implements ScalableIcon, SwingImageRef {
+  private static final class CachedImageIcon extends JBUI.AuxJBIcon implements ScalableIcon, SwingImageRef, consulo.ui.image.Image {
     private volatile Object myRealIcon;
     private String myOriginalPath;
     private ClassLoader myClassLoader;
@@ -491,7 +490,7 @@ public final class IconLoader {
 
       getRealIcon(); // force state update & cache reset
 
-      Icon icon = myScaledIconsCache.getOrScaleIcon(getJBUIScale(ScaleType.PIX), scale, UIUtil.isUnderDarcula());
+      Icon icon = myScaledIconsCache.getOrScaleIcon(getJBUIScale(ScaleType.PIX), scale, UIUtil.isUnderDarkTheme());
       if (icon != null) {
         return icon;
       }
@@ -502,13 +501,6 @@ public final class IconLoader {
       CachedImageIcon icon = new CachedImageIcon(this);
       icon.myFilters = new ImageFilter[] {getGlobalFilter(), UIUtil.getGrayFilter()};
       return icon;
-    }
-
-    @Override
-    public consulo.ui.image.Image toImage() {
-      // since we can't use static method in interfaces in 1.6 java
-      return UIInternal.get()._Images_image(myUrl);
-      //return consulo.ui.image.Image.create(myUrl);
     }
 
     private class MyScaledIconsCache {

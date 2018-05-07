@@ -20,8 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author yole
@@ -35,14 +34,14 @@ public class TypeIconEP extends AbstractExtensionPointBean {
   @Attribute("icon")
   public String icon;
 
-  private final NullableLazyValue<Icon> myIcon = new NullableLazyValue<Icon>() {
+  private final NullableLazyValue<Image> myIcon = new NullableLazyValue<Image>() {
     @Override
-    protected Icon compute() {
+    protected Image compute() {
       return IconLoader.findIcon(icon, getLoaderForClass());
     }
   };
 
-  public NullableLazyValue<Icon> getIcon() {
+  public NullableLazyValue<Image> getIcon() {
     return myIcon;
   }
 }

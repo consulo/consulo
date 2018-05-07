@@ -25,19 +25,22 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.tabs.impl.TabLabel;
 import com.intellij.util.Alarm;
 import com.intellij.util.Function;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -47,17 +50,19 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIconImpl<T>> implements DeferredIcon, RetrievableIcon {
+public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>> implements DeferredIcon, RetrievableIcon, consulo.ui.image.Image {
+  private static final consulo.ui.image.Image EMPTY_ICON = ImageEffects.empty(16, 16);
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.DeferredIconImpl");
   private static final int MIN_AUTO_UPDATE_MILLIS = 950;
   private static final RepaintScheduler ourRepaintScheduler = new RepaintScheduler();
   @Nonnull
-  private final Icon myDelegateIcon;
-  private volatile Icon myScaledDelegateIcon;
-  private Function<T, Icon> myEvaluator;
+  private final consulo.ui.image.Image myDelegateIcon;
+  private volatile consulo.ui.image.Image myScaledDelegateIcon;
+  private Function<T, consulo.ui.image.Image> myEvaluator;
   private volatile boolean myIsScheduled;
   private T myParam;
-  private static final Icon EMPTY_ICON = JBUI.scale(EmptyIcon.create(16));
+
   private final boolean myNeedReadAction;
   private boolean myDone;
   private final boolean myAutoUpdatable;
@@ -69,7 +74,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
   private final IconListener<T> myEvalListener;
   private static final TransferToEDTQueue<Runnable> ourLaterInvocator = TransferToEDTQueue.createRunnableMerger("Deferred icon later invocator", 200);
 
-  private DeferredIconImpl(@Nonnull DeferredIconImpl<T> icon) {
+  private DesktopDeferredIconImpl(@Nonnull DesktopDeferredIconImpl<T> icon) {
     super(icon);
     myDelegateIcon = icon.myDelegateIcon;
     myScaledDelegateIcon = icon.myDelegateIcon;
@@ -86,14 +91,14 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
 
   @Nonnull
   @Override
-  protected DeferredIconImpl<T> copy() {
-    return new DeferredIconImpl<>(this);
+  protected DesktopDeferredIconImpl<T> copy() {
+    return new DesktopDeferredIconImpl<>(this);
   }
 
   @Override
   public void setScale(float scale) {
     if (getScale() != scale && myDelegateIcon instanceof ScalableIcon) {
-      myScaledDelegateIcon = ((ScalableIcon)myDelegateIcon).scale(scale);
+      myScaledDelegateIcon = TargetAWT.from(((ScalableIcon)myDelegateIcon).scale(scale));
       super.setScale(scale);
     }
   }
@@ -112,20 +117,20 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     private static final boolean CHECK_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
   }
 
-  DeferredIconImpl(Icon baseIcon, T param, @Nonnull Function<T, Icon> evaluator, @Nonnull IconListener<T> listener, boolean autoUpdatable) {
+  DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon, T param, @Nonnull Function<T, consulo.ui.image.Image> evaluator, @Nonnull IconListener<T> listener, boolean autoUpdatable) {
     this(baseIcon, param, true, evaluator, listener, autoUpdatable);
   }
 
-  public DeferredIconImpl(Icon baseIcon, T param, final boolean needReadAction, @Nonnull Function<T, Icon> evaluator) {
+  public DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon, T param, final boolean needReadAction, @Nonnull Function<T, consulo.ui.image.Image> evaluator) {
     this(baseIcon, param, needReadAction, evaluator, null, false);
   }
 
-  private DeferredIconImpl(Icon baseIcon,
-                           T param,
-                           boolean needReadAction,
-                           @Nonnull Function<T, Icon> evaluator,
-                           @Nullable IconListener<T> listener,
-                           boolean autoUpdatable) {
+  private DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon,
+                                  T param,
+                                  boolean needReadAction,
+                                  @Nonnull Function<T, consulo.ui.image.Image> evaluator,
+                                  @Nullable IconListener<T> listener,
+                                  boolean autoUpdatable) {
     myParam = param;
     myDelegateIcon = nonNull(baseIcon);
     myScaledDelegateIcon = myDelegateIcon;
@@ -138,10 +143,10 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
 
   private void checkDelegationDepth() {
     int depth = 0;
-    DeferredIconImpl each = this;
-    while (each.myScaledDelegateIcon instanceof DeferredIconImpl && depth < 50) {
+    DesktopDeferredIconImpl each = this;
+    while (each.myScaledDelegateIcon instanceof DesktopDeferredIconImpl && depth < 50) {
       depth++;
-      each = (DeferredIconImpl)each.myScaledDelegateIcon;
+      each = (DesktopDeferredIconImpl)each.myScaledDelegateIcon;
     }
     if (depth >= 50) {
       LOG.error("Too deep deferred icon nesting");
@@ -149,14 +154,14 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
   }
 
   @Nonnull
-  private static Icon nonNull(final Icon icon) {
-    return icon == null ? EMPTY_ICON : icon;
+  private static consulo.ui.image.Image nonNull(final consulo.ui.image.Image icon) {
+    return ObjectUtil.notNull(icon, EMPTY_ICON);
   }
 
   @Override
   public void paintIcon(final Component c, @Nonnull final Graphics g, final int x, final int y) {
-    if (!(myScaledDelegateIcon instanceof DeferredIconImpl && ((DeferredIconImpl)myScaledDelegateIcon).myScaledDelegateIcon instanceof DeferredIconImpl)) {
-      myScaledDelegateIcon.paintIcon(c, g, x, y); //SOE protection
+    if (!(myScaledDelegateIcon instanceof DesktopDeferredIconImpl && ((DesktopDeferredIconImpl)myScaledDelegateIcon).myScaledDelegateIcon instanceof DesktopDeferredIconImpl)) {
+      TargetAWT.to(myScaledDelegateIcon).paintIcon(c, g, x, y); //SOE protection
     }
 
     if (isDone() || myIsScheduled || PowerSaveMode.isEnabled()) {
@@ -168,13 +173,13 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     final Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
     final Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent)paintingParent).getChildRec(c);
     ourIconsCalculatingExecutor.execute(() -> {
-      int oldWidth = myScaledDelegateIcon.getIconWidth();
-      final Icon[] evaluated = new Icon[1];
+      int oldWidth = myScaledDelegateIcon.getWidth();
+      final Ref<Image> evaluated = Ref.create();
 
       final long startTime = System.currentTimeMillis();
       if (myNeedReadAction) {
         boolean result = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
-          IconDeferrerImpl.evaluateDeferred(() -> evaluated[0] = evaluate());
+          DesktopIconDeferrerImpl.evaluateDeferred(() -> evaluated.set(evaluateImage()));
           if (myAutoUpdatable) {
             myLastCalcTime = System.currentTimeMillis();
             myLastTimeSpent = myLastCalcTime - startTime;
@@ -186,17 +191,17 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
         }
       }
       else {
-        IconDeferrerImpl.evaluateDeferred(() -> evaluated[0] = evaluate());
+        DesktopIconDeferrerImpl.evaluateDeferred(() -> evaluated.set(evaluateImage()));
         if (myAutoUpdatable) {
           myLastCalcTime = System.currentTimeMillis();
           myLastTimeSpent = myLastCalcTime - startTime;
         }
       }
-      final Icon result = evaluated[0];
+      final Image result = evaluated.get();
       myScaledDelegateIcon = result;
       checkDelegationDepth();
 
-      final boolean shouldRevalidate = Registry.is("ide.tree.deferred.icon.invalidates.cache") && myScaledDelegateIcon.getIconWidth() != oldWidth;
+      final boolean shouldRevalidate = Registry.is("ide.tree.deferred.icon.invalidates.cache") && myScaledDelegateIcon.getWidth() != oldWidth;
 
       ourLaterInvocator.offer(() -> {
         setDone(result);
@@ -264,7 +269,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     return target;
   }
 
-  void setDone(@Nonnull Icon result) {
+  void setDone(@Nonnull consulo.ui.image.Image result) {
     if (myEvalListener != null) {
       myEvalListener.evalDone(this, myParam, result);
     }
@@ -279,13 +284,13 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
   @Nullable
   @Override
   public Icon retrieveIcon() {
-    return isDone() ? myScaledDelegateIcon : evaluate();
+    return isDone() ? TargetAWT.to(myScaledDelegateIcon) : evaluate();
   }
 
   @Nonnull
   @Override
   public Icon evaluate() {
-    Icon result;
+    consulo.ui.image.Image result;
     try {
       result = nonNull(myEvaluator.fun(myParam));
     }
@@ -297,49 +302,70 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
       checkDoesntReferenceThis(result);
     }
 
-    if (getScale() != 1f && result instanceof ScalableIcon) {
-      result = ((ScalableIcon)result).scale(getScale());
+    Icon icon = TargetAWT.to(result);
+
+    if (getScale() != 1f && icon instanceof ScalableIcon) {
+      icon = ((ScalableIcon)result).scale(getScale());
     }
-    return result;
+    return icon;
   }
 
-  private void checkDoesntReferenceThis(final Icon icon) {
+  @Nonnull
+  public Image evaluateImage() {
+    consulo.ui.image.Image result;
+    try {
+      result = nonNull(myEvaluator.fun(myParam));
+    }
+    catch (IndexNotReadyException e) {
+      result = EMPTY_ICON;
+    }
+
+    if (Holder.CHECK_CONSISTENCY) {
+      checkDoesntReferenceThis(result);
+    }
+
+    Icon icon = TargetAWT.to(result);
+
+    if (getScale() != 1f && icon instanceof ScalableIcon) {
+      icon = ((ScalableIcon)result).scale(getScale());
+    }
+    return TargetAWT.from(icon);
+  }
+
+  private void checkDoesntReferenceThis(final consulo.ui.image.Image icon) {
     if (icon == this) {
       throw new IllegalStateException("Loop in icons delegation");
     }
 
-    if (icon instanceof DeferredIconImpl) {
-      checkDoesntReferenceThis(((DeferredIconImpl)icon).myScaledDelegateIcon);
+    if (icon instanceof DesktopDeferredIconImpl) {
+      checkDoesntReferenceThis(((DesktopDeferredIconImpl)icon).myScaledDelegateIcon);
     }
     else if (icon instanceof LayeredIcon) {
       for (Icon layer : ((LayeredIcon)icon).getAllLayers()) {
-        checkDoesntReferenceThis(layer);
+        checkDoesntReferenceThis(TargetAWT.from(layer));
       }
     }
     else if (icon instanceof RowIcon) {
       final RowIcon rowIcon = (RowIcon)icon;
       final int count = rowIcon.getIconCount();
       for (int i = 0; i < count; i++) {
-        checkDoesntReferenceThis(rowIcon.getIcon(i));
+        checkDoesntReferenceThis(TargetAWT.from(rowIcon.getIcon(i)));
       }
     }
   }
 
   @Override
   public int getIconWidth() {
-    return myScaledDelegateIcon.getIconWidth();
+    return TargetAWT.to(myScaledDelegateIcon).getIconWidth();
   }
 
   @Override
   public int getIconHeight() {
-    return myScaledDelegateIcon.getIconHeight();
+    return TargetAWT.to(myScaledDelegateIcon).getIconHeight();
   }
 
   public boolean isDone() {
-    if (myAutoUpdatable &&
-        myDone &&
-        myLastCalcTime > 0 &&
-        System.currentTimeMillis() - myLastCalcTime > Math.max(MIN_AUTO_UPDATE_MILLIS, 10 * myLastTimeSpent)) {
+    if (myAutoUpdatable && myDone && myLastCalcTime > 0 && System.currentTimeMillis() - myLastCalcTime > Math.max(MIN_AUTO_UPDATE_MILLIS, 10 * myLastTimeSpent)) {
       myDone = false;
       myIsScheduled = false;
     }
@@ -391,23 +417,23 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
 
   @FunctionalInterface
   interface IconListener<T> {
-    void evalDone(DeferredIconImpl<T> source, T key, @Nonnull Icon result);
+    void evalDone(DesktopDeferredIconImpl<T> source, T key, @Nonnull consulo.ui.image.Image result);
   }
 
-  static boolean equalIcons(Icon icon1, Icon icon2) {
-    if (icon1 instanceof DeferredIconImpl) {
-      return ((DeferredIconImpl)icon1).isDeferredAndEqual(icon2);
+  static boolean equalIcons(consulo.ui.image.Image icon1, consulo.ui.image.Image icon2) {
+    if (icon1 instanceof DesktopDeferredIconImpl) {
+      return ((DesktopDeferredIconImpl)icon1).isDeferredAndEqual(icon2);
     }
-    if (icon2 instanceof DeferredIconImpl) {
-      return ((DeferredIconImpl)icon2).isDeferredAndEqual(icon1);
+    if (icon2 instanceof DesktopDeferredIconImpl) {
+      return ((DesktopDeferredIconImpl)icon2).isDeferredAndEqual(icon1);
     }
     return Comparing.equal(icon1, icon2);
   }
 
-  private boolean isDeferredAndEqual(Icon icon) {
-    return icon instanceof DeferredIconImpl &&
-           Comparing.equal(myParam, ((DeferredIconImpl)icon).myParam) &&
-           equalIcons(myScaledDelegateIcon, ((DeferredIconImpl)icon).myScaledDelegateIcon);
+  private boolean isDeferredAndEqual(consulo.ui.image.Image icon) {
+    return icon instanceof DesktopDeferredIconImpl &&
+           Comparing.equal(myParam, ((DesktopDeferredIconImpl)icon).myParam) &&
+           equalIcons(myScaledDelegateIcon, ((DesktopDeferredIconImpl)icon).myScaledDelegateIcon);
   }
 
   @Override

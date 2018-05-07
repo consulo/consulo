@@ -63,6 +63,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
 import org.jetbrains.annotations.NonNls;
@@ -1187,7 +1188,7 @@ public class Switcher extends AnAction implements DumbAware {
         Project project = mySwitcherPanel.project;
         VirtualFile virtualFile = ((FileInfo)value).getFirst();
         String renderedName = ((FileInfo)value).getNameForRendering();
-        setIcon(VfsIconUtil.getIcon(virtualFile, Iconable.ICON_FLAG_READ_STATUS, project));
+        setIcon(TargetAWT.to(VfsIconUtil.getIcon(virtualFile, Iconable.ICON_FLAG_READ_STATUS, project)));
 
         FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(virtualFile);
         open = FileEditorManager.getInstance(project).isFileOpen(virtualFile);

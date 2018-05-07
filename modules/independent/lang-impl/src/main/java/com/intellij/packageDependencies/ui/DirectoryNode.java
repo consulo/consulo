@@ -17,6 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import com.intellij.icons.AllIcons;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
@@ -204,7 +205,7 @@ public class DirectoryNode extends PackageDependenciesNode {
   @Override
   public Icon getIcon() {
     if (myDirectory != null) {
-      return IconDescriptorUpdaters.getIcon(myDirectory, 0);
+      return TargetAWT.to(IconDescriptorUpdaters.getIcon(myDirectory, 0));
     }
     return AllIcons.Nodes.TreeOpen;
   }

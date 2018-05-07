@@ -17,16 +17,15 @@ package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.Internal;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.internal.*;
-import consulo.ui.internal.icon.DesktopFoldedImageImpl;
-import consulo.ui.internal.icon.DesktopImageImpl;
-import consulo.ui.internal.icon.DesktopTransparentImageImpl;
+import consulo.ui.internal.icon.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.net.URL;
 
@@ -46,13 +45,26 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _ImageEffects_folded(Image[] images) {
-    return new DesktopFoldedImageImpl(images);
+  public Image _ImageEffects_layered(Image[] images) {
+    return new DesktopLayeredImageImpl(images);
   }
 
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
     return new DesktopTransparentImageImpl(original, alpha);
+  }
+
+  @Override
+  public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+    DesktopAppendImageImpl image = new DesktopAppendImageImpl(2);
+    image.setIcon(TargetAWT.to(i0), 0);
+    image.setIcon(TargetAWT.to(i1), 0);
+    return image;
+  }
+
+  @Override
+  public Image _ImageEffects_empty(int width, int height) {
+    return DesktopEmptyImageImpl.get(width, height);
   }
 
   @Override

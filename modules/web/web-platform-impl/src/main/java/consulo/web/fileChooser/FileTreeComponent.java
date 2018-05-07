@@ -33,7 +33,9 @@ import java.util.Comparator;
  */
 public class FileTreeComponent {
   public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor) {
-    TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<FileElement>(new FileTreeStructure(project, descriptor)) {
+    FileTreeStructure fileTreeStructure = new FileTreeStructure(project, descriptor);
+    fileTreeStructure.showHiddens(true);
+    TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<FileElement>(fileTreeStructure) {
       @Nullable
       @Override
       public Comparator<TreeNode<FileElement>> getNodeComparator() {

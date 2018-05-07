@@ -40,11 +40,12 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -147,8 +148,8 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
       int flags = getIconableFlags();
 
       try {
-        Icon icon = IconDescriptorUpdaters.getIcon(value, flags);
-        data.setIcon(icon);
+        Image icon = IconDescriptorUpdaters.getIcon(value, flags);
+        data.setIcon(TargetAWT.to(icon));
       }
       catch (IndexNotReadyException ignored) {
       }

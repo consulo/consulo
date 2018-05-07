@@ -44,16 +44,16 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
-import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.*;
-import consulo.ui.migration.SwingImageRef;
+import consulo.ui.image.Image;
+import consulo.ui.shared.Rectangle2D;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -1042,7 +1042,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(bean.id, myProject, window);
     toolWindow.setContentFactory(factory);
     if (bean.icon != null && toolWindow.getIconObject() == null) {
-      SwingImageRef icon = IconLoader.findIcon(bean.icon, factory.getClass());
+      Image icon = IconLoader.findIcon(bean.icon, factory.getClass());
       if (icon == null) {
         try {
           icon = IconLoader.getIcon(bean.icon);

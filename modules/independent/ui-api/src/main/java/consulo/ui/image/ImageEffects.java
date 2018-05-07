@@ -25,11 +25,11 @@ import javax.annotation.Nonnull;
  */
 public final class ImageEffects {
   @Nonnull
-  public static Image folded(@Nonnull Image... images) {
+  public static Image layered(@Nonnull Image... images) {
     if (images.length == 0) {
       throw new IllegalArgumentException("empty array");
     }
-    return UIInternal.get()._ImageEffects_folded(images);
+    return UIInternal.get()._ImageEffects_layered(images);
   }
 
   @Nonnull
@@ -40,5 +40,19 @@ public final class ImageEffects {
   @Nonnull
   public static Image transparent(@Nonnull Image original, float alpha) {
     return UIInternal.get()._ImageEffects_transparent(original, alpha);
+  }
+
+  /**
+   * Return composize image, where height is max of i0&i1, and width is sum of both
+   * Return will be displayed like [i0][i1]
+   */
+  @Nonnull
+  public static Image appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+    return UIInternal.get()._ImageEffects_appendRight(i0, i1);
+  }
+
+  @Nonnull
+  public static Image empty(int height, int width) {
+    return UIInternal.get()._ImageEffects_empty(width, height);
   }
 }

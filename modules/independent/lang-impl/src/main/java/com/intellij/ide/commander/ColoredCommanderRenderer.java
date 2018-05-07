@@ -27,6 +27,8 @@ import com.intellij.ui.GroupedElementsRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -65,7 +67,7 @@ final class ColoredCommanderRenderer extends ColoredListCellRenderer {
 
     if (value instanceof NodeDescriptor) {
       final NodeDescriptor descriptor = (NodeDescriptor)value;
-      setIcon(descriptor.getIcon());
+      setIcon(TargetAWT.to(descriptor.getIcon()));
       final Color elementColor = descriptor.getColor();
 
       if (elementColor != null) {

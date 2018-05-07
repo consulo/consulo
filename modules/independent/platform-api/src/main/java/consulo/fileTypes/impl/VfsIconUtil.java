@@ -32,20 +32,20 @@ import com.intellij.util.NullableFunction;
 import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 20-Nov-16.
  */
 public class VfsIconUtil {
-  private static NullableFunction<AnyIconKey<VirtualFile>, Icon> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Icon>() {
+  private static NullableFunction<AnyIconKey<VirtualFile>, Image> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Image>() {
     @Override
     @RequiredReadAction
-    public Icon fun(final AnyIconKey<VirtualFile> key) {
+    public Image fun(final AnyIconKey<VirtualFile> key) {
       final VirtualFile file = key.getObject();
       final int flags = key.getFlags();
       Project project = key.getProject();
@@ -77,7 +77,7 @@ public class VfsIconUtil {
         }
       }
 
-      Icon icon = iconDescriptor.toIcon();
+      Image icon = iconDescriptor.toIcon();
       Iconable.LastComputedIcon.put(file, icon, flags);
       return icon;
     }
@@ -101,8 +101,8 @@ public class VfsIconUtil {
   }
 
   @Nullable
-  public static Icon getIcon(@Nonnull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
-    Icon icon = Iconable.LastComputedIcon.get(file, flags);
+  public static Image getIcon(@Nonnull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
+    Image icon = Iconable.LastComputedIcon.get(file, flags);
     if (icon == null) {
       icon = VirtualFilePresentation.getIcon(file);
     }
