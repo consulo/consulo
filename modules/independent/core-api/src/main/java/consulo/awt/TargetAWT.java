@@ -18,7 +18,6 @@ package consulo.awt;
 import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
@@ -93,7 +92,7 @@ public class TargetAWT {
       return null;
     }
 
-    if (uiImage instanceof SwingImageRef) {
+    if(uiImage instanceof Icon) {
       return (Icon)uiImage;
     }
 
