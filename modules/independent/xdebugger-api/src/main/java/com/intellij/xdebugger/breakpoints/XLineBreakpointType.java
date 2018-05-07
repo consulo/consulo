@@ -17,7 +17,6 @@
 package com.intellij.xdebugger.breakpoints;
 
 import com.intellij.icons.AllIcons;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -27,13 +26,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
+import consulo.ide.IconDescriptorUpdaters;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
@@ -190,7 +190,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     @RequiredReadAction
     @Override
     public Icon getIcon() {
-      return IconDescriptorUpdaters.getIcon(myElement, 0);
+      return TargetAWT.to(IconDescriptorUpdaters.getIcon(myElement, 0));
     }
 
     @Nonnull
