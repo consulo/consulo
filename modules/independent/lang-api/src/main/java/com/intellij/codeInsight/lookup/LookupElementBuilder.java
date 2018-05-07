@@ -25,6 +25,7 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.migration.SwingImageRef;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Contract;
 
@@ -144,6 +145,12 @@ public final class LookupElementBuilder extends LookupElement {
   @Contract(value = "", pure = true)
   public LookupElementBuilder setIcon(@javax.annotation.Nullable Icon icon) {
     return withIcon(icon);
+  }
+
+  @Deprecated
+  @Contract(value = "", pure = true)
+  public LookupElementBuilder withIcon(@Nullable SwingImageRef icon) {
+    return withIcon((Icon)icon);
   }
 
   @Contract(value = "", pure = true)
