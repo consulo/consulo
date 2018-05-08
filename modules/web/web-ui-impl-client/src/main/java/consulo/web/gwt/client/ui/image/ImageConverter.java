@@ -55,6 +55,10 @@ public class ImageConverter {
 
     widget.setWidth(state.myWidth + "px");
     widget.setHeight(state.myHeight + "px");
+
+    if(state.myAlpha != 1) {
+      widget.getElement().getStyle().setOpacity(state.myAlpha);
+    }
     return widget;
   }
 }

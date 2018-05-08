@@ -22,6 +22,7 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
+import consulo.ui.internal.image.WGwtTransparentImageImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
@@ -146,7 +147,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
-    return null;
+    return new WGwtTransparentImageImpl(original, alpha);
   }
 
   @Override

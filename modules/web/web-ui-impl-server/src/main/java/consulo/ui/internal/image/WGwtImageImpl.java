@@ -15,38 +15,45 @@
  */
 package consulo.ui.internal.image;
 
-import com.intellij.openapi.util.IconLoader;
 import consulo.ui.image.Image;
 import consulo.ui.internal.WGwtUIThreadLocal;
+import consulo.ui.migration.SwingImageRef;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.servlet.ui.UIServlet;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
 import java.net.URL;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtImageImpl implements Image, WGwtImageWithState {
-  private Icon myIcon;
+public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
   private int myURLHash;
+  private java.awt.Image myImage;
 
   public WGwtImageImpl(@Nonnull URL url) {
-    myIcon = IconLoader.findIcon(url);
     myURLHash = WGwtImageUrlCache.hashCode(url);
+    try {
+      myImage = ImageIO.read(url);
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
   public int getHeight() {
-    return myIcon.getIconHeight();
+    return myImage.getHeight(null);
   }
 
   @Override
   public int getWidth() {
-    return myIcon.getIconWidth();
+    return myImage.getWidth(null);
   }
 
   @Override
@@ -56,5 +63,20 @@ public class WGwtImageImpl implements Image, WGwtImageWithState {
     state.myURL = WGwtImageUrlCache.createURL(myURLHash, current.getURLPrefix());
 
     m.myImageState = state;
+  }
+
+  @Override
+  public void paintIcon(Component c, Graphics g, int x, int y) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getIconWidth() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getIconHeight() {
+    throw new UnsupportedOperationException();
   }
 }
