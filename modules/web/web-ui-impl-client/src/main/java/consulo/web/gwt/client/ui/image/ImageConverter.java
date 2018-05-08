@@ -35,6 +35,8 @@ public class ImageConverter {
       Image box = new Image();
       box.setStyleName("ui-image");
       box.setUrl(state.myImageState.myURL);
+      box.setWidth(state.myWidth + "px");
+      box.setHeight(state.myHeight + "px");
 
       widget = new SimplePanel(box);
     }

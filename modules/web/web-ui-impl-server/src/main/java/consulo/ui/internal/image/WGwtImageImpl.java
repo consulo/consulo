@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -38,6 +40,26 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
 
   public WGwtImageImpl(@Nonnull URL url) {
     myURLHash = WGwtImageUrlCache.hashCode(url);
+
+    URL scaledImageUrl = url;
+    String urlText = url.toString();
+    if (urlText.endsWith(".png")) {
+      urlText = urlText.replace(".png", "@2x.png");
+      try {
+        scaledImageUrl = new URL(urlText);
+      }
+      catch (MalformedURLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    try(InputStream ignored = scaledImageUrl.openStream()) {
+      // if scaled image resolved - map it for better quality
+      myURLHash = WGwtImageUrlCache.hashCode(scaledImageUrl);
+    }
+    catch (Throwable ignored) {
+    }
+
     try {
       myImage = ImageIO.read(url);
     }
@@ -72,11 +94,11 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
 
   @Override
   public int getIconWidth() {
-    throw new UnsupportedOperationException();
+    return getWidth();
   }
 
   @Override
   public int getIconHeight() {
-    throw new UnsupportedOperationException();
+    return getHeight();
   }
 }
