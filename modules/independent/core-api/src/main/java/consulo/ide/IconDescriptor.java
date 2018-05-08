@@ -71,12 +71,12 @@ public class IconDescriptor {
 
   @Nonnull
   public Image toIcon() {
-    Image mainIcon = null;
+    Image mainIcon;
     if(myLayerIcons.length == 0) {
       mainIcon = myMainIcon;
     }
     else {
-      mainIcon = ImageEffects.layered(myLayerIcons);
+      mainIcon = ImageEffects.layered(ArrayUtil.mergeArrays(new Image[]{myMainIcon}, myLayerIcons));
     }
 
     if(myRightIcon == null) {
