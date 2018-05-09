@@ -68,13 +68,18 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  MenuItem _MenuItems_item(String text) {
+  MenuItem _MenuItem_create(String text) {
     return new DesktopMenuItemImpl(text);
   }
 
   @Override
-  Menu _MenuItems_menu(String text) {
+  Menu _Menu_create(String text) {
     return new DesktopMenuImpl(text);
+  }
+
+  @Override
+  MenuSeparator _MenuSeparator_create() {
+    return DesktopMenuSeparatorImpl.INSTANCE;
   }
 
   @Override

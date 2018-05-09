@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.List;
@@ -44,7 +43,7 @@ public final class IconLoader {
   }
 
   @Deprecated
-  public static Icon getIcon(@Nonnull final Image image) {
+  public static Icon getIcon(@Nonnull final java.awt.Image image) {
     return new JBImageIcon(image);
   }
 

@@ -25,6 +25,8 @@ import com.intellij.openapi.vcs.checkin.CheckinEnvironment;
 import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 
+import javax.annotation.Nullable;
+
 public class MockAbstractVcs extends AbstractVcs {
   private static final String NAME = "mock";
   private static final VcsKey ourKey = createKey(NAME);
@@ -89,7 +91,7 @@ public class MockAbstractVcs extends AbstractVcs {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public VcsRevisionNumber parseRevisionNumber(final String revisionNumberString) {
     return new VcsRevisionNumber.Int(Integer.parseInt(revisionNumberString));
   }

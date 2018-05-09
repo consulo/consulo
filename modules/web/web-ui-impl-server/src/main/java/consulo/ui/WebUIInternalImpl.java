@@ -161,13 +161,18 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  MenuItem _MenuItems_item(String text) {
+  MenuItem _MenuItem_create(String text) {
     return new WGwtMenuItemImpl(text);
   }
 
   @Override
-  Menu _MenuItems_menu(String text) {
+  Menu _Menu_create(String text) {
     return new WGwtMenuImpl(text);
+  }
+
+  @Override
+  MenuSeparator _MenuSeparator_create() {
+    return new WGwtMenuSeparatorImpl();
   }
 
   @Override

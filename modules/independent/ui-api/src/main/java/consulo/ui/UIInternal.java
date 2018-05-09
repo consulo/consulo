@@ -86,9 +86,11 @@ public abstract class UIInternal {
 
   public abstract Image _ImageEffects_empty(int width, int height);
 
-  abstract MenuItem _MenuItems_item(String text);
+  abstract MenuItem _MenuItem_create(String text);
 
-  abstract Menu _MenuItems_menu(String text);
+  abstract Menu _Menu_create(String text);
+
+  abstract MenuSeparator _MenuSeparator_create();
 
   abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
 

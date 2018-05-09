@@ -26,6 +26,7 @@ import consulo.ui.internal.WGwtRootPanelImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -51,35 +52,46 @@ public class WebIdeRootView {
   @RequiredUIAccess
   public void update() {
     DataContext dataContext = ((DataManagerImpl)DataManager.getInstance()).getDataContextTest(myRootPanel);
-    ArrayList<AnAction> newVisibleActions = new ArrayList<>();
-    expandActionGroup(dataContext, newVisibleActions, ActionManager.getInstance());
 
-    for (AnAction newVisibleAction : newVisibleActions) {
-      Presentation presentation = myPresentationFactory.getPresentation(newVisibleAction);
+    expandActionGroup((ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU), dataContext, ActionManager.getInstance(), myPresentationFactory,
+                      menuItem -> myMenuBar.add(menuItem));
+  }
 
-      if (presentation.isVisible()) {
-        Menu menu = Menu.create(presentation.getText());
+  private static void expandActionGroup(ActionGroup group, DataContext context, ActionManager actionManager, MenuItemPresentationFactory menuItemPresentationFactory, Consumer<MenuItem> actionAdded) {
+    ArrayList<AnAction> actions = new ArrayList<>();
 
-        myMenuBar.add(menu);
+    expandActionGroup0(group, context, actions, actionManager, menuItemPresentationFactory);
+
+    for (AnAction action : actions) {
+      Presentation presentation = menuItemPresentationFactory.getPresentation(action);
+
+      MenuItem menu = action instanceof ActionGroup ? Menu.create(presentation.getText()) : MenuItem.create(presentation.getText());
+
+      actionAdded.accept(menu);
+
+      if (action instanceof ActionGroup) {
+        expandActionGroup((ActionGroup)action, context, actionManager, menuItemPresentationFactory, menuItem -> ((Menu)menu).add(menuItem));
       }
     }
   }
 
-  private void expandActionGroup(final DataContext context, final List<AnAction> newVisibleActions, ActionManager actionManager) {
-    final ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
-    if (mainActionGroup == null) return;
-    final AnAction[] children = mainActionGroup.getChildren(null);
+  private static void expandActionGroup0(ActionGroup group,
+                                         DataContext context,
+                                         List<AnAction> newVisibleActions,
+                                         ActionManager actionManager,
+                                         MenuItemPresentationFactory menuItemPresentationFactory) {
+    if (group == null) return;
+    final AnAction[] children = group.getChildren(null);
     for (final AnAction action : children) {
       if (!(action instanceof ActionGroup)) {
         continue;
       }
-      final Presentation presentation = myPresentationFactory.getPresentation(action);
+      final Presentation presentation = menuItemPresentationFactory.getPresentation(action);
       final AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
       e.setInjectedContext(action.isInInjectedContext());
       action.update(e);
-      if (presentation.isVisible()) { // add only visible items
-        newVisibleActions.add(action);
-      }
+
+      newVisibleActions.add(action);
     }
   }
 

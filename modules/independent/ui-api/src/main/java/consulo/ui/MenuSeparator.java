@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,12 @@
  */
 package consulo.ui;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2018-05-09
  */
-public interface Menu extends MenuItem {
-  @Nonnull
-  static Menu create(@Nonnull String text) {
-    return UIInternal.get()._Menu_create(text);
+public interface MenuSeparator extends MenuItem {
+  static MenuSeparator create() {
+    return UIInternal.get()._MenuSeparator_create();
   }
-
-  @RequiredUIAccess
-  @Nonnull
-  Menu add(@Nonnull MenuItem menuItem);
 }
