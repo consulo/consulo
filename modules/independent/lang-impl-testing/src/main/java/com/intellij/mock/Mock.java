@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorComposite;
 import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
@@ -21,11 +20,12 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.impl.IdeFocusManagerHeadless;
 import com.intellij.util.ArrayUtil;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -134,6 +134,7 @@ public class Mock {
   }
 
   public static class MyFileEditorManager extends FileEditorManagerEx {
+    @Nonnull
     @Override
     public JComponent getComponent() {
       return null;
@@ -219,7 +220,7 @@ public class Mock {
 
     @Override
     public EditorWindow getCurrentWindow() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      return null;
     }
 
     @Override
@@ -237,18 +238,16 @@ public class Mock {
 
     @Override
     public void unsplitWindow() {
-      //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void unsplitAllWindow() {
-      //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     @Nonnull
     public EditorWindow[] getWindows() {
-      return new EditorWindow[0];  //To change body of implemented methods use File | Settings | File Templates.
+      return new EditorWindow[0];
     }
 
     @Override
@@ -259,47 +258,44 @@ public class Mock {
 
     @Override
     public void createSplitter(int orientation, @javax.annotation.Nullable EditorWindow window) {
-      //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void changeSplitterOrientation() {
-      //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void flipTabs() {
-      //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public boolean tabsMode() {
-      return false;  //To change body of implemented methods use File | Settings | File Templates.
+      return false;
     }
 
     @Override
     public boolean isInSplitter() {
-      return false;  //To change body of implemented methods use File | Settings | File Templates.
+      return false;
     }
 
     @Override
     public boolean hasOpenedFile() {
-      return false;  //To change body of implemented methods use File | Settings | File Templates.
+      return false;
     }
 
     @Override
     public VirtualFile getCurrentFile() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      return null;
     }
 
     @Override
     public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      return null;
     }
 
     @Override
     public boolean isChanged(@Nonnull EditorComposite editor) {
-      return false;  //To change body of implemented methods use File | Settings | File Templates.
+      return false;
     }
 
     @Override

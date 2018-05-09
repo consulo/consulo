@@ -24,23 +24,26 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.annotations.DeprecationInfo;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
+
 import javax.annotation.Nonnull;
 
 /**
  * Author: msk
  */
-public class EditorWithProviderComposite extends EditorComposite {
+@Deprecated
+@DeprecationInfo("Desktop only")
+public class DesktopEditorWithProviderComposite extends DesktopEditorComposite implements EditorWithProviderComposite {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite");
   private FileEditorProvider[] myProviders;
 
-  EditorWithProviderComposite(@Nonnull VirtualFile file,
-                              @Nonnull FileEditor[] editors,
-                              @Nonnull FileEditorProvider[] providers,
-                              @Nonnull FileEditorManagerEx fileEditorManager) {
+  public DesktopEditorWithProviderComposite(@Nonnull VirtualFile file, @Nonnull FileEditor[] editors, @Nonnull FileEditorProvider[] providers, @Nonnull FileEditorManagerEx fileEditorManager) {
     super(file, editors, fileEditorManager);
     myProviders = providers;
   }
 
+  @Override
   @Nonnull
   public FileEditorProvider[] getProviders() {
     return myProviders;
@@ -77,6 +80,7 @@ public class EditorWithProviderComposite extends EditorComposite {
     }
   }
 
+  @Override
   @Nonnull
   public HistoryEntry currentStateAsHistoryEntry() {
     final FileEditor[] editors = getEditors();
@@ -91,6 +95,7 @@ public class EditorWithProviderComposite extends EditorComposite {
     return HistoryEntry.createLight(getFile(), providers, states, providers[selectedProviderIndex]);
   }
 
+  @Override
   public void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider) {
     addEditor(editor);
     myProviders = ArrayUtil.append(myProviders, provider);

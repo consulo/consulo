@@ -50,12 +50,14 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileTypes.impl.VfsIconUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -69,6 +71,8 @@ import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 /**
  * Author: msk
  */
+@Deprecated
+@DeprecationInfo("Desktop only")
 public class DesktopEditorWindow implements EditorWindow {
   private static final Logger LOG = Logger.getInstance(DesktopEditorWindow.class);
 
@@ -233,7 +237,7 @@ public class DesktopEditorWindow implements EditorWindow {
       final List<EditorWithProviderComposite> editors = splitters.findEditorComposites(file);
       if (editors.isEmpty()) return;
       try {
-        final EditorWithProviderComposite editor = findFileComposite(file);
+        final DesktopEditorWithProviderComposite editor = findFileComposite(file);
 
         final FileEditorManagerListener.Before beforePublisher = editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER);
 
@@ -354,7 +358,7 @@ public class DesktopEditorWindow implements EditorWindow {
         if (histFile.equals(fileBeingClosed)) {
           continue;
         }
-        final EditorWithProviderComposite editor = findFileComposite(histFile);
+        final DesktopEditorWithProviderComposite editor = findFileComposite(histFile);
         if (editor == null) {
           continue; // ????
         }
@@ -438,7 +442,7 @@ public class DesktopEditorWindow implements EditorWindow {
   public void setTabsPlacement(final int tabPlacement) {
     if (tabPlacement != UISettings.TABS_NONE && !UISettings.getInstance().getPresentationMode()) {
       if (myTabbedPane == null) {
-        final EditorWithProviderComposite editor = getSelectedEditor();
+        final DesktopEditorWithProviderComposite editor = getSelectedEditor();
         myPanel.removeAll();
         createTabs();
         restoreHiddenTabs();
@@ -510,7 +514,7 @@ public class DesktopEditorWindow implements EditorWindow {
       myTabbedPane.requestFocus(forced);
     }
     else {
-      EditorWithProviderComposite editor = getSelectedEditor();
+      DesktopEditorWithProviderComposite editor = getSelectedEditor();
       JComponent preferred = editor == null ? null : editor.getPreferredFocusedComponent();
       IdeFocusManager.findInstanceByComponent(preferred == null ? myPanel : preferred).requestFocus(myPanel, forced);
     }
@@ -529,10 +533,10 @@ public class DesktopEditorWindow implements EditorWindow {
 
   protected static class TComp extends JPanel implements DataProvider, EditorWindowHolder {
     @Nonnull
-    final EditorWithProviderComposite myEditor;
+    final DesktopEditorWithProviderComposite myEditor;
     protected final EditorWindow myWindow;
 
-    TComp(@Nonnull DesktopEditorWindow window, @Nonnull EditorWithProviderComposite editor) {
+    TComp(@Nonnull DesktopEditorWindow window, @Nonnull DesktopEditorWithProviderComposite editor) {
       super(new BorderLayout());
       myEditor = editor;
       myWindow = window;
@@ -571,7 +575,7 @@ public class DesktopEditorWindow implements EditorWindow {
   }
 
   protected static class TCompForTablessMode extends TComp implements CloseAction.CloseTarget {
-    TCompForTablessMode(@Nonnull DesktopEditorWindow window, @Nonnull EditorWithProviderComposite editor) {
+    TCompForTablessMode(@Nonnull DesktopEditorWindow window, @Nonnull DesktopEditorWithProviderComposite editor) {
       super(window, editor);
     }
 
@@ -598,7 +602,7 @@ public class DesktopEditorWindow implements EditorWindow {
   }
 
   @Override
-  public EditorWithProviderComposite getSelectedEditor() {
+  public DesktopEditorWithProviderComposite getSelectedEditor() {
     final TComp comp;
     if (myTabbedPane != null) {
       comp = (TComp)myTabbedPane.getSelectedComponent();
@@ -619,9 +623,9 @@ public class DesktopEditorWindow implements EditorWindow {
 
   @Nonnull
   @Override
-  public EditorWithProviderComposite[] getEditors() {
+  public DesktopEditorWithProviderComposite[] getEditors() {
     final int tabCount = getTabCount();
-    final EditorWithProviderComposite[] res = new EditorWithProviderComposite[tabCount];
+    final DesktopEditorWithProviderComposite[] res = new DesktopEditorWithProviderComposite[tabCount];
     for (int i = 0; i != tabCount; ++i) {
       res[i] = getEditorAt(i);
     }
@@ -639,7 +643,7 @@ public class DesktopEditorWindow implements EditorWindow {
     return res;
   }
 
-  public void setSelectedEditor(final EditorComposite editor, final boolean focusEditor) {
+  public void setSelectedEditor(final DesktopEditorComposite editor, final boolean focusEditor) {
     if (myTabbedPane == null) {
       return;
     }
@@ -661,15 +665,15 @@ public class DesktopEditorWindow implements EditorWindow {
       onBeforeSetEditor(editor.getFile());
       if (myTabbedPane == null) {
         myPanel.removeAll();
-        myPanel.add(new TCompForTablessMode(this, editor), BorderLayout.CENTER);
+        myPanel.add(new TCompForTablessMode(this, (DesktopEditorWithProviderComposite)editor), BorderLayout.CENTER);
         myOwner.validate();
         return;
       }
 
-      final int index = findEditorIndex(editor);
+      final int index = findEditorIndex((DesktopEditorWithProviderComposite)editor);
       if (index != -1) {
         if (selectEditor) {
-          setSelectedEditor(editor, focusEditor);
+          setSelectedEditor((DesktopEditorWithProviderComposite)editor, focusEditor);
         }
       }
       else {
@@ -694,10 +698,10 @@ public class DesktopEditorWindow implements EditorWindow {
 
         final VirtualFile file = editor.getFile();
         final Icon template = AllIcons.FileTypes.Text;
-        myTabbedPane.insertTab(file, EmptyIcon.create(template.getIconWidth(), template.getIconHeight()), new TComp(this, editor), null, indexToInsert);
+        myTabbedPane.insertTab(file, EmptyIcon.create(template.getIconWidth(), template.getIconHeight()), new TComp(this, (DesktopEditorWithProviderComposite)editor), null, indexToInsert);
         trimToSize(UISettings.getInstance().getEditorTabLimit(), file, false);
         if (selectEditor) {
-          setSelectedEditor(editor, focusEditor);
+          setSelectedEditor((DesktopEditorWithProviderComposite)editor, focusEditor);
         }
         myOwner.updateFileIcon(file);
         myOwner.updateFileColor(file);
@@ -733,14 +737,14 @@ public class DesktopEditorWindow implements EditorWindow {
       panel.setBorder(null);
       final int tabCount = getTabCount();
       if (tabCount != 0) {
-        final EditorWithProviderComposite firstEC = getEditorAt(0);
+        final DesktopEditorWithProviderComposite firstEC = getEditorAt(0);
         myPanel = new JPanel(new BorderLayout());
         myPanel.setOpaque(false);
 
         final Splitter splitter = new OnePixelSplitter(orientation == JSplitPane.VERTICAL_SPLIT, 0.5f, 0.1f, 0.9f);
         final DesktopEditorWindow res = new DesktopEditorWindow(myOwner);
         if (myTabbedPane != null) {
-          final EditorWithProviderComposite selectedEditor = getSelectedEditor();
+          final DesktopEditorWithProviderComposite selectedEditor = getSelectedEditor();
           panel.remove(myTabbedPane.getComponent());
           panel.add(splitter, BorderLayout.CENTER);
           splitter.setFirstComponent(myPanel);
@@ -809,7 +813,7 @@ public class DesktopEditorWindow implements EditorWindow {
       return;
     }
 
-    final EditorWithProviderComposite from = getSelectedEditor();
+    final DesktopEditorWithProviderComposite from = getSelectedEditor();
     if (from == null) {
       return;
     }
@@ -899,7 +903,7 @@ public class DesktopEditorWindow implements EditorWindow {
     int count = 1;
 
     final Icon pinIcon;
-    final EditorComposite composite = findFileComposite(file);
+    final DesktopEditorComposite composite = findFileComposite(file);
     if (composite != null && composite.isPinned()) {
       count++;
       pinIcon = AllIcons.Nodes.TabPin;
@@ -937,21 +941,21 @@ public class DesktopEditorWindow implements EditorWindow {
 
     if (!(splitter instanceof Splitter)) return;
 
-    EditorWithProviderComposite editorToSelect = getSelectedEditor();
+    DesktopEditorWithProviderComposite editorToSelect = getSelectedEditor();
     final DesktopEditorWindow[] siblings = findSiblings();
     final JPanel parent = (JPanel)splitter.getParent();
 
     for (DesktopEditorWindow eachSibling : siblings) {
       // selected editors will be added first
-      final EditorWithProviderComposite selected = eachSibling.getSelectedEditor();
+      final DesktopEditorWithProviderComposite selected = eachSibling.getSelectedEditor();
       if (editorToSelect == null) {
         editorToSelect = selected;
       }
     }
 
     for (final DesktopEditorWindow sibling : siblings) {
-      final EditorWithProviderComposite[] siblingEditors = sibling.getEditors();
-      for (final EditorWithProviderComposite siblingEditor : siblingEditors) {
+      final DesktopEditorWithProviderComposite[] siblingEditors = sibling.getEditors();
+      for (final DesktopEditorWithProviderComposite siblingEditor : siblingEditors) {
         if (editorToSelect == null) {
           editorToSelect = siblingEditor;
         }
@@ -979,7 +983,7 @@ public class DesktopEditorWindow implements EditorWindow {
     }
   }
 
-  private void processSiblingEditor(final EditorWithProviderComposite siblingEditor) {
+  private void processSiblingEditor(final DesktopEditorWithProviderComposite siblingEditor) {
     if (myTabbedPane != null && getTabCount() < UISettings.getInstance().getEditorTabLimit() && findFileComposite(siblingEditor.getFile()) == null || myTabbedPane == null && getTabCount() == 0) {
       setEditor(siblingEditor, true);
     }
@@ -1005,15 +1009,15 @@ public class DesktopEditorWindow implements EditorWindow {
   @Override
   public VirtualFile getSelectedFile() {
     checkConsistency();
-    final EditorWithProviderComposite editor = getSelectedEditor();
+    final DesktopEditorWithProviderComposite editor = getSelectedEditor();
     return editor == null ? null : editor.getFile();
   }
 
   @Override
   @Nullable
-  public EditorWithProviderComposite findFileComposite(final VirtualFile file) {
+  public DesktopEditorWithProviderComposite findFileComposite(final VirtualFile file) {
     for (int i = 0; i != getTabCount(); ++i) {
-      final EditorWithProviderComposite editor = getEditorAt(i);
+      final DesktopEditorWithProviderComposite editor = getEditorAt(i);
       if (editor.getFile().equals(file)) {
         return editor;
       }
@@ -1024,7 +1028,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
   private int findComponentIndex(final Component component) {
     for (int i = 0; i != getTabCount(); ++i) {
-      final EditorWithProviderComposite editor = getEditorAt(i);
+      final DesktopEditorWithProviderComposite editor = getEditorAt(i);
       if (editor.getComponent().equals(component)) {
         return i;
       }
@@ -1032,9 +1036,9 @@ public class DesktopEditorWindow implements EditorWindow {
     return -1;
   }
 
-  int findEditorIndex(final EditorComposite editorToFind) {
+  int findEditorIndex(final DesktopEditorComposite editorToFind) {
     for (int i = 0; i != getTabCount(); ++i) {
-      final EditorWithProviderComposite editor = getEditorAt(i);
+      final DesktopEditorWithProviderComposite editor = getEditorAt(i);
       if (editor.equals(editorToFind)) {
         return i;
       }
@@ -1053,7 +1057,7 @@ public class DesktopEditorWindow implements EditorWindow {
     return -1;
   }
 
-  private EditorWithProviderComposite getEditorAt(final int i) {
+  private DesktopEditorWithProviderComposite getEditorAt(final int i) {
     final TComp comp;
     if (myTabbedPane != null) {
       comp = (TComp)myTabbedPane.getComponentAt(i);
@@ -1072,7 +1076,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
   @Override
   public boolean isFilePinned(final VirtualFile file) {
-    final EditorComposite editorComposite = findFileComposite(file);
+    final DesktopEditorComposite editorComposite = findFileComposite(file);
     if (editorComposite == null) {
       throw new IllegalArgumentException("file is not open: " + file.getPath());
     }
@@ -1081,7 +1085,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
   @Override
   public void setFilePinned(final VirtualFile file, final boolean pinned) {
-    final EditorComposite editorComposite = findFileComposite(file);
+    final DesktopEditorComposite editorComposite = findFileComposite(file);
     if (editorComposite == null) {
       throw new IllegalArgumentException("file is not open: " + file.getPath());
     }
@@ -1098,7 +1102,7 @@ public class DesktopEditorWindow implements EditorWindow {
     FileEditorManagerEx.getInstanceEx(getManager().getProject()).getReady(this).doWhenDone(() -> {
       if (myTabbedPane == null) return;
       final boolean closeNonModifiedFilesFirst = UISettings.getInstance().getCloseNonModifiedFilesFirst();
-      final EditorComposite selectedComposite = getSelectedEditor();
+      final DesktopEditorComposite selectedComposite = getSelectedEditor();
       try {
         doTrimSize(limit, fileToIgnore, closeNonModifiedFilesFirst, transferFocus);
       }
@@ -1143,7 +1147,7 @@ public class DesktopEditorWindow implements EditorWindow {
     if (closeNonModifiedFilesFirst) {
       // Search in history
       for (final VirtualFile file : histFiles) {
-        EditorWithProviderComposite composite = findFileComposite(file);
+        DesktopEditorWithProviderComposite composite = findFileComposite(file);
         if (composite != null && !myOwner.getManager().isChanged(composite)) {
           // we found non modified file
           closingOrder.add(file);
@@ -1184,7 +1188,7 @@ public class DesktopEditorWindow implements EditorWindow {
     if (file == null || !isFileOpen(file) || isFilePinned(file)) {
       return false;
     }
-    EditorWithProviderComposite composite = findFileComposite(file);
+    DesktopEditorWithProviderComposite composite = findFileComposite(file);
     if (composite == null) return false;
     Component owner = IdeFocusManager.getInstance(myOwner.getManager().getProject()).getFocusOwner();
     if (owner == null || !SwingUtilities.isDescendingFrom(owner, composite.getSelectedEditor().getComponent())) return false;
@@ -1214,7 +1218,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
   @Override
   public void clear() {
-    for (EditorWithProviderComposite composite : getEditors()) {
+    for (DesktopEditorWithProviderComposite composite : getEditors()) {
       Disposer.dispose(composite);
     }
     if (myTabbedPane == null) {

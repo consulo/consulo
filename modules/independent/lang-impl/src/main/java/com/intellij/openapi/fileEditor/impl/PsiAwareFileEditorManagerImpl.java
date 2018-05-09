@@ -42,8 +42,8 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.PsiAwareFileEditorManagerImpl");
+public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
+  private static final Logger LOG = Logger.getInstance(PsiAwareFileEditorManagerImpl.class);
 
   private final PsiManager myPsiManager;
   private final WolfTheProblemSolver myProblemSolver;

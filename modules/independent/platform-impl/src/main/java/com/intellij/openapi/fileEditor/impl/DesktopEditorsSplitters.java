@@ -55,14 +55,16 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.application.AccessRule;
-import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.impl.EditorsSplitters;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -73,8 +75,10 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider, EditorSplitters {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorsSplitters");
+@Deprecated
+@DeprecationInfo("Desktop only")
+public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider, EditorsSplitters {
+  private static final Logger LOG = Logger.getInstance(DesktopEditorsSplitters.class);
 
   public static final Key<DesktopEditorsSplitters> KEY = Key.create("EditorsSplitters");
 
@@ -93,7 +97,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   private final Alarm myIconUpdaterAlarm = new Alarm();
   private final UIBuilder myUIBuilder = new UIBuilder();
 
-  DesktopEditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
+  public DesktopEditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
     super(new BorderLayout());
     myManager = manager;
     myFocusWatcher = new MyFocusWatcher();
@@ -228,7 +232,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       return res;
     }
     else if (comp instanceof DesktopEditorWindow.TCompForTablessMode) {
-      EditorWithProviderComposite composite = ((DesktopEditorWindow.TCompForTablessMode)comp).myEditor;
+      DesktopEditorWithProviderComposite composite = ((DesktopEditorWindow.TCompForTablessMode)comp).myEditor;
       Element res = new Element("leaf");
       res.addContent(writeComposite(composite.getFile(), composite, false, composite));
       return res;
@@ -241,7 +245,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   private void writeWindow(@Nonnull Element res, @Nullable DesktopEditorWindow window) {
     if (window != null) {
-      EditorWithProviderComposite[] composites = window.getEditors();
+      DesktopEditorWithProviderComposite[] composites = window.getEditors();
       for (int i = 0; i < composites.length; i++) {
         VirtualFile file = window.getFileAt(i);
         res.addContent(writeComposite(file, composites[i], window.isFilePinned(file), window.getSelectedEditor()));
@@ -250,7 +254,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Nonnull
-  private Element writeComposite(VirtualFile file, EditorWithProviderComposite composite, boolean pinned, EditorWithProviderComposite selectedEditor) {
+  private Element writeComposite(VirtualFile file, DesktopEditorWithProviderComposite composite, boolean pinned, DesktopEditorWithProviderComposite selectedEditor) {
     Element fileElement = new Element("file");
     fileElement.setAttribute("leaf-file-name", file.getName()); // TODO: all files
     composite.currentStateAsHistoryEntry().writeExternal(fileElement, getManager().getProject());
@@ -325,8 +329,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   public VirtualFile[] getOpenFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();
     for (final DesktopEditorWindow myWindow : myWindows) {
-      final EditorWithProviderComposite[] editors = myWindow.getEditors();
-      for (final EditorWithProviderComposite editor : editors) {
+      final DesktopEditorWithProviderComposite[] editors = myWindow.getEditors();
+      for (final DesktopEditorWithProviderComposite editor : editors) {
         VirtualFile file = editor.getFile();
         // background thread may call this method when invalid file is being removed
         // do not return it here as it will quietly drop out soon
@@ -372,7 +376,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
     List<FileEditor> editors = new ArrayList<>();
     for (final DesktopEditorWindow window : windows) {
-      final EditorWithProviderComposite composite = window.getSelectedEditor();
+      final DesktopEditorWithProviderComposite composite = window.getSelectedEditor();
       if (composite != null) {
         editors.add(composite.getSelectedEditor());
       }
@@ -606,7 +610,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     @Override
     public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
       if (myCurrentWindow != null) {
-        final EditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
+        final DesktopEditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
         if (selectedEditor != null) {
           return IdeFocusTraversalPolicy.getPreferredFocusedComponent(selectedEditor.getComponent(), this);
         }
@@ -626,6 +630,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return myCurrentWindow;
   }
 
+  @Nonnull
   @Override
   public EditorWindow getOrCreateCurrentWindow(final VirtualFile file) {
     final List<DesktopEditorWindow> windows = findWindows(file);
@@ -668,7 +673,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
    */
   @Override
   public void setCurrentWindow(@Nullable final EditorWindow window, final boolean requestFocus) {
-    final EditorWithProviderComposite newEditor = window == null ? null : window.getSelectedEditor();
+    EditorWithProviderComposite newEditor = window == null ? null : window.getSelectedEditor();
 
     Runnable fireRunnable = () -> getManager().fireSelectionChanged(newEditor);
 
@@ -683,7 +688,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       }
 
       if (requestFocus) {
-        ((DesktopEditorWindow)window).requestFocus(true);
+        window.requestFocus(true);
       }
     }
     else {
@@ -943,7 +948,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
         getManager().addSelectionRecord(focusedFile, window);
         VirtualFile finalFocusedFile = focusedFile;
         UIUtil.invokeLaterIfNeeded(() -> {
-          EditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
+          DesktopEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
           if (editor != null) {
             window.setEditor(editor, true, true);
           }

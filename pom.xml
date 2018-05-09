@@ -30,6 +30,7 @@
     <module>modules/desktop/desktop-bootstrap</module>
     <module>modules/desktop/desktop-ui-impl</module>
     <module>modules/desktop/desktop-platform-impl</module>
+    <module>modules/desktop/desktop-lang-impl</module>
     <module>modules/desktop/desktop-ui-laf-impl</module>
     <module>plugins/platform-desktop</module>
 

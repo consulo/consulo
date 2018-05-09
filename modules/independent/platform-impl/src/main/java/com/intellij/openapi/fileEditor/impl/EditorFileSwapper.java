@@ -21,6 +21,8 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
+
 import javax.annotation.Nullable;
 
 public abstract class EditorFileSwapper {

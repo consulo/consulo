@@ -34,12 +34,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.application.AccessRule;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -141,7 +141,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   private final Map<String, String> mySelectedProviders = new HashMap<>();
 
-  void providerSelected(EditorComposite composite) {
+  void providerSelected(DesktopEditorComposite composite) {
     if (!(composite instanceof EditorWithProviderComposite)) return;
     FileEditorProvider[] providers = ((EditorWithProviderComposite)composite).getProviders();
     if (providers.length < 2) return;

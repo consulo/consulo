@@ -18,22 +18,21 @@ package consulo.fileEditor.impl;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
-import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 28-Oct-17
  */
-public interface EditorSplitters {
+public interface EditorsSplitters {
   Key<DesktopEditorsSplitters> KEY = Key.create("EditorsSplitters");
 
   void readExternal(Element element);
@@ -48,6 +47,7 @@ public interface EditorSplitters {
 
   void clear();
 
+  @Nonnull
   EditorWindow getOrCreateCurrentWindow(VirtualFile file);
 
   void setCurrentWindow(EditorWindow window, boolean requestFocus);

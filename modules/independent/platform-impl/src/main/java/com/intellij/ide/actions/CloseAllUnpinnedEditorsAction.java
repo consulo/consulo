@@ -18,12 +18,12 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileEditor.impl.EditorComposite;
-import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.HashSet;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
 
 import java.util.List;
 import java.util.Set;
@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
   @Override
-  protected boolean isFileToClose(final EditorComposite editor, final EditorWindow window) {
+  protected boolean isFileToClose(EditorComposite editor, final EditorWindow window) {
     return !window.isFilePinned(editor.getFile());
   }
 

@@ -41,10 +41,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
@@ -401,6 +402,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return myActiveFile != null ? getEditor(myActiveFile) : null;
   }
 
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return new JLabel();

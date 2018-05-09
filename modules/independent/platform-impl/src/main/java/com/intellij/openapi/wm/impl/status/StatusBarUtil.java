@@ -16,15 +16,16 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
-import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
 import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
+import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,7 +33,8 @@ import javax.annotation.Nullable;
  * @author Kirill Likhodedov
  */
 public class StatusBarUtil {
-  private StatusBarUtil() { }
+  private StatusBarUtil() {
+  }
 
   /**
    * Finds the current file editor.
