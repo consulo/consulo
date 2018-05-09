@@ -17,10 +17,10 @@ package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Egor
@@ -34,7 +34,7 @@ public class XBreakpointCustomGroup extends XBreakpointGroup {
 
   @Override
   @Nullable
-  public Icon getIcon(final boolean isOpen) {
+  public Image getIcon(final boolean isOpen) {
     return AllIcons.Nodes.NewFolder;
   }
 

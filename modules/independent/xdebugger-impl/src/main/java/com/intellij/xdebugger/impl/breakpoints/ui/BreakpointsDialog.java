@@ -44,6 +44,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemNode;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.ui.WholeWestDialogWrapper;
 import consulo.util.ui.tree.TreeDecorationUtil;
 import javax.annotation.Nonnull;
@@ -394,7 +395,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
     public AddXBreakpointAction(XBreakpointType<?, ?> type) {
       myType = type;
-      getTemplatePresentation().setIcon(type.getEnabledIcon());
+      getTemplatePresentation().setIcon(TargetAWT.to(type.getEnabledIcon()));
       getTemplatePresentation().setText(type.getTitle());
     }
 

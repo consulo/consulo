@@ -70,6 +70,7 @@ import com.intellij.xdebugger.settings.XDebuggerSettings;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import gnu.trove.THashMap;
 
@@ -206,7 +207,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
               @Override
               public Icon getIconFor(XLineBreakpointType.XLineBreakpointVariant value) {
-                return value.getIcon();
+                return TargetAWT.to(value.getIcon());
               }
 
               @Override

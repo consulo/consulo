@@ -15,17 +15,17 @@
  */
 package com.intellij.xdebugger.breakpoints.ui;
 
-import javax.annotation.Nullable;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public abstract class XBreakpointGroup implements Comparable<XBreakpointGroup> {
   @Nullable
-  public Icon getIcon(boolean isOpen) {
+  public Image getIcon(boolean isOpen) {
     return null;
   }
 

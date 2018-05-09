@@ -23,11 +23,12 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,10 +50,10 @@ import java.util.List;
  */
 public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreakpointProperties> {
   public static final ExtensionPointName<XBreakpointType> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.xdebugger.breakpointType");
-  private final @NonNls @Nonnull
-  String myId;
-  private final @Nls @Nonnull
-  String myTitle;
+  @Nonnull
+  private final String myId;
+  @Nonnull
+  private final String myTitle;
   private final boolean mySuspendThreadSupported;
 
   /**
@@ -90,7 +91,11 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return SuspendPolicy.ALL;
   }
 
-  public enum StandardPanels {SUSPEND_POLICY, ACTIONS, DEPENDENCY}
+  public enum StandardPanels {
+    SUSPEND_POLICY,
+    ACTIONS,
+    DEPENDENCY
+  }
 
   public EnumSet<StandardPanels> getVisibleStandardPanels() {
     return EnumSet.allOf(StandardPanels.class);
@@ -107,22 +112,22 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   }
 
   @Nonnull
-  public Icon getEnabledIcon() {
+  public Image getEnabledIcon() {
     return AllIcons.Debugger.Db_set_breakpoint;
   }
 
   @Nonnull
-  public Icon getDisabledIcon() {
+  public Image getDisabledIcon() {
     return AllIcons.Debugger.Db_disabled_breakpoint;
   }
 
   @Nonnull
-  public Icon getMutedEnabledIcon() {
+  public Image getMutedEnabledIcon() {
     return AllIcons.Debugger.Db_muted_breakpoint;
   }
 
   @Nonnull
-  public Icon getMutedDisabledIcon() {
+  public Image getMutedDisabledIcon() {
     return AllIcons.Debugger.Db_muted_disabled_breakpoint;
   }
 
@@ -130,7 +135,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
    * @return the icon which is shown for a dependent breakpoint until its master breakpoint is reached
    */
   @Nonnull
-  public Icon getInactiveDependentIcon() {
+  public Image getInactiveDependentIcon() {
     return getDisabledDependentIcon();
   }
 
@@ -138,7 +143,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
    * @deprecated override {@link #getInactiveDependentIcon()} instead
    */
   @Nonnull
-  public Icon getDisabledDependentIcon() {
+  public Image getDisabledDependentIcon() {
     return AllIcons.Debugger.Db_dep_line_breakpoint;
   }
 
@@ -162,7 +167,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(@Nonnull Project project) {
     return null;
   }
@@ -175,7 +180,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   /**
    * @deprecated override {@link #getEditorsProvider(B, Project)} instead
    */
-  @javax.annotation.Nullable
+  @Nullable
   public XDebuggerEditorsProvider getEditorsProvider() {
     return null;
   }
@@ -232,7 +237,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return true;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @NonNls
   public String getBreakpointsDialogHelpTopic() {
     return null;

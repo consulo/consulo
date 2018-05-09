@@ -28,13 +28,13 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,7 +59,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * return non-null value if a breakpoint should have specific properties besides containing file and line. These properties will be stored in
    * {@link XBreakpoint} instance and can be obtained by using {@link XBreakpoint#getProperties()} method
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract P createBreakpointProperties(@Nonnull VirtualFile file, int line);
 
   @Override
@@ -96,7 +96,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     return Collections.emptyList();
   }
 
-  public Icon getTemporaryIcon() {
+  public Image getTemporaryIcon() {
     return AllIcons.Debugger.Db_temporary_breakpoint;
   }
 
@@ -111,7 +111,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * @return range to highlight on the line, null to highlight the whole line
    */
-  @javax.annotation.Nullable
+  @Nullable
   public TextRange getHighlightRange(XLineBreakpoint<P> breakpoint) {
     return null;
   }
@@ -129,15 +129,15 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     @Nonnull
     public abstract String getText();
 
-    @javax.annotation.Nullable
+    @Nullable
     @RequiredReadAction
-    public abstract Icon getIcon();
+    public abstract Image getIcon();
 
-    @javax.annotation.Nullable
+    @Nullable
     @RequiredReadAction
     public abstract TextRange getHighlightRange();
 
-    @javax.annotation.Nullable
+    @Nullable
     public abstract P createProperties();
   }
 
@@ -156,21 +156,21 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     }
 
     @RequiredReadAction
-    @javax.annotation.Nullable
+    @Nullable
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return null;
     }
 
     @RequiredReadAction
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public TextRange getHighlightRange() {
       return null;
     }
 
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public P createProperties() {
       return createBreakpointProperties(mySourcePosition.getFile(),
                                         mySourcePosition.getLine());
@@ -189,8 +189,8 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
 
     @RequiredReadAction
     @Override
-    public Icon getIcon() {
-      return TargetAWT.to(IconDescriptorUpdaters.getIcon(myElement, 0));
+    public Image getIcon() {
+      return IconDescriptorUpdaters.getIcon(myElement, 0);
     }
 
     @Nonnull

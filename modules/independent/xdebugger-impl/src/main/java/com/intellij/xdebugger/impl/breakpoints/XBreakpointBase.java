@@ -49,6 +49,8 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.actions.EditBreakpointAction;
 import com.intellij.xml.CommonXmlStrings;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -401,8 +403,8 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   protected void updateIcon() {
-    final Icon icon = calculateSpecialIcon();
-    setIcon(icon != null ? icon : getType().getEnabledIcon());
+    final Image icon = calculateSpecialIcon();
+    setIcon(icon != null ? TargetAWT.to(icon) : TargetAWT.to(getType().getEnabledIcon()));
   }
 
   protected void setIcon(Icon icon) {
@@ -418,7 +420,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   @Nullable
-  protected final Icon calculateSpecialIcon() {
+  protected final Image calculateSpecialIcon() {
     XDebugSessionImpl session = getBreakpointManager().getDebuggerManager().getCurrentSession();
     if (!isEnabled()) {
       // disabled icon takes precedence to other to visually distinguish it and provide feedback then it is enabled/disabled
@@ -445,14 +447,14 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
       }
       CustomizedBreakpointPresentation presentation = session.getBreakpointPresentation(this);
       if (presentation != null) {
-        Icon icon = presentation.getIcon();
+        Image icon = presentation.getIcon();
         if (icon != null) {
           return icon;
         }
       }
     }
     if (myCustomizedPresentation != null) {
-      final Icon icon = myCustomizedPresentation.getIcon();
+      final Image icon = myCustomizedPresentation.getIcon();
       if (icon != null) {
         return icon;
       }
