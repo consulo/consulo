@@ -38,10 +38,10 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.EditorNotifications;
 import javax.annotation.Nonnull;
 
-public class PsiAwareTextEditorImpl extends TextEditorImpl {
+public class DesktopPsiAwareTextEditorImpl extends DesktopTextEditorImpl {
   private TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
-  public PsiAwareTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProvider provider) {
+  public DesktopPsiAwareTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final DesktopTextEditorProvider provider) {
     super(project, file, provider);
   }
 
@@ -74,7 +74,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
 
   @Override
   public BackgroundEditorHighlighter getBackgroundHighlighter() {
-    if (!AsyncEditorLoader.isEditorLoaded(getEditor())) {
+    if (!DesktopAsyncEditorLoader.isEditorLoaded(getEditor())) {
       return null;
     }
 
@@ -90,7 +90,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
 
     private PsiAwareTextEditorComponent(@Nonnull final Project project,
                                         @Nonnull final VirtualFile file,
-                                        @Nonnull final TextEditorImpl textEditor) {
+                                        @Nonnull final DesktopTextEditorImpl textEditor) {
       super(project, file, textEditor);
       myProject = project;
       myFile = file;

@@ -321,9 +321,10 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    *
    * @param component component to be set.
    */
+  @Override
   @Nonnull
-  final FinalizableCommand createSetEditorComponentCmd(final JComponent component, @Nonnull Runnable finishCallBack) {
-    return new SetEditorComponentCmd(component, finishCallBack);
+  public FinalizableCommand createSetEditorComponentCmd(final Object component, @Nonnull Runnable finishCallBack) {
+    return new SetEditorComponentCmd((JComponent)component, finishCallBack);
   }
 
   @Override

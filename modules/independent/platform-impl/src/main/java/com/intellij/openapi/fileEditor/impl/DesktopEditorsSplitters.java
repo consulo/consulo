@@ -80,8 +80,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider, EditorsSplitters {
   private static final Logger LOG = Logger.getInstance(DesktopEditorsSplitters.class);
 
-  public static final Key<DesktopEditorsSplitters> KEY = Key.create("EditorsSplitters");
-
   private static final String PINNED = "pinned";
   private static final String CURRENT_IN_TAB = "current-in-tab";
 

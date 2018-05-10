@@ -51,8 +51,9 @@ import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBSwingUtilities;
-import javax.annotation.Nonnull;
+import consulo.fileEditor.impl.text.TextEditorProvider;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +68,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
   private final Project myProject;
   @Nonnull
   private final VirtualFile myFile;
-  private final TextEditorImpl myTextEditor;
+  private final DesktopTextEditorImpl myTextEditor;
   /**
    * Document to be edited
    */
@@ -85,7 +86,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    */
   private boolean myValid;
 
-  TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final TextEditorImpl textEditor) {
+  TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final DesktopTextEditorImpl textEditor) {
     super(new BorderLayout(), textEditor);
 
     myProject = project;

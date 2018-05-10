@@ -55,6 +55,7 @@ import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -659,6 +660,7 @@ public class DesktopEditorWindow implements EditorWindow {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void setEditor(@Nullable final EditorWithProviderComposite editor, final boolean selectEditor, final boolean focusEditor) {
     if (editor != null) {

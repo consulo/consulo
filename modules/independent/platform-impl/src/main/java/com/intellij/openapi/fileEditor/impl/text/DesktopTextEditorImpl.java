@@ -30,10 +30,11 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -45,23 +46,26 @@ import java.util.concurrent.TimeoutException;
 /**
  * @author Vladimir Kondratyev
  */
-public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
+@Deprecated
+@DeprecationInfo("Desktop only")
+@SuppressWarnings("deprecation")
+public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEditor {
   protected final Project myProject;
   private final PropertyChangeSupport myChangeSupport;
   @Nonnull
   private final TextEditorComponent myComponent;
   @Nonnull
   protected final VirtualFile myFile;
-  private final AsyncEditorLoader myAsyncLoader;
+  private final DesktopAsyncEditorLoader myAsyncLoader;
   private final Future<?> myLoadingFinished;
 
-  TextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProvider provider) {
+  DesktopTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final DesktopTextEditorProvider provider) {
     myProject = project;
     myFile = file;
     myChangeSupport = new PropertyChangeSupport(this);
     myComponent = createEditorComponent(project, file);
     Disposer.register(this, myComponent);
-    myAsyncLoader = new AsyncEditorLoader(this, myComponent, provider);
+    myAsyncLoader = new DesktopAsyncEditorLoader(this, myComponent, provider);
     myLoadingFinished = myAsyncLoader.start();
   }
 

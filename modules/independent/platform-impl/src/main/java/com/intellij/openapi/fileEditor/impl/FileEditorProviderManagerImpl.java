@@ -26,7 +26,6 @@ import com.intellij.openapi.fileEditor.FileEditorPolicy;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.WeighedFileEditorProvider;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -35,7 +34,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import consulo.application.AccessRule;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.impl.text.TextEditorProvider;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -141,7 +142,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   private final Map<String, String> mySelectedProviders = new HashMap<>();
 
-  void providerSelected(DesktopEditorComposite composite) {
+  void providerSelected(EditorComposite composite) {
     if (!(composite instanceof EditorWithProviderComposite)) return;
     FileEditorProvider[] providers = ((EditorWithProviderComposite)composite).getProviders();
     if (providers.length < 2) return;

@@ -35,9 +35,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
-public class PsiAwareTextEditorProvider extends TextEditorProvider {
+public class DesktopPsiAwareTextEditorProvider extends DesktopTextEditorProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorProvider");
   @NonNls
   private static final String FOLDING_ELEMENT = "folding";
@@ -45,7 +46,7 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider {
   @Override
   @Nonnull
   public FileEditor createEditor(@Nonnull final Project project, @Nonnull final VirtualFile file) {
-    return new PsiAwareTextEditorImpl(project, file, this);
+    return new DesktopPsiAwareTextEditorImpl(project, file, this);
   }
 
   @Override
@@ -94,7 +95,7 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider {
 
   @Nonnull
   @Override
-  protected TextEditorState getStateImpl(final Project project, @Nonnull final Editor editor, @Nonnull final FileEditorStateLevel level) {
+  public TextEditorState getStateImpl(final Project project, @Nonnull final Editor editor, @Nonnull final FileEditorStateLevel level) {
     final TextEditorState state = super.getStateImpl(project, editor, level);
     // Save folding only on FULL level. It's very expensive to commit document on every
     // type (caused by undo).
@@ -116,14 +117,12 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider {
     super.setStateImpl(project, editor, state);
     // Folding
     final CodeFoldingState foldState = state.getFoldingState();
-    if (project != null && foldState != null && AsyncEditorLoader.isEditorLoaded(editor)) {
+    if (project != null && foldState != null && DesktopAsyncEditorLoader.isEditorLoaded(editor)) {
       if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
         PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
         LOG.error("File should be parsed when changing editor state, otherwise UI might be frozen for a considerable time");
       }
-      editor.getFoldingModel().runBatchFoldingOperation(
-              () -> CodeFoldingManager.getInstance(project).restoreFoldingState(editor, foldState)
-      );
+      editor.getFoldingModel().runBatchFoldingOperation(() -> CodeFoldingManager.getInstance(project).restoreFoldingState(editor, foldState));
     }
   }
 
@@ -139,9 +138,7 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider {
     private PsiAwareEditorWrapper(@Nonnull Editor editor) {
       super(editor);
       final Project project = editor.getProject();
-      myBackgroundHighlighter = project == null
-                                ? null
-                                : new TextEditorBackgroundHighlighter(project, editor);
+      myBackgroundHighlighter = project == null ? null : new TextEditorBackgroundHighlighter(project, editor);
     }
 
     @Override

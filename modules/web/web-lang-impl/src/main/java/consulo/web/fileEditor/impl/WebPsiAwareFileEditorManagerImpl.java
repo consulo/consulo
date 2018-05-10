@@ -25,6 +25,7 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
 
@@ -42,6 +43,13 @@ public class WebPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerI
     if (mySplitters == null) {
       mySplitters = new WebEditorsSplitters(this);
     }
+  }
+
+  @Nonnull
+  @Override
+  public Component getUIComponent() {
+    initUI();
+    return mySplitters.getUIComponent();
   }
 
   @Nonnull

@@ -875,15 +875,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     commandList.add(new DesktopRequestFocusInToolWindowCmd(getFocusManager(), toolWindow, focusWatcher, myCommandProcessor, myProject));
   }
 
-  /**
-   * @see DesktopToolWindowPanelImpl#createSetEditorComponentCmd
-   */
-  public void appendSetEditorComponentCmd(@javax.annotation.Nullable final JComponent component, final List<FinalizableCommand> commandsList) {
-    final CommandProcessorBase commandProcessor = myCommandProcessor;
-    final FinalizableCommand command = getToolWindowPanel().createSetEditorComponentCmd(component, commandProcessor);
-    commandsList.add(command);
-  }
-
   @Override
   protected void appendUpdateToolWindowsPaneCmd(final List<FinalizableCommand> commandsList) {
     final JRootPane rootPane = myFrame.getRootPane();

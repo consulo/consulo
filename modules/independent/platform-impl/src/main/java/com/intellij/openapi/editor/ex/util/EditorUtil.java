@@ -39,14 +39,14 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
+import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.fileEditor.impl.text.TextEditorProvider;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -69,7 +69,7 @@ public final class EditorUtil {
    * false if the editor is part of EditorTextField, CommitMessage and etc.
    */
   public static boolean isRealFileEditor(@Nullable Editor editor) {
-    return editor != null && TextEditorProvider.getInstance().getTextEditor(editor) instanceof TextEditorImpl;
+    return editor != null && TextEditorProvider.getInstance().getTextEditor(editor) instanceof DesktopTextEditorImpl;
   }
 
   public static boolean isPasswordEditor(@Nullable Editor editor) {

@@ -17,7 +17,7 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
+import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -32,13 +32,13 @@ public abstract class EditorFileSwapper {
   public abstract Pair<VirtualFile, Integer> getFileToSwapTo(Project project, EditorWithProviderComposite editorWithProviderComposite);
 
   @Nullable
-  public static TextEditorImpl findSinglePsiAwareEditor(FileEditor[] fileEditors) {
-    TextEditorImpl res = null;
+  public static DesktopTextEditorImpl findSinglePsiAwareEditor(FileEditor[] fileEditors) {
+    DesktopTextEditorImpl res = null;
 
     for (FileEditor fileEditor : fileEditors) {
-      if (fileEditor instanceof TextEditorImpl) {
+      if (fileEditor instanceof DesktopTextEditorImpl) {
         if (res == null) {
-          res = (TextEditorImpl)fileEditor;
+          res = (DesktopTextEditorImpl)fileEditor;
         }
         else {
           return null;

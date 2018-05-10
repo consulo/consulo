@@ -15,11 +15,7 @@
  */
 package consulo.web.gwt.server;
 
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory;
+import com.intellij.codeInsight.daemon.impl.*;
 import com.intellij.codeInsight.navigation.CtrlMouseHandler;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
@@ -41,7 +37,6 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileTypes.BinaryFileDecompiler;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import com.intellij.openapi.fileTypes.FileType;
@@ -54,27 +49,15 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.ReferenceRange;
+import com.intellij.psi.*;
 import com.intellij.util.BitUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
-import consulo.web.gwt.shared.transport.GwtColor;
-import consulo.web.gwt.shared.transport.GwtEditorColorScheme;
-import consulo.web.gwt.shared.transport.GwtHighlightInfo;
-import consulo.web.gwt.shared.transport.GwtNavigatable;
-import consulo.web.gwt.shared.transport.GwtNavigateInfo;
-import consulo.web.gwt.shared.transport.GwtProjectInfo;
-import consulo.web.gwt.shared.transport.GwtTextAttributes;
-import consulo.web.gwt.shared.transport.GwtTextRange;
-import consulo.web.gwt.shared.transport.GwtVirtualFile;
+import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.web.gwt.shared.transport.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.servlet.annotation.WebServlet;
 import javax.swing.*;
 import java.awt.*;

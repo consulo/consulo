@@ -30,15 +30,20 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class AsyncEditorLoader {
+@Deprecated
+@DeprecationInfo("Desktop only")
+@SuppressWarnings("deprecation")
+public class DesktopAsyncEditorLoader {
   private static final ExecutorService ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("AsyncEditorLoader pool", 2);
-  private static final Key<AsyncEditorLoader> ASYNC_LOADER = Key.create("ASYNC_LOADER");
+  private static final Key<DesktopAsyncEditorLoader> ASYNC_LOADER = Key.create("ASYNC_LOADER");
   private static final int SYNCHRONOUS_LOADING_WAITING_TIME_MS = 200;
   private static final int RETRY_TIME_MS = 10;
   @Nonnull
@@ -46,16 +51,16 @@ public class AsyncEditorLoader {
   @Nonnull
   private final Project myProject;
   @Nonnull
-  private final TextEditorImpl myTextEditor;
+  private final DesktopTextEditorImpl myTextEditor;
   @Nonnull
   private final TextEditorComponent myEditorComponent;
   @Nonnull
-  private final TextEditorProvider myProvider;
+  private final DesktopTextEditorProvider myProvider;
   private final List<Runnable> myDelayedActions = new ArrayList<>();
   private TextEditorState myDelayedState;
   private final CompletableFuture<?> myLoadingFinished = new CompletableFuture<>();
 
-  AsyncEditorLoader(@Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponent component, @Nonnull TextEditorProvider provider) {
+  DesktopAsyncEditorLoader(@Nonnull DesktopTextEditorImpl textEditor, @Nonnull TextEditorComponent component, @Nonnull DesktopTextEditorProvider provider) {
     myProvider = provider;
     myTextEditor = textEditor;
     myProject = textEditor.myProject;
@@ -179,7 +184,7 @@ public class AsyncEditorLoader {
 
   public static void performWhenLoaded(@Nonnull Editor editor, @Nonnull Runnable runnable) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    AsyncEditorLoader loader = editor.getUserData(ASYNC_LOADER);
+    DesktopAsyncEditorLoader loader = editor.getUserData(ASYNC_LOADER);
     if (loader == null) {
       runnable.run();
     }

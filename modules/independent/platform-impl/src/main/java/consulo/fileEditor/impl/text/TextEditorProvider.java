@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,76 +13,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileEditor.impl.text;
+package consulo.fileEditor.impl.text;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
-import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
 import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Anton Katilin
- * @author Vladimir Kondratyev
+ * @author VISTALL
+ * @since 2018-05-10
+ * <p>
+ * Extracted part from {@link com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorProvider}
  */
-public class TextEditorProvider implements FileEditorProvider, DumbAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.TextEditorProvider");
-
-  @TestOnly
-  public static final Key<Boolean> TREAT_AS_SHOWN = Key.create("treat.editor.component.as.shown");
-
-  private static final Key<TextEditor> TEXT_EDITOR_KEY = Key.create("textEditor");
-
-  @NonNls private static final String TYPE_ID                         = "text-editor";
-  @NonNls private static final String LINE_ATTR                       = "line";
-  @NonNls private static final String COLUMN_ATTR                     = "column";
-  @NonNls private static final String LEAN_FORWARD_ATTR               = "lean-forward";
-  @NonNls private static final String SELECTION_START_LINE_ATTR       = "selection-start-line";
-  @NonNls private static final String SELECTION_START_COLUMN_ATTR     = "selection-start-column";
-  @NonNls private static final String SELECTION_END_LINE_ATTR         = "selection-end-line";
-  @NonNls private static final String SELECTION_END_COLUMN_ATTR       = "selection-end-column";
-  @NonNls private static final String RELATIVE_CARET_POSITION_ATTR    = "relative-caret-position";
-  @NonNls private static final String CARET_ELEMENT                   = "caret";
-
+public abstract class TextEditorProvider implements FileEditorProvider, DumbAware {
+  @Nonnull
   public static TextEditorProvider getInstance() {
     return ApplicationManager.getApplication().getComponent(TextEditorProvider.class);
   }
 
+  @TestOnly
+  public static final Key<Boolean> TREAT_AS_SHOWN = Key.create("treat.editor.component.as.shown");
+
+  protected static final Key<TextEditor> TEXT_EDITOR_KEY = Key.create("textEditor");
+
+  @NonNls
+  private static final String TYPE_ID = "text-editor";
+  @NonNls
+  private static final String LINE_ATTR = "line";
+  @NonNls
+  private static final String COLUMN_ATTR = "column";
+  @NonNls
+  private static final String LEAN_FORWARD_ATTR = "lean-forward";
+  @NonNls
+  private static final String SELECTION_START_LINE_ATTR = "selection-start-line";
+  @NonNls
+  private static final String SELECTION_START_COLUMN_ATTR = "selection-start-column";
+  @NonNls
+  private static final String SELECTION_END_LINE_ATTR = "selection-end-line";
+  @NonNls
+  private static final String SELECTION_END_COLUMN_ATTR = "selection-end-column";
+  @NonNls
+  private static final String RELATIVE_CARET_POSITION_ATTR = "relative-caret-position";
+  @NonNls
+  private static final String CARET_ELEMENT = "caret";
+
+  @Nonnull
+  public abstract TextEditor getTextEditor(@Nonnull Editor editor);
+
+
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
     return isTextFile(file) && !SingleRootFileViewProvider.isTooLargeForContentLoading(file);
-  }
-
-  @Override
-  @Nonnull
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {
-    LOG.assertTrue(accept(project, file));
-    return new TextEditorImpl(project, file, this);
   }
 
   @Override
@@ -93,7 +92,7 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     try {
       List<Element> caretElements = element.getChildren(CARET_ELEMENT);
       if (caretElements.isEmpty()) {
-        state.CARETS = new TextEditorState.CaretState[] {readCaretInfo(element)};
+        state.CARETS = new TextEditorState.CaretState[]{readCaretInfo(element)};
       }
       else {
         state.CARETS = new TextEditorState.CaretState[caretElements.size()];
@@ -165,22 +164,6 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     return FileEditorPolicy.NONE;
   }
 
-  @Nonnull
-  public TextEditor getTextEditor(@Nonnull Editor editor) {
-    TextEditor textEditor = editor.getUserData(TEXT_EDITOR_KEY);
-    if (textEditor == null) {
-      textEditor = createWrapperForEditor(editor);
-      putTextEditor(editor, textEditor);
-    }
-
-    return textEditor;
-  }
-
-  @Nonnull
-  protected EditorWrapper createWrapperForEditor(@Nonnull Editor editor) {
-    return new EditorWrapper(editor);
-  }
-
   @Nullable
   public static Document[] getDocuments(@Nonnull FileEditor editor) {
     if (editor instanceof DocumentsEditor) {
@@ -208,12 +191,12 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     return null;
   }
 
-  static void putTextEditor(Editor editor, TextEditor textEditor) {
+  public static void putTextEditor(Editor editor, TextEditor textEditor) {
     editor.putUserData(TEXT_EDITOR_KEY, textEditor);
   }
 
   @Nonnull
-  protected TextEditorState getStateImpl(final Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level){
+  public TextEditorState getStateImpl(final Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level) {
     TextEditorState state = new TextEditorState();
     CaretModel caretModel = editor.getCaretModel();
     if (caretModel.supportsMultipleCarets()) {
@@ -269,152 +252,5 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
 
   private static int getColumn(@Nullable LogicalPosition pos) {
     return pos == null ? 0 : pos.column;
-  }
-
-  protected void setStateImpl(final Project project, final Editor editor, final TextEditorState state){
-    if (state.CARETS != null && state.CARETS.length > 0) {
-      if (editor.getCaretModel().supportsMultipleCarets()) {
-        CaretModel caretModel = editor.getCaretModel();
-        List<CaretState> states = new ArrayList<>(state.CARETS.length);
-        for (TextEditorState.CaretState caretState : state.CARETS) {
-          states.add(new CaretState(new LogicalPosition(caretState.LINE, caretState.COLUMN, caretState.LEAN_FORWARD),
-                                    new LogicalPosition(caretState.SELECTION_START_LINE, caretState.SELECTION_START_COLUMN),
-                                    new LogicalPosition(caretState.SELECTION_END_LINE, caretState.SELECTION_END_COLUMN)));
-        }
-        caretModel.setCaretsAndSelections(states, false);
-      }
-      else {
-        TextEditorState.CaretState caretState = state.CARETS[0];
-        LogicalPosition pos = new LogicalPosition(caretState.LINE, caretState.COLUMN);
-        editor.getCaretModel().moveToLogicalPosition(pos);
-        int startOffset = editor.logicalPositionToOffset(new LogicalPosition(caretState.SELECTION_START_LINE,
-                                                                             caretState.SELECTION_START_COLUMN));
-        int endOffset = editor.logicalPositionToOffset(new LogicalPosition(caretState.SELECTION_END_LINE,
-                                                                           caretState.SELECTION_END_COLUMN));
-        if (startOffset == endOffset) {
-          editor.getSelectionModel().removeSelection();
-        }
-        else {
-          editor.getSelectionModel().setSelection(startOffset, endOffset);
-        }
-      }
-    }
-
-    final int relativeCaretPosition = state.RELATIVE_CARET_POSITION;
-    Runnable scrollingRunnable = () -> {
-      if (!editor.isDisposed()) {
-        editor.getScrollingModel().disableAnimation();
-        if (relativeCaretPosition != Integer.MAX_VALUE) {
-          EditorUtil.setRelativeCaretPosition(editor, relativeCaretPosition);
-        }
-        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-        editor.getScrollingModel().enableAnimation();
-      }
-    };
-    //noinspection TestOnlyProblems
-    if (Boolean.TRUE.equals(editor.getUserData(TREAT_AS_SHOWN))) scrollingRunnable.run();
-    else UiNotifyConnector.doWhenFirstShown(editor.getContentComponent(), scrollingRunnable);
-  }
-
-  protected class EditorWrapper extends UserDataHolderBase implements TextEditor {
-    private final Editor myEditor;
-
-    EditorWrapper(@Nonnull Editor editor) {
-      myEditor = editor;
-    }
-
-    @Override
-    @Nonnull
-    public Editor getEditor() {
-      return myEditor;
-    }
-
-    @Override
-    @Nonnull
-    public JComponent getComponent() {
-      return myEditor.getComponent();
-    }
-
-    @Override
-    public JComponent getPreferredFocusedComponent() {
-      return myEditor.getContentComponent();
-    }
-
-    @Override
-    @Nonnull
-    public String getName() {
-      return "Text";
-    }
-
-    @Override
-    public StructureViewBuilder getStructureViewBuilder() {
-      VirtualFile file = FileDocumentManager.getInstance().getFile(myEditor.getDocument());
-      if (file == null) return null;
-
-      final Project project = myEditor.getProject();
-      LOG.assertTrue(project != null);
-      return StructureViewBuilder.PROVIDER.getStructureViewBuilder(file.getFileType(), file, project);
-    }
-
-    @Nullable
-    @Override
-    public VirtualFile getFile() {
-      return FileDocumentManager.getInstance().getFile(myEditor.getDocument());
-    }
-
-    @Override
-    @Nonnull
-    public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
-      return getStateImpl(null, myEditor, level);
-    }
-
-    @Override
-    public void setState(@Nonnull FileEditorState state) {
-      setStateImpl(null, myEditor, (TextEditorState)state);
-    }
-
-    @Override
-    public boolean isModified() {
-      return false;
-    }
-
-    @Override
-    public boolean isValid() {
-      return true;
-    }
-
-    @Override
-    public void dispose() { }
-
-    @Override
-    public void selectNotify() { }
-
-    @Override
-    public void deselectNotify() { }
-
-    @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) { }
-
-    @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) { }
-
-    @Override
-    public BackgroundEditorHighlighter getBackgroundHighlighter() {
-      return null;
-    }
-
-    @Override
-    public FileEditorLocation getCurrentLocation() {
-      return null;
-    }
-
-    @Override
-    public boolean canNavigateTo(@Nonnull final Navigatable navigatable) {
-      return false;
-    }
-
-    @Override
-    public void navigateTo(@Nonnull final Navigatable navigatable) {
-    }
   }
 }

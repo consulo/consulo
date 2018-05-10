@@ -21,16 +21,16 @@ import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.Component;
-import consulo.ui.Label;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
 import consulo.ui.internal.VaadinWrapper;
+import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -166,6 +166,27 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     }
   }
 
+  private final class SetEditorComponentCmd extends FinalizableCommand {
+    private final Component myComponent;
+
+    public SetEditorComponentCmd(Component component, @Nonnull Runnable finishCallBack) {
+      super(finishCallBack);
+      myComponent = component;
+    }
+
+    @Override
+    public void run() {
+      try {
+        setDocumentComponent(myComponent);
+        //myLayeredPane.validate();
+        //myLayeredPane.repaint();
+      }
+      finally {
+        finish();
+      }
+    }
+  }
+
   private WGwtToolWindowStripe myTopStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.TOP);
   private WGwtToolWindowStripe myBottomStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.BOTTOM);
   private WGwtToolWindowStripe myLeftStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.LEFT);
@@ -176,9 +197,14 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   private final HashMap<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
   private final HashMap<WGwtToolWindowStripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
 
-  private final List<Component> myChildren = new ArrayList<>();
+  private final List<com.vaadin.ui.Component> myChildren = new ArrayList<>();
 
   private WGwtThreeComponentSplitLayout myHorizontalSplitter = new WGwtThreeComponentSplitLayout();
+  @Deprecated
+  @DeprecationInfo("Unsupported for now")
+  private WGwtThreeComponentSplitLayout myVerticalSplitter = new WGwtThreeComponentSplitLayout();
+
+  private boolean myWidescreen;
 
   public WGwtToolWindowPanel() {
     add(myTopStripe);
@@ -186,12 +212,10 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     add(myLeftStripe);
     add(myRightStripe);
 
-    myHorizontalSplitter.setCenterComponent(Label.create("Test"));
-
     add(myHorizontalSplitter);
   }
 
-  private void add(Component component) {
+  private void add(com.vaadin.ui.Component component) {
     addComponent(component);
     myChildren.add(component);
   }
@@ -222,13 +246,17 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     }
   }
 
-  @javax.annotation.Nullable
+  private void setDocumentComponent(Component component) {
+    (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setCenterComponent(component);
+  }
+
+  @Nullable
   private WGwtToolWindowStripeButton getButtonById(final String id) {
     return myId2Button.get(id);
   }
 
   @Override
-  public void replaceComponent(Component oldComponent, Component newComponent) {
+  public void replaceComponent(com.vaadin.ui.Component oldComponent, com.vaadin.ui.Component newComponent) {
     throw new UnsupportedOperationException();
   }
 
@@ -238,7 +266,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   }
 
   @Override
-  public Iterator<Component> iterator() {
+  public Iterator<com.vaadin.ui.Component> iterator() {
     return myChildren.iterator();
   }
 
@@ -365,5 +393,11 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   @Override
   public FinalizableCommand createUpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallback) {
     return new UpdateButtonPositionCmd(id, finishCallback);
+  }
+
+  @Nonnull
+  @Override
+  public FinalizableCommand createSetEditorComponentCmd(Object component, @Nonnull Runnable finishCallBack) {
+    return new SetEditorComponentCmd((Component)component, finishCallBack);
   }
 }

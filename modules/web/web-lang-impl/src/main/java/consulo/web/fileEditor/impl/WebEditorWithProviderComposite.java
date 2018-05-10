@@ -22,6 +22,7 @@ import com.intellij.openapi.fileEditor.impl.HistoryEntry;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -137,5 +138,10 @@ public class WebEditorWithProviderComposite implements EditorWithProviderComposi
   @Override
   public void dispose() {
 
+  }
+
+  @Override
+  public Component getUIComponent() {
+    return null;
   }
 }

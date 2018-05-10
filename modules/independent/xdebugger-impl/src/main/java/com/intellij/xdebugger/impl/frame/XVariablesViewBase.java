@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
@@ -48,9 +48,9 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XStackFrameNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -113,8 +113,8 @@ public abstract class XVariablesViewBase extends XDebugView {
   private void registerInlineEvaluator(final XStackFrame stackFrame, final XSourcePosition position, final Project project) {
     final VirtualFile file = position.getFile();
     final FileEditor fileEditor = FileEditorManagerEx.getInstanceEx(project).getSelectedEditor(file);
-    if (fileEditor instanceof PsiAwareTextEditorImpl) {
-      final Editor editor = ((PsiAwareTextEditorImpl)fileEditor).getEditor();
+    if (fileEditor instanceof TextEditor) {
+      final Editor editor = ((TextEditor)fileEditor).getEditor();
       removeSelectionListener();
       mySelectionListener = new MySelectionListener(editor, stackFrame, project);
       editor.getSelectionModel().addSelectionListener(mySelectionListener);

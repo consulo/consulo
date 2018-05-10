@@ -20,9 +20,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -32,9 +35,20 @@ public class WebEditorWindow implements EditorWindow {
   private FileEditorManagerEx myManager;
   private EditorsSplitters myEditorsSplitters;
 
+  private TabbedLayout myTabbedLayout = TabbedLayout.create();
+
+  private Map<EditorWithProviderComposite, Tab> myEditors = new LinkedHashMap<>();
+
+  @RequiredUIAccess
   public WebEditorWindow(FileEditorManagerEx manager, EditorsSplitters editorsSplitters) {
     myManager = manager;
     myEditorsSplitters = editorsSplitters;
+  }
+
+  @Override
+  @Nonnull
+  public Component getUIComponent() {
+    return myTabbedLayout;
   }
 
   @Nonnull
@@ -67,7 +81,7 @@ public class WebEditorWindow implements EditorWindow {
   @Nonnull
   @Override
   public EditorWithProviderComposite[] getEditors() {
-    return new EditorWithProviderComposite[0];
+    return myEditors.keySet().toArray(new EditorWithProviderComposite[myEditors.size()]);
   }
 
   @Nonnull
@@ -85,6 +99,11 @@ public class WebEditorWindow implements EditorWindow {
   @Nullable
   @Override
   public EditorWithProviderComposite findFileComposite(VirtualFile file) {
+    for (EditorWithProviderComposite composite : myEditors.keySet()) {
+      if (file.equals(composite.getFile())) {
+        return composite;
+      }
+    }
     return null;
   }
 
@@ -94,6 +113,7 @@ public class WebEditorWindow implements EditorWindow {
     return null;
   }
 
+  @Nonnull
   @Override
   public EditorsSplitters getOwner() {
     return myEditorsSplitters;
@@ -131,7 +151,7 @@ public class WebEditorWindow implements EditorWindow {
 
   @Override
   public void clear() {
-
+    myEditors.clear();
   }
 
   @Override
@@ -156,6 +176,11 @@ public class WebEditorWindow implements EditorWindow {
 
   @Override
   public boolean isFileOpen(VirtualFile virtualFile) {
+    for (EditorWithProviderComposite editor : myEditors.keySet()) {
+      if (editor.getFile().equals(virtualFile)) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -169,9 +194,25 @@ public class WebEditorWindow implements EditorWindow {
 
   }
 
+  @RequiredUIAccess
   @Override
   public void setEditor(@Nullable EditorWithProviderComposite editor, boolean selectEditor, boolean focusEditor) {
-    System.out.println("test");
+    if (editor == null) {
+
+    }
+    else {
+      EditorWithProviderComposite fileComposite = findFileComposite(editor.getFile());
+      if (fileComposite == null) {
+        Tab tab = myTabbedLayout.addTab(editor.getFile().getName(), editor.getUIComponent());
+
+        myEditors.put(editor, tab);
+      }
+      else {
+        Tab tab = myEditors.get(fileComposite);
+
+        //FIXME [VISTALL] focus
+      }
+    }
   }
 
   @Override

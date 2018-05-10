@@ -37,7 +37,7 @@ import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.ScrollingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
+import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.Interpolable;
 import com.intellij.util.SystemProperties;
@@ -147,7 +147,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   public void scrollToCaret(@Nonnull ScrollType scrollType) {
     assertIsDispatchThread();
     myEditor.validateSize();
-    AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.getCaretModel().getVisualPosition(), scrollType));
+    DesktopAsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.getCaretModel().getVisualPosition(), scrollType));
   }
 
   private void scrollTo(@Nonnull VisualPosition pos, @Nonnull ScrollType scrollType) {
@@ -166,7 +166,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
     assertIsDispatchThread();
 
-    AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
+    DesktopAsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
   }
 
   private static void assertIsDispatchThread() {

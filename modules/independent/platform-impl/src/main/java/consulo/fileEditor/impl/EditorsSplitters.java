@@ -17,7 +17,6 @@ package consulo.fileEditor.impl;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
@@ -33,7 +32,7 @@ import java.util.List;
  * @since 28-Oct-17
  */
 public interface EditorsSplitters {
-  Key<DesktopEditorsSplitters> KEY = Key.create("EditorsSplitters");
+  Key<EditorsSplitters> KEY = Key.create("EditorsSplitters");
 
   void readExternal(Element element);
 

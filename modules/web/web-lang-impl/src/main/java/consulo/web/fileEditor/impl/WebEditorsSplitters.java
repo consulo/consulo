@@ -22,6 +22,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.WrappedLayout;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -36,8 +39,20 @@ import java.util.List;
 public class WebEditorsSplitters implements EditorsSplitters {
   private FileEditorManagerEx myEditorManager;
 
+  private EditorWindow myCurrentWindow;
+
+  private WrappedLayout myLayout;
+
   public WebEditorsSplitters(FileEditorManagerEx editorManager) {
     myEditorManager = editorManager;
+
+    myLayout = WrappedLayout.create();
+  }
+
+  @Nonnull
+  @Override
+  public Component getUIComponent() {
+    return myLayout;
   }
 
   @Override
@@ -72,19 +87,29 @@ public class WebEditorsSplitters implements EditorsSplitters {
 
   @Nonnull
   @Override
+  @RequiredUIAccess
   public EditorWindow getOrCreateCurrentWindow(VirtualFile file) {
-    return new WebEditorWindow(myEditorManager, this);
+    if (myCurrentWindow != null) {
+      return myCurrentWindow;
+    }
+    myCurrentWindow = new WebEditorWindow(myEditorManager, this);
+    myLayout.set(myCurrentWindow.getUIComponent());
+    return myCurrentWindow;
   }
 
   @Override
   public void setCurrentWindow(EditorWindow window, boolean requestFocus) {
+    myCurrentWindow = window;
 
+    if(window != null) {
+      myLayout.set(window.getUIComponent());
+    }
   }
 
   @Nullable
   @Override
   public EditorWindow getCurrentWindow() {
-    return null;
+    return myCurrentWindow;
   }
 
   @Override
@@ -152,12 +177,18 @@ public class WebEditorsSplitters implements EditorsSplitters {
 
   @Override
   public EditorWindow[] getWindows() {
-    return new EditorWindow[0];
+    if (myCurrentWindow != null) {
+      return new EditorWindow[]{myCurrentWindow};
+    }
+    return EditorWindow.EMPTY_ARRAY;
   }
 
   @Override
   public EditorWindow[] getOrderedWindows() {
-    return new EditorWindow[0];
+    if (myCurrentWindow != null) {
+      return new EditorWindow[]{myCurrentWindow};
+    }
+    return EditorWindow.EMPTY_ARRAY;
   }
 
   @Nullable

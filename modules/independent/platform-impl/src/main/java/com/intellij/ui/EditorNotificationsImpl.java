@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.*;
-import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
+import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
@@ -36,12 +36,11 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.editor.notifications.EditorNotificationProviders;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.lang.ref.WeakReference;
@@ -123,7 +122,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
   private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
     List<FileEditor> editors = ContainerUtil.filter(
             FileEditorManager.getInstance(myProject).getAllEditors(file),
-            editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor) editor).getEditor()));
+            editor -> !(editor instanceof TextEditor) || DesktopAsyncEditorLoader.isEditorLoaded(((TextEditor) editor).getEditor()));
 
     if (editors.isEmpty()) return null;
 

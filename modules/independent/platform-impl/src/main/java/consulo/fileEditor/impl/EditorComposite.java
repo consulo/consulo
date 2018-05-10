@@ -20,6 +20,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -57,4 +58,8 @@ public interface EditorComposite extends Disposable {
   boolean isPinned();
 
   boolean isDisposed();
+
+  default Component getUIComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 }

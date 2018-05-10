@@ -41,8 +41,7 @@ import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
+import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -83,6 +82,7 @@ import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.impl.text.TextEditorProvider;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
@@ -1760,7 +1760,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             Pair<FileEditor[], FileEditorProvider[]> pair = openFileImpl2(eachWindow, newFile, editor == selected);
 
             if (newFilePair.second != null) {
-              TextEditorImpl openedEditor = EditorFileSwapper.findSinglePsiAwareEditor(pair.first);
+              DesktopTextEditorImpl openedEditor = EditorFileSwapper.findSinglePsiAwareEditor(pair.first);
               if (openedEditor != null) {
                 openedEditor.getEditor().getCaretModel().moveToOffset(newFilePair.second);
                 openedEditor.getEditor().getScrollingModel().scrollToCaret(ScrollType.CENTER);

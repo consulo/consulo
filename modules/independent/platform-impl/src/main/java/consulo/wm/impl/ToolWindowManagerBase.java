@@ -284,6 +284,12 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   protected abstract void appendUpdateToolWindowsPaneCmd(final List<FinalizableCommand> commandsList);
 
+  public void appendSetEditorComponentCmd(@Nullable Object component, final List<FinalizableCommand> commandsList) {
+    final CommandProcessorBase commandProcessor = myCommandProcessor;
+    final FinalizableCommand command = myToolWindowPanel.createSetEditorComponentCmd(component, commandProcessor);
+    commandsList.add(command);
+  }
+
   protected abstract void activateEditorComponentImpl(List<FinalizableCommand> commandList, final boolean forced);
 
   protected abstract boolean hasModalChild(final WindowInfoImpl info);

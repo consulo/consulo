@@ -17,7 +17,6 @@ package com.intellij.testFramework;
 
 import com.intellij.ide.actions.ViewStructureAction;
 import com.intellij.ide.util.FileStructurePopup;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,6 +25,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.fileEditor.impl.text.TextEditorProvider;
 import junit.framework.Assert;
 import org.junit.Before;
 
@@ -43,8 +43,8 @@ public abstract class FileStructureTestBase extends CodeInsightFixtureTestCase {
     super.setUp();
     myFixture.configureByFile(getFileName(getFileExtension()));
     myPopup = ViewStructureAction.createPopup(
-      myFixture.getProject(),
-      TextEditorProvider.getInstance().getTextEditor(myFixture.getEditor()));
+            myFixture.getProject(),
+            TextEditorProvider.getInstance().getTextEditor(myFixture.getEditor()));
     assert myPopup != null;
     myPopup.createCenterPanel();
     getBuilder().getUi().getUpdater().setPassThroughMode(true);
