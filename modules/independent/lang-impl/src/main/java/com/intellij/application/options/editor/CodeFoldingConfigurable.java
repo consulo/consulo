@@ -24,22 +24,23 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
+import consulo.options.SimpleConfigurableByProperties;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.Nls;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author yole
  */
-public class CodeFoldingConfigurable implements Configurable {
-  private JCheckBox myCbFolding;
-  private JPanel myRootPanel;
-
+public class CodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable {
   @Override
   @Nls
   public String getDisplayName() {
@@ -51,19 +52,22 @@ public class CodeFoldingConfigurable implements Configurable {
     return "reference.settingsdialog.IDE.editor.code.folding";
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public JComponent createComponent() {
-    return myRootPanel;
+  protected Component createLayout(PropertyBuilder propertyBuilder) {
+    VerticalLayout verticalLayout = VerticalLayout.create();
+
+    CheckBox outlineBox = CheckBox.create(ApplicationBundle.message("checkbox.show.code.folding.outline"));
+    verticalLayout.add(outlineBox);
+    EditorSettingsExternalizable externalizable = EditorSettingsExternalizable.getInstance();
+    propertyBuilder.add(outlineBox, externalizable::isFoldingOutlineShown, externalizable::setFoldingOutlineShown);
+    return verticalLayout;
   }
 
   @Override
-  public boolean isModified() {
-    return myCbFolding.isSelected() != EditorSettingsExternalizable.getInstance().isFoldingOutlineShown();
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-    EditorSettingsExternalizable.getInstance().setFoldingOutlineShown(myCbFolding.isSelected());
+  protected void afterApply() {
+    super.afterApply();
 
     final List<Pair<Editor, Project>> toUpdate = new ArrayList<Pair<Editor, Project>>();
     for (final Editor editor : EditorFactory.getInstance().getAllEditors()) {
@@ -73,30 +77,17 @@ public class CodeFoldingConfigurable implements Configurable {
       }
     }
 
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-          for (Pair<Editor, Project> each : toUpdate) {
-              if (each.second == null || each.second.isDisposed()) {
-                  continue;
-              }
-              final CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(each.second);
-              if (foldingManager != null) {
-                  foldingManager.buildInitialFoldings(each.first);
-              }
-          }
-          EditorOptionsPanel.reinitAllEditors();
+    ApplicationManager.getApplication().invokeLater(() -> {
+      for (Pair<Editor, Project> each : toUpdate) {
+        if (each.second == null || each.second.isDisposed()) {
+          continue;
+        }
+        final CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(each.second);
+        if (foldingManager != null) {
+          foldingManager.buildInitialFoldings(each.first);
+        }
       }
+      EditorOptionsPanel.reinitAllEditors();
     }, ModalityState.NON_MODAL);
-  }
-
-  @Override
-  public void reset() {
-    myCbFolding.setSelected(EditorSettingsExternalizable.getInstance().isFoldingOutlineShown());
-  }
-
-  @Override
-  public void disposeUIResources() {
-
   }
 }
