@@ -26,6 +26,11 @@
       <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
     </component>
+
+    <component>
+      <interface-class>consulo.fileEditor.impl.text.TextEditorProvider</interface-class>
+      <implementation-class>consulo.web.fileEditor.impl.text.WebTextEditorProvider</implementation-class>
+    </component>
   </application-components>
 
   <project-components>

@@ -39,11 +39,20 @@ public class WebEditorWithProviderComposite implements EditorWithProviderComposi
   private FileEditorProvider[] myProviders;
   private FileEditorManagerEx myFileEditorManager;
 
+  private final Component[] myComponents;
+
   public WebEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
     myFile = file;
     myEditors = editors;
     myProviders = providers;
     myFileEditorManager = fileEditorManager;
+
+    myComponents = new Component[editors.length];
+    for (int i = 0; i < editors.length; i++) {
+      FileEditor editor = editors[i];
+
+      myComponents[i] = editor.getUIComponent();
+    }
   }
 
   @Nonnull
@@ -142,6 +151,6 @@ public class WebEditorWithProviderComposite implements EditorWithProviderComposi
 
   @Override
   public Component getUIComponent() {
-    return null;
+    return myComponents[0];
   }
 }

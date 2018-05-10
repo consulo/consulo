@@ -42,12 +42,16 @@ public class GwtLoadingPanelImplConnector extends AbstractComponentConnector {
 
   @Override
   protected Widget createWidget() {
+    return createPanel();
+  }
+
+  public static Widget createPanel() {
     // http://tobiasahlin.com/spinkit/
     // MIT
     FlowPanel flowPanel = new FlowPanel();
     flowPanel.addStyleName("sk-cube-grid");
 
-    for(int i = 1; i <= 9; i++) {
+    for (int i = 1; i <= 9; i++) {
       FlowPanel child = new FlowPanel();
       child.addStyleName("sk-cube sk-cube" + i);
       flowPanel.add(child);

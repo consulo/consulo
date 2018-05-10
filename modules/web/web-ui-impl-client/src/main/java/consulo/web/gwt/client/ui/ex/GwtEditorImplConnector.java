@@ -16,8 +16,10 @@
 package consulo.web.gwt.client.ui.ex;
 
 import com.vaadin.client.StyleConstants;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
 
 /**
  * @author VISTALL
@@ -40,5 +42,15 @@ public class GwtEditorImplConnector extends AbstractComponentConnector {
   @Override
   public GwtEditorImpl getWidget() {
     return (GwtEditorImpl)super.getWidget();
+  }
+
+  @Override
+  public EditorState getState() {
+    return (EditorState)super.getState();
+  }
+
+  @OnStateChange("myText")
+  private void onTextChanged() {
+    getWidget().setText(getState().myText);
   }
 }

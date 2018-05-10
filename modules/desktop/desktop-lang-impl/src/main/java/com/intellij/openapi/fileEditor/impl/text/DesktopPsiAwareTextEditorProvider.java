@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("deprecation")
 public class DesktopPsiAwareTextEditorProvider extends DesktopTextEditorProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorProvider");
   @NonNls

@@ -19,7 +19,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
@@ -241,87 +240,6 @@ public class GwtEditorImpl extends SimplePanel {
   public GwtEditorImpl() {
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.ONKEYUP);
 
-    String text = "some text\nvfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv";
 
     myScheme = new GwtEditorColorScheme();
     setDefaultTextColors(this);
@@ -330,23 +248,22 @@ public class GwtEditorImpl extends SimplePanel {
 
     GwtUIUtil.fill(this);
 
-    setWidget(GwtUIUtil.loadingPanelDeprecated());
+    setWidget(GwtUIUtil.fillAndReturn(GwtLoadingPanelImplConnector.createPanel()));
+  }
 
-    Scheduler.get().scheduleDeferred(new Command() {
-      @Override
-      public void execute() {
-        myBuilder = new EditorSegmentBuilder(text);
-        myLineCount = myBuilder.getLineCount();
+  public void setText(String text) {
+    Scheduler.get().scheduleDeferred(() -> {
+      myBuilder = new EditorSegmentBuilder(text);
+      myLineCount = myBuilder.getLineCount();
 
-        setWidget(build());
+      setWidget(build());
 
-        if (myDelayedCaredOffset != -1) {
-          focusOffset(myDelayedCaredOffset);
-          myDelayedCaredOffset = -1;
-        }
-
-        //doHighlightImpl();
+      if (myDelayedCaredOffset != -1) {
+        focusOffset(myDelayedCaredOffset);
+        myDelayedCaredOffset = -1;
       }
+
+      //doHighlightImpl();
     });
   }
 
