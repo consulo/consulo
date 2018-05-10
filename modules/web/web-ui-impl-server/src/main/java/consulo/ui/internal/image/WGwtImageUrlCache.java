@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 public class WGwtImageUrlCache {
   public static final ConcurrentMap<Integer, URL> ourURLCache = ContainerUtil.newConcurrentMap();
 
-  public static WGwtImageWithState fixSwingImageRef(Image other) {
+  public static WGwtImageWithState map(Image other) {
     return (WGwtImageWithState)other;
   }
 

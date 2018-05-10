@@ -177,10 +177,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
-      <implementation-class>com.intellij.ide.SaveAndSyncHandlerImpl</implementation-class>
-    </component>
-    <component>
       <interface-class>com.intellij.ide.FrameStateManager</interface-class>
       <implementation-class>com.intellij.ide.FrameStateManagerImpl</implementation-class>
     </component>

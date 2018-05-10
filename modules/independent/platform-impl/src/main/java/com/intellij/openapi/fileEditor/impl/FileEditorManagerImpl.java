@@ -83,6 +83,8 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.platform.Platform;
+import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
@@ -188,8 +190,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   @Nonnull
-  protected EditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file, @Nonnull FileEditor[] editors, @Nonnull FileEditorProvider[] providers, @Nonnull
-          FileEditorManagerEx fileEditorManager) {
+  protected EditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
+                                                                          @Nonnull FileEditor[] editors,
+                                                                          @Nonnull FileEditorProvider[] providers,
+                                                                          @Nonnull FileEditorManagerEx fileEditorManager) {
     throw new UnsupportedOperationException();
   }
 
@@ -635,6 +639,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   private static boolean isOpenInNewWindow() {
+    if(!Platform.current().isDesktop()) {
+      return false;
+    }
     AWTEvent event = IdeEventQueue.getInstance().getTrueCurrentEvent();
 
     // Shift was used while clicking
@@ -722,12 +729,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                                                          final boolean focusEditor,
                                                          final Boolean pin,
                                                          final int index) {
-    assert ApplicationManager.getApplication().isDispatchThread() ||
-           !ApplicationManager.getApplication().isReadAccessAllowed() : "must not open files under read action since we are doing a lot of invokeAndWaits here";
+    UIAccess.assertIsUIThread();
 
     final Ref<EditorWithProviderComposite> compositeRef = new Ref<>();
 
-    UIUtil.invokeAndWaitIfNeeded((Runnable)() -> compositeRef.set(window.findFileComposite(file)));
+    compositeRef.set(window.findFileComposite(file));
 
     final FileEditorProvider[] newProviders;
     final AsyncFileEditorProvider.Builder[] builders;
@@ -840,7 +846,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
       // Notify editors about selection changes
       window.getOwner().setCurrentWindow(window, focusEditor);
-      if(window.getOwner() instanceof DesktopEditorsSplitters) {
+      if (window.getOwner() instanceof DesktopEditorsSplitters) {
         ((DesktopEditorsSplitters)window.getOwner()).afterFileOpen(file);
       }
       addSelectionRecord(file, window);
@@ -854,7 +860,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
           window.setAsCurrentWindow(true);
           ToolWindowManager.getInstance(myProject).activateEditorComponent();
 
-          if(window.getOwner() instanceof DesktopEditorsSplitters) {
+          if (window.getOwner() instanceof DesktopEditorsSplitters) {
             IdeFocusManager.getInstance(myProject).toFront((DesktopEditorsSplitters)window.getOwner());
           }
         }
@@ -884,7 +890,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       }
     };
 
-    UIUtil.invokeAndWaitIfNeeded(runnable);
+    runnable.run();
 
     EditorWithProviderComposite composite = compositeRef.get();
     return Pair.create(composite == null ? EMPTY_EDITOR_ARRAY : composite.getEditors(), composite == null ? EMPTY_PROVIDER_ARRAY : composite.getProviders());
@@ -1313,7 +1319,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   @Override
   public void addBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
-      final EditorWithProviderComposite composite = getEditorComposite(editor);
+    final EditorWithProviderComposite composite = getEditorComposite(editor);
     if (composite != null) {
       composite.addBottomComponent(editor, component);
     }

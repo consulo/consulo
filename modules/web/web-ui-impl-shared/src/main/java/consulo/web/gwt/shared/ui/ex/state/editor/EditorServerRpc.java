@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.shared.ui.ex.state.editor;
 
-import consulo.annotations.DeprecationInfo;
+import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * @author VISTALL
- * @since 20-May-16
+ * @since 2018-05-10
  */
-@Deprecated
-@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-public interface WidgetWithUpdateUI {
-  void updateUI();
+public interface EditorServerRpc extends ServerRpc {
+  void onShow();
 }

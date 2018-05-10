@@ -18,15 +18,15 @@ package consulo.web.gwt.client.util;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.shared.Connector;
-import consulo.annotations.DeprecationInfo;
-import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ import java.util.List;
  * @since 20-May-16
  */
 public class GwtUIUtil {
-  @javax.annotation.Nullable
+  @Nullable
   @SuppressWarnings("unchecked")
   public static <T extends Widget> T getParentOf(Widget widget, Class<T> type) {
     Widget target = widget;
@@ -52,20 +52,8 @@ public class GwtUIUtil {
     return null;
   }
 
-  @Deprecated
-  @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-  public static Widget loadingPanelDeprecated() {
-    VerticalPanel verticalPanel = fillAndReturn(new VerticalPanel());
-    verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-    verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
-    verticalPanel.add(new Label("Loading..."));
-
-    return verticalPanel;
-  }
-
   @Contract("null -> null")
-  public static Widget connector2Widget(@javax.annotation.Nullable Connector connector) {
+  public static Widget connector2Widget(@Nullable Connector connector) {
     if (connector == null) {
       return null;
     }
@@ -93,46 +81,6 @@ public class GwtUIUtil {
       return (Widget)listener;
     }
     return null;
-  }
-
-  public static Widget icon(List<String> icons) {
-    FlowPanel panel = new FlowPanel();
-    panel.setStyleName("imageWrapper");
-
-    for (String icon : icons) {
-      Image image = new Image("/icon?path=\"" + icon + "\"");
-      image.setStyleName("overlayImage");
-
-      panel.add(image);
-    }
-    return panel;
-  }
-
-  @Deprecated
-  @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-  public static void updateUI(Widget widget) {
-    if (widget instanceof WidgetWithUpdateUI) {
-      ((WidgetWithUpdateUI)widget).updateUI();
-    }
-
-    if (widget instanceof HasWidgets) {
-      for (Widget child : (HasWidgets)widget) {
-        updateUI(child);
-      }
-    }
-
-    if (widget instanceof Grid) {
-      Grid grid = (Grid)widget;
-      for (int c = 0; c < grid.getColumnCount(); c++) {
-        for (int r = 0; r < grid.getRowCount(); r++) {
-          Widget temp = grid.getWidget(r, c);
-
-          if (temp != null) {
-            updateUI(temp);
-          }
-        }
-      }
-    }
   }
 
   public static <T extends UIObject> T fillAndReturn(T object) {

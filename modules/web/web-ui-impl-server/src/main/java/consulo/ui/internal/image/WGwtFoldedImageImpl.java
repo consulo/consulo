@@ -47,7 +47,7 @@ public class WGwtFoldedImageImpl implements Image, WGwtImageWithState {
 
     for (int i = 0; i < myImages.length; i++) {
       Image image = myImages[i];
-      state.myChildren[i] = WGwtImageUrlCache.fixSwingImageRef(image).getState();
+      state.myChildren[i] = WGwtImageUrlCache.map(image).getState();
     }
 
     m.myFoldedImageState = state;

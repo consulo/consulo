@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
@@ -159,7 +160,15 @@ public class WebEditorWindow implements EditorWindow {
 
   @Override
   public int findFileIndex(VirtualFile fileToFind) {
-    return 0;
+    int i = 0;
+    for (EditorWithProviderComposite editorWithProviderComposite : myEditors.keySet()) {
+      if (fileToFind.equals(editorWithProviderComposite.getFile())) {
+        return i;
+      }
+
+      i++;
+    }
+    return -1;
   }
 
   @Override
@@ -207,7 +216,10 @@ public class WebEditorWindow implements EditorWindow {
       EditorWithProviderComposite fileComposite = findFileComposite(editor.getFile());
       if (fileComposite == null) {
         Tab tab = myTabbedLayout.addTab(editor.getFile().getName(), editor.getUIComponent());
-
+        tab.setCloseHandler((thisTab, component) -> {
+          myEditors.remove(editor);
+        });
+        tab.setIcon(VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject()));
         myEditors.put(editor, tab);
       }
       else {

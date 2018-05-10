@@ -24,17 +24,17 @@ import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.EventDispatcher;
+import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class HeavyProcessLatch {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.io.storage.HeavyProcessLatch");
   public static final HeavyProcessLatch INSTANCE = new HeavyProcessLatch();
 
-  private final Set<String> myHeavyProcesses = new THashSet<String>();
+  private final Set<String> myHeavyProcesses = new THashSet<>();
   private final EventDispatcher<HeavyProcessListener> myEventDispatcher = EventDispatcher.create(HeavyProcessListener.class);
 
   private final EventDispatcher<HeavyProcessListener> myUIProcessDispatcher = EventDispatcher.create(HeavyProcessListener.class);
@@ -46,7 +46,7 @@ public class HeavyProcessLatch {
   private static final int MAX_PRIORITIZATION_MILLIS = 12 * 1000;
   private volatile long myPrioritizingStarted;
 
-  private final List<Runnable> toExecuteOutOfHeavyActivity = new ArrayList<Runnable>();
+  private final List<Runnable> toExecuteOutOfHeavyActivity = new ArrayList<>();
 
   private HeavyProcessLatch() {
   }
@@ -84,7 +84,7 @@ public class HeavyProcessLatch {
         toRunNow = Collections.emptyList();
       }
       else {
-        toRunNow = new ArrayList<Runnable>(toExecuteOutOfHeavyActivity);
+        toRunNow = new ArrayList<>(toExecuteOutOfHeavyActivity);
         toExecuteOutOfHeavyActivity.clear();
       }
     }
@@ -148,7 +148,7 @@ public class HeavyProcessLatch {
    * @see #stopThreadPrioritizing()
    */
   public void prioritizeUiActivity() {
-    LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+    LOG.assertTrue(UIAccess.isUIThread());
 
     if (!Registry.is("ide.prioritize.ui.thread", false)) {
       return;

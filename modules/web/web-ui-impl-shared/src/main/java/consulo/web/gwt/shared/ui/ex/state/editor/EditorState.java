@@ -22,5 +22,4 @@ import com.vaadin.shared.AbstractComponentState;
  * @since 2018-05-10
  */
 public class EditorState extends AbstractComponentState {
-  public String myText;
 }

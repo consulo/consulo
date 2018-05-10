@@ -29,8 +29,8 @@ import consulo.web.main.WebPostStarter;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
 import consulo.web.servlet.ui.UIServlet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.servlet.annotation.WebServlet;
 import java.io.File;
 

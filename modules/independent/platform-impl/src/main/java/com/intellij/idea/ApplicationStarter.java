@@ -15,9 +15,6 @@
  */
 package com.intellij.idea;
 
-import com.intellij.Patches;
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.IdeRepaintManager;
 import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.TransactionGuard;
@@ -25,14 +22,10 @@ import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.util.ReflectionUtil;
 import consulo.start.CommandLineArgs;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 
 public class ApplicationStarter {
@@ -71,28 +64,7 @@ public class ApplicationStarter {
     myPostStarter.premain(args);
   }
 
-  private static void patchSystem(boolean headless) {
-    System.setProperty("sun.awt.noerasebackground", "true");
-
-    IdeEventQueue.getInstance(); // replace system event queue
-
-    if (headless) return;
-
-    if (Patches.SUN_BUG_ID_6209673) {
-      RepaintManager.setCurrentManager(new IdeRepaintManager());
-    }
-
-    if (SystemInfo.isXWindow) {
-      String wmName = X11UiUtil.getWmName();
-      LOG.info("WM detected: " + wmName);
-      if (wmName != null) {
-        X11UiUtil.patchDetectedWm(wmName);
-      }
-    }
-
-    IconLoader.activate();
-
-    new JFrame().pack(); // this peer will prevent shutting down our application
+  protected void patchSystem(boolean headless) {
   }
 
   @Nonnull

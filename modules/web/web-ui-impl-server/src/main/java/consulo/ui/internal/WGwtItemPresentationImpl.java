@@ -33,7 +33,7 @@ class WGwtItemPresentationImpl implements ItemPresentation {
 
   @Override
   public void setIcon(@Nullable Image image) {
-    myItem.myImageState = image == null ? null : WGwtImageUrlCache.fixSwingImageRef(image).getState();
+    myItem.myImageState = image == null ? null : WGwtImageUrlCache.map(image).getState();
   }
 
   @Override

@@ -45,7 +45,7 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
   private TabbedLayoutServerRpc myRpc = new TabbedLayoutServerRpc() {
     @Override
     public void close(int index) {
-      System.out.println("Close tab " + index);
+      closeTab(index);
     }
   };
 
@@ -57,6 +57,46 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
     getState().mySelected = index;
 
     getClientRpc().select(index);
+  }
+
+  private void closeTab(int index) {
+    WGwtTabImpl target = null;
+    for (WGwtTabImpl tab : myTabs.keySet()) {
+      if (tab.getIndex() == index) {
+        target = tab;
+        break;
+      }
+    }
+
+    if (target == null) {
+      return;
+    }
+
+    boolean last = myTabs.size() == index + 1;
+
+    com.vaadin.ui.Component component = myTabs.remove(target);
+
+    target.getCloseHandler().accept(target, (Component)component);
+
+    int i = 0;
+    for (WGwtTabImpl tab : myTabs.keySet()) {
+      tab.setIndex(i++);
+    }
+
+    if (getState().mySelected == index) {
+      if (last) {
+        getState().mySelected--;
+      }
+      else {
+        getState().mySelected++;
+      }
+
+      if (getState().mySelected < 0) {
+        getState().mySelected = 0;
+      }
+    }
+
+    markAsDirty();
   }
 
   private TabbedLayoutClientRpc getClientRpc() {
@@ -81,8 +121,8 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
       tabState.myItemSegments = tab.getItem().myItemSegments;
       BiConsumer<Tab, Component> closeHandler = tab.getCloseHandler();
       if (closeHandler != null) {
-        tabState.myCloseButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNew).getState();
-        tabState.myCloseHoverButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNewHovered).getState();
+        tabState.myCloseButton = WGwtImageUrlCache.map(AllIcons.Actions.CloseNew).getState();
+        tabState.myCloseHoverButton = WGwtImageUrlCache.map(AllIcons.Actions.CloseNewHovered).getState();
       }
 
       tabStates.add(tabState);

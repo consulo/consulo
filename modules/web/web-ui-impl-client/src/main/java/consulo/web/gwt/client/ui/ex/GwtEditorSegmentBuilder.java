@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.client.ui.ex;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
-import consulo.web.gwt.client.ui.ex.GwtEditorImpl;
 import consulo.web.gwt.client.util.BitUtil;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.transport.GwtColor;
@@ -35,7 +34,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-May-16
  */
-public class EditorSegmentBuilder {
+public class GwtEditorSegmentBuilder {
   public static class CharSpan extends InlineHTML {
     public static class StyleInfo {
       private String key;
@@ -51,7 +50,7 @@ public class EditorSegmentBuilder {
       }
     }
 
-    public GwtTextRange range;
+    public GwtEditorTextRange range;
     public boolean lineWrap;
     private int highlightFlags;
 
@@ -156,7 +155,7 @@ public class EditorSegmentBuilder {
   private CharSpan[] myFragments;
   private int myLineCount;
 
-  public EditorSegmentBuilder(String text) {
+  public GwtEditorSegmentBuilder(String text) {
     myFragments = new CharSpan[text.length()];
 
     for (int i = 0; i < text.length(); i++) {
@@ -182,7 +181,7 @@ public class EditorSegmentBuilder {
       int endOffset = i + 1;
 
       CharSpan charSpan = new CharSpan(labelText.isEmpty() ? "&#8205;" : labelText);
-      charSpan.range = new GwtTextRange(startOffset, endOffset);
+      charSpan.range = new GwtEditorTextRange(startOffset, endOffset);
       charSpan.setStyleName(null);
       charSpan.getElement().setPropertyObject("range", charSpan.range);
       charSpan.getElement().setPropertyObject("widget", charSpan);
@@ -221,7 +220,7 @@ public class EditorSegmentBuilder {
     }
   }
 
-  public void removeHighlightByRange(GwtTextRange textRange, int flag) {
+  public void removeHighlightByRange(GwtEditorTextRange textRange, int flag) {
     for (int i = textRange.getStartOffset(); i < textRange.getEndOffset(); i++) {
       CharSpan fragment = myFragments[i];
 

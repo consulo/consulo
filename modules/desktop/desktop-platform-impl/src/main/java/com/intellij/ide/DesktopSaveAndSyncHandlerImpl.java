@@ -46,7 +46,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
+public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
   private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
 
   private final Runnable myIdleListener;
@@ -58,10 +58,10 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
   private volatile long myRefreshSessionId;
 
-  public SaveAndSyncHandlerImpl(@Nonnull GeneralSettings generalSettings,
-                                @Nonnull ProgressManager progressManager,
-                                @Nonnull FrameStateManager frameStateManager,
-                                @Nonnull FileDocumentManager fileDocumentManager) {
+  public DesktopSaveAndSyncHandlerImpl(@Nonnull GeneralSettings generalSettings,
+                                       @Nonnull ProgressManager progressManager,
+                                       @Nonnull FrameStateManager frameStateManager,
+                                       @Nonnull FileDocumentManager fileDocumentManager) {
     mySettings = generalSettings;
     myProgressManager = progressManager;
 

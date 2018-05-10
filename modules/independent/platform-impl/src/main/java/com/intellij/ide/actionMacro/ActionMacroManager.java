@@ -52,11 +52,12 @@ import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
+import consulo.platform.Platform;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -122,7 +123,8 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     });
 
     myKeyProcessor = new MyKeyPostpocessor();
-    IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null);
+
+    Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null));
   }
 
   public void readExternal(Element element) throws InvalidDataException {
@@ -172,9 +174,9 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
 
   private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
-    private AnimatedIcon myIcon = new AnimatedIcon("Macro recording",
-                                                   new Icon[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3,
-                                                           AllIcons.Ide.Macro.Recording_4}, AllIcons.Ide.Macro.Recording_1, 1000);
+    private AnimatedIcon myIcon =
+            new AnimatedIcon("Macro recording", new Icon[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4},
+                             AllIcons.Ide.Macro.Recording_1, 1000);
     private StatusBar myStatusBar;
     private final WidgetPresentation myPresentation;
 
@@ -229,10 +231,8 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
         return;
       }
 
-      myBalloon =
-              JBPopupFactory.getInstance().createBalloonBuilder(myBalloonComponent).setAnimationCycle(200).setCloseButtonEnabled(true).setHideOnAction(false)
-                      .setHideOnClickOutside(false).setHideOnFrameResize(false).setHideOnKeyOutside(false).setSmallVariant(true).setShadow(true)
-                      .createBalloon();
+      myBalloon = JBPopupFactory.getInstance().createBalloonBuilder(myBalloonComponent).setAnimationCycle(200).setCloseButtonEnabled(true).setHideOnAction(false).setHideOnClickOutside(false)
+              .setHideOnFrameResize(false).setHideOnKeyOutside(false).setSmallVariant(true).setShadow(true).createBalloon();
 
       Disposer.register(myBalloon, new Disposable() {
         @Override
@@ -317,8 +317,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     myLastActionInputEvent.clear();
     String macroName;
     do {
-      macroName = Messages.showInputDialog(project, IdeBundle.message("prompt.enter.macro.name"), IdeBundle.message("title.enter.macro.name"),
-                                           Messages.getQuestionIcon());
+      macroName = Messages.showInputDialog(project, IdeBundle.message("prompt.enter.macro.name"), IdeBundle.message("title.enter.macro.name"), Messages.getQuestionIcon());
       if (macroName == null) {
         myRecordingMacro = null;
         return;
@@ -463,8 +462,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     final ActionManagerEx actionManager = (ActionManagerEx)ActionManager.getInstance();
     final String actionId = ActionMacro.MACRO_ACTION_PREFIX + name;
     if (actionManager.getAction(actionId) != null) {
-      if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name), IdeBundle.message("title.macro.name.already.used"),
-                                   Messages.getWarningIcon()) != 0) {
+      if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name), IdeBundle.message("title.macro.name.already.used"), Messages.getWarningIcon()) != 0) {
         return false;
       }
       actionManager.unregisterAction(actionId);
@@ -526,10 +524,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
         myLastActionInputEvent.remove(e);
         return;
       }
-      final boolean modifierKeyIsPressed = e.getKeyCode() == KeyEvent.VK_CONTROL ||
-                                           e.getKeyCode() == KeyEvent.VK_ALT ||
-                                           e.getKeyCode() == KeyEvent.VK_META ||
-                                           e.getKeyCode() == KeyEvent.VK_SHIFT;
+      final boolean modifierKeyIsPressed = e.getKeyCode() == KeyEvent.VK_CONTROL || e.getKeyCode() == KeyEvent.VK_ALT || e.getKeyCode() == KeyEvent.VK_META || e.getKeyCode() == KeyEvent.VK_SHIFT;
       if (modifierKeyIsPressed) return;
 
       final boolean ready = IdeEventQueue.getInstance().getKeyEventDispatcher().isReady();

@@ -19,8 +19,9 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.diagnostic.Logger;
-import javax.annotation.Nonnull;
+import consulo.platform.Platform;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -30,6 +31,10 @@ class NoSwingUnderWriteAction {
   private static final Logger LOG = Logger.getInstance(NoSwingUnderWriteAction.class);
 
   static void watchForEvents(Application application) {
+    if (Platform.current().isWebService()) {
+      return;
+    }
+
     AtomicBoolean reported = new AtomicBoolean();
     IdeEventQueue.getInstance().addPostprocessor(e -> {
       if (application.isWriteAccessAllowed() && reported.compareAndSet(false, true)) {

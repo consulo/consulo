@@ -94,7 +94,7 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
     return list.iterator();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public consulo.ui.Component getParentComponent() {
     return (consulo.ui.Component)getParent();

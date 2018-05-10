@@ -43,6 +43,8 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.ui.shared.Size;
+import consulo.web.gwt.shared.ui.ex.state.editor.EditorClientRpc;
+import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -82,7 +84,12 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
     myEditorColorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
     mySettings = new SettingsImpl(this, project);
 
-    getState().myText = myDocument.getText();
+    registerRpc(new EditorServerRpc() {
+      @Override
+      public void onShow() {
+        getRpcProxy(EditorClientRpc.class).setText(myDocument.getText());
+      }
+    }, EditorServerRpc.class);
   }
 
   @Override

@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.awt.*;
+import java.util.Map;
 
 public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnlyColorsScheme {
   private String myName;
@@ -67,6 +68,24 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
       }
     }
     return key.getDefaultColor();
+  }
+
+  @Override
+  public void fillColors(Map<ColorKey, Color> colors) {
+    if(myParentScheme != null) {
+      myParentScheme.fillColors(colors);
+    }
+
+    colors.putAll(myColorsMap);
+  }
+
+  @Override
+  public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
+    if(myParentScheme != null) {
+      myParentScheme.fillAttributes(map);
+    }
+
+    map.putAll(myAttributesMap);
   }
 
   @Override

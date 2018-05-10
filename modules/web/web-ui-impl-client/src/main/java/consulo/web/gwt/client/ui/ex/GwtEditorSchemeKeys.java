@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.util;
-
-import consulo.annotations.DeprecationInfo;
-import consulo.web.gwt.client.GwtTransportServiceAsync;
+package consulo.web.gwt.client.ui.ex;
 
 /**
  * @author VISTALL
- * @since 19-May-16
+ * @since 2018-05-10
  */
-@Deprecated
-@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-public class GwtUtil {
-  private static final GwtTransportServiceAsync ourAsyncService = null;
+public interface GwtEditorSchemeKeys {
+  String LINE_NUMBERS_COLOR = "LINE_NUMBERS_COLOR";
+  String GUTTER_BACKGROUND = "GUTTER_BACKGROUND";
+  String CARET_ROW_COLOR = "CARET_ROW_COLOR";
+  String TEARLINE_COLOR = "TEARLINE_COLOR";
 
-
-  public static GwtTransportServiceAsync rpc() {
-    return ourAsyncService;
-  }
-
+  String TEXT = "TEXT";
+  String CTRL_CLICKABLE = "CTRL_CLICKABLE";
 }

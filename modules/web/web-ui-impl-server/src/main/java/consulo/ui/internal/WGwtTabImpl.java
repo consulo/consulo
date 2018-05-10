@@ -39,6 +39,10 @@ public class WGwtTabImpl extends WGwtItemPresentationImpl implements Tab {
     myIndex = index;
   }
 
+  public int getIndex() {
+    return myIndex;
+  }
+
   @Override
   public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
     myCloseHandler = closeHandler;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.colors;
+package consulo.web.gwt.shared.ui.ex.state.editor;
 
-import com.intellij.openapi.editor.markup.TextAttributes;
+import com.vaadin.shared.communication.ClientRpc;
 
-import javax.annotation.Nonnull;
-import java.util.Map;
-
-public interface TextAttributesScheme {
-  TextAttributes getAttributes(TextAttributesKey key);
-
-  void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map);
+/**
+ * @author VISTALL
+ * @since 2018-05-10
+ */
+public interface EditorClientRpc extends ClientRpc {
+  void setText(String text);
 }

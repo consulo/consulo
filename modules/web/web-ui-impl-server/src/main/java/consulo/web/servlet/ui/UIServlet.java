@@ -17,6 +17,7 @@ package consulo.web.servlet.ui;
 
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ReflectionUtil;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
@@ -32,6 +33,7 @@ import java.util.Properties;
  * @since 11-Sep-17
  */
 public class UIServlet extends VaadinServlet {
+  @StyleSheet("app://GENERATED/__scheme.css?")
   public static class UIImpl extends UI {
     private String myURLPrefix;
     private final UIBuilder myBuilder;
@@ -93,7 +95,14 @@ public class UIServlet extends VaadinServlet {
 
   @Override
   protected VaadinServletService createServletService(DeploymentConfiguration deploymentConfiguration) throws ServiceException {
-    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration);
+    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration) {
+      @Override
+      protected List<RequestHandler> createRequestHandlers() throws ServiceException {
+        List<RequestHandler> requestHandlers = super.createRequestHandlers();
+        requestHandlers.add(new SchemeRequestHandler());
+        return requestHandlers;
+      }
+    };
     service.init();
     service.setClassLoader(UIImpl.class.getClassLoader());
     return service;

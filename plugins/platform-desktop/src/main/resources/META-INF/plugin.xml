@@ -39,6 +39,11 @@
       <interface-class>consulo.fileEditor.impl.text.TextEditorProvider</interface-class>
       <implementation-class>com.intellij.openapi.fileEditor.impl.text.DesktopPsiAwareTextEditorProvider</implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
+      <implementation-class>com.intellij.ide.DesktopSaveAndSyncHandlerImpl</implementation-class>
+    </component>
   </application-components>
 
   <project-components>

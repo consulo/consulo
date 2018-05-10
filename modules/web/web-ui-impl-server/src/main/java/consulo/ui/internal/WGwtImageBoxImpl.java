@@ -35,7 +35,7 @@ public class WGwtImageBoxImpl extends AbstractComponent implements ImageBox, Vaa
   private WGwtImageWithState myImage;
 
   public WGwtImageBoxImpl(Image image) {
-    myImage = WGwtImageUrlCache.fixSwingImageRef(image);
+    myImage = WGwtImageUrlCache.map(image);
 
     getState().myImageState = myImage.getState();
   }

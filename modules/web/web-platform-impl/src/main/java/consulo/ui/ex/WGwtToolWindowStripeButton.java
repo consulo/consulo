@@ -64,7 +64,7 @@ public class WGwtToolWindowStripeButton extends AbstractComponent implements Too
     Icon icon = toolWindow.getIcon();
 
     try {
-      state.myImageState = icon == null ? null : WGwtImageUrlCache.fixSwingImageRef((consulo.ui.image.Image)icon).getState();
+      state.myImageState = icon == null ? null : WGwtImageUrlCache.map((consulo.ui.image.Image)icon).getState();
     }
     catch (Exception e) {
       e.printStackTrace();

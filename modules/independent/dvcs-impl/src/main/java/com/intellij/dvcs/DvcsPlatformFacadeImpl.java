@@ -16,7 +16,6 @@
 package com.intellij.dvcs;
 
 import com.intellij.ide.SaveAndSyncHandler;
-import com.intellij.ide.SaveAndSyncHandlerImpl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.ApplicationManager;
@@ -36,6 +35,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -133,7 +133,7 @@ public abstract class DvcsPlatformFacadeImpl implements DvcsPlatformFacade {
   @Nonnull
   @Override
   public SaveAndSyncHandler getSaveAndSyncHandler() {
-    return SaveAndSyncHandlerImpl.getInstance();
+    return SaveAndSyncHandler.getInstance();
   }
 
   @Override

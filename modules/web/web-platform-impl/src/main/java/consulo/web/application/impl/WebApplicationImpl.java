@@ -10,8 +10,9 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.UIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -25,7 +26,7 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
     super(isHeadless, splash);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
   }
@@ -40,7 +41,7 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                                      @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
-                                                     @javax.annotation.Nullable Project project,
+                                                     @Nullable Project project,
                                                      JComponent parentComponent,
                                                      String cancelText) {
 
@@ -65,12 +66,12 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
   }
 
   @Override
-  public void setCurrentSession(@javax.annotation.Nullable WebSession session) {
+  public void setCurrentSession(@Nullable WebSession session) {
     myCurrentSession = session;
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public WebSession getCurrentSession() {
     return myCurrentSession;
   }

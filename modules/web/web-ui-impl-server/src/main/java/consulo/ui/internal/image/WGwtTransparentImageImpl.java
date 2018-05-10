@@ -45,7 +45,7 @@ public class WGwtTransparentImageImpl implements Image, WGwtImageWithState {
   @Override
   public void toState(MultiImageState m) {
     m.myFoldedImageState = new FoldedImageState();
-    m.myFoldedImageState.myChildren = new MultiImageState[]{WGwtImageUrlCache.fixSwingImageRef(myOriginal).getState()};
+    m.myFoldedImageState.myChildren = new MultiImageState[]{WGwtImageUrlCache.map(myOriginal).getState()};
 
     m.myAlpha = myAlpha;
   }
