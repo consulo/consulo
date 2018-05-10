@@ -20,7 +20,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Tab;
+import consulo.ui.TabbedLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -209,8 +212,8 @@ public class WebEditorWindow implements EditorWindow {
       }
       else {
         Tab tab = myEditors.get(fileComposite);
-
-        //FIXME [VISTALL] focus
+        assert tab != null;
+        tab.select();
       }
     }
   }

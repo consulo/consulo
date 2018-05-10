@@ -48,4 +48,9 @@ public class DesktopTabImpl implements Tab {
   public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
 
   }
+
+  @Override
+  public void select() {
+
+  }
 }

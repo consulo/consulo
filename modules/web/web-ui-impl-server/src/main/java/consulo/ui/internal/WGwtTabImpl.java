@@ -27,10 +27,29 @@ import java.util.function.BiConsumer;
  */
 public class WGwtTabImpl extends WGwtItemPresentationImpl implements Tab {
   private BiConsumer<Tab, Component> myCloseHandler;
+  private WGwtTabbedLayoutImpl myTabbedLayout;
+  private int myIndex;
+
+  public WGwtTabImpl(int index, WGwtTabbedLayoutImpl tabbedLayout) {
+    myIndex = index;
+    myTabbedLayout = tabbedLayout;
+  }
+
+  public void setIndex(int index) {
+    myIndex = index;
+  }
 
   @Override
   public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
     myCloseHandler = closeHandler;
+  }
+
+  @Override
+  public void select() {
+    if(myIndex == -1) {
+      throw new UnsupportedOperationException("Tab is not added to layout");
+    }
+    myTabbedLayout.selectTab(myIndex);
   }
 
   public BiConsumer<Tab, Component> getCloseHandler() {
