@@ -24,7 +24,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.application.ApplicationProperties;
 import consulo.web.main.WebPostStarter;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
@@ -53,7 +52,6 @@ public class WebLoader {
     System.setProperty(PathManager.PROPERTY_HOME_PATH, home.getPath());
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, home.getPath() + "/.config/sandbox/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, home.getPath() + "/.config/sandbox/system");
-    System.setProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS, new File(home, "plugins").getPath());
 
     Main.setFlags(new String[0]);
 
