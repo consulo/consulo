@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class HighlightInfoHolder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder");
@@ -112,6 +113,10 @@ public class HighlightInfoHolder {
       @Override
       public TextAttributes getAttributes(TextAttributesKey key) {
         return key.getDefaultAttributes();
+      }
+
+      @Override
+      public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
       }
     };
   }
