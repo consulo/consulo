@@ -20,16 +20,20 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.bundle.PredefinedBundlesProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 15:05/22.11.13
  */
-public class PredefinedBundlesLoader extends ApplicationComponent.Adapter {
+public class PredefinedBundlesLoader implements ApplicationComponent {
   public static final Logger LOGGER = Logger.getInstance(PredefinedBundlesLoader.class);
 
   @Override
@@ -49,13 +53,24 @@ public class PredefinedBundlesLoader extends ApplicationComponent.Adapter {
       }
     };
 
-    for (PredefinedBundlesProvider predefinedBundlesProvider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
+    List<SdkImpl> bundles = new ArrayList<>();
+    for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
       try {
-        predefinedBundlesProvider.createBundles(consumer);
+        provider.createBundles(bundles::add);
       }
       catch (Throwable e) {
         LOGGER.error(e);
       }
+    }
+
+    if (!bundles.isEmpty()) {
+      SdkTable sdkTable = SdkTable.getInstance();
+
+      for (SdkImpl bundle : bundles) {
+        bundle.setPredefined(true);
+      }
+
+      ((SdkTableImpl) sdkTable).addSdksUnsafe(bundles);
     }
   }
 }
