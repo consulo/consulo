@@ -868,7 +868,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
           ToolWindowManager.getInstance(myProject).activateEditorComponent();
 
           if (window.getOwner() instanceof DesktopEditorsSplitters) {
-            IdeFocusManager.getInstance(myProject).toFront((DesktopEditorsSplitters)window.getOwner());
+            IdeFocusManager.getInstance(myProject).toFront(window.getOwner().getComponent());
           }
         }
       }

@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -80,7 +81,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Deprecated
 @DeprecationInfo("Desktop only")
 @SuppressWarnings("deprecation")
-public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider, EditorsSplitters {
+public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   private static final Logger LOG = Logger.getInstance(DesktopEditorsSplitters.class);
 
   private static final String PINNED = "pinned";
@@ -98,15 +99,34 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   private final Alarm myIconUpdaterAlarm = new Alarm();
   private final UIBuilder myUIBuilder = new UIBuilder();
 
-  public DesktopEditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
-    super(new BorderLayout());
+  private final IdePanePanel myComponent;
 
-    AWTComponentProviderUtil.putMark(this, this);
+  public DesktopEditorsSplitters(FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
+    myComponent = new IdePanePanel(new BorderLayout()) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        if (showEmptyText()) {
+          Graphics2D gg = IdeBackgroundUtil.withFrameBackground(g, this);
+          super.paintComponent(gg);
+          g.setColor(UIUtil.isUnderDarcula() ? UIUtil.getBorderColor() : new Color(0, 0, 0, 50));
+          g.drawLine(0, 0, getWidth(), 0);
+        }
+      }
+    };
+    myComponent.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
+    myComponent.setTransferHandler(new MyTransferHandler());
+    DataManager.registerDataProvider(myComponent, dataId -> {
+      if (dataId == KEY) {
+        return this;
+      }
+      return null;
+    });
+
+    AWTComponentProviderUtil.putMark(myComponent, this);
 
     myManager = manager;
     myFocusWatcher = new MyFocusWatcher();
-    setFocusTraversalPolicy(new MyFocusTraversalPolicy());
-    setTransferHandler(new MyTransferHandler());
+
     clear();
 
     if (createOwnDockableContainer) {
@@ -115,25 +135,28 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       dockManager.register(dockable);
     }
     KeymapManagerListener keymapListener = keymap -> {
-      invalidate();
-      repaint();
+      myComponent.invalidate();
+      myComponent.repaint();
     };
     KeymapManager.getInstance().addKeymapManagerListener(keymapListener, this);
+
+    Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, source -> {
+      if (!myManager.getProject().isOpen()) {
+        return;
+      }
+
+      for (VirtualFile file : getOpenFiles()) {
+        updateFileBackgroundColor(file);
+        updateFileIcon(file);
+        updateFileColor(file);
+      }
+    });
   }
 
   @Nonnull
   @Override
   public JComponent getComponent() {
-    return this;
-  }
-
-  @Nullable
-  @Override
-  public Object getData(@Nonnull Key<?> dataId) {
-    if(KEY == dataId) {
-      return this;
-    }
-    return null;
+    return myComponent;
   }
 
   public FileEditorManagerImpl getManager() {
@@ -145,19 +168,19 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     for (DesktopEditorWindow window : myWindows) {
       window.dispose();
     }
-    removeAll();
+    myComponent.removeAll();
     myWindows.clear();
     setCurrentWindow(null);
-    repaint(); // revalidate doesn't repaint correctly after "Close All"
+    myComponent.repaint(); // revalidate doesn't repaint correctly after "Close All"
   }
 
   @Override
   public void startListeningFocus() {
-    myFocusWatcher.install(this);
+    myFocusWatcher.install(myComponent);
   }
 
   private void stopListeningFocus() {
-    myFocusWatcher.deinstall(this);
+    myFocusWatcher.deinstall(myComponent);
   }
 
   @Override
@@ -181,22 +204,12 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  protected void paintComponent(Graphics g) {
-    if (showEmptyText()) {
-      Graphics2D gg = IdeBackgroundUtil.withFrameBackground(g, this);
-      super.paintComponent(gg);
-      g.setColor(UIUtil.isUnderDarcula() ? UIUtil.getBorderColor() : new Color(0, 0, 0, 50));
-      g.drawLine(0, 0, getWidth(), 0);
-    }
-  }
-
-  @Override
   public void writeExternal(@Nonnull Element element) {
-    if (getComponentCount() == 0) {
+    if (myComponent.getComponentCount() == 0) {
       return;
     }
 
-    JPanel panel = (JPanel)getComponent(0);
+    JPanel panel = (JPanel)myComponent.getComponent(0);
     if (panel.getComponentCount() != 0) {
       try {
         element.addContent(writePanel(panel.getComponent(0)));
@@ -273,8 +286,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess);
       uiAccess.giveAndWaitIfNeed(() -> {
         if (comp != null) {
-          removeAll();
-          add(comp, BorderLayout.CENTER);
+          myComponent.removeAll();
+          myComponent.add(comp, BorderLayout.CENTER);
           mySplittersElement = null;
         }
         // clear empty splitters
@@ -411,7 +424,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
         updateFileIconImmediately(file1);
       }
       myFilesToUpdateIconsFor.clear();
-    }, 200, ModalityState.stateForComponent(this));
+    }, 200, ModalityState.stateForComponent(myComponent));
   }
 
   @Override
@@ -485,11 +498,11 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   @Override
   public AccessToken increaseChange() {
-    myInsideChange ++;
+    myInsideChange++;
     return new AccessToken() {
       @Override
       public void finish() {
-        myInsideChange --;
+        myInsideChange--;
       }
     };
   }
@@ -511,8 +524,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   @Override
   public int getSplitCount() {
-    if (getComponentCount() > 0) {
-      JPanel panel = (JPanel)getComponent(0);
+    if (myComponent.getComponentCount() > 0) {
+      JPanel panel = (JPanel)myComponent.getComponent(0);
       return getSplitCount(panel);
     }
     return 0;
@@ -538,8 +551,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   @Nullable
   JBTabs getTabsAt(RelativePoint point) {
-    Point thisPoint = point.getPoint(this);
-    Component c = SwingUtilities.getDeepestComponentAt(this, thisPoint.x, thisPoint.y);
+    Point thisPoint = point.getPoint(myComponent);
+    Component c = SwingUtilities.getDeepestComponentAt(myComponent, thisPoint.x, thisPoint.y);
     while (c != null) {
       if (c instanceof JBTabs) {
         return (JBTabs)c;
@@ -574,8 +587,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return null;
   }
 
- @Override
- public void closeFile(VirtualFile file, boolean moveFocus) {
+  @Override
+  public void closeFile(VirtualFile file, boolean moveFocus) {
     final List<DesktopEditorWindow> windows = findWindows(file);
     if (!windows.isEmpty()) {
       final VirtualFile nextFile = findNextFile(file);
@@ -600,16 +613,6 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
-  @Override
-  public void uiSettingsChanged(UISettings uiSettings) {
-    if (!myManager.getProject().isOpen()) return;
-    for (VirtualFile file : getOpenFiles()) {
-      updateFileBackgroundColor(file);
-      updateFileIcon(file);
-      updateFileColor(file);
-    }
-  }
-
   private final class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
     @Override
     public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
@@ -619,13 +622,13 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
           return IdeFocusTraversalPolicy.getPreferredFocusedComponent(selectedEditor.getComponent(), this);
         }
       }
-      return IdeFocusTraversalPolicy.getPreferredFocusedComponent(DesktopEditorsSplitters.this, this);
+      return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myComponent, this);
     }
   }
 
   @Nullable
   public JPanel getTopPanel() {
-    return getComponentCount() > 0 ? (JPanel)getComponent(0) : null;
+    return myComponent.getComponentCount() > 0 ? (JPanel)myComponent.getComponent(0) : null;
   }
 
   @Override
@@ -661,7 +664,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   void createCurrentWindow() {
     LOG.assertTrue(myCurrentWindow == null);
     setCurrentWindow(createEditorWindow());
-    add(myCurrentWindow.myPanel, BorderLayout.CENTER);
+    myComponent.add(myCurrentWindow.myPanel, BorderLayout.CENTER);
   }
 
   protected DesktopEditorWindow createEditorWindow() {
@@ -784,8 +787,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
 
     // get root component and traverse splitters tree:
-    if (getComponentCount() != 0) {
-      final Component comp = getComponent(0);
+    if (myComponent.getComponentCount() != 0) {
+      final Component comp = myComponent.getComponent(0);
       LOG.assertTrue(comp instanceof JPanel);
       final JPanel panel = (JPanel)comp;
       if (panel.getComponentCount() != 0) {
@@ -983,7 +986,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       }
       final Ref<JPanel> firstComponent = new Ref<>();
       final Ref<JPanel> secondComponent = new Ref<>();
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+      uiAccess.giveAndWaitIfNeed(() -> {
         if (context.getComponent(0) instanceof Splitter) {
           Splitter splitter = (Splitter)context.getComponent(0);
           firstComponent.set((JPanel)splitter.getFirstComponent());

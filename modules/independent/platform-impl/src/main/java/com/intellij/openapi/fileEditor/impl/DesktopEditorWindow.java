@@ -35,7 +35,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -52,13 +55,11 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
-import consulo.fileEditor.impl.EditorComposite;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWindowBase;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.impl.*;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.migration.AWTComponentProviderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -273,7 +274,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
           if (UISettings.getInstance().getEditorTabPlacement() == UISettings.TABS_NONE) {
             final DesktopEditorsSplitters owner = getOwner();
             if (owner != null) {
-              final ThreeComponentsSplitter splitter = UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner);
+              final ThreeComponentsSplitter splitter = UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner.getComponent());
               if (splitter != null) {
                 splitter.revalidate();
                 splitter.repaint();
@@ -326,7 +327,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
         parentSplitter.setSecondComponent(otherComponent);
       }
     }
-    else if (parent instanceof DesktopEditorsSplitters) {
+    else if (AWTComponentProviderUtil.getMark(parent) instanceof EditorsSplitters) {
       parent.removeAll();
       parent.add(otherComponent, BorderLayout.CENTER);
       parent.revalidate();
@@ -644,11 +645,11 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
       if (myTabbedPane == null) {
         myPanel.removeAll();
         myPanel.add(new TCompForTablessMode(this, (DesktopEditorWithProviderComposite)editor), BorderLayout.CENTER);
-        myOwner.validate();
+        myOwner.getComponent().validate();
         return;
       }
 
-      final int index = findEditorIndex((DesktopEditorWithProviderComposite)editor);
+      final int index = findEditorIndex(editor);
       if (index != -1) {
         if (selectEditor) {
           setSelectedEditor((DesktopEditorWithProviderComposite)editor, focusEditor);
@@ -686,7 +687,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
       }
       myOwner.setCurrentWindow(this, false);
     }
-    myOwner.validate();
+    myOwner.getComponent().validate();
   }
 
   protected void onBeforeSetEditor(VirtualFile file) {
@@ -1031,7 +1032,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
 
   @Override
   public void setFilePinned(final VirtualFile file, final boolean pinned) {
-    final DesktopEditorComposite editorComposite = (DesktopEditorComposite)findFileComposite(file);
+    final DesktopEditorComposite editorComposite = findFileComposite(file);
     if (editorComposite == null) {
       throw new IllegalArgumentException("file is not open: " + file.getPath());
     }

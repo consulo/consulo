@@ -104,7 +104,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
           DesktopEditorsSplitters splitters = new DesktopEditorsSplitters(this, myDockManager, true);
           mySplitters = splitters;
           Disposer.register(myProject, splitters);
-          panel.add(splitters, BorderLayout.CENTER);
+          panel.add(splitters.getComponent(), BorderLayout.CENTER);
           myPanels = panel;
         }
       }
