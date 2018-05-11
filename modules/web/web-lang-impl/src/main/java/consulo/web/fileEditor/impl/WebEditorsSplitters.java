@@ -17,11 +17,12 @@ package consulo.web.fileEditor.impl;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -37,15 +38,13 @@ import java.util.List;
  * @author VISTALL
  * @since 2018-05-09
  */
-public class WebEditorsSplitters implements EditorsSplitters {
-  private FileEditorManagerEx myEditorManager;
-
+public class WebEditorsSplitters extends EditorsSplittersBase implements EditorsSplitters {
   private EditorWindow myCurrentWindow;
 
   private WrappedLayout myLayout;
 
-  public WebEditorsSplitters(FileEditorManagerEx editorManager) {
-    myEditorManager = editorManager;
+  public WebEditorsSplitters(FileEditorManagerImpl editorManager) {
+    super(editorManager);
 
     myLayout = WrappedLayout.create();
   }
@@ -93,7 +92,7 @@ public class WebEditorsSplitters implements EditorsSplitters {
     if (myCurrentWindow != null) {
       return myCurrentWindow;
     }
-    myCurrentWindow = new WebEditorWindow(myEditorManager, this);
+    myCurrentWindow = new WebEditorWindow(myManager, this);
     myLayout.set(myCurrentWindow.getUIComponent());
     return myCurrentWindow;
   }
@@ -115,11 +114,6 @@ public class WebEditorsSplitters implements EditorsSplitters {
 
   @Override
   public void updateFileIcon(VirtualFile virtualFile) {
-
-  }
-
-  @Override
-  public void updateFileName(VirtualFile virtualFile) {
 
   }
 

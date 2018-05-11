@@ -15,9 +15,10 @@
  */
 package consulo.web.fileEditor.impl;
 
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWindowBase;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileTypes.impl.VfsIconUtil;
@@ -28,6 +29,7 @@ import consulo.ui.TabbedLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -35,8 +37,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 2018-05-09
  */
-public class WebEditorWindow implements EditorWindow {
-  private FileEditorManagerEx myManager;
+public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
+  private FileEditorManagerImpl myManager;
   private EditorsSplitters myEditorsSplitters;
 
   private TabbedLayout myTabbedLayout = TabbedLayout.create();
@@ -44,7 +46,7 @@ public class WebEditorWindow implements EditorWindow {
   private Map<EditorWithProviderComposite, Tab> myEditors = new LinkedHashMap<>();
 
   @RequiredUIAccess
-  public WebEditorWindow(FileEditorManagerEx manager, EditorsSplitters editorsSplitters) {
+  public WebEditorWindow(FileEditorManagerImpl manager, EditorsSplitters editorsSplitters) {
     myManager = manager;
     myEditorsSplitters = editorsSplitters;
   }
@@ -55,15 +57,38 @@ public class WebEditorWindow implements EditorWindow {
     return myTabbedLayout;
   }
 
-  @Nonnull
   @Override
-  public FileEditorManagerEx getManager() {
-    return myManager;
+  public int getTabCount() {
+    return myEditors.size();
   }
 
   @Override
-  public void closeAllExcept(VirtualFile selectedFile) {
+  protected EditorWithProviderComposite getEditorAt(int i) {
+    return myEditors.keySet().toArray(new EditorWithProviderComposite[myEditors.size()])[i];
+  }
 
+  @Override
+  protected void setTitleAt(int index, String text) {
+    EditorWithProviderComposite editorAt = getEditorAt(index);
+    Tab tab = myEditors.get(editorAt);
+    tab.clearText();
+    tab.append(text);
+  }
+
+  @Override
+  protected void setBackgroundColorAt(int index, Color color) {
+
+  }
+
+  @Override
+  protected void setToolTipTextAt(int index, String text) {
+
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorManagerImpl getManager() {
+    return myManager;
   }
 
   @Nullable
@@ -84,31 +109,8 @@ public class WebEditorWindow implements EditorWindow {
 
   @Nonnull
   @Override
-  public EditorWithProviderComposite[] getEditors() {
-    return myEditors.keySet().toArray(new EditorWithProviderComposite[myEditors.size()]);
-  }
-
-  @Nonnull
-  @Override
   public EditorWindow[] findSiblings() {
     return new EditorWindow[0];
-  }
-
-  @Nonnull
-  @Override
-  public VirtualFile[] getFiles() {
-    return new VirtualFile[0];
-  }
-
-  @Nullable
-  @Override
-  public EditorWithProviderComposite findFileComposite(VirtualFile file) {
-    for (EditorWithProviderComposite composite : myEditors.keySet()) {
-      if (file.equals(composite.getFile())) {
-        return composite;
-      }
-    }
-    return null;
   }
 
   @Nullable
@@ -126,11 +128,6 @@ public class WebEditorWindow implements EditorWindow {
   @Override
   public VirtualFile getSelectedFile() {
     return null;
-  }
-
-  @Override
-  public int getTabCount() {
-    return 0;
   }
 
   @Override
@@ -156,19 +153,6 @@ public class WebEditorWindow implements EditorWindow {
   @Override
   public void clear() {
     myEditors.clear();
-  }
-
-  @Override
-  public int findFileIndex(VirtualFile fileToFind) {
-    int i = 0;
-    for (EditorWithProviderComposite editorWithProviderComposite : myEditors.keySet()) {
-      if (fileToFind.equals(editorWithProviderComposite.getFile())) {
-        return i;
-      }
-
-      i++;
-    }
-    return -1;
   }
 
   @Override

@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -22,6 +21,7 @@ import com.intellij.openapi.wm.impl.IdeFocusManagerHeadless;
 import com.intellij.util.ArrayUtil;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
 
@@ -172,13 +172,13 @@ public class Mock {
     }
 
     @Override
-    public DesktopEditorsSplitters getSplittersFor(Component c) {
+    public EditorsSplitters getSplittersFor(Component c) {
       return null;
     }
 
     @Nonnull
     @Override
-    public DesktopEditorsSplitters getSplitters() {
+    public EditorsSplitters getSplitters() {
       throw new RuntimeException("not implemented");
     }
 

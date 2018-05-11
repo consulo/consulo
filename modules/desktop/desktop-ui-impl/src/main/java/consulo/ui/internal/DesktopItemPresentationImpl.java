@@ -43,6 +43,15 @@ public class DesktopItemPresentationImpl<E> implements ItemPresentation {
   }
 
   @Override
+  public void clearText() {
+    Icon icon = myRenderer.getIcon();
+
+    myRenderer.clear();
+
+    myRenderer.setIcon(icon);
+  }
+
+  @Override
   public void append(@Nonnull String text) {
     myRenderer.append(text);
   }

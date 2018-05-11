@@ -35,6 +35,11 @@ public class DesktopTabImpl implements Tab {
   }
 
   @Override
+  public void clearText() {
+
+  }
+
+  @Override
   public void append(@Nonnull String text) {
 
   }

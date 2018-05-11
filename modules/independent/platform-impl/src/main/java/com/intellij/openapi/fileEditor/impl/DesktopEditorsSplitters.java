@@ -245,7 +245,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   private void writeWindow(@Nonnull Element res, @Nullable DesktopEditorWindow window) {
     if (window != null) {
-      DesktopEditorWithProviderComposite[] composites = window.getEditors();
+      EditorWithProviderComposite[] composites = window.getEditors();
       for (int i = 0; i < composites.length; i++) {
         VirtualFile file = window.getFileAt(i);
         res.addContent(writeComposite(file, composites[i], window.isFilePinned(file), window.getSelectedEditor()));
@@ -254,7 +254,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Nonnull
-  private Element writeComposite(VirtualFile file, DesktopEditorWithProviderComposite composite, boolean pinned, DesktopEditorWithProviderComposite selectedEditor) {
+  private Element writeComposite(VirtualFile file, EditorWithProviderComposite composite, boolean pinned, DesktopEditorWithProviderComposite selectedEditor) {
     Element fileElement = new Element("file");
     fileElement.setAttribute("leaf-file-name", file.getName()); // TODO: all files
     composite.currentStateAsHistoryEntry().writeExternal(fileElement, getManager().getProject());
@@ -329,8 +329,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   public VirtualFile[] getOpenFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();
     for (final DesktopEditorWindow myWindow : myWindows) {
-      final DesktopEditorWithProviderComposite[] editors = myWindow.getEditors();
-      for (final DesktopEditorWithProviderComposite editor : editors) {
+      final EditorWithProviderComposite[] editors = myWindow.getEditors();
+      for (final EditorWithProviderComposite editor : editors) {
         VirtualFile file = editor.getFile();
         // background thread may call this method when invalid file is being removed
         // do not return it here as it will quietly drop out soon

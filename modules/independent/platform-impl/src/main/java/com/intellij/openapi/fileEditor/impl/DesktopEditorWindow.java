@@ -52,7 +52,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWindowBase;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.RequiredUIAccess;
@@ -76,7 +78,7 @@ import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 @Deprecated
 @DeprecationInfo("Desktop only")
 @SuppressWarnings("deprecation")
-public class DesktopEditorWindow implements EditorWindow {
+public class DesktopEditorWindow extends EditorWindowBase implements EditorWindow {
   private static final Logger LOG = Logger.getInstance(DesktopEditorWindow.class);
 
   protected JPanel myPanel;
@@ -158,16 +160,6 @@ public class DesktopEditorWindow implements EditorWindow {
 
   public boolean isShowing() {
     return myPanel.isShowing();
-  }
-
-  @Override
-  public void closeAllExcept(final VirtualFile selectedFile) {
-    final VirtualFile[] files = getFiles();
-    for (final VirtualFile file : files) {
-      if (!Comparing.equal(file, selectedFile) && !isFilePinned(file)) {
-        closeFile(file);
-      }
-    }
   }
 
   void dispose() {
@@ -416,19 +408,22 @@ public class DesktopEditorWindow implements EditorWindow {
     }
   }
 
-  private void setTitleAt(final int index, final String text) {
+  @Override
+  protected void setTitleAt(final int index, final String text) {
     if (myTabbedPane != null) {
       myTabbedPane.setTitleAt(index, text);
     }
   }
 
-  private void setBackgroundColorAt(final int index, final Color color) {
+  @Override
+  protected void setBackgroundColorAt(final int index, final Color color) {
     if (myTabbedPane != null) {
       myTabbedPane.setBackgroundColorAt(index, color);
     }
   }
 
-  private void setToolTipTextAt(final int index, final String text) {
+  @Override
+  protected void setToolTipTextAt(final int index, final String text) {
     if (myTabbedPane != null) {
       myTabbedPane.setToolTipTextAt(index, text);
     }
@@ -512,6 +507,7 @@ public class DesktopEditorWindow implements EditorWindow {
     return myTabbedPane;
   }
 
+  @Override
   public void requestFocus(boolean forced) {
     if (myTabbedPane != null) {
       myTabbedPane.requestFocus(forced);
@@ -622,28 +618,6 @@ public class DesktopEditorWindow implements EditorWindow {
       return comp.myEditor;
     }
     return null;
-  }
-
-  @Nonnull
-  @Override
-  public DesktopEditorWithProviderComposite[] getEditors() {
-    final int tabCount = getTabCount();
-    final DesktopEditorWithProviderComposite[] res = new DesktopEditorWithProviderComposite[tabCount];
-    for (int i = 0; i != tabCount; ++i) {
-      res[i] = getEditorAt(i);
-    }
-    return res;
-  }
-
-  @Nonnull
-  @Override
-  public VirtualFile[] getFiles() {
-    final int tabCount = getTabCount();
-    final VirtualFile[] res = new VirtualFile[tabCount];
-    for (int i = 0; i != tabCount; ++i) {
-      res[i] = getEditorAt(i).getFile();
-    }
-    return res;
   }
 
   public void setSelectedEditor(final DesktopEditorComposite editor, final boolean focusEditor) {
@@ -886,7 +860,8 @@ public class DesktopEditorWindow implements EditorWindow {
     setIconAt(index, getFileIcon(file));
   }
 
-  void updateFileName(VirtualFile file) {
+  @Override
+  protected void updateFileName(VirtualFile file) {
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
       setTitleAt(index, EditorTabbedContainer.calcTabTitle(getManager().getProject(), file));
@@ -945,7 +920,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
     if (!(splitter instanceof Splitter)) return;
 
-    DesktopEditorWithProviderComposite editorToSelect = getSelectedEditor();
+    EditorWithProviderComposite editorToSelect = getSelectedEditor();
     final DesktopEditorWindow[] siblings = findSiblings();
     final JPanel parent = (JPanel)splitter.getParent();
 
@@ -958,12 +933,12 @@ public class DesktopEditorWindow implements EditorWindow {
     }
 
     for (final DesktopEditorWindow sibling : siblings) {
-      final DesktopEditorWithProviderComposite[] siblingEditors = sibling.getEditors();
-      for (final DesktopEditorWithProviderComposite siblingEditor : siblingEditors) {
+      final EditorWithProviderComposite[] siblingEditors = sibling.getEditors();
+      for (final EditorWithProviderComposite siblingEditor : siblingEditors) {
         if (editorToSelect == null) {
           editorToSelect = siblingEditor;
         }
-        processSiblingEditor(siblingEditor);
+        processSiblingEditor((DesktopEditorWithProviderComposite)siblingEditor);
       }
       LOG.assertTrue(sibling != this);
       sibling.dispose();
@@ -980,7 +955,7 @@ public class DesktopEditorWindow implements EditorWindow {
     parent.revalidate();
     myPanel = parent;
     if (editorToSelect != null) {
-      setSelectedEditor(editorToSelect, true);
+      setSelectedEditor((DesktopEditorComposite)editorToSelect, true);
     }
     if (setCurrent) {
       myOwner.setCurrentWindow(this, false);
@@ -1017,19 +992,6 @@ public class DesktopEditorWindow implements EditorWindow {
     return editor == null ? null : editor.getFile();
   }
 
-  @Override
-  @Nullable
-  public DesktopEditorWithProviderComposite findFileComposite(final VirtualFile file) {
-    for (int i = 0; i != getTabCount(); ++i) {
-      final DesktopEditorWithProviderComposite editor = getEditorAt(i);
-      if (editor.getFile().equals(file)) {
-        return editor;
-      }
-    }
-    return null;
-  }
-
-
   private int findComponentIndex(final Component component) {
     for (int i = 0; i != getTabCount(); ++i) {
       final DesktopEditorWithProviderComposite editor = getEditorAt(i);
@@ -1040,28 +1002,8 @@ public class DesktopEditorWindow implements EditorWindow {
     return -1;
   }
 
-  int findEditorIndex(final DesktopEditorComposite editorToFind) {
-    for (int i = 0; i != getTabCount(); ++i) {
-      final DesktopEditorWithProviderComposite editor = getEditorAt(i);
-      if (editor.equals(editorToFind)) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
   @Override
-  public int findFileIndex(final VirtualFile fileToFind) {
-    for (int i = 0; i != getTabCount(); ++i) {
-      final VirtualFile file = getFileAt(i);
-      if (file.equals(fileToFind)) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  private DesktopEditorWithProviderComposite getEditorAt(final int i) {
+  protected DesktopEditorWithProviderComposite getEditorAt(final int i) {
     final TComp comp;
     if (myTabbedPane != null) {
       comp = (TComp)myTabbedPane.getComponentAt(i);
@@ -1080,7 +1022,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
   @Override
   public boolean isFilePinned(final VirtualFile file) {
-    final DesktopEditorComposite editorComposite = findFileComposite(file);
+    final EditorComposite editorComposite = findFileComposite(file);
     if (editorComposite == null) {
       throw new IllegalArgumentException("file is not open: " + file.getPath());
     }
@@ -1089,7 +1031,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
   @Override
   public void setFilePinned(final VirtualFile file, final boolean pinned) {
-    final DesktopEditorComposite editorComposite = findFileComposite(file);
+    final DesktopEditorComposite editorComposite = (DesktopEditorComposite)findFileComposite(file);
     if (editorComposite == null) {
       throw new IllegalArgumentException("file is not open: " + file.getPath());
     }
@@ -1216,18 +1158,20 @@ public class DesktopEditorWindow implements EditorWindow {
     return isFileOpen(file) && !file.equals(fileToIgnore) && !isFilePinned(file);
   }
 
-  VirtualFile getFileAt(int i) {
-    return getEditorAt(i).getFile();
-  }
-
   @Override
   public void clear() {
-    for (DesktopEditorWithProviderComposite composite : getEditors()) {
+    for (EditorWithProviderComposite composite : getEditors()) {
       Disposer.dispose(composite);
     }
     if (myTabbedPane == null) {
       myPanel.removeAll();
     }
+  }
+
+  @Nullable
+  @Override
+  public DesktopEditorWithProviderComposite findFileComposite(VirtualFile file) {
+    return (DesktopEditorWithProviderComposite)super.findFileComposite(file);
   }
 
   @Override

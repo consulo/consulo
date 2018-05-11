@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -25,6 +26,8 @@ import javax.annotation.Nullable;
  */
 public interface ItemPresentation {
   void setIcon(@Nullable Image image);
+
+  void clearText();
 
   void append(@Nonnull String text);
 

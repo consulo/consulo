@@ -34,6 +34,8 @@ class WGwtItemPresentationImpl implements ItemPresentation {
   @Override
   public void setIcon(@Nullable Image image) {
     myItem.myImageState = image == null ? null : WGwtImageUrlCache.map(image).getState();
+
+    after();
   }
 
   @Override
@@ -41,6 +43,15 @@ class WGwtItemPresentationImpl implements ItemPresentation {
     ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
     segment.myText = text;
     myItem.myItemSegments.add(segment);
+
+    after();
+  }
+
+  @Override
+  public void clearText() {
+    myItem.myItemSegments.clear();
+
+    after();
   }
 
   @Override
@@ -49,9 +60,14 @@ class WGwtItemPresentationImpl implements ItemPresentation {
     segment.myText = text;
     //TODO [VISTALL] style!
     myItem.myItemSegments.add(segment);
+
+    after();
   }
 
   public ComboBoxState.Item getItem() {
     return myItem;
+  }
+
+  protected void after() {
   }
 }
