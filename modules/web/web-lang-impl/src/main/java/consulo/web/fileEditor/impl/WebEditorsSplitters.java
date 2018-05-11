@@ -24,6 +24,7 @@ import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.WrappedLayout;
 import org.jdom.Element;
 
@@ -66,7 +67,7 @@ public class WebEditorsSplitters implements EditorsSplitters {
   }
 
   @Override
-  public void openFiles() {
+  public void openFiles(@Nonnull UIAccess uiAccess) {
 
   }
 

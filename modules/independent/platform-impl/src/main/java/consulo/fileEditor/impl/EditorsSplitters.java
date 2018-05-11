@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ public interface EditorsSplitters {
 
   void writeExternal(Element element);
 
-  void openFiles();
+  void openFiles(@Nonnull UIAccess uiAccess);
 
   int getSplitCount();
 

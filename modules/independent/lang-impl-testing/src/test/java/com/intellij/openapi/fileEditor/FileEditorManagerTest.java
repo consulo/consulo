@@ -28,6 +28,7 @@ import com.intellij.testFramework.PsiTestExtensionUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.ui.UIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -160,10 +161,11 @@ public class FileEditorManagerTest extends FileEditorManagerTestCase {
 
     myManager.loadState(rootElement);
 
+    UIAccess uiAccess = UIAccess.get();
     Future<?> future = ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override
       public void run() {
-        myManager.getMainSplitters().openFiles();
+        myManager.getMainSplitters().openFiles(uiAccess);
       }
     });
     future.get();

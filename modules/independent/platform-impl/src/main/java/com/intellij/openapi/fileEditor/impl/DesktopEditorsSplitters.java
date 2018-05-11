@@ -60,6 +60,7 @@ import consulo.application.AccessRule;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
@@ -77,6 +78,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 @Deprecated
 @DeprecationInfo("Desktop only")
+@SuppressWarnings("deprecation")
 public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider, EditorsSplitters {
   private static final Logger LOG = Logger.getInstance(DesktopEditorsSplitters.class);
 
@@ -262,10 +264,10 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  public void openFiles() {
+  public void openFiles(@Nonnull UIAccess uiAccess) {
     if (mySplittersElement != null) {
-      final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel());
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+      final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess);
+      uiAccess.giveAndWaitIfNeed(() -> {
         if (comp != null) {
           removeAll();
           add(comp, BorderLayout.CENTER);
@@ -284,7 +286,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   public int getEditorsCount() {
-    return mySplittersElement == null ? 0 : countFiles(mySplittersElement);
+    return mySplittersElement == null ? 0 : countFiles(mySplittersElement, UIAccess.get());
   }
 
   private double myProgressStep;
@@ -300,20 +302,20 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
-  private static int countFiles(Element element) {
+  private static int countFiles(Element element, UIAccess uiAccess) {
     Integer value = new ConfigTreeReader<Integer>() {
       @Override
-      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context) {
+      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context, UIAccess uiAccess) {
         return fileElements.size();
       }
 
       @Override
-      protected Integer processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable Integer context) {
-        Integer first = process(firstChild, null);
-        Integer second = process(secondChild, null);
+      protected Integer processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable Integer context, UIAccess uiAccess) {
+        Integer first = process(firstChild, null, uiAccess);
+        Integer second = process(secondChild, null, uiAccess);
         return (first == null ? 0 : first) + (second == null ? 0 : second);
       }
-    }.process(element, null);
+    }.process(element, null, uiAccess);
     return value == null ? 0 : value;
   }
 
@@ -850,7 +852,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   private abstract static class ConfigTreeReader<T> {
     @Nullable
-    public T process(@Nullable Element element, @Nullable T context) {
+    public T process(@Nullable Element element, @Nullable T context, UIAccess uiAccess) {
       if (element == null) {
         return null;
       }
@@ -858,7 +860,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       if (splitterElement != null) {
         final Element first = splitterElement.getChild("split-first");
         final Element second = splitterElement.getChild("split-second");
-        return processSplitter(splitterElement, first, second, context);
+        return processSplitter(splitterElement, first, second, context, uiAccess);
       }
 
       final Element leaf = element.getChild("leaf");
@@ -880,22 +882,22 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
         }
       }
 
-      return processFiles(children, context);
+      return processFiles(children, context, uiAccess);
     }
 
     @Nullable
-    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context);
+    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context, UIAccess uiAccess);
 
     @Nullable
-    protected abstract T processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context);
+    protected abstract T processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context, @Nonnull UIAccess uiAccess);
   }
 
   private class UIBuilder extends ConfigTreeReader<JPanel> {
 
     @Override
-    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context) {
+    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context, UIAccess uiAccess) {
       final Ref<DesktopEditorWindow> windowRef = new Ref<>();
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> windowRef.set(context == null ? createEditorWindow() : findWindowWith(context)));
+      uiAccess.giveAndWaitIfNeed(() -> windowRef.set(context == null ? createEditorWindow() : findWindowWith(context)));
       final DesktopEditorWindow window = windowRef.get();
       LOG.assertTrue(window != null);
       VirtualFile focusedFile = null;
@@ -924,7 +926,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
           Document document = AccessRule.read(action);
           final boolean isCurrentInTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB)).booleanValue();
           Boolean pin = Boolean.valueOf(file.getAttributeValue(PINNED));
-          fileEditorManager.openFileImpl4(window, virtualFile, entry, false, false, pin, i);
+          fileEditorManager.openFileImpl4(uiAccess, window, virtualFile, entry, false, false, pin, i);
           if (isCurrentInTab) {
             focusedFile = virtualFile;
           }
@@ -945,7 +947,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       if (focusedFile != null) {
         getManager().addSelectionRecord(focusedFile, window);
         VirtualFile finalFocusedFile = focusedFile;
-        UIUtil.invokeLaterIfNeeded(() -> {
+
+        uiAccess.giveIfNeed(() -> {
           DesktopEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
           if (editor != null) {
             window.setEditor(editor, true, true);
@@ -956,12 +959,12 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
 
     @Override
-    protected JPanel processSplitter(@Nonnull Element splitterElement, Element firstChild, Element secondChild, final JPanel context) {
+    protected JPanel processSplitter(@Nonnull Element splitterElement, Element firstChild, Element secondChild, final JPanel context, UIAccess uiAccess) {
       if (context == null) {
         final boolean orientation = "vertical".equals(splitterElement.getAttributeValue("split-orientation"));
         final float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion")).floatValue();
-        final JPanel firstComponent = process(firstChild, null);
-        final JPanel secondComponent = process(secondChild, null);
+        final JPanel firstComponent = process(firstChild, null, uiAccess);
+        final JPanel secondComponent = process(secondChild, null, uiAccess);
         final Ref<JPanel> panelRef = new Ref<>();
         UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
           JPanel panel = new JPanel(new BorderLayout());
@@ -987,8 +990,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
           secondComponent.set(context);
         }
       });
-      process(firstChild, firstComponent.get());
-      process(secondChild, secondComponent.get());
+      process(firstChild, firstComponent.get(), uiAccess);
+      process(secondChild, secondComponent.get(), uiAccess);
       return context;
     }
   }

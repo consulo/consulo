@@ -19,6 +19,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,11 +30,11 @@ import javax.annotation.Nonnull;
 public class OpenFilesActivity implements StartupActivity, DumbAware {
 
   @Override
-  public void runActivity(@Nonnull Project project) {
+  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
     if (fileEditorManager instanceof FileEditorManagerImpl) {
       final FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;
-      manager.getMainSplitters().openFiles();
+      manager.getMainSplitters().openFiles(uiAccess);
       manager.initDockableContentFactory();
     }
   }

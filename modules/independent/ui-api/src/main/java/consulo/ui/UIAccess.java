@@ -54,4 +54,22 @@ public interface UIAccess {
   void give(@RequiredUIAccess @Nonnull Runnable runnable);
 
   void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable);
+
+  default void giveIfNeed(@RequiredUIAccess @Nonnull Runnable runnable) {
+    if (isUIThread()) {
+      runnable.run();
+    }
+    else {
+      give(runnable);
+    }
+  }
+
+  default void giveAndWaitIfNeed(@RequiredUIAccess @Nonnull Runnable runnable) {
+    if (isUIThread()) {
+      runnable.run();
+    }
+    else {
+      giveAndWait(runnable);
+    }
+  }
 }

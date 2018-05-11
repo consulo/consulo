@@ -66,6 +66,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -912,7 +913,7 @@ public class Switcher extends AnAction implements DumbAware {
               else if (info.second != null) {
                 EditorWindow wnd = findAppropriateWindow(info);
                 if (wnd != null) {
-                  manager.openFileImpl2(wnd, file, true);
+                  manager.openFileImpl2(UIAccess.get(), wnd, file, true);
                   manager.addSelectionRecord(file, wnd);
                 }
               }

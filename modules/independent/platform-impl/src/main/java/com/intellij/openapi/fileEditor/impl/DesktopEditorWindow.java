@@ -56,6 +56,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -74,6 +75,7 @@ import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
  */
 @Deprecated
 @DeprecationInfo("Desktop only")
+@SuppressWarnings("deprecation")
 public class DesktopEditorWindow implements EditorWindow {
   private static final Logger LOG = Logger.getInstance(DesktopEditorWindow.class);
 
@@ -215,7 +217,7 @@ public class DesktopEditorWindow implements EditorWindow {
     final VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(info.getFirst());
     final Integer second = info.getSecond();
     if (file != null) {
-      getManager().openFileImpl4(this, file, null, true, true, null, second == null ? -1 : second.intValue());
+      getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
     }
   }
 
@@ -226,7 +228,7 @@ public class DesktopEditorWindow implements EditorWindow {
       final VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(info.getFirst());
       final Integer second = info.getSecond();
       if (file != null) {
-        getManager().openFileImpl4(this, file, null, true, true, null, second == null ? -1 : second.intValue());
+        getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
       }
     }
   }
@@ -471,7 +473,7 @@ public class DesktopEditorWindow implements EditorWindow {
       disposeTabs();
       if (currentFile != null) {
         currentFile.putUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN, null);
-        getManager().openFileImpl2(this, currentFile, focusEditor && myOwner.getCurrentWindow() == this);
+        getManager().openFileImpl2(UIAccess.get(), this, currentFile, focusEditor && myOwner.getCurrentWindow() == this);
       }
       else {
         myPanel.repaint();
@@ -730,7 +732,7 @@ public class DesktopEditorWindow implements EditorWindow {
         final DesktopEditorWindow[] siblings = findSiblings();
         final DesktopEditorWindow target = siblings[0];
         if (virtualFile != null) {
-          final FileEditor[] editors = fileEditorManager.openFileImpl3(target, virtualFile, focusNew, null, true).first;
+          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.get(), target, virtualFile, focusNew, null, true).first;
           syncCaretIfPossible(editors);
         }
         return target;
@@ -775,7 +777,7 @@ public class DesktopEditorWindow implements EditorWindow {
           }
 
           final VirtualFile nextFile = virtualFile == null ? file : virtualFile;
-          final FileEditor[] editors = fileEditorManager.openFileImpl3(res, nextFile, focusNew, null, true).first;
+          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.get(), res, nextFile, focusNew, null, true).first;
           syncCaretIfPossible(editors);
           res.setFilePinned(nextFile, isFilePinned(file));
           if (!focusNew) {
@@ -794,9 +796,9 @@ public class DesktopEditorWindow implements EditorWindow {
           panel.revalidate();
           final VirtualFile firstFile = firstEC.getFile();
           final VirtualFile nextFile = virtualFile == null ? firstFile : virtualFile;
-          final FileEditor[] firstEditors = fileEditorManager.openFileImpl3(this, firstFile, !focusNew, null, true).first;
+          final FileEditor[] firstEditors = fileEditorManager.openFileImpl3(UIAccess.get(), this, firstFile, !focusNew, null, true).first;
           syncCaretIfPossible(firstEditors);
-          final FileEditor[] secondEditors = fileEditorManager.openFileImpl3(res, nextFile, focusNew, null, true).first;
+          final FileEditor[] secondEditors = fileEditorManager.openFileImpl3(UIAccess.get(), res, nextFile, focusNew, null, true).first;
           syncCaretIfPossible(secondEditors);
         }
         return res;

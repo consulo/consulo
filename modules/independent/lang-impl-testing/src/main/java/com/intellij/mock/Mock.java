@@ -152,6 +152,7 @@ public class Mock {
       return AsyncResult.resolved();
     }
 
+    @RequiredUIAccess
     @Nonnull
     @Override
     public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
