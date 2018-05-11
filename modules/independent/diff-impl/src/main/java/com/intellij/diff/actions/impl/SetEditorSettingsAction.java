@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
@@ -143,7 +143,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
               public void applyDefaults(@Nonnull List<? extends Editor> editors) {
                 if (!myTextSettings.isUseSoftWraps()) {
                   for (Editor editor : editors) {
-                    myForcedSoftWrap = myForcedSoftWrap || ((EditorImpl)editor).shouldSoftWrapsBeForced();
+                    myForcedSoftWrap = myForcedSoftWrap || ((DesktopEditorImpl)editor).shouldSoftWrapsBeForced();
                   }
                 }
                 super.applyDefaults(editors);
@@ -225,7 +225,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
 
     private void apply(@Nonnull HighlightingLevel layer) {
       for (Editor editor : myEditors) {
-        ((EditorImpl)editor).setHighlightingFilter(layer.getCondition());
+        ((DesktopEditorImpl)editor).setHighlightingFilter(layer.getCondition());
       }
     }
 

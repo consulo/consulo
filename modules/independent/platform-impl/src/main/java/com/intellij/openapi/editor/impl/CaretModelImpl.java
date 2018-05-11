@@ -47,7 +47,7 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 
 public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, Disposable, Dumpable, InlayModel.Listener {
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
 
   private final EventDispatcher<CaretListener> myCaretListeners = EventDispatcher.create(CaretListener.class);
 
@@ -64,7 +64,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   int myDocumentUpdateCounter;
 
-  public CaretModelImpl(EditorImpl editor) {
+  public CaretModelImpl(DesktopEditorImpl editor) {
     myEditor = editor;
     myEditor.addPropertyChangeListener(new PropertyChangeListener() {
       @Override
@@ -282,7 +282,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
   @Nullable
   @Override
   public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
-    EditorImpl.assertIsDispatchThread();
+    DesktopEditorImpl.assertIsDispatchThread();
     CaretImpl caret = new CaretImpl(myEditor);
     caret.moveToVisualPosition(pos, false);
     if (addCaret(caret, makePrimary)) {
@@ -314,7 +314,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public boolean removeCaret(@Nonnull Caret caret) {
-    EditorImpl.assertIsDispatchThread();
+    DesktopEditorImpl.assertIsDispatchThread();
     if (myCarets.size() <= 1 || !(caret instanceof CaretImpl)) {
       return false;
     }
@@ -330,7 +330,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void removeSecondaryCarets() {
-    EditorImpl.assertIsDispatchThread();
+    DesktopEditorImpl.assertIsDispatchThread();
     ListIterator<CaretImpl> caretIterator = myCarets.listIterator(myCarets.size() - 1);
     while (caretIterator.hasPrevious()) {
       CaretImpl caret = caretIterator.previous();
@@ -349,7 +349,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void runForEachCaret(@Nonnull final CaretAction action, final boolean reverseOrder) {
-    EditorImpl.assertIsDispatchThread();
+    DesktopEditorImpl.assertIsDispatchThread();
     if (myCurrentCaret != null) {
       throw new IllegalStateException("Recursive runForEachCaret invocations are not allowed");
     }
@@ -372,7 +372,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void runBatchCaretOperation(@Nonnull Runnable runnable) {
-    EditorImpl.assertIsDispatchThread();
+    DesktopEditorImpl.assertIsDispatchThread();
     doWithCaretMerging(runnable);
   }
 
@@ -466,7 +466,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void setCaretsAndSelections(@Nonnull final List<CaretState> caretStates, final boolean updateSystemSelection) {
-    EditorImpl.assertIsDispatchThread();
+    DesktopEditorImpl.assertIsDispatchThread();
     if (caretStates.isEmpty()) {
       throw new IllegalArgumentException("At least one caret should exist");
     }

@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.highlighting;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.editor.markup.LineSeparatorRenderer;
 import com.intellij.openapi.util.Couple;
@@ -67,7 +67,7 @@ public class FragmentBoundRenderer implements LineMarkerRendererEx, LineSeparato
       final int editorWidth = editor.getScrollingModel().getVisibleArea().width;
       myShoeneLine.ensureLastX(editorWidth + width + width);
 
-      if (((EditorImpl) editor).isMirrored()) {
+      if (((DesktopEditorImpl) editor).isMirrored()) {
         // continue
         List<Couple<Integer>> points = myShoeneLine.getPoints();
         int i = 0;

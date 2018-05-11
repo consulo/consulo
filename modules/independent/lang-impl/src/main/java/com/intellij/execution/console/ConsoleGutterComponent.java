@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
@@ -40,7 +40,7 @@ import java.awt.event.MouseMotionListener;
 class ConsoleGutterComponent extends JComponent implements MouseMotionListener {
   private static final TooltipGroup TOOLTIP_GROUP = new TooltipGroup("CONSOLE_GUTTER_TOOLTIP_GROUP", 0);
 
-  private final EditorImpl editor;
+  private final DesktopEditorImpl editor;
 
   private int maxContentWidth;
   private int myLastPreferredHeight = -1;
@@ -53,7 +53,7 @@ class ConsoleGutterComponent extends JComponent implements MouseMotionListener {
   private final boolean atLineStart;
 
   public ConsoleGutterComponent(@Nonnull Editor editor, @Nonnull GutterContentProvider gutterContentProvider, boolean atLineStart) {
-    this.editor = (EditorImpl)editor;
+    this.editor = (DesktopEditorImpl)editor;
     this.gutterContentProvider = gutterContentProvider;
     this.atLineStart = atLineStart;
 

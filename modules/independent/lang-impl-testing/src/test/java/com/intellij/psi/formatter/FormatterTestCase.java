@@ -41,7 +41,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
@@ -73,7 +73,7 @@ import java.util.List;
 public abstract class FormatterTestCase extends LightPlatformTestCase {
   protected boolean doReformatRangeTest;
   protected TextRange myTextRange;
-  protected EditorImpl myEditor;
+  protected DesktopEditorImpl myEditor;
   protected PsiFile myFile;
 
   enum CheckPolicy {
@@ -193,11 +193,11 @@ public abstract class FormatterTestCase extends LightPlatformTestCase {
 
   private void checkDocument(final PsiFile file, final String text, String textAfter) {
     final Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
-    final EditorImpl editor;
+    final DesktopEditorImpl editor;
 
     if (doCheckDocumentUpdate()) {
-      editor =(EditorImpl)FileEditorManager.getInstance(getProject()).openTextEditor(new OpenFileDescriptor(getProject(), file.getVirtualFile(), 0), false);
-      editor.putUserData(EditorImpl.DO_DOCUMENT_UPDATE_TEST, Boolean.TRUE);
+      editor =(DesktopEditorImpl)FileEditorManager.getInstance(getProject()).openTextEditor(new OpenFileDescriptor(getProject(), file.getVirtualFile(), 0), false);
+      editor.putUserData(DesktopEditorImpl.DO_DOCUMENT_UPDATE_TEST, Boolean.TRUE);
       if (myFile != null) {
         FileEditorManager.getInstance(getProject()).closeFile(myFile.getVirtualFile());
       }
@@ -246,7 +246,7 @@ public abstract class FormatterTestCase extends LightPlatformTestCase {
     assertEquals(textAfter, file.getText());
   }
 
-  protected static void makeFolding(final PsiFile file, final EditorImpl editor) {
+  protected static void makeFolding(final PsiFile file, final DesktopEditorImpl editor) {
     final CodeFoldingPassFactory factory = getProject().getComponent(CodeFoldingPassFactory.class);
     final TextEditorHighlightingPass highlightingPass = factory.createHighlightingPass(file, editor);
     highlightingPass.collectInformation(new MockProgressIndicator());

@@ -36,7 +36,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
@@ -111,7 +111,7 @@ public class EditorActionUtil {
 
     VisualPosition caretPos = editor.getCaretModel().getVisualPosition();
     Point caretLocation2 = editor.visualPositionToXY(caretPos);
-    final boolean scrollToCaret = !(editor instanceof EditorImpl) || ((EditorImpl)editor).isScrollToCaret();
+    final boolean scrollToCaret = !(editor instanceof DesktopEditorImpl) || ((DesktopEditorImpl)editor).isScrollToCaret();
     if (scrollToCaret) {
       editor.getScrollingModel().scrollVertically(caretLocation2.y - caretVShift);
     }
@@ -451,7 +451,7 @@ public class EditorActionUtil {
     int logLineEndOffset = document.getLineEndOffset(logLine);
     LogicalPosition logLineStart = editor.offsetToLogicalPosition(logLineStartOffset);
     VisualPosition visLineStart = editor.logicalToVisualPosition(logLineStart);
-    boolean newRendering = editor instanceof EditorImpl && true;
+    boolean newRendering = editor instanceof DesktopEditorImpl;
 
     boolean softWrapIntroducedLine = visLineStart.line != visualLineNumber;
     if (!softWrapIntroducedLine) {
@@ -625,7 +625,7 @@ public class EditorActionUtil {
       caretModel.moveToVisualPosition(visualEndOfLineWithCaret);
     }
     else {
-      if (editor instanceof EditorImpl && true) {
+      if (editor instanceof DesktopEditorImpl && true) {
         caretModel.moveToLogicalPosition(editor.offsetToLogicalPosition(newOffset).leanForward(true));
       }
       else {
@@ -677,8 +677,8 @@ public class EditorActionUtil {
         newOffset = foldRegion.getStartOffset();
       }
     }
-    if (editor instanceof EditorImpl) {
-      int boundaryOffset = ((EditorImpl)editor).findNearestDirectionBoundary(offset, true);
+    if (editor instanceof DesktopEditorImpl) {
+      int boundaryOffset = ((DesktopEditorImpl)editor).findNearestDirectionBoundary(offset, true);
       if (boundaryOffset >= 0) {
         newOffset = Math.min(boundaryOffset, newOffset);
       }
@@ -765,8 +765,8 @@ public class EditorActionUtil {
       }
     }
 
-    if (editor instanceof EditorImpl && true) {
-      int boundaryOffset = ((EditorImpl)editor).findNearestDirectionBoundary(offset, false);
+    if (editor instanceof DesktopEditorImpl && true) {
+      int boundaryOffset = ((DesktopEditorImpl)editor).findNearestDirectionBoundary(offset, false);
       if (boundaryOffset >= 0) {
         newOffset = Math.max(boundaryOffset, newOffset);
       }

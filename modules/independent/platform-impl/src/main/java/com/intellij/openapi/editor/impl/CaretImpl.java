@@ -55,7 +55,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.CaretImpl");
   private static final Key<CaretVisualAttributes> VISUAL_ATTRIBUTES_KEY = new Key<>("CaretAttributes");
 
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private boolean isValid = true;
 
   private LogicalPosition myLogicalCaret;
@@ -108,7 +108,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
 
   private int myDocumentUpdateCounter;
 
-  CaretImpl(EditorImpl editor) {
+  CaretImpl(DesktopEditorImpl editor) {
     myEditor = editor;
 
     myLogicalCaret = new LogicalPosition(0, 0);
@@ -644,7 +644,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   }
 
   private static void assertIsDispatchThread() {
-    EditorImpl.assertIsDispatchThread();
+    DesktopEditorImpl.assertIsDispatchThread();
   }
 
   private void validateCallContext() {
@@ -1367,7 +1367,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
 
   @Override
   @Nonnull
-  public EditorImpl getEditor() {
+  public DesktopEditorImpl getEditor() {
     return myEditor;
   }
 
@@ -1522,7 +1522,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
         // Ideally, client code should be responsible for positioning caret after document modification, but in case of
         // postponed formatting (after PSI modifications), this is hard to implement, so a heuristic below is used.
         if (e.getOldLength() == 0 && oldOffset == e.getOffset() &&
-            !Boolean.TRUE.equals(myEditor.getUserData(EditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION)) &&
+            !Boolean.TRUE.equals(myEditor.getUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION)) &&
             needToShiftWhiteSpaces(e)) {
           int afterInserted = e.getOffset() + e.getNewLength();
           setIntervalStart(afterInserted);

@@ -82,7 +82,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   public static final Logger LOGGER = Logger.getInstance(EditorMarkupModelImpl.class);
 
   private static final TooltipGroup ERROR_STRIPE_TOOLTIP_GROUP = new TooltipGroup("ERROR_STRIPE_TOOLTIP_GROUP", 0);
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   // null renderer means we should not show traffic light icon
   private ErrorStripeRenderer myErrorStripeRenderer;
   private final List<ErrorStripeListener> myErrorMarkerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -106,7 +106,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   private int myRowAdjuster = 0;
   private int myWheelAccumulator = 0;
 
-  EditorMarkupModelImpl(@Nonnull EditorImpl editor) {
+  EditorMarkupModelImpl(@Nonnull DesktopEditorImpl editor) {
     super(editor.getDocument());
     myEditor = editor;
     myEditorFragmentRenderer = new EditorFragmentRenderer();
@@ -1175,7 +1175,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       Point point = new Point(hintInfo.getOriginalPoint());
       hintInfo.setTextBg(myEditor.getColorsScheme().getDefaultBackground());
       hintInfo.setBorderColor(myEditor.getColorsScheme().getDefaultForeground());
-      point = SwingUtilities.convertPoint(((EditorImpl)editor).getVerticalScrollBar(), point, myEditor.getComponent().getRootPane());
+      point = SwingUtilities.convertPoint(((DesktopEditorImpl)editor).getVerticalScrollBar(), point, myEditor.getComponent().getRootPane());
       myPointHolder.set(point);
       myHintHolder.set(hintInfo);
       if (needDelay && !myShowInstantly) {

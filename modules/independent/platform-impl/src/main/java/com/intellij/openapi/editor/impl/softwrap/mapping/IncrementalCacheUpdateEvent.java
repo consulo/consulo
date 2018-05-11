@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import javax.annotation.Nonnull;
 
@@ -51,7 +51,7 @@ public class IncrementalCacheUpdateEvent {
    *
    * @param event   object that describes document change that caused cache update
    */
-  IncrementalCacheUpdateEvent(@Nonnull DocumentEvent event, @Nonnull EditorImpl editor) {
+  IncrementalCacheUpdateEvent(@Nonnull DocumentEvent event, @Nonnull DesktopEditorImpl editor) {
     this(event.getOffset(), event.getOffset() + event.getOldLength(), event.getOffset() + event.getNewLength(), editor);
   }
 
@@ -59,7 +59,7 @@ public class IncrementalCacheUpdateEvent {
    * Creates new <code>IncrementalCacheUpdateEvent</code> object for the event not changing document length
    * (like expansion of folded region).
    */
-  IncrementalCacheUpdateEvent(int startOffset, int endOffset, @Nonnull EditorImpl editor) {
+  IncrementalCacheUpdateEvent(int startOffset, int endOffset, @Nonnull DesktopEditorImpl editor) {
     this(startOffset, endOffset, endOffset, editor);
     myNewEndLogicalLine = myOldEndLogicalLine;
   }
@@ -78,7 +78,7 @@ public class IncrementalCacheUpdateEvent {
     myOldEndLogicalLine = myNewEndLogicalLine = Math.max(0, document.getLineCount() - 1);
   }
 
-  private IncrementalCacheUpdateEvent(int startOffset, int oldEndOffset, int newEndOffset, @Nonnull EditorImpl editor) {
+  private IncrementalCacheUpdateEvent(int startOffset, int oldEndOffset, int newEndOffset, @Nonnull DesktopEditorImpl editor) {
     VisualLineInfo info = getVisualLineInfo(editor, startOffset, false);
     if (info.startsWithSoftWrap) {
       info = getVisualLineInfo(editor, info.startOffset, true);
@@ -91,7 +91,7 @@ public class IncrementalCacheUpdateEvent {
   }
 
 
-  private static VisualLineInfo getVisualLineInfo(@Nonnull EditorImpl editor, int offset, boolean beforeSoftWrap) {
+  private static VisualLineInfo getVisualLineInfo(@Nonnull DesktopEditorImpl editor, int offset, boolean beforeSoftWrap) {
     Document document = editor.getDocument();
     int textLength = document.getTextLength();
     if (offset <= 0 || textLength == 0) return new VisualLineInfo(0, false);

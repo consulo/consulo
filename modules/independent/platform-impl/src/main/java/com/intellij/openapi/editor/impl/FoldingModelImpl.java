@@ -60,7 +60,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   private final List<FoldingListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private boolean myIsFoldingEnabled;
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final FoldRegionsTree myFoldTree;
   private TextAttributes myFoldTextAttributes;
   private boolean myIsBatchFoldingProcessing;
@@ -72,7 +72,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   private boolean myDocumentChangeProcessed = true;
   private final AtomicLong myExpansionCounter = new AtomicLong();
 
-  public FoldingModelImpl(@Nonnull EditorImpl editor) {
+  public FoldingModelImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
     myIsFoldingEnabled = true;
     myIsBatchFoldingProcessing = false;

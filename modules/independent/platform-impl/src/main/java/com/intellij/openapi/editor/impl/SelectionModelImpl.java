@@ -47,11 +47,11 @@ public class SelectionModelImpl implements SelectionModel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.SelectionModelImpl");
 
   private final List<SelectionListener> mySelectionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
 
   private TextAttributes myTextAttributes;
 
-  public SelectionModelImpl(EditorImpl editor) {
+  public SelectionModelImpl(DesktopEditorImpl editor) {
     myEditor = editor;
   }
 

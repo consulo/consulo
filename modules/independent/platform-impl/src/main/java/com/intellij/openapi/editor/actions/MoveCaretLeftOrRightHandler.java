@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 
 class MoveCaretLeftOrRightHandler extends EditorActionHandler {
   enum Direction {LEFT, RIGHT}
@@ -64,7 +64,7 @@ class MoveCaretLeftOrRightHandler extends EditorActionHandler {
       caret.moveToVisualPosition(currentPosition.leanRight(!currentPosition.leansRight));
     }
     else {
-      final boolean scrollToCaret = (!(editor instanceof EditorImpl) || ((EditorImpl)editor).isScrollToCaret())
+      final boolean scrollToCaret = (!(editor instanceof DesktopEditorImpl) || ((DesktopEditorImpl)editor).isScrollToCaret())
                                     && caret == editor.getCaretModel().getPrimaryCaret();
       caretModel.moveCaretRelatively(myDirection == Direction.RIGHT ? 1 : -1, 0, false, false, scrollToCaret);
     }

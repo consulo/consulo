@@ -27,7 +27,7 @@ package com.intellij.openapi.editor.actions;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -55,7 +55,7 @@ public class TextEndWithSelectionAction extends TextComponentEditorAction {
           caret = carets.get(0);
         }
         int selectionStart = caret.getLeadSelectionOffset();
-        if (editor instanceof EditorImpl) {
+        if (editor instanceof DesktopEditorImpl) {
           caret.moveToLogicalPosition(editor.offsetToLogicalPosition(endOffset).leanForward(true));
         }
         else {

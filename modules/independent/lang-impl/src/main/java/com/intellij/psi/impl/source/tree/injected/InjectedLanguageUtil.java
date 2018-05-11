@@ -23,7 +23,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.ProgressManager;
@@ -217,7 +217,7 @@ public class InjectedLanguageUtil {
     if (!documentWindow.isValid()) {
       return hostEditor; // since the moment we got hold of injectedFile and this moment call, document may have been dirtied
     }
-    return EditorWindowImpl.create(documentWindow, (EditorImpl)hostEditor, injectedFile);
+    return EditorWindowImpl.create(documentWindow, (DesktopEditorImpl)hostEditor, injectedFile);
   }
 
   @Nullable
@@ -436,7 +436,7 @@ public class InjectedLanguageUtil {
     Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile, -1), false);
     if (editor == null || editor instanceof EditorWindow || editor.isDisposed()) return editor;
     if (document instanceof DocumentWindowImpl) {
-      return EditorWindowImpl.create((DocumentWindowImpl)document, (EditorImpl)editor, file);
+      return EditorWindowImpl.create((DocumentWindowImpl)document, (DesktopEditorImpl)editor, file);
     }
     return editor;
   }

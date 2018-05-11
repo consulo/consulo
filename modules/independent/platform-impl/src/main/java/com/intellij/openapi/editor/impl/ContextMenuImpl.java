@@ -53,12 +53,12 @@ public class ContextMenuImpl extends JPanel implements Disposable {
   private boolean myShow = false;
   private int myCurrentOpacity;
   private Timer myTimer;
-  private EditorImpl myEditor;
+  private DesktopEditorImpl myEditor;
   private boolean myDisposed;
   private final JLayeredPane myLayeredPane;
   private ActionToolbar myActionToolbar;
 
-  public ContextMenuImpl(JLayeredPane layeredPane, @Nonnull final JScrollPane container, @Nonnull final EditorImpl editor) {
+  public ContextMenuImpl(JLayeredPane layeredPane, @Nonnull final JScrollPane container, @Nonnull final DesktopEditorImpl editor) {
     setLayout(new BorderLayout(0, 0));
     myEditor = editor;
     myLayeredPane = layeredPane;

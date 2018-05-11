@@ -58,7 +58,6 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -132,7 +131,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public final class EditorImpl extends UserDataHolderBase implements EditorEx, HighlighterClient, Queryable, Dumpable {
+public final class DesktopEditorImpl extends UserDataHolderBase implements EditorEx, HighlighterClient, Queryable, Dumpable {
   private static final int MIN_FONT_SIZE = 8;
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.EditorImpl");
   private static final Key DND_COMMAND_KEY = Key.create("DndCommand");
@@ -353,7 +352,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
   private boolean myBackgroundImageSet;
 
-  EditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project) {
+  DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project) {
     assertIsDispatchThread();
     myProject = project;
     myDocument = (DocumentEx)document;
@@ -497,7 +496,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
             if (logicalLineToY(line) < visibleArea.y) {
               TextRange textRange = new TextRange(myDocument.getLineStartOffset(line), myDocument.getLineEndOffset(line));
 
-              myCurrentHint = EditorFragmentComponent.showEditorFragmentHint(EditorImpl.this, textRange, false, false);
+              myCurrentHint = EditorFragmentComponent.showEditorFragmentHint(DesktopEditorImpl.this, textRange, false, false);
             }
           }
         }
@@ -2426,7 +2425,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     private long mySleepTime = 500;
     private boolean myIsBlinkCaret = true;
     @Nullable
-    private EditorImpl myEditor;
+    private DesktopEditorImpl myEditor;
     private ScheduledFuture<?> mySchedulerHandle;
 
     public void start() {
@@ -2592,7 +2591,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       final boolean blink = mySettings.isBlinkCaret();
       final int blinkPeriod = mySettings.getCaretBlinkPeriod();
       synchronized (ourCaretBlinkingCommand) {
-        ourCaretBlinkingCommand.myEditor = EditorImpl.this;
+        ourCaretBlinkingCommand.myEditor = DesktopEditorImpl.this;
         ourCaretBlinkingCommand.setBlinkCaret(blink);
         ourCaretBlinkingCommand.setBlinkPeriod(blinkPeriod);
         myIsShown = true;
@@ -2906,7 +2905,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     private void executeAction(@Nonnull String actionId, @Nonnull DataContext dataContext) {
       EditorAction action = (EditorAction)ActionManager.getInstance().getAction(actionId);
       if (action != null) {
-        action.actionPerformed(EditorImpl.this, dataContext);
+        action.actionPerformed(DesktopEditorImpl.this, dataContext);
       }
     }
   }
@@ -3326,7 +3325,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
           if (composedTextIndex < text.getEndIndex()) {
             createComposedString(composedTextIndex, text);
 
-            runUndoTransparent(() -> EditorModificationUtil.insertStringAtCaret(EditorImpl.this, composedText, false, false));
+            runUndoTransparent(() -> EditorModificationUtil.insertStringAtCaret(DesktopEditorImpl.this, composedText, false, false));
 
             composedTextRange = ProperTextRange.from(getCaretModel().getOffset(), composedText.length());
           }
@@ -3350,7 +3349,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       if (!e.isConsumed() &&
           myMousePressedEvent != null &&
           !myMousePressedEvent.isConsumed() &&
-          Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, EditorImpl.this) &&
+          Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this) &&
           Math.abs(e.getY() - myMousePressedEvent.getY()) < getLineHeight()) {
         runMouseClickedCommand(e);
       }
@@ -3364,7 +3363,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     @Override
     public void mouseExited(@Nonnull MouseEvent e) {
       runMouseExitedCommand(e);
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
         myGutterComponent.mouseExited(e);
       }
@@ -3380,7 +3379,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
 
       myMousePressedEvent = e;
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
 
       myExpectedCaretOffset = logicalPositionToOffset(myLastMousePressedLocation);
       try {
@@ -3394,7 +3393,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
       if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA ||
           event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
-        myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(EditorImpl.this, e);
+        myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
       }
 
       // On some systems (for example on Linux) popup trigger is MOUSE_PRESSED event.
@@ -3420,7 +3419,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
 
     private void runMouseClickedCommand(@Nonnull final MouseEvent e) {
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       for (EditorMouseListener listener : myMouseListeners) {
         listener.mouseClicked(event);
         if (event.isConsumed()) {
@@ -3439,7 +3438,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       }
 
       myScrollingTimer.stop();
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       invokePopupIfNeeded(event);
       if (event.isConsumed()) {
         return;
@@ -3462,7 +3461,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
 
     private void runMouseEnteredCommand(@Nonnull MouseEvent e) {
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       for (EditorMouseListener listener : myMouseListeners) {
         listener.mouseEntered(event);
         if (event.isConsumed()) {
@@ -3473,7 +3472,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
 
     private void runMouseExitedCommand(@Nonnull MouseEvent e) {
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       for (EditorMouseListener listener : myMouseListeners) {
         listener.mouseExited(event);
         if (event.isConsumed()) {
@@ -3798,7 +3797,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       if (myDraggedRange != null || myGutterComponent.myDnDInProgress) return; // on Mac we receive events even if drag-n-drop is in progress
       validateMousePointer(e);
       ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> runMouseDraggedCommand(e));
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
         myGutterComponent.mouseDragged(e);
       }
@@ -3829,7 +3828,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
       myMouseMovedEvent = e;
 
-      EditorMouseEvent event = new EditorMouseEvent(EditorImpl.this, e, getMouseEventArea(e));
+      EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       if (e.getSource() == myGutterComponent) {
         myGutterComponent.mouseMoved(e);
       }
@@ -3840,7 +3839,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
         if (fold != null && !fold.shouldNeverExpand()) {
           DocumentFragment range = createDocumentFragment(fold);
           final Point p = SwingUtilities.convertPoint((Component)e.getSource(), e.getPoint(), getComponent().getRootPane().getLayeredPane());
-          controller.showTooltip(EditorImpl.this, p, new DocumentFragmentTooltipRenderer(range), false, FOLDING_TOOLTIP_GROUP);
+          controller.showTooltip(DesktopEditorImpl.this, p, new DocumentFragmentTooltipRenderer(range), false, FOLDING_TOOLTIP_GROUP);
         }
         else {
           controller.cancelTooltip(FOLDING_TOOLTIP_GROUP, e, true);
@@ -4117,7 +4116,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
   }
 
-  static boolean handleDrop(@Nonnull EditorImpl editor, @Nonnull final Transferable t, int dropAction) {
+  static boolean handleDrop(@Nonnull DesktopEditorImpl editor, @Nonnull final Transferable t, int dropAction) {
     final EditorDropHandler dropHandler = editor.getDropHandler();
 
     if (Registry.is("debugger.click.disable.breakpoints")) {
@@ -4195,7 +4194,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
   }
 
   private static class MyTransferHandler extends TransferHandler {
-    private static EditorImpl getEditor(@Nonnull JComponent comp) {
+    private static DesktopEditorImpl getEditor(@Nonnull JComponent comp) {
       EditorComponentImpl editorComponent = (EditorComponentImpl)comp;
       return editorComponent.getEditor();
     }
@@ -4210,7 +4209,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     @Override
     public boolean canImport(@Nonnull JComponent comp, @Nonnull DataFlavor[] transferFlavors) {
       Editor editor = getEditor(comp);
-      final EditorDropHandler dropHandler = ((EditorImpl)editor).getDropHandler();
+      final EditorDropHandler dropHandler = ((DesktopEditorImpl)editor).getDropHandler();
       if (dropHandler != null && dropHandler.canHandleDrop(transferFlavors)) {
         return true;
       }
@@ -4231,7 +4230,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     @Override
     @Nullable
     protected Transferable createTransferable(JComponent c) {
-      EditorImpl editor = getEditor(c);
+      DesktopEditorImpl editor = getEditor(c);
       String s = editor.getSelectionModel().getSelectedText();
       if (s == null) return null;
       int selectionStart = editor.getSelectionModel().getSelectionStart();
@@ -4254,7 +4253,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
       if (last != null && !(last instanceof EditorComponentImpl) && !(last instanceof EditorGutterComponentImpl)) return;
 
-      final EditorImpl editor = getEditor(source);
+      final DesktopEditorImpl editor = getEditor(source);
       if (action == MOVE && !editor.isViewer() && editor.myDraggedRange != null) {
         ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> removeDraggedOutFragment(editor));
       }
@@ -4262,7 +4261,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       editor.clearDnDContext();
     }
 
-    private static void removeDraggedOutFragment(EditorImpl editor) {
+    private static void removeDraggedOutFragment(DesktopEditorImpl editor) {
       if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
         return;
       }

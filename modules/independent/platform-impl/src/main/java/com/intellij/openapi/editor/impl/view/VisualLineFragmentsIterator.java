@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +82,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
   private int myNextWrapOffset;
 
   private VisualLineFragmentsIterator(EditorView view, int offset, boolean beforeSoftWrap, @Nullable Runnable quickEvaluationListener) {
-    EditorImpl editor = view.getEditor();
+    DesktopEditorImpl editor = view.getEditor();
     int visualLineStartOffset = EditorUtil.getNotFoldedLineStartOffset(editor, offset);
 
     SoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
@@ -125,7 +125,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
                     @Nullable Runnable quickEvaluationListener) {
     myQuickEvaluationListener = quickEvaluationListener;
     myView = view;
-    EditorImpl editor = view.getEditor();
+    DesktopEditorImpl editor = view.getEditor();
     myDocument = editor.getDocument();
     FoldingModelEx foldingModel = editor.getFoldingModel();
     FoldRegion[] regions = foldingModel.fetchTopLevel();

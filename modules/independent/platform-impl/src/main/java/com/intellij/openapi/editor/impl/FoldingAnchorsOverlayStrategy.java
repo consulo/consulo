@@ -24,9 +24,9 @@ import java.util.Collection;
 import java.util.Map;
 
 class FoldingAnchorsOverlayStrategy {
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
 
-  public FoldingAnchorsOverlayStrategy(EditorImpl editor) {
+  public FoldingAnchorsOverlayStrategy(DesktopEditorImpl editor) {
     myEditor = editor;
   }
 

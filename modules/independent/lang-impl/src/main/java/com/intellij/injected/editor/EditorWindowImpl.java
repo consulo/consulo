@@ -35,7 +35,7 @@ import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.LightHighlighterClient;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -68,7 +68,7 @@ import java.util.List;
  */
 public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, EditorEx {
   private final DocumentWindowImpl myDocumentWindow;
-  private final EditorImpl myDelegate;
+  private final DesktopEditorImpl myDelegate;
   private volatile PsiFile myInjectedFile;
   private final boolean myOneLine;
   private final CaretModelWindow myCaretModelDelegate;
@@ -81,7 +81,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   private final SoftWrapModelWindow mySoftWrapModel;
   private final InlayModelWindow myInlayModel;
 
-  public static Editor create(@Nonnull final DocumentWindowImpl documentRange, @Nonnull final EditorImpl editor, @Nonnull final PsiFile injectedFile) {
+  public static Editor create(@Nonnull final DocumentWindowImpl documentRange, @Nonnull final DesktopEditorImpl editor, @Nonnull final PsiFile injectedFile) {
     assert documentRange.isValid();
     assert injectedFile.isValid();
     EditorWindowImpl window;
@@ -105,7 +105,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   private EditorWindowImpl(@Nonnull DocumentWindowImpl documentWindow,
-                           @Nonnull final EditorImpl delegate,
+                           @Nonnull final DesktopEditorImpl delegate,
                            @Nonnull PsiFile injectedFile,
                            boolean oneLine) {
     myDocumentWindow = documentWindow;

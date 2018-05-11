@@ -125,10 +125,10 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   }
 
   private void registerDisposeHandler(final Editor editor) {
-    if (!(editor instanceof EditorImpl)) {
+    if (!(editor instanceof DesktopEditorImpl)) {
       return;
     }
-    EditorImpl editorImpl = (EditorImpl)editor;
+    DesktopEditorImpl editorImpl = (DesktopEditorImpl)editor;
     if (editorImpl.replace(DISPOSABLE_SET, null, Boolean.TRUE)) {
       Disposer.register(editorImpl.getDisposable(), new Disposable() {
         @Override

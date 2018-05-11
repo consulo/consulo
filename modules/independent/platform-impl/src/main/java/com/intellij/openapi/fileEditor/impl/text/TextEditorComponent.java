@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -176,7 +176,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
 
     ((EditorEx)editor).setContextMenuGroupId(IdeActions.GROUP_EDITOR_POPUP);
 
-    ((EditorImpl)editor).setDropHandler(new FileDropHandler(editor));
+    ((DesktopEditorImpl)editor).setDropHandler(new FileDropHandler(editor));
 
     TextEditorProvider.putTextEditor(editor, myTextEditor);
     return editor;

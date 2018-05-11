@@ -73,10 +73,10 @@ import java.util.List;
 import java.util.Map;
 
 public class EditorComponentImpl extends JTextComponent implements Scrollable, DataProvider, Queryable, TypingTarget, Accessible {
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final ApplicationImpl myApplication;
 
-  public EditorComponentImpl(@Nonnull EditorImpl editor) {
+  public EditorComponentImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
     enableEvents(AWTEvent.KEY_EVENT_MASK | AWTEvent.INPUT_METHOD_EVENT_MASK);
     enableInputMethods(true);
@@ -123,7 +123,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
   }
 
   @Nonnull
-  public EditorImpl getEditor() {
+  public DesktopEditorImpl getEditor() {
     return myEditor;
   }
 

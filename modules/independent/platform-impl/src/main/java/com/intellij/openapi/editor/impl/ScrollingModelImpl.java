@@ -56,7 +56,7 @@ import java.util.List;
 public class ScrollingModelImpl implements ScrollingModelEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.ScrollingModelImpl");
 
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final List<VisibleAreaListener> myVisibleAreaListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private AnimatedScrollingRunnable myCurrentAnimationRequest = null;
@@ -96,7 +96,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     }
   };
 
-  public ScrollingModelImpl(EditorImpl editor) {
+  public ScrollingModelImpl(DesktopEditorImpl editor) {
     myEditor = editor;
     myEditor.getScrollPane().getViewport().addChangeListener(myViewportChangeListener);
     myEditor.getDocument().addDocumentListener(myDocumentListener);

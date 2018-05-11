@@ -30,7 +30,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.TrailingSpacesStripper;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -224,7 +224,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
 
   protected static Editor createEditor(@Nonnull VirtualFile file) {
     Editor editor = FileEditorManager.getInstance(getProject()).openTextEditor(new OpenFileDescriptor(getProject(), file, 0), false);
-    ((EditorImpl)editor).setCaretActive();
+    ((DesktopEditorImpl)editor).setCaretActive();
     return editor;
   }
 

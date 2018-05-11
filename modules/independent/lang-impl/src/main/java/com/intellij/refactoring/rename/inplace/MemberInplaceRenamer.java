@@ -23,7 +23,7 @@ import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.util.Comparing;
@@ -215,7 +215,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
     finally {
       try {
-        ((EditorImpl)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
+        ((DesktopEditorImpl)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
       }
       finally {
         FinishMarkAction.finish(myProject, myEditor, markAction);
@@ -263,7 +263,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
   protected void revertStateOnFinish() {
     final Editor editor = InjectedLanguageUtil.getTopLevelEditor(myEditor);
     if (editor == FileEditorManager.getInstance(myProject).getSelectedTextEditor()) {
-      ((EditorImpl)editor).startDumb();
+      ((DesktopEditorImpl)editor).startDumb();
     }
     revertState();
   }
