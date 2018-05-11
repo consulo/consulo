@@ -16,7 +16,6 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.StatusBar;
@@ -24,6 +23,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.impl.EditorsSplitters;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -46,7 +46,7 @@ public class StatusBarUtil {
     }
 
     DockContainer c = DockManager.getInstance(project).getContainerFor(statusBar.getComponent());
-    DesktopEditorsSplitters splitters = null;
+    EditorsSplitters splitters = null;
     if (c instanceof DockableEditorTabbedContainer) {
       splitters = ((DockableEditorTabbedContainer)c).getSplitters();
     }
