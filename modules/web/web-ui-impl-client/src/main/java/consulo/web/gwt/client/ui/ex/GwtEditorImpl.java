@@ -176,6 +176,8 @@ public class GwtEditorImpl extends SimplePanel {
   private EditorServerRpc myEditorServerRpc;
 
   public GwtEditorImpl() {
+    addStyleName("ui-ex-editor");
+
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.ONKEYUP);
 
     setDefaultTextColors(this);
@@ -189,7 +191,7 @@ public class GwtEditorImpl extends SimplePanel {
 
   @Override
   protected void onLoad() {
-    if(myEditorServerRpc != null) {
+    if (myEditorServerRpc != null) {
       myEditorServerRpc.onShow();
     }
   }
@@ -212,7 +214,8 @@ public class GwtEditorImpl extends SimplePanel {
     });
   }
 
-  private void runHighlightPasses(int offset, final Runnable callback) {     }
+  private void runHighlightPasses(int offset, final Runnable callback) {
+  }
 
   public void updateUI() {
     // update main panel

@@ -15,6 +15,8 @@
  */
 package consulo.web.gwt.client.ui.tree;
 
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.user.cellview.client.TreeNode;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.vaadin.client.StyleConstants;
@@ -25,6 +27,7 @@ import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -56,6 +59,15 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
       TreeState.TreeNodeState childValue = (TreeState.TreeNodeState)value.getValue();
       getRpcProxy(TreeServerRpc.class).onSelected(childValue.myId);
     });
+    getTree().addHandler(new ContextMenuHandler() {
+      @Override
+      public void onContextMenu(ContextMenuEvent event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        getRpcProxy(TreeServerRpc.class).onContextMenu(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY());
+      }
+    }, ContextMenuEvent.getType());
 
     registerRpc(TreeClientRpc.class, new TreeClientRpc() {
       @Override

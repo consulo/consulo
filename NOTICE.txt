@@ -1,1 +1,2 @@
-Some icons from Kotlin repo - license Apache 2.
+ * Some icons from Kotlin repo - license Apache 2.
+ * Web impl contains sources from ContextMenu https://github.com/vaadin/context-menu

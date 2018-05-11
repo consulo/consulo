@@ -18,11 +18,12 @@ package consulo.web.gwt.client.ui.tree;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.TreeNode;
+import com.google.gwt.user.client.Event;
 import consulo.web.gwt.client.ui.DefaultCellTreeResources;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -45,6 +46,8 @@ public class GwtTreeImpl extends CellTree {
         return "loading...";
       }
     }, Integer.MAX_VALUE);
+
+    sinkEvents(Event.ONCONTEXTMENU);
 
     getTreeViewModel().init(this);
   }

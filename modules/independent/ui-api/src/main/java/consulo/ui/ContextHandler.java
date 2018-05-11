@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state.tree;
-
-import com.vaadin.shared.communication.ServerRpc;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2018-05-11
  */
-public interface TreeServerRpc extends ServerRpc {
-  void onOpen(String id);
-
-  void onDoubleClick(String id);
-
-  void onSelected(String id);
-
-  void onContextMenu(int x, int y);
+public interface ContextHandler {
+  void show(int x, int y);
 }

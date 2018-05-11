@@ -45,6 +45,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.WrappedLayout;
+import consulo.ui.internal.contextmenu.ContextMenu;
 import consulo.web.ui.TreeStructureWrappenModel;
 
 import javax.annotation.Nonnull;
@@ -60,7 +61,7 @@ import java.util.function.Function;
  */
 public class WebProjectViewImpl implements ProjectViewEx {
   private final class MyDataProvider implements Function<Key<?>, Object> {
-    @javax.annotation.Nullable
+    @Nullable
     private Object getSelectedNodeElement() {
       final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
       if (currentProjectViewPane == null) { // can happen if not initialized yet
@@ -325,7 +326,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
   @Nonnull
   @Override
   public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
-    return AsyncResult.done(null);
+    return AsyncResult.resolved(null);
   }
 
   @RequiredUIAccess
@@ -366,7 +367,15 @@ public class WebProjectViewImpl implements ProjectViewEx {
     };
 
     myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
+    myTree.setContextHandler((x, y) -> {
+      ContextMenu contextMenu = new ContextMenu((com.vaadin.ui.AbstractComponent)myTree, false);
 
+      contextMenu.addItem("Test", (e) -> {
+
+      });
+
+      contextMenu.open(x, y);
+    });
     WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
     wrappedLayout.addUserDataProvider(new MyDataProvider());
 
