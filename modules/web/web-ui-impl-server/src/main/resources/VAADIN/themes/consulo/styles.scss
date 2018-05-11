@@ -233,6 +233,7 @@ a:hover {
 .gwt-MenuBarPopup {
   border: 1px solid #a0a0a0;
   background: white;
+  z-index: 20000;
 }
 
 .gwt-MenuBarPopup .menuPopupTopCenter {

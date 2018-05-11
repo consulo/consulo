@@ -40,7 +40,6 @@ import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.ui.ex.WGwtToolWindowStripeButton;
 import consulo.ui.internal.WGwtRootPanelImpl;
-import consulo.web.application.WebApplication;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
@@ -83,17 +82,15 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private void projectOpened() {
-    WebApplication.invokeOnCurrentSession(() -> {
-      myFrame = myWindowManager.allocateFrame(myProject);
+    myFrame = myWindowManager.allocateFrame(myProject);
 
-      WGwtToolWindowPanel toolWindowPanel = new WGwtToolWindowPanel();
+    WGwtToolWindowPanel toolWindowPanel = new WGwtToolWindowPanel();
 
-      myToolWindowPanel = toolWindowPanel;
+    myToolWindowPanel = toolWindowPanel;
 
-      WGwtRootPanelImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
+    WGwtRootPanelImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
 
-      rootPanel.setCenterComponent(toolWindowPanel);
-    });
+    rootPanel.setCenterComponent(toolWindowPanel);
   }
 
   private void projectClosed() {

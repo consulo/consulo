@@ -17,15 +17,14 @@ package consulo.web.wm.impl;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.DataManagerImpl;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.Project;
 import consulo.ui.*;
 import consulo.ui.internal.WGwtRootPanelImpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -53,45 +52,49 @@ public class WebIdeRootView {
   public void update() {
     DataContext dataContext = ((DataManagerImpl)DataManager.getInstance()).getDataContextTest(myRootPanel);
 
-    expandActionGroup((ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU), dataContext, ActionManager.getInstance(), myPresentationFactory,
-                      menuItem -> myMenuBar.add(menuItem));
+    AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
+
+    expandActionGroup((ActionGroup)action, dataContext, ActionManager.getInstance(), myPresentationFactory, menuItem -> myMenuBar.add(menuItem));
   }
 
   private static void expandActionGroup(ActionGroup group, DataContext context, ActionManager actionManager, MenuItemPresentationFactory menuItemPresentationFactory, Consumer<MenuItem> actionAdded) {
-    ArrayList<AnAction> actions = new ArrayList<>();
+    Map<AnAction, Presentation> actions = new LinkedHashMap<>();
 
     expandActionGroup0(group, context, actions, actionManager, menuItemPresentationFactory);
 
-    for (AnAction action : actions) {
-      Presentation presentation = menuItemPresentationFactory.getPresentation(action);
+    for (Map.Entry<AnAction, Presentation> entry : actions.entrySet()) {
+      AnAction action = entry.getKey();
+      Presentation presentation = entry.getValue();
 
-      MenuItem menu = action instanceof ActionGroup ? Menu.create(presentation.getText()) : MenuItem.create(presentation.getText());
-
-      actionAdded.accept(menu);
-
-      if (action instanceof ActionGroup) {
-        expandActionGroup((ActionGroup)action, context, actionManager, menuItemPresentationFactory, menuItem -> ((Menu)menu).add(menuItem));
+      if (action instanceof AnSeparator) {
+        actionAdded.accept(MenuSeparator.create());
+      }
+      else if (action instanceof ActionGroup) {
+        MenuItem menu = Menu.create(presentation.getText());
+        actionAdded.accept(menu);
+        expandActionGroup((ActionGroup)action, context, actionManager, menuItemPresentationFactory, ((Menu)menu)::add);
+      }
+      else {
+        MenuItem menu = MenuItem.create(presentation.getText());
+        actionAdded.accept(menu);
       }
     }
   }
 
   private static void expandActionGroup0(ActionGroup group,
                                          DataContext context,
-                                         List<AnAction> newVisibleActions,
+                                         Map<AnAction, Presentation> newVisibleActions,
                                          ActionManager actionManager,
                                          MenuItemPresentationFactory menuItemPresentationFactory) {
     if (group == null) return;
     final AnAction[] children = group.getChildren(null);
     for (final AnAction action : children) {
-      if (!(action instanceof ActionGroup)) {
-        continue;
-      }
       final Presentation presentation = menuItemPresentationFactory.getPresentation(action);
       final AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
       e.setInjectedContext(action.isInInjectedContext());
       action.update(e);
 
-      newVisibleActions.add(action);
+      newVisibleActions.put(action, presentation);
     }
   }
 
