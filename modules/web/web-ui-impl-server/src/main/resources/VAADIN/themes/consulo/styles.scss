@@ -107,6 +107,20 @@ table, tr, td {
   margin: 0px;
 }
 
+a, a:visited {
+  color: #0066cc;
+  text-decoration:none;
+}
+
+a:hover {
+  color: #0066cc;
+  text-decoration:underline;
+}
+
+.ui-hyperlink {
+  cursor: pointer;
+}
+
 .ui-layered-image {
   position: relative;
 }

@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EventListener;
@@ -47,7 +49,7 @@ public interface Tree<E> extends Component {
   void setContextHandler(@Nonnull ContextHandler contextHandler);
 
   @Nonnull
-  default Runnable addSelectListener(@Nonnull @RequiredUIAccess SelectListener<E> listener) {
+  default Disposable addSelectListener(@Nonnull @RequiredUIAccess SelectListener<E> listener) {
     return addListener(SelectListener.class, listener);
   }
 }

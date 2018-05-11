@@ -79,16 +79,16 @@ public interface Component extends Disposable, UserDataHolder {
   void setSize(@Nonnull Size size);
 
   @Nonnull
-  <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier);
+  <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier);
 
   @Nonnull
-  Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
+  Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
 
   /**
    * @return runner for unregister listener
    */
   @Nonnull
-  <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @RequiredUIAccess @Nonnull T listener);
+  <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @RequiredUIAccess @Nonnull T listener);
 
   @Nonnull
   <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass);

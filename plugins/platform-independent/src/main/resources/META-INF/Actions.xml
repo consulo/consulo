@@ -1041,8 +1041,8 @@
     </group>
 
     <group id="WelcomeScreen.QuickStart.IDEA">
-      <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="AllIcons.General.CreateNewProject"/>
-      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenProjectAction" icon="AllIcons.General.OpenProject"/>
+      <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="AllIcons.Welcome.CreateNewProject"/>
+      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenProjectAction" icon="AllIcons.Welcome.OpenProject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </group>
 

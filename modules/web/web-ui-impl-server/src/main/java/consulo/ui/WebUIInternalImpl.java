@@ -121,6 +121,11 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
+  Hyperlink _Components_hyperlink(String text) {
+    return new WGwtHyperlinkImpl(text);
+  }
+
+  @Override
   HorizontalLayout _Layouts_horizontal() {
     return new WGwtHorizontalLayoutImpl();
   }

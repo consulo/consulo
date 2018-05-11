@@ -104,13 +104,6 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     }
   }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
-      e.getPresentation().setIcon(AllIcons.Welcome.CreateNewProject);
-    }
-  }
-
   @Nonnull
   @Override
   public JComponent createSlide(@Nonnull Disposable parentDisposable, Consumer<String> titleChanger) {

@@ -72,6 +72,8 @@ public abstract class UIInternal {
 
   abstract Button _Components_button(String text);
 
+  abstract Hyperlink _Components_hyperlink(String text);
+
   abstract ImageBox _Components_imageBox(Image image);
 
   abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
