@@ -78,8 +78,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
-  public static final Logger LOGGER = Logger.getInstance(EditorMarkupModelImpl.class);
+public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
+  public static final Logger LOGGER = Logger.getInstance(DesktopEditorMarkupModelImpl.class);
 
   private static final TooltipGroup ERROR_STRIPE_TOOLTIP_GROUP = new TooltipGroup("ERROR_STRIPE_TOOLTIP_GROUP", 0);
   private final DesktopEditorImpl myEditor;
@@ -106,7 +106,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   private int myRowAdjuster = 0;
   private int myWheelAccumulator = 0;
 
-  EditorMarkupModelImpl(@Nonnull DesktopEditorImpl editor) {
+  DesktopEditorMarkupModelImpl(@Nonnull DesktopEditorImpl editor) {
     super(editor.getDocument());
     myEditor = editor;
     myEditorFragmentRenderer = new EditorFragmentRenderer();
@@ -517,7 +517,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       Shape oldClip = g.getClip();
       g.clipRect(clip.x, clip.y, clip.width, clip.height);
 
-      drawMarkup(g, startOffset, endOffset, (MarkupModelEx)DocumentMarkupModel.forDocument(document, myEditor.getProject(), true), EditorMarkupModelImpl.this);
+      drawMarkup(g, startOffset, endOffset, (MarkupModelEx)DocumentMarkupModel.forDocument(document, myEditor.getProject(), true), DesktopEditorMarkupModelImpl.this);
 
       g.setClip(oldClip);
     }

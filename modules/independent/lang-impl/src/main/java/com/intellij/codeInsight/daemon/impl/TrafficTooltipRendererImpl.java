@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.LineTooltipRenderer;
 import com.intellij.codeInsight.hint.TooltipGroup;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.impl.EditorMarkupModelImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.impl.TrafficTooltipRenderer;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
@@ -55,7 +55,7 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
 
   @Override
   public LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
-    myTrafficLightRenderer = (TrafficLightRenderer)((EditorMarkupModelImpl)editor.getMarkupModel()).getErrorStripeRenderer();
+    myTrafficLightRenderer = (TrafficLightRenderer)((DesktopEditorMarkupModelImpl)editor.getMarkupModel()).getErrorStripeRenderer();
     myPanel = new TrafficProgressPanel(myTrafficLightRenderer, editor, hintHint);
     repaintTooltipWindow();
     LineTooltipRenderer.correctLocation(editor, myPanel, p, alignToRight, true, myPanel.getMinWidth());

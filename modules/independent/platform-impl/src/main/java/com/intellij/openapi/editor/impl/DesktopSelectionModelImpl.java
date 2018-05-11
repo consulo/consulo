@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class SelectionModelImpl implements SelectionModel {
+public class DesktopSelectionModelImpl implements SelectionModel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.SelectionModelImpl");
 
   private final List<SelectionListener> mySelectionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -51,19 +51,19 @@ public class SelectionModelImpl implements SelectionModel {
 
   private TextAttributes myTextAttributes;
 
-  public SelectionModelImpl(DesktopEditorImpl editor) {
+  public DesktopSelectionModelImpl(DesktopEditorImpl editor) {
     myEditor = editor;
   }
 
   /**
-   * @see CaretImpl#setUnknownDirection(boolean)
+   * @see DesktopCaretImpl#setUnknownDirection(boolean)
    */
   public boolean isUnknownDirection() {
     return myEditor.getCaretModel().getCurrentCaret().isUnknownDirection();
   }
 
   /**
-   * @see CaretImpl#setUnknownDirection(boolean)
+   * @see DesktopCaretImpl#setUnknownDirection(boolean)
    */
   public void setUnknownDirection(boolean unknownDirection) {
     myEditor.getCaretModel().getCurrentCaret().setUnknownDirection(unknownDirection);

@@ -42,16 +42,16 @@ import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.EmptyClipboardOwner;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
-public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
+public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.CaretImpl");
   private static final Key<CaretVisualAttributes> VISUAL_ATTRIBUTES_KEY = new Key<>("CaretAttributes");
 
@@ -108,7 +108,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
 
   private int myDocumentUpdateCounter;
 
-  CaretImpl(DesktopEditorImpl editor) {
+  DesktopCaretImpl(DesktopEditorImpl editor) {
     myEditor = editor;
 
     myLogicalCaret = new LogicalPosition(0, 0);
@@ -805,9 +805,9 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
     return newOffset;
   }
 
-  private CaretImpl cloneWithoutSelection() {
+  private DesktopCaretImpl cloneWithoutSelection() {
     updateCachedStateIfNeeded();
-    CaretImpl clone = new CaretImpl(myEditor);
+    DesktopCaretImpl clone = new DesktopCaretImpl(myEditor);
     clone.myLogicalCaret = myLogicalCaret;
     clone.myCaretInfo = myCaretInfo;
     clone.myVisibleCaret = myVisibleCaret;
@@ -835,7 +835,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
     if (newLine < 0 || newLine >= myEditor.getDocument().getLineCount()) {
       return null;
     }
-    final CaretImpl clone = cloneWithoutSelection();
+    final DesktopCaretImpl clone = cloneWithoutSelection();
     final int newSelectionStartOffset;
     final int newSelectionEndOffset;
     final int newSelectionStartColumn;
@@ -1284,7 +1284,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   @Override
   public void selectLineAtCaret() {
     validateContext(true);
-    myEditor.getCaretModel().doWithCaretMerging(() -> SelectionModelImpl.doSelectLineAtCaret(this));
+    myEditor.getCaretModel().doWithCaretMerging(() -> DesktopSelectionModelImpl.doSelectLineAtCaret(this));
   }
 
   @Override

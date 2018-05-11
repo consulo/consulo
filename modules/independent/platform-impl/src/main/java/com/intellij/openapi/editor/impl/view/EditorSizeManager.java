@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.FoldingListener;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
-import com.intellij.openapi.editor.impl.CaretModelImpl;
+import com.intellij.openapi.editor.impl.DesktopCaretModelImpl;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
@@ -173,7 +173,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     int widthWithoutCaret = getPreferredWidth();
     int width = widthWithoutCaret;
     if (!myDocument.isInBulkUpdate()) {
-      CaretModelImpl caretModel = myEditor.getCaretModel();
+      DesktopCaretModelImpl caretModel = myEditor.getCaretModel();
       int caretMaxX = (caretModel.isIteratingOverCarets() ? Stream.of(caretModel.getCurrentCaret()) : caretModel.getAllCarets().stream())
               .filter(Caret::isUpToDate)
               .mapToInt(c -> (int)myView.visualPositionToXY(c.getVisualPosition()).getX())
@@ -194,7 +194,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     int widthWithoutCaret = getPreferredWidthWithoutCaret(beginLine, endLine);
     int width = widthWithoutCaret;
     if (!myDocument.isInBulkUpdate()) {
-      CaretModelImpl caretModel = myEditor.getCaretModel();
+      DesktopCaretModelImpl caretModel = myEditor.getCaretModel();
       int caretMaxX = (caretModel.isIteratingOverCarets() ? Stream.of(caretModel.getCurrentCaret()) : caretModel.getAllCarets().stream())
               .filter(Caret::isUpToDate)
               .filter(caret -> caret.getVisualPosition().line >= beginLine && caret.getVisualPosition().line < endLine)

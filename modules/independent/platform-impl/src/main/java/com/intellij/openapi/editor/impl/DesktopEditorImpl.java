@@ -216,9 +216,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private EditorColorsScheme myScheme;
   private boolean myIsViewer;
   @Nonnull
-  private final SelectionModelImpl mySelectionModel;
+  private final DesktopSelectionModelImpl mySelectionModel;
   @Nonnull
-  private final EditorMarkupModelImpl myMarkupModel;
+  private final DesktopEditorMarkupModelImpl myMarkupModel;
   @Nonnull
   private final EditorFilteringMarkupModelEx myDocumentMarkupModel;
   @Nonnull
@@ -229,7 +229,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Nonnull
   private final ScrollingModelImpl myScrollingModel;
   @Nonnull
-  private final CaretModelImpl myCaretModel;
+  private final DesktopCaretModelImpl myCaretModel;
   @Nonnull
   private final SoftWrapModelImpl mySoftWrapModel;
   @Nonnull
@@ -327,7 +327,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   // Reset on mouse press event.
   private boolean myCurrentDragIsSubstantial;
 
-  private CaretImpl myPrimaryCaret;
+  private DesktopCaretImpl myPrimaryCaret;
 
   public final boolean myDisableRtl = Registry.is("editor.disable.rtl");
   final EditorView myView;
@@ -367,11 +367,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     MarkupModelEx documentMarkup = (MarkupModelEx)DocumentMarkupModel.forDocument(myDocument, myProject, true);
 
-    mySelectionModel = new SelectionModelImpl(this);
-    myMarkupModel = new EditorMarkupModelImpl(this);
+    mySelectionModel = new DesktopSelectionModelImpl(this);
+    myMarkupModel = new DesktopEditorMarkupModelImpl(this);
     myDocumentMarkupModel = new EditorFilteringMarkupModelEx(this, documentMarkup);
     myFoldingModel = new FoldingModelImpl(this);
-    myCaretModel = new CaretModelImpl(this);
+    myCaretModel = new DesktopCaretModelImpl(this);
     myCaretModel.initCarets();
     myScrollingModel = new ScrollingModelImpl(this);
     myInlayModel = new InlayModelImpl(this);
@@ -604,7 +604,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private void repaintCaretRegion(CaretEvent e) {
-    CaretImpl caretImpl = (CaretImpl)e.getCaret();
+    DesktopCaretImpl caretImpl = (DesktopCaretImpl)e.getCaret();
     if (caretImpl != null) {
       caretImpl.updateVisualPosition();
       if (caretImpl.hasSelection()) {
@@ -706,7 +706,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   @Nonnull
-  public SelectionModelImpl getSelectionModel() {
+  public DesktopSelectionModelImpl getSelectionModel() {
     return mySelectionModel;
   }
 
@@ -730,7 +730,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   @Nonnull
-  public CaretModelImpl getCaretModel() {
+  public DesktopCaretModelImpl getCaretModel() {
     return myCaretModel;
   }
 
@@ -1363,7 +1363,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     myEditorComponent.repaintEditorComponent(visibleArea.x, yStartLine, visibleArea.x + visibleArea.width, yEndLine - yStartLine);
     myGutterComponent.repaint(0, yStartLine, myGutterComponent.getWidth(), yEndLine - yStartLine);
-    ((EditorMarkupModelImpl)getMarkupModel()).repaint(-1, -1);
+    ((DesktopEditorMarkupModelImpl)getMarkupModel()).repaint(-1, -1);
   }
 
   /**
