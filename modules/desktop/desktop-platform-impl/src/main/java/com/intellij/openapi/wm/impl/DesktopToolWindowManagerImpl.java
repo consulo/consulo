@@ -33,7 +33,6 @@ import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
@@ -79,9 +78,9 @@ import consulo.wm.impl.ToolWindowManagerBase;
 import gnu.trove.THashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -491,7 +490,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     myEditorComponentFocusWatcher.install(editorComponent);
 
     appendSetEditorComponentCmd(editorComponent, commandsList);
-    if (myEditorWasActive && editorComponent instanceof DesktopEditorsSplitters) {
+    if (myEditorWasActive && AWTComponentProviderUtil.getMark(editorComponent) instanceof EditorsSplitters) {
       activateEditorComponentImpl(commandsList, true);
     }
   }
