@@ -27,12 +27,12 @@ import com.intellij.openapi.wm.impl.IdeRootPane;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.UIUtil;
 import consulo.ui.BalloonLayoutEx;
 import consulo.ui.impl.ToolWindowPanelImplEx;
+import consulo.ui.migration.AWTComponentProviderUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -302,7 +302,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
       columns = createColumns(layoutRec);
     }
 
-    ToolWindowPanelImplEx pane = UIUtil.findComponentOfType2(myParent, ToolWindowPanelImplEx.class);
+    ToolWindowPanelImplEx pane = AWTComponentProviderUtil.findChild(myParent, ToolWindowPanelImplEx.class);
     JComponent layeredPane = pane != null ? pane.getMyLayeredPane() : null;
     int eachColumnX = (layeredPane == null ? myLayeredPane.getWidth() : layeredPane.getX() + layeredPane.getWidth()) - 4;
 
@@ -311,7 +311,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
   private void newLayout(List<Balloon> balloons, int startX, int bottomY) {
     int y = bottomY;
-    ToolWindowPanelImplEx pane = UIUtil.findComponentOfType2(myParent, ToolWindowPanelImplEx.class);
+    ToolWindowPanelImplEx pane = AWTComponentProviderUtil.findChild(myParent, ToolWindowPanelImplEx.class);
     if (pane != null) {
       y -= pane.getBottomHeight();
     }

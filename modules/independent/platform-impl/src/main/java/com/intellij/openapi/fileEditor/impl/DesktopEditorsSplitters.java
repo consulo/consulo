@@ -61,6 +61,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.UIAccess;
+import consulo.ui.migration.AWTComponentProviderUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
@@ -99,6 +100,9 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   public DesktopEditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
     super(new BorderLayout());
+
+    AWTComponentProviderUtil.putMark(this, this);
+
     myManager = manager;
     myFocusWatcher = new MyFocusWatcher();
     setFocusTraversalPolicy(new MyFocusTraversalPolicy());

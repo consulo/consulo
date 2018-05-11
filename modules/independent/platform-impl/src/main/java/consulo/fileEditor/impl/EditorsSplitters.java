@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
+import consulo.ui.migration.AWTComponentProvider;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ import java.util.List;
  * @author VISTALL
  * @since 28-Oct-17
  */
-public interface EditorsSplitters {
+public interface EditorsSplitters extends AWTComponentProvider {
   Key<EditorsSplitters> KEY = Key.create("EditorsSplitters");
 
   void readExternal(Element element);
@@ -91,13 +92,14 @@ public interface EditorsSplitters {
 
   @Nonnull
   default Component getUIComponent() {
-    throw new AbstractMethodError();
+    throw new UnsupportedOperationException("Unsupported platform");
   }
 
+  @Override
   @Deprecated
   @DeprecationInfo("See #getUIComponent()")
   @Nonnull
   default javax.swing.JComponent getComponent() {
-    throw new AbstractMethodError();
+    throw new UnsupportedOperationException("Unsupported platform");
   }
 }

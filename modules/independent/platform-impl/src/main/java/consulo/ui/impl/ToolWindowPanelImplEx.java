@@ -17,6 +17,7 @@ package consulo.ui.impl;
 
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.ex.ToolWindowPanel;
+import consulo.ui.migration.AWTComponentProvider;
 
 import javax.swing.*;
 
@@ -26,7 +27,7 @@ import javax.swing.*;
  */
 @Deprecated
 @DeprecationInfo("class only for migration")
-public interface ToolWindowPanelImplEx extends ToolWindowPanel {
+public interface ToolWindowPanelImplEx extends ToolWindowPanel, AWTComponentProvider {
   default boolean isBottomSideToolWindowsVisible() {
     throw new UnsupportedOperationException();
   }

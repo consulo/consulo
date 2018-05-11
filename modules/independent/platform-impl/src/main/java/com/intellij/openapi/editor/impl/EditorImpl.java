@@ -90,13 +90,14 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.migration.AWTComponentProviderUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -4444,7 +4445,8 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     @Nonnull
     @Override
     public Insets getBorderInsets(Component c) {
-      Container splitters = SwingUtilities.getAncestorOfClass(DesktopEditorsSplitters.class, c);
+      EditorsSplitters splitters = AWTComponentProviderUtil.findParent(c, EditorsSplitters.class);
+
       boolean thereIsSomethingAbove =
               !SystemInfo.isMac || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance().getShowNavigationBar() || toolWindowIsNotEmpty();
       //noinspection ConstantConditions

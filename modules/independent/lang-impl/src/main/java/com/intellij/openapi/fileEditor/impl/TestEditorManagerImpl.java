@@ -42,6 +42,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
@@ -160,7 +161,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public DesktopEditorsSplitters getSplittersFor(Component c) {
+  public EditorsSplitters getSplittersFor(Component c) {
     return null;
   }
 
@@ -528,7 +529,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
   @Nonnull
   @Override
-  public DesktopEditorsSplitters getSplitters() {
+  public EditorsSplitters getSplitters() {
     throw new IncorrectOperationException();
   }
 

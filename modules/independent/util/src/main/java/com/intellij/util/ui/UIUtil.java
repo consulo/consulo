@@ -2890,22 +2890,6 @@ public class UIUtil {
     return null;
   }
 
-  @Nullable
-  @SuppressWarnings("unchecked")
-  public static <T> T findComponentOfType2(JComponent parent, Class<T> cls) {
-    if (parent == null || cls.isAssignableFrom(parent.getClass())) {
-      final T t = (T)parent;
-      return t;
-    }
-    for (Component component : parent.getComponents()) {
-      if (component instanceof JComponent) {
-        T comp = findComponentOfType2((JComponent)component, cls);
-        if (comp != null) return comp;
-      }
-    }
-    return null;
-  }
-
   public static <T extends JComponent> List<T> findComponentsOfType(JComponent parent, Class<T> cls) {
     final ArrayList<T> result = new ArrayList<T>();
     findComponentsOfType(parent, cls, result);

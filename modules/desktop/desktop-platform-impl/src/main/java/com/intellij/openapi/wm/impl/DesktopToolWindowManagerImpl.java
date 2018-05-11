@@ -69,8 +69,10 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.migration.AWTComponentProviderUtil;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
@@ -836,10 +838,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Override
   public boolean isEditorComponentActive() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     Component owner = getFocusManager().getFocusOwner();
-    DesktopEditorsSplitters splitters = UIUtil.getParentOfType(DesktopEditorsSplitters.class, owner);
+    EditorsSplitters splitters = AWTComponentProviderUtil.findParent(owner, EditorsSplitters.class);
     return splitters != null;
   }
 
