@@ -18,7 +18,6 @@ package com.intellij.openapi.application.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityInvokator;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 
