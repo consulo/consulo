@@ -32,6 +32,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
@@ -49,6 +50,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -135,6 +137,15 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   @Override
   public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
 
+  }
+
+  @Override
+  public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
+                                                            @Nullable Project project,
+                                                            @Nullable JComponent parentComponent,
+                                                            @Nullable String cancelText,
+                                                            @Nonnull Consumer<ProgressIndicator> action) {
+    return true;
   }
 
   @Nonnull
