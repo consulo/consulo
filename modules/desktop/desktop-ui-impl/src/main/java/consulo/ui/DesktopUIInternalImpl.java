@@ -58,7 +58,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
     DesktopAppendImageImpl image = new DesktopAppendImageImpl(2);
     image.setIcon(TargetAWT.to(i0), 0);
-    image.setIcon(TargetAWT.to(i1), 0);
+    image.setIcon(TargetAWT.to(i1), 1);
     return image;
   }
 
