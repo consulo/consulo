@@ -15,6 +15,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
+import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +29,18 @@ import java.util.function.Consumer;
  */
 public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implements WebApplication {
   private WebSession myCurrentSession;
+  private static final ModalityState ANY = new ModalityState() {
+    @Override
+    public boolean dominates(@Nonnull ModalityState anotherState) {
+      return false;
+    }
+
+    @NonNls
+    @Override
+    public String toString() {
+      return "ANY";
+    }
+  };
 
   public WebApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splash) {
     super(null, splash);
@@ -40,6 +53,12 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
+  }
+
+  @Override
+  @Nonnull
+  public ModalityState getAnyModalityState() {
+    return ANY;
   }
 
   @RequiredReadAction
@@ -120,13 +139,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Nonnull
   @Override
   public ModalityState getNoneModalityState() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public ModalityState getAnyModalityState() {
-    return null;
+    return ModalityState.NON_MODAL;
   }
 
   @RequiredDispatchThread

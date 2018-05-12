@@ -18,8 +18,11 @@ package consulo.application.impl;
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.ApplicationWithOwnWriteThread;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -28,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-05-12
  */
-public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication {
+public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication implements ApplicationWithOwnWriteThread {
   private final WriteThread myWriteThread;
 
   public BaseApplicationWithOwnWriteThread(ComponentManager parent, @Nonnull Ref<? extends StartupProgress> splashRef) {
@@ -38,6 +41,14 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     myLock = new ReadMostlyRWLock(myWriteThread);
 
     Disposer.register(myLastDisposable, myWriteThread);
+  }
+
+  @Override
+  @Nonnull
+  public <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable) {
+    AsyncResult<T> asyncResult = new AsyncResult<>();
+    myWriteThread.push(computable, asyncResult, caller);
+    return asyncResult;
   }
 
   @Override

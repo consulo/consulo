@@ -201,11 +201,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   }
 
   @Override
-  public void runInWriteThreadAndWait(@Nonnull Runnable runnable) {
-    invokeAndWait(runnable, ModalityState.any());
-  }
-
-  @Override
   @Nonnull
   public ModalityInvokator getInvokator() {
     return myInvokator;
