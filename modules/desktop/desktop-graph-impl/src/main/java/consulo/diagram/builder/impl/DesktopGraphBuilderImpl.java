@@ -36,10 +36,10 @@ import java.util.Map;
  * @author VISTALL
  * @since 22:38/15.10.13
  */
-public class GraphBuilderImpl implements GraphBuilder {
+public class DesktopGraphBuilderImpl implements GraphBuilder {
   private List<GraphNode<?>> myGraphNodes = new ArrayList<GraphNode<?>>();
 
-  public GraphBuilderImpl() {
+  public DesktopGraphBuilderImpl() {
 
   }
 

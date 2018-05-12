@@ -192,6 +192,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
+  Hyperlink _Components_hyperlink(String text) {
+    return null;
+  }
+
+  @Override
   HorizontalLayout _Layouts_horizontal() {
     return new DesktopHorizontalLayoutImpl();
   }

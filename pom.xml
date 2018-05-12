@@ -32,6 +32,7 @@
     <module>modules/desktop/desktop-platform-impl</module>
     <module>modules/desktop/desktop-lang-impl</module>
     <module>modules/desktop/desktop-ui-laf-impl</module>
+    <module>modules/desktop/desktop-graph-impl</module>
     <module>plugins/platform-desktop</module>
 
     <module>modules/web/web-boot</module>

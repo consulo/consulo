@@ -22,9 +22,9 @@ import consulo.diagram.builder.GraphBuilderFactory;
  * @author VISTALL
  * @since 22:37/15.10.13
  */
-public class GraphBuilderFactoryImpl extends GraphBuilderFactory {
+public class DesktopGraphBuilderFactoryImpl extends GraphBuilderFactory {
   @Override
   public GraphBuilder createBuilder() {
-    return new GraphBuilderImpl();
+    return new DesktopGraphBuilderImpl();
   }
 }

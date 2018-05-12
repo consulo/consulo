@@ -91,5 +91,8 @@
 
     <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
                         serviceImplementation="com.intellij.ui.DesktopIconDeferrerImpl"/>
+
+    <applicationService serviceInterface="consulo.diagram.builder.GraphBuilderFactory"
+                        serviceImplementation="consulo.diagram.builder.impl.DesktopGraphBuilderFactoryImpl"/>
   </extensions>
 </idea-plugin>

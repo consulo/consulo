@@ -38,7 +38,7 @@ public abstract class FileIndexBase implements FileIndex {
   protected final DirectoryIndex myDirectoryIndex;
   private final VirtualFileFilter myContentFilter = file -> {
     assert file != null;
-    return ObjectUtil.assertNotNull(AccessRule.read(() -> !isScopeDisposed() && isInContent(file)));
+    return ObjectUtil.assertNotNull(AccessRule.<Boolean, RuntimeException>read(() -> !isScopeDisposed() && isInContent(file)));
   };
 
   public FileIndexBase(@Nonnull DirectoryIndex directoryIndex, @Nonnull FileTypeRegistry fileTypeManager) {
