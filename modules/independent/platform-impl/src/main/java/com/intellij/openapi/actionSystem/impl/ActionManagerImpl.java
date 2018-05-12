@@ -53,6 +53,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.TransactionGuardEx;
 import consulo.extensions.ListOfElementsEP;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -1349,7 +1350,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   private void tryToExecuteNow(final AnAction action, final InputEvent inputEvent, final Component contextComponent, final String place, final AsyncResult<Void> result) {
     final Presentation presentation = action.getTemplatePresentation().clone();
 
-    IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(() -> ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> {
+    IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(() -> ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> {
       final DataContext context = getContextBy(contextComponent);
 
       AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, this, inputEvent.getModifiersEx());

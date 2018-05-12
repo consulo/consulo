@@ -29,7 +29,6 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -51,10 +50,11 @@ import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.application.TransactionGuardEx;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -1430,7 +1430,7 @@ public class AbstractPopup implements JBPopup {
             @Override
             public void run() {
               if (ModalityState.current().equals(modalityState)) {
-                ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(finalRunnable);
+                ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(finalRunnable);
               }
               // Otherwise the UI has changed unexpectedly and the action is likely not applicable.
               // And we don't want finalRunnable to perform potentially destructive actions

@@ -25,9 +25,10 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.TransactionGuardEx;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -36,8 +37,8 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author peter
  */
-public class TransactionGuardImpl extends TransactionGuard {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.TransactionGuardImpl");
+public class TransactionGuardImpl extends TransactionGuardEx {
+  private static final Logger LOG = Logger.getInstance(TransactionGuardImpl.class);
   private final Queue<Transaction> myQueue = new LinkedBlockingQueue<>();
   private final Map<ModalityState, TransactionIdImpl> myModality2Transaction = ContainerUtil.createConcurrentWeakMap();
 
@@ -186,6 +187,7 @@ public class TransactionGuardImpl extends TransactionGuard {
    * please consider using {@code ActionManager.tryToExecute()} instead, or ensure in some other way that the action is enabled
    * and can be invoked in the current modality state.
    */
+  @Override
   public void performUserActivity(Runnable activity) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     AccessToken token = startActivity(true);
@@ -223,6 +225,7 @@ public class TransactionGuardImpl extends TransactionGuard {
     return Boolean.TRUE.equals(myWriteSafeModalities.get(state));
   }
 
+  @Override
   public void assertWriteActionAllowed() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (areAssertionsEnabled() && !myWritingAllowed && !myErrorReported) {
@@ -288,6 +291,7 @@ public class TransactionGuardImpl extends TransactionGuard {
     return myWritingAllowed ? myCurrentTransaction : null;
   }
 
+  @Override
   public void enteredModality(@Nonnull ModalityState modality) {
     TransactionIdImpl contextTransaction = getContextTransaction();
     if (contextTransaction != null) {

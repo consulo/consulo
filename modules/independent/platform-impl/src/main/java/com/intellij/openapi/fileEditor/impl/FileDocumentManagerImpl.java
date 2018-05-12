@@ -21,7 +21,6 @@ import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
@@ -60,10 +59,11 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.application.TransactionGuardEx;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -297,7 +297,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
    */
   public void saveAllDocuments(boolean isExplicit) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    ((TransactionGuardImpl)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     myMultiCaster.beforeAllDocumentsSaving();
     if (myUnsavedDocuments.isEmpty()) return;
@@ -338,7 +338,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
 
   public void saveDocument(@Nonnull final Document document, final boolean explicit) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    ((TransactionGuardImpl)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     if (!myUnsavedDocuments.contains(document)) return;
 

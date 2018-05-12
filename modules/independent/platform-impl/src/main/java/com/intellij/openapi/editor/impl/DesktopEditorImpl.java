@@ -89,6 +89,7 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.application.TransactionGuardEx;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.migration.AWTComponentProviderUtil;
 import org.intellij.lang.annotations.JdkConstants;
@@ -3796,7 +3797,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     public void mouseDragged(@Nonnull MouseEvent e) {
       if (myDraggedRange != null || myGutterComponent.myDnDInProgress) return; // on Mac we receive events even if drag-n-drop is in progress
       validateMousePointer(e);
-      ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> runMouseDraggedCommand(e));
+      ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> runMouseDraggedCommand(e));
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
         myGutterComponent.mouseDragged(e);
@@ -4255,7 +4256,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
       final DesktopEditorImpl editor = getEditor(source);
       if (action == MOVE && !editor.isViewer() && editor.myDraggedRange != null) {
-        ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> removeDraggedOutFragment(editor));
+        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> removeDraggedOutFragment(editor));
       }
 
       editor.clearDnDContext();

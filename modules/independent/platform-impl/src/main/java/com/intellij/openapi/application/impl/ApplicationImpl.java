@@ -96,7 +96,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class ApplicationImpl extends PlatformComponentManagerImpl implements ApplicationEx2 {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.application.impl.ApplicationImpl");
+  private static final Logger LOG = Logger.getInstance(ApplicationImpl.class);
 
   final ReadMostlyRWLock myLock;
 
@@ -182,6 +182,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
 
     getPicoContainer().registerComponentInstance(Application.class, this);
+    getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), myTransactionGuard);
 
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 

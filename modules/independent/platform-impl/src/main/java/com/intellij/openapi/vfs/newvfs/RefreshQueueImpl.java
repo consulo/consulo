@@ -25,11 +25,12 @@ import com.intellij.openapi.vfs.VfsBundle;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.TransactionGuardEx;
 import gnu.trove.TLongObjectHashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 
@@ -51,7 +52,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     else {
       Application app = ApplicationManager.getApplication();
       if (app.isDispatchThread()) {
-        ((TransactionGuardImpl)TransactionGuard.getInstance()).assertWriteActionAllowed();
+        ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
         doScan(session);
         session.fireEvents();
       }
@@ -119,7 +120,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   @Nonnull
   @Override
   public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
-    return new RefreshSessionImpl(async, recursively, finishRunnable, ((TransactionGuardImpl)TransactionGuard.getInstance()).getModalityTransaction(state));
+    return new RefreshSessionImpl(async, recursively, finishRunnable, ((TransactionGuardEx)TransactionGuard.getInstance()).getModalityTransaction(state));
   }
 
   @Override
