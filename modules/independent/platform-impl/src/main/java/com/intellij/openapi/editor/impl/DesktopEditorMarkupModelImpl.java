@@ -31,7 +31,7 @@ import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.diagnostic.Logger;
@@ -473,7 +473,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       if (myDirtyYPositions != null) {
         final Graphics2D imageGraphics = myCachedTrack.createGraphics();
 
-        ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
+        ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
 
         try {
           myDirtyYPositions = myDirtyYPositions.intersection(docRange);
@@ -482,7 +482,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
           myDirtyYPositions = null;
         }
         finally {
-          ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintFinish();
+          ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintFinish();
         }
       }
 

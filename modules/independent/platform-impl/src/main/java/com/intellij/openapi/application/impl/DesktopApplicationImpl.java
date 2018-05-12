@@ -68,6 +68,7 @@ import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
@@ -95,8 +96,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class ApplicationImpl extends PlatformComponentManagerImpl implements ApplicationEx2 {
-  private static final Logger LOG = Logger.getInstance(ApplicationImpl.class);
+@Deprecated
+@DeprecationInfo("Desktop only")
+public class DesktopApplicationImpl extends PlatformComponentManagerImpl implements ApplicationEx2 {
+  private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
   final ReadMostlyRWLock myLock;
 
@@ -176,7 +179,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
-  public ApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
+  public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(null);
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
@@ -274,7 +277,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         @Override
         @RequiredDispatchThread
         public void run() {
-          if (ApplicationManager.getApplication() != ApplicationImpl.this) return;
+          if (ApplicationManager.getApplication() != DesktopApplicationImpl.this) return;
           try {
             myDisposeInProgress = true;
             saveAll();
@@ -310,7 +313,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         }
       }
     }
-    runWriteAction(() -> Disposer.dispose(ApplicationImpl.this));
+    runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));
 
     Disposer.assertIsEmpty();
     return true;

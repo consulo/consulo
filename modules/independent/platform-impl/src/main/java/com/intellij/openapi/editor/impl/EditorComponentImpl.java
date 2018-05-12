@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Caret;
@@ -74,7 +74,7 @@ import java.util.Map;
 
 public class EditorComponentImpl extends JTextComponent implements Scrollable, DataProvider, Queryable, TypingTarget, Accessible {
   private final DesktopEditorImpl myEditor;
-  private final ApplicationImpl myApplication;
+  private final DesktopApplicationImpl myApplication;
 
   public EditorComponentImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
@@ -98,7 +98,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
         return myEditor.visualPositionToXY(magnificationPosition);
       }
     });
-    myApplication = (ApplicationImpl)ApplicationManager.getApplication();
+    myApplication = (DesktopApplicationImpl)ApplicationManager.getApplication();
 
     // This editor extends JTextComponent rather than JComponent *only* for accessibility
     // purposes, and the JTextComponent is not fully supported: it does not reflect the

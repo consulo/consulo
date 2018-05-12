@@ -23,7 +23,7 @@ import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
@@ -50,6 +50,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
+  @SuppressWarnings("deprecation")
   public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
@@ -60,7 +61,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
       }
     }
 
-    new ApplicationImpl(isHeadlessMode, mySplashRef);
+    new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
   }
 
   @Nullable

@@ -1,7 +1,7 @@
 package consulo.web.application.impl;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -19,7 +19,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 16-Sep-17
  */
-public class WebApplicationImpl extends ApplicationImpl implements WebApplication {
+public class WebApplicationImpl extends DesktopApplicationImpl implements WebApplication {
   private WebSession myCurrentSession;
 
   public WebApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splash) {

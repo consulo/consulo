@@ -33,7 +33,7 @@ import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.ColorKey;
@@ -269,7 +269,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Override
   public void paint(Graphics g_) {
-    ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
+    ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
     try {
       Rectangle clip = g_.getClipBounds();
       if (clip.height < 0) return;
@@ -315,7 +315,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       if (old != null) g.setTransform(old);
     }
     finally {
-      ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintFinish();
+      ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintFinish();
     }
   }
 
