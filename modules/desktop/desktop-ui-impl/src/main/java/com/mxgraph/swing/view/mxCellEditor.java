@@ -379,32 +379,13 @@ public class mxCellEditor implements mxICellEditor {
       JTextComponent currentEditor = null;
 
       // Configures the style of the in-place editor
-      if (graphComponent.getGraph().isHtmlLabel(cell)) {
-        if (isExtractHtmlBody()) {
-          value = mxUtils.getBodyMarkup(value, isReplaceHtmlLinefeeds());
-        }
+      textArea.setFont(mxUtils.getFont(state.getStyle(), scale));
+      Color fontColor = mxUtils.getColor(state.getStyle(), mxConstants.STYLE_FONTCOLOR, Color.black);
+      textArea.setForeground(fontColor);
+      textArea.setText(value);
 
-        editorPane.setDocument(mxUtils.createHtmlDocumentObject(state.getStyle(), scale));
-        editorPane.setText(value);
-
-        // Workaround for wordwrapping in editor pane
-        // FIXME: Cursor not visible at end of line
-        JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.setOpaque(false);
-        wrapper.add(editorPane, BorderLayout.CENTER);
-        scrollPane.setViewportView(wrapper);
-
-        currentEditor = editorPane;
-      }
-      else {
-        textArea.setFont(mxUtils.getFont(state.getStyle(), scale));
-        Color fontColor = mxUtils.getColor(state.getStyle(), mxConstants.STYLE_FONTCOLOR, Color.black);
-        textArea.setForeground(fontColor);
-        textArea.setText(value);
-
-        scrollPane.setViewportView(textArea);
-        currentEditor = textArea;
-      }
+      scrollPane.setViewportView(textArea);
+      currentEditor = textArea;
 
       graphComponent.getGraphControl().add(scrollPane, 0);
 

@@ -135,34 +135,6 @@ public class mxCellRenderer {
   /**
    *
    */
-  public static Document createSvgDocument(mxGraph graph, Object[] cells, double scale, Color background, mxRectangle clip) {
-    mxSvgCanvas canvas = (mxSvgCanvas)drawCells(graph, cells, scale, clip, new CanvasFactory() {
-      public mxICanvas createCanvas(int width, int height) {
-        return new mxSvgCanvas(mxDomUtils.createSvgDocument(width, height));
-      }
-
-    });
-
-    return canvas.getDocument();
-  }
-
-  /**
-   *
-   */
-  public static Document createVmlDocument(mxGraph graph, Object[] cells, double scale, Color background, mxRectangle clip) {
-    mxVmlCanvas canvas = (mxVmlCanvas)drawCells(graph, cells, scale, clip, new CanvasFactory() {
-      public mxICanvas createCanvas(int width, int height) {
-        return new mxVmlCanvas(mxDomUtils.createVmlDocument());
-      }
-
-    });
-
-    return canvas.getDocument();
-  }
-
-  /**
-   *
-   */
   public static abstract class CanvasFactory {
 
     /**

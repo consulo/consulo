@@ -11,6 +11,7 @@ import com.mxgraph.model.*;
 import com.mxgraph.model.mxGraphModel.*;
 import com.mxgraph.util.*;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
+import consulo.util.pointers.Named;
 import org.w3c.dom.Element;
 
 import java.awt.*;
@@ -446,10 +447,6 @@ public class mxGraph extends mxEventSource {
    */
   protected boolean labelsVisible = true;
 
-  /**
-   * Specifies the return value for isHtmlLabel. Default is false.
-   */
-  protected boolean htmlLabels = false;
 
   /**
    * Specifies if nesting of swimlanes is allowed. Default is true.
@@ -2972,7 +2969,7 @@ public class mxGraph extends mxEventSource {
         String value = getLabel(cell);
 
         if (value != null && value.length() > 0) {
-          mxRectangle size = mxUtils.getLabelSize(value, style, isHtmlLabel(cell), 1);
+          mxRectangle size = mxUtils.getLabelSize(value, style, 1);
           double width = size.getWidth() + dx;
           double height = size.getHeight() + dy;
 
@@ -4324,23 +4321,6 @@ public class mxGraph extends mxEventSource {
   }
 
   /**
-   * @param value the htmlLabels to set
-   */
-  public void setHtmlLabels(boolean value) {
-    boolean oldValue = htmlLabels;
-    htmlLabels = value;
-
-    changeSupport.firePropertyChange("htmlLabels", oldValue, htmlLabels);
-  }
-
-  /**
-   *
-   */
-  public boolean isHtmlLabels() {
-    return htmlLabels;
-  }
-
-  /**
    * Returns the textual representation for the given cell.
    *
    * @param cell Cell to be converted to a string.
@@ -4348,7 +4328,9 @@ public class mxGraph extends mxEventSource {
    */
   public String convertValueToString(Object cell) {
     Object result = model.getValue(cell);
-
+    if(result instanceof Named) {
+      return ((Named)result).getName();
+    }
     return (result != null) ? result.toString() : "";
   }
 
@@ -4395,17 +4377,6 @@ public class mxGraph extends mxEventSource {
     finally {
       model.endUpdate();
     }
-  }
-
-  /**
-   * Returns true if the label must be rendered as HTML markup. The default
-   * implementation returns <htmlLabels>.
-   *
-   * @param cell <mxCell> whose label should be displayed as HTML markup.
-   * @return Returns true if the given cell label is HTML markup.
-   */
-  public boolean isHtmlLabel(Object cell) {
-    return isHtmlLabels();
   }
 
   /**
@@ -6643,7 +6614,7 @@ public class mxGraph extends mxEventSource {
         String label = state.getLabel();
 
         if (label != null && state.getLabelBounds() != null) {
-          lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
+          lab = canvas.drawLabel(label, state, false);
         }
       }
 

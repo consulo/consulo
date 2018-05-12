@@ -154,7 +154,7 @@ public abstract class mxGraphViewReader extends DefaultHandler {
       mxPoint offset = new mxPoint(mxUtils.getDouble(style, "dx"), mxUtils.getDouble(style, "dy"));
       mxRectangle vertexBounds = (!edge) ? state : null;
       state.setLabelBounds(
-        mxUtils.getLabelPaintBounds(label, state.getStyle(), mxUtils.isTrue(style, "html", false), offset, vertexBounds, scale));
+        mxUtils.getLabelPaintBounds(label, state.getStyle(), offset, vertexBounds, scale));
     }
 
     return label;

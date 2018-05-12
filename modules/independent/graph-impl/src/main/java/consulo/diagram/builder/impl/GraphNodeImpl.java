@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,11 @@ package consulo.diagram.builder.impl;
 
 import consulo.diagram.builder.GraphNode;
 import consulo.diagram.builder.GraphPositionStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.pointers.Named;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +29,17 @@ import java.util.List;
  * @author VISTALL
  * @since 22:44/15.10.13
  */
-public class GraphNodeImpl<E> implements GraphNode<E> {
-  private final List<GraphNode<?>> myArrowNodes = new ArrayList<GraphNode<?>>();
+public class GraphNodeImpl<E> implements GraphNode<E>, Named {
+  private final List<GraphNode<?>> myArrowNodes = new ArrayList<>();
+  private String myName;
+  @Nullable
+  private Icon myIcon;
   private final E myValue;
   private final GraphPositionStrategy myStrategy;
 
-  public GraphNodeImpl(E value, GraphPositionStrategy strategy) {
+  public GraphNodeImpl(@Nonnull String name, @Nullable Icon icon, @Nullable E value, GraphPositionStrategy strategy) {
+    myName = name;
+    myIcon = icon;
     myValue = value;
     myStrategy = strategy;
   }
@@ -55,5 +63,17 @@ public class GraphNodeImpl<E> implements GraphNode<E> {
   @Nonnull
   public List<GraphNode<?>> getArrowNodes() {
     return myArrowNodes;
+  }
+
+  @Nonnull
+  @Override
+  public String getName() {
+    return myName;
+  }
+
+  @Nullable
+  @Override
+  public Icon getIcon() {
+    return myIcon;
   }
 }
