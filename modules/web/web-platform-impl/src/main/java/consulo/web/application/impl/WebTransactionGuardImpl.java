@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application;
+package consulo.web.application.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.TransactionId;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,23 +28,29 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-05-12
  */
-public abstract class TransactionGuardEx extends TransactionGuard {
-  public void enteredModality(@Nonnull ModalityState modality) {
+public class WebTransactionGuardImpl extends TransactionGuardEx {
+  @Override
+  public void assertWriteSafeContext(@Nonnull ModalityState modality) {
+
   }
 
-  public void assertWriteActionAllowed() {
+  @Override
+  public void submitTransactionLater(@Nonnull Disposable parentDisposable, @Nonnull Runnable transaction) {
+    transaction.run();
   }
 
-  public void performUserActivity(Runnable activity) {
-    activity.run();
+  @Override
+  public void submitTransactionAndWait(@Nonnull Runnable transaction) throws ProcessCanceledException {
+    transaction.run();
   }
 
-  public boolean isWriteSafeModality(ModalityState state) {
-    return true;
+  @Override
+  public void submitTransaction(@Nonnull Disposable parentDisposable, @Nullable TransactionId expectedContext, @Nonnull Runnable transaction) {
+    transaction.run();
   }
 
-  @Nullable
-  public TransactionId getModalityTransaction(@Nonnull ModalityState modalityState) {
+  @Override
+  public TransactionId getContextTransaction() {
     return null;
   }
 }

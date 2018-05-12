@@ -186,7 +186,9 @@ public interface Application extends ComponentManager {
    * @see #assertWriteAccessAllowed()
    * @see #runWriteAction(Runnable)
    */
-  boolean isWriteAccessAllowed();
+  default boolean isWriteAccessAllowed() {
+    return isWriteThread();
+  }
 
   /**
    * Checks if the read access is currently allowed.
@@ -367,7 +369,9 @@ public interface Application extends ComponentManager {
    *
    * @return true if IDE is running in compiler server, false otherwise
    */
-  boolean isCompilerServerMode();
+  default boolean isCompilerServerMode() {
+    return false;
+  }
 
   /**
    * Checks if IDE is running as a command line applet or in unit test mode.
@@ -375,7 +379,9 @@ public interface Application extends ComponentManager {
    *
    * @return true if IDE is running in command line  mode, false otherwise
    */
-  boolean isCommandLine();
+ default boolean isCommandLine() {
+    return false;
+  }
 
   @Override
   boolean isDisposed();
@@ -452,7 +458,9 @@ public interface Application extends ComponentManager {
 
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
-  boolean isInternal();
+  default boolean isInternal() {
+    return false;
+  }
 
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

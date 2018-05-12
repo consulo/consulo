@@ -26,7 +26,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Caret;
@@ -53,12 +52,13 @@ import com.intellij.ui.components.Magnificator;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.application.ex.ApplicationEx2;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.UndoableEditListener;
@@ -74,7 +74,7 @@ import java.util.Map;
 
 public class EditorComponentImpl extends JTextComponent implements Scrollable, DataProvider, Queryable, TypingTarget, Accessible {
   private final DesktopEditorImpl myEditor;
-  private final DesktopApplicationImpl myApplication;
+  private final ApplicationEx2 myApplication;
 
   public EditorComponentImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
@@ -98,7 +98,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
         return myEditor.visualPositionToXY(magnificationPosition);
       }
     });
-    myApplication = (DesktopApplicationImpl)ApplicationManager.getApplication();
+    myApplication = (ApplicationEx2)ApplicationManager.getApplication();
 
     // This editor extends JTextComponent rather than JComponent *only* for accessibility
     // purposes, and the JTextComponent is not fully supported: it does not reflect the

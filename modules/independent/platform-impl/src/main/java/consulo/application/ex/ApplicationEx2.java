@@ -50,4 +50,10 @@ public interface ApplicationEx2 extends ApplicationEx {
                                                      @Nonnull Consumer<ProgressIndicator> action);
 
   ComponentConfig[] getComponentConfigurations();
+
+  default void editorPaintStart() {
+  }
+
+  default void editorPaintFinish() {
+  }
 }

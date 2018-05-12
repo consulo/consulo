@@ -17,68 +17,45 @@ package com.intellij.openapi.application.impl;
 
 import com.intellij.CommonBundle;
 import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
-import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.LogEventException;
-import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.diagnostic.ThreadDumper;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
-import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
-import com.intellij.openapi.components.impl.stores.IApplicationStore;
-import com.intellij.openapi.components.impl.stores.IComponentStore;
-import com.intellij.openapi.components.impl.stores.StoreUtil;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.AppIcon;
-import com.intellij.util.*;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
-import com.intellij.util.containers.Stack;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
+import consulo.application.impl.BaseApplication;
 import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.ide.PooledThreadExecutor;
-import org.picocontainer.MutablePicoContainer;
 import sun.awt.AWTAccessor;
 import sun.awt.AWTAutoShutdown;
 
@@ -86,63 +63,27 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-@Deprecated
-@DeprecationInfo("Desktop only")
-public class DesktopApplicationImpl extends PlatformComponentManagerImpl implements ApplicationEx2 {
+public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2 {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
-
-  final ReadMostlyRWLock myLock;
 
   private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
 
-  private final EventDispatcher<ApplicationListener> myDispatcher = EventDispatcher.create(ApplicationListener.class);
-
-  private final boolean myTestModeFlag;
   private final boolean myHeadlessMode;
-  private final boolean myCommandLineMode;
   private final boolean myIsInternal;
 
-  private final Stack<Class> myWriteActionsStack = new Stack<>(); // accessed from EDT only, no need to sync
   private final TransactionGuardImpl myTransactionGuard = new TransactionGuardImpl();
 
   private int myInEditorPaintCounter; // EDT only
-  private final long myStartTime;
-  @Nonnull
-  protected final Ref<? extends StartupProgress> mySplashRef;
-  private boolean myDoNotSave;
+
   private volatile boolean myDisposeInProgress;
 
-  private final Disposable myLastDisposable = Disposer.newDisposable(); // will be disposed last
-
-  private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
-
-  private final ExecutorService ourThreadExecutorsService = PooledThreadExecutor.INSTANCE;
-  @SuppressWarnings("UseOfArchaicSystemPropertyAccessors")
-  private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
-
-  private boolean myIsFiringLoadingEvent = false;
-  private boolean myLoaded = false;
   @NonNls
   private static final String WAS_EVER_SHOWN = "was.ever.shown";
-
-  private int myWriteStackBase;
-  private volatile Thread myWriteActionThread;
-
-  private final boolean gatherStatistics;
-
-  private static class ActionPauses {
-    private static final PausesStat WRITE = new PausesStat("Write action");
-  }
 
   private static final ModalityState ANY = new ModalityState() {
     @Override
@@ -157,34 +98,13 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     }
   };
 
-  @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    super.bootstrapPicoContainer(name);
-    getPicoContainer().registerComponentImplementation(IComponentStore.class, ApplicationStoreImpl.class);
-    getPicoContainer().registerComponentImplementation(ApplicationPathMacroManager.class);
-  }
-
-  @Override
-  @Nonnull
-  public IApplicationStore getStateStore() {
-    return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
-  }
-
-  @Override
-  public void initializeComponent(@Nonnull Object component, boolean service) {
-    getStateStore().initComponent(component);
-  }
-
   static {
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
-    super(null);
+    super(null, splashRef);
 
-    ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
-
-    getPicoContainer().registerComponentInstance(Application.class, this);
     getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), myTransactionGuard);
 
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
@@ -194,25 +114,14 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     String debugDisposer = System.getProperty("idea.disposer.debug");
     Disposer.setDebugMode((myIsInternal || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
 
-    myStartTime = System.currentTimeMillis();
-    mySplashRef = splashRef;
-
-    boolean isUnitTestMode = false;
-
-    myTestModeFlag = isUnitTestMode;
     myHeadlessMode = isHeadless;
-    myCommandLineMode = isUnitTestMode;
 
-    myDoNotSave = isUnitTestMode || isHeadless;
-    gatherStatistics = LOG.isDebugEnabled() || isUnitTestMode() || isInternal();
+    myDoNotSave = isHeadless;
+    myGatherStatistics = LOG.isDebugEnabled() || isInternal();
 
     loadApplicationComponents();
 
-    if (myTestModeFlag) {
-      registerShutdownHook();
-    }
-
-    if (!isUnitTestMode && !isHeadless) {
+    if (!isHeadless) {
       Disposer.register(this, Disposer.newDisposable(), "ui");
 
       StartupUtil.addExternalInstanceListener(commandLineArgs -> {
@@ -246,50 +155,7 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     });
     myLock = new ReadMostlyRWLock(edt);
 
-    if (isUnitTestMode) {
-      ApplicationStarter.ourLoaded = true;
-    }
-
     NoSwingUnderWriteAction.watchForEvents(this);
-  }
-
-  /**
-   * Executes a {@code runnable} in an "impatient" mode.
-   * In this mode any attempt to call {@link #runReadAction(Runnable)}
-   * would fail (i.e. throw {@link ApplicationUtil.CannotRunReadActionException})
-   * if there is a pending write action.
-   */
-  public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
-    if (isDispatchThread()) {
-      runnable.run();
-    }
-    else {
-      myLock.executeByImpatientReader(runnable);
-    }
-  }
-
-  private void registerShutdownHook() {
-    ShutDownTracker.getInstance().registerShutdownTask(() -> {
-      if (isDisposed() || myDisposeInProgress) {
-        return;
-      }
-      ShutDownTracker.invokeAndWait(isUnitTestMode(), true, new Runnable() {
-        @Override
-        @RequiredDispatchThread
-        public void run() {
-          if (ApplicationManager.getApplication() != DesktopApplicationImpl.this) return;
-          try {
-            myDisposeInProgress = true;
-            saveAll();
-          }
-          finally {
-            if (!disposeSelf(true)) {
-              myDisposeInProgress = false;
-            }
-          }
-        }
-      });
-    });
   }
 
   @RequiredDispatchThread
@@ -320,45 +186,8 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
   }
 
   @Override
-  public boolean holdsReadLock() {
-    return myLock.isReadLockedByThisThread();
-  }
-
-  private void loadApplicationComponents() {
-    PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
-    PluginManagerCore.initPlugins(mySplashRef.get());
-    IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
-        loadComponentsConfiguration(plugin.getAppComponents(), plugin, false);
-      }
-    }
-  }
-
-  @Override
-  protected synchronized Object createComponent(@Nonnull Class componentInterface) {
-    Object component = super.createComponent(componentInterface);
-    StartupProgress progress = mySplashRef.get();
-    if (progress != null) {
-      progress.showProgress("", 0.65f + getPercentageOfComponentsLoaded() * 0.35f);
-    }
-    return component;
-  }
-
-  @Nonnull
-  @Override
-  protected MutablePicoContainer createPicoContainer() {
-    return Extensions.getRootArea().getPicoContainer();
-  }
-
-  @Override
   public boolean isInternal() {
     return myIsInternal;
-  }
-
-  @Override
-  public boolean isUnitTestMode() {
-    return myTestModeFlag;
   }
 
   @Override
@@ -367,79 +196,7 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
   }
 
   @Override
-  public boolean isCompilerServerMode() {
-    return false;
-  }
-
-  @Override
-  public boolean isCommandLine() {
-    return myCommandLineMode;
-  }
-
-  @Nonnull
-  @Override
-  public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
-    ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
-    return ourThreadExecutorsService.submit(new Runnable() {
-      @Override
-      public String toString() {
-        return action.toString();
-      }
-
-      @Override
-      public void run() {
-        try (AccessToken ignored = myLock.applyReadPrivilege(suspensionId)) {
-          action.run();
-        }
-        catch (ProcessCanceledException e) {
-          // ignore
-        }
-        catch (Throwable t) {
-          LOG.error(t);
-        }
-        finally {
-          Thread.interrupted(); // reset interrupted status
-        }
-      }
-    });
-  }
-
-  @Nonnull
-  @Override
-  public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
-    ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
-    return ourThreadExecutorsService.submit(new Callable<T>() {
-      @Override
-      public T call() {
-        try (AccessToken ignored = myLock.applyReadPrivilege(suspensionId)) {
-          return action.call();
-        }
-        catch (ProcessCanceledException e) {
-          // ignore
-        }
-        catch (Throwable t) {
-          LOG.error(t);
-        }
-        finally {
-          Thread.interrupted(); // reset interrupted status
-        }
-        return null;
-      }
-
-      @Override
-      public String toString() {
-        return action.toString();
-      }
-    });
-  }
-
-  @Override
   public boolean isDispatchThread() {
-    return myLock.isWriteThread();
-  }
-
-  @Override
-  public boolean isWriteThread() {
     return myLock.isWriteThread();
   }
 
@@ -472,89 +229,6 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final Condition expired) {
     myInvokator.invokeLater(myTransactionGuard.wrapLaterInvocation(runnable, state), state, expired);
-  }
-
-  @Override
-  public void load(@Nullable String optionsPath) throws IOException {
-    load(PathManager.getConfigPath(), optionsPath == null ? PathManager.getOptionsPath() : optionsPath);
-  }
-
-  public void load(@Nonnull String configPath, @Nonnull String optionsPath) throws IOException {
-    IApplicationStore store = getStateStore();
-    store.setOptionsPath(optionsPath);
-    store.setConfigPath(configPath);
-
-    myIsFiringLoadingEvent = true;
-    try {
-      fireBeforeApplicationLoaded();
-    }
-    finally {
-      myIsFiringLoadingEvent = false;
-    }
-
-    AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Loading application components");
-    try {
-      store.load();
-    }
-    catch (StateStorageException e) {
-      throw new IOException(e.getMessage());
-    }
-    finally {
-      token.finish();
-    }
-    myLoaded = true;
-
-    createLocatorFile();
-  }
-
-  private static void createLocatorFile() {
-    File locatorFile = new File(PathManager.getSystemPath() + "/" + ApplicationEx.LOCATOR_FILE_NAME);
-    try {
-      byte[] data = PathManager.getHomePath().getBytes(CharsetToolkit.UTF8_CHARSET);
-      FileUtil.writeToFile(locatorFile, data);
-    }
-    catch (IOException e) {
-      LOG.warn("can't store a location in '" + locatorFile + "'", e);
-    }
-  }
-
-  @Override
-  public boolean isLoaded() {
-    return myLoaded;
-  }
-
-  @Override
-  protected <T> T getComponentFromContainer(@Nonnull final Class<T> interfaceClass) {
-    if (myIsFiringLoadingEvent) {
-      return null;
-    }
-    return super.getComponentFromContainer(interfaceClass);
-  }
-
-  private void fireBeforeApplicationLoaded() {
-    for (ApplicationLoadListener listener : ApplicationLoadListener.EP_NAME.getExtensions()) {
-      try {
-        listener.beforeApplicationLoaded(this);
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
-    }
-  }
-
-  @Override
-  public void dispose() {
-    fireApplicationExiting();
-
-    ShutDownTracker.getInstance().ensureStopperThreadsFinished();
-
-    disposeComponents();
-
-    AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
-    service.shutdownAppScheduledExecutorService();
-
-    super.dispose();
-    Disposer.dispose(myLastDisposable); // dispose it last
   }
 
   @RequiredDispatchThread
@@ -682,11 +356,6 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
   @Nonnull
   public ModalityState getNoneModalityState() {
     return ModalityState.NON_MODAL;
-  }
-
-  @Override
-  public long getStartTime() {
-    return myStartTime;
   }
 
   @RequiredDispatchThread
@@ -837,76 +506,7 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     return true;
   }
 
-  private boolean canExit() {
-    for (ApplicationListener applicationListener : myDispatcher.getListeners()) {
-      if (!applicationListener.canExitApplication()) {
-        return false;
-      }
-    }
-
-    ProjectManagerEx projectManager = (ProjectManagerEx)ProjectManager.getInstance();
-    Project[] projects = projectManager.getOpenProjects();
-    for (Project project : projects) {
-      if (!projectManager.canClose(project)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   @Override
-  public void runReadAction(@Nonnull final Runnable action) {
-    if (isReadAccessAllowed()) {
-      action.run();
-    }
-    else {
-      startRead();
-      try {
-        action.run();
-      }
-      finally {
-        endRead();
-      }
-    }
-  }
-
-  @Override
-  public <T> T runReadAction(@Nonnull final Computable<T> computation) {
-    if (isReadAccessAllowed()) {
-      return computation.compute();
-    }
-    startRead();
-    try {
-      return computation.compute();
-    }
-    finally {
-      endRead();
-    }
-  }
-
-  @Override
-  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    if (isReadAccessAllowed()) {
-      return computation.compute();
-    }
-    startRead();
-    try {
-      return computation.compute();
-    }
-    finally {
-      endRead();
-    }
-  }
-
-  private void startRead() {
-    myLock.readLock();
-  }
-
-  private void endRead() {
-    myLock.readUnlock();
-  }
-
   public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
                                                             @Nullable Project project,
                                                             @Nullable JComponent parentComponent,
@@ -950,57 +550,6 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     }
   }
 
-  @RequiredDispatchThread
-  @Override
-  public void runWriteAction(@Nonnull final Runnable action) {
-    Class<? extends Runnable> clazz = action.getClass();
-    startWrite(clazz);
-    try {
-      action.run();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public <T> T runWriteAction(@Nonnull final Computable<T> computation) {
-    Class<? extends Computable> clazz = computation.getClass();
-    startWrite(clazz);
-    try {
-      return computation.compute();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    Class<? extends ThrowableComputable> clazz = computation.getClass();
-    startWrite(clazz);
-    try {
-      return computation.compute();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
-    assertReadAccessAllowed();
-
-    for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {
-      Class action = myWriteActionsStack.get(i);
-      if (actionClass == action || ReflectionUtil.isAssignable(actionClass, action)) return true;
-    }
-    return false;
-  }
-
   @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
@@ -1036,6 +585,13 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     if (isDispatchThread()) return;
     if (ShutDownTracker.isShutdownHookRunning()) return;
     assertIsDispatchThread("Access is allowed from event dispatch thread only.");
+  }
+
+  @Override
+  protected void assertWriteActionStart() {
+    if (!isWriteAccessAllowed()) {
+      assertIsDispatchThread("Write access is allowed from event dispatch thread only");
+    }
   }
 
   private void assertIsDispatchThread(@Nonnull String message) {
@@ -1076,32 +632,12 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
 
   @Override
   public void assertTimeConsuming() {
-    if (myTestModeFlag || myHeadlessMode || ShutDownTracker.isShutdownHookRunning()) return;
+    if (myHeadlessMode || ShutDownTracker.isShutdownHookRunning()) return;
     LOG.assertTrue(!isDispatchThread(), "This operation is time consuming and must not be called on EDT");
   }
 
   @Override
-  public boolean tryRunReadAction(@Nonnull Runnable action) {
-    //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
-    if (isReadAccessAllowed()) {
-      action.run();
-    }
-    else {
-      if (!myLock.tryReadLock()) return false;
-      try {
-        action.run();
-      }
-      finally {
-        endRead();
-      }
-    }
-    return true;
-  }
-
-  @Override
   public boolean isActive() {
-    if (isUnitTestMode()) return true;
-
     Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 
     if (ApplicationActivationStateManager.getState().isInactive() && activeWindow != null) {
@@ -1111,171 +647,12 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     return ApplicationActivationStateManager.getState().isActive();
   }
 
-  @Nonnull
-  @Override
-  public AccessToken acquireReadActionLock() {
-    // if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
-    return isReadAccessAllowed() ? AccessToken.EMPTY_ACCESS_TOKEN : new ReadAccessToken();
-  }
-
-  private volatile boolean myWriteActionPending;
-
-  @Override
-  public boolean isWriteActionPending() {
-    return myWriteActionPending;
-  }
-
-  private void startWrite(@Nonnull Class clazz) {
-    if (!isWriteAccessAllowed()) {
-      assertIsDispatchThread("Write access is allowed from event dispatch thread only");
-    }
-    HeavyProcessLatch.INSTANCE.stopThreadPrioritizing(); // let non-cancellable read actions complete faster, if present
-    boolean writeActionPending = myWriteActionPending;
-    if (gatherStatistics && myWriteActionsStack.isEmpty() && !writeActionPending) {
-      ActionPauses.WRITE.started();
-    }
-    myWriteActionPending = true;
-    try {
-      ActivityTracker.getInstance().inc();
-      fireBeforeWriteActionStart(clazz);
-
-      if (!myLock.isWriteLocked()) {
-        if (!myLock.tryWriteLock()) {
-          Future<?> reportSlowWrite = ourDumpThreadsOnLongWriteActionWaiting <= 0
-                                      ? null
-                                      : JobScheduler.getScheduler().scheduleWithFixedDelay(() -> PerformanceWatcher.getInstance().dumpThreads("waiting", true), ourDumpThreadsOnLongWriteActionWaiting,
-                                                                                           ourDumpThreadsOnLongWriteActionWaiting, TimeUnit.MILLISECONDS);
-          myLock.writeLock();
-          if (reportSlowWrite != null) {
-            reportSlowWrite.cancel(false);
-          }
-        }
-      }
-    }
-    finally {
-      myWriteActionPending = writeActionPending;
-    }
-
-    myWriteActionsStack.push(clazz);
-    fireWriteActionStarted(clazz);
-  }
-
-  private void endWrite(Class clazz) {
-    try {
-      fireWriteActionFinished(clazz);
-      // fire listeners before popping stack because if somebody starts write action in a listener,
-      // there is a danger of unlocking the write lock before other listeners have been run (since write lock became non-reentrant).
-    }
-    finally {
-      myWriteActionsStack.pop();
-      if (gatherStatistics && myWriteActionsStack.isEmpty() && !myWriteActionPending) {
-        ActionPauses.WRITE.finished("write action (" + clazz + ")");
-      }
-      if (myWriteActionsStack.size() == myWriteStackBase) {
-        myLock.writeUnlock();
-      }
-      if (myWriteActionsStack.isEmpty()) {
-        fireAfterWriteActionFinished(clazz);
-      }
-    }
-  }
-
-  @RequiredDispatchThread
-  @Nonnull
-  @Override
-  public AccessToken acquireWriteActionLock(@Nonnull Class clazz) {
-    return new WriteAccessToken(clazz);
-  }
-
-  private class WriteAccessToken extends AccessToken {
-    @Nonnull
-    private final Class clazz;
-
-    public WriteAccessToken(@Nonnull Class clazz) {
-      this.clazz = clazz;
-      startWrite(clazz);
-      markThreadNameInStackTrace();
-    }
-
-    @Override
-    public void finish() {
-      try {
-        endWrite(clazz);
-      }
-      finally {
-        unmarkThreadNameInStackTrace();
-      }
-    }
-
-    private void markThreadNameInStackTrace() {
-      String id = id();
-
-      if (id != null) {
-        final Thread thread = Thread.currentThread();
-        thread.setName(thread.getName() + id);
-      }
-    }
-
-    private void unmarkThreadNameInStackTrace() {
-      String id = id();
-
-      if (id != null) {
-        final Thread thread = Thread.currentThread();
-        String name = thread.getName();
-        name = StringUtil.replace(name, id, "");
-        thread.setName(name);
-      }
-    }
-
-    private String id() {
-      Class aClass = getClass();
-      String name = aClass.getName();
-      while (name == null) {
-        aClass = aClass.getSuperclass();
-        name = aClass.getName();
-      }
-
-      name = name.substring(name.lastIndexOf('.') + 1);
-      name = name.substring(name.lastIndexOf('$') + 1);
-      if (!name.equals("AccessToken")) {
-        return " [" + name + "]";
-      }
-      return null;
-    }
-  }
-
-  private class ReadAccessToken extends AccessToken {
-    private ReadAccessToken() {
-      startRead();
-    }
-
-    @Override
-    public void finish() {
-      endRead();
-    }
-  }
-
-  @RequiredWriteAction
-  @Override
-  public void assertWriteAccessAllowed() {
-    LOG.assertTrue(isWriteAccessAllowed(), "Write access is allowed inside write-action only (see com.intellij.openapi.application.Application.runWriteAction())");
-  }
-
   @Override
   public boolean isWriteAccessAllowed() {
     return isDispatchThread() && myLock.isWriteLocked() || myWriteActionThread == Thread.currentThread();
   }
 
-  // cheaper version of isWriteAccessAllowed(). must be called from EDT
-  private boolean isInsideWriteActionEDTOnly() {
-    return !myWriteActionsStack.isEmpty();
-  }
-
   @Override
-  public boolean isWriteActionInProgress() {
-    return myLock.isWriteLocked();
-  }
-
   public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
     assertIsDispatchThread();
     if (!myLock.isWriteLocked()) {
@@ -1308,111 +685,15 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
     });
   }
 
+  @Override
   public void editorPaintStart() {
     myInEditorPaintCounter++;
   }
 
+  @Override
   public void editorPaintFinish() {
     myInEditorPaintCounter--;
     LOG.assertTrue(myInEditorPaintCounter >= 0);
-  }
-
-  @Override
-  public void addApplicationListener(@Nonnull ApplicationListener l) {
-    myDispatcher.addListener(l);
-  }
-
-  @Override
-  public void addApplicationListener(@Nonnull ApplicationListener l, @Nonnull Disposable parent) {
-    myDispatcher.addListener(l, parent);
-  }
-
-  @Override
-  public void removeApplicationListener(@Nonnull ApplicationListener l) {
-    myDispatcher.removeListener(l);
-  }
-
-  private void fireApplicationExiting() {
-    myDispatcher.getMulticaster().applicationExiting();
-  }
-
-  private void fireBeforeWriteActionStart(@Nonnull Class action) {
-    myDispatcher.getMulticaster().beforeWriteActionStart(action);
-  }
-
-  private void fireWriteActionStarted(@Nonnull Class action) {
-    myDispatcher.getMulticaster().writeActionStarted(action);
-  }
-
-  private void fireWriteActionFinished(@Nonnull Class action) {
-    myDispatcher.getMulticaster().writeActionFinished(action);
-  }
-
-  private void fireAfterWriteActionFinished(@Nonnull Class action) {
-    myDispatcher.getMulticaster().afterWriteActionFinished(action);
-  }
-
-  // public for testing purposes
-  public void _saveSettings() {
-    if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
-      HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
-      try {
-        StoreUtil.save(getStateStore(), null);
-      }
-      finally {
-        mySaveSettingsIsInProgress.set(false);
-      }
-    }
-  }
-
-  @Override
-  public void saveSettings() {
-    if (myDoNotSave) return;
-    _saveSettings();
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void saveAll() {
-    if (myDoNotSave) return;
-
-    FileDocumentManager.getInstance().saveAllDocuments();
-
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    for (Project openProject : openProjects) {
-      if (openProject.isDisposed()) {
-        // debug for https://github.com/consulo/consulo/issues/296
-        LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
-        continue;
-      }
-
-      ProjectEx project = (ProjectEx)openProject;
-      project.save();
-    }
-
-    saveSettings();
-  }
-
-  @Override
-  public void doNotSave() {
-    doNotSave(true);
-  }
-
-  @Override
-  public void doNotSave(boolean value) {
-    myDoNotSave = value;
-  }
-
-  @Override
-  public boolean isDoNotSave() {
-    return myDoNotSave;
-  }
-
-  @Nonnull
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
   @Override
@@ -1428,22 +709,5 @@ public class DesktopApplicationImpl extends PlatformComponentManagerImpl impleme
   @TestOnly
   public void setDisposeInProgress(boolean disposeInProgress) {
     myDisposeInProgress = disposeInProgress;
-  }
-
-  @Nonnull
-  @Override
-  public consulo.ui.image.Image getIcon() {
-    return ApplicationProperties.isInSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
-  }
-
-  @NonNls
-  @Override
-  public String toString() {
-    return "Application" +
-           (isDisposed() ? " (Disposed)" : "") +
-           (isUnitTestMode() ? " (Unit test)" : "") +
-           (isInternal() ? " (Internal)" : "") +
-           (isHeadlessEnvironment() ? " (Headless)" : "") +
-           (isCommandLine() ? " (Command line)" : "");
   }
 }

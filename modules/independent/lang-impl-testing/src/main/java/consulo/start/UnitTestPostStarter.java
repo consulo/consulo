@@ -22,7 +22,6 @@ import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.idea.starter.SMTestSender;
-import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -44,7 +43,7 @@ public class UnitTestPostStarter extends ApplicationPostStarter {
 
   @Override
   public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
-    new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
+    //new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
   }
 
   @Override

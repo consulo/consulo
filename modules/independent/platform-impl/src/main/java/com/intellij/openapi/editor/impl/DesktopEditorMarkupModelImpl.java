@@ -31,7 +31,6 @@ import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.diagnostic.Logger;
@@ -60,11 +59,12 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.ex.ApplicationEx2;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -473,7 +473,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       if (myDirtyYPositions != null) {
         final Graphics2D imageGraphics = myCachedTrack.createGraphics();
 
-        ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
+        ((ApplicationEx2)ApplicationManager.getApplication()).editorPaintStart();
 
         try {
           myDirtyYPositions = myDirtyYPositions.intersection(docRange);
@@ -482,7 +482,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
           myDirtyYPositions = null;
         }
         finally {
-          ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintFinish();
+          ((ApplicationEx2)ApplicationManager.getApplication()).editorPaintFinish();
         }
       }
 

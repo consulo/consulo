@@ -33,7 +33,6 @@ import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.ColorKey;
@@ -63,14 +62,15 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.ex.ApplicationEx2;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntFunction;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
@@ -269,7 +269,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Override
   public void paint(Graphics g_) {
-    ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
+    ((ApplicationEx2)ApplicationManager.getApplication()).editorPaintStart();
     try {
       Rectangle clip = g_.getClipBounds();
       if (clip.height < 0) return;
@@ -315,7 +315,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       if (old != null) g.setTransform(old);
     }
     finally {
-      ((DesktopApplicationImpl)ApplicationManager.getApplication()).editorPaintFinish();
+      ((ApplicationEx2)ApplicationManager.getApplication()).editorPaintFinish();
     }
   }
 

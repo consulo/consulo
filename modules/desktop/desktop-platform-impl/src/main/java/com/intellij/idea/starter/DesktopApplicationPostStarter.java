@@ -50,7 +50,6 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  @SuppressWarnings("deprecation")
   public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
