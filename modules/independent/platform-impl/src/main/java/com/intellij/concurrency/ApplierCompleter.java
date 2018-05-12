@@ -17,15 +17,15 @@ package com.intellij.concurrency;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
+import consulo.application.ex.ApplicationEx2;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountedCompleter;
@@ -93,7 +93,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   @Override
   public void compute() {
     if (failFastOnAcquireReadAction) {
-      ((ApplicationImpl)ApplicationManager.getApplication()).executeByImpatientReader(() -> wrapInReadActionAndIndicator(this::execAndForkSubTasks));
+      ((ApplicationEx2)ApplicationManager.getApplication()).executeByImpatientReader(() -> wrapInReadActionAndIndicator(this::execAndForkSubTasks));
     }
     else {
       wrapInReadActionAndIndicator(this::execAndForkSubTasks);

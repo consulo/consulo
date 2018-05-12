@@ -26,7 +26,6 @@ import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
@@ -65,15 +64,16 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.ex.ApplicationEx2;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -573,7 +573,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     Set<StateStorage> causes = new THashSet<>(myChangedApplicationFiles);
     myChangedApplicationFiles.clear();
 
-    ReloadComponentStoreStatus status = ComponentStoreImpl.reloadStore(causes, ((ApplicationImpl)ApplicationManager.getApplication()).getStateStore());
+    ReloadComponentStoreStatus status = ComponentStoreImpl.reloadStore(causes, ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore());
     if (status == ReloadComponentStoreStatus.RESTART_AGREED) {
       ApplicationManagerEx.getApplicationEx().restart(true);
       return false;

@@ -26,7 +26,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -50,12 +49,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Functions;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
+import consulo.application.ex.ApplicationEx2;
 import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -402,7 +402,7 @@ class PassExecutorService implements Disposable {
 
     @Override
     public void run() {
-      ((ApplicationImpl)ApplicationManager.getApplication()).executeByImpatientReader(() -> {
+      ((ApplicationEx2)ApplicationManager.getApplication()).executeByImpatientReader(() -> {
         try {
           doRun();
         }

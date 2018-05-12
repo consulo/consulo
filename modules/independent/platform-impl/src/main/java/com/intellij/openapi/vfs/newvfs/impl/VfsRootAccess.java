@@ -19,7 +19,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -38,11 +37,12 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ex.ApplicationEx2;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -61,8 +61,8 @@ public class VfsRootAccess {
     final Application application = ApplicationManager.getApplication();
     if (SHOULD_PERFORM_ACCESS_CHECK &&
         application.isUnitTestMode() &&
-        application instanceof ApplicationImpl &&
-        ((ApplicationImpl)application).isComponentsCreated() &&
+        application instanceof ApplicationEx2 &&
+        ((ApplicationEx2)application).isComponentsCreated() &&
         !ApplicationInfoImpl.isInPerformanceTest()) {
 
       if (delegate != LocalFileSystem.getInstance() && !(delegate instanceof ArchiveFileSystem)) {

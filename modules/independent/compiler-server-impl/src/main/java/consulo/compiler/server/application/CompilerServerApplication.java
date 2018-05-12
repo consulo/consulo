@@ -20,6 +20,7 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -124,6 +125,16 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   @Override
   public IApplicationStore getStateStore() {
     return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
+  }
+
+  @Override
+  public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
+    runWriteAction(runnable);
+  }
+
+  @Override
+  public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+
   }
 
   @Nonnull

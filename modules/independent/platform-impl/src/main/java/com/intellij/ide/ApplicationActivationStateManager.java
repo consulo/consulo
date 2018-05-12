@@ -18,10 +18,10 @@ package com.intellij.ide;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.ex.ApplicationEx2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +71,7 @@ public class ApplicationActivationStateManager {
   public static boolean updateState(final WindowEvent windowEvent) {
 
     final Application application = ApplicationManager.getApplication();
-    if (!(application instanceof ApplicationImpl)) return false;
+    if (!(application instanceof ApplicationEx2)) return false;
 
     final Window eventWindow = windowEvent.getWindow();
 
@@ -140,7 +140,7 @@ public class ApplicationActivationStateManager {
 
   public static void updateState(Window window) {
     final Application application = ApplicationManager.getApplication();
-    if (!(application instanceof ApplicationImpl)) return;
+    if (!(application instanceof ApplicationEx2)) return;
 
     if (state.isInactive() && window != null) {
       setActive(application, window);

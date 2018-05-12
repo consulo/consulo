@@ -32,7 +32,6 @@ import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -49,6 +48,8 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.application.ex.ApplicationEx2;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -103,7 +104,7 @@ public class JoinLinesHandler extends EditorActionHandler {
     int lineCount = endLine - startLine;
     int line = startLine;
 
-    ((ApplicationImpl)ApplicationManager.getApplication()).runWriteActionWithProgressInDispatchThread(
+    ((ApplicationEx2)ApplicationManager.getApplication()).runWriteActionWithProgressInDispatchThread(
             "Join Lines", project, null, IdeBundle.message("action.stop"), indicator -> {
               Ref<Integer> caretRestoreOffset = new Ref<>(-1);
               CodeEditUtil.setNodeReformatStrategy(node -> node.getTextRange().getStartOffset() >= startReformatOffset);
