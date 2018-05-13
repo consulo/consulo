@@ -15,6 +15,8 @@
  */
 package consulo.web.servlet.ui;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -25,6 +27,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -63,9 +66,15 @@ public class SchemeRequestHandler extends SynchronizedRequestHandler {
     return true;
   }
 
+  @Nonnull
   private byte[] generateCss() {
     if (generatedCss != null) {
       return generatedCss;
+    }
+
+    Application application = ApplicationManager.getApplication();
+    if (application == null) {
+      return new byte[0];
     }
 
     EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();

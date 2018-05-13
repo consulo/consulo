@@ -29,6 +29,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
@@ -42,13 +43,14 @@ import com.intellij.util.LineSeparator;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.AccessRule;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashSet;
@@ -65,15 +67,14 @@ public class StorageUtil {
   @SuppressWarnings("SpellCheckingInspection")
   private static final Pair<byte[], String> NON_EXISTENT_FILE_DATA = Pair.create(null, SystemProperties.getLineSeparator());
 
-  private StorageUtil() { }
+  private StorageUtil() {
+  }
 
   public static boolean isChangedByStorageOrSaveSession(@Nonnull VirtualFileEvent event) {
     return event.getRequestor() instanceof StateStorage.SaveSession || event.getRequestor() instanceof StateStorage;
   }
 
-  public static void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor,
-                                         @Nonnull final Project project,
-                                         @Nullable final String componentName) {
+  public static void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor, @Nonnull final Project project, @Nullable final String componentName) {
     final LinkedHashSet<String> macros = new LinkedHashSet<String>(substitutor.getUnknownMacros(componentName));
     if (macros.isEmpty()) {
       return;
@@ -90,12 +91,16 @@ public class StorageUtil {
           String productName = ApplicationNamesInfo.getInstance().getProductName();
           String content = String.format(format, StringUtil.join(macros, ", "), macros.size() == 1 ? "is" : "are") +
                            "<br>Path variables are used to substitute absolute paths " +
-                           "in " + productName + " project files " +
+                           "in " +
+                           productName +
+                           " project files " +
                            "and allow project file sharing in version control systems.<br>" +
                            "Some of the files describing the current project settings contain unknown path variables " +
-                           "and " + productName + " cannot restore those paths.";
-          new UnknownMacroNotification("Load Error", "Load error: undefined path variables", content, NotificationType.ERROR,
-                                       (notification, event) -> ((ProjectEx)project).checkUnknownMacros(true), macros).notify(project);
+                           "and " +
+                           productName +
+                           " cannot restore those paths.";
+          new UnknownMacroNotification("Load Error", "Load error: undefined path variables", content, NotificationType.ERROR, (notification, event) -> ((ProjectEx)project).checkUnknownMacros(true),
+                                       macros).notify(project);
         }
       }
     });
@@ -125,7 +130,11 @@ public class StorageUtil {
   }
 
   @Nonnull
-  public static VirtualFile writeFile(@Nullable File file, @Nonnull Object requestor, @Nullable VirtualFile virtualFile, @Nonnull BufferExposingByteArrayOutputStream content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
+  public static VirtualFile writeFile(@Nullable File file,
+                                      @Nonnull Object requestor,
+                                      @Nullable VirtualFile virtualFile,
+                                      @Nonnull BufferExposingByteArrayOutputStream content,
+                                      @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
       if (file != null && (virtualFile == null || !virtualFile.isValid())) {
@@ -156,6 +165,30 @@ public class StorageUtil {
     finally {
       token.finish();
     }
+  }
+
+  @Nonnull
+  public static AsyncResult<VirtualFile> writeFileAsync(@Nullable File file,
+                                           @Nonnull Object requestor,
+                                           @Nullable final VirtualFile fileRef,
+                                           @Nonnull BufferExposingByteArrayOutputStream content,
+                                           @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
+    return AccessRule.write(() -> {
+      VirtualFile virtualFile = fileRef;
+
+      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
+        virtualFile = getOrCreateVirtualFile(requestor, file);
+      }
+      assert virtualFile != null;
+      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
+        if (lineSeparatorIfPrependXmlProlog != null) {
+          out.write(XML_PROLOG);
+          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
+        }
+        content.writeTo(out);
+      }
+      return virtualFile;
+    });
   }
 
   public static void deleteFile(@Nonnull File file, @Nonnull Object requestor, @Nullable VirtualFile virtualFile) throws IOException {

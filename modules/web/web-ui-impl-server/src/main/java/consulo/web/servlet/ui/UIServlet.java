@@ -59,7 +59,7 @@ public class UIServlet extends VaadinServlet {
     public void setSession(VaadinSession session) {
       super.setSession(session);
 
-      if(session == null) {
+      if (session == null) {
         Disposer.dispose(myUIWindow);
       }
     }

@@ -62,6 +62,12 @@
       <implementation-class>com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
     </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.ChangesViewManager</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
+      <skipForDefaultProject/>
+    </component>
   </project-components>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -94,5 +100,8 @@
 
     <applicationService serviceInterface="consulo.diagram.builder.GraphBuilderFactory"
                         serviceImplementation="consulo.diagram.builder.impl.DesktopGraphBuilderFactoryImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
+                        serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"/>
   </extensions>
 </idea-plugin>

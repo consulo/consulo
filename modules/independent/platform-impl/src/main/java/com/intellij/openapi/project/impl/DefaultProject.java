@@ -25,7 +25,7 @@ public class DefaultProject extends ProjectImpl {
   private static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
   protected DefaultProject(@Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
-    super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME);
+    super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
   }
 
   @Override

@@ -42,6 +42,7 @@ public class WebStartupProgressImpl implements StartupProgress {
     }
   }
 
+  @Override
   public void dispose() {
     myListeners.clear();
   }

@@ -27,9 +27,9 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -243,12 +243,31 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       }
     }
 
+    @Override
+    public final void saveAsync() {
+      if (myBlockSavingTheContent) {
+        return;
+      }
+
+      try {
+        doSaveAsync(getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates));
+        myLoadedData = myCopiedStorageData;
+      }
+      catch (IOException e) {
+        throw new StateStorageException(e);
+      }
+    }
+
     // only because default project store hack
     protected boolean isCollapsePathsOnSave() {
       return true;
     }
 
     protected abstract void doSave(@Nullable Element element) throws IOException;
+
+    protected void doSaveAsync(@Nullable Element element) throws IOException {
+      doSave(element);
+    }
 
     protected void saveForProvider(@Nullable BufferExposingByteArrayOutputStream content, @Nullable Element element) throws IOException {
       if (!myStreamProvider.isApplicable(myFileSpec, myRoamingType)) {

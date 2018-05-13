@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.mac.MacDockDelegate;
 import com.intellij.ui.win.WinDockDelegate;
+import consulo.platform.Platform;
 
 /**
  * @author Denis Fokin
@@ -28,14 +28,20 @@ public class SystemDock {
   private static Delegate delegate;
 
   static {
-    if (SystemInfo.isMac) {
+    // FIXME [VISTALL] maybe use injector - as app service?
+    if (Platform.current().isWebService()) {
+      delegate = () -> {
+      };
+    }
+    else if (SystemInfo.isMac) {
       delegate = MacDockDelegate.getInstance();
-    } else if (SystemInfo.isWin7OrNewer && !ApplicationManager.getApplication().isUnitTestMode()) {
+    }
+    else if (SystemInfo.isWin7OrNewer) {
       delegate = WinDockDelegate.getInstance();
     }
   }
 
-  public static void updateMenu () {
+  public static void updateMenu() {
     if (delegate == null) return;
     delegate.updateRecentProjectsMenu();
   }

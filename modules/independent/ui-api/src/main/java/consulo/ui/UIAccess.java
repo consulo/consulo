@@ -45,7 +45,7 @@ public interface UIAccess {
   @RequiredUIAccess
   static void assertIsUIThread() {
     if (!isUIThread()) {
-      throw new IllegalArgumentException("Call must be wrapped inside UI thread");
+      throw new IllegalArgumentException("Call must be wrapped inside UI thread. Current thread: " + Thread.currentThread().getName());
     }
   }
 

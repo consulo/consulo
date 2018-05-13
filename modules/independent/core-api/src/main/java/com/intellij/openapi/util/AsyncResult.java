@@ -20,9 +20,9 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
 import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -179,7 +179,15 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
-  public final ActionCallback doWhenProcessed(@Nonnull final Consumer<T> consumer) {
+  public AsyncResult<T> retranslateTo(@Nonnull AsyncResult<T> other) {
+    doWhenDone((Consumer<T>)other::setDone);
+    doWhenRejected(other::reject);
+    doWhenRejectedWithThrowable(other::rejectWithThrowable);
+    return this;
+  }
+
+  @Nonnull
+  public final AsyncResult<T> doWhenProcessed(@Nonnull final Consumer<T> consumer) {
     doWhenDone(consumer);
     doWhenRejected((result, error) -> consumer.consume(result));
     return this;

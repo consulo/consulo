@@ -8,10 +8,10 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.*;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
@@ -55,6 +55,24 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     return (WebStartupProgressImpl)mySplashRef.get();
   }
 
+  @RequiredDispatchThread
+  @Override
+  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
+    return AccessRule.<T>write(computation::compute).getResultSync(-1);
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+    return AccessRule.<T>write(computation::compute).getResultSync(-1);
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void runWriteAction(@Nonnull Runnable action) {
+    AccessRule.write(action::run).getResultSync(-1);
+  }
+
   @Override
   @Nonnull
   public ModalityState getAnyModalityState() {
@@ -64,7 +82,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
-    if (isReadAccessAllowed()) {
+    if (!isReadAccessAllowed()) {
       throw new IllegalArgumentException();
     }
   }
@@ -82,11 +100,6 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   }
 
-  @Override
-  public void runInWriteThreadAndWait(@Nonnull Runnable runnable) {
-
-  }
-
   @Nonnull
   @Override
   public ModalityInvokator getInvokator() {
@@ -100,40 +113,40 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
-
+    getCurrentSession().getAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
-
+    getCurrentSession().getAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
-
+    getCurrentSession().getAccess().give(runnable);
   }
 
   @Override
   public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-
+    getCurrentSession().getAccess().giveAndWait(runnable);
   }
 
   @Nonnull
   @Override
   public ModalityState getCurrentModalityState() {
-    return null;
+    return getNoneModalityState();
   }
 
   @Nonnull
   @Override
   public ModalityState getModalityStateForComponent(@Nonnull Component c) {
-    return null;
+    return getNoneModalityState();
   }
 
   @Nonnull
   @Override
   public ModalityState getDefaultModalityState() {
-    return null;
+    return getNoneModalityState();
   }
 
   @Nonnull

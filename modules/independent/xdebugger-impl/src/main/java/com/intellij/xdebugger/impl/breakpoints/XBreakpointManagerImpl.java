@@ -37,6 +37,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.impl.XDebuggerManagerImpl;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 
@@ -399,7 +400,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     myDefaultBreakpoints.clear();
     myBreakpointsDefaults.clear();
 
-    ApplicationManager.getApplication().runReadAction(() -> {
+    AccessRule.read(() -> {
       for (BreakpointState breakpointState : state.getDefaultBreakpoints()) {
         loadBreakpoint(breakpointState, true);
       }

@@ -52,12 +52,11 @@ import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.picocontainer.*;
 import org.picocontainer.defaults.CachingComponentAdapter;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -85,7 +84,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
-  protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName) {
+  protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
 
@@ -96,7 +95,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     getPicoContainer().registerComponentInstance(Project.class, this);
 
     if (!isDefault()) {
-      getStateStore().setProjectFilePath(dirPath);
+      if(noUIThread) {
+        getStateStore().setProjectFilePathNoUI(dirPath);
+      }
+      else {
+        getStateStore().setProjectFilePath(dirPath);
+      }
     }
 
     myOptimiseTestLoadSpeed = isOptimiseTestLoadSpeed;
@@ -321,6 +325,45 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       }
 
       StoreUtil.save(getStateStore(), this);
+    }
+    finally {
+      mySavingInProgress.set(false);
+      ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+    }
+  }
+
+  @Override
+  public void saveAsync() {
+    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+      // no need to save
+      return;
+    }
+
+    if (!mySavingInProgress.compareAndSet(false, true)) {
+      return;
+    }
+
+    try {
+      if(!isDefault()) {
+        String projectBasePath = getStateStore().getProjectBasePath();
+        if (projectBasePath != null) {
+          File projectDir = new File(projectBasePath);
+          File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
+          if (!projectDir.getName().equals(getName())) {
+            try {
+              FileUtil.writeToFile(nameFile, getName());
+            }
+            catch (IOException e) {
+              LOG.error("Unable to store project name", e);
+            }
+          }
+          else {
+            FileUtil.delete(nameFile);
+          }
+        }
+      }
+
+      StoreUtil.saveAsync(getStateStore(), this);
     }
     finally {
       mySavingInProgress.set(false);

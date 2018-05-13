@@ -56,7 +56,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     if (isDispatchThread()) {
       return myWriteActionThread == null; // no reading from EDT during background write action
     }
-    return myLock.isReadLockedByThisThread() || myWriteActionThread == Thread.currentThread();
+    return isWriteThread() || myLock.isReadLockedByThisThread();
   }
 
   @Override

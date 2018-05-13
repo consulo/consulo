@@ -38,7 +38,7 @@ import java.util.concurrent.ExecutorService;
  * @author max
  */
 public class RefreshQueueImpl extends RefreshQueue implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.RefreshQueueImpl");
+  private static final Logger LOG = Logger.getInstance(RefreshQueueImpl.class);
 
   private final ExecutorService myQueue = new BoundedTaskExecutor("RefreshQueue pool", PooledThreadExecutor.INSTANCE, 1, this);
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
@@ -68,10 +68,15 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  private void queueSession(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  @Nonnull
+  protected AccessToken createHeavyLatch(String id) {
+    return HeavyProcessLatch.INSTANCE.processStarted(id);
+  }
+
+  protected void queueSession(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
     myQueue.submit(() -> {
       myRefreshIndicator.start();
-      try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Doing file refresh. " + session)) {
+      try (AccessToken ignored = createHeavyLatch("Doing file refresh. " + session)) {
         doScan(session);
       }
       finally {
@@ -82,7 +87,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     myEventCounter.eventHappened(session);
   }
 
-  private void doScan(RefreshSessionImpl session) {
+  protected void doScan(RefreshSessionImpl session) {
     try {
       updateSessionMap(session, true);
       session.scan();

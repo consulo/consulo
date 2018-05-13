@@ -19,8 +19,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.TimeoutUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -34,11 +36,13 @@ public class WriteThread extends Thread implements Disposable {
     private ThrowableComputable myComputable;
     private AsyncResult myResult;
     private Class myCallClass;
+    private String myCreateTrace;
 
     private CallInfo(ThrowableComputable computable, AsyncResult result, Class callClass) {
       myComputable = computable;
       myResult = result;
       myCallClass = callClass;
+      myCreateTrace = ExceptionUtil.currentStackTrace();
     }
   }
 
@@ -80,7 +84,7 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   @SuppressWarnings("unchecked")
-  private void runImpl(Class caller, ThrowableComputable computable, AsyncResult asyncResult) {
+  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult) {
     try {
       Object compute;
       //noinspection RequiredXAction
@@ -88,11 +92,11 @@ public class WriteThread extends Thread implements Disposable {
         compute = computable.compute();
       }
 
-      myApplication.executeOnPooledThread(() -> asyncResult.setDone(compute));
+      asyncResult.setDone(compute);
     }
     catch (Throwable throwable) {
       throwable.printStackTrace();
-      myApplication.executeOnPooledThread(() -> asyncResult.rejectWithThrowable(throwable));
+      asyncResult.rejectWithThrowable(throwable);
     }
   }
 

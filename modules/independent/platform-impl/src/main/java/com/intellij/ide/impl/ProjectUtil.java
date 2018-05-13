@@ -233,7 +233,7 @@ public class ProjectUtil {
         });
       });
 
-      AccessRule.write(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess)).notify(result);
+      AccessRule.write(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess));
       return result;
     }
     return AsyncResult.rejected("provider for file path is not find");

@@ -20,6 +20,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
+
 import javax.annotation.Nonnull;
 
 public abstract class WriteAction<T> extends BaseActionRunnable<T> {
@@ -74,6 +75,16 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   }
 
   public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
+    //Application application = Application.get();
+    //if (application instanceof ApplicationWithOwnWriteThread) {
+    //  //noinspection RequiredXAction
+    //  application.<Void, E>runWriteAction(() -> {
+    //    action.run();
+    //    return null;
+    //  });
+    //  return;
+    //}
+
     AccessToken token = start();
     try {
       action.run();
@@ -84,6 +95,12 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   }
 
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
+    //Application application = Application.get();
+    //if (application instanceof ApplicationWithOwnWriteThread) {
+    //  //noinspection RequiredXAction
+    //  return application.runWriteAction(action);
+    //}
+
     AccessToken token = start();
     try {
       return action.compute();

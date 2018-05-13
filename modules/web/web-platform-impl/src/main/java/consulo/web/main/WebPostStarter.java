@@ -18,18 +18,13 @@ package consulo.web.main;
 import com.intellij.ide.StartupProgress;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Ref;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
 import consulo.web.application.impl.WebApplicationImpl;
 import consulo.web.application.impl.WebStartupProgressImpl;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
-import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
 
 /**
  * Used via reflection
@@ -58,7 +53,7 @@ public class WebPostStarter extends ApplicationPostStarter {
       mySplashRef.set(null);
     }
 
-    AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
+    /*AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
       System.out.println("Save All");
 
       Application application = ApplicationManager.getApplication();
@@ -67,7 +62,7 @@ public class WebPostStarter extends ApplicationPostStarter {
       }
 
       SwingUtilities.invokeLater(() -> application.saveSettings());
-    }, 1, 5, TimeUnit.MINUTES);
+    }, 1, 5, TimeUnit.MINUTES); */
   }
 
   @Override

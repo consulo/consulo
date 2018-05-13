@@ -25,10 +25,11 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -136,6 +137,8 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   @Nonnull
   @Override
   public IdeFrameEx allocateFrame(@Nonnull Project project) {
+    UIAccess.assertIsUIThread();
+
     WebIdeFrameImpl frame = new WebIdeFrameImpl(project);
     myProject2Frame.put(project, frame);
 

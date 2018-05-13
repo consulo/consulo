@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 /**
  * @author irengrig
  */
-class DummyChangesView implements ChangesViewI {
+public class DummyChangesView implements ChangesViewI {
   public DummyChangesView(Project project) {
   }
 
