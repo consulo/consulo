@@ -200,7 +200,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     return myLock.isWriteThread();
   }
 
-  @Override
   @Nonnull
   public ModalityInvokator getInvokator() {
     return myInvokator;

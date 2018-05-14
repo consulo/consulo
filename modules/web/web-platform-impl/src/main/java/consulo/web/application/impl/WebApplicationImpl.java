@@ -1,14 +1,16 @@
 package consulo.web.application.impl;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.openapi.application.ModalityInvokator;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
@@ -98,12 +100,6 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Override
   public void exit() {
 
-  }
-
-  @Nonnull
-  @Override
-  public ModalityInvokator getInvokator() {
-    return null;
   }
 
   @Override

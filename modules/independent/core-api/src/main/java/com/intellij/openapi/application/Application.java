@@ -216,12 +216,6 @@ public interface Application extends ComponentManager {
   boolean isWriteThread();
 
   /**
-   * @return a facade, which lets to call all those invokeLater() with a ActionCallback handle returned.
-   */
-  @Nonnull
-  ModalityInvokator getInvokator();
-
-  /**
    * Causes {@code runnable.run()} to be executed asynchronously on the
    * AWT event dispatching thread. This will happen after all
    * pending AWT events have been processed.

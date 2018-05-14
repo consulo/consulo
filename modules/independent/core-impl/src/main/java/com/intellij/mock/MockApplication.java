@@ -245,12 +245,6 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  @Nonnull
-  public ModalityInvokator getInvokator() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
   }
 

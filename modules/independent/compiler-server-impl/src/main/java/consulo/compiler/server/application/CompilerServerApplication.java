@@ -347,12 +347,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
-  @Nonnull
-  @Override
-  public ModalityInvokator getInvokator() {
-    return null;
-  }
-
   @Override
   public void invokeLater(@Nonnull Runnable runnable) {
     try {
