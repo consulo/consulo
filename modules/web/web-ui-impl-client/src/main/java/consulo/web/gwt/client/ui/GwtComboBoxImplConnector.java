@@ -15,7 +15,6 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -23,9 +22,6 @@ import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -39,6 +35,13 @@ public class GwtComboBoxImplConnector extends AbstractComponentConnector {
   }
 
   @Override
+  protected void init() {
+    super.init();
+
+    getWidget().setConnection(getConnection());
+  }
+
+  @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();
 
@@ -49,13 +52,7 @@ public class GwtComboBoxImplConnector extends AbstractComponentConnector {
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    List<ComboBoxState.Item> items = getState().myItems;
-    List<Widget> widgets = new ArrayList<>(items.size());
-    for (ComboBoxState.Item item : items) {
-      widgets.add(buildItem(item));
-    }
-
-    getWidget().setItems(getState().mySelectedIndex, widgets);
+    getWidget().setItems(getState().mySelectedIndex, getState().myItems);
   }
 
   public static GwtHorizontalLayoutImpl buildItem(ComboBoxState.Item item) {

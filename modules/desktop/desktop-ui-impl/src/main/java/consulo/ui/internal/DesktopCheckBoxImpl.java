@@ -19,6 +19,7 @@ import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+
 import javax.annotation.Nonnull;
 
 /**
