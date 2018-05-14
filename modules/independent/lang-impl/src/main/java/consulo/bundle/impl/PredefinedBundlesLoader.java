@@ -15,15 +15,12 @@
  */
 package consulo.bundle.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
-import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.bundle.PredefinedBundlesProvider;
 
 import java.util.ArrayList;
@@ -41,17 +38,6 @@ public class PredefinedBundlesLoader implements ApplicationComponent {
     if (SystemProperties.is("consulo.disable.predefined.bundles")) {
       return;
     }
-
-    Consumer<SdkImpl> consumer = new Consumer<SdkImpl>() {
-      @Override
-      @RequiredDispatchThread
-      public void consume(final SdkImpl sdk) {
-        ApplicationManager.getApplication().runWriteAction(() -> {
-          sdk.setPredefined(true);
-          SdkTable.getInstance().addSdk(sdk);
-        });
-      }
-    };
 
     List<SdkImpl> bundles = new ArrayList<>();
     for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
