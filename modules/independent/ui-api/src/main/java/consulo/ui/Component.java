@@ -18,13 +18,14 @@ package consulo.ui;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
+import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
-import consulo.ui.shared.Size;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EventListener;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -72,7 +73,7 @@ public interface Component extends Disposable, UserDataHolder {
   @RequiredUIAccess
   void setEnabled(boolean value);
 
-  @javax.annotation.Nullable
+  @Nullable
   Component getParentComponent();
 
   @RequiredUIAccess

@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.ItemPresentation;
-import consulo.ui.TextStyle;
+import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
 import consulo.ui.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
@@ -48,18 +48,18 @@ class WGwtItemPresentationImpl implements ItemPresentation {
   }
 
   @Override
-  public void clearText() {
-    myItem.myItemSegments.clear();
+  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
+    ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
+    segment.myText = text;
+    //TODO [VISTALL] style!
+    myItem.myItemSegments.add(segment);
 
     after();
   }
 
   @Override
-  public void append(@Nonnull String text, @Nonnull TextStyle... styles) {
-    ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
-    segment.myText = text;
-    //TODO [VISTALL] style!
-    myItem.myItemSegments.add(segment);
+  public void clearText() {
+    myItem.myItemSegments.clear();
 
     after();
   }

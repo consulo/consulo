@@ -30,7 +30,6 @@ import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.app.impl.settings.SettingsDialog;
-import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
@@ -77,12 +76,10 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
 
     AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
 
-    ListModel<AnAction> model = new ImmutableListModel<>(Arrays.asList(recentProjectsActions));
+    ListModel<AnAction> model = ListModel.immutable(Arrays.asList(recentProjectsActions));
 
     ListBox<AnAction> listSelect = ListBox.create(model);
-    listSelect.setRender((render, index, item) -> {
-      render.append(((ReopenProjectAction)item).getProjectName());
-    });
+    listSelect.setRender((render, index, item) -> render.append(((ReopenProjectAction)item).getProjectName()));
     listSelect.addValueListener(event -> {
       ReopenProjectAction value = (ReopenProjectAction)event.getValue();
 

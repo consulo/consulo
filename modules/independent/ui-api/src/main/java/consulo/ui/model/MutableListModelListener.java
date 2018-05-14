@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.model;
+
+import javax.annotation.Nonnull;
+import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2018-05-15
  */
-public enum TextStyle {
-  DEFAULT,
-  BOLD,
-  ITALIC
+public interface MutableListModelListener<E> extends EventListener {
+  void itemAdded(@Nonnull E item);
+
+  void itemRemove(@Nonnull E item);
 }

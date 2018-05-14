@@ -23,14 +23,10 @@ import java.util.*;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class ImmutableListModel<E> implements ListModel<E> {
-  private final List<E> myItems = new ArrayList<E>();
+public class ImmutableListModelImpl<E> implements ListModel<E> {
+  protected final List<E> myItems = new ArrayList<>();
 
-  public ImmutableListModel(E... items) {
-    myItems.addAll(Arrays.asList(items));
-  }
-
-  public ImmutableListModel(Collection<? extends E> items) {
+  public ImmutableListModelImpl(Collection<? extends E> items) {
     myItems.addAll(items);
   }
 

@@ -18,12 +18,14 @@ package consulo.ui;
 import consulo.annotations.Internal;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
+import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.util.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -105,6 +107,10 @@ public abstract class UIInternal {
   public abstract Window _Windows_modalWindow(String title);
 
   public abstract AlertBuilder _Alerts_builder();
+
+  public abstract <T> ListModel<T> _ListModel_immutable(Collection<? extends T> list);
+
+  public abstract <T> MutableListModel<T> _ListModel_mutable(Collection<? extends T> list);
 
   @RequiredUIAccess
   @Nonnull

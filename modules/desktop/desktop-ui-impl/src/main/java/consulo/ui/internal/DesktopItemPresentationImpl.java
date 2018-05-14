@@ -16,11 +16,12 @@
 package consulo.ui.internal;
 
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.awt.TargetAWT;
 import consulo.ui.ItemPresentation;
-import consulo.ui.TextStyle;
-import javax.annotation.Nonnull;
+import consulo.ui.TargetAWTImpl;
+import consulo.ui.TextAttribute;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -39,7 +40,7 @@ public class DesktopItemPresentationImpl<E> implements ItemPresentation {
 
   @Override
   public void setIcon(@Nullable consulo.ui.image.Image icon) {
-    myRenderer.setIcon((Icon)icon);
+    myRenderer.setIcon(TargetAWT.to(icon));
   }
 
   @Override
@@ -52,17 +53,7 @@ public class DesktopItemPresentationImpl<E> implements ItemPresentation {
   }
 
   @Override
-  public void append(@Nonnull String text) {
-    myRenderer.append(text);
-  }
-
-  @Override
-  public void append(@Nonnull String text, @Nonnull TextStyle... styles) {
-    if (styles[0] == TextStyle.BOLD) {
-      myRenderer.append(text, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
-    }
-    else {
-      append(text);
-    }
+  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
+    myRenderer.append(text, TargetAWTImpl.from(textAttribute));
   }
 }

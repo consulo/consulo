@@ -29,7 +29,9 @@ public interface ItemPresentation {
 
   void clearText();
 
-  void append(@Nonnull String text);
+  default void append(@Nonnull String text) {
+    append(text, TextAttribute.REGULAR);
+  }
 
-  void append(@Nonnull String text, @Nonnull TextStyle... styles);
+  void append(@Nonnull String text, @Nonnull TextAttribute textAttribute);
 }

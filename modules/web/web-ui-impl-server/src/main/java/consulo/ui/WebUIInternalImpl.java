@@ -23,12 +23,16 @@ import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.internal.image.WGwtTransparentImageImpl;
+import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
+import consulo.ui.model.MutableListModel;
+import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -219,6 +223,16 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public AlertBuilder _Alerts_builder() {
     return null;
+  }
+
+  @Override
+  public <T> ListModel<T> _ListModel_immutable(Collection<? extends T> list) {
+    return new ImmutableListModelImpl<>(list);
+  }
+
+  @Override
+  public <T> MutableListModel<T> _ListModel_mutable(Collection<? extends T> list) {
+    return new MutableListModelImpl<>(list);
   }
 
   @RequiredUIAccess

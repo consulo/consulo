@@ -15,10 +15,10 @@
  */
 package consulo.ui;
 
-import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -31,7 +31,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
   @Nonnull
   @SafeVarargs
   static <E> ComboBox<E> create(@Nonnull E... elements) {
-    return UIInternal.get()._Components_comboBox(new ImmutableListModel<E>(elements));
+    return UIInternal.get()._Components_comboBox(ListModel.immutable(Arrays.asList(elements)));
   }
 
   @Nonnull

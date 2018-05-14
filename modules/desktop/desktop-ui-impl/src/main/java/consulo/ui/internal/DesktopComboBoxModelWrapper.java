@@ -16,32 +16,36 @@
 package consulo.ui.internal;
 
 import consulo.ui.model.ListModel;
-import javax.annotation.Nonnull;
+import consulo.ui.model.MutableListModel;
+import consulo.ui.model.MutableListModelListener;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.util.Iterator;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopComboBoxModelWrapper<E> extends AbstractListModel implements ListModel<E>, ComboBoxModel {
+public class DesktopComboBoxModelWrapper<E> extends AbstractListModel<E> implements ComboBoxModel<E> {
   private ListModel<E> myModel;
   private Object mySelectedItem;
 
   public DesktopComboBoxModelWrapper(ListModel<E> model) {
     myModel = model;
-  }
 
-  @Nonnull
-  @Override
-  public E get(int index) {
-    return myModel.get(index);
-  }
+    if (model instanceof MutableListModel) {
+      ((MutableListModel)model).adddListener(new MutableListModelListener() {
+        @Override
+        public void itemAdded(@Nonnull Object item) {
+          fireContentsChanged(this, -1, -1);
+        }
 
-  @Override
-  public int indexOf(@Nonnull E value) {
-    return myModel.indexOf(value);
+        @Override
+        public void itemRemove(@Nonnull Object item) {
+          fireContentsChanged(this, -1, -1);
+        }
+      });
+    }
   }
 
   @Override
@@ -50,13 +54,8 @@ public class DesktopComboBoxModelWrapper<E> extends AbstractListModel implements
   }
 
   @Override
-  public Object getElementAt(int index) {
+  public E getElementAt(int index) {
     return myModel.get(index);
-  }
-
-  @Override
-  public Iterator<E> iterator() {
-    return myModel.iterator();
   }
 
   @Override

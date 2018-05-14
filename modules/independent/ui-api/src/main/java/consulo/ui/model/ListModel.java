@@ -15,13 +15,26 @@
  */
 package consulo.ui.model;
 
+import consulo.ui.UIInternal;
+
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface ListModel<E> extends Iterable<E> {
+  @Nonnull
+  static <T> ListModel<T> immutable(@Nonnull Collection<? extends T> items) {
+    return UIInternal.get()._ListModel_immutable(items);
+  }
+
+  @Nonnull
+  static <T> MutableListModel<T> mutable(@Nonnull Collection<? extends T> items) {
+    return UIInternal.get()._ListModel_mutable(items);
+  }
+
   int getSize();
 
   @Nonnull
