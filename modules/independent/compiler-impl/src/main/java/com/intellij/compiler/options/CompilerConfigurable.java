@@ -41,7 +41,9 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
       myLayout = VerticalLayout.create();
 
       myCompilerOptions = ComboBox.<CompilationType>builder().fillByEnum(CompilationType.class, Enum::name).build();
-      myLayout.add(LabeledComponents.left("Compilation type:", myCompilerOptions));
+      Component compilerOptions = LabeledComponents.left("Compilation type:", myCompilerOptions);
+      myLayout.add(compilerOptions);
+      compilerOptions.setVisible(false);
 
       myCbClearOutputDirectory = CheckBox.create(CompilerBundle.message("label.option.clear.output.directory.on.rebuild"));
       myLayout.add(myCbClearOutputDirectory);
