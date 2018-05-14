@@ -347,11 +347,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
-  @Override
-  public void runInWriteThreadAndWait(@Nonnull Runnable runnable) {
-    runnable.run();
-  }
-
   @Nonnull
   @Override
   public ModalityInvokator getInvokator() {
