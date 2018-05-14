@@ -15,26 +15,84 @@
  */
 package com.intellij.compiler.options;
 
-import consulo.compiler.CompilationType;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.NotNullComputable;
+import consulo.compiler.CompilationType;
+import consulo.options.SimpleConfigurable;
+import consulo.ui.*;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
-public class CompilerConfigurable implements Configurable {
+public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements Configurable {
+  protected static class Root implements NotNullComputable<Component> {
+    private ComboBox<CompilationType> myCompilerOptions;
+    private CheckBox myCbClearOutputDirectory;
+    private CheckBox myCbAutoShowFirstError;
+
+    private VerticalLayout myLayout;
+
+    @RequiredUIAccess
+    public Root() {
+      myLayout = VerticalLayout.create();
+
+      myCompilerOptions = ComboBox.<CompilationType>builder().fillByEnum(CompilationType.class, Enum::name).build();
+      myLayout.add(LabeledComponents.left("Compilation type:", myCompilerOptions));
+
+      myCbClearOutputDirectory = CheckBox.create(CompilerBundle.message("label.option.clear.output.directory.on.rebuild"));
+      myLayout.add(myCbClearOutputDirectory);
+
+      myCbAutoShowFirstError = CheckBox.create(CompilerBundle.message("label.option.autoshow.first.error"));
+      myLayout.add(myCbAutoShowFirstError);
+    }
+
+    @Nonnull
+    @Override
+    public Component compute() {
+      return myLayout;
+    }
+  }
+
   private final CompilerWorkspaceConfiguration myCompilerWorkspaceConfiguration;
-
-  private JComboBox myCompilerOptions;
-  private JPanel myRootPanel;
-  private JCheckBox myCbClearOutputDirectory;
-  private JCheckBox myCbAutoShowFirstError;
 
   public CompilerConfigurable(Project project) {
     myCompilerWorkspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(project);
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  protected Root createPanel() {
+    return new Root();
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected boolean isModified(@Nonnull Root component) {
+    boolean isModified = !Comparing.equal(component.myCompilerOptions.getValue(), myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
+    isModified |= component.myCbClearOutputDirectory.getValue() != myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
+    isModified |= component.myCbAutoShowFirstError.getValue() != myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
+    return isModified;
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void reset(@Nonnull Root component) {
+    component.myCompilerOptions.setValue(myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
+    component.myCbAutoShowFirstError.setValue(myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
+    component.myCbClearOutputDirectory.setValue(myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void apply(@Nonnull Root component) throws ConfigurationException {
+    myCompilerWorkspaceConfiguration.COMPILATION_TYPE = component.myCompilerOptions.getValue();
+    myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
+    myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
   }
 
   @Override
@@ -45,41 +103,5 @@ public class CompilerConfigurable implements Configurable {
   @Override
   public String getHelpTopic() {
     return "project.propCompiler";
-  }
-
-  @Override
-  public JComponent createComponent() {
-    return myRootPanel;
-  }
-
-  @Override
-  public boolean isModified() {
-    boolean isModified = !Comparing.equal(myCompilerOptions.getSelectedItem(), myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
-    isModified |= ComparingUtils.isModified(myCbClearOutputDirectory, myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
-    isModified |= ComparingUtils.isModified(myCbAutoShowFirstError, myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
-    return isModified;
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-    myCompilerWorkspaceConfiguration.COMPILATION_TYPE = (CompilationType)myCompilerOptions.getSelectedItem();
-    myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = myCbAutoShowFirstError.isSelected();
-    myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = myCbClearOutputDirectory.isSelected();
-  }
-
-  @Override
-  public void reset() {
-    myCompilerOptions.setSelectedItem(myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
-    myCbAutoShowFirstError.setSelected(myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
-    myCbClearOutputDirectory.setSelected(myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
-  }
-
-  @Override
-  public void disposeUIResources() {
-
-  }
-
-  private void createUIComponents() {
-    myCompilerOptions = new JComboBox(CompilationType.VALUES);
   }
 }
