@@ -241,7 +241,7 @@ public class BundleBox implements PseudoComponent {
       list.add(new BundleBoxItem(sdk));
     }
 
-    return ListModel.mutable(list);
+    return MutableListModel.create(list);
   }
 
   public void addInvalidModuleItem(@Nullable String name) {

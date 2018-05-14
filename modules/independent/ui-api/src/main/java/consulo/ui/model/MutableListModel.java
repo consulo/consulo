@@ -16,14 +16,21 @@
 package consulo.ui.model;
 
 import com.intellij.openapi.Disposable;
+import consulo.ui.UIInternal;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * @author VISTALL
  * @since 2018-05-15
  */
 public interface MutableListModel<E> extends ListModel<E> {
+  @Nonnull
+  static <T> MutableListModel<T> create(@Nonnull Collection<? extends T> items) {
+    return UIInternal.get()._MutableListModel_create(items);
+  }
+
   void add(@Nonnull E e);
 
   void remove(@Nonnull E e);

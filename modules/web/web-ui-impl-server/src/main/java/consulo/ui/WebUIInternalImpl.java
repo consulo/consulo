@@ -226,12 +226,12 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public <T> ListModel<T> _ListModel_immutable(Collection<? extends T> list) {
+  public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
     return new ImmutableListModelImpl<>(list);
   }
 
   @Override
-  public <T> MutableListModel<T> _ListModel_mutable(Collection<? extends T> list) {
+  public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
     return new MutableListModelImpl<>(list);
   }
 

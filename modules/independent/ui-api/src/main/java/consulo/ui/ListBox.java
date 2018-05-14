@@ -28,7 +28,7 @@ public interface ListBox<E> extends ValueComponent<E> {
   @SafeVarargs
   @Nonnull
   static <E> ListBox<E> create(@Nonnull E... elements) {
-    return UIInternal.get()._Components_listBox(ListModel.immutable(Arrays.asList(elements)));
+    return UIInternal.get()._Components_listBox(ListModel.create(Arrays.asList(elements)));
   }
 
   @Nonnull

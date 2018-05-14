@@ -108,9 +108,9 @@ public abstract class UIInternal {
 
   public abstract AlertBuilder _Alerts_builder();
 
-  public abstract <T> ListModel<T> _ListModel_immutable(Collection<? extends T> list);
+  public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
 
-  public abstract <T> MutableListModel<T> _ListModel_mutable(Collection<? extends T> list);
+  public abstract <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list);
 
   @RequiredUIAccess
   @Nonnull

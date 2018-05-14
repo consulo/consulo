@@ -26,13 +26,8 @@ import java.util.Collection;
  */
 public interface ListModel<E> extends Iterable<E> {
   @Nonnull
-  static <T> ListModel<T> immutable(@Nonnull Collection<? extends T> items) {
-    return UIInternal.get()._ListModel_immutable(items);
-  }
-
-  @Nonnull
-  static <T> MutableListModel<T> mutable(@Nonnull Collection<? extends T> items) {
-    return UIInternal.get()._ListModel_mutable(items);
+  static <T> ListModel<T> create(@Nonnull Collection<? extends T> items) {
+    return UIInternal.get()._ListModel_create(items);
   }
 
   int getSize();

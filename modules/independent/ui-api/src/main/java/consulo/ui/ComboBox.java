@@ -31,7 +31,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
   @Nonnull
   @SafeVarargs
   static <E> ComboBox<E> create(@Nonnull E... elements) {
-    return UIInternal.get()._Components_comboBox(ListModel.immutable(Arrays.asList(elements)));
+    return UIInternal.get()._Components_comboBox(ListModel.create(Arrays.asList(elements)));
   }
 
   @Nonnull
