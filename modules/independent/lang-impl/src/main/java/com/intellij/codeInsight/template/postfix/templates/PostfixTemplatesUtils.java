@@ -19,11 +19,11 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -52,7 +52,7 @@ public abstract class PostfixTemplatesUtils {
 
   @Nonnull
   public static String getLangForProvider(@Nonnull PostfixTemplateProvider provider) {
-    LanguageExtensionPoint[] extensions = new ExtensionPointName<LanguageExtensionPoint>(LanguagePostfixTemplate.EP_NAME).getExtensions();
+    LanguageExtensionPoint[] extensions = LanguagePostfixTemplate.EP_NAME.getExtensions();
 
     for (LanguageExtensionPoint extension : extensions) {
       if (provider.equals(extension.getInstance())) {
