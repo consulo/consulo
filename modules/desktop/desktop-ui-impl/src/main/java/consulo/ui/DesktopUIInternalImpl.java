@@ -110,8 +110,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public CheckBox _Components_checkBox(@Nonnull String text, boolean selected) {
-    return new DesktopCheckBoxImpl(text, selected);
+  public CheckBox _Components_checkBox() {
+    return new DesktopCheckBoxImpl();
   }
 
   @Override

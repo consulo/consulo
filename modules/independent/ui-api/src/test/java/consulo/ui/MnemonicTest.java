@@ -15,54 +15,17 @@
  */
 package consulo.ui;
 
-import javax.annotation.Nonnull;
+import consulo.ui.util.MnemonicInfo;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author VISTALL
  * @since 2018-05-14
  */
-public enum KeyCode {
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  P,
-  Q,
-  R,
-  S,
-  T,
-  U,
-  V,
-  W,
-  X,
-  Y,
-  Z;
-
-  private static final KeyCode[] VALUES = values();
-
-  @Nonnull
-  public static KeyCode from(char ch) {
-    if (ch >= 'a' && ch <= 'z') {
-      int diff = (int)ch - (int)'a';
-      return VALUES[A.ordinal() + diff];
-    }
-    else if (ch >= 'A' && ch <= 'Z') {
-      int diff = (int)ch - (int)'A';
-      return VALUES[A.ordinal() + diff];
-    }
-    else {
-      throw new IllegalArgumentException("Illegal char: " + String.valueOf(ch));
-    }
+public class MnemonicTest extends Assert {
+  @Test
+  public void testParsing() {
+    assertEquals(KeyCode.T, MnemonicInfo.parse("&Test").getKeyCode());
   }
 }

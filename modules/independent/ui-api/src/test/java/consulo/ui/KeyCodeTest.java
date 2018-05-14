@@ -15,54 +15,32 @@
  */
 package consulo.ui;
 
-import javax.annotation.Nonnull;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author VISTALL
  * @since 2018-05-14
  */
-public enum KeyCode {
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  P,
-  Q,
-  R,
-  S,
-  T,
-  U,
-  V,
-  W,
-  X,
-  Y,
-  Z;
+public class KeyCodeTest extends Assert {
+  @Test
+  public void testFromChar() {
+    for (int i = 'a'; i <= 'z'; i++) {
+      char c = (char)i;
 
-  private static final KeyCode[] VALUES = values();
+      KeyCode fromName = KeyCode.valueOf(String.valueOf(Character.toUpperCase(c)));
+      KeyCode fromCha = KeyCode.from(c);
 
-  @Nonnull
-  public static KeyCode from(char ch) {
-    if (ch >= 'a' && ch <= 'z') {
-      int diff = (int)ch - (int)'a';
-      return VALUES[A.ordinal() + diff];
+      assertEquals(fromName, fromCha);
     }
-    else if (ch >= 'A' && ch <= 'Z') {
-      int diff = (int)ch - (int)'A';
-      return VALUES[A.ordinal() + diff];
-    }
-    else {
-      throw new IllegalArgumentException("Illegal char: " + String.valueOf(ch));
+
+    for (int i = 'A'; i <= 'Z'; i++) {
+      char c = (char)i;
+
+      KeyCode fromName = KeyCode.valueOf(String.valueOf(c));
+      KeyCode fromCha = KeyCode.from(c);
+
+      assertEquals(fromName, fromCha);
     }
   }
 }

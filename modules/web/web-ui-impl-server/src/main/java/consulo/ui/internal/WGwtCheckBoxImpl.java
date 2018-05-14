@@ -17,18 +17,19 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.CheckBox;
+import consulo.ui.KeyCode;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
 public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements CheckBox {
-  public WGwtCheckBoxImpl(boolean selected, String text) {
-    super(selected);
-    getState().caption = text;
+  public WGwtCheckBoxImpl() {
+    super(false);
   }
 
   @Override
@@ -51,5 +52,15 @@ public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements C
     getState().caption = text;
 
     markAsDirty();
+  }
+
+  @Override
+  public void setMnemonicKey(@Nullable KeyCode key) {
+
+  }
+
+  @Override
+  public void setMnemonicTextIndex(int index) {
+
   }
 }

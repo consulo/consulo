@@ -48,10 +48,10 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
     public Layout() {
       myLayout = VerticalLayout.create();
 
-      myPostfixTemplatesEnabled = CheckBox.create("Enable postfix templates");
+      myPostfixTemplatesEnabled = CheckBox.create("&Enable postfix templates");
       myLayout.add(myPostfixTemplatesEnabled);
 
-      myCompletionEnabledCheckbox = CheckBox.create("Show postfix templates in completion autopopup");
+      myCompletionEnabledCheckbox = CheckBox.create("&Show postfix templates in completion autopopup");
       myLayout.add(myCompletionEnabledCheckbox);
 
       consulo.ui.ComboBox.Builder<Character> builder = consulo.ui.ComboBox.<Character>builder();

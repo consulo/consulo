@@ -17,6 +17,7 @@ package consulo.awt;
 
 import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
+import consulo.ui.KeyCode;
 import consulo.ui.image.Image;
 import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.shared.ColorValue;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 /**
  * @author VISTALL
@@ -110,5 +112,13 @@ public class TargetAWT {
     }
 
     throw new IllegalArgumentException(icon + "' is not supported");
+  }
+
+  public static int to(@Nonnull KeyCode code) {
+    if (code.ordinal() >= KeyCode.A.ordinal() && code.ordinal() <= KeyCode.Z.ordinal()) {
+      int diff = code.ordinal() - KeyCode.A.ordinal();
+      return KeyEvent.VK_A + diff;
+    }
+    throw new IllegalArgumentException(code + "' is not supported");
   }
 }

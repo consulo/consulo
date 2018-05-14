@@ -38,7 +38,7 @@ public abstract class UIInternal {
     return ourInstance;
   }
 
-  abstract CheckBox _Components_checkBox(@Nonnull String text, boolean selected);
+  abstract CheckBox _Components_checkBox();
 
   abstract DockLayout _Layouts_dock();
 

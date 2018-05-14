@@ -32,12 +32,12 @@ public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton,
 
   @Override
   public void addValueListener(@Nonnull ValueListener<Boolean> valueListener) {
-    addItemListener(new DesktopValueListenerAsItemListenerImpl<>(valueListener, false));
+    addItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
   }
 
   @Override
   public void removeValueListener(@Nonnull ValueListener<Boolean> valueListener) {
-    removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(valueListener, false));
+    removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
   }
 
   @Nonnull

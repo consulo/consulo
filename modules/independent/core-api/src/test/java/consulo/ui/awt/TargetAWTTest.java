@@ -13,56 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.awt;
 
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.KeyCode;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.awt.event.KeyEvent;
 
 /**
  * @author VISTALL
  * @since 2018-05-14
  */
-public enum KeyCode {
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  G,
-  H,
-  I,
-  J,
-  K,
-  L,
-  M,
-  N,
-  O,
-  P,
-  Q,
-  R,
-  S,
-  T,
-  U,
-  V,
-  W,
-  X,
-  Y,
-  Z;
-
-  private static final KeyCode[] VALUES = values();
-
-  @Nonnull
-  public static KeyCode from(char ch) {
-    if (ch >= 'a' && ch <= 'z') {
-      int diff = (int)ch - (int)'a';
-      return VALUES[A.ordinal() + diff];
-    }
-    else if (ch >= 'A' && ch <= 'Z') {
-      int diff = (int)ch - (int)'A';
-      return VALUES[A.ordinal() + diff];
-    }
-    else {
-      throw new IllegalArgumentException("Illegal char: " + String.valueOf(ch));
-    }
+public class TargetAWTTest extends Assert {
+  @Test
+  public void testKeyCode() {
+       assertEquals(KeyEvent.VK_V, TargetAWT.to(KeyCode.V));
+       assertEquals(KeyEvent.VK_A, TargetAWT.to(KeyCode.A));
+       assertEquals(KeyEvent.VK_Z, TargetAWT.to(KeyCode.Z));
   }
 }

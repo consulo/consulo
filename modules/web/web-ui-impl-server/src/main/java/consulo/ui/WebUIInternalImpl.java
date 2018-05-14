@@ -41,8 +41,8 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  CheckBox _Components_checkBox(@Nonnull String text, boolean selected) {
-    return new WGwtCheckBoxImpl(selected, text);
+  CheckBox _Components_checkBox() {
+    return new WGwtCheckBoxImpl();
   }
 
   @Override

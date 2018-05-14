@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 
 import java.awt.event.ItemEvent;
@@ -25,10 +26,12 @@ import java.awt.event.ItemListener;
  * @since 13-Jun-16
  */
 class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
-  private ValueComponent.ValueListener<E> myValueListener;
-  private boolean mySelectEvent;
+  private final ValueComponent<E> myComponent;
+  private final ValueComponent.ValueListener<E> myValueListener;
+  private final boolean mySelectEvent;
 
-  public DesktopValueListenerAsItemListenerImpl(ValueComponent.ValueListener<E> valueListener, boolean selectEvent) {
+  public DesktopValueListenerAsItemListenerImpl(ValueComponent<E> component, ValueComponent.ValueListener<E> valueListener, boolean selectEvent) {
+    myComponent = component;
     myValueListener = valueListener;
     mySelectEvent = selectEvent;
   }
@@ -44,19 +47,18 @@ class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
            ((DesktopValueListenerAsItemListenerImpl)obj).myValueListener.equals(((DesktopValueListenerAsItemListenerImpl)obj).myValueListener);
   }
 
+  @RequiredUIAccess
   @Override
   @SuppressWarnings("unchecked")
   public void itemStateChanged(ItemEvent e) {
     if(mySelectEvent) {
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        final ValueComponent source = (ValueComponent)e.getSource();
-        myValueListener.valueChanged(new ValueComponent.ValueEvent<E>(source, (E)source.getValue()));
+        myValueListener.valueChanged(new ValueComponent.ValueEvent<>(myComponent, myComponent.getValue()));
       }
     }
     else {
       if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
-        final ValueComponent source = (ValueComponent)e.getSource();
-        myValueListener.valueChanged(new ValueComponent.ValueEvent<E>(source, (E)source.getValue()));
+        myValueListener.valueChanged(new ValueComponent.ValueEvent<>(myComponent, myComponent.getValue()));
       }
     }
   }
