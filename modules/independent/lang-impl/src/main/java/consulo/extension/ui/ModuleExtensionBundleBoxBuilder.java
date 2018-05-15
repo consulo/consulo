@@ -179,6 +179,6 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
       }
     });
 
-    return LabeledComponents.left(myLabelText, box);
+    return LabeledComponents.leftFilled(myLabelText, box);
   }
 }

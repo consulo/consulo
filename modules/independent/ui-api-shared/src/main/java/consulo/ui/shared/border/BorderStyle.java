@@ -20,5 +20,6 @@ package consulo.ui.shared.border;
  * @since 15-Sep-17
  */
 public enum BorderStyle {
-  LINE
+  LINE,
+  EMPTY
 }

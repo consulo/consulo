@@ -76,11 +76,18 @@ public interface SomeUIWrapper extends Component {
   @Override
   default void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
     dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
+
+    bordersChanged();
   }
 
   @RequiredUIAccess
   @Override
   default void removeBorder(@Nonnull BorderPosition borderPosition) {
     dataObject().removeBorder(borderPosition);
+
+    bordersChanged();
+  }
+
+  default void bordersChanged() {
   }
 }

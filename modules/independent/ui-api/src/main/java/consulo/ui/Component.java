@@ -24,6 +24,7 @@ import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EventListener;
@@ -46,8 +47,15 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey) {
+  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey) {
     addBorder(borderPosition, borderStyle, colorKey, 1);
+  }
+
+  @RequiredUIAccess
+  default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey, @Nonnegative int width) {
+    for (BorderPosition position : BorderPosition.values()) {
+      addBorder(position, borderStyle, colorKey, width);
+    }
   }
 
   @RequiredUIAccess
@@ -58,7 +66,14 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width);
+  void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey, @Nonnegative int width);
+
+  @RequiredUIAccess
+  default void removeBorders() {
+    for (BorderPosition position : BorderPosition.values()) {
+      removeBorder(position);
+    }
+  }
 
   @RequiredUIAccess
   void removeBorder(@Nonnull BorderPosition borderPosition);

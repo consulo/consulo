@@ -15,17 +15,26 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
+import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.migration.ToSwingWrapper;
+import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
+import consulo.ui.shared.border.BorderStyle;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -61,6 +70,39 @@ public interface SwingWrapper extends SomeUIWrapper, ToSwingWrapper {
       component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
     }
     return dataObject;
+  }
+
+  @Override
+  default void bordersChanged() {
+    JComponent component = (JComponent)toAWT();
+
+    component.setBorder(null);
+
+    Collection<BorderInfo> borders = dataObject().getBorders();
+
+    Map<BorderPosition, Integer> emptyBorders = new LinkedHashMap<>();
+    for (BorderInfo border : borders) {
+      if (border.getBorderStyle() == BorderStyle.EMPTY) {
+        emptyBorders.put(border.getBorderPosition(), border.getWidth());
+      }
+    }
+
+    if (!emptyBorders.isEmpty()) {
+      component.setBorder(new EmptyBorder(getBorderSize(emptyBorders, BorderPosition.TOP), getBorderSize(emptyBorders, BorderPosition.LEFT), getBorderSize(emptyBorders, BorderPosition.BOTTOM),
+                                          getBorderSize(emptyBorders, BorderPosition.RIGHT)));
+
+      return;
+    }
+
+    // FIXME [VISTALL] support other borders?
+  }
+
+  static int getBorderSize(Map<BorderPosition, Integer> map, BorderPosition position) {
+    Integer width = map.get(position);
+    if (width == null) {
+      return 0;
+    }
+    return JBUI.scale(width);
   }
 
   @Override
