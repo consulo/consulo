@@ -29,8 +29,8 @@ import java.awt.event.KeyEvent;
 public class TargetAWTTest extends Assert {
   @Test
   public void testKeyCode() {
-       assertEquals(KeyEvent.VK_V, TargetAWT.to(KeyCode.V));
-       assertEquals(KeyEvent.VK_A, TargetAWT.to(KeyCode.A));
-       assertEquals(KeyEvent.VK_Z, TargetAWT.to(KeyCode.Z));
+    assertEquals(KeyEvent.VK_V, TargetAWT.to(KeyCode.V));
+    assertEquals(KeyEvent.VK_A, TargetAWT.to(KeyCode.A));
+    assertEquals(KeyEvent.VK_Z, TargetAWT.to(KeyCode.Z));
   }
 }
