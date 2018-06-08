@@ -29,7 +29,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -100,8 +100,9 @@ public class PlatformOrPluginUpdateChecker {
     return Math.abs(timeDelta) >= DateFormatUtil.DAY;
   }
 
-  public static ActionCallback updateAndShowResult() {
-    final ActionCallback result = new ActionCallback();
+  @Nonnull
+  public static AsyncResult<Void> updateAndShowResult() {
+    final AsyncResult<Void> result = new AsyncResult<>();
     final Application app = Application.get();
     final UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
@@ -151,8 +152,8 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
-  public static ActionCallback checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
-    ActionCallback actionCallback = new ActionCallback();
+  public static AsyncResult<Void> checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
+    AsyncResult<Void> actionCallback = new AsyncResult<>();
     PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator);
     if (updateResult == PlatformOrPluginUpdateResult.CANCELED) {
       actionCallback.setDone();
