@@ -17,12 +17,12 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.shared.ColorValue;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -32,8 +32,8 @@ public interface ElementColorProvider {
 
   @Nullable
   @RequiredReadAction
-  Color getColorFrom(@Nonnull PsiElement element);
+  ColorValue getColorFrom(@Nonnull PsiElement element);
 
   @RequiredWriteAction
-  void setColorTo(@Nonnull PsiElement element, @Nonnull Color color);
+  void setColorTo(@Nonnull PsiElement element, @Nonnull ColorValue color);
 }

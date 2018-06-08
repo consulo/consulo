@@ -31,6 +31,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TwoColorsIcon;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
+import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -58,7 +60,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
 
           ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true, c -> {
             if (c != null) {
-              WriteCommandAction.runWriteCommandAction(element.getProject(), () -> colorProvider.setColorTo(element, c));
+              WriteCommandAction.runWriteCommandAction(element.getProject(), () -> colorProvider.setColorTo(element, TargetAWT.from(c)));
             }
           });
         }
@@ -92,9 +94,9 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
   @Override
   public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
     for (ElementColorProvider colorProvider : myExtensions) {
-      final Color color = colorProvider.getColorFrom(element);
+      final ColorValue color = colorProvider.getColorFrom(element);
       if (color != null) {
-        MyInfo info = new MyInfo(element, color, colorProvider);
+        MyInfo info = new MyInfo(element, TargetAWT.to(color), colorProvider);
         NavigateAction.setNavigateAction(info, "Choose color", null);
         return info;
       }

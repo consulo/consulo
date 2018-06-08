@@ -45,7 +45,8 @@ public class TargetAWT {
 
   @Nonnull
   public static java.awt.Color to(@Nonnull RGBColor color) {
-    return new java.awt.Color(color.getRed(), color.getGreed(), color.getBlue());
+    int alpha = (int) color.getAlpha() * 255;
+    return new java.awt.Color(color.getRed(), color.getGreed(), color.getBlue(), alpha);
   }
 
   @Contract("null -> null")
@@ -85,7 +86,8 @@ public class TargetAWT {
     if (color == null) {
       return null;
     }
-    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
+    float[] components = color.getRGBComponents(null);
+    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue(), components[3]);
   }
 
   @Contract("null -> null")
