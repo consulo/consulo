@@ -93,6 +93,9 @@ public class PluginListDialog extends DialogWrapper {
           if (myGreenStrategy.test(pluginNode.getPluginId())) {
             status = FileStatus.ADDED;
           }
+          if(myRedStrategy.test(pluginNode.getPluginId())) {
+            status = FileStatus.DELETED;
+          }
 
           myRating.setVisible(false);
           myDownloads.setVisible(false);
@@ -147,11 +150,14 @@ public class PluginListDialog extends DialogWrapper {
   @Nonnull
   private Predicate<PluginId> myGreenStrategy;
   @Nonnull
+  private Predicate<PluginId> myRedStrategy;
+  @Nonnull
   private PlatformOrPluginUpdateResult.Type myType;
 
   public PluginListDialog(@Nullable Project project,
                           @Nonnull PlatformOrPluginUpdateResult updateResult,
                           @Nullable Predicate<PluginId> greenStrategy,
+                          @Nullable Predicate<PluginId> redStrategy,
                           @Nullable Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     super(project);
     myProject = project;
@@ -160,6 +166,13 @@ public class PluginListDialog extends DialogWrapper {
     setTitle(updateResult.getType() == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL ? IdeBundle.message("plugin.install.dialog.title") : IdeBundle.message("update.available.group"));
 
     myNodes = updateResult.getPlugins();
+
+    if(redStrategy != null) {
+      myRedStrategy = redStrategy;
+    }
+    else {
+      myRedStrategy = pluginId -> false;
+    }
 
     if (greenStrategy != null) {
       myGreenStrategy = greenStrategy;
@@ -198,11 +211,23 @@ public class PluginListDialog extends DialogWrapper {
   @Override
   public void doOKAction() {
     super.doOKAction();
+
+    List<Couple<IdeaPluginDescriptor>> brokenPlugins = myNodes.stream().filter(c -> myRedStrategy.test(c.getFirst().getPluginId())).collect(Collectors.toList());
+    if(!brokenPlugins.isEmpty()) {
+      if(Messages.showOkCancelDialog(myProject, "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?", "Consulo", Messages.getErrorIcon()) == Messages.OK) {
+        return;
+      }
+    }
+ 
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<IdeaPluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
       for (Couple<IdeaPluginDescriptor> couple : myNodes) {
         IdeaPluginDescriptor pluginDescriptor = couple.getSecond();
+        if (myRedStrategy.test(pluginDescriptor.getPluginId())) {
+          // update list contains broken plugins
+          continue;
+        }
 
         try {
           PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion, myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL);

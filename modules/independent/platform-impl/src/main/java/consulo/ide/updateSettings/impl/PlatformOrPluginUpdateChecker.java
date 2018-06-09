@@ -122,7 +122,7 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
-  public static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
+  private static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
     PlatformOrPluginUpdateResult.Type type = targetsForUpdate.getType();
     switch (type) {
       case NO_UPDATE:
@@ -136,14 +136,14 @@ public class PlatformOrPluginUpdateChecker {
       case PLUGIN_UPDATE:
       case PLATFORM_UPDATE:
         if (showResults) {
-          new PluginListDialog(project, targetsForUpdate, null, null).show();
+          new PluginListDialog(project, targetsForUpdate, null, pluginId -> targetsForUpdate.getBrokenPluginIds().contains(pluginId), null).show();
         }
         else {
           Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION, null);
           notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-              new PluginListDialog(project, targetsForUpdate, null, null).show();
+              new PluginListDialog(project, targetsForUpdate, null, pluginId -> targetsForUpdate.getBrokenPluginIds().contains(pluginId), null).show();
             }
           });
           notification.notify(project);
@@ -239,6 +239,8 @@ public class PlatformOrPluginUpdateChecker {
       }
     }
 
+    List<PluginId> brokedPluginsAfterPlatformUpdate = new ArrayList<>();
+
     state.getOutdatedPlugins().clear();
     if (!ourPlugins.isEmpty()) {
       try {
@@ -248,6 +250,12 @@ public class PlatformOrPluginUpdateChecker {
           IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
           if (filtered == null) {
+            // if platform updated - but we not found new plugin in new remote list, notify user about it
+            if(newPlatformPlugin != null) {
+              brokedPluginsAfterPlatformUpdate.add(entry.getKey());
+
+              targets.add(Couple.of(entry.getValue(), entry.getValue()));
+            }
             continue;
           }
 
@@ -274,13 +282,13 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     if (newPlatformPlugin != null) {
-      return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets);
+      return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets, brokedPluginsAfterPlatformUpdate);
     }
 
     if (alreadyVisited && targets.isEmpty()) {
       return PlatformOrPluginUpdateResult.UPDATE_RESTART;
     }
-    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
+    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets, Collections.emptyList());
   }
 
   private static void processDependencies(@Nonnull IdeaPluginDescriptor target, List<Couple<IdeaPluginDescriptor>> targets, List<IdeaPluginDescriptor> remotePlugins) {
