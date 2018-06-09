@@ -27,10 +27,12 @@ import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelImpl;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.net.URL;
 import java.util.Collection;
@@ -226,6 +228,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   ImageBox _Components_imageBox(Image image) {
     return new DesktopImageBoxImpl(image);
+  }
+
+  @Override
+  ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
+    return new DesktopColorBoxImpl(colorValue);
   }
 
   @Override

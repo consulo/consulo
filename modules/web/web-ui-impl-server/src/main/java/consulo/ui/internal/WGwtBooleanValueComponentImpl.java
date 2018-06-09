@@ -15,27 +15,24 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.util.SmartList;
+import com.intellij.openapi.Disposable;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
+import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public class WGwtBooleanValueComponentImpl extends AbstractComponent implements ValueComponent<Boolean>, VaadinWrapper {
-  private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<>();
-
   private final CheckBoxRpc myRpc = value -> setValueImpl(value, true);
 
   public WGwtBooleanValueComponentImpl(boolean selected) {
@@ -78,20 +75,14 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
     getState().myChecked = value;
 
     if (fireEvents) {
-      for (ValueListener<Boolean> valueListener : myValueListeners) {
-        valueListener.valueChanged(new ValueEvent<>(this, value));
-      }
+      dataObject().getDispatcher(ValueListener.class).valueChanged(new ValueEvent<>(this, value));
     }
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    myValueListeners.add(valueListener);
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    myValueListeners.remove(valueListener);
+  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
+    return dataObject().addListener(ValueListener.class, valueListener);
   }
 
   @javax.annotation.Nullable

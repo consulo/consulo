@@ -28,10 +28,12 @@ import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelImpl;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -139,6 +141,11 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   ImageBox _Components_imageBox(Image image) {
     return new WGwtImageBoxImpl(image);
+  }
+
+  @Override
+  ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
+    throw new UnsupportedOperationException(); //TODO [VISTALL]
   }
 
   @Override

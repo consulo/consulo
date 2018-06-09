@@ -15,20 +15,16 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.Disposable;
 import com.vaadin.ui.AbstractComponent;
-import consulo.ui.Component;
-import consulo.ui.ListItemRender;
-import consulo.ui.ListItemRenders;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
-import consulo.ui.ValueComponent;
+import consulo.ui.*;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.ui.model.ListModel;
+import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +33,6 @@ import java.util.List;
  */
 public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent implements ValueComponent<E>, VaadinWrapper {
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
-  private List<ValueListener<E>> myValueListeners = new ArrayList<>();
   private ListModel<E> myModel;
 
   public WGwtSingleListComponentImpl(ListModel<E> model) {
@@ -99,14 +94,10 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
     return (ComboBoxState)super.getState();
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueListener<E> valueListener) {
-    myValueListeners.add(valueListener);
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    myValueListeners.remove(valueListener);
+  public Disposable addValueListener(@Nonnull ValueListener<E> valueListener) {
+    return dataObject().addListener(ValueListener.class, valueListener);
   }
 
   @javax.annotation.Nullable
@@ -152,9 +143,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
 
     if (fireEvents) {
       final ValueEvent<E> event = new ValueEvent<>(this, value);
-      for (ValueListener<E> valueListener : myValueListeners) {
-        valueListener.valueChanged(event);
-      }
+      dataObject().getDispatcher(ValueListener.class).valueChanged(event);
     }
 
     markAsDirty();

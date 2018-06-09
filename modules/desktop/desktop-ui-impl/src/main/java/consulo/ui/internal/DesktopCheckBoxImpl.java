@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.awt.TargetAWT;
 import consulo.ui.CheckBox;
@@ -75,14 +76,12 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> impl
     }
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    myComponent.addItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    myComponent.removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
+  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
+    DesktopValueListenerAsItemListenerImpl<Boolean> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false);
+    myComponent.addItemListener(listener);
+    return () -> myComponent.removeItemListener(listener);
   }
 
   @Override

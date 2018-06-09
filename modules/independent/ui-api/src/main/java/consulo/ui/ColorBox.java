@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotations;
+package consulo.ui;
 
-import java.lang.annotation.*;
+import consulo.ui.shared.ColorValue;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 05.03.14
+ * @since 6/9/18
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-public @interface DeprecationInfo {
-  String value();
+public interface ColorBox extends ValueComponent<ColorValue> {
+  @Nonnull
+  static ColorBox create() {
+    return create(null);
+  }
 
-  /**
-   * @return version or date (for date pattern is yyyy-MM-dd)
-   */
-  String until() default "0";
+  static ColorBox create(@Nullable ColorValue colorValue) {
+    return UIInternal.get()._Components_colorBox(colorValue);
+  }
 }

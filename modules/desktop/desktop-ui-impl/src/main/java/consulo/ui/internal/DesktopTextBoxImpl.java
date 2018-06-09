@@ -15,13 +15,13 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBTextField;
-import com.intellij.util.EventDispatcher;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -56,8 +56,6 @@ public class DesktopTextBoxImpl extends JBTextField implements TextBox, SwingWra
     }
   }
 
-  private EventDispatcher<ValueListener> myEventDispatcher = EventDispatcher.create(ValueListener.class);
-
   public DesktopTextBoxImpl(String text) {
     getDocument().addDocumentListener(new Listener(this));
     setValue(text);
@@ -66,17 +64,13 @@ public class DesktopTextBoxImpl extends JBTextField implements TextBox, SwingWra
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   private void fireListeners() {
-    myEventDispatcher.getMulticaster().valueChanged(new ValueEvent(this, getValue()));
+    dataObject().getDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, getValue()));
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueListener<String> valueListener) {
-    myEventDispatcher.addListener(valueListener);
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueListener<String> valueListener) {
-    myEventDispatcher.removeListener(valueListener);
+  public Disposable addValueListener(@Nonnull ValueListener<String> valueListener) {
+    return dataObject().addListener(ValueListener.class, valueListener);
   }
 
   @Override
