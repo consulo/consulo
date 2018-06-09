@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
@@ -44,10 +43,6 @@ import java.util.function.Consumer;
  */
 @Internal
 public class DesktopUIInternalImpl extends UIInternal {
-  static {
-    IconLoader.activate(); // TODO [VISTALL] hack until we not start Consulo app
-  }
-
   @Override
   public Image _Images_image(URL url) {
     return new DesktopImageImpl(url);

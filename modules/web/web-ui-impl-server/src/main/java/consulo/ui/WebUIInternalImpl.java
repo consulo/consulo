@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.util.IconLoader;
 import com.vaadin.ui.UI;
 import consulo.annotations.Internal;
 import consulo.ui.image.Image;
@@ -44,10 +43,6 @@ import java.util.function.Consumer;
  */
 @Internal
 public class WebUIInternalImpl extends UIInternal {
-  static {
-    IconLoader.activate(); // TODO [VISTALL] hack until we not start Consulo app
-  }
-
   @Override
   CheckBox _Components_checkBox() {
     return new WGwtCheckBoxImpl();
