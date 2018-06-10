@@ -103,7 +103,7 @@ public final class TodoDirNode extends PsiDirectoryNode implements HighlightedRe
   protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
     if (ProjectRootsUtil.isModuleContentRoot(virtualFile, psiDirectory.getProject())) {
-      data.setIcon(patchIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon(psiDirectory, 0)), virtualFile));
+      data.setIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon(psiDirectory, 0)));
     } else {
       super.setupIcon(data, psiDirectory);
     }

@@ -27,25 +27,27 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.KeyedExtensionFactory;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public interface OrderRootTypeUIFactory {
   ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.orderRootTypeEditor");
 
   KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType> FACTORY =
-          new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, EP_NAME,
-                                                                           ApplicationManager.getApplication().getPicoContainer()) {
+          new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, EP_NAME, ApplicationManager.getApplication().getPicoContainer()) {
             @Override
             public String getKey(@Nonnull final OrderRootType key) {
               return key.getName();
             }
           };
 
+  @Nonnull
   SdkPathEditor createPathEditor(Sdk sdk);
 
-  Icon getIcon();
+  @Nonnull
+  Image getIcon();
 
+  @Nonnull
   String getNodeText();
 }

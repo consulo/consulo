@@ -12,25 +12,29 @@
  */
 package com.intellij.openapi.roots.libraries.ui;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class OrderRootTypePresentation {
   private final String myNodeText;
-  private final Icon myIcon;
+  private final Image myIcon;
 
-  public OrderRootTypePresentation(String nodeText, Icon icon) {
+  public OrderRootTypePresentation(@Nonnull String nodeText, @Nonnull Image icon) {
     myNodeText = nodeText;
     myIcon = icon;
   }
 
+  @Nonnull
   public String getNodeText() {
     return myNodeText;
   }
 
-  public Icon getIcon() {
+  @Nonnull
+  public Image getIcon() {
     return myIcon;
   }
 }

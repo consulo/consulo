@@ -29,29 +29,33 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.projectRoots.ui.Util;
-import consulo.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonUpdater;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.util.IconUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.roots.types.DocumentationOrderRootType;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
+  @Nonnull
   @Override
   public SdkPathEditor createPathEditor(Sdk sdk) {
     return new DocumentationPathsEditor(sdk);
   }
 
+  @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.JavaDocFolder;
   }
 
+  @Nonnull
   @Override
   public String getNodeText() {
     return ProjectBundle.message("library.javadocs.node");
@@ -61,33 +65,28 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
     private final Sdk mySdk;
 
     public DocumentationPathsEditor(Sdk sdk) {
-      super(ProjectBundle.message("library.javadocs.node"), DocumentationOrderRootType.getInstance(),
-            FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(), sdk);
+      super(ProjectBundle.message("library.javadocs.node"), DocumentationOrderRootType.getInstance(), FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(), sdk);
       mySdk = sdk;
     }
 
     @Override
     protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
       AnActionButton specifyUrlButton = new AnActionButton(ProjectBundle.message("sdk.paths.specify.url.button"), IconUtil.getAddLinkIcon()) {
+        @RequiredDispatchThread
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           onSpecifyUrlButtonClicked();
         }
       };
       specifyUrlButton.setShortcut(CustomShortcutSet.fromString("alt S"));
-      specifyUrlButton.addCustomUpdater(new AnActionButtonUpdater() {
-        @Override
-        public boolean isEnabled(AnActionEvent e) {
-          return myEnabled;
-        }
-      });
+      specifyUrlButton.addCustomUpdater(e -> myEnabled);
       toolbarDecorator.addExtraAction(specifyUrlButton);
     }
 
     private void onSpecifyUrlButtonClicked() {
-      final String defaultDocsUrl = mySdk == null ? "" : StringUtil.notNullize(((SdkType) mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
-      VirtualFile virtualFile  = Util.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
-      if(virtualFile != null){
+      final String defaultDocsUrl = mySdk == null ? "" : StringUtil.notNullize(((SdkType)mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
+      VirtualFile virtualFile = Util.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
+      if (virtualFile != null) {
         addElement(virtualFile);
         setModified(true);
         requestDefaultFocus();

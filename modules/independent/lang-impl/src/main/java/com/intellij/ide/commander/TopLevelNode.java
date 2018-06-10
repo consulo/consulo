@@ -19,10 +19,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
 import java.util.Collections;
 
@@ -35,7 +33,7 @@ public class TopLevelNode extends AbstractTreeNode {
   public TopLevelNode(Project project, Object value) {
     super(project, value);
     myName = "[ .. ]";
-    setIcon(TargetAWT.to(AllIcons.Nodes.UpLevel));
+    setIcon(AllIcons.Nodes.UpLevel);
   }
 
   @Override

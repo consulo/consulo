@@ -38,7 +38,7 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
     super(null, null);
     myElement = element;
     myName = name;
-    setIcon(TargetAWT.to(icon));
+    setIcon(icon);
     myDescription = description;
     getPresentation().setTooltip(description);
   }

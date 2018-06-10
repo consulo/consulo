@@ -18,8 +18,6 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.bookmarks.Bookmark;
-import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
@@ -43,17 +41,14 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.RowIcon;
-import com.intellij.util.PlatformIcons;
 import consulo.application.AccessRule;
 import consulo.awt.TargetAWT;
+import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -172,7 +167,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
       }
 
       updateImpl(data);
-      data.setIcon(patchIcon(myProject, data.getIcon(true), getVirtualFile()));
+      data.setIcon(patchIcon(myProject, TargetAWT.from(data.getIcon()), getVirtualFile()));
 
       for (ProjectViewNodeDecorator decorator : Extensions.getExtensions(ProjectViewNodeDecorator.EP_NAME, myProject)) {
         decorator.decorate(AbstractPsiBasedNode.this, data);
@@ -181,28 +176,29 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   }
 
   @Nullable
-  public static Icon patchIcon(@Nonnull Project project, @Nullable Icon original, @Nullable VirtualFile file) {
+  public static Image patchIcon(@Nonnull Project project, @Nullable Image original, @Nullable VirtualFile file) {
     if (file == null || original == null) return original;
 
-    Icon icon = original;
+    IconDescriptor iconDescriptor = new IconDescriptor(original);
 
-    final Bookmark bookmarkAtFile = BookmarkManager.getInstance(project).findFileBookmark(file);
-    if (bookmarkAtFile != null) {
-      final RowIcon composite = new RowIcon(2, RowIcon.Alignment.CENTER);
-      composite.setIcon(icon, 0);
-      composite.setIcon(bookmarkAtFile.getIcon(), 1);
-      icon = composite;
-    }
+    // TODO [VISTALL] disabled for now
+    //final Bookmark bookmarkAtFile = BookmarkManager.getInstance(project).findFileBookmark(file);
+    //if (bookmarkAtFile != null) {
+    //  final RowIcon composite = new RowIcon(2, RowIcon.Alignment.CENTER);
+    //  composite.setIcon(icon, 0);
+    //  composite.setIcon(bookmarkAtFile.getIcon(), 1);
+    //  icon = composite;
+    //}
 
     if (!file.isWritable()) {
-      icon = LayeredIcon.create(icon, AllIcons.Nodes.Locked);
+      iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);
     }
 
     if (file.is(VFileProperty.SYMLINK)) {
-      icon = LayeredIcon.create(icon, AllIcons.Nodes.Symlink);
+      iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
     }
 
-    return icon;
+    return iconDescriptor.toIcon();
   }
 
   @Iconable.IconFlags
