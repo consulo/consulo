@@ -66,9 +66,7 @@ public final class RGBColor implements Serializable, ColorValue {
   }
 
   public RGBColor(int red, int green, int blue) {
-    myRed = red;
-    myGreen = green;
-    myBlue = blue;
+    this(red, green, blue, 1f);
   }
 
   public RGBColor(int red, int green, int blue, float alpha) {
