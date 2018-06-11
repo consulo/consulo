@@ -49,7 +49,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String myMajorVersion = null;
   private String myMinorVersion = null;
   private String myBuildNumber = null;
-  private String myCompanyName = "Must-Be";
+  private String myCompanyName = "consulo.io";
   private String myCompanyUrl = "https://consulo.io";
   private Color myAboutForeground = Color.black;
   private Color myAboutLinkColor = null;
