@@ -15,9 +15,8 @@
  */
 package com.intellij.util.concurrency;
 
-import com.intellij.util.ui.EdtInvocationManager;
 import javax.annotation.Nonnull;
-
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.ExecutorService;
@@ -40,7 +39,7 @@ public class EdtExecutorService extends AbstractExecutorService {
 
   @Override
   public void execute(@Nonnull Runnable command) {
-    EdtInvocationManager.getInstance().invokeLater(command);
+    SwingUtilities.invokeLater(command);
   }
 
   @Override
