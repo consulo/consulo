@@ -45,7 +45,6 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.WrappedLayout;
-import consulo.ui.internal.contextmenu.ContextMenu;
 import consulo.web.ui.TreeStructureWrappenModel;
 
 import javax.annotation.Nonnull;
@@ -367,15 +366,6 @@ public class WebProjectViewImpl implements ProjectViewEx {
     };
 
     myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
-    myTree.setContextHandler((x, y) -> {
-      ContextMenu contextMenu = new ContextMenu((com.vaadin.ui.AbstractComponent)myTree, false);
-
-      contextMenu.addItem("Test", (e) -> {
-
-      });
-
-      contextMenu.open(x, y);
-    });
     WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
     wrappedLayout.addUserDataProvider(new MyDataProvider());
 
