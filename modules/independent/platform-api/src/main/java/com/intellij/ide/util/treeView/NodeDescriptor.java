@@ -16,13 +16,13 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
 import java.util.Comparator;
 
 public abstract class NodeDescriptor<E> {
@@ -32,7 +32,7 @@ public abstract class NodeDescriptor<E> {
   protected String myName;
   protected consulo.ui.image.Image myIcon;
 
-  protected Color myColor;
+  protected java.awt.Color myColor;
 
   private int myIndex = -1;
 
@@ -73,7 +73,7 @@ public abstract class NodeDescriptor<E> {
     return myIcon;
   }
 
-  public final Color getColor() {
+  public final java.awt.Color getColor() {
     return myColor;
   }
 
@@ -129,7 +129,14 @@ public abstract class NodeDescriptor<E> {
     myIcon = closedIcon;
   }
 
-  public void setIcon(Icon closedIcon) {
+  // not deprecated - but will be dropped when method lower deleted
+  public void setIcon(SwingImageRef closedIcon) {
+    setIcon((Image)closedIcon);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use setIcon(Image)")
+  public void setIcon(javax.swing.Icon closedIcon) {
     myIcon = TargetAWT.from(closedIcon);
   }
 

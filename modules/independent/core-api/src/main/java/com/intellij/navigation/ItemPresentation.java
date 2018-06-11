@@ -15,6 +15,8 @@
  */
 package com.intellij.navigation;
 
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -45,9 +47,21 @@ public interface ItemPresentation {
 
   /**
    * Returns the icon representing the object.
+   */
+  @Nullable
+  default Icon getIcon() {
+    return getIcon(false);
+  }
+
+  /**
+   * Returns the icon representing the object.
    *
    * @param unused Used to mean if open/close icons for tree renderer. No longer in use. The parameter is only there for API compatibility reason.
    */
   @Nullable
-  Icon getIcon(boolean unused);
+  @Deprecated
+  @DeprecationInfo("Use #getIcon()")
+  default Icon getIcon(boolean unused) {
+    return getIcon();
+  }
 }

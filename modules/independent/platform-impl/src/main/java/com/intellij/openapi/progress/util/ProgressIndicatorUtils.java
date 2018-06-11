@@ -27,11 +27,11 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
-import com.intellij.util.ui.EdtInvocationManager;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
@@ -170,7 +170,7 @@ public class ProgressIndicatorUtils {
     // to tolerate any immediate modality changes (e.g. https://youtrack.jetbrains.com/issue/IDEA-135180)
 
     CompletableFuture<?> future = new CompletableFuture<>();
-    EdtInvocationManager.getInstance().invokeLater(() -> {
+    SwingUtilities.invokeLater(() -> {
       final Application application = ApplicationManager.getApplication();
       if (application.isDisposed() || progressIndicator.isCanceled()) {
         future.complete(null);

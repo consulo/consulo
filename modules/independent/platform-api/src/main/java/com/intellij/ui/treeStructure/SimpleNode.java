@@ -245,6 +245,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
    * @deprecated use {@link #getTemplatePresentation()} to set constant presentation right in node's constructor
    * or update presentation dynamically by defining {@link #update(com.intellij.ide.projectView.PresentationData)}
    */
+  @Deprecated
   public void setUniformIcon(Icon aIcon) {
     setIcon(aIcon);
   }
