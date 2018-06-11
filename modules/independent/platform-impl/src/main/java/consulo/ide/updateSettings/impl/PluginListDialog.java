@@ -16,15 +16,7 @@
 package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerColumnInfo;
-import com.intellij.ide.plugins.PluginManagerConfigurable;
-import com.intellij.ide.plugins.PluginManagerUISettings;
-import com.intellij.ide.plugins.PluginNode;
-import com.intellij.ide.plugins.PluginTable;
-import com.intellij.ide.plugins.PluginTableModel;
-import com.intellij.ide.plugins.PluginsTableRenderer;
+import com.intellij.ide.plugins.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
@@ -45,19 +37,16 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.ide.plugins.InstalledPluginsState;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -67,7 +56,7 @@ import java.util.stream.Collectors;
  * @since 07-Nov-16
  */
 public class PluginListDialog extends DialogWrapper {
-  public static final Logger LOGGER = Logger.getInstance(PluginListDialog.class);
+  private static final Logger LOGGER = Logger.getInstance(PluginListDialog.class);
 
   private class OurPluginColumnInfo extends PluginManagerColumnInfo {
     public OurPluginColumnInfo(PluginTableModel model) {
@@ -83,7 +72,7 @@ public class PluginListDialog extends DialogWrapper {
           assert couple != null;
           IdeaPluginDescriptor oldPlugin = couple.getFirst();
           if (oldPlugin != null) {
-            myCategory.setText(oldPlugin.getVersion() + " " + UIUtil.rightArrow() + " " + pluginNode.getVersion());
+            myCategory.setText(oldPlugin.getVersion() + " " + UIUtil.rightArrow() + " " + (myRedStrategy.test(pluginDescriptor.getPluginId()) ? "??" : pluginNode.getVersion()));
           }
           else {
             myCategory.setText(pluginNode.getVersion());
@@ -93,8 +82,8 @@ public class PluginListDialog extends DialogWrapper {
           if (myGreenStrategy.test(pluginNode.getPluginId())) {
             status = FileStatus.ADDED;
           }
-          if(myRedStrategy.test(pluginNode.getPluginId())) {
-            status = FileStatus.DELETED;
+          if (myRedStrategy.test(pluginNode.getPluginId())) {
+            status = FileStatus.UNKNOWN;
           }
 
           myRating.setVisible(false);
@@ -167,7 +156,7 @@ public class PluginListDialog extends DialogWrapper {
 
     myNodes = updateResult.getPlugins();
 
-    if(redStrategy != null) {
+    if (redStrategy != null) {
       myRedStrategy = redStrategy;
     }
     else {
@@ -189,14 +178,20 @@ public class PluginListDialog extends DialogWrapper {
 
     ContainerUtil.sort(list, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
-    Optional<IdeaPluginDescriptor> platform = list.stream().filter(x -> PlatformOrPluginUpdateChecker.isPlatform(x.getPluginId())).findAny();
-    platform.ifPresent(plugin -> {
-      // move platform node to top
-      list.remove(plugin);
-      list.add(0, plugin);
+    ContainerUtil.weightSort(list, pluginDescriptor -> {
+      if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
+        return 200;
+      }
 
-      myPlatformVersion = plugin.getVersion();
+      if (myRedStrategy.test(pluginDescriptor.getPluginId())) {
+        return 100;
+      }
+
+      return 0;
     });
+
+    Optional<IdeaPluginDescriptor> platform = list.stream().filter(x -> PlatformOrPluginUpdateChecker.isPlatform(x.getPluginId())).findAny();
+    platform.ifPresent(plugin -> myPlatformVersion = plugin.getVersion());
 
     OurPluginModel model = new OurPluginModel();
     model.updatePluginsList(list);
@@ -213,12 +208,13 @@ public class PluginListDialog extends DialogWrapper {
     super.doOKAction();
 
     List<Couple<IdeaPluginDescriptor>> brokenPlugins = myNodes.stream().filter(c -> myRedStrategy.test(c.getFirst().getPluginId())).collect(Collectors.toList());
-    if(!brokenPlugins.isEmpty()) {
-      if(Messages.showOkCancelDialog(myProject, "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?", "Consulo", Messages.getErrorIcon()) == Messages.OK) {
+    if (!brokenPlugins.isEmpty()) {
+
+      if (Messages.showOkCancelDialog(myProject, "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?", "Consulo", Messages.getErrorIcon()) != Messages.OK) {
         return;
       }
     }
- 
+
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<IdeaPluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
