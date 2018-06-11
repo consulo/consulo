@@ -15,8 +15,9 @@
  */
 package consulo.ui.shared;
 
-import javax.annotation.Nonnull;
+import consulo.annotations.Exported;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -24,25 +25,66 @@ import java.io.Serializable;
  * @since 21-Jun-16
  */
 public final class RGBColor implements Serializable, ColorValue {
+  @Nonnull
+  @Exported
+  public static RGBColor fromFloatValues(float r, float g, float b) {
+    return fromFloatValues(r, g, b, 1f);
+  }
+
+  @Nonnull
+  @Exported
+  public static RGBColor fromFloatValues(float r, float g, float b, float a) {
+    return new RGBColor((int)(r * 255 + 0.5), (int)(g * 255 + 0.5), (int)(b * 255 + 0.5), a);
+  }
+
+  /**
+   * Converts a <code>String</code> to an integer and returns the
+   * specified opaque <code>Color</code>. This method handles string
+   * formats that are used to represent octal and hexadecimal numbers.
+   *
+   * @param nm a <code>String</code> that represents
+   *           an opaque color as a 24-bit integer
+   * @return the new <code>Color</code> object.
+   * @throws NumberFormatException if the specified string cannot
+   *                               be interpreted as a decimal,
+   *                               octal, or hexadecimal integer.
+   * @see java.lang.Integer#decode
+   */
+  @Nonnull
+  @Exported
+  public static RGBColor decode(@Nonnull String nm) {
+    int i = Integer.decode(nm);
+    return new RGBColor((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+  }
+
   private int myRed;
-  private int myGreed;
+  private int myGreen;
   private int myBlue;
   private float myAlpha;
 
   private RGBColor() {
   }
 
-  public RGBColor(int red, int greed, int blue) {
+  public RGBColor(int red, int green, int blue) {
     myRed = red;
-    myGreed = greed;
+    myGreen = green;
     myBlue = blue;
   }
 
-  public RGBColor(int red, int greed, int blue, float alpha) {
+  public RGBColor(int red, int green, int blue, float alpha) {
     myRed = red;
-    myGreed = greed;
+    myGreen = green;
     myBlue = blue;
     myAlpha = alpha;
+  }
+
+  public float[] getFloatValues() {
+    float[] values = new float[4];
+    values[0] = ((float)getRed()) / 255f;
+    values[1] = ((float)getGreen()) / 255f;
+    values[2] = ((float)getBlue()) / 255f;
+    values[3] = getAlpha();
+    return values;
   }
 
   @Nonnull
@@ -55,8 +97,8 @@ public final class RGBColor implements Serializable, ColorValue {
     return myRed;
   }
 
-  public int getGreed() {
-    return myGreed;
+  public int getGreen() {
+    return myGreen;
   }
 
   public int getBlue() {
@@ -75,7 +117,7 @@ public final class RGBColor implements Serializable, ColorValue {
     RGBColor rgbColor = (RGBColor)o;
 
     if (myRed != rgbColor.myRed) return false;
-    if (myGreed != rgbColor.myGreed) return false;
+    if (myGreen != rgbColor.myGreen) return false;
     if (myBlue != rgbColor.myBlue) return false;
     if (Float.compare(rgbColor.myAlpha, myAlpha) != 0) return false;
 
@@ -85,7 +127,7 @@ public final class RGBColor implements Serializable, ColorValue {
   @Override
   public int hashCode() {
     int result = myRed;
-    result = 31 * result + myGreed;
+    result = 31 * result + myGreen;
     result = 31 * result + myBlue;
     result = 31 * result + (myAlpha != +0.0f ? Float.floatToIntBits(myAlpha) : 0);
     return result;
@@ -95,7 +137,7 @@ public final class RGBColor implements Serializable, ColorValue {
   public String toString() {
     final StringBuilder sb = new StringBuilder("RGBColor{");
     sb.append("myRed=").append(myRed);
-    sb.append(", myGreed=").append(myGreed);
+    sb.append(", myGreed=").append(myGreen);
     sb.append(", myBlue=").append(myBlue);
     sb.append(", myAlpha=").append(myAlpha);
     sb.append('}');

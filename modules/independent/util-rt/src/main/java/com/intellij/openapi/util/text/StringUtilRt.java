@@ -315,5 +315,12 @@ public class StringUtilRt {
     return -1;
   }
 
-
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimStart(@Nonnull String s, @NonNls @Nonnull String prefix) {
+    if (s.startsWith(prefix)) {
+      return s.substring(prefix.length());
+    }
+    return s;
+  }
 }
