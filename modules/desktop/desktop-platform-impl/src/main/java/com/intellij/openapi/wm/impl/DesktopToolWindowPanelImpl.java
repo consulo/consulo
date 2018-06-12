@@ -39,9 +39,10 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.impl.ToolWindowPanelImplEx;
+import consulo.ui.migration.AWTComponentProviderUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -99,6 +100,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
   DesktopToolWindowPanelImpl(@Nonnull IdeFrameImpl frame, @Nonnull DesktopToolWindowManagerImpl manager) {
     myManager = manager;
+
+    AWTComponentProviderUtil.putMark(this, this);
 
     setOpaque(false);
     myFrame = frame;
@@ -321,9 +324,10 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    *
    * @param component component to be set.
    */
+  @Override
   @Nonnull
-  final FinalizableCommand createSetEditorComponentCmd(final JComponent component, @Nonnull Runnable finishCallBack) {
-    return new SetEditorComponentCmd(component, finishCallBack);
+  public FinalizableCommand createSetEditorComponentCmd(final Object component, @Nonnull Runnable finishCallBack) {
+    return new SetEditorComponentCmd((JComponent)component, finishCallBack);
   }
 
   @Override
@@ -636,6 +640,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       myMaximizedProportion = Pair.create(wnd, size);
     }
     doLayout();
+  }
+
+  @Nullable
+  @Override
+  public Component getComponent() {
+    return this;
   }
 
 

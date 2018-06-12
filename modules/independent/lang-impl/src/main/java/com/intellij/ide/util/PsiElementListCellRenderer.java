@@ -46,6 +46,7 @@ import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import javax.annotation.Nonnull;
 
@@ -255,7 +256,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
   protected abstract int getIconFlags();
 
   protected Icon getIcon(PsiElement element) {
-    return IconDescriptorUpdaters.getIcon(element, getIconFlags());
+    return TargetAWT.to(IconDescriptorUpdaters.getIcon(element, getIconFlags()));
   }
 
   public Comparator<T> getComparator() {

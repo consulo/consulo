@@ -20,11 +20,11 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -58,7 +58,7 @@ public class SandConfigurationType implements ConfigurationType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Static;
   }
 

@@ -24,6 +24,13 @@ import javax.annotation.Nonnull;
  * @since 22-Jun-16
  */
 public enum StandardColors implements ColorKey {
+  WHITE(new RGBColor(255, 255, 255)),
+  BLACK(new RGBColor(0, 0, 0)),
+
+  CYAN(new RGBColor(0, 255, 255)),
+  MAGENTA(new RGBColor(255, 0, 255)),
+  YELLOW(new RGBColor(255, 255, 0)),
+
   RED(new RGBColor(255, 0, 0)),
   GREEN(new RGBColor(0, 255, 0)),
   BLUE(new RGBColor(0, 0, 255)),

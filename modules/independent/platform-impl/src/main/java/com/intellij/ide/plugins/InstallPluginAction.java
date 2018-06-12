@@ -33,6 +33,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.ide.updateSettings.impl.PluginListDialog;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -173,14 +174,14 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   }
 
   public static boolean downloadAndInstallPlugins(@Nullable Project project,
-                                               @Nonnull final List<IdeaPluginDescriptor> toInstall,
-                                               @Nonnull final List<IdeaPluginDescriptor> allPlugins,
-                                               @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
+                                                  @Nonnull final List<IdeaPluginDescriptor> toInstall,
+                                                  @Nonnull final List<IdeaPluginDescriptor> allPlugins,
+                                                  @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
-    PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL,
-                                                                           pluginsForInstallWithDependencies.stream().map(x -> Couple.of(x, x))
-                                                                                   .collect(Collectors.toList()));
+    PlatformOrPluginUpdateResult result =
+            new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL, pluginsForInstallWithDependencies.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()),
+                                             Collections.emptyList());
     Predicate<PluginId> greenNodeStrategy = pluginId -> {
       // do not mark target node as green, only depend
       for (IdeaPluginDescriptor node : toInstall) {
@@ -190,7 +191,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       }
       return true;
     };
-    PluginListDialog dialog = new PluginListDialog(project, result, greenNodeStrategy, afterCallback);
+    PluginListDialog dialog = new PluginListDialog(project, result, greenNodeStrategy, null, afterCallback);
     if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
       dialog.doOKAction();
       return true;
@@ -227,9 +228,8 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
       int result;
       if (!disabled.isEmpty() && !disabledDependants.isEmpty()) {
-        result = Messages.showYesNoCancelDialog(XmlStringUtil.wrapInHtml(message), CommonBundle.getWarningTitle(), "Enable all",
-                                                "Enable updated plugin" + (disabled.size() > 1 ? "s" : ""), CommonBundle.getCancelButtonText(),
-                                                Messages.getQuestionIcon());
+        result = Messages.showYesNoCancelDialog(XmlStringUtil.wrapInHtml(message), CommonBundle.getWarningTitle(), "Enable all", "Enable updated plugin" + (disabled.size() > 1 ? "s" : ""),
+                                                CommonBundle.getCancelButtonText(), Messages.getQuestionIcon());
         if (result == Messages.CANCEL) return false;
       }
       else {

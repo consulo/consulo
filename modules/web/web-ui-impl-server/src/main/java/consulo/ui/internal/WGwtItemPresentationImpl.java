@@ -16,11 +16,13 @@
 package consulo.ui.internal;
 
 import consulo.ui.ItemPresentation;
-import consulo.ui.TextStyle;
+import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
 import consulo.ui.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -30,8 +32,10 @@ class WGwtItemPresentationImpl implements ItemPresentation {
   private ComboBoxState.Item myItem = new ComboBoxState.Item();
 
   @Override
-  public void setIcon(@Nonnull Image image) {
-    myItem.myImageState = WGwtImageUrlCache.fixSwingImageRef(image).getState();
+  public void setIcon(@Nullable Image image) {
+    myItem.myImageState = image == null ? null : WGwtImageUrlCache.map(image).getState();
+
+    after();
   }
 
   @Override
@@ -39,17 +43,31 @@ class WGwtItemPresentationImpl implements ItemPresentation {
     ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
     segment.myText = text;
     myItem.myItemSegments.add(segment);
+
+    after();
   }
 
   @Override
-  public void append(@Nonnull String text, @Nonnull TextStyle... styles) {
+  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
     ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
     segment.myText = text;
     //TODO [VISTALL] style!
     myItem.myItemSegments.add(segment);
+
+    after();
+  }
+
+  @Override
+  public void clearText() {
+    myItem.myItemSegments.clear();
+
+    after();
   }
 
   public ComboBoxState.Item getItem() {
     return myItem;
+  }
+
+  protected void after() {
   }
 }

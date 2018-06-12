@@ -20,19 +20,21 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.LineSeparator;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -118,10 +120,6 @@ public class FileBasedStorage extends XmlElementStorage {
       }
 
       BufferExposingByteArrayOutputStream content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
-      if (ApplicationManager.getApplication().isUnitTestMode() && StringUtil.startsWithChar(myFile.getPath(), '$')) {
-        throw new StateStorageException("It seems like some macros were not expanded for path: " + myFile.getPath());
-      }
-
       try {
         if (myStreamProvider != null && myStreamProvider.isEnabled()) {
           // stream provider always use LF separator
@@ -143,6 +141,39 @@ public class FileBasedStorage extends XmlElementStorage {
           file = null;
         }
         myCachedVirtualFile = StorageUtil.writeFile(myFile, this, file, content, isUseXmlProlog() ? myLineSeparator : null);
+      }
+    }
+
+    @Override
+    protected void doSaveAsync(@Nullable Element element) throws IOException {
+      if (myLineSeparator == null) {
+        myLineSeparator = isUseLfLineSeparatorByDefault() ? LineSeparator.LF : LineSeparator.getSystemLineSeparator();
+      }
+
+      BufferExposingByteArrayOutputStream content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
+
+      try {
+        if (myStreamProvider != null && myStreamProvider.isEnabled()) {
+          // stream provider always use LF separator
+          saveForProvider(myLineSeparator == LineSeparator.LF ? content : null, element);
+        }
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+      }
+
+      if (content == null) {
+        StorageUtil.deleteFile(myFile, this, getVirtualFile());
+        myCachedVirtualFile = null;
+      }
+      else {
+        VirtualFile file = getVirtualFile();
+        if (file == null || !file.exists()) {
+          FileUtil.createParentDirs(myFile);
+          file = null;
+        }
+
+        StorageUtil.writeFileAsync(myFile, this, file, content, isUseXmlProlog() ? myLineSeparator : null).doWhenDone((f) -> myCachedVirtualFile = f);
       }
     }
   }

@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.impl;
 
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
@@ -27,12 +26,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiTarget;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.awt.TargetAWT;
+import consulo.ide.IconDescriptorUpdaters;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -92,11 +92,11 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
 
   @Override
   public Icon getIcon() {
-    Icon icon = TypePresentationService.getInstance().getIcon(myTarget);
+    Icon icon = TargetAWT.to(TypePresentationService.getInstance().getIcon(myTarget));
     if (icon != null) return icon;
 
     if (myTarget instanceof PsiTarget) {
-      return IconDescriptorUpdaters.getIcon(((PsiTarget)myTarget).getNavigationElement(), 0);
+      return TargetAWT.to(IconDescriptorUpdaters.getIcon(((PsiTarget)myTarget).getNavigationElement(), 0));
     }
     return null;
   }

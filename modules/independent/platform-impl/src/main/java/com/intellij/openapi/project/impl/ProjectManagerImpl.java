@@ -26,7 +26,6 @@ import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
@@ -65,15 +64,17 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
+import consulo.application.ex.ApplicationEx2;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -283,8 +284,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
   }
 
+  @Nonnull
   private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed) {
-    return isDefault ? new DefaultProject(this, "", isOptimiseTestLoadSpeed) : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
+    return createProject(projectName, dirPath, isDefault, isOptimiseTestLoadSpeed, false);
+  }
+
+  @Nonnull
+  private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed, boolean noUICall) {
+    return isDefault ? new DefaultProject(this, "", isOptimiseTestLoadSpeed) : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
   }
 
   @Override
@@ -414,6 +421,81 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
           }
         }
       }, ModalityState.NON_MODAL);
+    };
+
+    ProgressIndicator indicator = myProgressManager.getProgressIndicator();
+    if (indicator != null) {
+      indicator.setText("Preparing workspace...");
+      process.run();
+      return true;
+    }
+
+    boolean ok = myProgressManager.runProcessWithProgressSynchronously(process, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
+    if (!ok) {
+      closeProject(project, false, false, true);
+      notifyProjectOpenFailed();
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean openProjectAsync(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+    if (isLight(project)) {
+      ((ProjectImpl)project).setTemporarilyDisposed(false);
+      boolean isInitialized = StartupManagerEx.getInstanceEx(project).startupActivityPassed();
+      if (isInitialized) {
+        addToOpened(project);
+        // events already fired
+        return true;
+      }
+    }
+
+    for (Project p : getOpenProjects()) {
+      if (ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
+        GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), ModalityState.NON_MODAL);
+        return false;
+      }
+    }
+
+    if (!addToOpened(project)) {
+      return false;
+    }
+
+    Runnable process = () -> {
+      uiAccess.giveAndWait(() -> fireProjectOpened(project));
+
+      final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
+      startupManager.runStartupActivities();
+
+      // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
+      // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
+      // Post-startup activities should not ever see unindexed and at the same time non-dumb state
+      uiAccess.giveAndWait(startupManager::startCacheUpdate);
+
+      startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
+
+      uiAccess.giveAndWaitIfNeed(() -> {
+        if (!project.isDisposed()) {
+          startupManager.runPostStartupActivities();
+
+          Application application = ApplicationManager.getApplication();
+          if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+            final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+            if (macroSubstitutor != null) {
+              StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
+            }
+          }
+
+          if (ApplicationManager.getApplication().isActive()) {
+            JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+            if (projectFrame != null) {
+              IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
+            }
+          }
+        }
+      }/*, ModalityState.NON_MODAL*/);
     };
 
     ProgressIndicator indicator = myProgressManager.getProgressIndicator();
@@ -573,7 +655,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     Set<StateStorage> causes = new THashSet<>(myChangedApplicationFiles);
     myChangedApplicationFiles.clear();
 
-    ReloadComponentStoreStatus status = ComponentStoreImpl.reloadStore(causes, ((ApplicationImpl)ApplicationManager.getApplication()).getStateStore());
+    ReloadComponentStoreStatus status = ComponentStoreImpl.reloadStore(causes, ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore());
     if (status == ReloadComponentStoreStatus.RESTART_AGREED) {
       ApplicationManagerEx.getApplicationEx().restart(true);
       return false;
@@ -744,6 +826,61 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
     finally {
       shutDownTracker.unregisterStopperThread(Thread.currentThread());
+    }
+
+    return true;
+  }
+
+  @Override
+  @RequiredDispatchThread
+  public boolean closeProjectAsync(@Nonnull final Project project) {
+    return closeProjectAsync(project, true, false, true);
+  }
+
+  @RequiredDispatchThread
+  public boolean closeProjectAsync(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
+    if (isLight(project)) {
+      removeFromOpened(project);
+      return true;
+    }
+    else {
+      if (!isProjectOpened(project)) return true;
+    }
+
+    if (checkCanClose && !canClose(project)) return false;
+    final ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
+    shutDownTracker.registerStopperThread(Thread.currentThread());
+
+    Ref<Boolean> beforeWrite = Ref.create(Boolean.TRUE);
+    try {
+      if (save) {
+        FileDocumentManager.getInstance().saveAllDocuments();
+        project.saveAsync();
+      }
+
+      if (checkCanClose && !ensureCouldCloseIfUnableToSave(project)) {
+        return false;
+      }
+
+      fireProjectClosing(project); // somebody can start progress here, do not wrap in write action
+
+      beforeWrite.set(Boolean.FALSE);
+
+      AccessRule.write(() -> {
+        removeFromOpened(project);
+
+        fireProjectClosed(project);
+
+        if (dispose) {
+          Disposer.dispose(project);
+        }
+      }).doWhenProcessed(() -> shutDownTracker.unregisterStopperThread(Thread.currentThread()));
+    }
+    finally {
+      // if exception throw before puting inside write thread
+      if (beforeWrite.get()) {
+        shutDownTracker.unregisterStopperThread(Thread.currentThread());
+      }
     }
 
     return true;
@@ -921,11 +1058,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
    * Opens the project at the specified path.
    */
   private void loadProjectWithProgressAsync(AsyncResult<Project> result, @Nonnull final String filePath) {
-    final ProjectImpl project = createProject(null, toCanonicalName(filePath), false, false);
+    final ProjectImpl project = createProject(null, toCanonicalName(filePath), false, false, true);
     try {
       myProgressManager.runProcessWithProgressSynchronously(() -> {
         try {
-          initProject(project, null);
+          initProjectAsync(project, null);
 
           result.setDone(project);
         }
@@ -939,6 +1076,37 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
     catch (ProcessCanceledException ignore) {
       result.reject("canceled");
+    }
+  }
+
+  private void initProjectAsync(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
+    ProgressIndicator indicator = myProgressManager.getProgressIndicator();
+    if (indicator != null && !project.isDefault()) {
+      indicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
+      indicator.setIndeterminate(true);
+    }
+
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
+
+    boolean succeed = false;
+    try {
+      if (template != null) {
+        project.getStateStore().loadProjectFromTemplate(template);
+      }
+      else {
+        project.getStateStore().load();
+      }
+      project.loadProjectComponents();
+      project.init();
+      succeed = true;
+    }
+    catch (Throwable e) {
+      e.printStackTrace();
+    }
+    finally {
+      if (!succeed && !project.isDefault()) {
+        TransactionGuard.submitTransaction(project, () -> WriteAction.run(() -> Disposer.dispose(project)));
+      }
     }
   }
 

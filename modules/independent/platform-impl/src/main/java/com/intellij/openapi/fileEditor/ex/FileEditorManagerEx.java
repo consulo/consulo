@@ -22,18 +22,18 @@ import com.intellij.openapi.fileEditor.EditorDataProvider;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.impl.EditorComposite;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.fileEditor.impl.EditorSplitters;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -48,16 +48,24 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   /**
    * @return <code>JComponent</code> which represent the place where all editors are located
    */
-  public abstract JComponent getComponent();
+  @Nonnull
+  public javax.swing.JComponent getComponent() {
+    throw new UnsupportedOperationException("Not supported at this platform");
+  }
+
+  @Nonnull
+  public Component getUIComponent() {
+    throw new UnsupportedOperationException("Not supported at this platform");
+  }
 
   /**
    * @return preferred focused component inside myEditor tabbed container.
    * This method does similar things like {@link FileEditor#getPreferredFocusedComponent()}
    * but it also tracks (and remember) focus movement inside tabbed container.
-   * @see EditorComposite#getPreferredFocusedComponent()
+   * @see com.intellij.openapi.fileEditor.impl.DesktopEditorComposite#getPreferredFocusedComponent()
    */
   @Nullable
-  public abstract JComponent getPreferredFocusedComponent();
+  public abstract javax.swing.JComponent getPreferredFocusedComponent();
 
   @Nonnull
   public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull VirtualFile file);
@@ -131,7 +139,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public abstract void closeAllFiles();
 
   @Nonnull
-  public abstract EditorSplitters getSplitters();
+  public abstract EditorsSplitters getSplitters();
 
   @Override
   @Nonnull
@@ -149,6 +157,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
 
   @Nonnull
+  @RequiredUIAccess
   public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull EditorWindow window);
 
   public abstract boolean isChanged(@Nonnull EditorComposite editor);
@@ -180,8 +189,8 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public void refreshIcons() {
     if (this instanceof FileEditorManagerImpl) {
       final FileEditorManagerImpl mgr = (FileEditorManagerImpl)this;
-      Set<EditorSplitters> splitters = mgr.getAllSplitters();
-      for (EditorSplitters each : splitters) {
+      Set<EditorsSplitters> splitters = mgr.getAllSplitters();
+      for (EditorsSplitters each : splitters) {
         for (VirtualFile file : mgr.getOpenFiles()) {
           each.updateFileIcon(file);
         }
@@ -189,7 +198,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
     }
   }
 
-  public abstract EditorSplitters getSplittersFor(Component c);
+  public abstract EditorsSplitters getSplittersFor(java.awt.Component c);
 
   @Nonnull
   public abstract ActionCallback notifyPublisher(@Nonnull Runnable runnable);

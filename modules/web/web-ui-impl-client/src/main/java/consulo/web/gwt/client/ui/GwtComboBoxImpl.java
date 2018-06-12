@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.ui.advancedGwt.ComboBoxDataModel2;
 import consulo.web.gwt.client.ui.advancedGwt.WidgetComboBox;
+import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 import org.gwt.advanced.client.util.ThemeHelper;
 
@@ -41,7 +42,7 @@ public class GwtComboBoxImpl extends WidgetComboBox {
    * <p>
    * Contains null item too, that why - get component by index, need +1
    */
-  private List<Widget> myItemsWithNullItem = new ArrayList<>();
+  private List<ComboBoxState.Item> myItemsWithNullItem = new ArrayList<>();
 
   public GwtComboBoxImpl() {
     setLazyRenderingEnabled(false);
@@ -49,11 +50,11 @@ public class GwtComboBoxImpl extends WidgetComboBox {
       @Override
       public Widget createWidget(Object value) {
         int index = value == null ? 0 : ((Integer)value + 1);
-        final Widget child = myItemsWithNullItem.isEmpty() ? null : myItemsWithNullItem.get(index);
-        if (child == null) {
+        final ComboBoxState.Item item = myItemsWithNullItem.isEmpty() ? null : myItemsWithNullItem.get(index);
+        if (item == null) {
           return new Label(""); // empty item when no items
         }
-        return child;
+        return GwtComboBoxImplConnector.buildItem(item);
       }
 
       @Override
@@ -63,7 +64,7 @@ public class GwtComboBoxImpl extends WidgetComboBox {
     });
   }
 
-  public void setItems(int selectedIndex, List<Widget> widgets) {
+  public void setItems(int selectedIndex, List<ComboBoxState.Item> widgets) {
     myItemsWithNullItem.clear();
     myItemsWithNullItem.addAll(widgets);
 

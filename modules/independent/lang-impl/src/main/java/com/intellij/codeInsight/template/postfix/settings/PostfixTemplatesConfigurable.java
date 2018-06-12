@@ -21,53 +21,66 @@ import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.codeInsight.template.postfix.templates.LanguagePostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import com.intellij.lang.LanguageExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
-import org.jetbrains.annotations.Nls;
+import consulo.options.SimpleConfigurable;
+import consulo.ui.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.Abstract
-        implements Configurable.Composite, SearchableConfigurable, Configurable.NoScroll {
-  private PostfixTemplatesSettings myTemplatesSettings;
-  private JComponent myPanel;
-  private JBCheckBox myCompletionEnabledCheckbox;
-  private JBCheckBox myPostfixTemplatesEnabled;
-  private ComboBox myShortcutComboBox;
+public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemplatesConfigurable.Layout> implements Configurable.Composite, SearchableConfigurable {
+  protected static class Layout implements NotNullComputable<consulo.ui.Component> {
+    private final CheckBox myPostfixTemplatesEnabled;
+    private final CheckBox myCompletionEnabledCheckbox;
+    private final ComboBox<Character> myShortcutComboBox;
+    private final VerticalLayout myLayout;
 
-  private static final String SPACE = CodeInsightBundle.message("template.shortcut.space");
-  private static final String TAB = CodeInsightBundle.message("template.shortcut.tab");
-  private static final String ENTER = CodeInsightBundle.message("template.shortcut.enter");
+    @RequiredUIAccess
+    public Layout() {
+      myLayout = VerticalLayout.create();
 
-  @SuppressWarnings("unchecked")
-  public PostfixTemplatesConfigurable() {
-    myTemplatesSettings = PostfixTemplatesSettings.getInstance();
-    myPostfixTemplatesEnabled.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        updateComponents();
-      }
-    });
-    myShortcutComboBox.addItem(TAB);
-    myShortcutComboBox.addItem(SPACE);
-    myShortcutComboBox.addItem(ENTER);
+      myPostfixTemplatesEnabled = CheckBox.create("&Enable postfix templates");
+      myLayout.add(myPostfixTemplatesEnabled);
+
+      myCompletionEnabledCheckbox = CheckBox.create("&Show postfix templates in completion autopopup");
+      myLayout.add(myCompletionEnabledCheckbox);
+
+      consulo.ui.ComboBox.Builder<Character> builder = consulo.ui.ComboBox.<Character>builder();
+      builder.add(TemplateSettings.SPACE_CHAR, CodeInsightBundle.message("template.shortcut.space"));
+      builder.add(TemplateSettings.ENTER_CHAR, CodeInsightBundle.message("template.shortcut.enter"));
+      builder.add(TemplateSettings.TAB_CHAR, CodeInsightBundle.message("template.shortcut.tab"));
+      myShortcutComboBox = builder.build();
+
+      myLayout.add(LabeledComponents.left("Expand templates with", myShortcutComboBox));
+
+      myPostfixTemplatesEnabled.addValueListener(event -> updateComponents());
+    }
+
+    @RequiredUIAccess
+    private void updateComponents() {
+      boolean pluginEnabled = myPostfixTemplatesEnabled.getValue();
+      myCompletionEnabledCheckbox.setVisible(!LiveTemplateCompletionContributor.shouldShowAllTemplates());
+      myCompletionEnabledCheckbox.setEnabled(pluginEnabled);
+      myShortcutComboBox.setEnabled(pluginEnabled);
+    }
+
+    @Nonnull
+    @Override
+    public Component compute() {
+      return myLayout;
+    }
   }
+
+  private Configurable[] myChildren;
 
   @Nonnull
   @Override
@@ -81,98 +94,67 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     return getId();
   }
 
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return null;
-  }
-
-  @RequiredDispatchThread
-  @Nonnull
-  @Override
-  public JComponent createComponent() {
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(myPanel, BorderLayout.NORTH);
-    return panel;
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void apply() throws ConfigurationException {
-    myTemplatesSettings.setPostfixTemplatesEnabled(myPostfixTemplatesEnabled.isSelected());
-    myTemplatesSettings.setTemplatesCompletionEnabled(myCompletionEnabledCheckbox.isSelected());
-    myTemplatesSettings.setShortcut(stringToShortcut((String)myShortcutComboBox.getSelectedItem()));
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void reset() {
-    myPostfixTemplatesEnabled.setSelected(myTemplatesSettings.isPostfixTemplatesEnabled());
-    myCompletionEnabledCheckbox.setSelected(myTemplatesSettings.isTemplatesCompletionEnabled());
-    myShortcutComboBox.setSelectedItem(shortcutToString((char)myTemplatesSettings.getShortcut()));
-    updateComponents();
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public boolean isModified() {
-    return myPostfixTemplatesEnabled.isSelected() != myTemplatesSettings.isPostfixTemplatesEnabled() ||
-           myCompletionEnabledCheckbox.isSelected() != myTemplatesSettings.isTemplatesCompletionEnabled() ||
-           stringToShortcut((String)myShortcutComboBox.getSelectedItem()) != myTemplatesSettings.getShortcut();
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void disposeUIResources() {
-  }
-
-  @Nullable
-  @Override
-  public Runnable enableSearch(String s) {
-    return null;
-  }
-
-  @Override
   protected Configurable[] buildConfigurables() {
-    LanguageExtensionPoint[] extensions = new ExtensionPointName<LanguageExtensionPoint>(LanguagePostfixTemplate.EP_NAME).getExtensions();
-    List<Configurable> list = new ArrayList<Configurable>(extensions.length);
+    LanguageExtensionPoint[] extensions = LanguagePostfixTemplate.EP_NAME.getExtensions();
+    List<Configurable> list = new ArrayList<>(extensions.length);
     for (LanguageExtensionPoint extensionPoint : extensions) {
       list.add(new PostfixTemplatesChildConfigurable(extensionPoint));
     }
-    Collections.sort(list, new Comparator<Configurable>() {
-      @Override
-      public int compare(Configurable o1, Configurable o2) {
-        return StringUtil.compare(o1.getDisplayName(), o2.getDisplayName(), true);
-      }
-    });
+    Collections.sort(list, (o1, o2) -> StringUtil.compare(o1.getDisplayName(), o2.getDisplayName(), true));
     return list.toArray(new Configurable[list.size()]);
   }
 
-  private void updateComponents() {
-    boolean pluginEnabled = myPostfixTemplatesEnabled.isSelected();
-    myCompletionEnabledCheckbox.setVisible(!LiveTemplateCompletionContributor.shouldShowAllTemplates());
-    myCompletionEnabledCheckbox.setEnabled(pluginEnabled);
-    myShortcutComboBox.setEnabled(pluginEnabled);
+  @Nonnull
+  @Override
+  public Configurable[] getConfigurables() {
+    if (myChildren == null) {
+      myChildren = buildConfigurables();
+    }
+    return myChildren;
   }
 
-  private static char stringToShortcut(@Nonnull String string) {
-    if (SPACE.equals(string)) {
-      return TemplateSettings.SPACE_CHAR;
-    }
-    else if (ENTER.equals(string)) {
-      return TemplateSettings.ENTER_CHAR;
-    }
-    return TemplateSettings.TAB_CHAR;
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  protected Layout createPanel() {
+    return new Layout();
   }
 
-  private static String shortcutToString(char shortcut) {
-    if (shortcut == TemplateSettings.SPACE_CHAR) {
-      return SPACE;
-    }
-    if (shortcut == TemplateSettings.ENTER_CHAR) {
-      return ENTER;
-    }
-    return TAB;
+  @RequiredUIAccess
+  @Override
+  protected boolean isModified(@Nonnull Layout component) {
+    PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
+    return component.myPostfixTemplatesEnabled.getValue() != templatesSettings.isPostfixTemplatesEnabled() ||
+           component.myCompletionEnabledCheckbox.getValue() != templatesSettings.isTemplatesCompletionEnabled() ||
+           component.myShortcutComboBox.getValue() != templatesSettings.getShortcut();
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void apply(@Nonnull Layout component) throws ConfigurationException {
+    PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
+
+    templatesSettings.setPostfixTemplatesEnabled(component.myPostfixTemplatesEnabled.getValue());
+    templatesSettings.setTemplatesCompletionEnabled(component.myCompletionEnabledCheckbox.getValue());
+    templatesSettings.setShortcut(component.myShortcutComboBox.getValue());
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void reset(@Nonnull Layout component) {
+    PostfixTemplatesSettings templatesSettings = PostfixTemplatesSettings.getInstance();
+
+    component.myPostfixTemplatesEnabled.setValue(templatesSettings.isPostfixTemplatesEnabled());
+    component.myCompletionEnabledCheckbox.setValue(templatesSettings.isTemplatesCompletionEnabled());
+    component.myShortcutComboBox.setValue((char)templatesSettings.getShortcut());
+  }
+
+  @RequiredDispatchThread
+  @Override
+  protected void disposeUIResources(@Nonnull Layout component) {
+    super.disposeUIResources(component);
+
+    myChildren = null;
   }
 
   @Nullable
@@ -180,7 +162,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     for (Configurable configurable : getConfigurables()) {
       PostfixTemplatesChildConfigurable childConfigurable = (PostfixTemplatesChildConfigurable)configurable;
 
-      if(childConfigurable.getPostfixTemplateProvider() == postfixTemplateProvider) {
+      if (childConfigurable.getPostfixTemplateProvider() == postfixTemplateProvider) {
         return childConfigurable;
       }
     }

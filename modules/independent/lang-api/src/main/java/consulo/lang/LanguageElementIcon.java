@@ -20,14 +20,13 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
  * @since 12:27/08.10.13
  */
-public class LanguageElementIcon extends CustomLoadingExtensionPointBean implements KeyedLazyInstance<Icon> {
+public class LanguageElementIcon extends CustomLoadingExtensionPointBean implements KeyedLazyInstance<Image> {
 
   // these must be public for scrambling compatibility
   @Attribute("language")
@@ -36,13 +35,7 @@ public class LanguageElementIcon extends CustomLoadingExtensionPointBean impleme
   @Attribute("file")
   public String file;
 
-  private NullableLazyValue<Icon> myIconValue = new NullableLazyValue<Icon>() {
-    @javax.annotation.Nullable
-    @Override
-    protected Icon compute() {
-      return IconLoader.findIcon(file, getLoaderForClass());
-    }
-  };
+  private NullableLazyValue<Image> myIconValue = NullableLazyValue.<Image>of(() -> IconLoader.findIcon(file, getLoaderForClass()));
 
   @Override
   public String getKey() {
@@ -50,7 +43,7 @@ public class LanguageElementIcon extends CustomLoadingExtensionPointBean impleme
   }
 
   @Override
-  public Icon getInstance() {
+  public Image getInstance() {
     return myIconValue.getValue();
   }
 }

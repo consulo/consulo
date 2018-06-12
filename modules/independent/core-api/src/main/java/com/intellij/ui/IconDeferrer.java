@@ -22,9 +22,9 @@ package com.intellij.ui;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public abstract class IconDeferrer {
   @Nonnull
@@ -32,11 +32,11 @@ public abstract class IconDeferrer {
     return ServiceManager.getService(IconDeferrer.class);
   }
 
-  public abstract <T> Icon defer(Icon base, T param, @Nonnull Function<T, Icon> f);
+  public abstract <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f);
 
-  public abstract <T> Icon deferAutoUpdatable(Icon base, T param, @Nonnull Function<T, Icon> f);
+  public abstract <T> Image deferAutoUpdatable(Image base, T param, @Nonnull Function<T, Image> f);
 
-  public boolean equalIcons(Icon icon1, Icon icon2) {
+  public boolean equalIcons(Image icon1, Image icon2) {
     return Comparing.equal(icon1, icon2);
   }
 }

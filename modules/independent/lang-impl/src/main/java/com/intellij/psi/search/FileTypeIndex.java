@@ -88,7 +88,7 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
     FileType[] types = myFileTypeManager.getRegisteredFileTypes();
     int version = 1;
     for (FileType type : types) {
-      version += type.getName().hashCode();
+      version += type.getId().hashCode();
     }
 
     version *= 31;

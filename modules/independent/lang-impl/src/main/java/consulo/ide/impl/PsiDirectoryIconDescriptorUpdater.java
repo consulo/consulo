@@ -31,10 +31,10 @@ import consulo.ide.IconDescriptorUpdater;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -49,7 +49,7 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
       VirtualFile virtualFile = psiDirectory.getVirtualFile();
       Project project = psiDirectory.getProject();
 
-      Icon symbolIcon = null;
+      Image symbolIcon = null;
       if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
         if (virtualFile.getParent() == null) {
           symbolIcon = AllIcons.Nodes.PpJar;

@@ -17,9 +17,10 @@ package consulo.ui.internal;
 
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
-import consulo.ui.MenuItem;
+import consulo.ui.MenuSeparator;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuItem, VaadinWrapper {
+public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuSeparator, VaadinWrapper {
   public WGwtMenuSeparatorImpl() {
   }
 

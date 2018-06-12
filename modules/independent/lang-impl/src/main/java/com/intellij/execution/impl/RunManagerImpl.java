@@ -39,6 +39,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakHashMap;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -69,7 +71,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   @Nullable
   private String mySelectedConfigurationId = null;
 
-  private final Map<String, Icon> myIdToIcon = new HashMap<>();
+  private final Map<String, Image> myIdToIcon = new HashMap<>();
   private final Map<String, Long> myIconCheckTimes = new HashMap<>();
   private final Map<String, Long> myIconCalcTime = Collections.synchronizedMap(new HashMap<String, Long>());
 
@@ -1068,7 +1070,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         myIdToIcon.remove(uniqueID);//cache has expired
       }
     }
-    Icon icon = myIdToIcon.get(uniqueID);
+    Image icon = myIdToIcon.get(uniqueID);
     if (icon == null) {
       icon = IconDeferrer.getInstance().deferAutoUpdatable(settings.getConfiguration().getIcon(), myProject.hashCode() ^ settings.hashCode(), param -> {
         if (myProject.isDisposed()) return null;
@@ -1076,7 +1078,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         myIconCalcTime.remove(uniqueID);
         long startTime = System.currentTimeMillis();
 
-        Icon ico;
+        Image ico;
         try {
           DumbService.getInstance(myProject).setAlternativeResolveEnabled(true);
           settings.checkSettings();
@@ -1099,7 +1101,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       myIconCheckTimes.put(uniqueID, System.currentTimeMillis());
     }
 
-    return icon;
+    return TargetAWT.to(icon);
   }
 
   public RunnerAndConfigurationSettings getConfigurationById(@Nonnull final String id) {

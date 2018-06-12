@@ -24,10 +24,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -51,6 +51,8 @@ public abstract class ProjectManagerEx extends ProjectManager {
   }
 
   public abstract boolean openProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+
+  public abstract boolean openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   public abstract boolean isProjectOpened(Project project);
 

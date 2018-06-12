@@ -21,10 +21,12 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,12 +68,12 @@ public abstract class SdkType implements SdkTypeId {
 
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public String getVersionString(Sdk sdk) {
     return getVersionString(sdk.getHomePath());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract String getVersionString(String sdkHome);
 
   public abstract String suggestSdkName(String currentSdkName, String sdkHome);
@@ -82,7 +84,7 @@ public abstract class SdkType implements SdkTypeId {
   /**
    * @return Configurable object for the sdk's additional data or null if not applicable
    */
-  @javax.annotation.Nullable
+  @Nullable
   public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
     return null;
   }
@@ -93,7 +95,7 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
     return null;
   }
@@ -106,11 +108,11 @@ public abstract class SdkType implements SdkTypeId {
   @Nonnull
   public abstract String getPresentableName();
 
-  @javax.annotation.Nullable
-  public abstract Icon getIcon();
+  @Nullable
+  public abstract Image getIcon();
 
-  @javax.annotation.Nullable
-  public Icon getGroupIcon() {
+  @Nullable
+  public Image getGroupIcon() {
     return getIcon();
   }
 
@@ -163,7 +165,7 @@ public abstract class SdkType implements SdkTypeId {
     return descriptor;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getDefaultDocumentationUrl(final @Nonnull Sdk sdk) {
     return null;
   }

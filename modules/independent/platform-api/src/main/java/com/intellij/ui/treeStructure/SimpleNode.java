@@ -26,9 +26,10 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -96,7 +97,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
 
     Color oldColor = myColor;
     String oldName = myName;
-    Icon oldIcon = getIcon();
+    consulo.ui.image.Image oldIcon = getIcon();
     List<ColoredFragment> oldFragments = new ArrayList<ColoredFragment>(presentation.getColoredText());
 
     myColor = UIUtil.getTreeTextForeground();
@@ -111,7 +112,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
                                              new Object[]{oldIcon, oldName, oldFragments, oldColor}));
 
     presentation.setForcedTextForeground(myColor);
-    presentation.setIcon(getIcon());
+    presentation.setIcon(TargetAWT.to(getIcon()));
   }
 
   protected void updateFileStatus() {
@@ -244,6 +245,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
    * @deprecated use {@link #getTemplatePresentation()} to set constant presentation right in node's constructor
    * or update presentation dynamically by defining {@link #update(com.intellij.ide.projectView.PresentationData)}
    */
+  @Deprecated
   public void setUniformIcon(Icon aIcon) {
     setIcon(aIcon);
   }

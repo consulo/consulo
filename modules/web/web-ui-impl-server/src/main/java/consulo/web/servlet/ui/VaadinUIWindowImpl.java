@@ -15,17 +15,21 @@
  */
 package consulo.web.servlet.ui;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
-import consulo.ui.*;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
 import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
+import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -99,13 +103,13 @@ class VaadinUIWindowImpl implements Window {
 
   @Nonnull
   @Override
-  public <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
+  public <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
     throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
     throw new UnsupportedOperationException();
   }
 
@@ -117,7 +121,7 @@ class VaadinUIWindowImpl implements Window {
 
   @Nonnull
   @Override
-  public <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
+  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
     throw new UnsupportedOperationException();
   }
 

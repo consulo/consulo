@@ -21,7 +21,7 @@ import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.LayeredIcon;
+import consulo.ui.image.ImageEffects;
 
 public class CompoundRunConfigurationType extends ConfigurationTypeBase {
 
@@ -30,10 +30,7 @@ public class CompoundRunConfigurationType extends ConfigurationTypeBase {
   }
 
   public CompoundRunConfigurationType() {
-    super("CompoundRunConfigurationType",
-          "Compound",
-          "It runs batch of run configurations at once",
-          LayeredIcon.create(AllIcons.Nodes.Folder, AllIcons.Nodes.RunnableMark));
+    super("CompoundRunConfigurationType", "Compound", "It runs batch of run configurations at once", ImageEffects.layered(AllIcons.Nodes.Folder, AllIcons.Nodes.RunnableMark));
     addFactory(new ConfigurationFactory(this) {
       @Override
       public RunConfiguration createTemplateConfiguration(Project project) {

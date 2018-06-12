@@ -48,9 +48,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
+import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
+import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
@@ -75,15 +74,15 @@ import com.intellij.util.*;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
+import consulo.fileEditor.impl.text.TextEditorProvider;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -350,9 +349,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
     Map<FileEditor, HighlightingPass[]> map = new HashMap<>();
     for (TextEditor textEditor : textEditors) {
-      if (textEditor instanceof TextEditorImpl) {
+      if (textEditor instanceof DesktopTextEditorImpl) {
         try {
-          ((TextEditorImpl)textEditor).waitForLoaded(10, TimeUnit.SECONDS);
+          ((DesktopTextEditorImpl)textEditor).waitForLoaded(10, TimeUnit.SECONDS);
         }
         catch (TimeoutException e) {
           throw new RuntimeException(textEditor + " has not completed loading in 10 seconds");
@@ -361,7 +360,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       TextEditorBackgroundHighlighter highlighter = (TextEditorBackgroundHighlighter)textEditor.getBackgroundHighlighter();
       if (highlighter == null) {
         Editor editor = textEditor.getEditor();
-        throw new RuntimeException("Null highlighter from " + textEditor + "; loaded: " + AsyncEditorLoader.isEditorLoaded(editor));
+        throw new RuntimeException("Null highlighter from " + textEditor + "; loaded: " + DesktopAsyncEditorLoader.isEditorLoaded(editor));
       }
       final List<TextEditorHighlightingPass> passes = highlighter.getPasses(toIgnore);
       HighlightingPass[] array = passes.toArray(new HighlightingPass[passes.size()]);

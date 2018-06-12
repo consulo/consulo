@@ -36,7 +36,7 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
@@ -512,7 +512,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     initOneLineMode(editor);
 
     if (myIsRendererWithSelection) {
-      ((EditorImpl)editor).setPaintSelection(true);
+      ((DesktopEditorImpl)editor).setPaintSelection(true);
       editor.getColorsScheme().setColor(EditorColors.SELECTION_BACKGROUND_COLOR, myRendererBg);
       editor.getColorsScheme().setColor(EditorColors.SELECTION_FOREGROUND_COLOR, myRendererFg);
       editor.getSelectionModel().setSelection(0, myDocument.getTextLength());
@@ -559,7 +559,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
   private void setupEditorFont(final EditorEx editor) {
     if (myInheritSwingFont) {
-      ((EditorImpl)editor).setUseEditorAntialiasing(false);
+      ((DesktopEditorImpl)editor).setUseEditorAntialiasing(false);
       editor.getColorsScheme().setEditorFontName(getFont().getFontName());
       editor.getColorsScheme().setEditorFontSize(getFont().getSize());
       return;

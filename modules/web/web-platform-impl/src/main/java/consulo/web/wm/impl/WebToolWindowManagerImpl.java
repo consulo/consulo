@@ -19,6 +19,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
@@ -39,12 +40,12 @@ import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.ui.ex.WGwtToolWindowStripeButton;
 import consulo.ui.internal.WGwtRootPanelImpl;
-import consulo.web.application.WebApplication;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -81,17 +82,15 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private void projectOpened() {
-    WebApplication.invokeOnCurrentSession(() -> {
-      myFrame = myWindowManager.allocateFrame(myProject);
+    myFrame = myWindowManager.allocateFrame(myProject);
 
-      WGwtToolWindowPanel toolWindowPanel = new WGwtToolWindowPanel();
+    WGwtToolWindowPanel toolWindowPanel = new WGwtToolWindowPanel();
 
-      myToolWindowPanel = toolWindowPanel;
+    myToolWindowPanel = toolWindowPanel;
 
-      WGwtRootPanelImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
+    WGwtRootPanelImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
 
-      rootPanel.setCenterComponent(toolWindowPanel);
-    });
+    rootPanel.setCenterComponent(toolWindowPanel);
   }
 
   private void projectClosed() {
@@ -101,9 +100,26 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
+  protected void initAll(List<FinalizableCommand> commandsList) {
+    appendUpdateToolWindowsPaneCmd(commandsList);
+
+    Component editorComponent = getEditorComponent(myProject);
+    //myEditorComponentFocusWatcher.install(editorComponent);
+
+    appendSetEditorComponentCmd(editorComponent, commandsList);
+    //if (myEditorWasActive && editorComponent instanceof DesktopEditorsSplitters) {
+    //  activateEditorComponentImpl(commandsList, true);
+    //}
+  }
+
+  private Component getEditorComponent(Project project) {
+    return FileEditorManagerEx.getInstanceEx(project).getUIComponent();
+  }
+
+  @Override
   @Nonnull
   @RequiredUIAccess
-  protected consulo.ui.Component createInitializingLabel() {
+  protected Component createInitializingLabel() {
     Label label = Label.create("Initializing...");
     DockLayout dock = DockLayout.create();
     dock.center(label);
@@ -191,7 +207,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     return false;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Element getState() {
     return new Element("state");
@@ -218,7 +234,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Balloon getToolWindowBalloon(String id) {
     return null;

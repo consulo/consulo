@@ -24,11 +24,11 @@ import com.intellij.openapi.externalSystem.model.execution.ExternalTaskPojo;
 import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.ui.image.Image;
 import gnu.trove.TObjectIntHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -71,7 +71,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
   private final ProjectSystemId myExternalSystemId;
 
   public ExternalSystemTasksTreeModel(@Nonnull ProjectSystemId externalSystemId) {
-    super(new ExternalSystemNode<String>(new ExternalSystemNodeDescriptor<String>("", "", "", null)));
+    super(new ExternalSystemNode<>(new ExternalSystemNodeDescriptor<>("", "", "", null)));
     myExternalSystemId = externalSystemId;
     myUiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
   }
@@ -109,7 +109,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
     ExternalProjectPojo element = new ExternalProjectPojo(project.getName(), project.getPath());
     ExternalSystemNodeDescriptor<ExternalProjectPojo> descriptor = descriptor(element, myUiAware.getProjectIcon());
-    ExternalSystemNode<ExternalProjectPojo> result = new ExternalSystemNode<ExternalProjectPojo>(descriptor);
+    ExternalSystemNode<ExternalProjectPojo> result = new ExternalSystemNode<>(descriptor);
     insertNodeInto(result, root);
     return result;
   }
@@ -120,7 +120,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
    * @param payload target payload
    */
   public void pruneNodes(@Nonnull Object payload) {
-    Deque<ExternalSystemNode<?>> toProcess = new ArrayDeque<ExternalSystemNode<?>>();
+    Deque<ExternalSystemNode<?>> toProcess = new ArrayDeque<>();
     toProcess.addFirst(getRoot());
     while (!toProcess.isEmpty()) {
       ExternalSystemNode<?> node = toProcess.removeLast();
@@ -135,8 +135,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   }
 
-  public void ensureSubProjectsStructure(@Nonnull ExternalProjectPojo topLevelProject,
-                                         @Nonnull Collection<ExternalProjectPojo> subProjects) {
+  public void ensureSubProjectsStructure(@Nonnull ExternalProjectPojo topLevelProject, @Nonnull Collection<ExternalProjectPojo> subProjects) {
     ExternalSystemNode<ExternalProjectPojo> topLevelProjectNode = ensureProjectNodeExists(topLevelProject);
     Map<String/*config path*/, ExternalProjectPojo> toAdd = ContainerUtilRt.newHashMap();
     for (ExternalProjectPojo subProject : subProjects) {
@@ -144,7 +143,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
     toAdd.remove(topLevelProject.getPath());
 
-    final TObjectIntHashMap<Object> taskWeights = new TObjectIntHashMap<Object>();
+    final TObjectIntHashMap<Object> taskWeights = new TObjectIntHashMap<>();
     for (int i = 0; i < topLevelProjectNode.getChildCount(); i++) {
       ExternalSystemNode<?> child = topLevelProjectNode.getChildAt(i);
       Object childElement = child.getDescriptor().getElement();
@@ -160,10 +159,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
     if (!toAdd.isEmpty()) {
       for (Map.Entry<String, ExternalProjectPojo> entry : toAdd.entrySet()) {
-        ExternalProjectPojo
-          element = new ExternalProjectPojo(entry.getValue().getName(), entry.getValue().getPath());
-        insertNodeInto(new ExternalSystemNode<ExternalProjectPojo>(descriptor(element, myUiAware.getProjectIcon())),
-                       topLevelProjectNode);
+        ExternalProjectPojo element = new ExternalProjectPojo(entry.getValue().getName(), entry.getValue().getPath());
+        insertNodeInto(new ExternalSystemNode<>(descriptor(element, myUiAware.getProjectIcon())), topLevelProjectNode);
       }
     }
   }
@@ -198,9 +195,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
 
     if (!toAdd.isEmpty()) {
       for (ExternalTaskExecutionInfo taskInfo : toAdd) {
-        insertNodeInto(
-          new ExternalSystemNode<ExternalTaskExecutionInfo>(descriptor(taskInfo, taskInfo.getDescription(), myUiAware.getTaskIcon())),
-          moduleNode);
+        insertNodeInto(new ExternalSystemNode<>(descriptor(taskInfo, taskInfo.getDescription(), myUiAware.getTaskIcon())), moduleNode);
       }
     }
   }
@@ -227,8 +222,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
       for (int j = child.getChildCount() - 1; j >= 0; j--) {
         ExternalSystemNode<?> grandChild = child.getChildAt(j);
         Object grandChildElement = grandChild.getDescriptor().getElement();
-        if (grandChildElement instanceof ExternalProjectPojo
-            && ((ExternalProjectPojo)grandChildElement).getPath().equals(configPath)) {
+        if (grandChildElement instanceof ExternalProjectPojo && ((ExternalProjectPojo)grandChildElement).getPath().equals(configPath)) {
           return (ExternalSystemNode<ExternalProjectPojo>)grandChild;
         }
       }
@@ -237,13 +231,13 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
   }
 
   @Nonnull
-  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nullable Icon icon) {
+  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nullable Image icon) {
     return descriptor(element, "", icon);
   }
 
   @Nonnull
-  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nonnull String description, @javax.annotation.Nullable Icon icon) {
-    return new ExternalSystemNodeDescriptor<T>(element, element.toString(), description, icon);
+  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nonnull String description, @Nullable Image icon) {
+    return new ExternalSystemNodeDescriptor<>(element, element.toString(), description, icon);
   }
 
   @Nonnull

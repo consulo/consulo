@@ -28,6 +28,8 @@ import java.util.List;
  */
 public class GwtWrappedLayout extends SimplePanel {
   public void build(@Nonnull List<Widget> widgets) {
+    GwtUIUtil.fill(this);
+    
     if(widgets.isEmpty()) {
       setWidget(null);
     }

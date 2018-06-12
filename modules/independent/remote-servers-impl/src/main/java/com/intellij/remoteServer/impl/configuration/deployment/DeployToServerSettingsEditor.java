@@ -33,6 +33,8 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable;
 import com.intellij.ui.*;
 import com.intellij.util.ui.FormBuilder;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -80,7 +82,7 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
         if (value == null) return;
         RemoteServer<S> server = RemoteServersManager.getInstance().findByName(value, type);
         SimpleTextAttributes attributes = server == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES;
-        setIcon(server != null ? server.getType().getIcon() : null);
+        setIcon(server != null ? TargetAWT.to(server.getType().getIcon()) : null);
         append(value, attributes);
       }
     });

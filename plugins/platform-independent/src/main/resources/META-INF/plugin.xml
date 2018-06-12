@@ -1211,8 +1211,6 @@
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
                         serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"
                         serviceImplementationForCompilerServer="com.intellij.openapi.progress.impl.CoreProgressManager"/>
-    <applicationService serviceInterface="com.intellij.openapi.application.TransactionGuard"
-                        serviceImplementation="com.intellij.openapi.application.TransactionGuardImpl"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
 
@@ -1244,9 +1242,6 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
-                        serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"
-                        serviceImplementationForCompilerServer="consulo.compiler.server.fileSystem.CompilerServerRefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory"
                         serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>
@@ -1412,9 +1407,6 @@
 
     <applicationService serviceInterface="com.intellij.psi.search.scope.packageSet.PackageSetFactory"
                         serviceImplementation="com.intellij.psi.search.scope.packageSet.PackageSetFactoryImpl"/>
-
-    <applicationService serviceInterface="com.intellij.ui.ColorChooserService"
-                        serviceImplementation="com.intellij.ui.ColorChooserServiceImpl"/>
 
     <scopeParserExtension implementation="com.intellij.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
     <applicationService serviceInterface="com.intellij.openapi.ui.popup.StackingPopupDispatcher"
@@ -1778,9 +1770,6 @@
 
     <applicationService serviceInterface="com.intellij.usageView.UsageTreeColorsScheme"
                         serviceImplementation="com.intellij.usageView.UsageTreeColorsScheme"/>
-
-    <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
-                        serviceImplementation="com.intellij.ui.IconDeferrerImpl"/>
 
     <applicationService serviceInterface="com.intellij.ui.mac.MacMessages"
                         serviceImplementation="com.intellij.ui.mac.MacMessagesImpl"/>

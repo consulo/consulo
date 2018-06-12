@@ -27,9 +27,8 @@ import consulo.ui.Window;
 import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Rectangle2D;
 import consulo.web.application.WebApplication;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -57,7 +56,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     ((com.vaadin.ui.Window)myWindow).addCloseListener(closeEvent -> {
       myWindow.close();
 
-      SwingUtilities.invokeLater(() -> ProjectManager.getInstance().closeProject(myProject));
+      ProjectManager.getInstance().closeProjectAsync(myProject);
     });
 
     myWindow.setContent(myRootView.getComponent());

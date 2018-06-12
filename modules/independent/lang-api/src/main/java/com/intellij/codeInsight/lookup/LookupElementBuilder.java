@@ -23,12 +23,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.migration.SwingImageRef;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
@@ -45,9 +47,12 @@ public final class LookupElementBuilder extends LookupElement {
   @Nonnull
   private final Object myObject;
   private final boolean myCaseSensitive;
-  @Nullable private final InsertHandler<LookupElement> myInsertHandler;
-  @Nullable private final LookupElementRenderer<LookupElement> myRenderer;
-  @Nullable private final LookupElementPresentation myHardcodedPresentation;
+  @Nullable
+  private final InsertHandler<LookupElement> myInsertHandler;
+  @Nullable
+  private final LookupElementRenderer<LookupElement> myRenderer;
+  @Nullable
+  private final LookupElementPresentation myHardcodedPresentation;
   @Nonnull
   private final Set<String> myAllLookupStrings;
 
@@ -142,6 +147,17 @@ public final class LookupElementBuilder extends LookupElement {
     return withIcon(icon);
   }
 
+  @Deprecated
+  @Contract(value = "", pure = true)
+  public LookupElementBuilder withIcon(@Nullable SwingImageRef icon) {
+    return withIcon((Icon)icon);
+  }
+
+  @Contract(value = "", pure = true)
+  public LookupElementBuilder withIcon(@Nullable consulo.ui.image.Image icon) {
+    return withIcon(TargetAWT.to(icon));
+  }
+
   @Contract(value = "", pure = true)
   public LookupElementBuilder withIcon(@Nullable Icon icon) {
     final LookupElementPresentation presentation = copyPresentation();
@@ -173,8 +189,7 @@ public final class LookupElementBuilder extends LookupElement {
   public LookupElementBuilder withLookupString(@Nonnull String another) {
     final THashSet<String> set = new THashSet<>(myAllLookupStrings);
     set.add(another);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, myRenderer, myHardcodedPresentation, Collections.unmodifiableSet(set),
-                                    myCaseSensitive);
+    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, myRenderer, myHardcodedPresentation, Collections.unmodifiableSet(set), myCaseSensitive);
   }
 
   @Override

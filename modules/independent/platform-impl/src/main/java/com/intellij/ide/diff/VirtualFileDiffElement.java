@@ -124,7 +124,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
 
   @Override
   public Icon getIcon() {
-    return isContainer() ? PlatformIcons.FOLDER_ICON : VirtualFilePresentation.getIcon(myFile);
+    return isContainer() ? PlatformIcons.FOLDER_ICON : VirtualFilePresentation.getAWTIcon(myFile);
   }
 
   @Override

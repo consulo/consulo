@@ -51,4 +51,10 @@ public interface RadioButton extends ValueComponent<Boolean> {
 
   @RequiredUIAccess
   void setText(@Nonnull String text);
+
+  @Nonnull
+  default RadioButton toGroup(ValueGroup<Boolean> group) {
+    group.add(this);
+    return this;
+  }
 }

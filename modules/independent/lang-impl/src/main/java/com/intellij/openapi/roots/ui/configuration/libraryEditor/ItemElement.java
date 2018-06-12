@@ -22,10 +22,10 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
+import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
 
 
@@ -43,8 +43,8 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     myRootType = rootType;
   }
 
-  private static Icon getIconForUrl(final String url, final boolean isValid, final boolean isJarDirectory) {
-    final Icon icon;
+  private static Image getIconForUrl(final String url, final boolean isValid, final boolean isJarDirectory) {
+    final Image icon;
     if (isValid) {
       VirtualFile presentableFile;
       if (isArchiveFileRoot(url)) {

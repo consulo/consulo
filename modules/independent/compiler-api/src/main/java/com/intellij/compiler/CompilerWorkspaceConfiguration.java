@@ -24,13 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.compiler.CompilationType;
 
-@State(
-  name = "CompilerWorkspaceConfiguration",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "CompilerWorkspaceConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class CompilerWorkspaceConfiguration implements PersistentStateComponent<CompilerWorkspaceConfiguration> {
   public CompilationType COMPILATION_TYPE = CompilationType.IN_PROGRESS;
   public boolean AUTO_SHOW_ERRORS_IN_EDITOR = true;

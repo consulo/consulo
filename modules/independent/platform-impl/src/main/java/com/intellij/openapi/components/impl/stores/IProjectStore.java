@@ -25,6 +25,8 @@ import javax.annotation.Nullable;
  * @see com.intellij.openapi.project.ex.ProjectEx#getStateStore()
  */
 public interface IProjectStore extends IComponentStore.Reloadable {
+  void setProjectFilePathNoUI(@Nonnull String filePath);
+
   void setProjectFilePath(@Nonnull String filePath);
 
   @Nullable

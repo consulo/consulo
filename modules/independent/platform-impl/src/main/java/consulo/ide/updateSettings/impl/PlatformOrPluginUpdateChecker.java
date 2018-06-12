@@ -16,20 +16,10 @@
 package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.ide.plugins.PluginNode;
-import com.intellij.ide.plugins.RepositoryHelper;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationAction;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import com.intellij.ide.plugins.*;
+import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
@@ -39,7 +29,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -51,15 +41,11 @@ import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -114,9 +100,10 @@ public class PlatformOrPluginUpdateChecker {
     return Math.abs(timeDelta) >= DateFormatUtil.DAY;
   }
 
-  public static ActionCallback updateAndShowResult() {
-    final ActionCallback result = new ActionCallback();
-    final Application app = ApplicationManager.getApplication();
+  @Nonnull
+  public static AsyncResult<Void> updateAndShowResult() {
+    final AsyncResult<Void> result = new AsyncResult<>();
+    final Application app = Application.get();
     final UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       result.setDone();
@@ -135,7 +122,7 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
-  public static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
+  private static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
     PlatformOrPluginUpdateResult.Type type = targetsForUpdate.getType();
     switch (type) {
       case NO_UPDATE:
@@ -149,14 +136,14 @@ public class PlatformOrPluginUpdateChecker {
       case PLUGIN_UPDATE:
       case PLATFORM_UPDATE:
         if (showResults) {
-          new PluginListDialog(project, targetsForUpdate, null, null).show();
+          new PluginListDialog(project, targetsForUpdate, null, pluginId -> targetsForUpdate.getBrokenPluginIds().contains(pluginId), null).show();
         }
         else {
           Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION, null);
           notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-              new PluginListDialog(project, targetsForUpdate, null, null).show();
+              new PluginListDialog(project, targetsForUpdate, null, pluginId -> targetsForUpdate.getBrokenPluginIds().contains(pluginId), null).show();
             }
           });
           notification.notify(project);
@@ -165,8 +152,8 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
-  public static ActionCallback checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
-    ActionCallback actionCallback = new ActionCallback();
+  public static AsyncResult<Void> checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
+    AsyncResult<Void> actionCallback = new AsyncResult<>();
     PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator);
     if (updateResult == PlatformOrPluginUpdateResult.CANCELED) {
       actionCallback.setDone();
@@ -252,6 +239,8 @@ public class PlatformOrPluginUpdateChecker {
       }
     }
 
+    List<PluginId> brokedPluginsAfterPlatformUpdate = new ArrayList<>();
+
     state.getOutdatedPlugins().clear();
     if (!ourPlugins.isEmpty()) {
       try {
@@ -261,6 +250,12 @@ public class PlatformOrPluginUpdateChecker {
           IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
           if (filtered == null) {
+            // if platform updated - but we not found new plugin in new remote list, notify user about it
+            if(newPlatformPlugin != null) {
+              brokedPluginsAfterPlatformUpdate.add(entry.getKey());
+
+              targets.add(Couple.of(entry.getValue(), entry.getValue()));
+            }
             continue;
           }
 
@@ -287,13 +282,13 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     if (newPlatformPlugin != null) {
-      return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets);
+      return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets, brokedPluginsAfterPlatformUpdate);
     }
 
     if (alreadyVisited && targets.isEmpty()) {
       return PlatformOrPluginUpdateResult.UPDATE_RESTART;
     }
-    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
+    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets, Collections.emptyList());
   }
 
   private static void processDependencies(@Nonnull IdeaPluginDescriptor target, List<Couple<IdeaPluginDescriptor>> targets, List<IdeaPluginDescriptor> remotePlugins) {

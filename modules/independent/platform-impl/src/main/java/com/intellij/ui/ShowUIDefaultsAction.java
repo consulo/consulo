@@ -59,7 +59,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
     Arrays.sort(data, new Comparator<Object[]>() {
       @Override
       public int compare(Object[] o1, Object[] o2) {
-        return StringUtil.naturalCompare(o1[0 ].toString(), o2[0].toString());
+        return StringUtil.naturalCompare(o1[0].toString(), o2[0].toString());
       }
     });
 
@@ -97,25 +97,23 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
           public boolean editCellAt(int row, int column, EventObject e) {
             if (isCellEditable(row, column) && e instanceof MouseEvent) {
               final Object color = getValueAt(row, column);
-              final Color newColor = ColorPicker.showDialog(this, "Choose Color", (Color)color, true, null, true);
-              if (newColor != null) {
-                final ColorUIResource colorUIResource = new ColorUIResource(newColor);
-                final Object key = getValueAt(row, 0);
-                UIManager.put(key, colorUIResource);
-                setValueAt(colorUIResource, row, column);
-              }
+
+              ColorChooser.chooseColor(this, "Choose Color", (Color)color, true, null, true, newColor -> {
+                if (newColor != null) {
+                  final ColorUIResource colorUIResource = new ColorUIResource(newColor);
+                  final Object key = getValueAt(row, 0);
+                  UIManager.put(key, colorUIResource);
+                  setValueAt(colorUIResource, row, column);
+                }
+              });
+
             }
             return false;
           }
         };
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
           @Override
-          public Component getTableCellRendererComponent(JTable table,
-                                                         Object value,
-                                                         boolean isSelected,
-                                                         boolean hasFocus,
-                                                         int row,
-                                                         int column) {
+          public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             final JPanel panel = new JPanel(new BorderLayout());
             final JLabel label = new JLabel(value == null ? "" : value.toString());
             panel.add(label, BorderLayout.CENTER);
@@ -125,23 +123,27 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
               label.setForeground(ColorUtil.isDark(c) ? Color.white : Color.black);
               panel.setBackground(c);
               return panel;
-            } else if (value instanceof Icon) {
+            }
+            else if (value instanceof Icon) {
               try {
                 final Icon icon = new IconWrap((Icon)value);
                 if (icon.getIconHeight() <= 20) {
                   label.setIcon(icon);
                 }
-                label.setText(String.format("(%dx%d) %s)",icon.getIconWidth(), icon.getIconHeight(), label.getText()));
+                label.setText(String.format("(%dx%d) %s)", icon.getIconWidth(), icon.getIconHeight(), label.getText()));
               }
               catch (Throwable e1) {//
               }
               return panel;
-            } else if (value instanceof Border) {
+            }
+            else if (value instanceof Border) {
               try {
                 final Insets i = ((Border)value).getBorderInsets(null);
                 label.setText(String.format("[%d, %d, %d, %d] %s", i.top, i.left, i.bottom, i.right, label.getText()));
                 return panel;
-              } catch (Exception ignore) {}
+              }
+              catch (Exception ignore) {
+              }
             }
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
           }
@@ -176,7 +178,8 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
     public void paintIcon(Component c, Graphics g, int x, int y) {
       try {
         myIcon.paintIcon(c, g, x, y);
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         EmptyIcon.ICON_0.paintIcon(c, g, x, y);
       }
     }

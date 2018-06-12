@@ -18,13 +18,15 @@ package consulo.ui;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
+import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
-import consulo.ui.shared.Size;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EventListener;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -45,8 +47,15 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey) {
+  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey) {
     addBorder(borderPosition, borderStyle, colorKey, 1);
+  }
+
+  @RequiredUIAccess
+  default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey, @Nonnegative int width) {
+    for (BorderPosition position : BorderPosition.values()) {
+      addBorder(position, borderStyle, colorKey, width);
+    }
   }
 
   @RequiredUIAccess
@@ -57,7 +66,14 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width);
+  void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey, @Nonnegative int width);
+
+  @RequiredUIAccess
+  default void removeBorders() {
+    for (BorderPosition position : BorderPosition.values()) {
+      removeBorder(position);
+    }
+  }
 
   @RequiredUIAccess
   void removeBorder(@Nonnull BorderPosition borderPosition);
@@ -72,23 +88,23 @@ public interface Component extends Disposable, UserDataHolder {
   @RequiredUIAccess
   void setEnabled(boolean value);
 
-  @javax.annotation.Nullable
+  @Nullable
   Component getParentComponent();
 
   @RequiredUIAccess
   void setSize(@Nonnull Size size);
 
   @Nonnull
-  <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier);
+  <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier);
 
   @Nonnull
-  Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
+  Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
 
   /**
    * @return runner for unregister listener
    */
   @Nonnull
-  <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @RequiredUIAccess @Nonnull T listener);
+  <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @RequiredUIAccess @Nonnull T listener);
 
   @Nonnull
   <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass);

@@ -24,12 +24,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.WriteExternalException;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +54,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   @NonNls private static final String SHOW_CONSOLE_ON_STD_OUT = "show_console_on_std_out";
   @NonNls private static final String SHOW_CONSOLE_ON_STD_ERR = "show_console_on_std_err";
 
-  private final Icon myIcon;
+  private final Image myIcon;
   private boolean mySaveOutput = false;
   private boolean myShowConsoleOnStdOut = false;
   private boolean myShowConsoleOnStdErr = false;
@@ -94,7 +94,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

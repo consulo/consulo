@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.*;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.LineSet;
 import com.intellij.openapi.editor.impl.RangeMarkerImpl;
 import com.intellij.openapi.editor.impl.RangeMarkerTree;
@@ -200,14 +200,14 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     protected void setTextToEditor(String text) {
       myEditor.getMarkupModel().removeAllHighlighters();
       myEditor.getDocument().setText(text);
-      ((EditorImpl)myEditor).resetSizes();
+      ((DesktopEditorImpl)myEditor).resetSizes();
       myEditor.getHighlighter().setText(text);
       if (myTextAttributes != null) {
         myEditor.getMarkupModel().addRangeHighlighter(0, myEditor.getDocument().getTextLength(),
                                                       HighlighterLayer.ADDITIONAL_SYNTAX, myTextAttributes, HighlighterTargetArea.EXACT_RANGE);
       }
 
-      ((EditorImpl)myEditor).setPaintSelection(mySelected);
+      ((DesktopEditorImpl)myEditor).setPaintSelection(mySelected);
       SelectionModel selectionModel = myEditor.getSelectionModel();
       selectionModel.setSelection(0, mySelected ? myEditor.getDocument().getTextLength() : 0);
     }
@@ -253,7 +253,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
           linesCount++;
         }
 
-        FontMetrics fontMetrics = ((EditorImpl)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
+        FontMetrics fontMetrics = ((DesktopEditorImpl)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
         int preferredHeight = getEditor().getLineHeight() * Math.max(1, linesCount);
         int preferredWidth = fontMetrics.charWidth('m') * maxLineLength;
 
@@ -275,7 +275,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     }
 
     private void updateText(Rectangle clip) {
-      FontMetrics fontMetrics = ((EditorImpl)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
+      FontMetrics fontMetrics = ((DesktopEditorImpl)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
       Insets insets = getInsets();
       int maxLineWidth = getWidth() - (insets != null ? insets.left + insets.right : 0);
 

@@ -20,12 +20,10 @@ import com.intellij.codeInspection.CommonProblemDescriptor;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.ui.ComputableIcon;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.MutableTreeNode;
 
@@ -36,20 +34,12 @@ public class RefElementNode extends InspectionTreeNode {
   private boolean myHasDescriptorsUnder = false;
   private CommonProblemDescriptor mySingleDescriptor = null;
   protected final InspectionToolPresentation myToolPresentation;
-  private final ComputableIcon myIcon = new ComputableIcon(new Computable<Icon>() {
-    @Override
-    public Icon compute() {
-      final RefEntity refEntity = getElement();
-      if (refEntity == null) {
-        return null;
-      }
-      return refEntity.getIcon(false);
-    }
-  });
+  private final Icon myIcon;
 
   public RefElementNode(@Nonnull Object userObject, @Nonnull InspectionToolPresentation presentation) {
     super(userObject);
     myToolPresentation = presentation;
+    myIcon = userObject instanceof RefEntity ? ((RefEntity)userObject).getIcon(false) : null;
   }
 
   public RefElementNode(@Nonnull RefElement element, @Nonnull InspectionToolPresentation presentation) {
@@ -68,7 +58,7 @@ public class RefElementNode extends InspectionTreeNode {
   @Override
   @Nullable
   public Icon getIcon(boolean expanded) {
-    return myIcon.getIcon();
+    return myIcon;
   }
 
   @Override

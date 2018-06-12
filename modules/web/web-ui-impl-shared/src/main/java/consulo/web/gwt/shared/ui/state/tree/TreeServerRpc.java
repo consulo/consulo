@@ -27,4 +27,6 @@ public interface TreeServerRpc extends ServerRpc {
   void onDoubleClick(String id);
 
   void onSelected(String id);
+
+  void onContextMenu(int x, int y);
 }

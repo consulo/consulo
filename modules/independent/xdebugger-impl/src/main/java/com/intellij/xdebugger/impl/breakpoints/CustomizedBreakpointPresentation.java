@@ -15,17 +15,18 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author nik
 */
 public class CustomizedBreakpointPresentation {
-  private Icon myIcon;
+  private Image myIcon;
   private String myErrorMessage;
 
-  public void setIcon(final Icon icon) {
+  public void setIcon(final Image icon) {
     myIcon = icon;
   }
 
@@ -34,7 +35,7 @@ public class CustomizedBreakpointPresentation {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

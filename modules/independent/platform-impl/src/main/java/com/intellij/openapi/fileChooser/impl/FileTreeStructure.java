@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.fileChooser.impl;
 
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -29,11 +28,12 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.fileTypes.ArchiveFileType;
+import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -183,10 +183,10 @@ public class FileTreeStructure extends AbstractTreeStructure {
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     LOG.assertTrue(element instanceof FileElement, element.getClass().getName());
     VirtualFile file = ((FileElement)element).getFile();
-    Icon closedIcon = file == null ? null : myChooserDescriptor.getIcon(file);
+    Image icon = file == null ? null : myChooserDescriptor.getIcon(file);
     String name = file == null ? null : myChooserDescriptor.getName(file);
     String comment = file == null ? null : myChooserDescriptor.getComment(file);
 
-    return new FileNodeDescriptor(myProject, (FileElement)element, parentDescriptor, closedIcon, name, comment);
+    return new FileNodeDescriptor(myProject, (FileElement)element, parentDescriptor, icon, name, comment);
   }
 }

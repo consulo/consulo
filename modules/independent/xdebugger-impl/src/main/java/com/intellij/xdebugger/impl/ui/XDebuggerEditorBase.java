@@ -48,6 +48,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.evaluate.CodeFragmentInputComponent;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -113,7 +114,7 @@ public abstract class XDebuggerEditorBase {
     DefaultActionGroup actions = new DefaultActionGroup();
     for (Language language : getSupportedLanguages()) {
       //noinspection ConstantConditions
-      actions.add(new AnAction(language.getDisplayName(), null, language.getAssociatedFileType().getIcon()) {
+      actions.add(new AnAction(language.getDisplayName(), null, TargetAWT.to(language.getAssociatedFileType().getIcon())) {
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           XExpression currentExpression = getExpression();
@@ -230,7 +231,7 @@ public abstract class XDebuggerEditorBase {
 
     if (language != null && language.getAssociatedFileType() != null) {
       LayeredIcon icon = new LayeredIcon(2);
-      icon.setIcon(language.getAssociatedFileType().getIcon(), 0);
+      icon.setIcon(TargetAWT.to(language.getAssociatedFileType().getIcon()), 0);
       icon.setIcon(AllIcons.General.Dropdown, 1, 3, 0);
       myChooseFactory.setIcon(icon);
       myChooseFactory.setDisabledIcon(IconLoader.getDisabledIcon(icon));

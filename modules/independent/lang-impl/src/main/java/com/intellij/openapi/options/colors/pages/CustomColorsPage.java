@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.options.colors.pages;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.highlighter.custom.CustomFileHighlighter;
 import com.intellij.ide.highlighter.custom.CustomHighlighterColors;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
@@ -26,9 +25,8 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class CustomColorsPage implements ColorSettingsPage {
@@ -68,11 +66,6 @@ public class CustomColorsPage implements ColorSettingsPage {
   @Nonnull
   public String getDisplayName() {
     return OptionsBundle.message("options.custom.display.name");
-  }
-
-  @Override
-  public Icon getIcon() {
-    return AllIcons.FileTypes.Custom;
   }
 
   @Override

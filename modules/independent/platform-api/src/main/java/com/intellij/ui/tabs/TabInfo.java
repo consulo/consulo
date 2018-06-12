@@ -26,6 +26,8 @@ import com.intellij.ui.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.AlertIcon;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -146,7 +148,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
 
   public TabInfo setIcon(Icon icon) {
     Icon old = myIcon;
-    if (!IconDeferrer.getInstance().equalIcons(old, icon)) {
+    if (!IconDeferrer.getInstance().equalIcons(TargetAWT.from(old), TargetAWT.from(icon))) {
       myIcon = icon;
       myChangeSupport.firePropertyChange(ICON, old, icon);
     }

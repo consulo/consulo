@@ -15,21 +15,26 @@
  */
 package com.intellij.ide.presentation;
 
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class PresentationProvider<T> {
+  @Nullable
+  public String getName(T t) {
+    return null;
+  }
 
   @Nullable
-  public String getName(T t) { return null; }
+  public Image getIcon(T t) {
+    return null;
+  }
 
   @Nullable
-  public Icon getIcon(T t) { return null; }
-
-  @Nullable
-  public String getTypeName(T t) { return null; }
+  public String getTypeName(T t) {
+    return null;
+  }
 }

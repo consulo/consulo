@@ -92,6 +92,29 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
+  public void setProjectFilePathNoUI(@Nonnull final String filePath) {
+    final StateStorageManager stateStorageManager = getStateStorageManager();
+    final LocalFileSystem fs = LocalFileSystem.getInstance();
+
+    final File file = new File(filePath);
+
+    final File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+    String defaultFilePath = new File(dirStore, "misc.xml").getPath();
+    // deprecated
+    stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
+    stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
+
+    final File ws = new File(dirStore, "workspace.xml");
+    stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
+
+    stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
+
+    VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
+
+    myPresentableUrl = null;
+  }
+
+  @Override
   @Nullable
   public VirtualFile getProjectBaseDir() {
     if (myProject.isDefault()) return null;
@@ -217,9 +240,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Nonnull
   @Override
-  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent,
-                                                   @Nonnull State stateSpec,
-                                                   @Nonnull StateStorageOperation operation) {
+  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent, @Nonnull State stateSpec, @Nonnull StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;
@@ -270,8 +291,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   protected final void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
-    ProjectImpl.UnableToSaveProjectNotification[] notifications =
-            NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectImpl.UnableToSaveProjectNotification.class, myProject);
+    ProjectImpl.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectImpl.UnableToSaveProjectNotification.class, myProject);
     if (notifications.length > 0) {
       throw new SaveCancelledException();
     }
@@ -279,6 +299,38 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     beforeSave(readonlyFiles);
 
     super.doSave(saveSessions, readonlyFiles);
+
+    if (!readonlyFiles.isEmpty()) {
+      ReadonlyStatusHandler.OperationStatus status = AccessRule.read(() -> ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(getFilesList(readonlyFiles)));
+      if (status.hasReadonlyFiles()) {
+        ProjectImpl.dropUnableToSaveProjectNotification(myProject, status.getReadonlyFiles());
+        throw new SaveCancelledException();
+      }
+      else {
+        List<Pair<SaveSession, VirtualFile>> oldList = new ArrayList<>(readonlyFiles);
+        readonlyFiles.clear();
+        for (Pair<SaveSession, VirtualFile> entry : oldList) {
+          executeSave(entry.first, readonlyFiles);
+        }
+
+        if (!readonlyFiles.isEmpty()) {
+          ProjectImpl.dropUnableToSaveProjectNotification(myProject, getFilesList(readonlyFiles));
+          throw new SaveCancelledException();
+        }
+      }
+    }
+  }
+
+  @Override
+  protected final void doSaveAsync(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
+    ProjectImpl.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectImpl.UnableToSaveProjectNotification.class, myProject);
+    if (notifications.length > 0) {
+      throw new SaveCancelledException();
+    }
+
+    beforeSave(readonlyFiles);
+
+    super.doSaveAsync(saveSessions, readonlyFiles);
 
     if (!readonlyFiles.isEmpty()) {
       ReadonlyStatusHandler.OperationStatus status = AccessRule.read(() -> ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(getFilesList(readonlyFiles)));

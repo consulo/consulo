@@ -18,7 +18,6 @@ package com.intellij.codeInsight.hint;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.find.FindUtil;
 import com.intellij.icons.AllIcons;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
@@ -33,7 +32,6 @@ import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -49,11 +47,14 @@ import com.intellij.ui.SideBorder;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.usages.UsageView;
 import com.intellij.util.PairFunction;
+import consulo.awt.TargetAWT;
+import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.ide.IconDescriptorUpdaters;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
@@ -344,7 +345,7 @@ public class ImplementationViewComponent extends JPanel {
   }
   
   private static Icon getIconForFile(PsiFile psiFile) {
-    return IconDescriptorUpdaters.getIcon(psiFile.getNavigationElement(), 0);
+    return TargetAWT.to(IconDescriptorUpdaters.getIcon(psiFile.getNavigationElement(), 0));
   }
 
   public JComponent getPreferredFocusableComponent() {

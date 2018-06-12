@@ -22,14 +22,13 @@ import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.idea.starter.SMTestSender;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotations.Internal;
-import javax.annotation.Nonnull;
 import org.junit.runner.JUnitCore;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class UnitTestPostStarter extends ApplicationPostStarter {
 
   @Override
   public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
-    new ApplicationImpl(isHeadlessMode, mySplashRef);
+    //new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
   }
 
   @Override

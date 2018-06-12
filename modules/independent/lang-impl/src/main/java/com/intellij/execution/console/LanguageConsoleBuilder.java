@@ -31,7 +31,7 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
@@ -339,7 +339,7 @@ public final class LanguageConsoleBuilder {
           Rectangle clip = g.getClipBounds();
           int lineHeight = editor.getLineHeight();
           int startLine = clip.y / lineHeight;
-          int endLine = Math.min(((clip.y + clip.height) / lineHeight) + 1, ((EditorImpl)editor).getVisibleLineCount());
+          int endLine = Math.min(((clip.y + clip.height) / lineHeight) + 1, ((DesktopEditorImpl)editor).getVisibleLineCount());
           if (startLine >= endLine) {
             return;
           }

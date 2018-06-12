@@ -15,38 +15,35 @@
  */
 package com.intellij.ui;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author max
  * @author Konstantin Bulenkov
  */
 public class ColorChooser {
-  @Nullable
-  public static Color chooseColor(Component parent,
-                                  String caption,
-                                  @Nullable Color preselectedColor,
-                                  boolean enableOpacity,
-                                  ColorPickerListener[] listeners,
-                                  boolean opacityInPercent) {
-    return ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent);
+  public static void chooseColor(Component parent,
+                                 String caption,
+                                 @Nullable Color preselectedColor,
+                                 boolean enableOpacity,
+                                 ColorPickerListener[] listeners,
+                                 boolean opacityInPercent,
+                                 @Nonnull Consumer<Color> colorConsumer) {
+    ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent, colorConsumer);
   }
 
-  @Nullable
-  public static Color chooseColor(Component parent, String caption, @Nullable Color preselectedColor, boolean enableOpacity) {
-    return chooseColor(parent, caption, preselectedColor, enableOpacity, ColorPickerListener.EMPTY_ARRAY, false);
+  public static void chooseColor(Component parent, String caption, @Nullable Color preselectedColor, boolean enableOpacity, @Nonnull Consumer<Color> colorConsumer) {
+    chooseColor(parent, caption, preselectedColor, enableOpacity, ColorPickerListener.EMPTY_ARRAY, false, colorConsumer);
   }
 
-  @Nullable
-  public static Color chooseColor(Component parent, String caption, @Nullable Color preselectedColor, boolean enableOpacity,
-                                  boolean opacityInPercent) {
-    return chooseColor(parent, caption, preselectedColor, enableOpacity, ColorPickerListener.EMPTY_ARRAY, opacityInPercent);
+  public static void chooseColor(Component parent, String caption, @Nullable Color preselectedColor, boolean enableOpacity, boolean opacityInPercent, @Nonnull Consumer<Color> colorConsumer) {
+    chooseColor(parent, caption, preselectedColor, enableOpacity, ColorPickerListener.EMPTY_ARRAY, opacityInPercent, colorConsumer);
   }
 
-  @Nullable
-  public static Color chooseColor(Component parent, String caption, @Nullable Color preselectedColor) {
-    return chooseColor(parent, caption, preselectedColor, false);
+  public static void chooseColor(Component parent, String caption, @Nullable Color preselectedColor, @Nonnull Consumer<Color> colorConsumer) {
+    chooseColor(parent, caption, preselectedColor, false, colorConsumer);
   }
 }

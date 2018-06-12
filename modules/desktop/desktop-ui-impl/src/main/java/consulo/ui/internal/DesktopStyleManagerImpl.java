@@ -25,8 +25,8 @@ import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,6 +42,9 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
       public ColorValue getColor(@Nonnull ColorKey colorKey) {
         if (colorKey == ComponentColors.TEXT) {
           return TargetAWT.from(UIUtil.getLabelForeground());
+        }
+        else if (colorKey == ComponentColors.DISABLED_TEXT) {
+          return TargetAWT.from(UIUtil.getInactiveTextColor());
         }
         else if (colorKey == ComponentColors.BORDER) {
           return TargetAWT.from(UIUtil.getBorderColor());

@@ -16,24 +16,24 @@
 package com.intellij.ide.fileTemplates;
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileTemplateGroupDescriptor extends FileTemplateDescriptor {
   private final String myTitle;
-  private final List<FileTemplateDescriptor> myTemplates = new ArrayList<FileTemplateDescriptor>();
+  private final List<FileTemplateDescriptor> myTemplates = new ArrayList<>();
 
-  public FileTemplateGroupDescriptor(String title, Icon icon, FileTemplateDescriptor... children) {
+  public FileTemplateGroupDescriptor(String title, Image icon, FileTemplateDescriptor... children) {
     this(title, icon);
     for (final FileTemplateDescriptor child : children) {
       addTemplate(child);
     }
   }
 
-  public FileTemplateGroupDescriptor(String title, Icon icon) {
+  public FileTemplateGroupDescriptor(String title, Image icon) {
     super(null, icon);
     myTitle = title;
   }

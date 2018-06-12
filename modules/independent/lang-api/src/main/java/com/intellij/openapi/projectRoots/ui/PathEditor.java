@@ -37,11 +37,12 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.ArchiveFileType;
 import gnu.trove.TIntArrayList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -354,7 +355,7 @@ public class PathEditor {
    * @return icon for displaying parameter (ProjectRoot or VirtualFile)
    *         If parameter is not ProjectRoot or VirtualFile, returns empty icon "/nodes/emptyNode.png"
    */
-  private static Icon getIconForRoot(Object projectRoot) {
+  private static consulo.ui.image.Image getIconForRoot(Object projectRoot) {
     if (projectRoot instanceof VirtualFile) {
       final VirtualFile file = (VirtualFile)projectRoot;
       if (!file.isValid()) {
@@ -409,7 +410,7 @@ public class PathEditor {
           }
         }
       }
-      setIcon(getIconForRoot(value));
+      setIcon(TargetAWT.to(getIconForRoot(value)));
       return this;
     }
   }

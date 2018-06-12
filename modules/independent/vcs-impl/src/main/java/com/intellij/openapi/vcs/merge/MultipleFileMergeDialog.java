@@ -414,7 +414,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     @Override
     protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
       VirtualFile vf = (VirtualFile)value;
-      setIcon(VirtualFilePresentation.getIcon(vf));
+      setIcon(VirtualFilePresentation.getAWTIcon(vf));
       append(vf.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       final VirtualFile parent = vf.getParent();
       if (parent != null) {

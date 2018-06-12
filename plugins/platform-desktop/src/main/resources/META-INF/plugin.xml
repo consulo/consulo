@@ -34,12 +34,22 @@
       <implementation-class>com.intellij.openapi.wm.impl.FocusManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
     </component>
+
+    <component>
+      <interface-class>consulo.fileEditor.impl.text.TextEditorProvider</interface-class>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.text.DesktopPsiAwareTextEditorProvider</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
+      <implementation-class>com.intellij.ide.DesktopSaveAndSyncHandlerImpl</implementation-class>
+    </component>
   </application-components>
 
   <project-components>
     <component>
       <interface-class>com.intellij.openapi.fileEditor.FileEditorManager</interface-class>
-      <implementation-class>com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl</implementation-class>
+      <implementation-class>consulo.fileEditor.impl.DesktopPsiAwareFileEditorManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.fileEditor.impl.TestEditorManagerImpl</headless-implementation-class>
     </component>
     <component>
@@ -51,6 +61,12 @@
       <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
       <implementation-class>com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.ChangesViewManager</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
+      <skipForDefaultProject/>
     </component>
   </project-components>
 
@@ -75,5 +91,17 @@
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"
                     serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ui.ColorChooserService"
+                        serviceImplementation="com.intellij.ui.DesktopColorChooserServiceImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
+                        serviceImplementation="com.intellij.ui.DesktopIconDeferrerImpl"/>
+
+    <applicationService serviceInterface="consulo.diagram.builder.GraphBuilderFactory"
+                        serviceImplementation="consulo.diagram.builder.impl.DesktopGraphBuilderFactoryImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
+                        serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"/>
   </extensions>
 </idea-plugin>

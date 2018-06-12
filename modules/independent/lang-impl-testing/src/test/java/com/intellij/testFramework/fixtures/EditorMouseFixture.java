@@ -16,7 +16,7 @@
 package com.intellij.testFramework.fixtures;
 
 import com.intellij.openapi.editor.VisualPosition;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.util.SystemInfo;
 import org.junit.Assert;
 
@@ -27,7 +27,7 @@ import java.awt.event.MouseEvent;
 
 @SuppressWarnings("MagicConstant")
 public class EditorMouseFixture {
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private int myX;
   private int myY;
   private int myModifiers;
@@ -35,7 +35,7 @@ public class EditorMouseFixture {
   private int myLastId;
   private Component myLastComponent;
 
-  public EditorMouseFixture(EditorImpl editor) {
+  public EditorMouseFixture(DesktopEditorImpl editor) {
     myEditor = editor;
   }
 

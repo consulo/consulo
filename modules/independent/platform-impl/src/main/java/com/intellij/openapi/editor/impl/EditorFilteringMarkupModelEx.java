@@ -38,7 +38,7 @@ import java.util.List;
 
 public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   @Nonnull
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   @Nonnull
   private final MarkupModelEx myDelegate;
 
@@ -49,7 +49,7 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
     }
   };
 
-  public EditorFilteringMarkupModelEx(@Nonnull EditorImpl editor, @Nonnull MarkupModelEx delegate) {
+  public EditorFilteringMarkupModelEx(@Nonnull DesktopEditorImpl editor, @Nonnull MarkupModelEx delegate) {
     myEditor = editor;
     myDelegate = delegate;
   }

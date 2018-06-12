@@ -24,7 +24,10 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.LibraryOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
+import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
@@ -35,12 +38,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
-import consulo.roots.OrderEntryWithTracking;
-import consulo.roots.orderEntry.OrderEntryTypeEditor;
-import javax.annotation.Nonnull;
-import consulo.roots.orderEntry.OrderEntryType;
+import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
+import consulo.roots.OrderEntryWithTracking;
+import consulo.roots.orderEntry.OrderEntryType;
+import consulo.roots.orderEntry.OrderEntryTypeEditor;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -99,7 +103,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
       final Sdk sdk = sdkOrderEntry.getSdk();
-      presentation.setIcon(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk()));
+      presentation.setIcon(TargetAWT.to(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk())));
       if (sdk != null) { //jdk not specified
         final String path = sdk.getHomePath();
         if (path != null) {

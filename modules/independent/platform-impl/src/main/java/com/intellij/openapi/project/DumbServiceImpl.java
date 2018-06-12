@@ -20,7 +20,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -48,10 +47,11 @@ import com.intellij.util.containers.Queue;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.application.ex.ApplicationEx2;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -177,7 +177,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
     if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
       runTaskSynchronously(task);
-    } else {
+    }
+    else {
       queueAsynchronousTask(task);
     }
   }
@@ -203,14 +204,13 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     Runnable runnable = () -> queueTaskOnEdt(task, contextTransaction, trace);
     if (ApplicationManager.getApplication().isDispatchThread()) {
       runnable.run(); // will log errors if not already in a write-safe context
-    } else {
+    }
+    else {
       TransactionGuard.submitTransaction(myProject, runnable);
     }
   }
 
-  private void queueTaskOnEdt(@Nonnull DumbModeTask task,
-                              @Nullable TransactionId contextTransaction,
-                              @Nonnull Throwable trace) {
+  private void queueTaskOnEdt(@Nonnull DumbModeTask task, @Nullable TransactionId contextTransaction, @Nonnull Throwable trace) {
     if (!addTaskToQueue(task)) return;
 
     if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
@@ -256,8 +256,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
   private void queueUpdateFinished() {
     if (myState.compareAndSet(State.RUNNING_DUMB_TASKS, State.WAITING_FOR_FINISH)) {
-      StartupManager.getInstance(myProject).runWhenProjectIsInitialized(
-              () -> TransactionGuard.getInstance().submitTransaction(myProject, myDumbStartTransaction, this::updateFinished));
+      StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> TransactionGuard.getInstance().submitTransaction(myProject, myDumbStartTransaction, this::updateFinished));
     }
   }
 
@@ -368,7 +367,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     ApplicationManager.getApplication().invokeLater(() -> {
       if (isDumb()) {
         runWhenSmart(() -> smartInvokeLater(runnable, modalityState));
-      } else {
+      }
+      else {
         runnable.run();
       }
     }, modalityState, myProject.getDisposed());
@@ -389,8 +389,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   private void showModalProgress() {
     NoAccessDuringPsiEvents.checkCallContext();
     try {
-      ((ApplicationImpl)ApplicationManager.getApplication()).executeSuspendingWriteAction(myProject, IdeBundle.message("progress.indexing"), () ->
-              runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator()));
+      ((ApplicationEx2)ApplicationManager.getApplication())
+              .executeSuspendingWriteAction(myProject, IdeBundle.message("progress.indexing"), () -> runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator()));
     }
     finally {
       if (myState.get() != State.SMART) {
@@ -496,7 +496,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
         indicator.setText("Indexing paused during Power Save mode...");
         runWhenPowerSaveModeChanges(() -> result.complete(pollTaskQueue()));
         completeWhenProjectClosed(result);
-      } else {
+      }
+      else {
         result.complete(pollTaskQueue());
       }
     });
@@ -576,8 +577,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     public void setFraction(final double fraction) {
       if (fraction - lastFraction < 0.01d) return;
       lastFraction = fraction;
-      UIUtil.invokeLaterIfNeeded(
-              () -> AppIcon.getInstance().setProgress(myProject, "indexUpdate", AppIconScheme.Progress.INDEXING, fraction, true));
+      UIUtil.invokeLaterIfNeeded(() -> AppIcon.getInstance().setProgress(myProject, "indexUpdate", AppIconScheme.Progress.INDEXING, fraction, true));
     }
 
     @Override
@@ -595,7 +595,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   private enum State {
-    /** Non-dumb mode. For all other states, {@link #isDumb()} returns true. */
+    /**
+     * Non-dumb mode. For all other states, {@link #isDumb()} returns true.
+     */
     SMART,
 
     /**

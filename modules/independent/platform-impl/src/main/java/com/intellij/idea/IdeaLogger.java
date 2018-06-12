@@ -17,7 +17,6 @@ package com.intellij.idea;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.ApplicationInfoProvider;
@@ -25,7 +24,9 @@ import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.ex.ApplicationEx2;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nullable;
 
 /**
@@ -114,7 +115,7 @@ public class IdeaLogger extends Logger {
     myLogger.error("Vendor: " + System.getProperties().getProperty("java.vendor", "unknown"));
     myLogger.error("OS: " + System.getProperties().getProperty("os.name", "unknown"));
 
-    ApplicationImpl application = (ApplicationImpl)ApplicationManager.getApplication();
+    ApplicationEx2 application = (ApplicationEx2)ApplicationManager.getApplication();
     if (application != null && application.isComponentsCreated()) {
       final String lastPreformedActionId = ourLastActionId;
       if (lastPreformedActionId != null) {

@@ -34,7 +34,7 @@ public class PlainTextASTLeafFactory implements ASTLeafFactory {
   }
 
   @Override
-  public boolean apply(@Nullable IElementType input) {
+  public boolean test(@Nullable IElementType input) {
     return input == PlainTextTokenTypes.PLAIN_TEXT;
   }
 }

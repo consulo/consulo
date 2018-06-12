@@ -20,6 +20,7 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides access to the <code>Application</code>.
@@ -32,6 +33,7 @@ public class ApplicationManager {
    *
    * @return <code>Application</code>
    */
+  @Nullable
   public static Application getApplication() {
     return ourApplication;
   }

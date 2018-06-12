@@ -17,13 +17,11 @@ package consulo.ui;
 
 import javax.annotation.Nonnull;
 
-import java.util.EventListener;
-
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
-public interface Button extends Component {
+public interface Button extends Clickable {
   @Nonnull
   static Button create(@Nonnull String text) {
     return UIInternal.get()._Components_button(text);
@@ -36,18 +34,9 @@ public interface Button extends Component {
     return button;
   }
 
-  interface ClickHandler extends EventListener {
-    @RequiredUIAccess
-    void onClick();
-  }
-
   @Nonnull
   String getText();
 
   @RequiredUIAccess
   void setText(@Nonnull String text);
-
-  default void addClickListener(@RequiredUIAccess ClickHandler listener) {
-    addListener(ClickHandler.class, listener);
-  }
 }

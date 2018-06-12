@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorBundle;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.DumbAware;
 import javax.annotation.Nullable;
 
@@ -38,7 +38,7 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final EditorImpl editor = getEditor(e);
+    final DesktopEditorImpl editor = getEditor(e);
     if (editor != null) {
       final int size = editor.getFontSize() + myStep;
       if (size >= 8 && size <= EditorFontsConstants.getMaxEditorFontSize()) {
@@ -48,10 +48,10 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
   }
 
   @Nullable
-  private static EditorImpl getEditor(AnActionEvent e) {
+  private static DesktopEditorImpl getEditor(AnActionEvent e) {
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    if (editor instanceof EditorImpl) {
-      return (EditorImpl)editor;
+    if (editor instanceof DesktopEditorImpl) {
+      return (DesktopEditorImpl)editor;
     }
     return null;
   }

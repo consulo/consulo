@@ -22,6 +22,10 @@ import javax.annotation.Nonnull;
  * @since 03-May-17
  */
 public interface ValueGroup<V> {
+  static ValueGroup<Boolean> createBool() {
+    return UIInternal.get()._ValueGroups_boolGroup();
+  }
+
   @RequiredUIAccess
   void clearValues();
 

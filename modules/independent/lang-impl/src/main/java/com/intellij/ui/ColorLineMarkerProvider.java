@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ElementColorProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
@@ -31,8 +31,10 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TwoColorsIcon;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.shared.ColorValue;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -55,10 +57,12 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
 
           final Editor editor = PsiUtilBase.findEditor(element);
           assert editor != null;
-          final Color c = ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true);
-          if (c != null) {
-            WriteAction.run(() -> colorProvider.setColorTo(element, c));
-          }
+
+          ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true, c -> {
+            if (c != null) {
+              WriteCommandAction.runWriteCommandAction(element.getProject(), () -> colorProvider.setColorTo(element, TargetAWT.from(c)));
+            }
+          });
         }
       }, GutterIconRenderer.Alignment.LEFT);
       myColor = color;
@@ -90,9 +94,9 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
   @Override
   public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
     for (ElementColorProvider colorProvider : myExtensions) {
-      final Color color = colorProvider.getColorFrom(element);
+      final ColorValue color = colorProvider.getColorFrom(element);
       if (color != null) {
-        MyInfo info = new MyInfo(element, color, colorProvider);
+        MyInfo info = new MyInfo(element, TargetAWT.to(color), colorProvider);
         NavigateAction.setNavigateAction(info, "Choose color", null);
         return info;
       }

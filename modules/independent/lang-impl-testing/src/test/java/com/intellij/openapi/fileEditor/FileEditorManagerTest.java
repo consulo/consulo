@@ -20,7 +20,6 @@ import com.intellij.mock.Mock;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.components.PathMacroUtil;
-import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,11 +27,13 @@ import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.PsiTestExtensionUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.ui.UIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -160,10 +161,11 @@ public class FileEditorManagerTest extends FileEditorManagerTestCase {
 
     myManager.loadState(rootElement);
 
+    UIAccess uiAccess = UIAccess.get();
     Future<?> future = ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override
       public void run() {
-        myManager.getMainSplitters().openFiles();
+        myManager.getMainSplitters().openFiles(uiAccess);
       }
     });
     future.get();

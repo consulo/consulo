@@ -15,8 +15,10 @@
  */
 package consulo.ui;
 
-import javax.annotation.Nonnull;
+import com.intellij.openapi.Disposable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EventListener;
 
 /**
@@ -30,7 +32,7 @@ public interface Tree<E> extends Component {
   }
 
   @Nonnull
-  static <E> Tree<E> create(@javax.annotation.Nullable E rootValue, @Nonnull TreeModel<E> model) {
+  static <E> Tree<E> create(@Nullable E rootValue, @Nonnull TreeModel<E> model) {
     return UIInternal.get()._Components_tree(rootValue, model);
   }
 
@@ -39,13 +41,15 @@ public interface Tree<E> extends Component {
     void onSelected(TreeNode<K> node);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   TreeNode<E> getSelectedNode();
 
   void expand(@Nonnull TreeNode<E> node);
 
+  void setContextHandler(@Nonnull ContextHandler contextHandler);
+
   @Nonnull
-  default Runnable addSelectListener(@Nonnull @RequiredUIAccess SelectListener<E> listener) {
+  default Disposable addSelectListener(@Nonnull @RequiredUIAccess SelectListener<E> listener) {
     return addListener(SelectListener.class, listener);
   }
 }

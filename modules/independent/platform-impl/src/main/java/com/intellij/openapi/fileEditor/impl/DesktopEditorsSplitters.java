@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -55,14 +56,18 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.application.AccessRule;
-import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.UIAccess;
+import consulo.ui.migration.AWTComponentProviderUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -73,10 +78,11 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider, EditorSplitters {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorsSplitters");
-
-  public static final Key<DesktopEditorsSplitters> KEY = Key.create("EditorsSplitters");
+@Deprecated
+@DeprecationInfo("Desktop only")
+@SuppressWarnings("deprecation")
+public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
+  private static final Logger LOG = Logger.getInstance(DesktopEditorsSplitters.class);
 
   private static final String PINNED = "pinned";
   private static final String CURRENT_IN_TAB = "current-in-tab";
@@ -93,12 +99,34 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   private final Alarm myIconUpdaterAlarm = new Alarm();
   private final UIBuilder myUIBuilder = new UIBuilder();
 
-  DesktopEditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
-    super(new BorderLayout());
+  private final IdePanePanel myComponent;
+
+  public DesktopEditorsSplitters(FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
+    myComponent = new IdePanePanel(new BorderLayout()) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        if (showEmptyText()) {
+          Graphics2D gg = IdeBackgroundUtil.withFrameBackground(g, this);
+          super.paintComponent(gg);
+          g.setColor(UIUtil.isUnderDarcula() ? UIUtil.getBorderColor() : new Color(0, 0, 0, 50));
+          g.drawLine(0, 0, getWidth(), 0);
+        }
+      }
+    };
+    myComponent.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
+    myComponent.setTransferHandler(new MyTransferHandler());
+    DataManager.registerDataProvider(myComponent, dataId -> {
+      if (dataId == KEY) {
+        return this;
+      }
+      return null;
+    });
+
+    AWTComponentProviderUtil.putMark(myComponent, this);
+
     myManager = manager;
     myFocusWatcher = new MyFocusWatcher();
-    setFocusTraversalPolicy(new MyFocusTraversalPolicy());
-    setTransferHandler(new MyTransferHandler());
+
     clear();
 
     if (createOwnDockableContainer) {
@@ -107,25 +135,28 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       dockManager.register(dockable);
     }
     KeymapManagerListener keymapListener = keymap -> {
-      invalidate();
-      repaint();
+      myComponent.invalidate();
+      myComponent.repaint();
     };
     KeymapManager.getInstance().addKeymapManagerListener(keymapListener, this);
+
+    Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, source -> {
+      if (!myManager.getProject().isOpen()) {
+        return;
+      }
+
+      for (VirtualFile file : getOpenFiles()) {
+        updateFileBackgroundColor(file);
+        updateFileIcon(file);
+        updateFileColor(file);
+      }
+    });
   }
 
   @Nonnull
   @Override
   public JComponent getComponent() {
-    return this;
-  }
-
-  @Nullable
-  @Override
-  public Object getData(@Nonnull Key<?> dataId) {
-    if(KEY == dataId) {
-      return this;
-    }
-    return null;
+    return myComponent;
   }
 
   public FileEditorManagerImpl getManager() {
@@ -137,19 +168,19 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     for (DesktopEditorWindow window : myWindows) {
       window.dispose();
     }
-    removeAll();
+    myComponent.removeAll();
     myWindows.clear();
     setCurrentWindow(null);
-    repaint(); // revalidate doesn't repaint correctly after "Close All"
+    myComponent.repaint(); // revalidate doesn't repaint correctly after "Close All"
   }
 
   @Override
   public void startListeningFocus() {
-    myFocusWatcher.install(this);
+    myFocusWatcher.install(myComponent);
   }
 
   private void stopListeningFocus() {
-    myFocusWatcher.deinstall(this);
+    myFocusWatcher.deinstall(myComponent);
   }
 
   @Override
@@ -173,22 +204,12 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  protected void paintComponent(Graphics g) {
-    if (showEmptyText()) {
-      Graphics2D gg = IdeBackgroundUtil.withFrameBackground(g, this);
-      super.paintComponent(gg);
-      g.setColor(UIUtil.isUnderDarcula() ? UIUtil.getBorderColor() : new Color(0, 0, 0, 50));
-      g.drawLine(0, 0, getWidth(), 0);
-    }
-  }
-
-  @Override
   public void writeExternal(@Nonnull Element element) {
-    if (getComponentCount() == 0) {
+    if (myComponent.getComponentCount() == 0) {
       return;
     }
 
-    JPanel panel = (JPanel)getComponent(0);
+    JPanel panel = (JPanel)myComponent.getComponent(0);
     if (panel.getComponentCount() != 0) {
       try {
         element.addContent(writePanel(panel.getComponent(0)));
@@ -228,7 +249,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       return res;
     }
     else if (comp instanceof DesktopEditorWindow.TCompForTablessMode) {
-      EditorWithProviderComposite composite = ((DesktopEditorWindow.TCompForTablessMode)comp).myEditor;
+      DesktopEditorWithProviderComposite composite = ((DesktopEditorWindow.TCompForTablessMode)comp).myEditor;
       Element res = new Element("leaf");
       res.addContent(writeComposite(composite.getFile(), composite, false, composite));
       return res;
@@ -250,7 +271,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Nonnull
-  private Element writeComposite(VirtualFile file, EditorWithProviderComposite composite, boolean pinned, EditorWithProviderComposite selectedEditor) {
+  private Element writeComposite(VirtualFile file, EditorWithProviderComposite composite, boolean pinned, DesktopEditorWithProviderComposite selectedEditor) {
     Element fileElement = new Element("file");
     fileElement.setAttribute("leaf-file-name", file.getName()); // TODO: all files
     composite.currentStateAsHistoryEntry().writeExternal(fileElement, getManager().getProject());
@@ -260,13 +281,13 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  public void openFiles() {
+  public void openFiles(@Nonnull UIAccess uiAccess) {
     if (mySplittersElement != null) {
-      final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel());
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+      final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess);
+      uiAccess.giveAndWaitIfNeed(() -> {
         if (comp != null) {
-          removeAll();
-          add(comp, BorderLayout.CENTER);
+          myComponent.removeAll();
+          myComponent.add(comp, BorderLayout.CENTER);
           mySplittersElement = null;
         }
         // clear empty splitters
@@ -282,7 +303,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   public int getEditorsCount() {
-    return mySplittersElement == null ? 0 : countFiles(mySplittersElement);
+    return mySplittersElement == null ? 0 : countFiles(mySplittersElement, UIAccess.get());
   }
 
   private double myProgressStep;
@@ -298,20 +319,20 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
-  private static int countFiles(Element element) {
+  private static int countFiles(Element element, UIAccess uiAccess) {
     Integer value = new ConfigTreeReader<Integer>() {
       @Override
-      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context) {
+      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context, UIAccess uiAccess) {
         return fileElements.size();
       }
 
       @Override
-      protected Integer processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable Integer context) {
-        Integer first = process(firstChild, null);
-        Integer second = process(secondChild, null);
+      protected Integer processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable Integer context, UIAccess uiAccess) {
+        Integer first = process(firstChild, null, uiAccess);
+        Integer second = process(secondChild, null, uiAccess);
         return (first == null ? 0 : first) + (second == null ? 0 : second);
       }
-    }.process(element, null);
+    }.process(element, null, uiAccess);
     return value == null ? 0 : value;
   }
 
@@ -372,7 +393,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
     List<FileEditor> editors = new ArrayList<>();
     for (final DesktopEditorWindow window : windows) {
-      final EditorWithProviderComposite composite = window.getSelectedEditor();
+      final DesktopEditorWithProviderComposite composite = window.getSelectedEditor();
       if (composite != null) {
         editors.add(composite.getSelectedEditor());
       }
@@ -403,7 +424,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
         updateFileIconImmediately(file1);
       }
       myFilesToUpdateIconsFor.clear();
-    }, 200, ModalityState.stateForComponent(this));
+    }, 200, ModalityState.stateForComponent(myComponent));
   }
 
   @Override
@@ -477,11 +498,11 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   @Override
   public AccessToken increaseChange() {
-    myInsideChange ++;
+    myInsideChange++;
     return new AccessToken() {
       @Override
       public void finish() {
-        myInsideChange --;
+        myInsideChange--;
       }
     };
   }
@@ -503,8 +524,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   @Override
   public int getSplitCount() {
-    if (getComponentCount() > 0) {
-      JPanel panel = (JPanel)getComponent(0);
+    if (myComponent.getComponentCount() > 0) {
+      JPanel panel = (JPanel)myComponent.getComponent(0);
       return getSplitCount(panel);
     }
     return 0;
@@ -530,8 +551,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   @Nullable
   JBTabs getTabsAt(RelativePoint point) {
-    Point thisPoint = point.getPoint(this);
-    Component c = SwingUtilities.getDeepestComponentAt(this, thisPoint.x, thisPoint.y);
+    Point thisPoint = point.getPoint(myComponent);
+    Component c = SwingUtilities.getDeepestComponentAt(myComponent, thisPoint.x, thisPoint.y);
     while (c != null) {
       if (c instanceof JBTabs) {
         return (JBTabs)c;
@@ -566,8 +587,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return null;
   }
 
- @Override
- public void closeFile(VirtualFile file, boolean moveFocus) {
+  @Override
+  public void closeFile(VirtualFile file, boolean moveFocus) {
     final List<DesktopEditorWindow> windows = findWindows(file);
     if (!windows.isEmpty()) {
       final VirtualFile nextFile = findNextFile(file);
@@ -592,32 +613,22 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
-  @Override
-  public void uiSettingsChanged(UISettings uiSettings) {
-    if (!myManager.getProject().isOpen()) return;
-    for (VirtualFile file : getOpenFiles()) {
-      updateFileBackgroundColor(file);
-      updateFileIcon(file);
-      updateFileColor(file);
-    }
-  }
-
   private final class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
     @Override
     public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
       if (myCurrentWindow != null) {
-        final EditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
+        final DesktopEditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
         if (selectedEditor != null) {
           return IdeFocusTraversalPolicy.getPreferredFocusedComponent(selectedEditor.getComponent(), this);
         }
       }
-      return IdeFocusTraversalPolicy.getPreferredFocusedComponent(DesktopEditorsSplitters.this, this);
+      return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myComponent, this);
     }
   }
 
   @Nullable
   public JPanel getTopPanel() {
-    return getComponentCount() > 0 ? (JPanel)getComponent(0) : null;
+    return myComponent.getComponentCount() > 0 ? (JPanel)myComponent.getComponent(0) : null;
   }
 
   @Override
@@ -626,6 +637,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return myCurrentWindow;
   }
 
+  @Nonnull
   @Override
   public EditorWindow getOrCreateCurrentWindow(final VirtualFile file) {
     final List<DesktopEditorWindow> windows = findWindows(file);
@@ -652,7 +664,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   void createCurrentWindow() {
     LOG.assertTrue(myCurrentWindow == null);
     setCurrentWindow(createEditorWindow());
-    add(myCurrentWindow.myPanel, BorderLayout.CENTER);
+    myComponent.add(myCurrentWindow.myPanel, BorderLayout.CENTER);
   }
 
   protected DesktopEditorWindow createEditorWindow() {
@@ -668,7 +680,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
    */
   @Override
   public void setCurrentWindow(@Nullable final EditorWindow window, final boolean requestFocus) {
-    final EditorWithProviderComposite newEditor = window == null ? null : window.getSelectedEditor();
+    EditorWithProviderComposite newEditor = window == null ? null : window.getSelectedEditor();
 
     Runnable fireRunnable = () -> getManager().fireSelectionChanged(newEditor);
 
@@ -683,7 +695,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       }
 
       if (requestFocus) {
-        ((DesktopEditorWindow)window).requestFocus(true);
+        window.requestFocus(true);
       }
     }
     else {
@@ -775,8 +787,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
 
     // get root component and traverse splitters tree:
-    if (getComponentCount() != 0) {
-      final Component comp = getComponent(0);
+    if (myComponent.getComponentCount() != 0) {
+      final Component comp = myComponent.getComponent(0);
       LOG.assertTrue(comp instanceof JPanel);
       final JPanel panel = (JPanel)comp;
       if (panel.getComponentCount() != 0) {
@@ -847,7 +859,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   private abstract static class ConfigTreeReader<T> {
     @Nullable
-    public T process(@Nullable Element element, @Nullable T context) {
+    public T process(@Nullable Element element, @Nullable T context, UIAccess uiAccess) {
       if (element == null) {
         return null;
       }
@@ -855,7 +867,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       if (splitterElement != null) {
         final Element first = splitterElement.getChild("split-first");
         final Element second = splitterElement.getChild("split-second");
-        return processSplitter(splitterElement, first, second, context);
+        return processSplitter(splitterElement, first, second, context, uiAccess);
       }
 
       final Element leaf = element.getChild("leaf");
@@ -877,22 +889,22 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
         }
       }
 
-      return processFiles(children, context);
+      return processFiles(children, context, uiAccess);
     }
 
     @Nullable
-    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context);
+    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context, UIAccess uiAccess);
 
     @Nullable
-    protected abstract T processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context);
+    protected abstract T processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context, @Nonnull UIAccess uiAccess);
   }
 
   private class UIBuilder extends ConfigTreeReader<JPanel> {
 
     @Override
-    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context) {
+    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context, UIAccess uiAccess) {
       final Ref<DesktopEditorWindow> windowRef = new Ref<>();
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> windowRef.set(context == null ? createEditorWindow() : findWindowWith(context)));
+      uiAccess.giveAndWaitIfNeed(() -> windowRef.set(context == null ? createEditorWindow() : findWindowWith(context)));
       final DesktopEditorWindow window = windowRef.get();
       LOG.assertTrue(window != null);
       VirtualFile focusedFile = null;
@@ -921,7 +933,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
           Document document = AccessRule.read(action);
           final boolean isCurrentInTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB)).booleanValue();
           Boolean pin = Boolean.valueOf(file.getAttributeValue(PINNED));
-          fileEditorManager.openFileImpl4(window, virtualFile, entry, false, false, pin, i);
+          fileEditorManager.openFileImpl4(uiAccess, window, virtualFile, entry, false, false, pin, i);
           if (isCurrentInTab) {
             focusedFile = virtualFile;
           }
@@ -942,8 +954,9 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       if (focusedFile != null) {
         getManager().addSelectionRecord(focusedFile, window);
         VirtualFile finalFocusedFile = focusedFile;
-        UIUtil.invokeLaterIfNeeded(() -> {
-          EditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
+
+        uiAccess.giveIfNeed(() -> {
+          DesktopEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
           if (editor != null) {
             window.setEditor(editor, true, true);
           }
@@ -953,12 +966,12 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
 
     @Override
-    protected JPanel processSplitter(@Nonnull Element splitterElement, Element firstChild, Element secondChild, final JPanel context) {
+    protected JPanel processSplitter(@Nonnull Element splitterElement, Element firstChild, Element secondChild, final JPanel context, UIAccess uiAccess) {
       if (context == null) {
         final boolean orientation = "vertical".equals(splitterElement.getAttributeValue("split-orientation"));
         final float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion")).floatValue();
-        final JPanel firstComponent = process(firstChild, null);
-        final JPanel secondComponent = process(secondChild, null);
+        final JPanel firstComponent = process(firstChild, null, uiAccess);
+        final JPanel secondComponent = process(secondChild, null, uiAccess);
         final Ref<JPanel> panelRef = new Ref<>();
         UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
           JPanel panel = new JPanel(new BorderLayout());
@@ -973,7 +986,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
       }
       final Ref<JPanel> firstComponent = new Ref<>();
       final Ref<JPanel> secondComponent = new Ref<>();
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+      uiAccess.giveAndWaitIfNeed(() -> {
         if (context.getComponent(0) instanceof Splitter) {
           Splitter splitter = (Splitter)context.getComponent(0);
           firstComponent.set((JPanel)splitter.getFirstComponent());
@@ -984,8 +997,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
           secondComponent.set(context);
         }
       });
-      process(firstChild, firstComponent.get());
-      process(secondChild, secondComponent.get());
+      process(firstChild, firstComponent.get(), uiAccess);
+      process(secondChild, secondComponent.get(), uiAccess);
       return context;
     }
   }

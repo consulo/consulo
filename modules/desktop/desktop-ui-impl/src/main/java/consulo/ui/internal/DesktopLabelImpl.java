@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.internal.base.SwingComponentDelegate;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.style.ComponentColors;

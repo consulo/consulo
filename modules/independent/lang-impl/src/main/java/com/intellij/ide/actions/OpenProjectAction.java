@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -30,12 +29,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 public class OpenProjectAction extends AnAction implements DumbAware {
@@ -64,13 +63,5 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     ProjectOpenProcessor[] providers = ProjectOpenProcessors.getInstance().getProcessors();
 
     return IdeBundle.message("import.project.chooser.header", StringUtil.join(providers, ProjectOpenProcessor::getFileSample, ", <br>"));
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
-      e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
-    }
   }
 }

@@ -33,17 +33,18 @@ import javax.swing.*;
  * @since 12-Jun-16
  */
 public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements ComboBox<E>, SwingWrapper {
-  private DesktopComboBoxModelWrapper<E> myModel;
+  private ListModel<E> myModel;
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
 
   public DesktopComboBoxImpl(ListModel<E> model) {
-    myModel = new DesktopComboBoxModelWrapper<E>(model);
+    DesktopComboBoxModelWrapper wrapper = new DesktopComboBoxModelWrapper<>(model);
+    myModel = model;
 
-    setModel(myModel);
+    setModel(wrapper);
     setRenderer(new ColoredListCellRenderer<E>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
-        DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<E>(this);
+        DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<>(this);
         myRender.render(render, index, value);
       }
     });
@@ -73,12 +74,12 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
 
   @Override
   public void addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    addItemListener(new DesktopValueListenerAsItemListenerImpl<E>(valueListener, true));
+    addItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true));
   }
 
   @Override
   public void removeValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    removeItemListener(new DesktopValueListenerAsItemListenerImpl<E>(valueListener, true));
+    removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true));
   }
 
   @SuppressWarnings("unchecked")

@@ -172,7 +172,7 @@ public class RefreshSessionImpl extends RefreshSession {
     }
   }
 
-  void fireEvents() {
+  public void fireEvents() {
     if (!myHaveEventsToFire || ApplicationManager.getApplication().isDisposed()) {
       mySemaphore.up();
       return;
@@ -227,7 +227,7 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   @Nullable
-  TransactionId getTransaction() {
+  public TransactionId getTransaction() {
     return myTransaction;
   }
 

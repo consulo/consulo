@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,21 +27,20 @@ import javax.annotation.Nullable;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public abstract class FileEditorProviderManager{
-  public static FileEditorProviderManager getInstance(){
+public abstract class FileEditorProviderManager {
+  public static FileEditorProviderManager getInstance() {
     return ServiceManager.getService(FileEditorProviderManager.class);
   }
 
   /**
    * @param file cannot be <code>null</code>
-   *
    * @return array of all editors providers that can create editor
    * for the specified <code>file</code>. The method returns
    * an empty array if there are no such providers. Please note that returned array
    * is constructed with respect to editor policies.
    */
-  public abstract @Nonnull
-  FileEditorProvider[] getProviders(@Nonnull Project project, @Nonnull VirtualFile file);
+  @Nonnull
+  public abstract FileEditorProvider[] getProviders(@Nonnull Project project, @Nonnull VirtualFile file);
 
   /**
    * @return may be null

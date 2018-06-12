@@ -19,9 +19,10 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.EditorTextField;
+import consulo.fileEditor.impl.text.TextEditorProvider;
+
 import javax.annotation.Nonnull;
 
 public class FileEditorRule implements GetDataRule<FileEditor> {

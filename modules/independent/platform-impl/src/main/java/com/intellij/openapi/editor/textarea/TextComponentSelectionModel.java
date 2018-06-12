@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.event.SelectionListener;
-import com.intellij.openapi.editor.impl.SelectionModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSelectionModelImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -146,7 +146,7 @@ public class TextComponentSelectionModel implements SelectionModel {
 
   @Override
   public void selectLineAtCaret() {
-    SelectionModelImpl.doSelectLineAtCaret(myEditor.getCaretModel().getPrimaryCaret());
+    DesktopSelectionModelImpl.doSelectLineAtCaret(myEditor.getCaretModel().getPrimaryCaret());
   }
 
   @Override

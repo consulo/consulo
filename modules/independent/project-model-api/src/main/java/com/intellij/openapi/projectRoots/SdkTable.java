@@ -34,7 +34,7 @@ public abstract class SdkTable {
 
   public static Topic<SdkTableListener> SDK_TABLE_TOPIC = Topic.create("Sdk table", SdkTableListener.class);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Sdk findSdk(String name);
 
   @Nonnull

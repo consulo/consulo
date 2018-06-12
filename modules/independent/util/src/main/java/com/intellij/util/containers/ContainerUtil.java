@@ -2940,5 +2940,14 @@ public class ContainerUtil extends ContainerUtilRt {
   public static <K,V> Map<K,V> createWeakKeySoftValueMap() {
     return new WeakKeySoftValueHashMap<K, V>();
   }
+
+  public static <T> void weightSort(List<T> list, final Function<T, Integer> weighterFunc) {
+    Collections.sort(list, new Comparator<T>() {
+      @Override
+      public int compare(T o1, T o2) {
+        return weighterFunc.fun(o2) - weighterFunc.fun(o1);
+      }
+    });
+  }
 }
 

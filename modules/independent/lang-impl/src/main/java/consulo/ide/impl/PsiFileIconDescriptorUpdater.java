@@ -25,9 +25,9 @@ import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import consulo.lang.LanguageElementIcons;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -49,7 +49,7 @@ public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
       }
     }
     else {
-      Icon languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
+      Image languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
       if (languageElementIcon == null) {
         return;
       }

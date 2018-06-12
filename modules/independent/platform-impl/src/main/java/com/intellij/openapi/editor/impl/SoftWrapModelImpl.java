@@ -32,10 +32,10 @@ import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManage
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.DocumentUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -81,7 +81,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
   private       EditorTextRepresentationHelper     myEditorTextRepresentationHelper;
 
   @Nonnull
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
 
   private boolean myUseSoftWraps;
   private int myTabWidth = -1;
@@ -113,7 +113,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
 
   private boolean myForceAdditionalColumns;
 
-  public SoftWrapModelImpl(@Nonnull EditorImpl editor) {
+  public SoftWrapModelImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
     myStorage = new SoftWrapsStorage();
     myPainter = new CompositeSoftWrapPainter(editor);

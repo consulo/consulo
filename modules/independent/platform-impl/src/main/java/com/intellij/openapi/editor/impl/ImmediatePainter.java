@@ -60,10 +60,10 @@ class ImmediatePainter {
   private static final RegistryValue PIPELINE_FLUSH = Registry.get("editor.zero.latency.rendering.pipeline.flush");
   private static final RegistryValue DEBUG = Registry.get("editor.zero.latency.rendering.debug");
 
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private Image myImage;
 
-  ImmediatePainter(EditorImpl editor) {
+  ImmediatePainter(DesktopEditorImpl editor) {
     myEditor = editor;
 
     Disposer.register(editor.getDisposable(), () -> {
@@ -89,7 +89,7 @@ class ImmediatePainter {
     }
   }
 
-  private static boolean canPaintImmediately(final EditorImpl editor) {
+  private static boolean canPaintImmediately(final DesktopEditorImpl editor) {
     final CaretModel caretModel = editor.getCaretModel();
     final Caret caret = caretModel.getPrimaryCaret();
     final Document document = editor.getDocument();
@@ -114,7 +114,7 @@ class ImmediatePainter {
   }
 
   private void paintImmediately(final Graphics g, final int offset, final char c2) {
-    final EditorImpl editor = myEditor;
+    final DesktopEditorImpl editor = myEditor;
     final Document document = editor.getDocument();
     final LexerEditorHighlighter highlighter = (LexerEditorHighlighter)myEditor.getHighlighter();
 
@@ -260,7 +260,7 @@ class ImmediatePainter {
     return caretColor == null ? new JBColor(Gray._0, Gray._255) : caretColor;
   }
 
-  private static void updateAttributes(final EditorImpl editor, final int offset, final List<TextAttributes> attributes) {
+  private static void updateAttributes(final DesktopEditorImpl editor, final int offset, final List<TextAttributes> attributes) {
     final List<RangeHighlighterEx> list1 = new ArrayList<>();
     final List<RangeHighlighterEx> list2 = new ArrayList<>();
 
@@ -289,7 +289,7 @@ class ImmediatePainter {
   }
 
   // TODO Unify with com.intellij.openapi.editor.impl.view.IterationState.setAttributes
-  private static void updateAttributes(final EditorImpl editor,
+  private static void updateAttributes(final DesktopEditorImpl editor,
                                        final TextAttributes attributes,
                                        final List<RangeHighlighterEx> highlighters) {
     if (highlighters.size() > 1) {

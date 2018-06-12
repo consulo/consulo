@@ -17,20 +17,23 @@ package com.intellij.codeInsight.template.postfix.templates;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
+import com.intellij.lang.LanguageExtensionPoint;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
 public class LanguagePostfixTemplate extends LanguageExtension<PostfixTemplateProvider> {
   public static final LanguagePostfixTemplate LANG_EP = new LanguagePostfixTemplate();
-  public static final String EP_NAME = "com.intellij.codeInsight.template.postfixTemplateProvider";
+  private static final String EP_ID = "com.intellij.codeInsight.template.postfixTemplateProvider";
+
+  public static final ExtensionPointName<LanguageExtensionPoint> EP_NAME = ExtensionPointName.create(EP_ID);
 
   private LanguagePostfixTemplate() {
-    super(EP_NAME);
+    super(EP_ID);
   }
-
 
   @Nonnull
   @Override

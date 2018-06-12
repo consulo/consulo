@@ -35,6 +35,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointCustomGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointFileGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointGroupingByTypeRule;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -164,7 +166,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
     public AddXBreakpointAction(XBreakpointType<?, ?> type) {
       myType = type;
-      getTemplatePresentation().setIcon(type.getEnabledIcon());
+      getTemplatePresentation().setIcon(TargetAWT.to(type.getEnabledIcon()));
       getTemplatePresentation().setText(type.getTitle());
     }
 

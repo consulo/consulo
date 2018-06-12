@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
+import consulo.awt.TargetAWT;
 import consulo.vfs.ArchiveFileSystem;
 import javax.annotation.Nonnull;
 
@@ -84,7 +85,7 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     final FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
     final File parent = file.getParentFile();
     final CompositeAppearance appearance = CompositeAppearance.textComment(name, parent.getAbsolutePath());
-    appearance.setIcon(fileType.getIcon());
+    appearance.setIcon(TargetAWT.to(fileType.getIcon()));
     return appearance;
   }
 

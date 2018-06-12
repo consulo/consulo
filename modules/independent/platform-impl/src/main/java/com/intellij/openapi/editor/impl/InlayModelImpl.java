@@ -29,11 +29,10 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,12 +44,12 @@ public class InlayModelImpl implements InlayModel, Disposable {
   private static final Comparator<Inlay> INLAY_COMPARATOR = Comparator.comparingInt(Inlay::getOffset)
           .thenComparingInt(i -> ((InlayImpl)i).myOriginalOffset);
 
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final EventDispatcher<Listener> myDispatcher = EventDispatcher.create(Listener.class);
   final RangeMarkerTree<InlayImpl> myInlayTree;
   boolean myStickToLargerOffsetsOnUpdate;
 
-  InlayModelImpl(@Nonnull EditorImpl editor) {
+  InlayModelImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
     myInlayTree = new RangeMarkerTree<InlayImpl>(editor.getDocument()) {
       @Nonnull

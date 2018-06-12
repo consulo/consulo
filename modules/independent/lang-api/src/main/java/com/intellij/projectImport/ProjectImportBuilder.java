@@ -26,10 +26,10 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -46,7 +46,7 @@ public abstract class ProjectImportBuilder<T> extends ProjectBuilder {
   @Nonnull
   public abstract String getName();
 
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   public abstract List<T> getList();
 

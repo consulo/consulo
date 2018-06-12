@@ -52,10 +52,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -408,7 +409,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
     window.show(true);
     final EditorWindow editorWindow = ((DockableEditorTabbedContainer)container).getSplitters().getOrCreateCurrentWindow(file);
-    final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(editorWindow, file, true);
+    final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(UIAccess.get(), editorWindow, file, true);
     container.add(EditorTabbedContainer.createDockableEditor(myProject, null, file, new Presentation(file.getName()), editorWindow), null);
 
     SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));

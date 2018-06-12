@@ -16,7 +16,6 @@
 package com.intellij.util.ui;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -26,7 +25,7 @@ import java.awt.image.ImageObserver;
  *
  * @author Konstantin Bulenkov
  */
-public class JBImageIcon extends ImageIcon {
+public class JBImageIcon extends ImageIcon implements consulo.ui.image.Image {
   public JBImageIcon(@Nonnull Image image) {
     super(image);
   }
@@ -36,5 +35,15 @@ public class JBImageIcon extends ImageIcon {
     final ImageObserver observer = getImageObserver();
 
     UIUtil.drawImage(g, getImage(), x, y, observer == null ? c : observer);
+  }
+
+  @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
   }
 }

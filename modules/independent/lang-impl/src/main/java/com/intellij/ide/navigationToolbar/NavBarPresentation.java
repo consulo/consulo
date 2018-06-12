@@ -16,7 +16,6 @@
 package com.intellij.ide.navigationToolbar;
 
 import com.intellij.icons.AllIcons;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.application.ApplicationManager;
@@ -43,10 +42,13 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
+import consulo.bundle.SdkUtil;
+import consulo.ide.IconDescriptorUpdaters;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.bundle.SdkUtil;
-
 import javax.swing.*;
 
 /**
@@ -69,12 +71,7 @@ public class NavBarPresentation {
     if (object instanceof Module) return AllIcons.Nodes.Module;
     try {
       if (object instanceof PsiElement) {
-        Icon icon = ApplicationManager.getApplication().runReadAction(new Computable<Icon>() {
-          @Override
-          public Icon compute() {
-            return ((PsiElement)object).isValid() ? IconDescriptorUpdaters.getIcon(((PsiElement)object), 0) : null;
-          }
-        });
+        Icon icon = TargetAWT.to(AccessRule.read(() -> ((PsiElement)object).isValid() ? IconDescriptorUpdaters.getIcon(((PsiElement)object), 0) : null));
 
         if (icon != null && (icon.getIconHeight() > JBUI.scale(16) || icon.getIconWidth() > JBUI.scale(16))) {
           icon = IconUtil.cropIcon(icon, JBUI.scale(16), JBUI.scale(16));
@@ -86,7 +83,7 @@ public class NavBarPresentation {
       return null;
     }
     if (object instanceof ModuleExtensionWithSdkOrderEntry) {
-      return SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)object).getSdk());
+      return TargetAWT.to(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)object).getSdk()));
     }
     if (object instanceof LibraryOrderEntry) return AllIcons.Nodes.PpLibFolder;
     if (object instanceof ModuleOrderEntry) return AllIcons.Nodes.Module;

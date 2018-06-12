@@ -49,40 +49,56 @@ public final class AccessRule {
 
   @SuppressWarnings("deprecation")
   public static AsyncResult<Void> write(@Nonnull ThrowableRunnable<Throwable> action) {
-    AsyncResult<Void> result = new AsyncResult<>();
-
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
 
-    // noinspection RequiredXAction
-    try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
-      try {
+    Application application = Application.get();
+    if (application instanceof ApplicationWithOwnWriteThread) {
+      return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, () -> {
         action.run();
-        result.setDone();
-      }
-      catch (Throwable throwable) {
-        result.rejectWithThrowable(throwable);
-      }
+        return null;
+      });
     }
+    else {
+      AsyncResult<Void> result = new AsyncResult<>();
 
-    return result;
+      // noinspection RequiredXAction
+      try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
+        try {
+          action.run();
+          result.setDone();
+        }
+        catch (Throwable throwable) {
+          result.rejectWithThrowable(throwable);
+        }
+      }
+
+      return result;
+    }
   }
 
   @SuppressWarnings("deprecation")
   public static <T> AsyncResult<T> write(@Nonnull ThrowableComputable<T, Throwable> action) {
-    AsyncResult<T> result = new AsyncResult<>();
 
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
 
-    // noinspection RequiredXAction
-    try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
-      try {
-        result.setDone(action.compute());
-      }
-      catch (Throwable throwable) {
-        result.rejectWithThrowable(throwable);
-      }
-    }
+    Application application = Application.get();
 
-    return result;
+    if (application instanceof ApplicationWithOwnWriteThread) {
+      return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, action);
+    }
+    else {
+      AsyncResult<T> result = new AsyncResult<>();
+
+      // noinspection RequiredXAction
+      try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
+        try {
+          result.setDone(action.compute());
+        }
+        catch (Throwable throwable) {
+          result.rejectWithThrowable(throwable);
+        }
+      }
+      return result;
+    }
   }
 }

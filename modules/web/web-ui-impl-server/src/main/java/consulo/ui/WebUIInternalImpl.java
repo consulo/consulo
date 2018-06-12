@@ -18,17 +18,21 @@ package consulo.ui;
 import com.intellij.openapi.util.IconLoader;
 import com.vaadin.ui.UI;
 import consulo.annotations.Internal;
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
+import consulo.ui.internal.image.WGwtTransparentImageImpl;
+import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
+import consulo.ui.model.MutableListModel;
+import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -41,8 +45,8 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  CheckBox _Components_checkBox(@Nonnull String text, boolean selected) {
-    return new WGwtCheckBoxImpl(selected, text);
+  CheckBox _Components_checkBox() {
+    return new WGwtCheckBoxImpl();
   }
 
   @Override
@@ -121,6 +125,11 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
+  Hyperlink _Components_hyperlink(String text) {
+    return new WGwtHyperlinkImpl(text);
+  }
+
+  @Override
   HorizontalLayout _Layouts_horizontal() {
     return new WGwtHorizontalLayoutImpl();
   }
@@ -141,18 +150,38 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public FoldedImage _Images_foldedImage(Image[] images) {
+  public Image _ImageEffects_layered(Image[] images) {
     return new WGwtFoldedImageImpl(images);
   }
 
   @Override
-  MenuItem _MenuItems_item(String text) {
+  public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+    return new WGwtTransparentImageImpl(original, alpha);
+  }
+
+  @Override
+  public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+    return null;
+  }
+
+  @Override
+  public Image _ImageEffects_empty(int width, int height) {
+    return null;
+  }
+
+  @Override
+  MenuItem _MenuItem_create(String text) {
     return new WGwtMenuItemImpl(text);
   }
 
   @Override
-  Menu _MenuItems_menu(String text) {
+  Menu _Menu_create(String text) {
     return new WGwtMenuImpl(text);
+  }
+
+  @Override
+  MenuSeparator _MenuSeparator_create() {
+    return new WGwtMenuSeparatorImpl();
   }
 
   @Override
@@ -194,6 +223,16 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public AlertBuilder _Alerts_builder() {
     return null;
+  }
+
+  @Override
+  public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
+    return new ImmutableListModelImpl<>(list);
+  }
+
+  @Override
+  public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
+    return new MutableListModelImpl<>(list);
   }
 
   @RequiredUIAccess

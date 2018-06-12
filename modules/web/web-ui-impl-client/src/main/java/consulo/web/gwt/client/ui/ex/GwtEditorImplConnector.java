@@ -18,6 +18,9 @@ package consulo.web.gwt.client.ui.ex;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.ex.state.editor.EditorClientRpc;
+import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
+import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
 
 /**
  * @author VISTALL
@@ -25,6 +28,20 @@ import com.vaadin.shared.ui.Connect;
  */
 @Connect(canonicalName = "consulo.ui.ex.internal.WGwtEditorImpl")
 public class GwtEditorImplConnector extends AbstractComponentConnector {
+  @Override
+  protected void init() {
+    super.init();
+
+    getWidget().setEditorServerRpc(getRpcProxy(EditorServerRpc.class));
+
+    registerRpc(EditorClientRpc.class, new EditorClientRpc() {
+      @Override
+      public void setText(String text) {
+        getWidget().setText(text);
+      }
+    });
+  }
+
   @Override
   protected void updateComponentSize() {
     // nothing
@@ -40,5 +57,10 @@ public class GwtEditorImplConnector extends AbstractComponentConnector {
   @Override
   public GwtEditorImpl getWidget() {
     return (GwtEditorImpl)super.getWidget();
+  }
+
+  @Override
+  public EditorState getState() {
+    return (EditorState)super.getState();
   }
 }

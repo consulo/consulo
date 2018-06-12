@@ -17,6 +17,8 @@ package com.intellij.ide;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.diagnostic.Logger;
+import consulo.platform.Platform;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -48,6 +50,10 @@ public class ProhibitAWTEvents implements IdeEventQueue.EventDispatcher {
 
   @Nonnull
   public static AccessToken start(@Nonnull String activityName) {
+    if(!Platform.current().isDesktop()) {
+      return AccessToken.EMPTY_ACCESS_TOKEN;
+    }
+
     if (!SwingUtilities.isEventDispatchThread()) {
       // some crazy highlighting queries getData outside EDT: https://youtrack.jetbrains.com/issue/IDEA-162970
       return AccessToken.EMPTY_ACCESS_TOKEN;

@@ -21,6 +21,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -49,7 +51,7 @@ public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
   public void customize(JList list, FileType type, int index, boolean selected, boolean hasFocus) {
     LayeredIcon layeredIcon = new LayeredIcon(2);
     layeredIcon.setIcon(EMPTY_ICON, 0);
-    final Icon icon = type.getIcon();
+    final Icon icon = TargetAWT.to(type.getIcon());
     if (icon != null) {
       layeredIcon.setIcon(icon, 1, (- icon.getIconWidth() + EMPTY_ICON.getIconWidth())/2, (EMPTY_ICON.getIconHeight() - icon.getIconHeight())/2);
     }

@@ -15,15 +15,16 @@
  */
 package consulo.ui.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.EventListener;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -49,19 +50,19 @@ public interface SomeUIWrapper extends Component {
 
   @Nonnull
   @Override
-  default <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
+  default <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
     return addUserDataProvider(k -> k == key ? supplier.get() : null);
   }
 
   @Override
   @Nonnull
-  default Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+  default Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
     return dataObject().addUserDataProvider(function);
   }
 
   @Nonnull
   @Override
-  default <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
+  default <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
     return dataObject().addListener(eventClass, listener);
   }
 
@@ -75,11 +76,18 @@ public interface SomeUIWrapper extends Component {
   @Override
   default void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
     dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
+
+    bordersChanged();
   }
 
   @RequiredUIAccess
   @Override
   default void removeBorder(@Nonnull BorderPosition borderPosition) {
     dataObject().removeBorder(borderPosition);
+
+    bordersChanged();
+  }
+
+  default void bordersChanged() {
   }
 }

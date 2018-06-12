@@ -16,10 +16,11 @@
 package consulo.fileEditor.impl;
 
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,6 +29,8 @@ import javax.annotation.Nullable;
  * @since 27-Oct-17
  */
 public interface EditorWindow {
+  EditorWindow[] EMPTY_ARRAY = new EditorWindow[0];
+
   Key<EditorWindow> DATA_KEY = Key.create("editorWindow");
 
   @Nonnull
@@ -57,7 +60,8 @@ public interface EditorWindow {
   @Nullable
   EditorWithProviderComposite getSelectedEditor();
 
-  DesktopEditorsSplitters getOwner();
+  @Nonnull
+  EditorsSplitters getOwner();
 
   VirtualFile getSelectedFile();
 
@@ -87,10 +91,12 @@ public interface EditorWindow {
 
   void unsplitAll();
 
+  @RequiredUIAccess
   default void setEditor(@Nullable final EditorWithProviderComposite editor, final boolean focusEditor) {
     setEditor(editor, true, focusEditor);
   }
 
+  @RequiredUIAccess
   void setEditor(@Nullable final EditorWithProviderComposite editor, final boolean selectEditor, final boolean focusEditor);
 
   void setAsCurrentWindow(boolean value);
@@ -102,4 +108,9 @@ public interface EditorWindow {
   boolean hasClosedTabs();
 
   void requestFocus(boolean force);
+
+  @Nonnull
+  default Component getUIComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 }

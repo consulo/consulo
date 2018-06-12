@@ -22,9 +22,9 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile {
 
@@ -35,7 +35,7 @@ public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile 
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

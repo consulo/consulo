@@ -19,8 +19,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.*;
-import consulo.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
-import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckboxTreeNoPolicy;
@@ -29,17 +27,22 @@ import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.module.extension.MutableModuleExtension;
-import consulo.psi.PsiPackageManager;
-import consulo.roots.ModifiableModuleRootLayer;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.MutableModuleExtension;
+import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
+import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
+import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import consulo.ui.Layout;
+import consulo.ui.shared.border.BorderStyle;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -65,10 +68,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   private ModuleExtension<?> myConfigurablePanelExtension;
 
-  public ExtensionEditor(ModuleConfigurationState state,
-                         OutputEditor outputEditor,
-                         ClasspathEditor classpathEditor,
-                         ContentEntriesEditor contentEntriesEditor) {
+  public ExtensionEditor(ModuleConfigurationState state, OutputEditor outputEditor, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
     super(state);
     myState = state;
     myOutputEditor = outputEditor;
@@ -158,9 +158,13 @@ public class ExtensionEditor extends ModuleElementsEditor {
     final consulo.ui.Component component = extension.createConfigurationComponent(updateOnCheck);
 
     if (component != null) {
-      // we can call UIAccess.get() due we inside ui thread
-      // we need this ugly cast for now
-      configurablePanel = (JComponent)component;
+      if (component instanceof Layout) {
+        component.removeBorders();
+
+        component.addBorders(BorderStyle.EMPTY, null, 5);
+      }
+
+      configurablePanel = (JComponent)TargetAWT.to(component);
     }
     else {
       configurablePanel = extension.createConfigurablePanel(updateOnCheck);

@@ -29,9 +29,11 @@ public interface Activatable {
 
   @Deprecated
   class Adapter implements Activatable {
+    @Override
     public void hideNotify() {
     }
 
+    @Override
     public void showNotify() {
     }
   }

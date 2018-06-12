@@ -249,13 +249,13 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   @Nonnull
   @Override
-  public <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
+  public <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
     throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
     throw new UnsupportedOperationException();
   }
 
@@ -267,7 +267,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   @Nonnull
   @Override
-  public <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
+  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
     throw new UnsupportedOperationException();
   }
 

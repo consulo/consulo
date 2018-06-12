@@ -25,7 +25,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.progress.impl.ProgressSuspender;
@@ -54,10 +53,12 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.impl.ToolWindowPanelImplEx;
+import consulo.ui.migration.AWTComponentProviderUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -150,8 +151,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   private void runOnPowerSaveChange(@Nonnull Runnable runnable, Disposable parentDisposable) {
     synchronized (myOriginals) {
       if (!myDisposed) {
-        ApplicationManager.getApplication().getMessageBus().connect(parentDisposable)
-                .subscribe(PowerSaveMode.TOPIC, () -> UIUtil.invokeLaterIfNeeded(runnable));
+        ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(PowerSaveMode.TOPIC, () -> UIUtil.invokeLaterIfNeeded(runnable));
       }
     }
   }
@@ -412,10 +412,9 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     final DesktopBalloonLayoutImpl balloonLayout = getBalloonLayout(pane);
 
     final Balloon balloon =
-            JBPopupFactory.getInstance().createBalloonBuilder(panel.getProgressPanel()).setFadeoutTime(0).setFillColor(Gray.TRANSPARENT).setShowCallout(false)
-                    .setBorderColor(Gray.TRANSPARENT).setBorderInsets(JBUI.emptyInsets()).setAnimationCycle(0).setCloseButtonEnabled(false)
-                    .setHideOnClickOutside(false).setDisposable(inline).setHideOnFrameResize(false).setHideOnKeyOutside(false)
-                    .setBlockClicksThroughBalloon(true).setHideOnAction(false).createBalloon();
+            JBPopupFactory.getInstance().createBalloonBuilder(panel.getProgressPanel()).setFadeoutTime(0).setFillColor(Gray.TRANSPARENT).setShowCallout(false).setBorderColor(Gray.TRANSPARENT)
+                    .setBorderInsets(JBUI.emptyInsets()).setAnimationCycle(0).setCloseButtonEnabled(false).setHideOnClickOutside(false).setDisposable(inline).setHideOnFrameResize(false)
+                    .setHideOnKeyOutside(false).setBlockClicksThroughBalloon(true).setHideOnAction(false).createBalloon();
     if (balloonLayout != null) {
       class MyListener implements JBPopupListener, Runnable {
         @Override
@@ -466,15 +465,19 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   @Nonnull
   private static Component getAnchor(@Nonnull JRootPane pane) {
     Component tabWrapper = UIUtil.findComponentOfType(pane, TabbedPaneWrapper.TabWrapper.class);
-    if (tabWrapper != null) return tabWrapper;
-    Component splitters = UIUtil.findComponentOfType(pane, DesktopEditorsSplitters.class);
-    if (splitters != null) return splitters;
+    if (tabWrapper != null) {
+      return tabWrapper;
+    }
+    EditorsSplitters splitters = AWTComponentProviderUtil.findChild(pane, EditorsSplitters.class);
+    if (splitters != null) {
+      return splitters.getComponent();
+    }
     FileEditorManagerEx ex = FileEditorManagerEx.getInstanceEx(ProjectUtil.guessCurrentProject(pane));
     return ex == null ? pane : ex.getSplitters().getComponent();
   }
 
   private static boolean isBottomSideToolWindowsVisible(@Nonnull JRootPane parent) {
-    ToolWindowPanelImplEx pane = UIUtil.findComponentOfType2(parent, ToolWindowPanelImplEx.class);
+    ToolWindowPanelImplEx pane = AWTComponentProviderUtil.findChild(parent, ToolWindowPanelImplEx.class);
     return pane != null && pane.isBottomSideToolWindowsVisible();
   }
 
@@ -509,9 +512,8 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
-    final Balloon balloon = JBPopupFactory.getInstance()
-            .createHtmlTextBalloonBuilder(htmlBody.replace("\n", "<br>"), icon != null ? icon : type.getDefaultIcon(), type.getPopupBackground(), listener)
-            .createBalloon();
+    final Balloon balloon =
+            JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(htmlBody.replace("\n", "<br>"), icon != null ? icon : type.getDefaultIcon(), type.getPopupBackground(), listener).createBalloon();
 
     SwingUtilities.invokeLater(() -> {
       Component comp = this;
@@ -624,9 +626,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   private void updateProgressIcon() {
-    if (myOriginals.isEmpty() ||
-        PowerSaveMode.isEnabled() ||
-        myOriginals.stream().map(ProgressSuspender::getSuspender).filter(Objects::nonNull).anyMatch(ProgressSuspender::isSuspended)) {
+    if (myOriginals.isEmpty() || PowerSaveMode.isEnabled() || myOriginals.stream().map(ProgressSuspender::getSuspender).filter(Objects::nonNull).anyMatch(ProgressSuspender::isSuspended)) {
       myProgressIcon.suspend();
     }
     else {
@@ -687,15 +687,14 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     }
 
     private ProgressButton createSuspendButton() {
-      InplaceButton suspendButton =
-              new InplaceButton(new IconButton("Pause", AllIcons.Actions.Pause, AllIcons.Actions.Pause, AllIcons.Actions.Pause), new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                  ProgressSuspender suspender = Objects.requireNonNull(getSuspender());
-                  suspender.setSuspended(!suspender.isSuspended());
-                  updateProgressNow();
-                }
-              }).setFillBg(false);
+      InplaceButton suspendButton = new InplaceButton(new IconButton("Pause", AllIcons.Actions.Pause, AllIcons.Actions.Pause, AllIcons.Actions.Pause), new ActionListener() {
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+          ProgressSuspender suspender = Objects.requireNonNull(getSuspender());
+          suspender.setSuspended(!suspender.isSuspended());
+          updateProgressNow();
+        }
+      }).setFillBg(false);
       suspendButton.setVisible(false);
 
       return new ProgressButton(suspendButton, () -> {

@@ -20,11 +20,12 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.ide.IconDescriptor;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.util.pointers.NamedPointer;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -44,14 +45,14 @@ public class SdkUtil {
   }
 
   @Nonnull
-  public static Icon getIcon(@javax.annotation.Nullable Sdk sdk) {
+  public static Image getIcon(@Nullable Sdk sdk) {
     if (sdk == null) {
       return AllIcons.Toolbar.Unknown;
     }
     SdkType sdkType = (SdkType)sdk.getSdkType();
-    Icon icon = ObjectUtil.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
+    Image icon = ObjectUtil.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
     if(sdk.isPredefined()) {
-      return new IconDescriptor(icon).addLayerIcon(AllIcons.Nodes.Locked).toIcon();
+      return ImageEffects.layered(icon, AllIcons.Nodes.Locked);
     }
     else {
       return icon;

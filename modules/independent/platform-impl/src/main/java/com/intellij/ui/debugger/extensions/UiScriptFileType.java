@@ -18,9 +18,9 @@ package com.intellij.ui.debugger.extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +43,7 @@ public class UiScriptFileType implements FileType {
 
   @Override
   @Nonnull
-  public String getName() {
+  public String getId() {
     return "UI Script";
   }
 
@@ -62,18 +62,8 @@ public class UiScriptFileType implements FileType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
-  }
-
-  @Override
-  public boolean isBinary() {
-    return false;
-  }
-
-  @Override
-  public boolean isReadOnly() {
-    return false;
   }
 
   @Override

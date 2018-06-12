@@ -27,7 +27,6 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -41,10 +40,14 @@ import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
@@ -136,6 +139,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     });
   }
 
+  @RequiredUIAccess
   @Nonnull
   @Override
   public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
@@ -157,7 +161,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public DesktopEditorsSplitters getSplittersFor(Component c) {
+  public EditorsSplitters getSplittersFor(Component c) {
     return null;
   }
 
@@ -401,6 +405,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return myActiveFile != null ? getEditor(myActiveFile) : null;
   }
 
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return new JLabel();
@@ -524,7 +529,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
   @Nonnull
   @Override
-  public DesktopEditorsSplitters getSplitters() {
+  public EditorsSplitters getSplitters() {
     throw new IncorrectOperationException();
   }
 

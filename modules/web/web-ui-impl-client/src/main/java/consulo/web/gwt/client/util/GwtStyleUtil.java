@@ -33,6 +33,6 @@ public class GwtStyleUtil {
 
   @Nonnull
   public static String toString(RGBColor color) {
-    return "rgb(" + color.getRed() + ", " + color.getGreed() + ", " + color.getBlue() + ")";
+    return "rgb(" + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")";
   }
 }

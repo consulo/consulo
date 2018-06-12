@@ -46,10 +46,10 @@ public class WebPathChooserDialog implements PathChooserDialog {
 
   @Override
   @RequiredUIAccess
-  public void choose(@javax.annotation.Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     Window fileTree = Window.createModal("Select file");
     fileTree.setSize(new Size(400, 400));
-    fileTree.setContent(Label.create("TEst"));
+    fileTree.setContent(Label.create("Test"));
 
     DockLayout dockLayout = DockLayout.create();
     Tree<FileElement> component = FileTreeComponent.create(myProject, myDescriptor);

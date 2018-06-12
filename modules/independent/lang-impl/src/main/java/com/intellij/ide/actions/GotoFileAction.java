@@ -36,9 +36,9 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -105,11 +105,11 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
 
     @Override
     protected String textForFilterValue(@Nonnull FileType value) {
-      return value.getName();
+      return value.getId();
     }
 
     @Override
-    protected Icon iconForFilterValue(@Nonnull FileType value) {
+    protected Image iconForFilterValue(@Nonnull FileType value) {
       return value.getIcon();
     }
   }

@@ -31,13 +31,13 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.Processor;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ClassMap;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -831,7 +831,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
     @Override
     @Nonnull
-    public String getName() {
+    public String getId() {
       return "TempFileType";
     }
 
@@ -848,22 +848,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
 
     @Override
-    public Icon getIcon() {
-      return null;
-    }
-
-    @Override
-    public boolean isBinary() {
-      return false;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-      return false;
-    }
-
-    @Override
-    public String getCharset(@Nonnull VirtualFile file, @Nonnull byte[] content) {
+    public Image getIcon() {
       return null;
     }
   }

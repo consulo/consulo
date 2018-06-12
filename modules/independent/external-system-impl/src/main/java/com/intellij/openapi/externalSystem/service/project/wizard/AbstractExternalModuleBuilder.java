@@ -32,6 +32,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -59,8 +62,8 @@ public abstract class AbstractExternalModuleBuilder<S extends ExternalProjectSet
   {
     myExternalSystemId = externalSystemId;
     myExternalProjectSettings = externalProjectSettings;
-    Icon icon = ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon();
-    myIcon = icon == null ? super.getNodeIcon() : icon;
+    Image icon = ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon();
+    myIcon = icon == null ? super.getNodeIcon() : TargetAWT.to(icon);
   }
 
   @Override

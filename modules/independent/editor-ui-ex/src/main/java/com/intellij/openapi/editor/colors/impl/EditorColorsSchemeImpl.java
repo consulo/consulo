@@ -23,9 +23,11 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.Comparing;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.Map;
 
 /**
  * @author Yura Cangea
@@ -72,7 +74,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
     return myAttributesMap.containsKey(key);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Color getColor(ColorKey key) {
     if (myColorsMap.containsKey(key)) {
@@ -81,6 +83,24 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
     else {
       return myParentScheme.getColor(key);
     }
+  }
+
+  @Override
+  public void fillColors(Map<ColorKey, Color> colors) {
+    if (myParentScheme != null) {
+      myParentScheme.fillColors(colors);
+    }
+
+    colors.putAll(myColorsMap);
+  }
+
+  @Override
+  public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
+    if (myParentScheme != null) {
+      myParentScheme.fillAttributes(map);
+    }
+
+    map.putAll(myAttributesMap);
   }
 
   @Override

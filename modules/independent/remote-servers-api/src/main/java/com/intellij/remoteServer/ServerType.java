@@ -10,10 +10,10 @@ import com.intellij.remoteServer.configuration.localServer.LocalRunner;
 import com.intellij.remoteServer.runtime.ServerConnector;
 import com.intellij.remoteServer.runtime.ServerTaskExecutor;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author nik
@@ -34,7 +34,7 @@ public abstract class ServerType<C extends ServerConfiguration> {
   public abstract String getPresentableName();
 
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   @Nonnull
   public abstract C createDefaultConfiguration();

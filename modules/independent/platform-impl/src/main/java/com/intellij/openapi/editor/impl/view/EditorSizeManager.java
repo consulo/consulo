@@ -24,9 +24,9 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.FoldingListener;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
-import com.intellij.openapi.editor.impl.CaretModelImpl;
+import com.intellij.openapi.editor.impl.DesktopCaretModelImpl;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.openapi.editor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
@@ -55,7 +55,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   private static final int UNKNOWN_WIDTH = Integer.MAX_VALUE;
 
   private final EditorView myView;
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final DocumentEx myDocument;
 
   private final TIntArrayList myLineWidths = new TIntArrayList(); // cached widths of visual lines (in pixels)
@@ -173,7 +173,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     int widthWithoutCaret = getPreferredWidth();
     int width = widthWithoutCaret;
     if (!myDocument.isInBulkUpdate()) {
-      CaretModelImpl caretModel = myEditor.getCaretModel();
+      DesktopCaretModelImpl caretModel = myEditor.getCaretModel();
       int caretMaxX = (caretModel.isIteratingOverCarets() ? Stream.of(caretModel.getCurrentCaret()) : caretModel.getAllCarets().stream())
               .filter(Caret::isUpToDate)
               .mapToInt(c -> (int)myView.visualPositionToXY(c.getVisualPosition()).getX())
@@ -194,7 +194,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     int widthWithoutCaret = getPreferredWidthWithoutCaret(beginLine, endLine);
     int width = widthWithoutCaret;
     if (!myDocument.isInBulkUpdate()) {
-      CaretModelImpl caretModel = myEditor.getCaretModel();
+      DesktopCaretModelImpl caretModel = myEditor.getCaretModel();
       int caretMaxX = (caretModel.isIteratingOverCarets() ? Stream.of(caretModel.getCurrentCaret()) : caretModel.getAllCarets().stream())
               .filter(Caret::isUpToDate)
               .filter(caret -> caret.getVisualPosition().line >= beginLine && caret.getVisualPosition().line < endLine)

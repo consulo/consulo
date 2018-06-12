@@ -48,10 +48,10 @@ import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import sun.awt.AWTAccessor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -429,7 +429,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  public StatusBar getStatusBar(@Nonnull Component c, @javax.annotation.Nullable Project project) {
+  public StatusBar getStatusBar(@Nonnull Component c, @Nullable Project project) {
     Component parent = UIUtil.findUltimateParent(c);
     if (parent instanceof IdeFrame) {
       return ((IdeFrame)parent).getStatusBar().findChild(c);

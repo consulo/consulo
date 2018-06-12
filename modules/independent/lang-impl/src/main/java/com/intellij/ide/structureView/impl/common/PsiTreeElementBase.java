@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.structureView.impl.common;
 
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.structureView.StructureViewExtension;
 import com.intellij.ide.structureView.StructureViewFactoryEx;
@@ -69,7 +70,7 @@ public abstract class PsiTreeElementBase <T extends PsiElement> implements Struc
     if (element != null) {
       int flags = Iconable.ICON_FLAG_READ_STATUS;
       if (!(element instanceof PsiFile) || !element.isWritable()) flags |= Iconable.ICON_FLAG_VISIBILITY;
-      return IconDescriptorUpdaters.getIcon(element, flags);
+      return TargetAWT.to(IconDescriptorUpdaters.getIcon(element, flags));
     }
     else {
       return null;

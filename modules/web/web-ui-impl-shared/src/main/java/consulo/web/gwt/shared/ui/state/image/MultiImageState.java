@@ -28,6 +28,8 @@ public class MultiImageState implements Serializable {
 
   public FoldedImageState myFoldedImageState;
 
+  public float myAlpha = 1;
+
   public int myHeight;
 
   public int myWidth;

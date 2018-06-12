@@ -32,7 +32,7 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.Consumer;
 import com.intellij.util.io.ReadOnlyAttributeUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.fileEditor.impl.EditorSplitters;
+import consulo.fileEditor.impl.EditorsSplitters;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -126,7 +126,7 @@ public class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe,
   private VirtualFile getCurrentFile() {
     final Project project = getProject();
     if (project == null) return null;
-    EditorSplitters splitters = FileEditorManagerEx.getInstanceEx(project).getSplittersFor(myStatusBar.getComponent());
+    EditorsSplitters splitters = FileEditorManagerEx.getInstanceEx(project).getSplittersFor(myStatusBar.getComponent());
     return splitters.getCurrentFile();
   }
 

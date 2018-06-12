@@ -18,14 +18,14 @@ package com.intellij.openapi.editor.impl.view;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.SoftWrap;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class VisualLinesIterator {
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final Document myDocument;
   private final FoldRegion[] myFoldRegions;
   private final List<? extends SoftWrap> mySoftWraps;
@@ -34,7 +34,7 @@ public class VisualLinesIterator {
   private Location myLocation;
   private Location myNextLocation;
 
-  public VisualLinesIterator(@Nonnull EditorImpl editor, int startVisualLine) {
+  public VisualLinesIterator(@Nonnull DesktopEditorImpl editor, int startVisualLine) {
     myEditor = editor;
     SoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
     myDocument = myEditor.getDocument();

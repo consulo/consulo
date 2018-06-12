@@ -26,12 +26,17 @@
       <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
     </component>
+
+    <component>
+      <interface-class>consulo.fileEditor.impl.text.TextEditorProvider</interface-class>
+      <implementation-class>consulo.web.fileEditor.impl.text.WebTextEditorProvider</implementation-class>
+    </component>
   </application-components>
 
   <project-components>
     <component>
       <interface-class>com.intellij.openapi.fileEditor.FileEditorManager</interface-class>
-      <implementation-class>com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl</implementation-class>
+      <implementation-class>consulo.web.fileEditor.impl.WebPsiAwareFileEditorManagerImpl</implementation-class>
     </component>
     <component>
       <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
@@ -40,6 +45,12 @@
     <component>
       <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
+      <skipForDefaultProject/>
     </component>
   </project-components>
 
@@ -58,5 +69,11 @@
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"
                     serviceImplementation="consulo.web.projectView.WebProjectViewImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
+                        serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
+                        serviceImplementation="consulo.vfs.newvfs.NewRefreshQueueImpl"/>
   </extensions>
 </idea-plugin>

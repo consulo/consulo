@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.paths;
 
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.NullableLazyValue;
@@ -88,7 +89,7 @@ public class PathReference {
     @Override
     public Icon fun(final PathReference pathReference) {
       final PsiElement element = pathReference.resolve();
-      return element == null ? myDefaultIcon : IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS);
+      return element == null ? myDefaultIcon : TargetAWT.to(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS));
     }
   }
 }

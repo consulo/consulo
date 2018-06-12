@@ -61,11 +61,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.KeyboardLayoutUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.TransactionGuardEx;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.text.JTextComponent;
@@ -637,7 +638,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         return true;
       }
 
-      ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> processor.performAction(e, action, actionEvent));
+      ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> processor.performAction(e, action, actionEvent));
       actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
       return true;
     }

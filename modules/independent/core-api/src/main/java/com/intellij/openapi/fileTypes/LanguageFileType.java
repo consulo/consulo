@@ -18,19 +18,20 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.nio.charset.Charset;
 
 /**
  * Kind of file types capable to provide {@link Language}.
  */
-public abstract class LanguageFileType implements FileType{
+public abstract class LanguageFileType implements FileType {
   private final Language myLanguage;
 
   /**
    * Creates a language file type for the specified language.
+   *
    * @param language The language used in the files of the type.
    */
   protected LanguageFileType(@Nonnull final Language language) {
@@ -39,17 +40,13 @@ public abstract class LanguageFileType implements FileType{
 
   /**
    * Returns the language used in the files of the type.
+   *
    * @return The language instance.
    */
 
   @Nonnull
   public final Language getLanguage() {
     return myLanguage;
-  }
-
-  @Override
-  public final boolean isBinary() {
-    return false;
   }
 
   public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @Nonnull CharSequence content) {

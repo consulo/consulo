@@ -14,6 +14,7 @@ import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.JBUI;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -155,6 +156,6 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
   @Nullable
   @Override
   public Icon getIcon(boolean expanded) {
-    return myServer.getType().getIcon();
+    return TargetAWT.to(myServer.getType().getIcon());
   }
 }

@@ -15,38 +15,190 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.ui.components.JBRadioButton;
-import consulo.annotations.RequiredDispatchThread;
+import com.intellij.openapi.util.NotNullComputable;
+import consulo.options.SimpleConfigurable;
+import consulo.ui.*;
+
 import javax.annotation.Nonnull;
 
-import javax.annotation.Nullable;
-import javax.swing.*;
+public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSettingsConfigurable.MyComponent> implements SearchableConfigurable {
 
-/**
- * To provide additional options in General section register implementation of {@link com.intellij.openapi.options.SearchableConfigurable} in the plugin.xml:
- * <p>
- * &lt;extensions defaultExtensionNs="com.intellij"&gt;<br>
- * &nbsp;&nbsp;&lt;generalOptionsProvider instance="class-name"/&gt;<br>
- * &lt;/extensions&gt;
- * <p>
- * A new instance of the specified class will be created each time then the Settings dialog is opened
- */
-public class GeneralSettingsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+  protected static class MyComponent implements NotNullComputable<Component> {
+    private CheckBox myChkReopenLastProject;
+    private CheckBox myConfirmExit;
 
-  private MyComponent myComponent;
+    private RadioButton myOpenProjectInNewWindow;
+    private RadioButton myOpenProjectInSameWindow;
+    private RadioButton myConfirmWindowToOpenProject;
 
-  public GeneralSettingsConfigurable() {
-    myComponent = new MyComponent();
+    private CheckBox myChkSyncOnFrameActivation;
+    private CheckBox myChkSaveOnFrameDeactivation;
+    private CheckBox myChkAutoSaveIfInactive;
+    private TextBox myTfInactiveTimeout;
+    private CheckBox myChkUseSafeWrite;
+
+    private CheckBox myChkSupportScreenReaders;
+
+    private RadioButton myTerminateProcessRadioButton;
+    private RadioButton myDisconnectRadioButton;
+    private RadioButton myAskRadioButton;
+
+    private VerticalLayout myRootLayout;
+
+    @RequiredUIAccess
+    public MyComponent() {
+      myRootLayout = VerticalLayout.create();
+
+      VerticalLayout startupOrShutdownLayout = VerticalLayout.create();
+      startupOrShutdownLayout.add(myChkReopenLastProject = CheckBox.create(IdeBundle.message("checkbox.reopen.last.project.on.startup")));
+      startupOrShutdownLayout.add(myConfirmExit = CheckBox.create(IdeBundle.message("checkbox.confirm.application.exit")));
+      myRootLayout.add(LabeledLayout.create("Startup/Shutdown", startupOrShutdownLayout));
+
+      VerticalLayout projectReopeningLayout = VerticalLayout.create();
+      ValueGroup<Boolean> projectOpenGroup = ValueGroup.createBool();
+      projectReopeningLayout.add(myOpenProjectInNewWindow = RadioButton.create("Open project in new window").toGroup(projectOpenGroup));
+      projectReopeningLayout.add(myOpenProjectInSameWindow = RadioButton.create("Open project in the same window").toGroup(projectOpenGroup));
+      projectReopeningLayout.add(myConfirmWindowToOpenProject = RadioButton.create("Confirm window to open project in").toGroup(projectOpenGroup));
+      myRootLayout.add(LabeledLayout.create("Project Opening", projectReopeningLayout));
+
+      VerticalLayout syncLayout = VerticalLayout.create();
+      syncLayout.add(myChkSyncOnFrameActivation = CheckBox.create(IdeBundle.message("checkbox.synchronize.files.on.frame.activation")));
+      syncLayout.add(myChkSaveOnFrameDeactivation = CheckBox.create(IdeBundle.message("checkbox.save.files.on.frame.deactivation")));
+
+      HorizontalLayout syncWithIde = HorizontalLayout.create();
+      syncLayout.add(syncWithIde);
+      syncWithIde.add(myChkAutoSaveIfInactive = CheckBox.create(IdeBundle.message("checkbox.save.files.automatically")));
+      syncWithIde.add(myTfInactiveTimeout = TextBox.create());
+      myTfInactiveTimeout.setEnabled(false);
+      syncWithIde.add(Label.create(IdeBundle.message("label.inactive.timeout.sec")));
+      myChkAutoSaveIfInactive.addValueListener(event -> myTfInactiveTimeout.setEnabled(event.getValue()));
+
+      syncLayout.add(myChkUseSafeWrite = CheckBox.create("Use \"safe write\" (save changes to a temporary file first)"));
+      myRootLayout.add(LabeledLayout.create("Synchronization", syncLayout));
+
+      VerticalLayout screenLayout = VerticalLayout.create();
+      screenLayout.add(myChkSupportScreenReaders = CheckBox.create(IdeBundle.message("checkbox.support.screen.readers")));
+      myRootLayout.add(LabeledLayout.create("Accessibility", screenLayout));
+
+      VerticalLayout processLayout = VerticalLayout.create();
+      ValueGroup<Boolean> processGroup = ValueGroup.createBool();
+      processLayout.add(myTerminateProcessRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.terminate")).toGroup(processGroup));
+      processLayout.add(myDisconnectRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.disconnect")).toGroup(processGroup));
+      processLayout.add(myAskRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.ask")).toGroup(processGroup));
+
+      myRootLayout.add(LabeledLayout.create(IdeBundle.message("group.settings.process.tab.close"), processLayout));
+    }
+
+    @Nonnull
+    @Override
+    public Component compute() {
+      return myRootLayout;
+    }
   }
 
-  private int getConfirmOpenNewProject() {
-    if (myComponent.myConfirmWindowToOpenProject.isSelected()) {
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  protected MyComponent createPanel() {
+    return new MyComponent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected boolean isModified(@Nonnull MyComponent component) {
+    boolean isModified = false;
+    GeneralSettings settings = GeneralSettings.getInstance();
+    isModified |= settings.isReopenLastProject() != component.myChkReopenLastProject.getValue();
+    isModified |= settings.isConfirmExit() != component.myConfirmExit.getValue();
+    isModified |= settings.isSupportScreenReaders() != component.myChkSupportScreenReaders.getValue();
+    isModified |= settings.isSyncOnFrameActivation() != component.myChkSyncOnFrameActivation.getValue();
+    isModified |= settings.isSaveOnFrameDeactivation() != component.myChkSaveOnFrameDeactivation.getValue();
+    isModified |= settings.isAutoSaveIfInactive() != component.myChkAutoSaveIfInactive.getValue();
+    isModified |= settings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
+    isModified |= settings.getConfirmOpenNewProject() != getConfirmOpenNewProject(component);
+
+    int inactiveTimeout = -1;
+    try {
+      inactiveTimeout = Integer.parseInt(component.myTfInactiveTimeout.getValue());
+    }
+    catch (NumberFormatException ignored) {
+    }
+    isModified |= inactiveTimeout > 0 && settings.getInactiveTimeout() != inactiveTimeout;
+
+    isModified |= settings.isUseSafeWrite() != component.myChkUseSafeWrite.getValue();
+
+    return isModified;
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void apply(@Nonnull MyComponent component) throws ConfigurationException {
+    GeneralSettings settings = GeneralSettings.getInstance();
+
+    settings.setReopenLastProject(component.myChkReopenLastProject.getValue());
+    settings.setSupportScreenReaders(component.myChkSupportScreenReaders.getValue());
+    settings.setSyncOnFrameActivation(component.myChkSyncOnFrameActivation.getValue());
+    settings.setSaveOnFrameDeactivation(component.myChkSaveOnFrameDeactivation.getValue());
+    settings.setConfirmExit(component.myConfirmExit.getValue());
+    settings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
+    settings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
+
+    settings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
+    try {
+      int newInactiveTimeout = Integer.parseInt(component.myTfInactiveTimeout.getValue());
+      if (newInactiveTimeout > 0) {
+        settings.setInactiveTimeout(newInactiveTimeout);
+      }
+    }
+    catch (NumberFormatException ignored) {
+    }
+    settings.setUseSafeWrite(component.myChkUseSafeWrite.getValue());
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void reset(@Nonnull MyComponent component) {
+    GeneralSettings settings = GeneralSettings.getInstance();
+    component.myChkSupportScreenReaders.setValue(settings.isSupportScreenReaders());
+    component.myChkReopenLastProject.setValue(settings.isReopenLastProject());
+    component.myChkSyncOnFrameActivation.setValue(settings.isSyncOnFrameActivation());
+    component.myChkSaveOnFrameDeactivation.setValue(settings.isSaveOnFrameDeactivation());
+    component.myChkAutoSaveIfInactive.setValue(settings.isAutoSaveIfInactive());
+    component.myTfInactiveTimeout.setValue(Integer.toString(settings.getInactiveTimeout()));
+    component.myTfInactiveTimeout.setEnabled(settings.isAutoSaveIfInactive());
+    component.myChkUseSafeWrite.setValue(settings.isUseSafeWrite());
+    component.myConfirmExit.setValue(settings.isConfirmExit());
+    switch (settings.getProcessCloseConfirmation()) {
+      case TERMINATE:
+        component.myTerminateProcessRadioButton.setValue(true);
+        break;
+      case DISCONNECT:
+        component.myDisconnectRadioButton.setValue(true);
+        break;
+      case ASK:
+        component.myAskRadioButton.setValue(true);
+        break;
+    }
+    switch (settings.getConfirmOpenNewProject()) {
+      case GeneralSettings.OPEN_PROJECT_ASK:
+        component.myConfirmWindowToOpenProject.setValue(true);
+        break;
+      case GeneralSettings.OPEN_PROJECT_NEW_WINDOW:
+        component.myOpenProjectInNewWindow.setValue(true);
+        break;
+      case GeneralSettings.OPEN_PROJECT_SAME_WINDOW:
+        component.myOpenProjectInSameWindow.setValue(true);
+        break;
+    }
+  }
+
+  private static int getConfirmOpenNewProject(MyComponent component) {
+    if (component.myConfirmWindowToOpenProject.getValue()) {
       return GeneralSettings.OPEN_PROJECT_ASK;
     }
-    else if (myComponent.myOpenProjectInNewWindow.isSelected()) {
+    else if (component.myOpenProjectInNewWindow.getValue()) {
       return GeneralSettings.OPEN_PROJECT_NEW_WINDOW;
     }
     else {
@@ -54,11 +206,11 @@ public class GeneralSettingsConfigurable implements SearchableConfigurable, Conf
     }
   }
 
-  private GeneralSettings.ProcessCloseConfirmation getProcessCloseConfirmation() {
-    if (myComponent.myTerminateProcessJBRadioButton.isSelected()) {
+  private static GeneralSettings.ProcessCloseConfirmation getProcessCloseConfirmation(MyComponent component) {
+    if (component.myTerminateProcessRadioButton.getValue()) {
       return GeneralSettings.ProcessCloseConfirmation.TERMINATE;
     }
-    else if (myComponent.myDisconnectJBRadioButton.isSelected()) {
+    else if (component.myDisconnectRadioButton.getValue()) {
       return GeneralSettings.ProcessCloseConfirmation.DISCONNECT;
     }
     else {
@@ -66,116 +218,9 @@ public class GeneralSettingsConfigurable implements SearchableConfigurable, Conf
     }
   }
 
-  @RequiredDispatchThread
-  @Override
-  public void apply() throws ConfigurationException {
-    GeneralSettings settings = GeneralSettings.getInstance();
-
-    settings.setReopenLastProject(myComponent.myChkReopenLastProject.isSelected());
-    settings.setSupportScreenReaders(myComponent.myChkSupportScreenReaders.isSelected());
-    settings.setSyncOnFrameActivation(myComponent.myChkSyncOnFrameActivation.isSelected());
-    settings.setSaveOnFrameDeactivation(myComponent.myChkSaveOnFrameDeactivation.isSelected());
-    settings.setConfirmExit(myComponent.myConfirmExit.isSelected());
-    settings.setConfirmOpenNewProject(getConfirmOpenNewProject());
-    settings.setProcessCloseConfirmation(getProcessCloseConfirmation());
-
-    settings.setAutoSaveIfInactive(myComponent.myChkAutoSaveIfInactive.isSelected());
-    try {
-      int newInactiveTimeout = Integer.parseInt(myComponent.myTfInactiveTimeout.getText());
-      if (newInactiveTimeout > 0) {
-        settings.setInactiveTimeout(newInactiveTimeout);
-      }
-    }
-    catch (NumberFormatException ignored) {
-    }
-    settings.setUseSafeWrite(myComponent.myChkUseSafeWrite.isSelected());
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void reset() {
-    GeneralSettings settings = GeneralSettings.getInstance();
-    myComponent.myChkSupportScreenReaders.setSelected(settings.isSupportScreenReaders());
-    myComponent.myChkReopenLastProject.setSelected(settings.isReopenLastProject());
-    myComponent.myChkSyncOnFrameActivation.setSelected(settings.isSyncOnFrameActivation());
-    myComponent.myChkSaveOnFrameDeactivation.setSelected(settings.isSaveOnFrameDeactivation());
-    myComponent.myChkAutoSaveIfInactive.setSelected(settings.isAutoSaveIfInactive());
-    myComponent.myTfInactiveTimeout.setText(Integer.toString(settings.getInactiveTimeout()));
-    myComponent.myTfInactiveTimeout.setEditable(settings.isAutoSaveIfInactive());
-    myComponent.myChkUseSafeWrite.setSelected(settings.isUseSafeWrite());
-    myComponent.myConfirmExit.setSelected(settings.isConfirmExit());
-    switch (settings.getProcessCloseConfirmation()) {
-      case TERMINATE:
-        myComponent.myTerminateProcessJBRadioButton.setSelected(true);
-        break;
-      case DISCONNECT:
-        myComponent.myDisconnectJBRadioButton.setSelected(true);
-        break;
-      case ASK:
-        myComponent.myAskJBRadioButton.setSelected(true);
-        break;
-    }
-    switch (settings.getConfirmOpenNewProject()) {
-      case GeneralSettings.OPEN_PROJECT_ASK:
-        myComponent.myConfirmWindowToOpenProject.setSelected(true);
-        break;
-      case GeneralSettings.OPEN_PROJECT_NEW_WINDOW:
-        myComponent.myOpenProjectInNewWindow.setSelected(true);
-        break;
-      case GeneralSettings.OPEN_PROJECT_SAME_WINDOW:
-        myComponent.myOpenProjectInSameWindow.setSelected(true);
-        break;
-    }
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public boolean isModified() {
-    boolean isModified = false;
-    GeneralSettings settings = GeneralSettings.getInstance();
-    isModified |= settings.isReopenLastProject() != myComponent.myChkReopenLastProject.isSelected();
-    isModified |= settings.isSupportScreenReaders() != myComponent.myChkSupportScreenReaders.isSelected();
-    isModified |= settings.isSyncOnFrameActivation() != myComponent.myChkSyncOnFrameActivation.isSelected();
-    isModified |= settings.isSaveOnFrameDeactivation() != myComponent.myChkSaveOnFrameDeactivation.isSelected();
-    isModified |= settings.isAutoSaveIfInactive() != myComponent.myChkAutoSaveIfInactive.isSelected();
-    isModified |= settings.isConfirmExit() != myComponent.myConfirmExit.isSelected();
-    isModified |= settings.getProcessCloseConfirmation() != getProcessCloseConfirmation();
-    isModified |= settings.getConfirmOpenNewProject() != getConfirmOpenNewProject();
-
-    int inactiveTimeout = -1;
-    try {
-      inactiveTimeout = Integer.parseInt(myComponent.myTfInactiveTimeout.getText());
-    }
-    catch (NumberFormatException ignored) {
-    }
-    isModified |= inactiveTimeout > 0 && settings.getInactiveTimeout() != inactiveTimeout;
-
-    isModified |= settings.isUseSafeWrite() != myComponent.myChkUseSafeWrite.isSelected();
-
-    return isModified;
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public JComponent createComponent() {
-    if (myComponent == null) {
-      myComponent = new MyComponent();
-    }
-
-    myComponent.myChkAutoSaveIfInactive.addChangeListener(e -> myComponent.myTfInactiveTimeout.setEditable(myComponent.myChkAutoSaveIfInactive.isSelected()));
-
-    return myComponent.myPanel;
-  }
-
   @Override
   public String getDisplayName() {
     return IdeBundle.message("title.general");
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void disposeUIResources() {
-    myComponent = null;
   }
 
   @Override
@@ -184,37 +229,9 @@ public class GeneralSettingsConfigurable implements SearchableConfigurable, Conf
     return "preferences.general";
   }
 
-  private static class MyComponent {
-    private JPanel myPanel;
-    private JCheckBox myChkReopenLastProject;
-    private JCheckBox myChkSyncOnFrameActivation;
-    private JCheckBox myChkSaveOnFrameDeactivation;
-    private JCheckBox myChkAutoSaveIfInactive;
-    private JTextField myTfInactiveTimeout;
-    private JCheckBox myChkUseSafeWrite;
-    private JCheckBox myConfirmExit;
-    private JPanel myPluginOptionsPanel;
-    private JBRadioButton myOpenProjectInNewWindow;
-    private JBRadioButton myOpenProjectInSameWindow;
-    private JBRadioButton myConfirmWindowToOpenProject;
-    private JCheckBox myChkSupportScreenReaders;
-    private JBRadioButton myTerminateProcessJBRadioButton;
-    private JBRadioButton myDisconnectJBRadioButton;
-    private JBRadioButton myAskJBRadioButton;
-
-    public MyComponent() {
-    }
-  }
-
   @Override
   @Nonnull
   public String getId() {
     return getHelpTopic();
-  }
-
-  @Override
-  @Nullable
-  public Runnable enableSearch(String option) {
-    return null;
   }
 }

@@ -17,7 +17,6 @@
 package com.intellij.util.ui;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -33,7 +32,7 @@ import java.util.Map;
  *
  * @see ColorIcon
  */
-public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
+public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> implements consulo.ui.image.Image {
   private static final Map<Integer, EmptyIcon> cache = new HashMap<Integer, EmptyIcon>();
 
   public static final Icon ICON_16 = JBUI.scale(create(16));
@@ -93,7 +92,7 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
     this(width, height, false);
   }
 
-  private EmptyIcon(int width, int height, boolean useCache) {
+  protected EmptyIcon(int width, int height, boolean useCache) {
     this.width = width;
     this.height = height;
     this.myUseCache = useCache;
@@ -172,6 +171,16 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
 
   public EmptyIconUIResource asUIResource() {
     return new EmptyIconUIResource(this);
+  }
+
+  @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
   }
 
   public static class EmptyIconUIResource extends EmptyIcon implements UIResource {

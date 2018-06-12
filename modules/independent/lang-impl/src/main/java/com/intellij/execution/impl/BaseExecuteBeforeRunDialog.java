@@ -28,6 +28,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.StringSetSpinAllocator;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -146,7 +147,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
     final ConfigurationType[] configTypes = runManager.getConfigurationFactories();
 
     for (final ConfigurationType type : configTypes) {
-      final Icon icon = type.getIcon();
+      final Icon icon = TargetAWT.to(type.getIcon());
       DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(new ConfigurationTypeDescriptor(type, icon, isConfigurationAssigned(type)));
       root.add(typeNode);
       final Set<String> addedNames = StringSetSpinAllocator.alloc();

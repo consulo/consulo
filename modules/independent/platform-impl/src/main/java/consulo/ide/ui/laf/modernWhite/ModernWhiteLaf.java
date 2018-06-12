@@ -31,6 +31,11 @@ public class ModernWhiteLaf extends ModernDarkLaf {
   }
 
   @Override
+  public String getID() {
+    return "modern-light";
+  }
+
+  @Override
   protected String getPrefix() {
     return "modernWhite";
   }

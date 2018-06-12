@@ -20,13 +20,15 @@ import com.intellij.openapi.options.FontSize;
 import consulo.util.pointers.Named;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
+import java.util.Map;
 
 public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Named {
-  @NonNls String DEFAULT_SCHEME_NAME = "Default";
+  @NonNls
+  String DEFAULT_SCHEME_NAME = "Default";
 
   void setName(String name);
 
@@ -34,69 +36,85 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
 
   @Nonnull
   Color getDefaultBackground();
+
   @Nonnull
   Color getDefaultForeground();
 
   @Nullable
   Color getColor(ColorKey key);
+
   void setColor(ColorKey key, Color color);
+
+  void fillColors(Map<ColorKey, Color> colors);
 
   /**
    * The IDE has allowed to configure only a single font family for a while. However, that doesn't handle a situation when
    * that font family is unable to display particular char - fallback font family was chosen randomly from the whole collection
    * of all registered fonts.
-   * <p/>
+   * <p>
    * Now it's possible to specify more than one font, i.e. directly indicated 'fallback fonts sequence' (see {@link FontPreferences}).
    * However, old single font-based API is still here in order to preserve backward compatibility ({@link #getEditorFontName()} and
    * {@link #getEditorFontSize()}). I.e. those methods are just re-written in order to use {@link FontPreferences} object exposed
    * by this method.
    *
-   * @return    font preferences to use
+   * @return font preferences to use
    */
   @Nonnull
   FontPreferences getFontPreferences();
+
   void setFontPreferences(@Nonnull FontPreferences preferences);
 
   String getEditorFontName();
+
   void setEditorFontName(String fontName);
 
   int getEditorFontSize();
+
   /**
    * @return editor font size with scaling
    */
   int getEditorFontSize(boolean scale);
+
   void setEditorFontSize(int fontSize);
 
   FontSize getQuickDocFontSize();
+
   void setQuickDocFontSize(@Nonnull FontSize fontSize);
 
   Font getFont(EditorFontType key);
+
   void setFont(EditorFontType key, Font font);
 
   float getLineSpacing();
+
   void setLineSpacing(float lineSpacing);
 
   EditorColorsScheme clone();
 
   /**
-   * @return    console font preferences to use
+   * @return console font preferences to use
    * @see #getFontPreferences()
    */
   @Nonnull
   FontPreferences getConsoleFontPreferences();
+
   void setConsoleFontPreferences(@Nonnull FontPreferences preferences);
 
   String getConsoleFontName();
+
   void setConsoleFontName(String fontName);
 
   /**
    * @return console font size with scaling
    */
   int getConsoleFontSize();
+
   int getConsoleFontSize(boolean scale);
+
   void setConsoleFontSize(int fontSize);
 
   float getConsoleLineSpacing();
+
   void setConsoleLineSpacing(float lineSpacing);
 
   void readExternal(Element parentNode);

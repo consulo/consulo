@@ -19,27 +19,20 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
-import consulo.web.gwt.client.ui.EditorSegmentBuilder;
-import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
-import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.client.util.GwtUtil;
-import consulo.web.gwt.client.util.ReportableCallable;
-import consulo.web.gwt.shared.transport.*;
+import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 17-May-16
  */
 public class GwtEditorImpl extends SimplePanel {
-  private static class CodeLinePanel extends FlowPanel implements WidgetWithUpdateUI {
+  private static class CodeLinePanel extends FlowPanel {
     private GwtEditorImpl myEditor;
     private int myLine;
 
@@ -62,18 +55,13 @@ public class GwtEditorImpl extends SimplePanel {
       }
     }
 
-    @Override
     public void updateUI() {
-      if (Boolean.TRUE) {
-        return;
-      }
       Element parentElement = getElement().getParentElement();
 
-      GwtEditorColorScheme scheme = myEditor.getScheme();
       if (myEditor.myCurrentLinePanel == this) {
 
         // we need change color td element, due we have padding
-        parentElement.getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+        //parentElement.getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
       }
       else {
         myEditor.setDefaultTextColors(parentElement);
@@ -85,28 +73,16 @@ public class GwtEditorImpl extends SimplePanel {
     }
   }
 
-  public static class LineNumberSpan extends InlineHTML implements WidgetWithUpdateUI {
-    private GwtEditorImpl myEditor;
+  public static class LineNumberSpan extends InlineHTML {
 
     public LineNumberSpan(String html, GwtEditorImpl editor) {
       super(html);
-      myEditor = editor;
 
-      updateUI();
-    }
-
-    @Override
-    public void updateUI() {
-      if (Boolean.TRUE) {
-        return;
-      }
-      GwtEditorColorScheme scheme = myEditor.getScheme();
-
-      getElement().getStyle().setColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
+      getElement().addClassName(GwtEditorSchemeKeys.LINE_NUMBERS_COLOR + "_fg");
     }
   }
 
-  public static class MainGrid extends Grid implements WidgetWithUpdateUI {
+  public static class MainGrid extends Grid {
     private GwtEditorImpl myEditor;
 
     public MainGrid(GwtEditorImpl editor, int rows, int columns) {
@@ -116,47 +92,33 @@ public class GwtEditorImpl extends SimplePanel {
       updateUI();
     }
 
-    @Override
     public void updateUI() {
       myEditor.setDefaultTextColors(this);
     }
   }
 
-  public static class GutterPanel extends Grid implements WidgetWithUpdateUI {
-    private GwtEditorImpl myEditor;
-
+  public static class GutterPanel extends Grid {
     public GutterPanel(int lineCount, GwtEditorImpl editor) {
       super(lineCount + 1, 1);
-      myEditor = editor;
 
       // dummy element - fill free space with same background and resize it
       set(lineCount, new InlineHTML("&#8205;"));
 
       getCellFormatter().getElement(lineCount, 0).getStyle().setHeight(100, Style.Unit.PCT);
 
-      updateUI();
+      getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
+      getElement().addClassName(GwtEditorSchemeKeys.GUTTER_BACKGROUND + "_bg");
+      getElement().addClassName(GwtEditorSchemeKeys.TEARLINE_COLOR + "_brc");
+      getElement().getStyle().setProperty("borderRightStyle", "solid");
+      getElement().getStyle().setProperty("borderRightWidth", "1px");
     }
 
     public void set(int row, Widget widget) {
       setWidget(row, 0, widget);
     }
-
-    @Override
-    public void updateUI() {
-      if (Boolean.TRUE) {
-        return;
-      }
-      GwtEditorColorScheme scheme = myEditor.getScheme();
-
-      getElement().getStyle().setProperty("borderRightColor", GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.TEARLINE_COLOR)));
-      getElement().getStyle().setProperty("borderRightStyle", "solid");
-      getElement().getStyle().setProperty("borderRightWidth", "1px");
-      getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
-      getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
-    }
   }
 
-  public static class GutterLineGrid extends Grid implements WidgetWithUpdateUI {
+  public static class GutterLineGrid extends Grid {
     private GwtEditorImpl myEditor;
     private int myLine;
 
@@ -166,18 +128,13 @@ public class GwtEditorImpl extends SimplePanel {
       myLine = line;
     }
 
-    @Override
     public void updateUI() {
-      if (Boolean.TRUE) {
-        return;
-      }
       final Style style = getElement().getStyle();
-      GwtEditorColorScheme scheme = myEditor.getScheme();
       if (myEditor.myCurrentLinePanel != null && myEditor.myCurrentLinePanel.myLine == myLine) {
-        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
+        //style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.CARET_ROW_COLOR)));
       }
       else {
-        style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
+        //style.setBackgroundColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.GUTTER_BACKGROUND)));
       }
     }
   }
@@ -187,8 +144,8 @@ public class GwtEditorImpl extends SimplePanel {
 
   public static final int ourSelectFlag = 1 << 24;
 
-  @javax.annotation.Nullable
-  private EditorSegmentBuilder myBuilder;
+  @Nullable
+  private GwtEditorSegmentBuilder myBuilder;
 
   private int myLineCount;
 
@@ -196,15 +153,9 @@ public class GwtEditorImpl extends SimplePanel {
 
   private int myLastCaretOffset = -1;
 
-  private String myFileUrl;
-
-  private GwtTextRange myLastCursorPsiElementTextRange;
-
-  private GwtNavigateInfo myLastNavigationInfo;
+  private GwtEditorTextRange myLastCursorPsiElementTextRange;
 
   private CodeLinePanel myCurrentLinePanel;
-
-  private GwtEditorColorScheme myScheme;
 
   private GutterPanel myGutterPanel;
 
@@ -212,7 +163,7 @@ public class GwtEditorImpl extends SimplePanel {
 
   private DecoratedPopupPanel myLastTooltip;
 
-  private GwtTextRange myLastTooltipRange;
+  private GwtEditorTextRange myLastTooltipRange;
 
   enum HighlightState {
     UNKNOWN,
@@ -222,160 +173,48 @@ public class GwtEditorImpl extends SimplePanel {
 
   private HighlightState myHighlightState = HighlightState.UNKNOWN;
 
-  /*private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
-    @Override
-    public void schemeChanged(GwtEditorColorScheme scheme) {
-      myScheme = scheme;
-
-      Scheduler.get().scheduleDeferred(new Command() {
-        @Override
-        public void execute() {
-          GwtUIUtil.updateUI(GwtEditorImpl.this);
-
-          doHighlightImpl();
-        }
-      });
-    }
-  };*/
+  private EditorServerRpc myEditorServerRpc;
 
   public GwtEditorImpl() {
+    addStyleName("ui-ex-editor");
+
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.ONKEYUP);
 
-    String text = "some text\nvfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv\n" +
-                  "vfdsavfdasvfsdavafv";
-
-    myScheme = new GwtEditorColorScheme();
     setDefaultTextColors(this);
 
-    addStyleName("scroll");
+    //addStyleName("scroll");
 
     GwtUIUtil.fill(this);
 
-    setWidget(GwtUIUtil.loadingPanelDeprecated());
-
-    Scheduler.get().scheduleDeferred(new Command() {
-      @Override
-      public void execute() {
-        myBuilder = new EditorSegmentBuilder(text);
-        myLineCount = myBuilder.getLineCount();
-
-        setWidget(build());
-
-        if (myDelayedCaredOffset != -1) {
-          focusOffset(myDelayedCaredOffset);
-          myDelayedCaredOffset = -1;
-        }
-
-        //doHighlightImpl();
-      }
-    });
+    setWidget(GwtUIUtil.fillAndReturn(GwtLoadingPanelImplConnector.createPanel()));
   }
 
-  private void doHighlightImpl() {
-    GwtUtil.rpc().getLexerHighlight(myFileUrl, new ReportableCallable<List<GwtHighlightInfo>>() {
-      @Override
-      public void onSuccess(List<GwtHighlightInfo> result) {
-        addHighlightInfos(result, GwtEditorImpl.ourLexerFlag);
+  @Override
+  protected void onLoad() {
+    if (myEditorServerRpc != null) {
+      myEditorServerRpc.onShow();
+    }
+  }
 
-        myHighlightState = HighlightState.LEXER;
+  public void setEditorServerRpc(EditorServerRpc editorServerRpc) {
+    myEditorServerRpc = editorServerRpc;
+  }
 
-        runHighlightPasses(myLastCaretOffset, null);
+  public void setText(String text) {
+    Scheduler.get().scheduleDeferred(() -> {
+      myBuilder = new GwtEditorSegmentBuilder(text);
+      myLineCount = myBuilder.getLineCount();
 
-        myHighlightState = HighlightState.PASS;
+      setWidget(build());
+
+      if (myDelayedCaredOffset != -1) {
+        focusOffset(myDelayedCaredOffset);
+        myDelayedCaredOffset = -1;
       }
     });
   }
 
   private void runHighlightPasses(int offset, final Runnable callback) {
-    GwtUtil.rpc().runHighlightPasses(myFileUrl, offset, new ReportableCallable<List<GwtHighlightInfo>>() {
-      @Override
-      public void onSuccess(List<GwtHighlightInfo> result) {
-        addHighlightInfos(result, GwtEditorImpl.ourEditorFlag);
-
-        if (callback != null) {
-          callback.run();
-        }
-      }
-    });
   }
 
   public void updateUI() {
@@ -393,31 +232,7 @@ public class GwtEditorImpl extends SimplePanel {
   }
 
   private void setDefaultTextColors(Element element) {
-    if (Boolean.TRUE) {
-      return;
-    }
-    GwtTextAttributes textAttr = myScheme.getAttributes(GwtEditorColorScheme.TEXT);
-    if (textAttr != null) {
-      GwtColor background = textAttr.getBackground();
-      if (background != null) {
-        element.getStyle().setBackgroundColor(GwtStyleUtil.toString(background));
-      }
-      else {
-        element.getStyle().clearBackgroundColor();
-      }
-
-      GwtColor foreground = textAttr.getForeground();
-      if (foreground != null) {
-        element.getStyle().setColor(GwtStyleUtil.toString(foreground));
-      }
-      else {
-        element.getStyle().clearColor();
-      }
-    }
-  }
-
-  public void dispose() {
-
+    element.addClassName(GwtEditorSchemeKeys.TEXT + "_attr");
   }
 
   private boolean insideGutter(Element element) {
@@ -455,11 +270,11 @@ public class GwtEditorImpl extends SimplePanel {
         }
 
         Object range = element == null ? null : element.getPropertyObject("range");
-        if (!(range instanceof GwtTextRange)) {
+        if (!(range instanceof GwtEditorTextRange)) {
           return;
         }
 
-        final int startOffset = ((GwtTextRange)range).getStartOffset();
+        final int startOffset = ((GwtEditorTextRange)range).getStartOffset();
 
         final Widget widget = (Widget)element.getPropertyObject("widget");
 
@@ -467,41 +282,41 @@ public class GwtEditorImpl extends SimplePanel {
           if (myHighlightState == HighlightState.UNKNOWN) {
             return;
           }
-          GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
-            @Override
-            public void onSuccess(GwtNavigateInfo result) {
-              if (result == null) {
-                return;
-              }
-
-              GwtTextRange resultElementRange = result.getRange();
-              if (myLastCursorPsiElementTextRange != null && myLastCursorPsiElementTextRange.containsRange(resultElementRange)) {
-                return;
-              }
-
-              getElement().getStyle().setCursor(Style.Cursor.POINTER);
-
-              if (result.getDocText() != null) {
-                myLastTooltipRange = myLastCursorPsiElementTextRange;
-                showTooltip(widget, result.getDocText());
-              }
-              else {
-                removeTooltip();
-              }
-
-              myLastCursorPsiElementTextRange = resultElementRange;
-              GwtHighlightInfo highlightInfo = new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.CTRL_CLICKABLE), resultElementRange, Integer.MAX_VALUE);
-
-              myLastNavigationInfo = result;
-
-              addHighlightInfos(Arrays.asList(highlightInfo), ourSelectFlag);
-            }
-          });
+          //GwtUtil.rpc().getNavigationInfo(myFileUrl, startOffset, new ReportableCallable<GwtNavigateInfo>() {
+          //  @Override
+          //  public void onSuccess(GwtNavigateInfo result) {
+          //    if (result == null) {
+          //      return;
+          //    }
+          //
+          //    GwtEditorTextRange resultElementRange = result.getRange();
+          //    if (myLastCursorPsiElementTextRange != null && myLastCursorPsiElementTextRange.containsRange(resultElementRange)) {
+          //      return;
+          //    }
+          //
+          //    getElement().getStyle().setCursor(Style.Cursor.POINTER);
+          //
+          //    if (result.getDocText() != null) {
+          //      myLastTooltipRange = myLastCursorPsiElementTextRange;
+          //      showTooltip(widget, result.getDocText());
+          //    }
+          //    else {
+          //      removeTooltip();
+          //    }
+          //
+          //    myLastCursorPsiElementTextRange = resultElementRange;
+          //    GwtHighlightInfo highlightInfo = new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.CTRL_CLICKABLE), resultElementRange, Integer.MAX_VALUE);
+          //
+          //    myLastNavigationInfo = result;
+          //
+          //    addHighlightInfos(Arrays.asList(highlightInfo), ourSelectFlag);
+          //  }
+          //});
         }
         else {
-          if (widget instanceof EditorSegmentBuilder.CharSpan) {
-            myLastTooltipRange = ((EditorSegmentBuilder.CharSpan)widget).range;
-            String toolTip = ((EditorSegmentBuilder.CharSpan)widget).getToolTip();
+          if (widget instanceof GwtEditorSegmentBuilder.CharSpan) {
+            myLastTooltipRange = ((GwtEditorSegmentBuilder.CharSpan)widget).range;
+            String toolTip = ((GwtEditorSegmentBuilder.CharSpan)widget).getToolTip();
             if (toolTip != null) {
               showTooltip(widget, toolTip);
             }
@@ -532,7 +347,7 @@ public class GwtEditorImpl extends SimplePanel {
         }
 
         com.google.gwt.dom.client.Element element = DOM.eventGetToElement(event);
-        GwtTextRange range = element == null ? null : (GwtTextRange)element.getPropertyObject("range");
+        GwtEditorTextRange range = element == null ? null : (GwtEditorTextRange)element.getPropertyObject("range");
 
         if (range == null || myLastTooltipRange != null && !myLastTooltipRange.containsRange(range)) {
           removeTooltip();
@@ -553,12 +368,12 @@ public class GwtEditorImpl extends SimplePanel {
         int offset = 0;
         Object spanRange = element.getPropertyObject("range");
         if (spanRange != null) {
-          offset = ((GwtTextRange)spanRange).getStartOffset();
+          offset = ((GwtEditorTextRange)spanRange).getStartOffset();
         }
         else {
           Object lineRange = element.getPropertyObject("lineRange");
           if (lineRange != null) {
-            offset = ((GwtTextRange)lineRange).getStartOffset();
+            offset = ((GwtEditorTextRange)lineRange).getStartOffset();
           }
         }
         if (offset == myLastCaretOffset) {
@@ -568,15 +383,15 @@ public class GwtEditorImpl extends SimplePanel {
         myLastCaretOffset = offset;
 
         if (event.getCtrlKey()) {
-          if (myLastNavigationInfo != null) {
-            List<GwtNavigatable> navigates = myLastNavigationInfo.getNavigates();
-
-            GwtNavigatable navigatable = navigates.get(0);
-
-            onMouseOut();
-
-            //myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
-          }
+          //if (myLastNavigationInfo != null) {
+          //  List<GwtNavigatable> navigates = myLastNavigationInfo.getNavigates();
+          //
+          //  GwtNavigatable navigatable = navigates.get(0);
+          //
+          //  onMouseOut();
+          //
+          //  //myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
+          //}
         }
         else {
           onOffsetChangeImpl();
@@ -609,7 +424,7 @@ public class GwtEditorImpl extends SimplePanel {
       myBuilder.removeHighlightByRange(myLastCursorPsiElementTextRange, ourSelectFlag);
 
       myLastCursorPsiElementTextRange = null;
-      myLastNavigationInfo = null;
+      //myLastNavigationInfo = null;
     }
   }
 
@@ -661,18 +476,7 @@ public class GwtEditorImpl extends SimplePanel {
             switch (event.getKeyCode()) {
               case KeyCodes.KEY_B:
                 if (event.getCtrlKey()) {
-                  GwtUtil.rpc().getNavigationInfo(myFileUrl, myLastCaretOffset, new ReportableCallable<GwtNavigateInfo>() {
-                    @Override
-                    public void onSuccess(GwtNavigateInfo result) {
-                      if (result == null) {
-                        return;
-                      }
 
-                      GwtNavigatable navigatable = result.getNavigates().get(0);
-
-                      //myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
-                    }
-                  });
                 }
                 break;
             }
@@ -700,7 +504,7 @@ public class GwtEditorImpl extends SimplePanel {
     CodeLinePanel lineElement = null;
     int startOffset = 0;
 
-    for (EditorSegmentBuilder.CharSpan fragment : myBuilder.getFragments()) {
+    for (GwtEditorSegmentBuilder.CharSpan fragment : myBuilder.getFragments()) {
       if (lineElement == null) {
         lineElement = new CodeLinePanel(this, lineCount);
         setDefaultTextColors(lineElement);
@@ -718,7 +522,7 @@ public class GwtEditorImpl extends SimplePanel {
 
         editorCodePanel.setWidget(lineCount, 0, lineElement);
 
-        lineElement.getElement().setPropertyObject("lineRange", new GwtTextRange(startOffset, fragment.range.getEndOffset()));
+        lineElement.getElement().setPropertyObject("lineRange", new GwtEditorTextRange(startOffset, fragment.range.getEndOffset()));
         lineElement.updateUI(); // update after adding
 
         lineElement = null;
@@ -730,9 +534,6 @@ public class GwtEditorImpl extends SimplePanel {
     return gridPanel;
   }
 
-  public GwtEditorColorScheme getScheme() {
-    return myScheme;
-  }
 
   private void removeTooltip() {
     myLastTooltipRange = null;
@@ -754,14 +555,6 @@ public class GwtEditorImpl extends SimplePanel {
     myLastTooltip.show();
   }
 
-
-  public void addHighlightInfos(List<GwtHighlightInfo> result, int flag) {
-    if (myBuilder == null) {
-      return;
-    }
-    myBuilder.addHighlights(result, flag);
-  }
-
   public void setCaretOffset(int offset) {
     myLastCaretOffset = offset;
 
@@ -777,7 +570,7 @@ public class GwtEditorImpl extends SimplePanel {
     }
 
     myLastCaretOffset = offset;
-    for (EditorSegmentBuilder.CharSpan fragment : myBuilder.getFragments()) {
+    for (GwtEditorSegmentBuilder.CharSpan fragment : myBuilder.getFragments()) {
       if (fragment.range.containsRange(offset, offset)) {
         fragment.getElement().focus();
         fragment.getElement().scrollIntoView();
@@ -803,14 +596,11 @@ public class GwtEditorImpl extends SimplePanel {
       myCurrentLinePanel = null; // drop current line
 
       currentLinePanel.updateUI();
-
-      GwtUIUtil.updateUI(myGutterPanel);
     }
 
     myCurrentLinePanel = widget;
 
     myCurrentLinePanel.updateUI();
-    GwtUIUtil.updateUI(myGutterPanel);
   }
 
   public native void set(Element element) /*-{

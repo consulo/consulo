@@ -21,9 +21,9 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -61,8 +61,8 @@ public class SubstitutedFileType extends LanguageFileType{
 
   @Nonnull
   @Override
-  public String getName() {
-    return myFileType.getName();
+  public String getId() {
+    return myFileType.getId();
   }
 
   @Nonnull
@@ -78,7 +78,7 @@ public class SubstitutedFileType extends LanguageFileType{
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myFileType.getIcon();
   }
 

@@ -25,10 +25,12 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
+import consulo.ui.image.Image;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,8 +57,8 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  @javax.annotation.Nullable
-  public Icon getIcon() {
+  @Nullable
+  public Image getIcon() {
     return null;
   }
 

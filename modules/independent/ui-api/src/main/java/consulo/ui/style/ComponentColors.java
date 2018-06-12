@@ -21,5 +21,6 @@ package consulo.ui.style;
  */
 public enum ComponentColors implements ColorKey {
   BORDER,
-  TEXT
+  TEXT,
+  DISABLED_TEXT
 }

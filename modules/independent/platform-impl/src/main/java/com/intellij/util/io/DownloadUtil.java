@@ -7,17 +7,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.Producer;
-import com.intellij.util.containers.Predicate;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.NetUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * @author Sergey Simonchik
@@ -58,7 +58,7 @@ public class DownloadUtil {
       downloadContentToFile(indicator, url, tempFile);
       if (contentChecker != null) {
         String content = FileUtil.loadFile(tempFile);
-        if (!contentChecker.apply(content)) {
+        if (!contentChecker.test(content)) {
           return false;
         }
       }

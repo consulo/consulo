@@ -20,17 +20,16 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import consulo.roots.ContentFolderTypeProvider;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 22:46/31.10.13
  */
 public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
+  private static final java.awt.Color EXCLUDED_COLOR = new JBColor(new java.awt.Color(0x992E00), DarculaColors.RED);
 
   @Nonnull
   public static ExcludedContentFolderTypeProvider getInstance() {
@@ -43,12 +42,12 @@ public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Modules.ExcludeRoot;
   }
 
   @Override
-  public Icon getChildDirectoryIcon() {
+  public Image getChildDirectoryIcon() {
     return AllIcons.Modules.ExcludeRoot;
   }
 
@@ -60,7 +59,7 @@ public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider
 
   @Nonnull
   @Override
-  public Color getGroupColor() {
+  public java.awt.Color getGroupColor() {
     return EXCLUDED_COLOR;
   }
 }

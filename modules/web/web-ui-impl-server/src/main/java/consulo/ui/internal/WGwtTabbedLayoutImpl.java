@@ -20,15 +20,16 @@ import com.intellij.util.containers.hash.LinkedHashMap;
 import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
 import consulo.ui.internal.image.WGwtImageUrlCache;
-import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutRpc;
+import consulo.ui.shared.Size;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutServerRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +42,65 @@ import java.util.function.BiConsumer;
 public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements TabbedLayout, VaadinWrapper {
   private Map<WGwtTabImpl, com.vaadin.ui.Component> myTabs = new LinkedHashMap<>();
 
-  private TabbedLayoutRpc myRpc = new TabbedLayoutRpc() {
+  private TabbedLayoutServerRpc myRpc = new TabbedLayoutServerRpc() {
     @Override
     public void close(int index) {
-      System.out.println("Close tab " + index);
+      closeTab(index);
     }
   };
 
   public WGwtTabbedLayoutImpl() {
     registerRpc(myRpc);
+  }
+
+  protected void selectTab(int index) {
+    getState().mySelected = index;
+
+    getClientRpc().select(index);
+  }
+
+  private void closeTab(int index) {
+    WGwtTabImpl target = null;
+    for (WGwtTabImpl tab : myTabs.keySet()) {
+      if (tab.getIndex() == index) {
+        target = tab;
+        break;
+      }
+    }
+
+    if (target == null) {
+      return;
+    }
+
+    boolean last = myTabs.size() == index + 1;
+
+    com.vaadin.ui.Component component = myTabs.remove(target);
+
+    target.getCloseHandler().accept(target, (Component)component);
+
+    int i = 0;
+    for (WGwtTabImpl tab : myTabs.keySet()) {
+      tab.setIndex(i++);
+    }
+
+    if (getState().mySelected == index) {
+      if (last) {
+        getState().mySelected--;
+      }
+      else {
+        getState().mySelected++;
+      }
+
+      if (getState().mySelected < 0) {
+        getState().mySelected = 0;
+      }
+    }
+
+    markAsDirty();
+  }
+
+  private TabbedLayoutClientRpc getClientRpc() {
+    return getRpcProxy(TabbedLayoutClientRpc.class);
   }
 
   @Override
@@ -70,8 +121,8 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
       tabState.myItemSegments = tab.getItem().myItemSegments;
       BiConsumer<Tab, Component> closeHandler = tab.getCloseHandler();
       if (closeHandler != null) {
-        tabState.myCloseButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNew).getState();
-        tabState.myCloseHoverButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNewHovered).getState();
+        tabState.myCloseButton = WGwtImageUrlCache.map(AllIcons.Actions.CloseNew).getState();
+        tabState.myCloseHoverButton = WGwtImageUrlCache.map(AllIcons.Actions.CloseNewHovered).getState();
       }
 
       tabStates.add(tabState);
@@ -81,7 +132,7 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
   @Nonnull
   @Override
   public Tab createTab() {
-    return new WGwtTabImpl();
+    return new WGwtTabImpl(-1, this);
   }
 
   @RequiredUIAccess
@@ -89,8 +140,14 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
   @Override
   public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
     addComponent((com.vaadin.ui.Component)component);
-    myTabs.put((WGwtTabImpl)tab, (com.vaadin.ui.Component)component);
+    WGwtTabImpl gwtTab = (WGwtTabImpl)tab;
+    int index = myTabs.size();
+    gwtTab.setIndex(index);
+
+    myTabs.put(gwtTab, (com.vaadin.ui.Component)component);
     markAsDirtyRecursive();
+
+    getState().mySelected = index;
     return tab;
   }
 
@@ -98,7 +155,7 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
   @Nonnull
   @Override
   public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
-    WGwtTabImpl presentation = new WGwtTabImpl();
+    WGwtTabImpl presentation = new WGwtTabImpl(myTabs.size(), this);
     presentation.append(tabName);
     return addTab(presentation, component);
   }

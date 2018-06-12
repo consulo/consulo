@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.roots.OrderRootType;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,7 +27,7 @@ import javax.swing.*;
 public class OrderRootTypeElement extends LibraryTableTreeContentElement<OrderRootTypeElement> {
   private final OrderRootType myRootType;
 
-  public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, @Nonnull OrderRootType rootType, final String nodeText, final Icon icon) {
+  public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, @Nonnull OrderRootType rootType, String nodeText, @Nonnull Image icon) {
     super(rootElementDescriptor);
     myRootType = rootType;
     setIcon(icon);

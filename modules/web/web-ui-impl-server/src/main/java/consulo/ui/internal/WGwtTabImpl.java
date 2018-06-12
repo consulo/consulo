@@ -17,8 +17,8 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.Tab;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
@@ -27,13 +27,41 @@ import java.util.function.BiConsumer;
  */
 public class WGwtTabImpl extends WGwtItemPresentationImpl implements Tab {
   private BiConsumer<Tab, Component> myCloseHandler;
+  private WGwtTabbedLayoutImpl myTabbedLayout;
+  private int myIndex;
+
+  public WGwtTabImpl(int index, WGwtTabbedLayoutImpl tabbedLayout) {
+    myIndex = index;
+    myTabbedLayout = tabbedLayout;
+  }
+
+  public void setIndex(int index) {
+    myIndex = index;
+  }
+
+  public int getIndex() {
+    return myIndex;
+  }
 
   @Override
   public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
     myCloseHandler = closeHandler;
   }
 
+  @Override
+  public void select() {
+    if (myIndex == -1) {
+      throw new UnsupportedOperationException("Tab is not added to layout");
+    }
+    myTabbedLayout.selectTab(myIndex);
+  }
+
   public BiConsumer<Tab, Component> getCloseHandler() {
     return myCloseHandler;
+  }
+
+  @Override
+  protected void after() {
+    myTabbedLayout.markAsDirty();
   }
 }

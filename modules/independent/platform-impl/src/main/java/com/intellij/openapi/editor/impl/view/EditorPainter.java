@@ -68,7 +68,7 @@ class EditorPainter implements TextDrawingCallback {
 
 
   private final EditorView myView;
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final Document myDocument;
 
   EditorPainter(EditorView view) {
@@ -836,7 +836,7 @@ class EditorPainter implements TextDrawingCallback {
   }
 
   private void paintCaret(Graphics2D g_) {
-    EditorImpl.CaretRectangle[] locations = myEditor.getCaretLocations(true);
+    DesktopEditorImpl.CaretRectangle[] locations = myEditor.getCaretLocations(true);
     if (locations == null) return;
 
     Graphics2D g = IdeBackgroundUtil.getOriginalGraphics(g_);
@@ -846,7 +846,7 @@ class EditorPainter implements TextDrawingCallback {
     Color caretColor = myEditor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
     if (caretColor == null) caretColor = new JBColor(CARET_DARK, CARET_LIGHT);
     int minX = getMinX();
-    for (EditorImpl.CaretRectangle location : locations) {
+    for (DesktopEditorImpl.CaretRectangle location : locations) {
       float x = location.myPoint.x;
       int y = location.myPoint.y - topOverhang;
       Caret caret = location.myCaret;
@@ -899,11 +899,11 @@ class EditorPainter implements TextDrawingCallback {
   }
 
   void repaintCarets() {
-    EditorImpl.CaretRectangle[] locations = myEditor.getCaretLocations(false);
+    DesktopEditorImpl.CaretRectangle[] locations = myEditor.getCaretLocations(false);
     if (locations == null) return;
     int nominalLineHeight = myView.getNominalLineHeight();
     int topOverhang = myView.getTopOverhang();
-    for (EditorImpl.CaretRectangle location : locations) {
+    for (DesktopEditorImpl.CaretRectangle location : locations) {
       int x = location.myPoint.x;
       int y = location.myPoint.y - topOverhang;
       int width = Math.max(location.myWidth, CARET_DIRECTION_MARK_SIZE);

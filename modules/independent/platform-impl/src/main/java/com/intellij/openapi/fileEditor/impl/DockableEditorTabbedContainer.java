@@ -30,6 +30,7 @@ import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,12 +90,13 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
 
   @Override
   public RelativeRectangle getAcceptArea() {
-    return new RelativeRectangle(mySplitters);
+    return new RelativeRectangle(mySplitters.getComponent());
   }
 
+  @Override
   public RelativeRectangle getAcceptAreaFallback() {
-    JRootPane root = mySplitters.getRootPane();
-    return root != null ? new RelativeRectangle(root) : new RelativeRectangle(mySplitters);
+    JRootPane root = mySplitters.getComponent().getRootPane();
+    return root != null ? new RelativeRectangle(root) : new RelativeRectangle(mySplitters.getComponent());
   }
 
   @Nonnull
@@ -154,7 +156,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
       file.putUserData(DesktopEditorWindow.INITIAL_INDEX_KEY, index);
     }
 
-    ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(window, file, true);
+    ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(UIAccess.get(), window, file, true);
     window.setFilePinned(file, dockableEditor.isPinned());
   }
 
@@ -197,7 +199,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
 
   @Override
   public JComponent getContainerComponent() {
-    return mySplitters;
+    return mySplitters.getComponent();
   }
 
   public DesktopEditorsSplitters getSplitters() {
@@ -246,7 +248,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
   public void showNotify() {
     if (!myWasEverShown) {
       myWasEverShown = true;
-      getSplitters().openFiles();
+      getSplitters().openFiles(UIAccess.get());
     }
   }
 

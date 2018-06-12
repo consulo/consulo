@@ -32,8 +32,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -51,7 +51,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
   private FileColorConfiguration myConfiguration;
   private JComboBox myScopeComboBox;
   private final FileColorManager myManager;
-  private HashMap<String,AbstractButton> myColorToButtonMap;
+  private HashMap<String, AbstractButton> myColorToButtonMap;
   private static final String CUSTOM_COLOR_NAME = "Custom";
   private final Map<String, NamedScope> myScopeNames = new HashMap<String, NamedScope>();
 
@@ -158,10 +158,11 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     close(OK_EXIT_CODE);
 
     if (myConfiguration != null) {
-      myConfiguration.setScopeName((String) myScopeComboBox.getSelectedItem());
+      myConfiguration.setScopeName((String)myScopeComboBox.getSelectedItem());
       myConfiguration.setColorName(getColorName());
-    } else {
-      myConfiguration = new FileColorConfiguration((String) myScopeComboBox.getSelectedItem(), getColorName());
+    }
+    else {
+      myConfiguration = new FileColorConfiguration((String)myScopeComboBox.getSelectedItem(), getColorName());
     }
   }
 
@@ -175,8 +176,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
 
     final JPanel inner = new JPanel();
     inner.setLayout(new BoxLayout(inner, BoxLayout.X_AXIS));
-    inner.setBorder(
-      BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    inner.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
     if (!UIUtil.isUnderDarcula()) {
       inner.setBackground(Color.WHITE);
     }
@@ -233,7 +233,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
 
   @Override
   public boolean isOKActionEnabled() {
-    final String scopeName = (String) myScopeComboBox.getSelectedItem();
+    final String scopeName = (String)myScopeComboBox.getSelectedItem();
     return scopeName != null && scopeName.length() > 0 && getColorName() != null;
   }
 
@@ -276,9 +276,11 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     public Color getForeground() {
       if (getModel().isSelected()) {
         return JBColor.foreground();
-      } else if (getModel().isRollover()) {
+      }
+      else if (getModel().isRollover()) {
         return JBColor.GRAY;
-      } else {
+      }
+      else {
         return getColor();
       }
     }
@@ -297,12 +299,14 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
 
     @Override
     protected void doPerformAction(ActionEvent e) {
-      final Color color = ColorChooser.chooseColor(FileColorConfigurationEditDialog.this.getRootPane(), "Choose Color", myColor);
-      if (color != null) {
+      ColorChooser.chooseColor(FileColorConfigurationEditDialog.this.getRootPane(), "Choose Color", myColor, color -> {
+        if (color != null) {
           myColor = color;
-      }
-      setSelected(myColor != null);
-      getOKAction().setEnabled(myColor != null);
+        }
+
+        setSelected(myColor != null);
+        getOKAction().setEnabled(myColor != null);
+      });
     }
 
     @Override

@@ -21,6 +21,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.ui.UIAccess;
 
 /**
  * User: anna
@@ -40,7 +42,7 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
       if (siblings.length == 1) {
         final EditorWithProviderComposite editorComposite = window.getSelectedEditor();
         final HistoryEntry entry = editorComposite.currentStateAsHistoryEntry();
-        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(siblings[0], vFile, true, entry, true);
+        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(UIAccess.get(), siblings[0], vFile, true, entry, true);
         window.closeFile(vFile);
       }
     }

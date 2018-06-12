@@ -18,15 +18,16 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.image.Image;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.swing.*;
-
 public interface FileType extends Named {
   FileType[] EMPTY_ARRAY = new FileType[0];
+
   ArrayFactory<FileType> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new FileType[count];
 
   /**
@@ -45,7 +46,6 @@ public interface FileType extends Named {
    *
    * @return The file type name.
    */
-  @Override
   @Nonnull
   @NonNls
   @Deprecated
@@ -80,14 +80,16 @@ public interface FileType extends Named {
    */
 
   @Nullable
-  Icon getIcon();
+  Image getIcon();
 
   /**
    * Returns true if files of the specified type contain binary data. Used for source control, to-do items scanning and other purposes.
    *
    * @return true if the file is binary, false if the file is plain text.
    */
-  boolean isBinary();
+  default boolean isBinary() {
+    return false;
+  }
 
   /**
    * Returns true if the specified file type is read-only. Read-only file types are not shown in the "File Types" settings dialog,

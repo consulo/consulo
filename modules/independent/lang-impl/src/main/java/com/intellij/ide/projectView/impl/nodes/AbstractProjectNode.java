@@ -28,6 +28,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 
@@ -79,7 +80,7 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
 
   @Override
   public void update(PresentationData presentation) {
-    presentation.setIcon(Application.get().getIcon());
+    presentation.setIcon(TargetAWT.to(Application.get().getIcon()));
     presentation.setPresentableText(getProject().getName());
   }
 

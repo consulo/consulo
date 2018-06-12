@@ -18,10 +18,10 @@ package com.intellij.execution.configurations;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * Base interface for things that can be executed (run configurations explicitly managed by user, or custom run profile implementations
@@ -54,6 +54,6 @@ public interface RunProfile {
    *
    * @return the icon for the run configuration, or null if the default executor icon should be used.
    */
-  @javax.annotation.Nullable
-  Icon getIcon();
+  @Nullable
+  Image getIcon();
 }

@@ -4,17 +4,15 @@ import com.intellij.execution.process.ConsoleHighlighter;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Weighted;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,12 +94,6 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Weighted
   @Nonnull
   public String getDisplayName() {
     return OptionsBundle.message("color.settings.console.name");
-  }
-
-  @Override
-  @Nonnull
-  public Icon getIcon() {
-    return PlainTextFileType.INSTANCE.getIcon();
   }
 
   @Override

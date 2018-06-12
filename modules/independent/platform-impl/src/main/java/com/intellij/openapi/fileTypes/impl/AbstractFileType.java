@@ -94,6 +94,12 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     mySyntaxTable = syntaxTable;
   }
 
+  @Nonnull
+  @Override
+  public String getName() {
+    return getId();
+  }
+
   @Override
   public AbstractFileType clone() {
     return (AbstractFileType)super.clone();

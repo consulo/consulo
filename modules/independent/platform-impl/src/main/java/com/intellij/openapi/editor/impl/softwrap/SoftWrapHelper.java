@@ -18,8 +18,8 @@ package com.intellij.openapi.editor.impl.softwrap;
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.SoftWrapModel;
 import com.intellij.openapi.editor.VisualPosition;
-import com.intellij.openapi.editor.impl.CaretImpl;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopCaretImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 
 /**
  * Holds utility methods for soft wraps-related processing.
@@ -49,11 +49,11 @@ public class SoftWrapHelper {
    * @return          <code>true</code> if caret offset of the given editor points to visual position that belongs to
    *                  visual line where soft wrap end is located
    */
-  public static boolean isCaretAfterSoftWrap(CaretImpl caret) {
+  public static boolean isCaretAfterSoftWrap(DesktopCaretImpl caret) {
     if (!caret.isUpToDate()) {
       return false;
     }
-    EditorImpl editor = caret.getEditor();
+    DesktopEditorImpl editor = caret.getEditor();
     SoftWrapModel softWrapModel = editor.getSoftWrapModel();
     int offset = caret.getOffset();
     SoftWrap softWrap = softWrapModel.getSoftWrap(offset);

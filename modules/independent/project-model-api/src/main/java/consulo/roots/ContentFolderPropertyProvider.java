@@ -17,24 +17,23 @@ package consulo.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Key;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 21:58/25.11.13
  */
 public abstract class ContentFolderPropertyProvider<T> {
-  public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME =
-    ExtensionPointName.create("com.intellij.contentFolderPropertyProvider");
+  public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME = ExtensionPointName.create("com.intellij.contentFolderPropertyProvider");
 
   @Nonnull
   public abstract Key<T> getKey();
 
   @Nullable
-  public abstract Icon getLayerIcon(@Nonnull T value);
+  public abstract Image getLayerIcon(@Nonnull T value);
 
   public abstract T fromString(@Nonnull String value);
 
@@ -43,10 +42,10 @@ public abstract class ContentFolderPropertyProvider<T> {
   @Nonnull
   public abstract T[] getValues();
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ContentFolderPropertyProvider<?> findProvider(@Nonnull String key) {
     for (ContentFolderPropertyProvider provider : EP_NAME.getExtensions()) {
-      if(key.equals(provider.getKey().toString())) {
+      if (key.equals(provider.getKey().toString())) {
         return provider;
       }
     }

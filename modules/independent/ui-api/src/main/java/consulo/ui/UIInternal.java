@@ -16,15 +16,16 @@
 package consulo.ui;
 
 import consulo.annotations.Internal;
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
+import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.util.ServiceLoaderUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -39,7 +40,7 @@ public abstract class UIInternal {
     return ourInstance;
   }
 
-  abstract CheckBox _Components_checkBox(@Nonnull String text, boolean selected);
+  abstract CheckBox _Components_checkBox();
 
   abstract DockLayout _Layouts_dock();
 
@@ -73,17 +74,27 @@ public abstract class UIInternal {
 
   abstract Button _Components_button(String text);
 
+  abstract Hyperlink _Components_hyperlink(String text);
+
   abstract ImageBox _Components_imageBox(Image image);
 
   abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
 
   public abstract Image _Images_image(URL url);
 
-  public abstract FoldedImage _Images_foldedImage(Image[] images);
+  public abstract Image _ImageEffects_layered(Image[] images);
 
-  abstract MenuItem _MenuItems_item(String text);
+  public abstract Image _ImageEffects_transparent(@Nonnull Image original, float alpha);
 
-  abstract Menu _MenuItems_menu(String text);
+  public abstract Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1);
+
+  public abstract Image _ImageEffects_empty(int width, int height);
+
+  abstract MenuItem _MenuItem_create(String text);
+
+  abstract Menu _Menu_create(String text);
+
+  abstract MenuSeparator _MenuSeparator_create();
 
   abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
 
@@ -96,6 +107,10 @@ public abstract class UIInternal {
   public abstract Window _Windows_modalWindow(String title);
 
   public abstract AlertBuilder _Alerts_builder();
+
+  public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
+
+  public abstract <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list);
 
   @RequiredUIAccess
   @Nonnull

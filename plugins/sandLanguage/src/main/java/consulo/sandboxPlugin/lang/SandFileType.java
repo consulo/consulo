@@ -17,9 +17,10 @@ package consulo.sandboxPlugin.lang;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -50,9 +51,9 @@ public class SandFileType extends LanguageFileType {
     return "sand";
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Static;
   }
 }

@@ -27,10 +27,10 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.projectImport.ProjectImportProvider;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -58,9 +58,9 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
     return myProvider.getName();
   }
 
-  @javax.annotation.Nullable
+  @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myProvider.getIcon();
   }
 
@@ -94,7 +94,7 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
 
   @Nullable
   @Override
-  public Icon getIconForFile(VirtualFile file) {
+  public Image getIconForFile(VirtualFile file) {
     return myProvider.getIconForFile(file);
   }
 

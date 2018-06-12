@@ -22,9 +22,9 @@ import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -66,6 +66,13 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
         getListenerDispatcher(SelectListener.class).onSelected(gwtTreeNode);
       }
     }
+
+    @Override
+    public void onContextMenu(int x, int y) {
+      if(myContextHandler != null) {
+        myContextHandler.show(x, y);
+      }
+    }
   };
 
   private final Executor myUpdater = Executors.newSingleThreadExecutor();  //TODO [VISTALL] very bad idea without dispose
@@ -76,6 +83,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   private final Map<String, WGwtTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
   private final WGwtTreeNodeImpl<NODE> myRootNode;
   private final TreeModel<NODE> myModel;
+  private ContextHandler myContextHandler;
 
   public WGwtTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model) {
     myModel = model;
@@ -109,6 +117,11 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   @Override
   public void expand(@Nonnull TreeNode<NODE> node) {
     queue((WGwtTreeNodeImpl<NODE>)node, TreeState.TreeChangeType.SET);
+  }
+
+  @Override
+  public void setContextHandler(@Nonnull ContextHandler contextHandler) {
+    myContextHandler = contextHandler;
   }
 
   private void queue(@Nonnull WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
@@ -159,7 +172,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     parent.setChildren(list);
 
     Comparator<TreeNode<NODE>> nodeComparator = myModel.getNodeComparator();
-    if(nodeComparator != null) {
+    if (nodeComparator != null) {
       list.sort(nodeComparator);
     }
 

@@ -16,43 +16,82 @@
 package consulo.ui.internal;
 
 import com.intellij.ui.components.JBCheckBox;
+import consulo.awt.TargetAWT;
 import consulo.ui.CheckBox;
+import consulo.ui.KeyCode;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+import consulo.ui.internal.base.SwingComponentDelegate;
+import consulo.ui.util.MnemonicInfo;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox, SwingWrapper {
-  public DesktopCheckBoxImpl(String text, boolean selected) {
-    super(text, selected);
+public class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements CheckBox, SwingWrapper {
+  public DesktopCheckBoxImpl() {
+    myComponent = new JBCheckBox();
   }
 
   @Nonnull
   @Override
   public Boolean getValue() {
-    return isSelected();
+    return myComponent.isSelected();
   }
 
   @RequiredUIAccess
   @Override
-  public void setValue(@javax.annotation.Nullable Boolean value, boolean fireEvents) {
+  public void setValue(@Nullable Boolean value, boolean fireEvents) {
     if (value == null) {
       throw new IllegalArgumentException();
     }
 
-    setSelected(value);
+    myComponent.setSelected(value);
+  }
+
+  @Nonnull
+  @Override
+  public String getText() {
+    return myComponent.getText();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setText(@Nonnull String text) {
+    MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
+    if (mnemonicInfo == null) {
+      myComponent.setText(text);
+
+      setMnemonicKey(null);
+      setMnemonicTextIndex(-1);
+    }
+    else {
+      myComponent.setText(mnemonicInfo.getText());
+      setMnemonicKey(mnemonicInfo.getKeyCode());
+      setMnemonicTextIndex(mnemonicInfo.getIndex());
+    }
   }
 
   @Override
   public void addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    addItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
+    myComponent.addItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
   }
 
   @Override
   public void removeValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    removeItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
+    myComponent.removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
+  }
+
+  @Override
+  public void setMnemonicKey(@Nullable KeyCode key) {
+    myComponent.setMnemonic(key == null ? 0 : TargetAWT.to(key));
+  }
+
+  @Override
+  public void setMnemonicTextIndex(int index) {
+    myComponent.setDisplayedMnemonicIndex(index);
   }
 }

@@ -29,7 +29,7 @@ public class FileListRenderer extends ColoredListCellRenderer {
     mySelected = false;
     setBackground(null);
     VirtualFile vf = (VirtualFile) value;
-    setIcon(VirtualFilePresentation.getIcon(vf));
+    setIcon(VirtualFilePresentation.getAWTIcon(vf));
     append(vf.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     VirtualFile parent = vf.getParent();
     if (parent != null) {

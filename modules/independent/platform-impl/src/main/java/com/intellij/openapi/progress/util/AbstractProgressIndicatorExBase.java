@@ -24,6 +24,8 @@ import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakList;
+import consulo.application.TransactionGuardEx;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;
@@ -109,7 +111,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
       ModalityState modalityState = ModalityState.defaultModalityState();
       if (!myModalityEntered &&
           !ApplicationManager.getApplication().isDispatchThread() &&
-          !((TransactionGuardImpl)TransactionGuard.getInstance()).isWriteSafeModality(modalityState)) {
+          !((TransactionGuardEx)TransactionGuard.getInstance()).isWriteSafeModality(modalityState)) {
         // exceptions here should be assigned to Peter
         LOG.error("Non-modal progress should be started in a write-safe context: an action or modality-aware invokeLater. See also TransactionGuard documentation.");
       }

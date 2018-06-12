@@ -16,9 +16,6 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.bookmarks.Bookmark;
-import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ViewSettings;
@@ -37,19 +34,17 @@ import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiPackageHelper;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.RowIcon;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 
@@ -124,8 +119,8 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
   protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
-    final Icon icon = VfsIconUtil.getIcon(virtualFile, 0, myProject);
-    data.setIcon(patchIcon(icon, virtualFile));
+    final Icon icon = TargetAWT.to(VfsIconUtil.getIcon(virtualFile, 0, myProject));
+    data.setIcon(icon);
   }
 
   @Override
@@ -249,28 +244,6 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
       return PsiPackageHelper.getInstance(getProject()).getQualifiedName(directory, true);
     }
     return super.getTitle();
-  }
-
-  protected Icon patchIcon(Icon original, VirtualFile file) {
-    Icon icon = original;
-
-    final Bookmark bookmarkAtFile = BookmarkManager.getInstance(myProject).findFileBookmark(file);
-    if (bookmarkAtFile != null) {
-      final RowIcon composite = new RowIcon(2, RowIcon.Alignment.CENTER);
-      composite.setIcon(icon, 0);
-      composite.setIcon(bookmarkAtFile.getIcon(), 1);
-      icon = composite;
-    }
-
-    if (!file.isWritable()) {
-      icon = LayeredIcon.create(icon, AllIcons.Nodes.Locked);
-    }
-
-    if (file.is(VFileProperty.SYMLINK)) {
-      icon = LayeredIcon.create(icon, AllIcons.Nodes.Symlink);
-    }
-
-    return icon;
   }
 
   @Override

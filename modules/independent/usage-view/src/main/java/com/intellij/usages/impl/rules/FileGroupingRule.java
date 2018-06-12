@@ -32,6 +32,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.usages.*;
 import com.intellij.usages.rules.SingleParentUsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +73,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     private Icon getIconImpl() {
-      return VfsIconUtil.getIcon(myFile, Iconable.ICON_FLAG_READ_STATUS, myProject);
+      return TargetAWT.to(VfsIconUtil.getIcon(myFile, Iconable.ICON_FLAG_READ_STATUS, myProject));
     }
 
     @Override

@@ -30,7 +30,7 @@ public abstract class StartupManager {
    * @param project the project for which the instance should be returned.
    * @return the startup manager instance.
    */
-  public static StartupManager getInstance(Project project) {
+  public static StartupManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, StartupManager.class);
   }
 

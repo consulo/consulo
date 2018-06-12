@@ -24,14 +24,10 @@ import javax.annotation.Nonnull;
 public interface Menu extends MenuItem {
   @Nonnull
   static Menu create(@Nonnull String text) {
-    return UIInternal.get()._MenuItems_menu(text);
+    return UIInternal.get()._Menu_create(text);
   }
 
   @RequiredUIAccess
   @Nonnull
   Menu add(@Nonnull MenuItem menuItem);
-
-  @RequiredUIAccess
-  @Nonnull
-  Menu separate();
 }

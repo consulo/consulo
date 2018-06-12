@@ -22,6 +22,8 @@ import com.intellij.execution.dashboard.DashboardRunConfigurationNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -61,7 +63,7 @@ public class RunConfigurationDashboardGroupingRule implements DashboardGroupingR
   public DashboardGroup getGroup(AbstractTreeNode<?> node) {
     if (node instanceof DashboardRunConfigurationNode) {
       RunnerAndConfigurationSettings configurationSettings = ((DashboardRunConfigurationNode)node).getConfigurationSettings();
-      return new DashboardGroupImpl<>(configurationSettings, configurationSettings.getName(), configurationSettings.getConfiguration().getIcon());
+      return new DashboardGroupImpl<>(configurationSettings, configurationSettings.getName(), TargetAWT.to(configurationSettings.getConfiguration().getIcon()));
     }
     return null;
   }

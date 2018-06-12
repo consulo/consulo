@@ -17,9 +17,9 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,10 +30,10 @@ public abstract class ConfigurationTypeBase implements ConfigurationType {
   private final String myId;
   private final String myDisplayName;
   private final String myDescription;
-  private final Icon myIcon;
+  private final Image myIcon;
   private ConfigurationFactory[] myFactories;
 
-  protected ConfigurationTypeBase(@Nonnull String id, String displayName, String description, Icon icon) {
+  protected ConfigurationTypeBase(@Nonnull String id, String displayName, String description, Image icon) {
     myId = id;
     myDisplayName = displayName;
     myDescription = description;
@@ -56,7 +56,7 @@ public abstract class ConfigurationTypeBase implements ConfigurationType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

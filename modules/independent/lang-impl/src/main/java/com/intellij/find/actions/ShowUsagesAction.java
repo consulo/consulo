@@ -32,7 +32,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
+import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -1123,7 +1123,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
       runnable.run();
     }
     else {
-      AsyncEditorLoader.performWhenLoaded(editor, runnable);
+      DesktopAsyncEditorLoader.performWhenLoaded(editor, runnable);
     }
   }
 

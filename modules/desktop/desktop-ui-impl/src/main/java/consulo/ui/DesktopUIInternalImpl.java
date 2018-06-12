@@ -17,18 +17,21 @@ package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.Internal;
-import consulo.ui.image.FoldedImage;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.internal.*;
-import consulo.ui.internal.icon.DesktopFoldedImageImpl;
-import consulo.ui.internal.icon.DesktopImageImpl;
+import consulo.ui.internal.icon.*;
+import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
+import consulo.ui.model.MutableListModel;
+import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.net.URL;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -46,18 +49,41 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public FoldedImage _Images_foldedImage(Image[] images) {
-    return new DesktopFoldedImageImpl(images);
+  public Image _ImageEffects_layered(Image[] images) {
+    return new DesktopLayeredImageImpl(images);
   }
 
   @Override
-  MenuItem _MenuItems_item(String text) {
+  public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+    return new DesktopTransparentImageImpl(original, alpha);
+  }
+
+  @Override
+  public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+    DesktopAppendImageImpl image = new DesktopAppendImageImpl(2);
+    image.setIcon(TargetAWT.to(i0), 0);
+    image.setIcon(TargetAWT.to(i1), 1);
+    return image;
+  }
+
+  @Override
+  public Image _ImageEffects_empty(int width, int height) {
+    return DesktopEmptyImageImpl.get(width, height);
+  }
+
+  @Override
+  MenuItem _MenuItem_create(String text) {
     return new DesktopMenuItemImpl(text);
   }
 
   @Override
-  Menu _MenuItems_menu(String text) {
+  Menu _Menu_create(String text) {
     return new DesktopMenuImpl(text);
+  }
+
+  @Override
+  MenuSeparator _MenuSeparator_create() {
+    return DesktopMenuSeparatorImpl.INSTANCE;
   }
 
   @Override
@@ -88,8 +114,18 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public CheckBox _Components_checkBox(@Nonnull String text, boolean selected) {
-    return new DesktopCheckBoxImpl(text, selected);
+  public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
+    return new ImmutableListModelImpl<>(list);
+  }
+
+  @Override
+  public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
+    return new MutableListModelImpl<>(list);
+  }
+
+  @Override
+  public CheckBox _Components_checkBox() {
+    return new DesktopCheckBoxImpl();
   }
 
   @Override
@@ -167,6 +203,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   Button _Components_button(String text) {
     return new DesktopButtonImpl(text, null);
+  }
+
+  @Override
+  Hyperlink _Components_hyperlink(String text) {
+    return null;
   }
 
   @Override

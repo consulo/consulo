@@ -19,9 +19,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.roots.types.BinariesOrderRootType;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +38,7 @@ public class SandBundleType extends SdkType {
     return true;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getVersionString(String sdkHome) {
     return "1";
@@ -59,9 +60,9 @@ public class SandBundleType extends SdkType {
     return "Sand Bundle";
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Static;
   }
 }

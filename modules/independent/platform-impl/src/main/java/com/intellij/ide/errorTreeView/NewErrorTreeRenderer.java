@@ -24,9 +24,10 @@ import com.intellij.ui.MultilineTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
@@ -51,13 +52,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
   }
 
   @Override
-  public Component getTreeCellRendererComponent(JTree tree,
-                                                Object value,
-                                                boolean selected,
-                                                boolean expanded,
-                                                boolean leaf,
-                                                int row,
-                                                boolean hasFocus) {
+  public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     final ErrorTreeElement element = getElement(value);
     if (element != null) {
       final CustomizeColoredTreeCellRenderer leftSelfRenderer = element.getLeftSelfRenderer();
@@ -74,16 +69,9 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
   private static class MyNotSelectedColoredTreeCellRenderer extends SimpleColoredComponent implements ClickableTreeCellRenderer {
     private CustomizeColoredTreeCellRenderer myCurrentCallback;
 
-    public Component getTreeCellRendererComponent(JTree tree,
-                                                  Object value,
-                                                  boolean selected,
-                                                  boolean expanded,
-                                                  boolean leaf,
-                                                  int row,
-                                                  boolean hasFocus) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       if (myCurrentCallback instanceof CustomizeColoredTreeCellRendererReplacement) {
-        return ((CustomizeColoredTreeCellRendererReplacement)myCurrentCallback)
-                .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+        return ((CustomizeColoredTreeCellRendererReplacement)myCurrentCallback).getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
       }
 
       clear();
@@ -101,7 +89,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
 
     @Nullable
     public Object getTag() {
-      return myCurrentCallback == null? null : myCurrentCallback.getTag();
+      return myCurrentCallback == null ? null : myCurrentCallback.getTag();
     }
 
     public void setCurrentCallback(final CustomizeColoredTreeCellRenderer currentCallback) {
@@ -129,13 +117,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
       myPanel = new JPanel(new BorderLayout());
     }
 
-    public Component getTreeCellRendererComponent(JTree tree,
-                                                  Object value,
-                                                  boolean selected,
-                                                  boolean expanded,
-                                                  boolean leaf,
-                                                  int row,
-                                                  boolean hasFocus) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       myPanel.removeAll();
       myPanel.setBackground(tree.getBackground());
       myPanel.add(myLeft.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus), BorderLayout.WEST);
@@ -146,7 +128,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
 
   @Nonnull
   public static String calcPrefix(@Nullable ErrorTreeElement element) {
-    if(element instanceof SimpleMessageElement || element instanceof NavigatableMessageElement) {
+    if (element instanceof SimpleMessageElement || element instanceof NavigatableMessageElement) {
       String prefix = element.getKind().getPresentableText();
 
       if (element instanceof NavigatableMessageElement) {
@@ -161,7 +143,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
 
   protected void initComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     final ErrorTreeElement element = getElement(value);
-    if(element instanceof GroupingElement) {
+    if (element instanceof GroupingElement) {
       setFont(getFont().deriveFont(Font.BOLD));
     }
 
@@ -171,13 +153,13 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
       if (text == null) {
         text = ArrayUtil.EMPTY_STRING_ARRAY;
       }
-      if(text.length > 0 && text[0] == null) {
+      if (text.length > 0 && text[0] == null) {
         text[0] = "";
       }
       setText(text, prefix);
     }
 
-    Icon icon = null;
+    consulo.ui.image.Image icon = null;
 
     if (element instanceof GroupingElement) {
       final GroupingElement groupingElement = (GroupingElement)element;
@@ -197,7 +179,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
       }
     }
 
-    setIcon(icon);
+    setIcon(TargetAWT.to(icon));
   }
 
   private static ErrorTreeElement getElement(Object value) {

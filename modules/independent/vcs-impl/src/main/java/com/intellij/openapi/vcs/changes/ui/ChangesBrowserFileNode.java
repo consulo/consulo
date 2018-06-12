@@ -25,6 +25,8 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PlatformIcons;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import static com.intellij.util.FontUtil.spaceAndThinSpace;
@@ -69,7 +71,7 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
       renderer.setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
     }
     else {
-      renderer.setIcon(file.getFileType().getIcon());
+      renderer.setIcon(TargetAWT.to(file.getFileType().getIcon()));
     }
   }
 

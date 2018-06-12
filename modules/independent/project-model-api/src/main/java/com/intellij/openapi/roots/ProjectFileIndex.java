@@ -15,15 +15,13 @@
  */
 package com.intellij.openapi.roots;
 
-import com.google.common.base.Predicate;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.roots.ContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -53,7 +51,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param file the file for which the module is requested.
    * @return the module instance or null if the file does not belong to content of any module.
    */
-  @javax.annotation.Nullable
+  @Nullable
   Module getModuleForFile(@Nonnull VirtualFile file);
 
   /**
@@ -63,7 +61,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param honorExclusion if {@code false} the containing module will be returned even if the file is located under a folder marked as excluded
    * @return the module instance or null if the file does not belong to content of any module.
    */
-  @javax.annotation.Nullable
+  @Nullable
   Module getModuleForFile(@Nonnull VirtualFile file, boolean honorExclusion);
 
   /**
@@ -102,7 +100,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param file the file or directory for which the information is requested.
    * @return the file for the content root, or null if the file does not belong to this project.
    */
-  @javax.annotation.Nullable
+  @Nullable
   VirtualFile getContentRootForFile(@Nonnull VirtualFile file);
 
   /**
@@ -112,21 +110,8 @@ public interface ProjectFileIndex extends FileIndex {
    * @param honorExclusion if {@code false} the containing content root will be returned even if the file is located under a folder marked as excluded
    * @return the file for the content root, or null if the file does not belong to this project.
    */
-  @javax.annotation.Nullable
+  @Nullable
   VirtualFile getContentRootForFile(@Nonnull VirtualFile file, final boolean honorExclusion);
-
-  @javax.annotation.Nullable
-  ContentFolderTypeProvider getContentFolderTypeForFile(@Nonnull VirtualFile file);
-
-  default boolean isUnderContentFolderType(@Nonnull VirtualFile virtualFile, @Nonnull ContentFolderTypeProvider contentFolderTypeProvider) {
-    ContentFolderTypeProvider contentFolderTypeForFile = getContentFolderTypeForFile(virtualFile);
-    return contentFolderTypeProvider == contentFolderTypeForFile;
-  }
-
-  default boolean isUnderContentFolderType(@Nonnull VirtualFile virtualFile, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-    ContentFolderTypeProvider contentFolderTypeForFile = getContentFolderTypeForFile(virtualFile);
-    return contentFolderTypeForFile != null && predicate.apply(contentFolderTypeForFile);
-  }
 
   /**
    * Returns the name of the package corresponding to the specified directory.
@@ -134,7 +119,7 @@ public interface ProjectFileIndex extends FileIndex {
    * @param dir the directory for which the package name is requested.
    * @return the package name, or null if the directory does not correspond to any package.
    */
-  @javax.annotation.Nullable
+  @Nullable
   String getPackageNameByDirectory(@Nonnull VirtualFile dir); //Q: move to FileIndex?
 
   /**

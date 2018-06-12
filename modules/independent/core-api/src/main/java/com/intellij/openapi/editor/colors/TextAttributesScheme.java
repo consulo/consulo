@@ -17,6 +17,11 @@ package com.intellij.openapi.editor.colors;
 
 import com.intellij.openapi.editor.markup.TextAttributes;
 
+import javax.annotation.Nonnull;
+import java.util.Map;
+
 public interface TextAttributesScheme {
   TextAttributes getAttributes(TextAttributesKey key);
+
+  void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map);
 }

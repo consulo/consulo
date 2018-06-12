@@ -46,7 +46,6 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
@@ -54,6 +53,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.TransactionGuardEx;
 import consulo.extensions.ListOfElementsEP;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -67,7 +67,10 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.List;
@@ -517,31 +520,19 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
                                        final Presentation presentation,
                                        final PluginId pluginId) {
 
-    final IconLoader.LazyIcon lazyIcon = new IconLoader.LazyIcon() {
-      @Override
-      protected Icon compute() {
-        //try to find icon in idea class path
-        Icon icon = IconLoader.findIcon(iconPath, actionClass, true);
-        if (icon == null) {
-          icon = IconLoader.findIcon(iconPath, classLoader);
-        }
-
-        if (icon == null) {
-          reportActionError(pluginId, "Icon cannot be found in '" + iconPath + "', action class='" + className + "'");
-        }
-
-        return icon;
+    Icon lazyIcon = IconLoader.createLazyIcon(() -> {
+      //try to find icon in idea class path
+      Icon icon = IconLoader.findIcon(iconPath, actionClass, true);
+      if (icon == null) {
+        icon = IconLoader.findIcon(iconPath, classLoader);
       }
 
-      @Override
-      public String toString() {
-        return "LazyIcon@ActionManagerImpl (path: " + iconPath + ", action class: " + actionClass + ")";
+      if (icon == null) {
+        reportActionError(pluginId, "Icon cannot be found in '" + iconPath + "', action class='" + className + "'");
       }
-    };
 
-    if (!Registry.is("ide.lazyIconLoading")) {
-      lazyIcon.load();
-    }
+      return icon;
+    });
 
     presentation.setIcon(lazyIcon);
   }
@@ -1359,7 +1350,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   private void tryToExecuteNow(final AnAction action, final InputEvent inputEvent, final Component contextComponent, final String place, final AsyncResult<Void> result) {
     final Presentation presentation = action.getTemplatePresentation().clone();
 
-    IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(() -> ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> {
+    IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(() -> ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> {
       final DataContext context = getContextBy(contextComponent);
 
       AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, this, inputEvent.getModifiersEx());

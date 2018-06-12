@@ -38,11 +38,12 @@ import com.intellij.ui.FocusTrackback;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.TransactionGuardEx;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -585,8 +586,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
             IdeEventQueue.getInstance().dispatchEvent(keyEvent);
           }
           else {
-            ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(
-                    () -> myQueue._dispatchEvent(keyEvent, true));
+            ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> myQueue._dispatchEvent(keyEvent, true));
           }
         }
 

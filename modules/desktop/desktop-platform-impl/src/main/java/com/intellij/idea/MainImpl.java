@@ -17,6 +17,7 @@ package com.intellij.idea;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.starter.DesktopApplicationPostStarter;
+import com.intellij.idea.starter.DesktopApplicationStarter;
 
 import javax.swing.*;
 
@@ -30,7 +31,7 @@ public class MainImpl {
    */
   protected static void start(String[] args) {
     StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new ApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
+      ApplicationStarter app = new DesktopApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
 
       SwingUtilities.invokeLater(() -> {
         PluginManager.installExceptionHandler();

@@ -286,12 +286,6 @@
       <implementation-class>com.intellij.openapi.vcs.changes.ChangeListManagerImpl</implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.changes.ChangesViewManager</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
       <interface-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeManager</interface-class>
       <implementation-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeManagerImpl</implementation-class>
       <option name="workspace" value="true"/>

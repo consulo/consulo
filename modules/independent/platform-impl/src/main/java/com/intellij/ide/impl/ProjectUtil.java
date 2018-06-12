@@ -35,9 +35,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
 import consulo.application.DefaultPaths;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
@@ -222,21 +222,18 @@ public class ProjectUtil {
 
     ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
     if (provider != null) {
-      AppExecutorUtil.getAppExecutorService().execute(() -> {
-        result.doWhenDone((project) -> {
-          uiAccess.give(() -> {
-            if (!project.isDisposed()) {
-              final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-              if (toolWindow != null) {
-                toolWindow.activate(null);
-              }
+      result.doWhenDone((project) -> {
+        uiAccess.give(() -> {
+          if (!project.isDisposed()) {
+            final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+            if (toolWindow != null) {
+              toolWindow.activate(null);
             }
-          });
+          }
         });
-
-        ApplicationManager.getApplication().runInWriteThreadAndWait(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess));
       });
 
+      AccessRule.write(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess));
       return result;
     }
     return AsyncResult.rejected("provider for file path is not find");

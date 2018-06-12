@@ -16,9 +16,10 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.components.ServiceManager;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -28,11 +29,15 @@ public abstract class ColorChooserService {
     return ServiceManager.getService(ColorChooserService.class);
   }
 
-  @Nullable
-  public abstract Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity,
-                                   ColorPickerListener[] listeners);
+  public void showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, @Nonnull Consumer<Color> colorConsumer) {
+    showDialog(parent, caption, preselectedColor, enableOpacity, listeners, false, colorConsumer);
+  }
 
-  @Nullable
-  public abstract Color showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity,
-                                   ColorPickerListener[] listeners, boolean opacityInPercent);
+  public abstract void showDialog(Component parent,
+                                   String caption,
+                                   Color preselectedColor,
+                                   boolean enableOpacity,
+                                   ColorPickerListener[] listeners,
+                                   boolean opacityInPercent,
+                                   @Nonnull Consumer<Color> colorConsumer);
 }

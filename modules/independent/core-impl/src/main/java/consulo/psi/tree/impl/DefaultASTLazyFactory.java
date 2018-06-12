@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 public class DefaultASTLazyFactory implements ASTLazyFactory {
   @Nonnull
   @Override
-  public LazyParseableElement createLazy(ILazyParseableElementType type, CharSequence text) {
+  public LazyParseableElement createLazy(@Nonnull ILazyParseableElementType type, @Nullable CharSequence text) {
     if (type instanceof IFileElementType) {
       final ASTNode node = type.createNode(text);
       return node instanceof  LazyParseableElement ? (LazyParseableElement) node : new FileElement(type, text);
@@ -55,7 +55,7 @@ public class DefaultASTLazyFactory implements ASTLazyFactory {
   }
 
   @Override
-  public boolean apply(@Nullable IElementType input) {
+  public boolean test(@Nullable IElementType input) {
     return true;
   }
 }

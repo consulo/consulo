@@ -21,6 +21,7 @@ import com.intellij.openapi.util.NotNullComputable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -84,7 +85,12 @@ public abstract class SimpleConfigurable<T extends NotNullComputable<? extends C
   public final void apply() throws ConfigurationException {
     if (myComponent != null) {
       apply(myComponent);
+
+      afterApply();
     }
+  }
+
+  protected void afterApply() {
   }
 
   @Override

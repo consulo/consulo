@@ -5,6 +5,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ThrowableNotNullFunction;
 import com.intellij.util.io.NettyKt;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -58,7 +59,7 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
     }
 
     if (urlDecoder.path().equals("/favicon.ico")) {
-      Icon icon = Application.get().getIcon();
+      Icon icon = TargetAWT.to(Application.get().getIcon());
       BufferedImage image = UIUtil.createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
       icon.paintIcon(null, image.getGraphics(), 0, 0);
       byte[] icoBytes = Imaging.writeImageToBytes(image, ImageFormats.ICO, null);

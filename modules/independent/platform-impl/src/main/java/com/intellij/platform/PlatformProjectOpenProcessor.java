@@ -46,6 +46,8 @@ import consulo.application.AccessRule;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -177,13 +179,14 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     });
   }
 
-  private static void openFileFromCommandLine(final Project project, final VirtualFile virtualFile, final int line) {
+  private static void openFileFromCommandLine(@Nonnull Project project, final VirtualFile virtualFile, final int line) {
     //noinspection RedundantCast
     StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
       if (project.isDisposed()) {
         return;
       }
-      ToolWindowManager.getInstance(project).invokeLater(() -> ToolWindowManager.getInstance(project).invokeLater(() -> {
+
+      Application.get().invokeLater(() -> {
         if (!virtualFile.isDirectory()) {
           if (line > 0) {
             new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
@@ -192,13 +195,32 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
             new OpenFileDescriptor(project, virtualFile).navigate(true);
           }
         }
-      }));
+      }, ModalityState.NON_MODAL);
+    });
+  }
+
+  private static void openFileFromCommandLineAsync(@Nonnull Project project, final VirtualFile virtualFile, final int line, UIAccess uiAccess) {
+    //noinspection RedundantCast
+    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
+      if (project.isDisposed()) {
+        return;
+      }
+      uiAccess.give(() -> {
+        if (!virtualFile.isDirectory()) {
+          if (line > 0) {
+            new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
+          }
+          else {
+            new OpenFileDescriptor(project, virtualFile).navigate(true);
+          }
+        }
+      });
     });
   }
 
   @Override
   @Nonnull
-  public Icon getIcon() {
+  public Image getIcon() {
     return Application.get().getIcon();
   }
 
@@ -265,8 +287,8 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
     Consumer<Project> afterProjectAction = project -> {
       openProjectToolWindow(project);
-      openFileFromCommandLine(project, virtualFile, line);
-      if (!projectManager.openProject(project, uiAccess)) {
+      openFileFromCommandLineAsync(project, virtualFile, line, uiAccess);
+      if (!projectManager.openProjectAsync(project, uiAccess)) {
         WelcomeFrame.showIfNoProjectOpened();
         final Project finalProject = project;
         ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));

@@ -58,6 +58,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.lang.LanguageVersion;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
@@ -1043,7 +1044,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
       @Override
       public Icon getIcon(final boolean open) {
-        return IconDescriptorUpdaters.getIcon(PsiFileImpl.this, 0);
+        return TargetAWT.to(IconDescriptorUpdaters.getIcon(PsiFileImpl.this, 0));
       }
     };
   }

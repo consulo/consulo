@@ -23,11 +23,12 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import javax.annotation.Nonnull;
+import consulo.ui.Component;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
@@ -64,7 +65,21 @@ public interface Editor extends UserDataHolder {
    * @return the component instance.
    */
   @Nonnull
-  JComponent getComponent();
+  default javax.swing.JComponent getComponent()  {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
+
+  /**
+   * Returns the component for the entire editor including the scrollbars, error stripe, gutter
+   * and other decorations. The component can be used, for example, for converting logical to
+   * screen coordinates.
+   *
+   * @return the component instance.
+   */
+  @Nonnull
+  default Component getUIComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * Returns the component for the content area of the editor (the area displaying the document text).
@@ -74,11 +89,13 @@ public interface Editor extends UserDataHolder {
    * @return the component instance.
    */
   @Nonnull
-  JComponent getContentComponent();
+  default javax.swing.JComponent getContentComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
-  void setBorder(@javax.annotation.Nullable Border border);
+  void setBorder(@Nullable Border border);
 
-  Insets getInsets();
+  java.awt.Insets getInsets();
 
   /**
    * Returns the selection model for the editor, which can be used to select ranges of text in
@@ -86,9 +103,8 @@ public interface Editor extends UserDataHolder {
    * <p>
    * To query or change selections for specific carets, {@link CaretModel} interface should be used.
    *
-   * @see #getCaretModel()
-   *
    * @return the selection model instance.
+   * @see #getCaretModel()
    */
   @Nonnull
   SelectionModel getSelectionModel();
@@ -99,7 +115,7 @@ public interface Editor extends UserDataHolder {
    * to the highlighters contained in the markup model for the document.
    * <p>
    * See also {@link com.intellij.openapi.editor.impl.DocumentMarkupModel.forDocument(Document, Project, boolean)}
-   *          {@link com.intellij.openapi.editor.ex.EditorEx#getFilteredDocumentMarkupModel()}.
+   * {@link com.intellij.openapi.editor.ex.EditorEx#getFilteredDocumentMarkupModel()}.
    *
    * @return the markup model instance.
    */
@@ -174,7 +190,7 @@ public interface Editor extends UserDataHolder {
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
   @Nonnull
-  Point logicalPositionToXY(@Nonnull LogicalPosition pos);
+  java.awt.Point logicalPositionToXY(@Nonnull LogicalPosition pos);
 
   /**
    * Maps a logical position in the editor to the offset in the document.
@@ -201,7 +217,7 @@ public interface Editor extends UserDataHolder {
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
   @Nonnull
-  Point visualPositionToXY(@Nonnull VisualPosition visible);
+  java.awt.Point visualPositionToXY(@Nonnull VisualPosition visible);
 
   /**
    * Same as {@link #visualPositionToXY(VisualPosition)}, but returns potentially more precise result.
@@ -248,10 +264,10 @@ public interface Editor extends UserDataHolder {
   /**
    * Maps an offset in the document to a visual position.
    *
-   * @param offset the offset in the document.
-   * @param leanForward if <code>true</code>, original position is associated with character after given offset, if <code>false</code> -
-   *                    with character before given offset. This can make a difference in bidirectional text (see {@link LogicalPosition},
-   *                    {@link VisualPosition})
+   * @param offset         the offset in the document.
+   * @param leanForward    if <code>true</code>, original position is associated with character after given offset, if <code>false</code> -
+   *                       with character before given offset. This can make a difference in bidirectional text (see {@link LogicalPosition},
+   *                       {@link VisualPosition})
    * @param beforeSoftWrap if <code>true</code>, visual position at line preceeding the wrap will be returned, otherwise - visual position
    *                       at line following the wrap.
    * @return the corresponding visual position.
@@ -266,7 +282,7 @@ public interface Editor extends UserDataHolder {
    * @return the corresponding logical position.
    */
   @Nonnull
-  LogicalPosition xyToLogicalPosition(@Nonnull Point p);
+  LogicalPosition xyToLogicalPosition(@Nonnull java.awt.Point p);
 
   /**
    * Maps the pixel coordinates in the editor to a visual position.
@@ -275,10 +291,10 @@ public interface Editor extends UserDataHolder {
    * @return the corresponding visual position.
    */
   @Nonnull
-  VisualPosition xyToVisualPosition(@Nonnull Point p);
+  VisualPosition xyToVisualPosition(@Nonnull java.awt.Point p);
 
   /**
-   * Same as {{@link #xyToVisualPosition(Point)}}, but allows to specify target point with higher precision.
+   * Same as {{@link #xyToVisualPosition(java.awt.Point)}}, but allows to specify target point with higher precision.
    */
   @Nonnull
   VisualPosition xyToVisualPosition(@Nonnull Point2D p);
@@ -365,7 +381,7 @@ public interface Editor extends UserDataHolder {
    * @param e the mouse event for which the area is requested.
    * @return the editor area, or null if the event occurred over an unknown area.
    */
-  @javax.annotation.Nullable
+  @Nullable
   EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e);
 
   /**
@@ -374,7 +390,7 @@ public interface Editor extends UserDataHolder {
    *
    * @param header a component to setup as header for this text editor or <code>null</code> to remove one.
    */
-  void setHeaderComponent(@javax.annotation.Nullable JComponent header);
+  void setHeaderComponent(@Nullable JComponent header);
 
   /**
    * @return <code>true</code> if this editor has active header component set up by {@link #setHeaderComponent(JComponent)}
@@ -384,7 +400,7 @@ public interface Editor extends UserDataHolder {
   /**
    * @return a component set by {@link #setHeaderComponent(JComponent)} or <code>null</code> if no header currently installed.
    */
-  @javax.annotation.Nullable
+  @Nullable
   JComponent getHeaderComponent();
 
   @Nonnull

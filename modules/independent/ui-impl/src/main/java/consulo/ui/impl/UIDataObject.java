@@ -15,6 +15,7 @@
  */
 package consulo.ui.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -23,9 +24,9 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -43,7 +44,7 @@ public class UIDataObject extends UserDataHolderBase {
   private final AtomicNotNullLazyValue<List<Function<Key<?>, Object>>> myUserDataProviders = AtomicNotNullLazyValue.createValue(ContainerUtil::createLockFreeCopyOnWriteList);
 
   @SuppressWarnings("unchecked")
-  public <T extends EventListener> Runnable addListener(Class<T> clazz, T value) {
+  public <T extends EventListener> Disposable addListener(Class<T> clazz, T value) {
     EventDispatcher<T> eventDispatcher = myListeners.computeIfAbsent(clazz, EventDispatcher::create);
     eventDispatcher.addListener(value);
     return () -> eventDispatcher.removeListener(value);
@@ -55,7 +56,7 @@ public class UIDataObject extends UserDataHolderBase {
   }
 
   @Nonnull
-  public <T> Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+  public <T> Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
     myUserDataProviders.getValue().add(function);
     return () -> myUserDataProviders.getValue().remove(function);
   }

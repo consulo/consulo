@@ -26,6 +26,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.usageView.UsageInfo;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import javax.annotation.Nonnull;
 
@@ -49,7 +50,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   }
 
   public PsiElementUsageGroupBase(@Nonnull T element) {
-    this(element, IconDescriptorUpdaters.getIcon(element, 0));
+    this(element, TargetAWT.to(IconDescriptorUpdaters.getIcon(element, 0)));
   }
 
   @Override

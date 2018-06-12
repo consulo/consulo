@@ -26,6 +26,8 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.Content;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -103,7 +105,7 @@ public class RunContentDescriptor implements Disposable {
   }
 
   public RunContentDescriptor(@Nonnull RunProfile profile, @Nonnull ExecutionResult executionResult, @Nonnull RunnerLayoutUi ui) {
-    this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui.getComponent(), profile.getName(), profile.getIcon(), null,
+    this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui.getComponent(), profile.getName(), TargetAWT.to(profile.getIcon()), null,
          executionResult instanceof DefaultExecutionResult ? ((DefaultExecutionResult)executionResult).getRestartActions() : null);
     myRunnerLayoutUi = ui;
   }

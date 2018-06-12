@@ -20,6 +20,8 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -61,7 +63,7 @@ public class ScratchFileType extends LanguageFileType implements FileTypeIdentif
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return PlainTextFileType.INSTANCE.getIcon();
   }
 

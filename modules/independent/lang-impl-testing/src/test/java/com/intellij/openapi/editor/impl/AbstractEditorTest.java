@@ -137,7 +137,7 @@ public abstract class AbstractEditorTest extends LightPlatformCodeInsightTestCas
   }
 
   public EditorMouseFixture mouse() {
-    return new EditorMouseFixture((EditorImpl)myEditor);
+    return new EditorMouseFixture((DesktopEditorImpl)myEditor);
   }
 
   public void setEditorVisibleSize(int widthInChars, int heightInChars) {

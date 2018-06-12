@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.options.colors.EditorHighlightingProvidingColorSettingsPage;
@@ -411,7 +411,7 @@ public class SimpleEditorPreview implements PreviewPanel {
   private HighlightData getRainbowTemp(@Nonnull TextAttributesKey[] rainbowTempKeys,
                                        int startOffset, int endOffset) {
     String id = myEditor.getDocument().getText(TextRange.create(startOffset, endOffset));
-    int index = UsedColors.getOrAddColorIndex((EditorImpl)myEditor, id, rainbowTempKeys.length);
+    int index = UsedColors.getOrAddColorIndex((DesktopEditorImpl)myEditor, id, rainbowTempKeys.length);
     return new HighlightData(startOffset, endOffset, rainbowTempKeys[index]);
   }
 }

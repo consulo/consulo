@@ -16,12 +16,12 @@
 package com.intellij.openapi.options.colors;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Map;
 
@@ -36,8 +36,11 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
    *
    * @return the icon for the page, or null if the page does not have a custom icon.
    */
-  @javax.annotation.Nullable
-  Icon getIcon();
+  @Nullable
+  @Deprecated
+  default Icon getIcon() {
+    return null;
+  }
 
   /**
    * Returns the syntax highlighter which is used to highlight the text shown in the preview
@@ -57,7 +60,8 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
    *
    * @return the text to show in the preview pane.
    */
-  @NonNls @Nonnull
+  @NonNls
+  @Nonnull
   String getDemoText();
 
   /**
@@ -68,5 +72,6 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
    * @return the mapping from tag names to text attribute keys, or null if the demo text
    * does not contain any additional highlighting tags.
    */
-  @Nullable Map<String,TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap();
+  @Nullable
+  Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap();
 }

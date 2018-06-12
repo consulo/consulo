@@ -81,7 +81,7 @@ public class SoftWrapApplianceManager implements Dumpable {
   private final WidthsStorage                              myOffset2widthInPixels = new WidthsStorage();
 
   private final SoftWrapsStorage               myStorage;
-  private final EditorImpl                     myEditor;
+  private final DesktopEditorImpl myEditor;
   private       SoftWrapPainter                myPainter;
   private final CachingSoftWrapDataMapper      myDataMapper;
 
@@ -110,7 +110,7 @@ public class SoftWrapApplianceManager implements Dumpable {
 
 
   public SoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage,
-                                  @Nonnull EditorImpl editor,
+                                  @Nonnull DesktopEditorImpl editor,
                                   @Nonnull SoftWrapPainter painter,
                                   CachingSoftWrapDataMapper dataMapper)
   {
@@ -1018,9 +1018,9 @@ public class SoftWrapApplianceManager implements Dumpable {
 
   private static class DefaultVisibleAreaWidthProvider implements VisibleAreaWidthProvider {
 
-    private final EditorImpl myEditor;
+    private final DesktopEditorImpl myEditor;
 
-    DefaultVisibleAreaWidthProvider(EditorImpl editor) {
+    DefaultVisibleAreaWidthProvider(DesktopEditorImpl editor) {
       myEditor = editor;
     }
 

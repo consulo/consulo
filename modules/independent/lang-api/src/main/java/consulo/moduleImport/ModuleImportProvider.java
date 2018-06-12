@@ -26,11 +26,11 @@ import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.Language;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
@@ -57,10 +57,10 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   @Nonnull
   abstract String getName();
 
-  @Nullable
-  abstract Icon getIcon();
+  @Nonnull
+  abstract Image getIcon();
 
-  boolean canImport(@Nonnull File fileOrDirectory) ;
+  boolean canImport(@Nonnull File fileOrDirectory);
 
   default List<Module> commit(@Nonnull C context, @Nonnull Project project) {
     return commit(context, project, null, DefaultModulesProvider.createForProject(project), null);
@@ -98,9 +98,9 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     return getName();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Deprecated
-  default Icon getIconForFile(VirtualFile file) {
+  default Image getIconForFile(VirtualFile file) {
     return null;
   }
 

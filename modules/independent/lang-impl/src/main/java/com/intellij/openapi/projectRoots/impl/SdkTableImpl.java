@@ -33,10 +33,11 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.fileTypes.ArchiveFileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
@@ -46,7 +47,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @NonNls
   public static final String ELEMENT_SDK = "sdk";
 
-  private final List<Sdk> mySdks = new ArrayList<Sdk>();
+  private final List<Sdk> mySdks = new ArrayList<>();
 
   private final MessageBus myMessageBus;
 
@@ -120,6 +121,13 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
       }
     }
     return null;
+  }
+
+  /**
+   * Add sdks without write access, and without listener notify
+   */
+  public void addSdksUnsafe(@Nonnull Collection<? extends Sdk> sdks) {
+    mySdks.addAll(sdks);
   }
 
   @Override

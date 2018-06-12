@@ -17,14 +17,19 @@ package consulo.awt;
 
 import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
+import consulo.ui.KeyCode;
+import consulo.ui.image.Image;
 import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 /**
  * @author VISTALL
@@ -40,12 +45,13 @@ public class TargetAWT {
 
   @Nonnull
   public static java.awt.Color to(@Nonnull RGBColor color) {
-    return new java.awt.Color(color.getRed(), color.getGreed(), color.getBlue());
+    int alpha = (int) color.getAlpha() * 255;
+    return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
   }
 
-  @Nonnull
-  public static java.awt.Color to(@Nonnull ColorValue colorValue) {
-    return to(colorValue.toRGB());
+  @Contract("null -> null")
+  public static java.awt.Color to(@Nullable ColorValue colorValue) {
+    return colorValue == null ? null : to(colorValue.toRGB());
   }
 
   @Contract("null -> null")
@@ -61,7 +67,7 @@ public class TargetAWT {
     if (component instanceof ToSwingWrapper) {
       return ((ToSwingWrapper)component).toAWT();
     }
-    else if(component instanceof java.awt.Component) {
+    else if (component instanceof java.awt.Component) {
       return (java.awt.Component)component;
     }
     throw new IllegalArgumentException(component + " is not ToSwingWrapper");
@@ -80,6 +86,41 @@ public class TargetAWT {
     if (color == null) {
       return null;
     }
-    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
+    float[] components = color.getRGBComponents(null);
+    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue(), components[3]);
+  }
+
+  @Contract("null -> null")
+  public static Icon to(@Nullable Image image) {
+    if (image == null) {
+      return null;
+    }
+
+    if (image instanceof Icon) {
+      return (Icon)image;
+    }
+
+    throw new IllegalArgumentException(image + "' is not supported");
+  }
+
+  @Contract("null -> null")
+  public static Image from(@Nullable Icon icon) {
+    if (icon == null) {
+      return null;
+    }
+
+    if (icon instanceof Image) {
+      return (Image)icon;
+    }
+
+    throw new IllegalArgumentException(icon + "' is not supported");
+  }
+
+  public static int to(@Nonnull KeyCode code) {
+    if (code.ordinal() >= KeyCode.A.ordinal() && code.ordinal() <= KeyCode.Z.ordinal()) {
+      int diff = code.ordinal() - KeyCode.A.ordinal();
+      return KeyEvent.VK_A + diff;
+    }
+    throw new IllegalArgumentException(code + "' is not supported");
   }
 }

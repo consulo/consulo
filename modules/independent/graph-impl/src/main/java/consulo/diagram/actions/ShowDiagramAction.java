@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.diagram.provider.GraphProvider;
 import consulo.ide.eap.EarlyAccessProgramDescriptor;
 import consulo.ide.eap.EarlyAccessProgramManager;
@@ -48,14 +49,14 @@ public class ShowDiagramAction extends AnAction {
     }
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
-    super.update(e);
-
+  public void update(@Nonnull AnActionEvent e) {
     boolean state = EarlyAccessProgramManager.is(DiagramSupport.class);
     if (state) {
       PsiElement psiElement = e.getData(CommonDataKeys.PSI_ELEMENT);

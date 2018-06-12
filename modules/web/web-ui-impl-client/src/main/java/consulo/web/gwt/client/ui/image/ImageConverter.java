@@ -35,6 +35,8 @@ public class ImageConverter {
       Image box = new Image();
       box.setStyleName("ui-image");
       box.setUrl(state.myImageState.myURL);
+      box.setWidth(state.myWidth + "px");
+      box.setHeight(state.myHeight + "px");
 
       widget = new SimplePanel(box);
     }
@@ -55,6 +57,10 @@ public class ImageConverter {
 
     widget.setWidth(state.myWidth + "px");
     widget.setHeight(state.myHeight + "px");
+
+    if(state.myAlpha != 1) {
+      widget.getElement().getStyle().setOpacity(state.myAlpha);
+    }
     return widget;
   }
 }

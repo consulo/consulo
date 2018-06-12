@@ -31,6 +31,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.pom.Navigatable;
+import consulo.platform.Platform;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -151,7 +153,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
         Editor e = ((TextEditor)editor).getEditor();
         unfoldCurrentLine(e);
         if (focusEditor) {
-          IdeFocusManager.getInstance(myProject).requestFocus(e.getContentComponent(), true);
+          Platform.onlyAtDesktop(() -> IdeFocusManager.getInstance(myProject).requestFocus(e.getContentComponent(), true));
         }
       }
     }

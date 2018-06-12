@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ApplicationConnection;
 import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
 import org.gwt.advanced.client.datamodel.ListModelListener;
@@ -76,6 +77,7 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
    */
   private boolean keyPressed;
 
+  private ApplicationConnection myConnection;
 
   /**
    * Setter for property 'listItemFactory'.
@@ -629,7 +631,12 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
    */
   protected ListPopupPanel2 getListPanel() {
     if (listPanel == null) {
-      listPanel = new ListPopupPanel2(this);
+      listPanel = new ListPopupPanel2(this) {
+        @Override
+        protected ApplicationConnection getApplicationConnection() {
+          return myConnection;
+        }
+      };
     }
     return listPanel;
   }
@@ -841,5 +848,13 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
       event.getNativeEvent().preventDefault();
       event.cancel();
     }
+  }
+
+  public void setConnection(ApplicationConnection connection) {
+    myConnection = connection;
+  }
+
+  public ApplicationConnection getConnection() {
+    return myConnection;
   }
 }

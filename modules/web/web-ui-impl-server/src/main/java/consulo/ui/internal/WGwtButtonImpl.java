@@ -39,7 +39,7 @@ public class WGwtButtonImpl extends AbstractComponent implements Button, VaadinW
 
   public WGwtButtonImpl(String text, Image image) {
     registerRpc(myRpc);
-    getState().caption = text;
+    getState(false).caption = text;
   }
 
   @Nonnull

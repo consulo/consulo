@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.io.File;
@@ -29,7 +30,7 @@ public class ValidFileCellAppearance extends BaseTextCommentCellAppearance {
 
   @Override
   protected Icon getIcon() {
-    return myFile.getFileType().getIcon();
+    return TargetAWT.to(myFile.getFileType().getIcon());
   }
 
   @Override

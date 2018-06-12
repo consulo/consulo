@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.JDOMException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -114,6 +115,9 @@ public abstract class ProjectManager {
    */
   @RequiredDispatchThread
   public abstract boolean closeProject(@Nonnull Project project);
+
+  @RequiredUIAccess
+  public abstract boolean closeProjectAsync(@Nonnull Project project);
 
   /**
    * Asynchronously reloads the specified project.

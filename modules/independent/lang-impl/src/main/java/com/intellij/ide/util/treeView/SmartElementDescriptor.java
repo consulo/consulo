@@ -16,7 +16,6 @@
 
 package com.intellij.ide.util.treeView;
 
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -29,12 +28,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiUtilCore;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.IconDescriptorUpdaters;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 
 public class SmartElementDescriptor extends NodeDescriptor{
@@ -73,7 +71,7 @@ public class SmartElementDescriptor extends NodeDescriptor{
     if (isMarkReadOnly()){
       flags |= Iconable.ICON_FLAG_READ_STATUS;
     }
-    Icon icon = null;
+    consulo.ui.image.Image icon = null;
     try {
       icon = IconDescriptorUpdaters.getIcon(element, flags);
     }

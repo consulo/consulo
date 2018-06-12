@@ -30,6 +30,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.platform.Platform;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 import javax.annotation.Nonnull;
@@ -107,7 +108,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable, ApplicationCom
                              boolean skipIfActionHasShortcut) {
     final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
-    IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher);
+    Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher));
     myActionManagerEx.addAnActionListener(dispatcher, dispatcher);
     if (oldDispatcher != null) {
       Disposer.dispose(oldDispatcher);

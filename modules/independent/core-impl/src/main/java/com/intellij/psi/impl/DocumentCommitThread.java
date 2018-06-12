@@ -380,7 +380,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
 
         if (success) {
           assert !myApplication.isDispatchThread();
-          TransactionGuardImpl guard = (TransactionGuardImpl)TransactionGuard.getInstance();
+          TransactionGuard guard = TransactionGuard.getInstance();
           guard.submitTransaction(project, task.myCreationContext, finishRunnable);
         }
       }

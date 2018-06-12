@@ -33,6 +33,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsSimpleTree;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -218,7 +220,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     }
     else if (value instanceof XBreakpointGroup) {
       renderer.append(((XBreakpointGroup)value).getName());
-      renderer.setIcon(((XBreakpointGroup)value).getIcon(expanded));
+      renderer.setIcon(TargetAWT.to(((XBreakpointGroup)value).getIcon(expanded)));
     }
     else if (value instanceof XBreakpointGroupingRule) {
       renderer.append(((XBreakpointGroupingRule)value).getPresentableName());

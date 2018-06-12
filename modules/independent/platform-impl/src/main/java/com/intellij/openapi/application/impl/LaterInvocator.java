@@ -33,6 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.TransactionGuardEx;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -206,7 +207,7 @@ public class LaterInvocator {
     ourModalEntities.add(modalEntity);
     ourModalityStack.push(new ModalityStateEx(ArrayUtil.toObjectArray(ourModalEntities)));
 
-    TransactionGuardImpl guard = ApplicationStarter.isLoaded() ? (TransactionGuardImpl)TransactionGuard.getInstance() : null;
+    TransactionGuardEx guard = ApplicationStarter.isLoaded() ? (TransactionGuardEx)TransactionGuard.getInstance() : null;
     if (guard != null) {
       guard.enteredModality(ourModalityStack.peek());
     }

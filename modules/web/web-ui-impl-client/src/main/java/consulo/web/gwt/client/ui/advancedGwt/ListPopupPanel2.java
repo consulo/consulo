@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.vaadin.client.ui.VOverlay;
 import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.ui.AdvancedWidget;
 import org.gwt.advanced.client.ui.widget.combo.ComboBoxChangeEvent;
@@ -42,7 +43,7 @@ import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
  * @author <a href="mailto:sskladchikov@gmail.com">Sergey Skladchikov</a>
  * @since 1.2.0
  */
-public class ListPopupPanel2 extends PopupPanel implements AdvancedWidget, HasChangeHandlers {
+public class ListPopupPanel2 extends VOverlay implements AdvancedWidget, HasChangeHandlers {
   /** a list of items */
   private FlowPanel list;
   /** items scrolling widget */
@@ -369,8 +370,9 @@ public class ListPopupPanel2 extends PopupPanel implements AdvancedWidget, HasCh
   protected void prepareList() {
     FlowPanel panel = getList();
 
-    if (!isLazyRenderingEnabled() || getComboBox().getModel().getCount() != getItemCount())
+    if (!isLazyRenderingEnabled() || getComboBox().getModel().getCount() != getItemCount()) {
       panel.clear();
+    }
 
     fillList();
 

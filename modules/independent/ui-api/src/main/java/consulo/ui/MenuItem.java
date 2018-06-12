@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public interface MenuItem extends Component {
   @Nonnull
   static MenuItem create(@Nonnull String text) {
-    return UIInternal.get()._MenuItems_item(text);
+    return UIInternal.get()._MenuItem_create(text);
   }
 
   @Nonnull

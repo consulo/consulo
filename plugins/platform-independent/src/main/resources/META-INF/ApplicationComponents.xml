@@ -177,10 +177,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
-      <implementation-class>com.intellij.ide.SaveAndSyncHandlerImpl</implementation-class>
-    </component>
-    <component>
       <interface-class>com.intellij.ide.FrameStateManager</interface-class>
       <implementation-class>com.intellij.ide.FrameStateManagerImpl</implementation-class>
     </component>
@@ -209,10 +205,6 @@
     </component>
     <component>
       <implementation-class>com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler</implementation-class>
-    </component>
-    <component>
-      <interface-class>com.intellij.openapi.fileEditor.impl.text.TextEditorProvider</interface-class>
-      <implementation-class>com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorProvider</implementation-class>
     </component>
 
     <component>

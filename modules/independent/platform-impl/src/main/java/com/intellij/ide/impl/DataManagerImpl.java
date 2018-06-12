@@ -38,6 +38,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakValueHashMap;
 import consulo.ide.impl.DataValidators;
+import consulo.platform.Platform;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
@@ -366,7 +367,7 @@ public class DataManagerImpl extends DataManager {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getData(@Nonnull Key<T> dataId) {
-      int currentEventCount = IdeEventQueue.getInstance().getEventCount();
+      int currentEventCount = Platform.current().isDesktop() ? IdeEventQueue.getInstance().getEventCount() : -1;
       if (myEventCount != -1 && myEventCount != currentEventCount) {
         LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
         return doGetData(dataId);

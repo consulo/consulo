@@ -21,11 +21,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
-import javax.annotation.Nonnull;
-
 import consulo.roots.ContentFolderTypeProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class DirectoryIndex {
+  @Nonnull
   public static DirectoryIndex getInstance(Project project) {
     assert !project.isDefault() : "Must not call DirectoryIndex for default project";
     return ServiceManager.getService(project, DirectoryIndex.class);
@@ -42,14 +44,14 @@ public abstract class DirectoryIndex {
   @Nonnull
   public abstract DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo info);
 
   @Nonnull
   public abstract
   Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract String getPackageName(@Nonnull VirtualFile dir);
 
   @Nonnull

@@ -18,8 +18,8 @@ package com.intellij.xdebugger.impl.ui.tree;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.ui.*;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -43,17 +43,20 @@ public abstract class ValueMarkerPresentationDialogBase extends DialogWrapper {
     setTitle("Select Object Label");
     setModal(true);
     myLabelField.getDocument().addDocumentListener(new DocumentAdapter() {
+      @Override
       protected void textChanged(final DocumentEvent e) {
         updateLabelSample();
       }
     });
     myChooseColorButton.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
-        final Color color = ColorChooser.chooseColor(myColorSample, "Choose Label Color", myColor);
-        if (color != null) {
-          myColor = color;
-          updateLabelSample();
-        }
+        ColorChooser.chooseColor(myColorSample, "Choose Label Color", myColor, color -> {
+          if (color != null) {
+            myColor = color;
+            updateLabelSample();
+          }
+        });
       }
     });
     myColor = DEFAULT_COLOR;
@@ -63,6 +66,7 @@ public abstract class ValueMarkerPresentationDialogBase extends DialogWrapper {
     }
   }
 
+  @Override
   public JComponent getPreferredFocusedComponent() {
     return myLabelField;
   }

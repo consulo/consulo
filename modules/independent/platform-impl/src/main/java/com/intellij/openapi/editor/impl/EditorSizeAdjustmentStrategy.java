@@ -25,7 +25,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This class is aimed to help {@link EditorImpl the editor} when user extensively modifies the longest line
+ * This class is aimed to help {@link DesktopEditorImpl the editor} when user extensively modifies the longest line
  * at the document (e.g. is typing at its end).
  * <p/>
  * The problem is that the longest line's width is a {@link JComponent#getPreferredSize() preferred size's width} as well.
@@ -72,7 +72,7 @@ class EditorSizeAdjustmentStrategy {
    * @return preferred size to use (given 'new preferred size' may be adjusted)
    */
   @Nonnull
-  Dimension adjust(@Nonnull Dimension newPreferredSize, @Nullable Dimension oldPreferredSize, @Nonnull EditorImpl editor) {
+  Dimension adjust(@Nonnull Dimension newPreferredSize, @Nullable Dimension oldPreferredSize, @Nonnull DesktopEditorImpl editor) {
     if (oldPreferredSize == null || myInsideValidation) {
       return newPreferredSize;
     }
@@ -124,15 +124,15 @@ class EditorSizeAdjustmentStrategy {
     }
   }
 
-  private void scheduleSizeUpdate(@Nonnull EditorImpl editor) {
+  private void scheduleSizeUpdate(@Nonnull DesktopEditorImpl editor) {
     myAlarm.cancelAllRequests();
     myAlarm.addRequest(new UpdateSizeTask(editor), 1000);
   }
 
   private class UpdateSizeTask implements Runnable {
-    private final EditorImpl myEditor;
+    private final DesktopEditorImpl myEditor;
 
-    UpdateSizeTask(@Nonnull EditorImpl editor) {
+    UpdateSizeTask(@Nonnull DesktopEditorImpl editor) {
       myEditor = editor;
     }
 

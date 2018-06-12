@@ -23,14 +23,14 @@ import javax.annotation.Nonnull;
 
 class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
   @Nonnull
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   final int myOriginalOffset; // used for sorting of inlays, if they ever get merged into same offset after document modification
   int myOffsetBeforeDisposal = -1;
   private int myWidthInPixels;
   @Nonnull
   private final EditorCustomElementRenderer myRenderer;
 
-  InlayImpl(@Nonnull EditorImpl editor, int offset, @Nonnull EditorCustomElementRenderer renderer) {
+  InlayImpl(@Nonnull DesktopEditorImpl editor, int offset, @Nonnull EditorCustomElementRenderer renderer) {
     super(editor.getDocument(), offset, offset, false);
     myEditor = editor;
     myOriginalOffset = offset;

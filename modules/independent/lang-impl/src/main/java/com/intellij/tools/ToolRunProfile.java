@@ -36,9 +36,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -78,7 +78,7 @@ public class ToolRunProfile implements ModuleRunProfile{
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

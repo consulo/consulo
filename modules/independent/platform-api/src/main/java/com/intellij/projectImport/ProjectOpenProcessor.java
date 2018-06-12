@@ -25,11 +25,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.Language;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.File;
 
 public abstract class ProjectOpenProcessor {
@@ -40,10 +40,10 @@ public abstract class ProjectOpenProcessor {
   }
 
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   @Nullable
-  public Icon getIcon(final VirtualFile file) {
+  public Image getIcon(final VirtualFile file) {
     return getIcon();
   }
 

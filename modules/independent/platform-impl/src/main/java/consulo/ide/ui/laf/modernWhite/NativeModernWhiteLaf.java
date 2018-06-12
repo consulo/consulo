@@ -51,4 +51,9 @@ public class NativeModernWhiteLaf extends ModernWhiteLaf {
   public String getName() {
     return "Modern White (native)";
   }
+
+  @Override
+  public String getID() {
+    return "modern-light-native";
+  }
 }

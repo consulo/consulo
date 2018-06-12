@@ -19,7 +19,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorFontType;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
@@ -54,7 +54,7 @@ class LookupPreview {
 
     String suffix = getSuffixText(item);
     Editor editor = myLookup.getTopLevelEditor();
-    if (!suffix.isEmpty() && editor instanceof EditorImpl &&
+    if (!suffix.isEmpty() && editor instanceof DesktopEditorImpl &&
         !editor.getSelectionModel().hasSelection() &&
         InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
       myLookup.performGuardedChange(() -> {
@@ -110,7 +110,7 @@ class LookupPreview {
       public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {
         g.setColor(JBColor.GRAY);
         g.setFont(getFont(editor));
-        g.drawString(suffix, r.x, r.y + ((EditorImpl)editor).getAscent());
+        g.drawString(suffix, r.x, r.y + ((DesktopEditorImpl)editor).getAscent());
       }
 
       private Font getFont(@Nonnull Editor editor) {

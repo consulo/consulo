@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.impl.EditorMarkupModelImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -159,7 +159,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
           myeditor = PsiUtilBase.findEditor(file);
         }
         if (myeditor == null || myeditor.isDisposed()) return;
-        EditorMarkupModelImpl markup = (EditorMarkupModelImpl)myeditor.getMarkupModel();
+        DesktopEditorMarkupModelImpl markup = (DesktopEditorMarkupModelImpl)myeditor.getMarkupModel();
         markup.repaintTrafficLightIcon();
         DaemonListeners.repaintErrorStripeRenderer(myeditor, myProject);
       }, 50, null);

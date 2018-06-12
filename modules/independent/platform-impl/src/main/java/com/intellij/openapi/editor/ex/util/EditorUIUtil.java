@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.ex.util;
 import com.intellij.ide.ui.AntialiasingType;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
@@ -49,8 +49,8 @@ public class EditorUIUtil {
     if (SystemInfo.isMac) {
       MacUIUtil.hideCursor();
     }
-    else if (editor instanceof EditorImpl) {
-      ((EditorImpl)editor).hideCursor();
+    else if (editor instanceof DesktopEditorImpl) {
+      ((DesktopEditorImpl)editor).hideCursor();
     }
   }
 }

@@ -33,9 +33,9 @@ public class IndentsModelImpl implements IndentsModel {
   private final Map<IntPair, IndentGuideDescriptor> myIndentsByLines = ContainerUtilRt.newHashMap();
   private       List<IndentGuideDescriptor>         myIndents        = ContainerUtilRt.newArrayList();
   @Nonnull
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
 
-  public IndentsModelImpl(@Nonnull EditorImpl editor) {
+  public IndentsModelImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
   }
 

@@ -2,14 +2,14 @@ package com.intellij.mock;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author gregsh
  */
-public class MockLanguageFileType extends LanguageFileType{
+public class MockLanguageFileType extends LanguageFileType {
 
   private final String myExtension;
 
@@ -20,7 +20,7 @@ public class MockLanguageFileType extends LanguageFileType{
 
   @Nonnull
   @Override
-  public String getName() {
+  public String getId() {
     return getLanguage().getID();
   }
 
@@ -37,7 +37,7 @@ public class MockLanguageFileType extends LanguageFileType{
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

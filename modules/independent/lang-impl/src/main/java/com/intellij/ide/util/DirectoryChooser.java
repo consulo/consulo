@@ -46,13 +46,14 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.ui.image.Image;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -333,13 +334,13 @@ public class DirectoryChooser extends DialogWrapper {
     @Nonnull
     @Deprecated
     @DeprecationInfo(value = "Use #getIcon()")
-    public Icon getIcon(@Nonnull ProjectFileIndex fileIndex) {
+    public Image getIcon(@Nonnull ProjectFileIndex fileIndex) {
       return getIcon();
     }
 
     @RequiredDispatchThread
     @Nonnull
-    public Icon getIcon() {
+    public Image getIcon() {
       if (myDirectory != null) {
         VirtualFile virtualFile = myDirectory.getVirtualFile();
         List<ContentFolder> contentFolders = ModuleUtilCore.getContentFolders(myDirectory.getProject());

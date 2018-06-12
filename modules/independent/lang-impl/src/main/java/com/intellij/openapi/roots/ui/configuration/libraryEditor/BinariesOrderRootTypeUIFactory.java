@@ -25,24 +25,28 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class BinariesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
+  @Nonnull
   @Override
   public SdkPathEditor createPathEditor(Sdk sdk) {
     return new SdkPathEditor(ProjectBundle.message("library.binaries.node"), BinariesOrderRootType.getInstance(),
                              new FileChooserDescriptor(true, true, true, false, true, true), sdk);
   }
 
+  @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.CompiledClassesFolder;
   }
 
+  @Nonnull
   @Override
   public String getNodeText() {
     return ProjectBundle.message("library.binaries.node");

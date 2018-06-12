@@ -44,11 +44,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.platform.Platform;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
@@ -136,6 +137,10 @@ public class IdeEventQueue extends EventQueue {
   }
 
   private IdeEventQueue() {
+    if(Platform.current().isWebService()) {
+      throw new UnsupportedOperationException("we should init event awt event queue");
+    }
+
     EventQueue systemEventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
     assert !(systemEventQueue instanceof IdeEventQueue) : systemEventQueue;
     systemEventQueue.push(this);

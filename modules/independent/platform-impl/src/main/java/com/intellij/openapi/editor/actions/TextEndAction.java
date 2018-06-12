@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
 
@@ -39,7 +39,7 @@ public class TextEndAction extends TextComponentEditorAction {
     public void execute(Editor editor, DataContext dataContext) {
       editor.getCaretModel().removeSecondaryCarets();
       int offset = editor.getDocument().getTextLength();
-      if (editor instanceof EditorImpl) {
+      if (editor instanceof DesktopEditorImpl) {
         editor.getCaretModel().moveToLogicalPosition(editor.offsetToLogicalPosition(offset).leanForward(true));
       }
       else {

@@ -21,6 +21,7 @@ import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.HighlightedRegion;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -58,7 +59,7 @@ final class TodoCompositeRenderer implements TreeCellRenderer {
       for (HighlightedRegion region : regionProvider.getHighlightedRegions()) {
         myColorTreeCellRenderer.addHighlighter(region.startOffset, region.endOffset, region.textAttributes);
       }
-      myColorTreeCellRenderer.setIcon(descriptor.getIcon());
+      myColorTreeCellRenderer.setIcon(TargetAWT.to(descriptor.getIcon()));
       result = myColorTreeCellRenderer;
     }
     else {

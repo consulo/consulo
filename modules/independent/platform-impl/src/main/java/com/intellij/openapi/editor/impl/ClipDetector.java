@@ -26,7 +26,7 @@ import java.awt.*;
  * requests are mostly grouped by visual lines, as caching of intermediate data is performed.
  */
 public class ClipDetector {
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final Rectangle myClipRectangle;
 
   private int myVisualLineStartOffset = -1;
@@ -34,7 +34,7 @@ public class ClipDetector {
   private int myVisualLineClipStartOffset;
   private int myVisualLineClipEndOffset;
 
-  public ClipDetector(@Nonnull EditorImpl editor, Rectangle clipRectangle) {
+  public ClipDetector(@Nonnull DesktopEditorImpl editor, Rectangle clipRectangle) {
     myEditor = editor;
     myClipRectangle = clipRectangle;
   }

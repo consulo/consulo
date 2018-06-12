@@ -34,11 +34,6 @@ import javax.annotation.Nullable;
  * @since 2:22/02.04.13
  */
 public class DefaultASTLeafFactory implements ASTLeafFactory {
-  @Override
-  public boolean apply(@Nullable IElementType input) {
-    return true;
-  }
-
   @Nonnull
   @Override
   public LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text) {
@@ -58,5 +53,10 @@ public class DefaultASTLeafFactory implements ASTLeafFactory {
       return (LeafElement)((ILeafElementType)type).createLeafNode(text);
     }
     return new LeafPsiElement(type, text);
+  }
+
+  @Override
+  public boolean test(@Nullable IElementType input) {
+    return true;
   }
 }

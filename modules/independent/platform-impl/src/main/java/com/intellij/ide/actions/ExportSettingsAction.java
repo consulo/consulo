@@ -29,11 +29,11 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.extensions.PluginDescriptor;
@@ -46,10 +46,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.ex.ApplicationEx2;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -134,9 +135,9 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
   public static MultiMap<File, ExportableItem> getExportableComponentsMap(final boolean onlyExisting) {
     final MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
 
-    ApplicationImpl application = (ApplicationImpl)ApplicationManager.getApplication();
+    ApplicationEx2 application = (ApplicationEx2)ApplicationManager.getApplication();
     final StateStorageManager storageManager = application.getStateStore().getStateStorageManager();
-    ServiceManagerImpl.processAllImplementationClasses(application, (aClass, pluginDescriptor) -> {
+    ServiceManagerImpl.processAllImplementationClasses((ComponentManagerImpl)application, (aClass, pluginDescriptor) -> {
       State stateAnnotation = aClass.getAnnotation(State.class);
       if (stateAnnotation != null && !StringUtil.isEmpty(stateAnnotation.name())) {
         int storageIndex;

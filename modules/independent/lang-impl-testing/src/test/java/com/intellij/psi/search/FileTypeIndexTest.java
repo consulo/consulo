@@ -37,7 +37,7 @@ public class FileTypeIndexTest extends LightPlatformCodeInsightFixtureTestCase {
 
       @Nonnull
       @Override
-      public String getName() {
+      public String getId() {
         return "foo";
       }
 

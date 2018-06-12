@@ -18,32 +18,43 @@ package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.folding.CodeFoldingSettings;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.options.BeanConfigurable;
 import com.intellij.openapi.options.Configurable;
-import org.jetbrains.annotations.Nls;
-import javax.annotation.Nullable;
+import consulo.options.SimpleConfigurableByProperties;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.VerticalLayout;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
-public class GeneralCodeFoldingConfigurable extends BeanConfigurable<CodeFoldingSettings> implements Configurable {
-  public GeneralCodeFoldingConfigurable() {
-    super(CodeFoldingSettings.getInstance());
-    checkBox("COLLAPSE_FILE_HEADER", ApplicationBundle.message("checkbox.collapse.file.header"));
-    checkBox("COLLAPSE_IMPORTS", ApplicationBundle.message("checkbox.collapse.title.imports"));
-    checkBox("COLLAPSE_DOC_COMMENTS", ApplicationBundle.message("checkbox.collapse.javadoc.comments"));
-    checkBox("COLLAPSE_METHODS", ApplicationBundle.message("checkbox.collapse.method.bodies"));
-  }
-
-  @Nls
+public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable {
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public String getDisplayName() {
-    return null;
-  }
+  protected Component createLayout(PropertyBuilder propertyBuilder) {
+    VerticalLayout verticalLayout = VerticalLayout.create();
 
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
+    CodeFoldingSettings settings = CodeFoldingSettings.getInstance();
+
+    CheckBox fileHeaderBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.file.header"));
+    verticalLayout.add(fileHeaderBox);
+    propertyBuilder.add(fileHeaderBox, () -> settings.COLLAPSE_FILE_HEADER, val -> settings.COLLAPSE_FILE_HEADER = val);
+
+    CheckBox importsBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.title.imports"));
+    verticalLayout.add(importsBox);
+    propertyBuilder.add(importsBox, () -> settings.COLLAPSE_IMPORTS, val -> settings.COLLAPSE_IMPORTS = val);
+
+    CheckBox docCommentsBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.javadoc.comments"));
+    verticalLayout.add(docCommentsBox);
+    propertyBuilder.add(docCommentsBox, () -> settings.COLLAPSE_DOC_COMMENTS, val -> settings.COLLAPSE_DOC_COMMENTS = val);
+
+    CheckBox methodsBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.method.bodies"));
+    verticalLayout.add(methodsBox);
+    propertyBuilder.add(methodsBox, () -> settings.COLLAPSE_METHODS, val -> settings.COLLAPSE_METHODS = val);
+
+    return verticalLayout;
   }
 }

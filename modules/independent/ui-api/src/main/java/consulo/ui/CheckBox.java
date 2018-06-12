@@ -21,15 +21,20 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface CheckBox extends ValueComponent<Boolean> {
+public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
   @Nonnull
+  @RequiredUIAccess
   static CheckBox create(@Nonnull String text) {
     return create(text, false);
   }
 
   @Nonnull
+  @RequiredUIAccess
   static CheckBox create(@Nonnull String text, boolean selected) {
-    return UIInternal.get()._Components_checkBox(text, selected);
+    CheckBox box = UIInternal.get()._Components_checkBox();
+    box.setText(text);
+    box.setValue(selected);
+    return box;
   }
 
   @Nonnull

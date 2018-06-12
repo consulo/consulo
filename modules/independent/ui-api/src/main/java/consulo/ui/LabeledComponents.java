@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.util.text.StringUtilRt;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -25,6 +26,11 @@ import javax.annotation.Nonnull;
 public class LabeledComponents {
   @RequiredUIAccess
   public static Component left(@Nonnull String text, @Nonnull Component component) {
+    return left(text, () -> component);
+  }
+
+  @RequiredUIAccess
+  public static Component left(@Nonnull String text, @Nonnull PseudoComponent component) {
     if (!StringUtilRt.endsWithChar(text, ':')) {
       text += ": ";
     }
@@ -37,6 +43,11 @@ public class LabeledComponents {
 
   @RequiredUIAccess
   public static Component leftFilled(@Nonnull String text, @Nonnull Component component) {
+    return leftFilled(text, () -> component);
+  }
+
+  @RequiredUIAccess
+  public static Component leftFilled(@Nonnull String text, @Nonnull PseudoComponent component) {
     if (!StringUtilRt.endsWithChar(text, ':')) {
       text += ": ";
     }

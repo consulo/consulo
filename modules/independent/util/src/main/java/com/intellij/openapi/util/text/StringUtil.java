@@ -1125,10 +1125,7 @@ public class StringUtil extends StringUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static String trimStart(@Nonnull String s, @NonNls @Nonnull String prefix) {
-    if (s.startsWith(prefix)) {
-      return s.substring(prefix.length());
-    }
-    return s;
+    return StringUtilRt.trimStart(s, prefix);
   }
 
   @Nonnull

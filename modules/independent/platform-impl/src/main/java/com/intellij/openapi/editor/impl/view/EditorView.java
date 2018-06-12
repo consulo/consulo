@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -54,7 +54,7 @@ import java.text.Bidi;
 public class EditorView implements TextDrawingCallback, Disposable, Dumpable, HierarchyListener, VisibleAreaListener {
   private static Key<LineLayout> FOLD_REGION_TEXT_LAYOUT = Key.create("text.layout");
 
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final DocumentEx myDocument;
   private final EditorPainter myPainter;
   private final EditorCoordinateMapper myMapper;
@@ -80,7 +80,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
 
   private final Object myLock = new Object();
 
-  public EditorView(EditorImpl editor) {
+  public EditorView(DesktopEditorImpl editor) {
     myEditor = editor;
     myDocument = editor.getDocument();
 
@@ -99,7 +99,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     Disposer.register(this, mySizeManager);
   }
 
-  EditorImpl getEditor() {
+  DesktopEditorImpl getEditor() {
     return myEditor;
   }
 

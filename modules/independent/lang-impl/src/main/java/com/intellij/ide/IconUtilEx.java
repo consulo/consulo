@@ -23,12 +23,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ide.IconDescriptorUpdaters;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class IconUtilEx {
 
-  public static Icon getIcon(Object object, @Iconable.IconFlags int flags, Project project) {
+  public static Image getIcon(Object object, @Iconable.IconFlags int flags, Project project) {
     if (object instanceof PsiElement) {
       return IconDescriptorUpdaters.getIcon(((PsiElement)object), flags);
     }

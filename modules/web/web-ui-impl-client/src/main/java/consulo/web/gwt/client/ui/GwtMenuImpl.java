@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import consulo.web.gwt.client.util.Log;
 
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class GwtMenuImpl extends SimplePanel {
 
   public void setChildren(List<Widget> children) {
     MenuBar bar = new MenuBar(true);
+
+    Log.log("creating sub menu. Item " + myMenu.getTitle());
 
     GwtMenuBarImplConnector.addItems(children, bar);
 

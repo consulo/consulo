@@ -15,38 +15,67 @@
  */
 package consulo.ui.internal.image;
 
-import com.intellij.openapi.util.IconLoader;
 import consulo.ui.image.Image;
 import consulo.ui.internal.WGwtUIThreadLocal;
+import consulo.ui.migration.SwingImageRef;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.servlet.ui.UIServlet;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtImageImpl implements Image, WGwtImageWithState {
-  private Icon myIcon;
+public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
   private int myURLHash;
+  private java.awt.Image myImage;
 
   public WGwtImageImpl(@Nonnull URL url) {
-    myIcon = IconLoader.findIcon(url);
     myURLHash = WGwtImageUrlCache.hashCode(url);
+
+    URL scaledImageUrl = url;
+    String urlText = url.toString();
+    if (urlText.endsWith(".png")) {
+      urlText = urlText.replace(".png", "@2x.png");
+      try {
+        scaledImageUrl = new URL(urlText);
+      }
+      catch (MalformedURLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    try(InputStream ignored = scaledImageUrl.openStream()) {
+      // if scaled image resolved - map it for better quality
+      myURLHash = WGwtImageUrlCache.hashCode(scaledImageUrl);
+    }
+    catch (Throwable ignored) {
+    }
+
+    try {
+      myImage = ImageIO.read(url);
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
   public int getHeight() {
-    return myIcon.getIconHeight();
+    return myImage.getHeight(null);
   }
 
   @Override
   public int getWidth() {
-    return myIcon.getIconWidth();
+    return myImage.getWidth(null);
   }
 
   @Override
@@ -56,5 +85,20 @@ public class WGwtImageImpl implements Image, WGwtImageWithState {
     state.myURL = WGwtImageUrlCache.createURL(myURLHash, current.getURLPrefix());
 
     m.myImageState = state;
+  }
+
+  @Override
+  public void paintIcon(Component c, Graphics g, int x, int y) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getIconWidth() {
+    return getWidth();
+  }
+
+  @Override
+  public int getIconHeight() {
+    return getHeight();
   }
 }

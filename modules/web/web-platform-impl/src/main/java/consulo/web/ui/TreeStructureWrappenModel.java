@@ -65,7 +65,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
 
         itemPresentation.append(descriptor.toString());
         try {
-          AccessRule.read(() -> itemPresentation.setIcon((consulo.ui.image.Image)descriptor.getIcon()));
+          AccessRule.read(() -> itemPresentation.setIcon(descriptor.getIcon()));
         }
         catch (Exception e) {
           e.printStackTrace();

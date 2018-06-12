@@ -34,9 +34,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Producer;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -58,14 +59,14 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
     super(model);
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
-    Icon icon = null;
+    consulo.ui.image.Image icon = null;
     if (manager instanceof ExternalSystemUiAware) {
       icon = ((ExternalSystemUiAware)manager).getTaskIcon();
     }
     if (icon == null) {
       icon = DefaultExternalSystemUiAware.INSTANCE.getTaskIcon();
     }
-    setCellRenderer(new MyRenderer(project, icon, ExternalSystemUtil.findConfigurationType(externalSystemId)));
+    setCellRenderer(new MyRenderer(project, TargetAWT.to(icon), ExternalSystemUtil.findConfigurationType(externalSystemId)));
     setVisibleRowCount(ExternalSystemConstants.RECENT_TASKS_NUMBER);
 
     registerKeyboardAction(new ActionListener() {

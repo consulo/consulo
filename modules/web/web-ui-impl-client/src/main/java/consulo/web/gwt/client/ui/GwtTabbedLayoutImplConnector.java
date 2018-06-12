@@ -20,7 +20,8 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutRpc;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutServerRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 
 import java.util.LinkedHashMap;
@@ -39,6 +40,13 @@ public class GwtTabbedLayoutImplConnector extends GwtLayoutConnector implements 
     super.init();
 
     getWidget().setCloseHandler(this);
+
+    registerRpc(TabbedLayoutClientRpc.class, new TabbedLayoutClientRpc() {
+      @Override
+      public void select(int tabIndex) {
+        getWidget().selectTab(tabIndex);
+      }
+    });
   }
 
   @Override
@@ -70,6 +78,6 @@ public class GwtTabbedLayoutImplConnector extends GwtLayoutConnector implements 
 
   @Override
   public void accept(int value) {
-    getRpcProxy(TabbedLayoutRpc.class).close(value);
+    getRpcProxy(TabbedLayoutServerRpc.class).close(value);
   }
 }

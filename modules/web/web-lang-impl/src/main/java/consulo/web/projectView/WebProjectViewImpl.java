@@ -60,7 +60,7 @@ import java.util.function.Function;
  */
 public class WebProjectViewImpl implements ProjectViewEx {
   private final class MyDataProvider implements Function<Key<?>, Object> {
-    @javax.annotation.Nullable
+    @Nullable
     private Object getSelectedNodeElement() {
       final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
       if (currentProjectViewPane == null) { // can happen if not initialized yet
@@ -325,7 +325,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
   @Nonnull
   @Override
   public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
-    return AsyncResult.done(null);
+    return AsyncResult.resolved(null);
   }
 
   @RequiredUIAccess
@@ -366,7 +366,6 @@ public class WebProjectViewImpl implements ProjectViewEx {
     };
 
     myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
-
     WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
     wrappedLayout.addUserDataProvider(new MyDataProvider());
 

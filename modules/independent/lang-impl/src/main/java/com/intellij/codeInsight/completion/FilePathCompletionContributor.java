@@ -47,6 +47,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
+import consulo.awt.TargetAWT;
 import consulo.codeInsight.completion.CompletionProvider;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -271,7 +272,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
       myHelpers = helpers;
 
       myInfo = FileInfoManager.getFileAdditionalInfo(file);
-      myIcon = file.getFileType().getIcon();
+      myIcon = TargetAWT.to(file.getFileType().getIcon());
 
       myFile = file;
     }

@@ -17,8 +17,8 @@ package consulo.ui.ex;
 
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
 
 /**
@@ -33,6 +33,9 @@ public interface ToolWindowPanel {
 
   @Nonnull
   FinalizableCommand createUpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallback);
+
+  @Nonnull
+  FinalizableCommand createSetEditorComponentCmd(Object component, @Nonnull Runnable finishCallBack);
 
   @Nonnull
   FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack);

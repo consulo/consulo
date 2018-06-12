@@ -25,6 +25,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,7 +72,7 @@ public class ConfigurationTypeDashboardGroupingRule implements DashboardGrouping
       RunnerAndConfigurationSettings configurationSettings = ((DashboardRunConfigurationNode)node).getConfigurationSettings();
       ConfigurationType type = configurationSettings.getType();
       if (type != null) {
-        return new DashboardGroupImpl<>(type, type.getDisplayName(), type.getIcon());
+        return new DashboardGroupImpl<>(type, type.getDisplayName(), TargetAWT.to(type.getIcon()));
       }
     }
     return null;

@@ -107,6 +107,20 @@ table, tr, td {
   margin: 0px;
 }
 
+a, a:visited {
+  color: #0066cc;
+  text-decoration:none;
+}
+
+a:hover {
+  color: #0066cc;
+  text-decoration:underline;
+}
+
+.ui-hyperlink {
+  cursor: pointer;
+}
+
 .ui-layered-image {
   position: relative;
 }
@@ -219,6 +233,7 @@ table, tr, td {
 .gwt-MenuBarPopup {
   border: 1px solid #a0a0a0;
   background: white;
+  z-index: 20000;
 }
 
 .gwt-MenuBarPopup .menuPopupTopCenter {

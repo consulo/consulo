@@ -93,7 +93,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
   public void initComponent() {
     ModalityStateListener myModalityStateListener = entering -> {
       for (Editor editor : myEditors) {
-        ((EditorImpl)editor).beforeModalityStateChanged();
+        ((DesktopEditorImpl)editor).beforeModalityStateChanged();
       }
     };
     LaterInvocator.addModalityStateListener(myModalityStateListener, ApplicationManager.getApplication());
@@ -114,8 +114,8 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
 
   @NonNls
   public static void throwNotReleasedError(@Nonnull Editor editor) {
-    if (editor instanceof EditorImpl) {
-      ((EditorImpl)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
+    if (editor instanceof DesktopEditorImpl) {
+      ((DesktopEditorImpl)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
     }
     else {
       throw new RuntimeException("Editor of " + editor.getClass() +
@@ -194,7 +194,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
 
   private Editor createEditor(@Nonnull Document document, boolean isViewer, Project project) {
     Document hostDocument = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
-    EditorImpl editor = new EditorImpl(hostDocument, isViewer, project);
+    DesktopEditorImpl editor = new DesktopEditorImpl(hostDocument, isViewer, project);
     myEditors.add(editor);
     myEditorEventMulticaster.registerEditor(editor);
     myEditorFactoryEventDispatcher.getMulticaster().editorCreated(new EditorFactoryEvent(this, editor));
@@ -213,7 +213,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
     }
     finally {
       try {
-        ((EditorImpl)editor).release();
+        ((DesktopEditorImpl)editor).release();
       }
       finally {
         myEditors.remove(editor);
@@ -282,12 +282,12 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
 
     @Override
     public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
-      editor.putUserData(EditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
+      editor.putUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
       try {
         myDelegate.execute(editor, charTyped, dataContext);
       }
       finally {
-        editor.putUserData(EditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, null);
+        editor.putUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, null);
       }
     }
 

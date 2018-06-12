@@ -27,51 +27,41 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 
 public class PatchFileType implements FileType {
   public static final PatchFileType INSTANCE = new PatchFileType();
   public static final String NAME = "PATCH";
 
+  @Override
   @Nonnull
   @NonNls
-  public String getName() {
+  public String getId() {
     return NAME;
   }
 
+  @Override
   @Nonnull
   public String getDescription() {
     return VcsBundle.message("patch.file.type.description");
   }
 
+  @Override
   @Nonnull
   @NonNls
   public String getDefaultExtension() {
     return "patch";
   }
 
+  @Override
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Pointcut;
-  }
-
-  public boolean isBinary() {
-    return false;
-  }
-
-  public boolean isReadOnly() {
-    return false;
-  }
-
-  @Nullable
-  @NonNls
-  public String getCharset(@Nonnull VirtualFile file, @Nonnull final byte[] content) {
-    return null;
   }
 
   public static boolean isPatchFile(@javax.annotation.Nullable VirtualFile vFile) {

@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -40,10 +40,9 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -255,9 +254,9 @@ public class ExecutionPointHighlighter {
       @Override
       public void run() {
         JComponent component = editor.getComponent();
-        Object o = component.getClientProperty(EditorImpl.IGNORE_MOUSE_TRACKING);
+        Object o = component.getClientProperty(DesktopEditorImpl.IGNORE_MOUSE_TRACKING);
         Integer value = ((o instanceof Integer) ? (Integer)o : 0) + increment;
-        component.putClientProperty(EditorImpl.IGNORE_MOUSE_TRACKING, value > 0 ? value : null);
+        component.putClientProperty(DesktopEditorImpl.IGNORE_MOUSE_TRACKING, value > 0 ? value : null);
       }
     });
   }

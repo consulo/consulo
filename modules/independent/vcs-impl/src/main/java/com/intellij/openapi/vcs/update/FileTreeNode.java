@@ -24,6 +24,8 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -51,7 +53,7 @@ public class FileTreeNode extends FileOrDirectoryTreeNode {
     if (myFile.isDirectory()) {
       return AllIcons.Nodes.TreeClosed;
     }
-    return FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName()).getIcon();
+    return TargetAWT.to(FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName()).getIcon());
   }
 
   @Override

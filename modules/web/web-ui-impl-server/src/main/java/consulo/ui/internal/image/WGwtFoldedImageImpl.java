@@ -15,17 +15,15 @@
  */
 package consulo.ui.internal.image;
 
-import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.web.gwt.shared.ui.state.image.FoldedImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class WGwtFoldedImageImpl implements FoldedImage, WGwtImageWithState {
+public class WGwtFoldedImageImpl implements Image, WGwtImageWithState {
   private Image[] myImages;
 
   public WGwtFoldedImageImpl(Image[] images) {
@@ -42,12 +40,6 @@ public class WGwtFoldedImageImpl implements FoldedImage, WGwtImageWithState {
     return myImages[0].getWidth();
   }
 
-  @Nonnull
-  @Override
-  public Image[] getImages() {
-    return myImages;
-  }
-
   @Override
   public void toState(MultiImageState m) {
     FoldedImageState state = new FoldedImageState();
@@ -55,7 +47,7 @@ public class WGwtFoldedImageImpl implements FoldedImage, WGwtImageWithState {
 
     for (int i = 0; i < myImages.length; i++) {
       Image image = myImages[i];
-      state.myChildren[i] = WGwtImageUrlCache.fixSwingImageRef(image).getState();
+      state.myChildren[i] = WGwtImageUrlCache.map(image).getState();
     }
 
     m.myFoldedImageState = state;

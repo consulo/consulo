@@ -23,9 +23,6 @@ public interface DockContainerFactory extends Disposable {
   DockContainer createContainer(DockableContent content);
 
   interface Persistent extends DockContainerFactory {
-
     DockContainer loadContainerFrom(Element element);
-
   }
-
 }

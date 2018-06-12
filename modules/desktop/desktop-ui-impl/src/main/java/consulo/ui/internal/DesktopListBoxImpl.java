@@ -18,19 +18,15 @@ package consulo.ui.internal;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBList;
-import consulo.ui.ListBox;
-import consulo.ui.ListItemRender;
-import consulo.ui.ListItemRenders;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
-import consulo.ui.ValueComponent;
+import consulo.ui.*;
 import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.model.ListModel;
+import consulo.ui.shared.Size;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
 
 /**
  * @author VISTALL
@@ -38,15 +34,16 @@ import java.awt.*;
  */
 public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingWrapper {
   private JBList<E> myList;
-  private DesktopComboBoxModelWrapper<E> myModel;
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
 
   private JScrollPane myRootPanel;
+  private ListModel<E> myModel;
 
   public DesktopListBoxImpl(ListModel<E> model) {
-    myModel = new DesktopComboBoxModelWrapper<>(model);
+    myModel = model;
+    DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(model);
 
-    myList = new JBList<>(myModel);
+    myList = new JBList<>(wrapper);
     myList.setCellRenderer(new ColoredListCellRenderer<E>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {

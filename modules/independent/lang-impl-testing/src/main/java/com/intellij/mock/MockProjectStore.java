@@ -36,6 +36,11 @@ import java.util.Set;
  */
 public class MockProjectStore implements IProjectStore {
   @Override
+  public void setProjectFilePathNoUI(@Nonnull String filePath) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public void setProjectFilePath(@Nonnull final String filePath) {
     throw new UnsupportedOperationException("Method setProjectFilePath is not yet implemented in " + getClass().getName());
   }
@@ -116,7 +121,12 @@ public class MockProjectStore implements IProjectStore {
   }
 
   @Override
-  @javax.annotation.Nullable
+  public void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @Nullable
   public String getPresentableUrl() {
     throw new UnsupportedOperationException("Method getPresentableUrl not implemented in " + getClass());
   }

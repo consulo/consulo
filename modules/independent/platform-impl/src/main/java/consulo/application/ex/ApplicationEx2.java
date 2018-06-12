@@ -16,9 +16,16 @@
 package consulo.application.ex;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -30,5 +37,23 @@ public interface ApplicationEx2 extends ApplicationEx {
 
   void init();
 
+  boolean isComponentsCreated();
+
+  void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable);
+
+  void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException;
+
+  boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
+                                                     @Nullable Project project,
+                                                     @Nullable JComponent parentComponent,
+                                                     @Nullable String cancelText,
+                                                     @Nonnull Consumer<ProgressIndicator> action);
+
   ComponentConfig[] getComponentConfigurations();
+
+  default void editorPaintStart() {
+  }
+
+  default void editorPaintFinish() {
+  }
 }

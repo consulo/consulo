@@ -38,6 +38,7 @@ import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.rules.*;
 import com.intellij.util.*;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import javax.annotation.Nonnull;
 
@@ -464,7 +465,7 @@ public class UsageInfo2UsageAdapter
     Icon icon = myIcon;
     if (icon == null) {
       PsiElement psiElement = getElement();
-      myIcon = icon = psiElement != null && psiElement.isValid() ? IconDescriptorUpdaters.getIcon(psiElement, 0) : null;
+      myIcon = icon = psiElement != null && psiElement.isValid() ? TargetAWT.to(IconDescriptorUpdaters.getIcon(psiElement, 0)) : null;
     }
     return icon;
   }

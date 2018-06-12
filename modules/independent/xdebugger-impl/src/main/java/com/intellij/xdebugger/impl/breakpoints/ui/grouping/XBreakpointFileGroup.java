@@ -16,12 +16,12 @@
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
+import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author nik
@@ -34,7 +34,7 @@ public class XBreakpointFileGroup extends XBreakpointGroup {
   }
 
   @Nullable
-  public Icon getIcon(final boolean isOpen) {
+  public Image getIcon(final boolean isOpen) {
     return VirtualFilePresentation.getIcon(myFile);
   }
 

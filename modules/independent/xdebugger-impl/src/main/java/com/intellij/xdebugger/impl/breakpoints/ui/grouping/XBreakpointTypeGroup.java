@@ -19,9 +19,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class XBreakpointTypeGroup extends XBreakpointGroup {
 
@@ -42,7 +42,7 @@ public class XBreakpointTypeGroup extends XBreakpointGroup {
   }
 
   @Override
-  public Icon getIcon(boolean isOpen) {
+  public Image getIcon(boolean isOpen) {
     return myBreakpointType.getEnabledIcon();
   }
 

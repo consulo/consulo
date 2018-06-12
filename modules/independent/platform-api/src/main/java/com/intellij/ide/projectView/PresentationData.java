@@ -25,9 +25,11 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.awt.TargetAWT;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -68,8 +70,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
    *                        in a non-tree view.
    * @param attributesKey   the attributes for rendering the item text.
    */
-  public PresentationData(String presentableText, String locationString, Icon icon,
-                          @Nullable TextAttributesKey attributesKey) {
+  public PresentationData(String presentableText, String locationString, Icon icon, @Nullable TextAttributesKey attributesKey) {
     myIcon = icon;
     myLocationString = locationString;
     myPresentableText = presentableText;
@@ -79,8 +80,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
   /**
    * @deprecated Use constructor with single icon instead.
    */
-  public PresentationData(String presentableText, String locationString, Icon openIcon, Icon closedIcon,
-                          @Nullable TextAttributesKey attributesKey) {
+  public PresentationData(String presentableText, String locationString, Icon openIcon, Icon closedIcon, @Nullable TextAttributesKey attributesKey) {
     this(presentableText, locationString, closedIcon, attributesKey);
   }
 
@@ -119,6 +119,14 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     myIcon = icon;
   }
 
+  public void setIcon(SwingImageRef icon) {
+    myIcon = icon;
+  }
+
+  public void setIcon(consulo.ui.image.Image icon) {
+    myIcon = TargetAWT.to(icon);
+  }
+
   /**
    * Sets the location of the object (for example, the package of a class). The location
    * string is used by some renderers and usually displayed as grayed text next to the item name.
@@ -143,8 +151,8 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
    * @param closedIcon the closed icon for the node.
    * @see #setIcons(javax.swing.Icon)
    * @deprecated Different icons for open/closed no longer supported. Use setIcon instead
-   *             Sets the icon shown for the node when it is collapsed in a tree, or when it is displayed
-   *             in a non-tree view.
+   * Sets the icon shown for the node when it is collapsed in a tree, or when it is displayed
+   * in a non-tree view.
    */
   public void setClosedIcon(Icon closedIcon) {
     setIcon(closedIcon);
@@ -155,7 +163,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
    * @param openIcon the open icon for the node.
    * @see #setIcons(javax.swing.Icon)
    * @deprecated Different icons for open/closed no longer supported. This function is no op.
-   *             Sets the icon shown for the node when it is expanded in the tree.
+   * Sets the icon shown for the node when it is expanded in the tree.
    */
   @Deprecated
   public void setOpenIcon(Icon openIcon) {
@@ -166,7 +174,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
    * @see #setOpenIcon(javax.swing.Icon)
    * @see #setClosedIcon(javax.swing.Icon)
    * @deprecated Different icons for open/closed no longer supported. Use setIcon instead.
-   *             Sets both the open and closed icons of the node to the specified icon.
+   * Sets both the open and closed icons of the node to the specified icon.
    */
 
   public void setIcons(Icon icon) {
@@ -265,8 +273,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
   @Override
   @Nonnull
   public Object[] getEqualityObjects() {
-    return new Object[]{myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText,
-      myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
+    return new Object[]{myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
   }
 
   @Override

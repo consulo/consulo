@@ -36,10 +36,11 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -252,7 +253,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
           append(fragment.getText(),
                  fragment.isCommon() ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
         }
-        setIcon(wrapper.getIcon());
+        setIcon(TargetAWT.to(wrapper.getIcon()));
       }
       else if (value instanceof Module) {
         final Module module = (Module)value;

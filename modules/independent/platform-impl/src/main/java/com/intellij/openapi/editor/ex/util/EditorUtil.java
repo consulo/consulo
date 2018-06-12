@@ -32,21 +32,21 @@ import com.intellij.openapi.editor.ex.DocumentBulkUpdateListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.impl.ScrollingModelImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
+import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.fileEditor.impl.text.TextEditorProvider;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -69,7 +69,7 @@ public final class EditorUtil {
    * false if the editor is part of EditorTextField, CommitMessage and etc.
    */
   public static boolean isRealFileEditor(@Nullable Editor editor) {
-    return editor != null && TextEditorProvider.getInstance().getTextEditor(editor) instanceof TextEditorImpl;
+    return editor != null && TextEditorProvider.getInstance().getTextEditor(editor) instanceof DesktopTextEditorImpl;
   }
 
   public static boolean isPasswordEditor(@Nullable Editor editor) {
@@ -83,7 +83,7 @@ public final class EditorUtil {
   }
 
   public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
-    if (editor instanceof EditorImpl) {
+    if (editor instanceof DesktopEditorImpl) {
       LogicalPosition lineEndPosition = editor.visualToLogicalPosition(new VisualPosition(line, Integer.MAX_VALUE));
       int lineEndOffset = editor.logicalPositionToOffset(lineEndPosition);
       return editor.offsetToVisualPosition(lineEndOffset, true, true).column;
@@ -280,7 +280,7 @@ public final class EditorUtil {
     if (editor != null && useOptimization) {
       Document document = editor.getDocument();
       if (start < offset - 1 && document.getLineNumber(start) != document.getLineNumber(offset - 1)) {
-        String editorInfo = editor instanceof EditorImpl ? ". Editor info: " + ((EditorImpl)editor).dumpState() : "";
+        String editorInfo = editor instanceof DesktopEditorImpl ? ". Editor info: " + ((DesktopEditorImpl)editor).dumpState() : "";
         String documentInfo;
         if (text instanceof Dumpable) {
           documentInfo = ((Dumpable)text).dumpState();
@@ -320,8 +320,8 @@ public final class EditorUtil {
   }
 
   public static Icon scaleIconAccordingEditorFont(Icon icon, Editor editor) {
-    if (Registry.is("editor.scale.gutter.icons") && editor instanceof EditorImpl && icon instanceof ScalableIcon) {
-      float scale = ((EditorImpl)editor).getScale();
+    if (Registry.is("editor.scale.gutter.icons") && editor instanceof DesktopEditorImpl && icon instanceof ScalableIcon) {
+      float scale = ((DesktopEditorImpl)editor).getScale();
       if (Math.abs(1f - scale) > 0.1f) {
         return ((ScalableIcon)icon).scale(scale);
       }
@@ -636,7 +636,7 @@ public final class EditorUtil {
   }
 
   public static int yPositionToLogicalLine(@Nonnull Editor editor, int y) {
-    int line = editor instanceof EditorImpl ? ((EditorImpl)editor).yToVisibleLine(y): y / editor.getLineHeight();
+    int line = editor instanceof DesktopEditorImpl ? ((DesktopEditorImpl)editor).yToVisibleLine(y) : y / editor.getLineHeight();
     return line > 0 ? editor.visualToLogicalPosition(new VisualPosition(line, 0)).line : 0;
   }
 

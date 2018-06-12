@@ -52,11 +52,12 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.TransactionGuardEx;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -230,7 +231,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   @Override
   public void commitAllDocuments() {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    ((TransactionGuardImpl)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     if (myUncommittedDocuments.isEmpty()) return;
 
@@ -307,7 +308,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     final Document document = doc instanceof DocumentWindow ? ((DocumentWindow)doc).getDelegate() : doc;
 
     if (isEventSystemEnabled(document)) {
-      ((TransactionGuardImpl)TransactionGuard.getInstance()).assertWriteActionAllowed();
+      ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
     }
 
     if (!isCommitted(document)) {

@@ -17,11 +17,11 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.Tab;
-import consulo.ui.TextStyle;
+import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.function.BiConsumer;
 
 /**
@@ -30,22 +30,27 @@ import java.util.function.BiConsumer;
  */
 public class DesktopTabImpl implements Tab {
   @Override
-  public void setIcon(@Nonnull Image image) {
+  public void setIcon(@Nullable Image image) {
 
   }
 
   @Override
-  public void append(@Nonnull String text) {
+  public void clearText() {
 
   }
 
   @Override
-  public void append(@Nonnull String text, @Nonnull TextStyle... styles) {
+  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
 
   }
 
   @Override
   public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+
+  }
+
+  @Override
+  public void select() {
 
   }
 }

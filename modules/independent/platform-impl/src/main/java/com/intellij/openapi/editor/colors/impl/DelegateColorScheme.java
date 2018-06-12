@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.awt.*;
+import java.util.Map;
 
 /**
  * User: spLeaner
@@ -74,6 +75,16 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   @Override
   public Color getColor(ColorKey key) {
     return myDelegate.getColor(key);
+  }
+
+  @Override
+  public void fillColors(Map<ColorKey, Color> colors) {
+    myDelegate.fillColors(colors);
+  }
+
+  @Override
+  public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
+    myDelegate.fillAttributes(map);
   }
 
   @Override

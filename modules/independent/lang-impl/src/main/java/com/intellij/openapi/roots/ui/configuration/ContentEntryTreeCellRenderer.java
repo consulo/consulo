@@ -24,11 +24,14 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -39,6 +42,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
     myTreeEditor = treeEditor;
   }
 
+  @RequiredDispatchThread
   @Override
   public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
@@ -53,7 +57,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
           if (file != null && file.isDirectory()) {
             final ContentEntry contentEntry = editor.getContentEntry();
             if (contentEntry != null) {
-              setIcon(updateIcon(contentEntry, file, getIcon()));
+              setIcon(TargetAWT.to(updateIcon(contentEntry, file, TargetAWT.from(getIcon()))));
             }
           }
         }
@@ -62,8 +66,8 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
   }
 
 
-  protected Icon updateIcon(final ContentEntry entry, final VirtualFile file, Icon originalIcon) {
-    Icon icon = originalIcon;
+  protected Image updateIcon(final ContentEntry entry, final VirtualFile file, Image originalIcon) {
+    Image icon = originalIcon;
     VirtualFile currentRoot = null;
     for (ContentFolder contentFolder : entry.getFolders(ContentFolderScopes.all())) {
       final VirtualFile contentPath = contentFolder.getFile();

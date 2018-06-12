@@ -19,11 +19,11 @@ package com.intellij.openapi.projectRoots;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -56,7 +56,7 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

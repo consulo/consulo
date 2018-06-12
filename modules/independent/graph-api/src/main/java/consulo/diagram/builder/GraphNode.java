@@ -16,7 +16,8 @@
 package consulo.diagram.builder;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -33,6 +34,12 @@ public interface GraphNode<T> {
 
   @Nonnull
   List<GraphNode<?>> getArrowNodes();
+
+  @Nonnull
+  String getName();
+
+  @Nullable
+  Icon getIcon();
 
   T getValue();
 

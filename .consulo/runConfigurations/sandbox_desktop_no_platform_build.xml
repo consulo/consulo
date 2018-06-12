@@ -1,12 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="sandbox-desktop no-platform-build" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
-    <option name="VM_PARAMETERS" value=" -Dconsulo.maven.console.log=true" />
+    <option name="VM_PARAMETERS" value="-Dconsulo.maven.console.log=true" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo" />
     <java-sdk name="1.8" />
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
+    <ConfigurationWrapper RunnerId="Cover" />
     <method>
       <option name="Make" enabled="false" />
     </method>

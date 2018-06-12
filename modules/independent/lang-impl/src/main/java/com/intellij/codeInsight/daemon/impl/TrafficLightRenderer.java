@@ -33,8 +33,8 @@ import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.impl.EditorImpl;
-import com.intellij.openapi.editor.impl.EditorMarkupModelImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -142,11 +142,11 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     if (renderer instanceof TrafficLightRenderer) {
       TrafficLightRenderer tlr = (TrafficLightRenderer)renderer;
       tlr.refresh();
-      ((EditorMarkupModelImpl)editorMarkupModel).repaintVerticalScrollBar();
+      ((DesktopEditorMarkupModelImpl)editorMarkupModel).repaintVerticalScrollBar();
       if (tlr.myFile == null || tlr.myFile.isValid()) return;
       Disposer.dispose(tlr);
     }
-    EditorImpl editor = (EditorImpl)editorMarkupModel.getEditor();
+    DesktopEditorImpl editor = (DesktopEditorImpl)editorMarkupModel.getEditor();
 
     if (!editor.isDisposed()) {
       renderer = new TrafficLightRenderer(project, document, file);

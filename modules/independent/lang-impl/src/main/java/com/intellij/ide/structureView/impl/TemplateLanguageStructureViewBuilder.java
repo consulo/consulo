@@ -37,9 +37,10 @@ import com.intellij.psi.*;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,16 +83,17 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
       }
 
       final Alarm myAlarm = new Alarm();
+
       @Override
       public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
         myAlarm.cancelAllRequests();
-        myAlarm.addRequest(new Runnable(){
+        myAlarm.addRequest(new Runnable() {
           @Override
           public void run() {
             if (myProject.isDisposed()) return;
             if (myBaseStructureViewDescriptor != null && ((StructureViewComponent)myBaseStructureViewDescriptor.structureView).getTree() == null) return;
             if (!myVirtualFile.isValid()) return;
-            ApplicationManager.getApplication().runReadAction(new Runnable(){
+            ApplicationManager.getApplication().runReadAction(new Runnable() {
               @Override
               public void run() {
                 final TemplateLanguageFileViewProvider provider = getViewProvider();
@@ -101,8 +103,7 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
                 if (structureViewWrapper == null) return;
 
                 Language baseLanguage = provider.getTemplateDataLanguage();
-                if (baseLanguage == myTemplateDataLanguage
-                    && (myBaseStructureViewDescriptor == null || isPsiValid(myBaseStructureViewDescriptor))) {
+                if (baseLanguage == myTemplateDataLanguage && (myBaseStructureViewDescriptor == null || isPsiValid(myBaseStructureViewDescriptor))) {
                   updateBaseLanguageView();
                 }
                 else {
@@ -174,7 +175,7 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
     List<PsiAnchor> expanded = new ArrayList<PsiAnchor>(expandedElements == null ? 0 : expandedElements.length);
     if (expandedElements != null) {
       for (Object element : expandedElements) {
-        if (element instanceof PsiElement && ((PsiElement) element).isValid()) {
+        if (element instanceof PsiElement && ((PsiElement)element).isValid()) {
           expanded.add(PsiAnchor.create((PsiElement)element));
         }
       }
@@ -213,7 +214,7 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
     }
 
     StructureViewComposite.StructureViewDescriptor[] array = viewDescriptors.toArray(new StructureViewComposite.StructureViewDescriptor[viewDescriptors.size()]);
-    myStructureViewComposite = new StructureViewComposite(array){
+    myStructureViewComposite = new StructureViewComposite(array) {
       @Override
       public void dispose() {
         removeBaseLanguageListener();
@@ -242,7 +243,8 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
     if (builder == null) return null;
 
     StructureView structureView = builder.createStructureView(fileEditor, myProject);
-    return new StructureViewComposite.StructureViewDescriptor(IdeBundle.message("tab.structureview.baselanguage.view", language.getDisplayName()), structureView, findFileType(language).getIcon());
+    return new StructureViewComposite.StructureViewDescriptor(IdeBundle.message("tab.structureview.baselanguage.view", language.getDisplayName()), structureView,
+                                                              TargetAWT.to(findFileType(language).getIcon()));
   }
 
   protected boolean isAcceptableBaseLanguageFile(PsiFile dataFile) {

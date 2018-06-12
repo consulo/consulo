@@ -26,16 +26,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import consulo.application.impl.FrameTitleUtil;
+import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.app.impl.settings.SettingsDialog;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
 import consulo.web.application.WebApplication;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,12 +76,10 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
 
     AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
 
-    ListModel<AnAction> model = new ImmutableListModel<>(Arrays.asList(recentProjectsActions));
+    ListModel<AnAction> model = ListModel.create(Arrays.asList(recentProjectsActions));
 
     ListBox<AnAction> listSelect = ListBox.create(model);
-    listSelect.setRender((render, index, item) -> {
-      render.append(((ReopenProjectAction)item).getProjectName());
-    });
+    listSelect.setRender((render, index, item) -> render.append(((ReopenProjectAction)item).getProjectName()));
     listSelect.addValueListener(event -> {
       ReopenProjectAction value = (ReopenProjectAction)event.getValue();
 
@@ -113,9 +111,13 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
           text = text.substring(0, text.length() - 3);
         }
 
-        projectActionLayout.add(Button.create(text, () -> {
+        Hyperlink component = Hyperlink.create(text, () -> {
           action.actionPerformed(e);
-        }));
+        });
+
+        component.setImage(TargetAWT.from(presentation.getIcon()));
+
+        projectActionLayout.add(component);
       }
     }
 

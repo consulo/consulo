@@ -27,8 +27,10 @@ import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -76,7 +78,7 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
       right.setBackground(bg);
       right.setForeground(fg);
       right.add(group, BorderLayout.CENTER);
-      final JLabel icon = new JLabel(getIcon(toolWrapper));
+      final JLabel icon = new JLabel(TargetAWT.to(getIcon(toolWrapper)));
       icon.setBackground(bg);
       icon.setForeground(fg);
       right.add(icon, BorderLayout.EAST);
@@ -92,8 +94,8 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
   }
 
   @Nonnull
-  private static Icon getIcon(@Nonnull InspectionToolWrapper tool) {
-    Icon icon = null;
+  private static Image getIcon(@Nonnull InspectionToolWrapper tool) {
+    Image icon = null;
     final Language language = Language.findLanguageByID(tool.getLanguage());
     if (language != null) {
       final LanguageFileType fileType = language.getAssociatedFileType();

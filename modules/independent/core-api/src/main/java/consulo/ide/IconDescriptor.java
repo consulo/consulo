@@ -15,94 +15,75 @@
  */
 package consulo.ide;
 
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.RowIcon;
-import com.intellij.util.SmartList;
-import com.intellij.util.ui.EmptyIcon;
-import javax.annotation.Nonnull;
+import com.intellij.util.ArrayUtil;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 0:07/19.07.13
  */
 public class IconDescriptor {
-  private List<Icon> myLayerIcons;
-  private Icon myRightIcon;
-  private Icon myMainIcon;
+  private Image[] myLayerIcons = Image.EMPTY_ARRAY;
+  private Image myRightIcon;
+  private Image myMainIcon;
 
-  public IconDescriptor(@Nullable Icon mainIcon) {
+  public IconDescriptor(@Nullable Image mainIcon) {
     myMainIcon = mainIcon;
   }
 
   @Nullable
-  public Icon getMainIcon() {
+  public Image getMainIcon() {
     return myMainIcon;
   }
 
-  public IconDescriptor setMainIcon(@Nullable Icon mainIcon) {
+  public IconDescriptor setMainIcon(@Nullable Image mainIcon) {
     myMainIcon = mainIcon;
     return this;
   }
 
-  public IconDescriptor addLayerIcon(@Nonnull Icon icon) {
-    if(myLayerIcons == null) {
-      myLayerIcons = new SmartList<Icon>();
-    }
-    myLayerIcons.add(icon);
+  public IconDescriptor addLayerIcon(@Nonnull Image icon) {
+    myLayerIcons = ArrayUtil.append(myLayerIcons, icon);
     return this;
   }
 
-  public IconDescriptor removeLayerIcon(@Nonnull Icon icon) {
-    if(myLayerIcons != null) {
-      myLayerIcons.remove(icon);
-    }
+  public IconDescriptor removeLayerIcon(@Nonnull Image icon) {
+    myLayerIcons = ArrayUtil.remove(myLayerIcons, icon);
     return this;
   }
 
   public IconDescriptor clearLayerIcons() {
-    if(myLayerIcons != null) {
-      myLayerIcons.clear();
-    }
+    myLayerIcons = Image.EMPTY_ARRAY;
     return this;
   }
 
   @Nullable
-  public Icon getRightIcon() {
+  public Image getRightIcon() {
     return myRightIcon;
   }
 
-  public void setRightIcon(@Nullable Icon rightIcon) {
+  public void setRightIcon(@Nullable Image rightIcon) {
     myRightIcon = rightIcon;
   }
 
   @Nonnull
-  public Icon toIcon() {
-    Icon mainIcon = null;
-    if(myLayerIcons == null) {
+  public Image toIcon() {
+    Image mainIcon;
+    if(myLayerIcons.length == 0) {
       mainIcon = myMainIcon;
     }
     else {
-      LayeredIcon layeredIcon = new LayeredIcon(myLayerIcons.size() + 1);
-      layeredIcon.setIcon(myMainIcon, 0);
-      for (int i = 0; i < myLayerIcons.size(); i++) {
-        Icon icon = myLayerIcons.get(i);
-        layeredIcon.setIcon(icon, i + 1);
-      }
-      mainIcon = layeredIcon;
+      mainIcon = ImageEffects.layered(ArrayUtil.mergeArrays(new Image[]{myMainIcon}, myLayerIcons));
     }
 
     if(myRightIcon == null) {
-      return mainIcon == null ? EmptyIcon.ICON_16 : mainIcon;
+      return mainIcon == null ? ImageEffects.empty(16, 16) : mainIcon;
     }
     else {
-      RowIcon baseIcon = new RowIcon(2);
-      baseIcon.setIcon(mainIcon, 0);
-      baseIcon.setIcon(myRightIcon, 1);
-      return baseIcon;
+      return ImageEffects.appendRight(mainIcon, myRightIcon);
     }
   }
 }

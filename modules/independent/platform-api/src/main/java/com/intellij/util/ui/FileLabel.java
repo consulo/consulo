@@ -17,6 +17,7 @@ package com.intellij.util.ui;
 
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +46,7 @@ public class FileLabel extends JLabel {
   public void setFile(File ioFile) {
     myFile = ioFile;
     if (myShowIcon) {
-      setIcon(FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName()).getIcon());
+      setIcon(TargetAWT.to(FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName()).getIcon()));
     }
     else {
       setIcon(null);

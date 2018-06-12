@@ -30,8 +30,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -109,12 +109,14 @@ public class RegistryUi implements Disposable {
             String required = "Requires IDE restart.";
             if (desc.endsWith(".")) {
               desc += required;
-            } else {
+            }
+            else {
               desc += (". " + required);
             }
           }
           myDescriptionLabel.setText(desc);
-        } else {
+        }
+        else {
           myDescriptionLabel.setText(null);
         }
       }
@@ -300,19 +302,18 @@ public class RegistryUi implements Disposable {
 
   private void processClose() {
     if (Registry.getInstance().isRestartNeeded()) {
-      final ApplicationEx app = (ApplicationEx) ApplicationManager.getApplication();
+      final ApplicationEx app = (ApplicationEx)ApplicationManager.getApplication();
       final ApplicationInfo info = ApplicationInfo.getInstance();
 
       final int r = Messages.showOkCancelDialog(myContent, "You need to restart " + info.getVersionName() + " for the changes to take effect", "Restart Required",
-              (app.isRestartCapable() ? "Restart Now" : "Shutdown Now"), (app.isRestartCapable() ? "Restart Later": "Shutdown Later")
-          , Messages.getQuestionIcon());
+                                                (app.isRestartCapable() ? "Restart Now" : "Shutdown Now"), (app.isRestartCapable() ? "Restart Later" : "Shutdown Later"), Messages.getQuestionIcon());
 
 
       if (r == 0) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
-              app.restart(true);
+            app.restart(true);
           }
         }, ModalityState.NON_MODAL);
       }
@@ -346,7 +347,7 @@ public class RegistryUi implements Disposable {
       myLabel.setIcon(null);
       myLabel.setText(null);
       myLabel.setHorizontalAlignment(SwingConstants.LEFT);
-      
+
       if (v != null) {
         switch (column) {
           case 0:
@@ -359,12 +360,14 @@ public class RegistryUi implements Disposable {
           case 2:
             if (v.asColor(null) != null) {
               myLabel.setIcon(createColoredIcon(v.asColor(null)));
-            } else if (v.isBoolean()) {
+            }
+            else if (v.isBoolean()) {
               final JCheckBox box = new JCheckBox();
               box.setSelected(v.asBoolean());
               box.setBackground(table.getBackground());
               return box;
-            } else {
+            }
+            else {
               myLabel.setText(v.asString());
             }
         }
@@ -381,12 +384,11 @@ public class RegistryUi implements Disposable {
   }
 
   private static final Map<Color, Icon> icons_cache = new HashMap<Color, Icon>();
+
   private static Icon createColoredIcon(Color color) {
     Icon icon = icons_cache.get(color);
     if (icon != null) return icon;
-    final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment()
-      .getDefaultScreenDevice().getDefaultConfiguration()
-      .createCompatibleImage(16, 16, Transparency.TRANSLUCENT);
+    final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(16, 16, Transparency.TRANSLUCENT);
     final Graphics g = image.getGraphics();
     g.setColor(color);
     g.fillRect(0, 0, 16, 16);
@@ -407,16 +409,19 @@ public class RegistryUi implements Disposable {
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
       myValue = ((MyTableModel)table.getModel()).getRegistryValue(row);
       if (myValue.asColor(null) != null) {
-        final Color color = ColorChooser.chooseColor(table, "Choose color", ((RegistryValue)value).asColor(Color.WHITE));
-        if (color != null) {
-          myValue.setValue(color.getRed() + "," + color.getGreen() + "," + color.getBlue());
-        }
+        ColorChooser.chooseColor(table, "Choose color", ((RegistryValue)value).asColor(Color.WHITE), color -> {
+          if (color != null) {
+            myValue.setValue(color.getRed() + "," + color.getGreen() + "," + color.getBlue());
+          }
+        });
         return null;
-      } else if (myValue.isBoolean()) {
+      }
+      else if (myValue.isBoolean()) {
         myCheckBox.setSelected(myValue.asBoolean());
         myCheckBox.setBackground(table.getBackground());
         return myCheckBox;
-      } else {
+      }
+      else {
         myField.setText(myValue.asString());
         myField.setBorder(null);
         myField.selectAll();
@@ -429,7 +434,8 @@ public class RegistryUi implements Disposable {
       if (myValue != null) {
         if (myValue.isBoolean()) {
           myValue.setValue(myCheckBox.isSelected());
-        } else {
+        }
+        else {
           myValue.setValue(myField.getText().trim());
         }
       }

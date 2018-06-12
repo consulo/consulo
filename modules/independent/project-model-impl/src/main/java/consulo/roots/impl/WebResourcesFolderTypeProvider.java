@@ -19,10 +19,9 @@ package consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import consulo.roots.ContentFolderTypeProvider;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,12 +44,12 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Modules.WebRoot;
   }
 
   @Override
-  public Icon getChildDirectoryIcon() {
+  public Image getChildDirectoryIcon() {
     return AllIcons.Nodes.WebFolder;
   }
 
@@ -62,7 +61,7 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
 
   @Nonnull
   @Override
-  public Color getGroupColor() {
+  public java.awt.Color getGroupColor() {
     return ProductionResourceContentFolderTypeProvider.getInstance().getGroupColor();
   }
 }

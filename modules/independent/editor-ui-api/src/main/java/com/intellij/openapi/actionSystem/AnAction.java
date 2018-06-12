@@ -27,9 +27,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.intellij.lang.annotations.JdkConstants;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.List;
 
@@ -118,7 +118,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *                    the status bar when presentation has focus
    * @param icon        Action's icon
    */
-  public AnAction(@javax.annotation.Nullable String text, @Nullable String description, @javax.annotation.Nullable Icon icon) {
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
     myShortcutSet = CustomShortcutSet.EMPTY;
     myEnabledInModalContext = false;
     Presentation presentation = getTemplatePresentation();
@@ -152,7 +152,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
   }
 
-  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @javax.annotation.Nullable JComponent component, @javax.annotation.Nullable Disposable parentDisposable) {
+  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable Disposable parentDisposable) {
     setShortcutSet(shortcutSet);
     registerCustomShortcutSet(component, parentDisposable);
   }
@@ -346,7 +346,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   public interface TransparentUpdate {
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static Project getEventProject(AnActionEvent e) {
     return e == null ? null : e.getData(CommonDataKeys.PROJECT);
   }

@@ -17,6 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 
@@ -38,16 +39,16 @@ public interface Iconable {
   Icon getIcon(@IconFlags int flags);
 
   class LastComputedIcon {
-    private static final Key<ConcurrentIntObjectMap<Icon>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
+    private static final Key<ConcurrentIntObjectMap<Image>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
 
     @Nullable
-    public static Icon get(@Nonnull UserDataHolder holder, int flags) {
-      ConcurrentIntObjectMap<Icon> map = holder.getUserData(LAST_COMPUTED_ICON);
+    public static Image get(@Nonnull UserDataHolder holder, int flags) {
+      ConcurrentIntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
       return map == null ? null : map.get(flags);
     }
 
-    public static void put(@Nonnull UserDataHolder holder, Icon icon, int flags) {
-      ConcurrentIntObjectMap<Icon> map = holder.getUserData(LAST_COMPUTED_ICON);
+    public static void put(@Nonnull UserDataHolder holder, Image icon, int flags) {
+      ConcurrentIntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
       if (icon == null) {
         if (map != null) {
           map.remove(flags);

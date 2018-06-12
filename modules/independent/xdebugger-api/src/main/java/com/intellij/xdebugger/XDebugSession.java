@@ -31,10 +31,10 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 
 /**
@@ -104,7 +104,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link com.intellij.icons.AllIcons.Debugger}
    * @param errorMessage an error message if breakpoint isn't successfully registered
    */
-  void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable String errorMessage);
+  void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
 
   /**
    * Call this method when a breakpoint is reached if its condition ({@link XBreakpoint#getCondition()}) evaluates to {@code true}.
@@ -154,7 +154,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   void reportMessage(@Nonnull String message, @Nonnull MessageType type);
 
-  void reportMessage(@Nonnull String message, @Nonnull MessageType type, @javax.annotation.Nullable HyperlinkListener listener);
+  void reportMessage(@Nonnull String message, @Nonnull MessageType type, @Nullable HyperlinkListener listener);
 
   @Nonnull
   String getSessionName();

@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl.event;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.util.EventDispatcher;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
@@ -50,7 +50,7 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
   public void registerEditor(@Nonnull EditorEx editor) {
     editor.addEditorMouseListener(myEditorMouseMulticaster.getMulticaster());
     editor.addEditorMouseMotionListener(myEditorMouseMotionMulticaster.getMulticaster());
-    ((EditorMarkupModel) editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((EditorImpl)editor).getDisposable());
+    ((EditorMarkupModel) editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((DesktopEditorImpl)editor).getDisposable());
     editor.getCaretModel().addCaretListener(myCaretMulticaster.getMulticaster());
     editor.getSelectionModel().addSelectionListener(mySelectionMulticaster.getMulticaster());
     editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaMulticaster.getMulticaster());

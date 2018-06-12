@@ -52,7 +52,7 @@ public class ForcedSoftWrapsNotificationProvider implements EditorNotificationPr
     final Editor editor = ((TextEditor)fileEditor).getEditor();
     final Project project = editor.getProject();
     if (project == null ||
-        !Boolean.TRUE.equals(editor.getUserData(EditorImpl.FORCED_SOFT_WRAPS)) ||
+        !Boolean.TRUE.equals(editor.getUserData(DesktopEditorImpl.FORCED_SOFT_WRAPS)) ||
         PropertiesComponent.getInstance().isTrueValue(DISABLED_NOTIFICATION_KEY)) {
       return null;
     }
@@ -62,7 +62,7 @@ public class ForcedSoftWrapsNotificationProvider implements EditorNotificationPr
     panel.createActionLabel(EditorBundle.message("forced.soft.wrap.hide.message"), new Runnable() {
       @Override
       public void run() {
-        editor.putUserData(EditorImpl.FORCED_SOFT_WRAPS, null);
+        editor.putUserData(DesktopEditorImpl.FORCED_SOFT_WRAPS, null);
         EditorNotifications.getInstance(project).updateNotifications(file);
       }
     });

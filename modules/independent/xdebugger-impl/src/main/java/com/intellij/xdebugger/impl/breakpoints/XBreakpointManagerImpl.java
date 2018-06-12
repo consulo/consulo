@@ -37,11 +37,12 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.impl.XDebuggerManagerImpl;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
+import consulo.ui.image.Image;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -330,7 +331,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
   }
 
   @Override
-  public void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Icon icon, @Nullable String errorMessage) {
+  public void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage) {
     XLineBreakpointImpl lineBreakpoint = (XLineBreakpointImpl)breakpoint;
     CustomizedBreakpointPresentation presentation = lineBreakpoint.getCustomizedPresentation();
     if (presentation == null) {
@@ -399,7 +400,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     myDefaultBreakpoints.clear();
     myBreakpointsDefaults.clear();
 
-    ApplicationManager.getApplication().runReadAction(() -> {
+    AccessRule.read(() -> {
       for (BreakpointState breakpointState : state.getDefaultBreakpoints()) {
         loadBreakpoint(breakpointState, true);
       }

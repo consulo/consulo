@@ -20,6 +20,7 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -31,6 +32,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
@@ -40,15 +42,15 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
-import consulo.ui.migration.SwingImageRef;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.picocontainer.MutablePicoContainer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -125,6 +127,25 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   @Override
   public IApplicationStore getStateStore() {
     return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
+  }
+
+  @Override
+  public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
+    runWriteAction(runnable);
+  }
+
+  @Override
+  public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+
+  }
+
+  @Override
+  public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
+                                                            @Nullable Project project,
+                                                            @Nullable JComponent parentComponent,
+                                                            @Nullable String cancelText,
+                                                            @Nonnull Consumer<ProgressIndicator> action) {
+    return true;
   }
 
   @Nonnull
@@ -327,17 +348,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void runInWriteThreadAndWait(@Nonnull Runnable runnable) {
-    runnable.run();
-  }
-
-  @Nonnull
-  @Override
-  public ModalityInvokator getInvokator() {
-    return null;
-  }
-
-  @Override
   public void invokeLater(@Nonnull Runnable runnable) {
     try {
       runnable.run();
@@ -476,7 +486,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @Nonnull
   @Override
-  public SwingImageRef getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return null;
   }
 

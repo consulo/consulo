@@ -13,6 +13,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +39,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
 
     e.getPresentation().setText(ExternalSystemBundle.message("action.open.config.text", externalSystemId.getReadableName()));
     e.getPresentation().setDescription(ExternalSystemBundle.message("action.open.config.description", externalSystemId.getReadableName()));
-    e.getPresentation().setIcon(ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon());
+    e.getPresentation().setIcon(TargetAWT.to(ExternalSystemUiUtil.getUiAware(externalSystemId).getProjectIcon()));
 
     VirtualFile config = getExternalConfig(e.getDataContext());
     e.getPresentation().setEnabled(config != null);

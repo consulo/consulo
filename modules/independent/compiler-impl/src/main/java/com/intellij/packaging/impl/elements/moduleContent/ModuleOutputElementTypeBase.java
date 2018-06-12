@@ -27,10 +27,11 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import consulo.util.pointers.NamedPointer;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.util.pointers.NamedPointer;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
   @Nonnull
   @Override
   public Icon getIcon() {
-    return myContentFolderTypeProvider.getIcon();
+    return TargetAWT.to(myContentFolderTypeProvider.getIcon());
   }
 
   public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {

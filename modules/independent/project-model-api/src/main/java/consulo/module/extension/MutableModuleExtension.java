@@ -15,13 +15,13 @@
  */
 package consulo.module.extension;
 
+import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
-
-import consulo.annotations.RequiredDispatchThread;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -29,13 +29,13 @@ import javax.swing.*;
  * @since 10:58/19.05.13
  */
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredDispatchThread
   default JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredUIAccess
   default Component createConfigurationComponent(@Nonnull Runnable updateOnCheck) {
     return null;

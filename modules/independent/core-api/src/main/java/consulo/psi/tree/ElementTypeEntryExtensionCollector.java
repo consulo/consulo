@@ -18,10 +18,10 @@ package consulo.psi.tree;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
-import com.intellij.util.containers.Predicate;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -42,7 +42,7 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
   private final Map<IElementType, E> myMap = ConcurrentFactoryMap.createMap(elementType -> {
     E factory = null;
     for (E e : myExtensionPointName.getExtensions()) {
-      if (e.apply(elementType)) {
+      if (e.test(elementType)) {
         factory = e;
         break;
       }

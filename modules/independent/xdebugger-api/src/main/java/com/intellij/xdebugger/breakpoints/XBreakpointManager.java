@@ -18,9 +18,10 @@ package com.intellij.xdebugger.breakpoints;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -30,20 +31,20 @@ import java.util.Collection;
  */
 public interface XBreakpointManager {
   @Nonnull
-  <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(XBreakpointType<XBreakpoint<T>, T> type, @javax.annotation.Nullable T properties);
+  <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(XBreakpointType<XBreakpoint<T>, T> type, @Nullable T properties);
 
   @Nonnull
   <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
                                                                          @Nonnull String fileUrl,
                                                                          int line,
-                                                                         @javax.annotation.Nullable T properties,
+                                                                         @Nullable T properties,
                                                                          boolean temporary);
 
   @Nonnull
   <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
                                                                          @Nonnull String fileUrl,
                                                                          int line,
-                                                                         @javax.annotation.Nullable T properties);
+                                                                         @Nullable T properties);
 
   void removeBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
 
@@ -56,14 +57,14 @@ public interface XBreakpointManager {
   @Nonnull
   <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass);
 
-  @javax.annotation.Nullable
+  @Nullable
   <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(@Nonnull XLineBreakpointType<P> type,
                                                                             @Nonnull VirtualFile file,
                                                                             int line);
 
   boolean isDefaultBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
 
-  @javax.annotation.Nullable
+  @Nullable
   <B extends XBreakpoint<?>> B getDefaultBreakpoint(@Nonnull XBreakpointType<B, ?> type);
 
   <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
@@ -82,5 +83,5 @@ public interface XBreakpointManager {
 
   void addBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener, @Nonnull Disposable parentDisposable);
 
-  void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable String errorMessage);
+  void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
 }

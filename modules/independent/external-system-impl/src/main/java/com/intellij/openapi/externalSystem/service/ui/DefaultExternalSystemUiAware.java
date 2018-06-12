@@ -18,11 +18,11 @@ package com.intellij.openapi.externalSystem.service.ui;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.externalSystem.ExternalSystemUiAware;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.ui.image.Image;
 import icons.ExternalSystemIcons;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -50,13 +50,13 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
 
   @Nonnull
   @Override
-  public Icon getProjectIcon() {
+  public Image getProjectIcon() {
     return Application.get().getIcon();
   }
 
   @Nonnull
   @Override
-  public Icon getTaskIcon() {
+  public Image getTaskIcon() {
     return ExternalSystemIcons.Task;
   }
 }

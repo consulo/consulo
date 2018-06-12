@@ -63,20 +63,20 @@ import com.intellij.usages.ChunkExtractor;
 import com.intellij.usages.UsageViewManager;
 import com.intellij.usages.impl.SyntaxHighlighterOverEditorHighlighter;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Predicate;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.StringSearcher;
 import consulo.lang.LanguageVersion;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -289,7 +289,7 @@ public class FindManagerImpl extends FindManager {
     final char[] textArray = CharArrayUtil.fromSequenceWithoutCopying(text);
     while (true) {
       FindResult result = doFindString(text, textArray, offset, model, file);
-      if (filter == null || filter.apply(result)) {
+      if (filter == null || filter.test(result)) {
         if (!model.isWholeWordsOnly()) {
           return result;
         }
@@ -350,7 +350,7 @@ public class FindManagerImpl extends FindManager {
     }
 
     @Override
-    public boolean apply(@Nullable FindResult input) {
+    public boolean test(@Nullable FindResult input) {
       if (input == null || !input.isStringFound()) return true;
       NavigableMap<Integer, Integer> map = mySkipRangesSet.headMap(input.getStartOffset(), true);
       for (Map.Entry<Integer, Integer> e : map.descendingMap().entrySet()) {

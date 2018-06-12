@@ -19,6 +19,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -31,7 +32,7 @@ public class LibraryTreeRenderer extends ColoredTreeCellRenderer {
       Object userObject = node.getUserObject();
       if (userObject instanceof NodeDescriptor) {
         final NodeDescriptor descriptor = (NodeDescriptor)userObject;
-        setIcon(descriptor.getIcon());
+        setIcon(TargetAWT.to(descriptor.getIcon()));
         append(descriptor.toString(), new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, descriptor.getColor()));
       }
     }

@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -208,8 +208,8 @@ public class ParameterInfoController implements Disposable {
     LookupManager.getInstance(project).addPropertyChangeListener(lookupListener, this);
 
     updateComponent();
-    if (myEditor instanceof EditorImpl) {
-      Disposer.register(((EditorImpl)myEditor).getDisposable(), this);
+    if (myEditor instanceof DesktopEditorImpl) {
+      Disposer.register(((DesktopEditorImpl)myEditor).getDisposable(), this);
     }
   }
 

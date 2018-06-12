@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.AbstractEditorTest;
-import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
@@ -818,7 +818,7 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorT
     // position to offset mapping
     String text = "\t test";
     init(15, text);
-    ((EditorImpl)myEditor).setPrefixTextAndAttributes(" ", new TextAttributes());
+    ((DesktopEditorImpl)myEditor).setPrefixTextAndAttributes(" ", new TextAttributes());
     myEditor.getCaretModel().moveToOffset(text.length());
   }
 
@@ -869,7 +869,7 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorT
     assertNotNull(indentOptions);
     indentOptions.TAB_SIZE++;
 
-    ((EditorImpl)getEditor()).reinitSettings();
+    ((DesktopEditorImpl)getEditor()).reinitSettings();
     assertEquals(
             new VisualPosition(caretPositionBefore.line, caretPositionBefore.column + 1),
             getEditor().getCaretModel().getVisualPosition()

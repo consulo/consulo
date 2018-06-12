@@ -33,7 +33,6 @@ import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.ColorKey;
@@ -63,14 +62,15 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.ex.ApplicationEx2;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntFunction;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
@@ -121,7 +121,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private static final int GAP_BETWEEN_ANNOTATIONS = JBUI.scale(5);
   private static final TooltipGroup GUTTER_TOOLTIP_GROUP = new TooltipGroup("GUTTER_TOOLTIP_GROUP", 0);
 
-  private final EditorImpl myEditor;
+  private final DesktopEditorImpl myEditor;
   private final FoldingAnchorsOverlayStrategy myAnchorsDisplayStrategy;
   @Nullable
   private TIntObjectHashMap<List<GutterMark>> myLineToGutterRenderers;
@@ -151,7 +151,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private int myLastNonDumbModeIconAreaWidth;
   boolean myDnDInProgress;
 
-  EditorGutterComponentImpl(@Nonnull EditorImpl editor) {
+  EditorGutterComponentImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
       installDnD();
@@ -197,7 +197,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       else if (attachedObject instanceof DnDNativeTarget.EventInfo && myEditor.getSettings().isDndEnabled()) {
         Transferable transferable = ((DnDNativeTarget.EventInfo)attachedObject).getTransferable();
         if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-          EditorImpl.handleDrop(myEditor, transferable, e.getAction().getActionId());
+          DesktopEditorImpl.handleDrop(myEditor, transferable, e.getAction().getActionId());
         }
       }
       myDnDInProgress = false;
@@ -269,7 +269,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Override
   public void paint(Graphics g_) {
-    ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
+    ((ApplicationEx2)ApplicationManager.getApplication()).editorPaintStart();
     try {
       Rectangle clip = g_.getClipBounds();
       if (clip.height < 0) return;
@@ -315,7 +315,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       if (old != null) g.setTransform(old);
     }
     finally {
-      ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintFinish();
+      ((ApplicationEx2)ApplicationManager.getApplication()).editorPaintFinish();
     }
   }
 

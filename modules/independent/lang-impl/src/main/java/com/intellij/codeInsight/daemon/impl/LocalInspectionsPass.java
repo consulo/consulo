@@ -33,7 +33,6 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
@@ -63,12 +62,13 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.application.ex.ApplicationEx2;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -254,7 +254,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     Processor<Map.Entry<LocalInspectionToolWrapper, Set<String>>> processor = pair -> {
       LocalInspectionToolWrapper toolWrapper = pair.getKey();
       Set<String> dialectIdsSpecifiedForTool = pair.getValue();
-      ((ApplicationImpl)ApplicationManager.getApplication()).executeByImpatientReader(
+      ((ApplicationEx2)ApplicationManager.getApplication()).executeByImpatientReader(
               () -> runToolOnElements(toolWrapper, dialectIdsSpecifiedForTool, iManager, isOnTheFly, indicator, elements, session, init, elementDialectIds));
       return true;
     };

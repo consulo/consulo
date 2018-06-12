@@ -25,9 +25,8 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.ui.migration.SwingImageRef;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -187,7 +186,9 @@ public interface Application extends ComponentManager {
    * @see #assertWriteAccessAllowed()
    * @see #runWriteAction(Runnable)
    */
-  boolean isWriteAccessAllowed();
+  default boolean isWriteAccessAllowed() {
+    return isWriteThread();
+  }
 
   /**
    * Checks if the read access is currently allowed.
@@ -213,17 +214,6 @@ public interface Application extends ComponentManager {
    * @return true if the current thread is the "write thread", false otherwise.
    */
   boolean isWriteThread();
-
-  /**
-   * Execute action in write thread. Write thread can be not UI thread
-   */
-  void runInWriteThreadAndWait(@Nonnull Runnable runnable);
-
-  /**
-   * @return a facade, which lets to call all those invokeLater() with a ActionCallback handle returned.
-   */
-  @Nonnull
-  ModalityInvokator getInvokator();
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -368,7 +358,9 @@ public interface Application extends ComponentManager {
    *
    * @return true if IDE is running in compiler server, false otherwise
    */
-  boolean isCompilerServerMode();
+  default boolean isCompilerServerMode() {
+    return false;
+  }
 
   /**
    * Checks if IDE is running as a command line applet or in unit test mode.
@@ -376,7 +368,9 @@ public interface Application extends ComponentManager {
    *
    * @return true if IDE is running in command line  mode, false otherwise
    */
-  boolean isCommandLine();
+ default boolean isCommandLine() {
+    return false;
+  }
 
   @Override
   boolean isDisposed();
@@ -431,7 +425,7 @@ public interface Application extends ComponentManager {
    * @return Application icon. In sandbox icon maybe different
    */
   @Nonnull
-  SwingImageRef getIcon();
+  consulo.ui.image.Image getIcon();
 
   // region Deprecated stuff
   /**
@@ -453,7 +447,9 @@ public interface Application extends ComponentManager {
 
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
-  boolean isInternal();
+  default boolean isInternal() {
+    return false;
+  }
 
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

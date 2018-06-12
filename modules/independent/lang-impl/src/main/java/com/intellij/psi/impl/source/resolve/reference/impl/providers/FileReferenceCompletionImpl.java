@@ -16,7 +16,6 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
@@ -27,11 +26,13 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.FilteringProcessor;
+import consulo.awt.TargetAWT;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,8 +109,8 @@ public class FileReferenceCompletionImpl extends FileReferenceCompletion {
         final String encoded = reference.encode(name, psiElement);
         if (encoded == null) continue;
         if (!encoded.equals(name)) {
-          final Icon icon = IconDescriptorUpdaters.getIcon(psiElement, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
-          LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, icon);
+          final Image icon = IconDescriptorUpdaters.getIcon(psiElement, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
+          LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, TargetAWT.to(icon));
           encodedVariants.add(item.withTailText(" (" + name + ")"));
         }
         else {

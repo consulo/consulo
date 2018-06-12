@@ -27,6 +27,8 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -47,7 +49,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
       if (userObject instanceof NodeDescriptor) {
         descriptor = (NodeDescriptor)userObject;
         color = descriptor.getColor();
-        setIcon(descriptor.getIcon());
+        setIcon(TargetAWT.to(descriptor.getIcon()));
       }
     }
 

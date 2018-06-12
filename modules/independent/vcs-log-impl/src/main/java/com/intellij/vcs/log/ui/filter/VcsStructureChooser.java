@@ -43,6 +43,8 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.treeWithCheckedNodes.SelectionManager;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -427,7 +429,7 @@ public class VcsStructureChooser extends DialogWrapper {
           setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
         }
         else {
-          setIcon(path.getFileType().getIcon());
+          setIcon(TargetAWT.to(path.getFileType().getIcon()));
         }
       }
     }
