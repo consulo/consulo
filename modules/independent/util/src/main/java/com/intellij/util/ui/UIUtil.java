@@ -63,6 +63,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
@@ -596,8 +597,10 @@ public class UIUtil {
               return true;
             }
           }
-          catch (AWTError ignore) { }
-          catch (Exception ignore) { }
+          catch (AWTError ignore) {
+          }
+          catch (Exception ignore) {
+          }
           ourRetina.set(false);
         }
 
@@ -1888,53 +1891,151 @@ public class UIUtil {
    */
   @Nonnull
   public static BufferedImage createImage(Component comp, int width, int height, int type) {
-    return comp != null ? createImage(comp != null ? comp.getGraphicsConfiguration() : null, width, height, type) : createImage(width, height, type);
+    return comp != null ? createImage(comp.getGraphicsConfiguration(), width, height, type) : createImage(width, height, type);
   }
 
-  public static void drawImage(Graphics g, Image image, int x, int y, ImageObserver observer) {
-    drawImage(g, image, x, y, -1, -1, observer);
+  /**
+   * A hidpi-aware wrapper over {@link Graphics#drawImage(Image, int, int, ImageObserver)}.
+   *
+   * @see #drawImage(Graphics, Image, Rectangle, Rectangle, ImageObserver)
+   */
+  public static void drawImage(@Nonnull Graphics g, @Nonnull Image image, int x, int y, @Nullable ImageObserver observer) {
+    drawImage(g, image, new Rectangle(x, y, -1, -1), null, null, observer);
   }
 
-  public static void drawImage(Graphics g, Image image, int x, int y, int width, int height, ImageObserver observer) {
+  /**
+   * A hidpi-aware wrapper over {@link Graphics#drawImage(Image, int, int, int, int, ImageObserver)}.
+   * <p/>
+   * Note, the method interprets [x,y,width,height] as the destination and source bounds which doesn't conform
+   * to the {@link Graphics#drawImage(Image, int, int, int, int, ImageObserver)} method contract. This works
+   * just fine for the general-purpose one-to-one drawing, however when the dst and src bounds need to be specific,
+   * use {@link #drawImage(Graphics, Image, Rectangle, Rectangle, BufferedImageOp, ImageObserver)}.
+   */
+  @Deprecated
+  public static void drawImage(@Nonnull Graphics g, @Nonnull Image image, int x, int y, int width, int height, @Nullable ImageObserver observer) {
+    drawImage(g, image, x, y, width, height, null, observer);
+  }
+
+  private static void drawImage(Graphics g, Image image, int x, int y, int width, int height, @Nullable BufferedImageOp op, ImageObserver observer) {
+    Rectangle srcBounds = width >= 0 && height >= 0 ? new Rectangle(x, y, width, height) : null;
+    drawImage(g, image, new Rectangle(x, y, width, height), srcBounds, op, observer);
+  }
+
+  /**
+   * A hidpi-aware wrapper over {@link Graphics#drawImage(Image, int, int, int, int, ImageObserver)}.
+   *
+   * @see #drawImage(Graphics, Image, Rectangle, Rectangle, BufferedImageOp, ImageObserver)
+   */
+  public static void drawImage(@Nonnull Graphics g, @Nonnull Image image, @Nullable Rectangle dstBounds, @Nullable ImageObserver observer) {
+    drawImage(g, image, dstBounds, null, null, observer);
+  }
+
+  /**
+   * @see #drawImage(Graphics, Image, Rectangle, Rectangle, BufferedImageOp, ImageObserver)
+   */
+  public static void drawImage(@Nonnull Graphics g, @Nonnull Image image, @Nullable Rectangle dstBounds, @Nullable Rectangle srcBounds, @Nullable ImageObserver observer) {
+    drawImage(g, image, dstBounds, srcBounds, null, observer);
+  }
+
+  /**
+   * A hidpi-aware wrapper over {@link Graphics#drawImage(Image, int, int, int, int, int, int, int, int, ImageObserver)}.
+   * <p/>
+   * The {@code dstBounds} and {@code srcBounds} are in the user space (just like the width/height of the image).
+   * If {@code dstBounds} is null or if its width/height is set to (-1) the image bounds or the image width/height is used.
+   * If {@code srcBounds} is null or if its width/height is set to (-1) the image bounds or the image right/bottom area to the provided x/y is used.
+   */
+  public static void drawImage(@Nonnull Graphics g,
+                               @Nonnull Image image,
+                               @Nullable Rectangle dstBounds,
+                               @Nullable Rectangle srcBounds,
+                               @Nullable BufferedImageOp op,
+                               @Nullable ImageObserver observer) {
+    Graphics2D invG = null;
+    double scale = 1;
+    int userWidth = ImageUtil.getUserWidth(image);
+    int userHeight = ImageUtil.getUserHeight(image);
+
+    int dx = 0;
+    int dy = 0;
+    int dw = -1;
+    int dh = -1;
+    if (dstBounds != null) {
+      dx = dstBounds.x;
+      dy = dstBounds.y;
+      dw = dstBounds.width;
+      dh = dstBounds.height;
+    }
+    boolean hasDstSize = dw >= 0 && dh >= 0;
+
     if (image instanceof JBHiDPIScaledImage) {
-      final Graphics2D newG = (Graphics2D)g.create(x, y, image.getWidth(observer), image.getHeight(observer));
-      newG.scale(0.5, 0.5);
-      Image img = ((JBHiDPIScaledImage)image).getDelegate();
-      if (img == null) {
-        img = image;
+      JBHiDPIScaledImage hidpiImage = (JBHiDPIScaledImage)image;
+      Image delegate = hidpiImage.getDelegate();
+      if (delegate != null) image = delegate;
+      scale = hidpiImage.getScale();
+
+      AffineTransform tx = ((Graphics2D)g).getTransform();
+      if (scale == tx.getScaleX()) {
+        // The image has the same original scale as the graphics scale. However, the real image
+        // scale - userSize/realSize - can suffer from inaccuracy due to the image user size
+        // rounding to int (userSize = (int)realSize/originalImageScale). This may case quality
+        // loss if the image is drawn via Graphics.drawImage(image, <srcRect>, <dstRect>)
+        // due to scaling in Graphics. To avoid that, the image should be drawn directly via
+        // Graphics.drawImage(image, 0, 0) on the unscaled Graphics.
+        double gScaleX = tx.getScaleX();
+        double gScaleY = tx.getScaleY();
+        tx.scale(1 / gScaleX, 1 / gScaleY);
+        tx.translate(dx * gScaleX, dy * gScaleY);
+        dx = dy = 0;
+        g = invG = (Graphics2D)g.create();
+        invG.setTransform(tx);
       }
-      if (width == -1 && height == -1) {
-        newG.drawImage(img, 0, 0, observer);
+    }
+    final double _scale = scale;
+    Function<Integer, Integer> size = new Function<Integer, Integer>() {
+      @Override
+      public Integer fun(Integer size) {
+        return (int)Math.round(size * _scale);
+      }
+    };
+    try {
+      if (op != null && image instanceof BufferedImage) {
+        image = op.filter((BufferedImage)image, null);
+      }
+      if (invG != null && hasDstSize) {
+        dw = size.fun(dw);
+        dh = size.fun(dh);
+      }
+      if (srcBounds != null) {
+        int sx = size.fun(srcBounds.x);
+        int sy = size.fun(srcBounds.y);
+        int sw = srcBounds.width >= 0 ? size.fun(srcBounds.width) : size.fun(userWidth) - sx;
+        int sh = srcBounds.height >= 0 ? size.fun(srcBounds.height) : size.fun(userHeight) - sy;
+        if (!hasDstSize) {
+          dw = size.fun(userWidth);
+          dh = size.fun(userHeight);
+        }
+        g.drawImage(image, dx, dy, dx + dw, dy + dh, sx, sy, sx + sw, sy + sh, observer);
+      }
+      else if (hasDstSize) {
+        g.drawImage(image, dx, dy, dw, dh, observer);
+      }
+      else if (invG == null) {
+        g.drawImage(image, dx, dy, userWidth, userHeight, observer);
       }
       else {
-        newG.drawImage(img, 0, 0, width * 2, height * 2, 0, 0, width * 2, height * 2, observer);
+        g.drawImage(image, dx, dy, observer);
       }
-      //newG.scale(1, 1);
-      newG.dispose();
     }
-    else if (width == -1 && height == -1) {
-      g.drawImage(image, x, y, observer);
-    }
-    else {
-      g.drawImage(image, x, y, x + width, y + height, 0, 0, width, height, observer);
+    finally {
+      if (invG != null) invG.dispose();
     }
   }
 
-  public static void drawImage(Graphics g, BufferedImage image, BufferedImageOp op, int x, int y) {
-    if (image instanceof JBHiDPIScaledImage) {
-      final Graphics2D newG = (Graphics2D)g.create(x, y, image.getWidth(null), image.getHeight(null));
-      newG.scale(0.5, 0.5);
-      Image img = ((JBHiDPIScaledImage)image).getDelegate();
-      if (img == null) {
-        img = image;
-      }
-      newG.drawImage((BufferedImage)img, op, 0, 0);
-      //newG.scale(1, 1);
-      newG.dispose();
-    }
-    else {
-      ((Graphics2D)g).drawImage(image, op, x, y);
-    }
+  /**
+   * @see #drawImage(Graphics, Image, int, int, ImageObserver)
+   */
+  public static void drawImage(@Nonnull Graphics g, @Nonnull BufferedImage image, @Nullable BufferedImageOp op, int x, int y) {
+    drawImage(g, image, x, y, -1, -1, op, null);
   }
 
   public static void paintWithXorOnRetina(@Nonnull Dimension size, @Nonnull Graphics g, Consumer<Graphics2D> paintRoutine) {
@@ -2086,9 +2187,10 @@ public class UIUtil {
 
   /**
    * Draws a centered string in the passed rectangle.
-   * @param g the {@link Graphics} instance to draw to
-   * @param rect the {@link Rectangle} to use as bounding box
-   * @param str the string to draw
+   *
+   * @param g            the {@link Graphics} instance to draw to
+   * @param rect         the {@link Rectangle} to use as bounding box
+   * @param str          the string to draw
    * @param horzCentered if true, the string will be centered horizontally
    * @param vertCentered if true, the string will be centered vertically
    */
@@ -2105,9 +2207,10 @@ public class UIUtil {
 
   /**
    * Draws a centered string in the passed rectangle.
-   * @param g the {@link Graphics} instance to draw to
+   *
+   * @param g    the {@link Graphics} instance to draw to
    * @param rect the {@link Rectangle} to use as bounding box
-   * @param str the string to draw
+   * @param str  the string to draw
    */
   public static void drawCenteredString(Graphics2D g, Rectangle rect, String str) {
     drawCenteredString(g, rect, str, true, true);
@@ -3388,9 +3491,15 @@ public class UIUtil {
       try {
         onWindow.getClass().getMethod("setAutoRequestFocus", boolean.class).invoke(onWindow, set);
       }
-      catch (NoSuchMethodException e) { LOG.debug(e); }
-      catch (InvocationTargetException e) { LOG.debug(e); }
-      catch (IllegalAccessException e) { LOG.debug(e); }
+      catch (NoSuchMethodException e) {
+        LOG.debug(e);
+      }
+      catch (InvocationTargetException e) {
+        LOG.debug(e);
+      }
+      catch (IllegalAccessException e) {
+        LOG.debug(e);
+      }
     }
   }
 

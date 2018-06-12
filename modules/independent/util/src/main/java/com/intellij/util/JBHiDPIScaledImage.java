@@ -220,6 +220,7 @@ public class JBHiDPIScaledImage extends BufferedImage {
   public Graphics2D createGraphics() {
     Graphics2D g = super.createGraphics();
     if (myImage == null) {
+      g.scale(myScale, myScale);
       return new HiDPIScaledGraphics(g);
     }
     return g;
