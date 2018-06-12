@@ -2970,7 +2970,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myVerticalScrollBar;
   }
 
-  JPanel getPanel() {
+  public JPanel getPanel() {
     return myPanel;
   }
 

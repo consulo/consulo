@@ -23,7 +23,9 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -31,7 +33,7 @@ import javax.annotation.Nonnull;
 public interface MarkupModelEx extends MarkupModel {
   void dispose();
 
-  @javax.annotation.Nullable
+  @Nullable
   RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes);
 
   void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged);
