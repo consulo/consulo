@@ -93,7 +93,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Override
-  public void choose(@javax.annotation.Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     if (toSelect != null && toSelect.getParent() != null) {
 
       String directoryName;
@@ -184,7 +184,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
   @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable VirtualFile toSelect, @javax.annotation.Nullable Project project) {
+  public VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable Project project) {
     choose(toSelect, files -> {
     });
     return virtualFiles;

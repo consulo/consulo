@@ -33,8 +33,9 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.OwnerOptional;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -92,7 +93,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Override
-  public void choose(@javax.annotation.Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     if (toSelect != null && toSelect.getParent() != null) {
 
       String directoryName;
@@ -178,7 +179,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
   @Nonnull
   @Override
-  public VirtualFile[] choose(@javax.annotation.Nullable VirtualFile toSelect, @javax.annotation.Nullable Project project) {
+  public VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable Project project) {
     choose(toSelect, files -> {
     });
     return virtualFiles;
@@ -186,7 +187,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
   @Nonnull
   @Override
-  public VirtualFile[] choose(@javax.annotation.Nullable Project project, @Nonnull VirtualFile... toSelect) {
-    return choose((toSelect.length > 0 ? toSelect[0] : null), project);
+  public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
+    return choose(toSelect.length > 0 ? toSelect[0] : null, project);
   }
 }
