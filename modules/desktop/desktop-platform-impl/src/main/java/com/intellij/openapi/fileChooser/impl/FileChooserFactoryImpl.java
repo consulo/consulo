@@ -48,7 +48,7 @@ import java.util.Set;
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @javax.annotation.Nullable Project project, @javax.annotation.Nullable Component parent) {
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
     if (useNativeMacChooser(descriptor)) {
       return new MacPathChooserDialog(descriptor, parent, project);
     }
@@ -62,7 +62,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
 
   @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @javax.annotation.Nullable Project project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
     if (useNativeMacChooser(descriptor)) {
       return new MacPathChooserDialog(descriptor, parent, project);
     }
@@ -91,12 +91,12 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
 
   @Nonnull
   @Override
-  public FileTextField createFileTextField(@Nonnull final FileChooserDescriptor descriptor, boolean showHidden, @javax.annotation.Nullable Disposable parent) {
+  public FileTextField createFileTextField(@Nonnull final FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     return new FileTextFieldImpl.Vfs(new JTextField(), getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
   }
 
   @Override
-  public void installFileCompletion(@Nonnull JTextField field, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @javax.annotation.Nullable Disposable parent) {
+  public void installFileCompletion(@Nonnull JTextField field, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
       new FileTextFieldImpl.Vfs(field, getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
     }
@@ -115,7 +115,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
 
   @Nonnull
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @javax.annotation.Nullable Project project) {
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project) {
     return (SystemInfo.isMac && Registry.is("ide.mac.native.save.dialog")) ? new MacFileSaverDialog(descriptor, project) : new FileSaverDialogImpl(descriptor, project);
   }
 
