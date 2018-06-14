@@ -26,11 +26,13 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.util.ImageLoader;
+import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -44,19 +46,22 @@ import java.util.List;
  * @author yole
  */
 public class AppUIUtil {
+  @SuppressWarnings("deprecation")
   public static void updateWindowIcon(@Nonnull Window window) {
-    window.setIconImages(getAppIconImages());
-  }
-
-  @SuppressWarnings({"UnnecessaryFullyQualifiedName", "deprecation"})
-  private static List<Image> getAppIconImages() {
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
-    List<Image> images = ContainerUtil.newArrayListWithCapacity(3);
+    List<Image> images = ContainerUtil.newArrayListWithCapacity(2);
 
-    images.add(com.intellij.util.ImageLoader.loadFromResource(appInfo.getIconUrl()));
-    images.add(com.intellij.util.ImageLoader.loadFromResource(appInfo.getSmallIconUrl()));
+    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl()));
+    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl()));
 
-    return images;
+    for (int i = 0; i < images.size(); i++) {
+      Image image = images.get(i);
+      if (image instanceof JBHiDPIScaledImage) {
+        images.set(i, ((JBHiDPIScaledImage)image).getDelegate());
+      }
+    }
+
+    window.setIconImages(images);
   }
 
   public static void invokeLaterIfProjectAlive(@Nonnull final Project project, @Nonnull final Runnable runnable) {
@@ -101,7 +106,8 @@ public class AppUIUtil {
         awtAppClassName.set(toolkit, getFrameClass());
       }
     }
-    catch (Exception ignore) { }
+    catch (Exception ignore) {
+    }
   }
 
   public static String getFrameClass() {
