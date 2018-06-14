@@ -31,10 +31,14 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public interface HighlightInfoType {
   @NonNls String UNUSED_SYMBOL_SHORT_NAME = "unused";
@@ -227,8 +231,19 @@ public interface HighlightInfoType {
   HighlightInfoType ELEMENT_UNDER_CARET_WRITE =
           new HighlightInfoType.HighlightInfoTypeImpl(ELEMENT_UNDER_CARET_SEVERITY, EditorColors.WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES);
 
+  /**
+   * @see com.intellij.openapi.editor.markup.RangeHighlighter#VISIBLE_IF_FOLDED
+   */
+  Set<HighlightInfoType> VISIBLE_IF_FOLDED = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+          ELEMENT_UNDER_CARET_READ,
+          ELEMENT_UNDER_CARET_WRITE,
+          WARNING,
+          ERROR,
+          WRONG_REF
+  )));
+
   @Nonnull
-  HighlightSeverity getSeverity(@javax.annotation.Nullable PsiElement psiElement);
+  HighlightSeverity getSeverity(@Nullable PsiElement psiElement);
 
   TextAttributesKey getAttributesKey();
 

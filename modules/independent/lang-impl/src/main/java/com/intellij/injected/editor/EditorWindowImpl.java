@@ -47,12 +47,13 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.psi.impl.source.tree.injected.InlayModelWindow;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.WeakList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -60,8 +61,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * @author Alexey
@@ -862,6 +865,11 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   @Override
   public void setPurePaintingMode(boolean enabled) {
     myDelegate.setPurePaintingMode(enabled);
+  }
+
+  @Override
+  public void registerLineExtensionPainter(IntFunction<Collection<LineExtensionInfo>> lineExtensionPainter) {
+    myDelegate.registerLineExtensionPainter(lineExtensionPainter);
   }
 
   @Override

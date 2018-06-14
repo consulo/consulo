@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
+import com.intellij.openapi.util.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,6 +29,15 @@ import javax.annotation.Nullable;
  */
 public interface FoldRegion extends RangeMarker {
   FoldRegion[] EMPTY_ARRAY = new FoldRegion[0];
+
+  /**
+   * If {@code Boolean.TRUE} value is set for this key on a collapsed fold region (see {@link #putUserData(Key, Object)}),
+   * there will not be a visual indication that region contains certain highlighters inside. By default such indication is added.
+   *
+   * @see com.intellij.openapi.editor.markup.RangeHighlighter#VISIBLE_IF_FOLDED
+   */
+  Key<Boolean> MUTE_INNER_HIGHLIGHTERS = Key.create("mute.inner.highlighters");
+
   /**
    * Checks if the fold region is currently expanded.
    *

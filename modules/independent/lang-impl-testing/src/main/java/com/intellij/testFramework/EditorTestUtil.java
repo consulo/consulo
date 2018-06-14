@@ -32,14 +32,16 @@ import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.Assert;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +72,12 @@ public class EditorTestUtil {
     if (c == BACKSPACE_FAKE_CHAR) {
       EditorActionHandler actionHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE);
       actionHandler.execute(editor, DataManager.getInstance().getDataContext());
-    } else if (c == SMART_ENTER_FAKE_CHAR) {
+    }
+    else if (c == SMART_ENTER_FAKE_CHAR) {
       EditorActionHandler actionHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_COMPLETE_STATEMENT);
       actionHandler.execute(editor, DataManager.getInstance().getDataContext());
-    } else if (c == SMART_LINE_SPLIT_CHAR) {
+    }
+    else if (c == SMART_LINE_SPLIT_CHAR) {
       EditorActionHandler actionHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_SPLIT);
       actionHandler.execute(editor, DataManager.getInstance().getDataContext());
     }
@@ -90,9 +94,7 @@ public class EditorTestUtil {
   public static void performReferenceCopy(DataContext dataContext) {
     ActionManager actionManager = ActionManager.getInstance();
     AnAction action = actionManager.getAction(IdeActions.ACTION_COPY_REFERENCE);
-    AnActionEvent
-            event = new AnActionEvent(null, dataContext, "", action.getTemplatePresentation(),
-                                      ActionManager.getInstance(), 0);
+    AnActionEvent event = new AnActionEvent(null, dataContext, "", action.getTemplatePresentation(), ActionManager.getInstance(), 0);
     action.update(event);
     Assert.assertTrue(event.getPresentation().isEnabled());
     action.actionPerformed(event);
@@ -193,7 +195,8 @@ public class EditorTestUtil {
       }
 
       @Override
-      public void reinit() {}
+      public void reinit() {
+      }
     });
     model.reinitSettings();
 
@@ -216,9 +219,7 @@ public class EditorTestUtil {
   }
 
   public static void setEditorVisibleSize(Editor editor, int widthInChars, int heightInChars) {
-    setEditorVisibleSizeInPixels(editor,
-                                 widthInChars * EditorUtil.getSpaceWidth(Font.PLAIN, editor),
-                                 heightInChars * editor.getLineHeight());
+    setEditorVisibleSizeInPixels(editor, widthInChars * EditorUtil.getSpaceWidth(Font.PLAIN, editor), heightInChars * editor.getLineHeight());
   }
 
   public static void setEditorVisibleSizeInPixels(Editor editor, int widthInPixels, int heightInPixels) {
@@ -229,10 +230,13 @@ public class EditorTestUtil {
   public static Inlay addInlay(@Nonnull Editor editor, int offset) {
     return editor.getInlayModel().addInlineElement(offset, new EditorCustomElementRenderer() {
       @Override
-      public int calcWidthInPixels(@Nonnull Editor editor) { return 1; }
+      public int calcWidthInPixels(@Nonnull Editor editor) {
+        return 1;
+      }
 
       @Override
-      public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {}
+      public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle targetRegion, @NotNull TextAttributes textAttributes) {
+      }
     });
   }
 
@@ -274,8 +278,7 @@ public class EditorTestUtil {
           }
         }
 
-        boolean multiCaret = StringUtil.getOccurrenceCount(document.getText(), CARET_TAG) > 1
-                             || StringUtil.getOccurrenceCount(document.getText(), SELECTION_START_TAG) > 1;
+        boolean multiCaret = StringUtil.getOccurrenceCount(document.getText(), CARET_TAG) > 1 || StringUtil.getOccurrenceCount(document.getText(), SELECTION_START_TAG) > 1;
         int pos = 0;
         while (pos < document.getTextLength()) {
           fileText = document.getText();
@@ -302,23 +305,17 @@ public class EditorTestUtil {
           }
 
           final RangeMarker caretMarker = caretIndex >= 0 ? document.createRangeMarker(caretIndex, caretIndex) : null;
-          final RangeMarker selStartMarker = selStartIndex >= 0
-                                             ? document.createRangeMarker(selStartIndex, selStartIndex)
-                                             : null;
-          final RangeMarker selEndMarker = selEndIndex >= 0
-                                           ? document.createRangeMarker(selEndIndex, selEndIndex)
-                                           : null;
+          final RangeMarker selStartMarker = selStartIndex >= 0 ? document.createRangeMarker(selStartIndex, selStartIndex) : null;
+          final RangeMarker selEndMarker = selEndIndex >= 0 ? document.createRangeMarker(selEndIndex, selEndIndex) : null;
 
           if (caretMarker != null) {
             document.deleteString(caretMarker.getStartOffset(), caretMarker.getStartOffset() + CARET_TAG.length());
           }
           if (selStartMarker != null) {
-            document.deleteString(selStartMarker.getStartOffset(),
-                                  selStartMarker.getStartOffset() + SELECTION_START_TAG.length());
+            document.deleteString(selStartMarker.getStartOffset(), selStartMarker.getStartOffset() + SELECTION_START_TAG.length());
           }
           if (selEndMarker != null) {
-            document.deleteString(selEndMarker.getStartOffset(),
-                                  selEndMarker.getStartOffset() + SELECTION_END_TAG.length());
+            document.deleteString(selEndMarker.getStartOffset(), selEndMarker.getStartOffset() + SELECTION_END_TAG.length());
           }
 
           LogicalPosition caretPosition = null;
@@ -327,10 +324,7 @@ public class EditorTestUtil {
             int column = caretMarker.getStartOffset() - document.getLineStartOffset(line);
             caretPosition = new LogicalPosition(line, column);
           }
-          result.carets.add(new CaretInfo(caretPosition,
-                                          selStartMarker == null || selEndMarker == null
-                                          ? null
-                                          : new TextRange(selStartMarker.getStartOffset(), selEndMarker.getEndOffset())));
+          result.carets.add(new CaretInfo(caretPosition, selStartMarker == null || selEndMarker == null ? null : new TextRange(selStartMarker.getStartOffset(), selEndMarker.getEndOffset())));
 
           pos = Math.max(caretMarker == null ? -1 : caretMarker.getStartOffset(), selEndMarker == null ? -1 : selEndMarker.getEndOffset());
         }
@@ -373,8 +367,8 @@ public class EditorTestUtil {
       }
     }
     if (caretsState.blockSelection != null) {
-      editor.getSelectionModel().setBlockSelection(editor.offsetToLogicalPosition(caretsState.blockSelection.getStartOffset()),
-                                                   editor.offsetToLogicalPosition(caretsState.blockSelection.getEndOffset()));
+      editor.getSelectionModel()
+              .setBlockSelection(editor.offsetToLogicalPosition(caretsState.blockSelection.getStartOffset()), editor.offsetToLogicalPosition(caretsState.blockSelection.getEndOffset()));
     }
   }
 
@@ -422,8 +416,7 @@ public class EditorTestUtil {
         assertEquals(messageSuffix + caretDescription + "unexpected selection end", expectedSelectionEnd, actualSelectionEnd);
       }
       else {
-        assertFalse(messageSuffix + caretDescription + "should has no selection, but was: (" + actualSelectionStart + ", " + actualSelectionEnd + ")",
-                    currentCaret.hasSelection());
+        assertFalse(messageSuffix + caretDescription + "should has no selection, but was: (" + actualSelectionStart + ", " + actualSelectionEnd + ")", currentCaret.hasSelection());
       }
     }
   }

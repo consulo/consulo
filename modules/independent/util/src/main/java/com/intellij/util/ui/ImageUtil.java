@@ -17,10 +17,18 @@ package com.intellij.util.ui;
 
 import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
-import javax.annotation.Nonnull;
+import com.intellij.util.RetinaImage;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+
+import static com.intellij.util.ui.JBUI.ScaleType.SYS_SCALE;
 
 /**
  * @author Konstantin Bulenkov
@@ -86,5 +94,17 @@ public class ImageUtil {
    */
   public static Image scaleImage(Image image, float scale) {
     return ImageLoader.scaleImage(image, scale);
+  }
+
+  /**
+   * Wraps the {@code image} with {@link JBHiDPIScaledImage} according to {@code ctx} when applicable.
+   */
+  @Contract("null, _ -> null; !null, _ -> !null")
+  public static Image ensureHiDPI(@Nullable Image image, @NotNull JBUI.ScaleContext ctx) {
+    if (image == null) return null;
+    if (UIUtil.isJreHiDPI(ctx)) {
+      return RetinaImage.createFrom(image, ctx.getScale(SYS_SCALE), null);
+    }
+    return image;
   }
 }

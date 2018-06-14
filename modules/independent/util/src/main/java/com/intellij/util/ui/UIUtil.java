@@ -524,6 +524,13 @@ public class UIUtil {
     return isJreHiDPI(comp != null ? comp.getGraphicsConfiguration() : null);
   }
 
+  /**
+   * Returns whether the JRE-managed HiDPI mode is enabled and the provided system scale context is HiDPI.
+   */
+  public static boolean isJreHiDPI(@Nullable JBUI.ScaleContext ctx) {
+    return isJreHiDPIEnabled() && JBUI.isHiDPI(JBUI.sysScale(ctx));
+  }
+
   private static Boolean jreHiDPI;
   private static boolean jreHiDPI_earlierVersion;
 

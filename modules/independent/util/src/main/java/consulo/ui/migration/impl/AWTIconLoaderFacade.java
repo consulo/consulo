@@ -16,10 +16,9 @@
 package consulo.ui.migration.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ScalableIcon;
+import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.RetrievableIcon;
@@ -29,7 +28,6 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.RetinaImage;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakHashMap;
-import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
@@ -38,6 +36,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,13 +45,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
+import java.awt.image.RGBImageFilter;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
+
+import static com.intellij.util.ui.JBUI.ScaleType.*;
 
 /**
  * @author VISTALL
@@ -68,6 +72,8 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   private final Map<Icon, Icon> myIcon2DisabledIcon = new WeakHashMap<Icon, Icon>(200);
 
   private static boolean USE_DARK_ICONS = UIUtil.isUnderDarcula();
+
+  private volatile static int clearCacheCounter;
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
     @NonNls
@@ -267,33 +273,51 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
     Icon disabledIcon = myIcon2DisabledIcon.get(icon);
     if (disabledIcon == null) {
-      if (!isGoodSize(icon)) {
-        LOG.error(icon); // # 22481
-        return EMPTY_ICON;
-      }
-      if (icon instanceof CachedImageIcon) {
-        disabledIcon = ((CachedImageIcon)icon).asDisabledIcon();
-      }
-      else {
-        final float scale = UIUtil.isJreHiDPI() ? JBUI.sysScale() : 1f;  // [tav] todo: no screen available
-        @SuppressWarnings("UndesirableClassUsage") BufferedImage image = new BufferedImage((int)(scale * icon.getIconWidth()), (int)(scale * icon.getIconHeight()), BufferedImage.TYPE_INT_ARGB);
-        final Graphics2D graphics = image.createGraphics();
-
-        graphics.setColor(UIUtil.TRANSPARENT_COLOR);
-        graphics.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
-        graphics.scale(scale, scale);
-        icon.paintIcon(LabelHolder.ourFakeComponent, graphics, 0, 0);
-
-        graphics.dispose();
-
-        Image img = ImageUtil.filter(image, UIUtil.getGrayFilter());
-        if (UIUtil.isJreHiDPI()) img = RetinaImage.createFrom(img, scale, null);
-
-        disabledIcon = new JBImageIcon(img);
-      }
+      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(), null);
       myIcon2DisabledIcon.put(icon, disabledIcon);
     }
     return disabledIcon;
+  }
+
+  /**
+   * Creates new icon with the filter applied.
+   */
+  @Nullable
+  public static Icon filterIcon(@NotNull Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
+    if (icon instanceof LazyIcon) icon = ((LazyIcon)icon).getOrComputeIcon();
+    if (icon == null) return null;
+
+    if (!isGoodSize(icon)) {
+      LOG.error(icon); // # 22481
+      return EMPTY_ICON;
+    }
+    if (icon instanceof CachedImageIcon) {
+      icon = ((CachedImageIcon)icon).asDisabledIcon();
+    }
+    else {
+      final float scale;
+      if (icon instanceof JBUI.ScaleContextAware) {
+        scale = (float)((JBUI.ScaleContextAware)icon).getScale(SYS_SCALE);
+      }
+      else {
+        scale = UIUtil.isJreHiDPI() ? JBUI.sysScale(ancestor) : 1f;
+      }
+      @SuppressWarnings("UndesirableClassUsage") BufferedImage image = new BufferedImage((int)(scale * icon.getIconWidth()), (int)(scale * icon.getIconHeight()), BufferedImage.TYPE_INT_ARGB);
+      final Graphics2D graphics = image.createGraphics();
+
+      graphics.setColor(UIUtil.TRANSPARENT_COLOR);
+      graphics.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
+      graphics.scale(scale, scale);
+      icon.paintIcon(LabelHolder.ourFakeComponent, graphics, 0, 0);
+
+      graphics.dispose();
+
+      Image img = ImageUtil.filter(image, filter);
+      if (UIUtil.isJreHiDPI()) img = RetinaImage.createFrom(img, scale, null);
+
+      icon = new JBImageIcon(img);
+    }
+    return icon;
   }
 
   @Override
@@ -345,88 +369,101 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     };
   }
 
-  private static final class CachedImageIcon extends JBUI.AuxJBIcon implements ScalableIcon, SwingImageRef, consulo.ui.image.Image {
-    private static final ImageFilter[] ourEmptyFilters = new ImageFilter[0];
+  public static final class CachedImageIcon extends JBUI.RasterJBIcon implements ScalableIcon, SwingImageRef, consulo.ui.image.Image {
+    private static final ImageFilter[] EMPTY_FILTER_ARRAY = new ImageFilter[0];
 
     private volatile Object myRealIcon;
     private String myOriginalPath;
     private ClassLoader myClassLoader;
-    @Nonnull
+    @NotNull
     private URL myUrl;
     private volatile boolean dark;
+    private final boolean svg;
+    private final boolean useCacheOnLoad;
+    private int myClearCacheCounter = clearCacheCounter;
 
-    private ImageFilter[] myFilters = ourEmptyFilters;
+    private ImageFilter[] myFilters = EMPTY_FILTER_ARRAY;
     private final MyScaledIconsCache myScaledIconsCache = new MyScaledIconsCache();
 
-    private CachedImageIcon(@Nonnull CachedImageIcon icon) {
+    {
+      // For instance, ShadowPainter updates the context from outside.
+      getScaleContext().addUpdateListener(new JBUI.BaseScaleContext.UpdateListener() {
+        @Override
+        public void contextUpdated() {
+          myRealIcon = null;
+        }
+      });
+    }
+
+    private CachedImageIcon(@NotNull CachedImageIcon icon) {
       myRealIcon = null; // to be computed
       myOriginalPath = icon.myOriginalPath;
       myClassLoader = icon.myClassLoader;
       myUrl = icon.myUrl;
       dark = icon.dark;
-      myFilters = icon.myFilters;
+      svg = myOriginalPath != null && myOriginalPath.toLowerCase().endsWith("svg");
+      useCacheOnLoad = icon.useCacheOnLoad;
     }
 
-    public CachedImageIcon(@Nonnull URL url) {
+    public CachedImageIcon(@NotNull URL url) {
+      this(url, true);
+    }
+
+    public CachedImageIcon(@NotNull URL url, boolean useCacheOnLoad) {
       myUrl = url;
       dark = USE_DARK_ICONS;
+      svg = url.toString().endsWith("svg");
+      this.useCacheOnLoad = useCacheOnLoad;
     }
 
-    @Nonnull
+    @NotNull
     private synchronized ImageIcon getRealIcon() {
       return getRealIcon(null);
     }
 
-    @Nonnull
-    private synchronized ImageIcon getRealIcon(@Nullable Graphics g) {
-      if (!isValid() || needUpdateJBUIScale((Graphics2D)g)) {
+    @Nullable
+    @TestOnly
+    public ImageIcon doGetRealIcon() {
+      Object icon = myRealIcon;
+      if (icon instanceof Reference) {
+        icon = ((Reference<ImageIcon>)icon).get();
+      }
+      return icon instanceof ImageIcon ? (ImageIcon)icon : null;
+    }
+
+    @NotNull
+    private synchronized ImageIcon getRealIcon(@Nullable JBUI.ScaleContext ctx) {
+      if (!isValid()) {
         if (isLoaderDisabled()) return EMPTY_ICON;
+        myClearCacheCounter = clearCacheCounter;
         myRealIcon = null;
         dark = USE_DARK_ICONS;
-        updateJBUIScale((Graphics2D)g);
-        if (!isValid()) myScaledIconsCache.clear();
-      }
-      Object realIcon = myRealIcon;
-      if (realIcon instanceof Icon) return (ImageIcon)realIcon;
-
-      ImageIcon icon;
-      if (realIcon instanceof Reference) {
-        icon = ((Reference<ImageIcon>)realIcon).get();
-        if (icon != null) return icon;
+        myScaledIconsCache.clear();
       }
 
-      icon = myScaledIconsCache.getOrLoadIcon(getJBUIScale(JBUI.ScaleType.PIX));
+      if (!updateScaleContext(ctx) && myRealIcon != null) {
+        // try returning the current icon as the context is up-to-date
+        Object icon = myRealIcon;
+        if (icon instanceof Reference) icon = ((Reference<ImageIcon>)icon).get();
+        if (icon instanceof ImageIcon) return (ImageIcon)icon;
+      }
 
+      ImageIcon icon = myScaledIconsCache.getOrScaleIcon(1f);
       if (icon != null) {
-        if (icon.getIconWidth() < 50 && icon.getIconHeight() < 50) {
-          realIcon = icon;
-        }
-        else {
-          realIcon = new SoftReference<ImageIcon>(icon);
-        }
-        myRealIcon = realIcon;
+        myRealIcon = icon.getIconWidth() < 50 && icon.getIconHeight() < 50 ? icon : new SoftReference<ImageIcon>(icon);
+        return icon;
       }
-
-      return icon == null ? EMPTY_ICON : icon;
+      return EMPTY_ICON;
     }
 
     private boolean isValid() {
-      return myRealIcon != null && dark == USE_DARK_ICONS;
+      return dark == USE_DARK_ICONS && myClearCacheCounter == clearCacheCounter;
     }
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
-      getRealIcon(g).paintIcon(c, g, x, y);
-    }
-
-    @Override
-    public int getHeight() {
-      return getRealIcon().getIconHeight();
-    }
-
-    @Override
-    public int getWidth() {
-      return getRealIcon().getIconWidth();
+      Graphics2D g2d = g instanceof Graphics2D ? (Graphics2D)g : null;
+      getRealIcon(JBUI.ScaleContext.create(c, g2d)).paintIcon(c, g, x, y);
     }
 
     @Override
@@ -449,13 +486,14 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       return 1f;
     }
 
+    @NotNull
     @Override
     public Icon scale(float scale) {
       if (scale == 1f) return this;
 
       getRealIcon(); // force state update & cache reset
 
-      Icon icon = myScaledIconsCache.getOrScaleIcon(getJBUIScale(JBUI.ScaleType.PIX), scale, UIUtil.isUnderDarkTheme());
+      Icon icon = myScaledIconsCache.getOrScaleIcon(scale);
       if (icon != null) {
         return icon;
       }
@@ -468,79 +506,82 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       return icon;
     }
 
-    private class MyScaledIconsCache {
-      // Map {false -> image}, {true -> image@2x}
-      private Map<Boolean, SoftReference<Image>> origImagesCache = Collections.synchronizedMap(new HashMap<Boolean, SoftReference<Image>>(2));
+    private Image loadFromUrl(@NotNull JBUI.ScaleContext ctx) {
+      return ImageLoader.loadFromUrl(myUrl, true, useCacheOnLoad, myFilters, ctx);
+    }
 
+    @Override
+    public int getHeight() {
+      return getIconHeight();
+    }
+
+    @Override
+    public int getWidth() {
+      return getIconWidth();
+    }
+
+    private class MyScaledIconsCache {
       private static final int SCALED_ICONS_CACHE_LIMIT = 5;
 
-      // Map {pixel scale -> icon}
-      private Map<Float, SoftReference<ImageIcon>> scaledIconsCache = Collections.synchronizedMap(new LinkedHashMap<Float, SoftReference<ImageIcon>>(SCALED_ICONS_CACHE_LIMIT) {
+      private final Map<Couple<Double>, SoftReference<ImageIcon>> scaledIconsCache = Collections.synchronizedMap(new LinkedHashMap<Couple<Double>, SoftReference<ImageIcon>>(SCALED_ICONS_CACHE_LIMIT) {
         @Override
-        public boolean removeEldestEntry(Map.Entry<Float, SoftReference<ImageIcon>> entry) {
+        public boolean removeEldestEntry(Map.Entry<Couple<Double>, SoftReference<ImageIcon>> entry) {
           return size() > SCALED_ICONS_CACHE_LIMIT;
         }
       });
 
-      private Image getOrLoadOrigImage(float pixScale) {
-        return getOrLoadOrigImage(pixScale, true);
+      private Couple<Double> key(@NotNull JBUI.ScaleContext ctx) {
+        return new Couple<Double>(ctx.getScale(USR_SCALE) * ctx.getScale(OBJ_SCALE), ctx.getScale(SYS_SCALE));
       }
 
       /**
-       * Retrieves the orig image based on the pixScale.
+       * Retrieves the orig icon scaled by the provided scale.
        */
-      private Image getOrLoadOrigImage(float pixScale, boolean allowFloatScaling) {
-        boolean needRetinaImage = (pixScale > 1.0f);
-        Image image = SoftReference.dereference(origImagesCache.get(needRetinaImage));
-        if (image != null) return image;
+      ImageIcon getOrScaleIcon(final float scale) {
+        final JBUI.ScaleContext ctx = scale == 1 ? getScaleContext() : (JBUI.ScaleContext)getScaleContext().copy(); // not modifying this scale context
+        if (scale != 1) ctx.update(OBJ_SCALE.of(scale));
 
-        image = ImageLoader.loadFromUrl(myUrl, allowFloatScaling, myFilters, pixScale);
-        if (image == null) return null;
-        origImagesCache.put(needRetinaImage, new SoftReference<Image>(image));
-        return image;
-      }
-
-      /**
-       * Retrieves the orig icon based on the pixScale, then scale it by the instanceScale.
-       */
-      public ImageIcon getOrScaleIcon(float pixScale, float instanceScale, boolean allowFloatScaling) {
-        float effectiveScale = pixScale * instanceScale;
-        ImageIcon icon = SoftReference.dereference(scaledIconsCache.get(effectiveScale));
+        ImageIcon icon = SoftReference.dereference(scaledIconsCache.get(key(ctx)));
         if (icon != null) {
           return icon;
         }
-
-        Image image = getOrLoadOrigImage(pixScale, allowFloatScaling);
-        if (image == null) return null;
-
-        image = ImageUtil.scaleImage(image, instanceScale);
+        Image image;
+        if (svg) {
+          image = doWithTmpRegValue("ide.svg.icon", true, new Callable<Image>() {
+            @Override
+            public Image call() {
+              return loadFromUrl(ctx);
+            }
+          });
+        }
+        else {
+          image = loadFromUrl(ctx);
+        }
         icon = checkIcon(image, myUrl);
-        scaledIconsCache.put(effectiveScale, new SoftReference<ImageIcon>(icon));
-        return icon;
-      }
 
-      /**
-       * Retrieves the orig icon based on the pixScale.
-       */
-      public ImageIcon getOrLoadIcon(float pixScale) {
-        return getOrScaleIcon(pixScale, 1f, true);
+        if (icon != null && icon.getIconWidth() * icon.getIconHeight() * 4 < ImageLoader.CACHED_IMAGE_MAX_SIZE) {
+          scaledIconsCache.put(key(ctx), new SoftReference<ImageIcon>(icon));
+        }
+        return icon;
       }
 
       public void clear() {
         scaledIconsCache.clear();
-        origImagesCache.clear();
       }
     }
   }
 
-  public abstract static class LazyIcon extends JBUI.AuxJBIcon {
+  public abstract static class LazyIcon extends JBUI.RasterJBIcon {
     private boolean myWasComputed;
     private Icon myIcon;
     private boolean isDarkVariant = USE_DARK_ICONS;
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
-      final Icon icon = getOrComputeIcon((Graphics2D)g);
+      if (updateScaleContext(JBUI.ScaleContext.create((Graphics2D)g))) {
+        myIcon = null;
+      }
+      final Icon icon = getOrComputeIcon();
       if (icon != null) {
         icon.paintIcon(c, g, x, y);
       }
@@ -559,13 +600,8 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
 
     protected final synchronized Icon getOrComputeIcon() {
-      return getOrComputeIcon(null);
-    }
-
-    protected final synchronized Icon getOrComputeIcon(@Nullable Graphics2D g) {
-      if (!myWasComputed || isDarkVariant != USE_DARK_ICONS || needUpdateJBUIScale(g)) {
+      if (!myWasComputed || isDarkVariant != USE_DARK_ICONS || myIcon == null) {
         isDarkVariant = USE_DARK_ICONS;
-        updateJBUIScale(g);
         myWasComputed = true;
         myIcon = compute();
       }
@@ -578,18 +614,23 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
 
     protected abstract Icon compute();
+  }
 
-    public Icon inOriginalScale() {
-      Icon icon = getOrComputeIcon();
-      if (icon != null) {
-        if (icon instanceof CachedImageIcon) {
-          Image img = ((CachedImageIcon)icon).myScaledIconsCache.getOrLoadOrigImage(1f);
-          if (img != null) {
-            icon = new ImageIcon(img);
-          }
-        }
-      }
-      return icon;
+  /**
+   * Do something with the temporarily registry value.
+   */
+  private static <T> T doWithTmpRegValue(@NotNull String key, @NotNull Boolean tempValue, @NotNull Callable<T> action) {
+    RegistryValue regVal = Registry.get(key);
+    boolean regValOrig = regVal.asBoolean();
+    if (regValOrig != tempValue) regVal.setValue(tempValue);
+    try {
+      return action.call();
+    }
+    catch (Exception ignore) {
+      return null;
+    }
+    finally {
+      if (regValOrig != tempValue) regVal.setValue(regValOrig);
     }
   }
 
@@ -600,5 +641,4 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
      */
     private static final JComponent ourFakeComponent = new JLabel();
   }
-
 }

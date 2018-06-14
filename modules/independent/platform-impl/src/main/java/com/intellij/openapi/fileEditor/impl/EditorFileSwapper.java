@@ -17,12 +17,14 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class EditorFileSwapper {
@@ -32,13 +34,13 @@ public abstract class EditorFileSwapper {
   public abstract Pair<VirtualFile, Integer> getFileToSwapTo(Project project, EditorWithProviderComposite editorWithProviderComposite);
 
   @Nullable
-  public static DesktopTextEditorImpl findSinglePsiAwareEditor(FileEditor[] fileEditors) {
-    DesktopTextEditorImpl res = null;
+  public static TextEditor findSinglePsiAwareEditor(@Nonnull FileEditor[] fileEditors) {
+    TextEditor res = null;
 
     for (FileEditor fileEditor : fileEditors) {
       if (fileEditor instanceof DesktopTextEditorImpl) {
         if (res == null) {
-          res = (DesktopTextEditorImpl)fileEditor;
+          res = (TextEditor)fileEditor;
         }
         else {
           return null;

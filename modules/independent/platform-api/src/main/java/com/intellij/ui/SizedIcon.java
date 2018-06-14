@@ -17,9 +17,13 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ui.JBUI;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
 
 /**
  * @author peter
@@ -44,6 +48,7 @@ public class SizedIcon extends JBUI.CachingScalableJBIcon {
     myScaledDelegate = null;
   }
 
+  @NotNull
   @Override
   protected SizedIcon copy() {
     return new SizedIcon(this);
@@ -65,10 +70,10 @@ public class SizedIcon extends JBUI.CachingScalableJBIcon {
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
     Icon icon = myScaledIcon();
-    int dx = scaleVal(myWidth) - icon.getIconWidth();
-    int dy = scaleVal(myHeight) - icon.getIconHeight();
+    double dx = scaleVal(myWidth) - icon.getIconWidth();
+    double dy = scaleVal(myHeight) - icon.getIconHeight();
     if (dx > 0 || dy > 0) {
-      icon.paintIcon(c, g, x + dx / 2, y + dy / 2);
+      icon.paintIcon(c, g, x + (int)floor(dx / 2), y + (int)floor(dy / 2));
     }
     else {
       icon.paintIcon(c, g, x, y);
@@ -77,11 +82,11 @@ public class SizedIcon extends JBUI.CachingScalableJBIcon {
 
   @Override
   public int getIconWidth() {
-    return scaleVal(myWidth);
+    return (int)ceil(scaleVal(myWidth));
   }
 
   @Override
   public int getIconHeight() {
-    return scaleVal(myHeight);
+    return (int)ceil(scaleVal(myHeight));
   }
 }

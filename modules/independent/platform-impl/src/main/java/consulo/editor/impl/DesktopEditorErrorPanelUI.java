@@ -21,10 +21,8 @@ import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.IntervalTreeImpl;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -212,72 +210,68 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
 
     MarkupIterator<RangeHighlighterEx> iterator1 = markup1.overlappingIterator(startOffset, endOffset);
     MarkupIterator<RangeHighlighterEx> iterator2 = markup2.overlappingIterator(startOffset, endOffset);
-    MarkupIterator<RangeHighlighterEx> iterator = IntervalTreeImpl.mergeIterators(iterator1, iterator2, RangeHighlighterEx.BY_AFFECTED_START_OFFSET);
+    MarkupIterator<RangeHighlighterEx> iterator = MarkupIterator.mergeIterators(iterator1, iterator2, RangeHighlighterEx.BY_AFFECTED_START_OFFSET);
     try {
-      ContainerUtil.process(iterator, new Processor<RangeHighlighterEx>() {
-        @Override
-        public boolean process(@Nonnull RangeHighlighterEx highlighter) {
-          Color color = highlighter.getErrorStripeMarkColor();
-          if (color == null) return true;
-          boolean isThin = highlighter.isThinErrorStripeMark();
-          int[] yStart = isThin ? thinYStart : wideYStart;
-          List<PositionedStripe> stripes = isThin ? thinStripes : wideStripes;
-          Queue<PositionedStripe> ends = isThin ? thinEnds : wideEnds;
+      ContainerUtil.process(iterator, highlighter -> {
+        Color color = highlighter.getErrorStripeMarkColor();
+        if (color == null) return true;
+        boolean isThin = highlighter.isThinErrorStripeMark();
+        int[] yStart = isThin ? thinYStart : wideYStart;
+        List<PositionedStripe> stripes = isThin ? thinStripes : wideStripes;
+        Queue<PositionedStripe> ends = isThin ? thinEnds : wideEnds;
 
-          ProperTextRange range = myPanel.offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset());
-          final int ys = range.getStartOffset();
-          int ye = range.getEndOffset();
-          if (ye - ys < myPanel.getMarkupModel().getMinMarkHeight()) ye = ys + myPanel.getMarkupModel().getMinMarkHeight();
+        ProperTextRange range = myPanel.offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset());
+        final int ys = range.getStartOffset();
+        int ye = range.getEndOffset();
+        if (ye - ys < myPanel.getMarkupModel().getMinMarkHeight()) ye = ys + myPanel.getMarkupModel().getMinMarkHeight();
 
-          yStart[0] = drawStripesEndingBefore(ys, ends, stripes, g, yStart[0]);
+        yStart[0] = drawStripesEndingBefore(ys, ends, stripes, g, yStart[0]);
 
-          final int layer = highlighter.getLayer();
+        final int layer = highlighter.getLayer();
 
-          PositionedStripe stripe = null;
-          int i;
-          for (i = 0; i < stripes.size(); i++) {
-            PositionedStripe s = stripes.get(i);
-            if (s.layer == layer) {
-              stripe = s;
-              break;
-            }
-            if (s.layer < layer) {
-              break;
-            }
+        PositionedStripe stripe = null;
+        int i;
+        for (i = 0; i < stripes.size(); i++) {
+          PositionedStripe s = stripes.get(i);
+          if (s.layer == layer) {
+            stripe = s;
+            break;
           }
-          if (stripe == null) {
-            // started new stripe, draw previous above
-            if (i == 0 && yStart[0] != ys) {
-              if (!stripes.isEmpty()) {
-                PositionedStripe top = stripes.get(0);
-                drawSpot(g, top.thin, yStart[0], ys, top.color);
-              }
-              yStart[0] = ys;
+          if (s.layer < layer) {
+            break;
+          }
+        }
+        if (stripe == null) {
+          // started new stripe, draw previous above
+          if (i == 0 && yStart[0] != ys) {
+            if (!stripes.isEmpty()) {
+              PositionedStripe top = stripes.get(0);
+              drawSpot(g, top.thin, yStart[0], ys, top.color);
             }
-            stripe = new PositionedStripe(color, ye, isThin, layer);
-            stripes.add(i, stripe);
+            yStart[0] = ys;
+          }
+          stripe = new PositionedStripe(color, ye, isThin, layer);
+          stripes.add(i, stripe);
+          ends.offer(stripe);
+        }
+        else {
+          if (stripe.yEnd < ye) {
+            if (!color.equals(stripe.color)) {
+              // paint previous stripe on this layer
+              if (i == 0 && yStart[0] != ys) {
+                drawSpot(g, stripe.thin, yStart[0], ys, stripe.color);
+                yStart[0] = ys;
+              }
+              stripe.color = color;
+            }
+
+            // key changed, reinsert into queue
+            ends.remove(stripe);
+            stripe.yEnd = ye;
             ends.offer(stripe);
           }
-          else {
-            if (stripe.yEnd < ye) {
-              if (!color.equals(stripe.color)) {
-                // paint previous stripe on this layer
-                if (i == 0 && yStart[0] != ys) {
-                  drawSpot(g, stripe.thin, yStart[0], ys, stripe.color);
-                  yStart[0] = ys;
-                }
-                stripe.color = color;
-              }
-
-              // key changed, reinsert into queue
-              ends.remove(stripe);
-              stripe.yEnd = ye;
-              ends.offer(stripe);
-            }
-          }
-
-          return true;
         }
+        return true;
       });
     }
     finally {

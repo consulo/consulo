@@ -48,8 +48,8 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import org.intellij.lang.annotations.JdkConstants;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -124,7 +124,7 @@ public final class EditorUtil {
         int result = visual.column;
         int x = editor.visualPositionToXY(visual).x;
         // We need to add width of the next symbol because current result column points to the last symbol before the soft wrap.
-        return  result + textWidthInColumns(editor, text, softWrap.getStart() - 1, softWrap.getStart(), x);
+        return result + textWidthInColumns(editor, text, softWrap.getStart() - 1, softWrap.getStart(), x);
       }
 
       int softWrapLineFeeds = StringUtil.countNewLines(softWrap.getText());
@@ -178,14 +178,15 @@ public final class EditorUtil {
       return result;
     }
 
-    CharSequence editorInfo = "editor's class: " + editor.getClass()
-                              + ", all soft wraps: " + editor.getSoftWrapModel().getSoftWrapsForRange(0, document.getTextLength())
-                              + ", fold regions: " + Arrays.toString(editor.getFoldingModel().getAllFoldRegions());
+    CharSequence editorInfo = "editor's class: " +
+                              editor.getClass() +
+                              ", all soft wraps: " +
+                              editor.getSoftWrapModel().getSoftWrapsForRange(0, document.getTextLength()) +
+                              ", fold regions: " +
+                              Arrays.toString(editor.getFoldingModel().getAllFoldRegions());
     LogMessageEx.error(LOG, "Can't calculate last visual column", String.format(
-            "Target visual line: %d, mapped logical line: %d, visual lines range for the mapped logical line: [%s]-[%s], soft wraps for "
-            + "the target logical line: %s. Editor info: %s",
-            line, resultLogLine, resVisStart, resVisEnd, softWraps, editorInfo
-    ));
+            "Target visual line: %d, mapped logical line: %d, visual lines range for the mapped logical line: [%s]-[%s], soft wraps for " + "the target logical line: %s. Editor info: %s", line,
+            resultLogLine, resVisStart, resVisEnd, softWraps, editorInfo));
 
     return resVisEnd.column;
   }
@@ -203,7 +204,7 @@ public final class EditorUtil {
     }
     LogicalPosition pos = editor.getCaretModel().getLogicalPosition();
     Point location = editor.logicalPositionToXY(pos);
-    return (location.y - viewArea.y) / (float) viewArea.height;
+    return (location.y - viewArea.y) / (float)viewArea.height;
   }
 
   public static void setVerticalScrollProportion(@Nonnull Editor editor, float proportion) {
@@ -288,9 +289,8 @@ public final class EditorUtil {
         else {
           documentInfo = "Text holder class: " + text.getClass();
         }
-        LogMessageEx.error(
-                LOG, "detected incorrect offset -> column number calculation",
-                "start: " + start + ", given offset: " + offset+", given tab size: " + tabSize + ". "+documentInfo+ editorInfo);
+        LogMessageEx.error(LOG, "detected incorrect offset -> column number calculation",
+                           "start: " + start + ", given offset: " + offset + ", given tab size: " + tabSize + ". " + documentInfo + editorInfo);
       }
     }
 
@@ -315,8 +315,7 @@ public final class EditorUtil {
   @Nonnull
   public static FontInfo fontForChar(final char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
     EditorColorsScheme colorsScheme = editor.getColorsScheme();
-    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, colorsScheme.getFontPreferences(),
-                                                           FontInfo.getFontRenderContext(editor.getContentComponent()));
+    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, colorsScheme.getFontPreferences(), FontInfo.getFontRenderContext(editor.getContentComponent()));
   }
 
   public static Icon scaleIconAccordingEditorFont(Icon icon, Editor editor) {
@@ -369,6 +368,16 @@ public final class EditorUtil {
     return (nTabs + 1) * tabSize;
   }
 
+  public static float nextTabStop(float x, float plainSpaceWidth, int tabSize) {
+    if (tabSize <= 0) {
+      return x + plainSpaceWidth;
+    }
+    tabSize *= plainSpaceWidth;
+
+    int nTabs = (int)(x / tabSize);
+    return (nTabs + 1) * tabSize;
+  }
+
   public static int textWidthInColumns(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int end, int x) {
     int startToUse = start;
     int lastTabSymbolIndex = -1;
@@ -377,8 +386,11 @@ public final class EditorUtil {
     loop:
     for (int i = end - 1; i >= start; i--) {
       switch (text.charAt(i)) {
-        case '\n': startToUse = i + 1; break loop;
-        case '\t': if (lastTabSymbolIndex < 0) lastTabSymbolIndex = i;
+        case '\n':
+          startToUse = i + 1;
+          break loop;
+        case '\t':
+          if (lastTabSymbolIndex < 0) lastTabSymbolIndex = i;
       }
     }
 
@@ -404,8 +416,12 @@ public final class EditorUtil {
           x = nextTabStop(x, editor);
           result += columnsNumber(x - prevX, spaceSize);
           break;
-        case '\n': x = result = 0; break;
-        default: x += charWidth(c, Font.PLAIN, editor); result++;
+        case '\n':
+          x = result = 0;
+          break;
+        default:
+          x += charWidth(c, Font.PLAIN, editor);
+          result++;
       }
     }
 
@@ -417,9 +433,9 @@ public final class EditorUtil {
   /**
    * Allows to answer how many visual columns are occupied by the given width.
    *
-   * @param width       target width
-   * @param plainSpaceSize   width of the single space symbol within the target editor (in plain font style)
-   * @return            number of visual columns are occupied by the given width
+   * @param width          target width
+   * @param plainSpaceSize width of the single space symbol within the target editor (in plain font style)
+   * @return number of visual columns are occupied by the given width
    */
   public static int columnsNumber(int width, int plainSpaceSize) {
     int result = width / plainSpaceSize;
@@ -429,24 +445,28 @@ public final class EditorUtil {
     return result;
   }
 
+  public static int columnsNumber(float width, float plainSpaceSize) {
+    return (int)Math.ceil(width / plainSpaceSize);
+  }
+
   /**
    * Allows to answer what width in pixels is required to draw fragment of the given char array from <code>[start; end)</code> interval
    * at the given editor.
-   * <p/>
+   * <p>
    * Tabulation symbols is processed specially, i.e. it's ta
-   * <p/>
+   * <p>
    * <b>Note:</b> it's assumed that target text fragment remains to the single line, i.e. line feed symbols within it are not
    * treated specially.
    *
-   * @param editor    editor that will be used for target text representation
-   * @param text      target text holder
-   * @param start     offset within the given char array that points to target text start (inclusive)
-   * @param end       offset within the given char array that points to target text end (exclusive)
-   * @param fontType  font type to use for target text representation
-   * @param x         <code>'x'</code> coordinate that should be used as a starting point for target text representation.
-   *                  It's necessity is implied by the fact that IDEA editor may represent tabulation symbols in any range
-   *                  from <code>[1; tab size]</code> (check {@link #nextTabStop(int, Editor)} for more details)
-   * @return          width in pixels required for target text representation
+   * @param editor   editor that will be used for target text representation
+   * @param text     target text holder
+   * @param start    offset within the given char array that points to target text start (inclusive)
+   * @param end      offset within the given char array that points to target text end (exclusive)
+   * @param fontType font type to use for target text representation
+   * @param x        <code>'x'</code> coordinate that should be used as a starting point for target text representation.
+   *                 It's necessity is implied by the fact that IDEA editor may represent tabulation symbols in any range
+   *                 from <code>[1; tab size]</code> (check {@link #nextTabStop(int, Editor)} for more details)
+   * @return width in pixels required for target text representation
    */
   public static int textWidth(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int end, @JdkConstants.FontStyle int fontType, int x) {
     int result = 0;
@@ -467,8 +487,8 @@ public final class EditorUtil {
    * Delegates to the {@link #calcSurroundingRange(Editor, VisualPosition, VisualPosition)} with the
    * {@link CaretModel#getVisualPosition() caret visual position} as an argument.
    *
-   * @param editor  target editor
-   * @return        surrounding logical positions
+   * @param editor target editor
+   * @return surrounding logical positions
    * @see #calcSurroundingRange(Editor, VisualPosition, VisualPosition)
    */
   public static Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(@Nonnull Editor editor) {
@@ -495,26 +515,20 @@ public final class EditorUtil {
    * </pre>
    * The very first and the last positions will be returned here.
    *
-   * @param editor    target editor to use
-   * @param start     target start coordinate
-   * @param end       target end coordinate
-   * @return          pair of the closest surrounding non-soft-wrapped logical positions for the visual line start and end
-   *
+   * @param editor target editor to use
+   * @param start  target start coordinate
+   * @param end    target end coordinate
+   * @return pair of the closest surrounding non-soft-wrapped logical positions for the visual line start and end
    * @see #getNotFoldedLineStartOffset(Editor, int)
    * @see #getNotFoldedLineEndOffset(Editor, int)
    */
   @SuppressWarnings("AssignmentToForLoopParameter")
-  public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor,
-                                                                            @Nonnull VisualPosition start,
-                                                                            @Nonnull VisualPosition end) {
+  public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor, @Nonnull VisualPosition start, @Nonnull VisualPosition end) {
     final Document document = editor.getDocument();
     final FoldingModel foldingModel = editor.getFoldingModel();
 
     LogicalPosition first = editor.visualToLogicalPosition(new VisualPosition(start.line, 0));
-    for (
-            int line = first.line, offset = document.getLineStartOffset(line);
-            offset >= 0;
-            offset = document.getLineStartOffset(line)) {
+    for (int line = first.line, offset = document.getLineStartOffset(line); offset >= 0; offset = document.getLineStartOffset(line)) {
       final FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
       if (foldRegion == null) {
         first = new LogicalPosition(line, 0);
@@ -530,10 +544,7 @@ public final class EditorUtil {
 
 
     LogicalPosition second = editor.visualToLogicalPosition(new VisualPosition(end.line, 0));
-    for (
-            int line = second.line, offset = document.getLineEndOffset(line);
-            offset <= document.getTextLength();
-            offset = document.getLineEndOffset(line)) {
+    for (int line = second.line, offset = document.getLineEndOffset(line); offset <= document.getTextLength(); offset = document.getLineEndOffset(line)) {
       final FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
       if (foldRegion == null) {
         second = new LogicalPosition(line + 1, 0);
@@ -557,7 +568,7 @@ public final class EditorUtil {
    * Finds the start offset of visual line at which given offset is located, not taking soft wraps into account.
    */
   public static int getNotFoldedLineStartOffset(@Nonnull Editor editor, int offset) {
-    while(true) {
+    while (true) {
       offset = DocumentUtil.getLineStartOffset(offset, editor.getDocument());
       FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1);
       if (foldRegion == null || foldRegion.getStartOffset() >= offset) {
@@ -572,7 +583,7 @@ public final class EditorUtil {
    * Finds the end offset of visual line at which given offset is located, not taking soft wraps into account.
    */
   public static int getNotFoldedLineEndOffset(@Nonnull Editor editor, int offset) {
-    while(true) {
+    while (true) {
       offset = getLineEndOffset(offset, editor.getDocument());
       FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(offset);
       if (foldRegion == null || foldRegion.getEndOffset() <= offset) {
@@ -596,7 +607,8 @@ public final class EditorUtil {
     int lastLine = Math.max(0, editor.getDocument().getLineCount() - 1);
     if (editor.getCaretModel().getLogicalPosition().line == lastLine) {
       editor.getCaretModel().moveToOffset(editor.getDocument().getTextLength());
-    } else {
+    }
+    else {
       editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(lastLine, 0));
     }
     editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
@@ -604,9 +616,7 @@ public final class EditorUtil {
 
   public static boolean isChangeFontSize(@Nonnull MouseWheelEvent e) {
     if (e.getWheelRotation() == 0) return false;
-    return SystemInfo.isMac
-           ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown()
-           : e.isControlDown() && !e.isMetaDown() && !e.isAltDown() && !e.isShiftDown();
+    return SystemInfo.isMac ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown() : e.isControlDown() && !e.isMetaDown() && !e.isAltDown() && !e.isShiftDown();
   }
 
   public static boolean inVirtualSpace(@Nonnull Editor editor, @Nonnull LogicalPosition logicalPosition) {
@@ -678,8 +688,7 @@ public final class EditorUtil {
 
   public static Font getEditorFont() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    int size = UISettings.getInstance().getPresentationMode()
-               ? UISettings.getInstance().getPresentationModeFontSize() - 4 : scheme.getEditorFontSize();
+    int size = UISettings.getInstance().getPresentationMode() ? UISettings.getInstance().getPresentationModeFontSize() - 4 : scheme.getEditorFontSize();
     return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
   }
 
@@ -699,8 +708,7 @@ public final class EditorUtil {
   }
 
   public static boolean attributesImpactFontStyleOrColor(@Nullable TextAttributes attributes) {
-    return attributes == TextAttributes.ERASE_MARKER ||
-           (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
+    return attributes == TextAttributes.ERASE_MARKER || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
   }
 
   public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {

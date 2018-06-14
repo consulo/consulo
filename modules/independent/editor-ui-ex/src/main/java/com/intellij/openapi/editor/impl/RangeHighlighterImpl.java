@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeInsight.daemon.GutterMark;
@@ -24,12 +10,12 @@ import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Getter;
-import com.intellij.ui.Gray;
+import com.intellij.openapi.util.Key;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -38,7 +24,9 @@ import java.awt.*;
  * @author max
  */
 class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx, Getter<RangeHighlighterEx> {
-  private static final Color NULL_COLOR = Gray._0;
+  @SuppressWarnings({"InspectionUsingGrayColors", "UseJBColor"})
+  private static final Color NULL_COLOR = new Color(0, 0, 0); // must be new instance to work as a sentinel
+  private static final Key<Boolean> VISIBLE_IF_FOLDED = Key.create("visible.folded");
 
   private final MarkupModel myModel;
   private TextAttributes myTextAttributes;
@@ -69,11 +57,11 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   @MagicConstant(flags = {CHANGED_MASK, RENDERERS_CHANGED_MASK, FONT_STYLE_OR_COLOR_CHANGED_MASK})
   private @interface ChangeStatus {}
 
-  RangeHighlighterImpl(@Nonnull MarkupModel model,
+  RangeHighlighterImpl(@NotNull MarkupModel model,
                        int start,
                        int end,
                        int layer,
-                       @Nonnull HighlighterTargetArea target,
+                       @NotNull HighlighterTargetArea target,
                        TextAttributes textAttributes,
                        boolean greedyToLeft,
                        boolean greedyToRight) {
@@ -100,7 +88,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  public void setTextAttributes(@Nonnull TextAttributes textAttributes) {
+  public void setTextAttributes(@NotNull TextAttributes textAttributes) {
     TextAttributes old = myTextAttributes;
     myTextAttributes = textAttributes;
     if (old != textAttributes && (old == TextAttributes.ERASE_MARKER || textAttributes == TextAttributes.ERASE_MARKER)) {
@@ -112,6 +100,16 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
   }
 
+  @Override
+  public void setVisibleIfFolded(boolean value) {
+    putUserData(VISIBLE_IF_FOLDED, value ? Boolean.TRUE : null);
+  }
+
+  @Override
+  public boolean isVisibleIfFolded() {
+    return VISIBLE_IF_FOLDED.isIn(this);
+  }
+
   private static int getFontStyle(TextAttributes textAttributes) {
     return textAttributes == null ? Font.PLAIN : textAttributes.getFontType();
   }
@@ -121,7 +119,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  @Nonnull
+  @NotNull
   public HighlighterTargetArea getTargetArea() {
     return isFlagSet(TARGET_AREA_IS_EXACT_MASK) ? HighlighterTargetArea.EXACT_RANGE : HighlighterTargetArea.LINES_IN_RANGE;
   }
@@ -245,13 +243,13 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  public void setEditorFilter(@Nonnull MarkupEditorFilter filter) {
+  public void setEditorFilter(@NotNull MarkupEditorFilter filter) {
     myFilter = filter;
     fireChanged(false, false);
   }
 
   @Override
-  @Nonnull
+  @NotNull
   public MarkupEditorFilter getEditorFilter() {
     return myFilter;
   }
@@ -317,7 +315,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @ChangeStatus
-  byte changeAttributesNoEvents(@Nonnull Consumer<RangeHighlighterEx> change) {
+  byte changeAttributesNoEvents(@NotNull Consumer<RangeHighlighterEx> change) {
     assert !isFlagSet(IN_BATCH_CHANGE_MASK);
     assert !isFlagSet(CHANGED_MASK);
     setFlag(IN_BATCH_CHANGE_MASK, true);
@@ -341,7 +339,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     return result;
   }
 
-  public MarkupModel getMarkupModel() {
+  private MarkupModel getMarkupModel() {
     return myModel;
   }
 

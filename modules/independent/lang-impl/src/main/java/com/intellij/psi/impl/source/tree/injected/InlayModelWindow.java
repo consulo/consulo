@@ -1,19 +1,5 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.intellij.injected.editor;
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
@@ -21,8 +7,8 @@ import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.InlayModel;
 import com.intellij.openapi.editor.VisualPosition;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -33,12 +19,12 @@ public class InlayModelWindow implements InlayModel {
 
   @Nullable
   @Override
-  public Inlay addInlineElement(int offset, @Nonnull EditorCustomElementRenderer renderer) {
+  public Inlay addInlineElement(int offset, boolean relatesToPrecedingText, @NotNull EditorCustomElementRenderer renderer) {
     logUnsupported();
     return null;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public List<Inlay> getInlineElementsInRange(int startOffset, int endOffset) {
     logUnsupported();
@@ -51,21 +37,22 @@ public class InlayModelWindow implements InlayModel {
     return false;
   }
 
+  @Nullable
   @Override
-  public boolean hasInlineElementAt(@Nonnull VisualPosition visualPosition) {
+  public Inlay getInlineElementAt(@NotNull VisualPosition visualPosition) {
     logUnsupported();
-    return false;
+    return null;
   }
 
   @Nullable
   @Override
-  public Inlay getElementAt(@Nonnull Point point) {
+  public Inlay getElementAt(@NotNull Point point) {
     logUnsupported();
     return null;
   }
 
   @Override
-  public void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable) {
+  public void addListener(@NotNull Listener listener, @NotNull Disposable disposable) {
     logUnsupported();
   }
 

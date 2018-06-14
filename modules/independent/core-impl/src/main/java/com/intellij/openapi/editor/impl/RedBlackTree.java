@@ -17,26 +17,34 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.util.BitUtil;
 import com.intellij.util.Processor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 
-/**
- * User: cdr
- */
-public abstract class RedBlackTree<K> {
-  public static boolean VERIFY = false;
+public abstract class RedBlackTree<K> extends AtomicInteger {
+  // this "extends AtomicInteger" thing is for supporting modCounter.
+  // I couldn't make it "volatile int" field because Unsafe.getAndAddInt is since jdk8 only, and "final AtomicInteger" field would be too many indirections
+
+  public static boolean VERIFY;
   private static final int INDENT_STEP = 4;
   private int nodeSize; // number of nodes
-  protected int modCount;
   protected Node<K> root;
 
-  public RedBlackTree() {
+  RedBlackTree() {
     root = null;
     verifyProperties();
   }
 
-  protected void rotateLeft(@Nonnull Node<K> n) {
+  void incModCount() {
+    incrementAndGet();
+  }
+  int getModCount() {
+    return get();
+  }
+
+  protected void rotateLeft(@NotNull Node<K> n) {
     Node<K> r = n.getRight();
     replaceNode(n, r);
     n.setRight(r.getLeft());
@@ -47,7 +55,7 @@ public abstract class RedBlackTree<K> {
     n.setParent(r);
   }
 
-  protected void rotateRight(@Nonnull Node<K> n) {
+  protected void rotateRight(@NotNull Node<K> n) {
     Node<K> l = n.getLeft();
     replaceNode(n, l);
     n.setLeft(l.getRight());
@@ -58,7 +66,7 @@ public abstract class RedBlackTree<K> {
     n.setParent(l);
   }
 
-  protected void replaceNode(@Nonnull Node<K> oldn, Node<K> newn) {
+  protected void replaceNode(@NotNull Node<K> oldn, Node<K> newn) {
     Node<K> parent = oldn.getParent();
     if (parent == null) {
       root = newn;
@@ -79,11 +87,11 @@ public abstract class RedBlackTree<K> {
     //oldn.right = null;
   }
 
-  protected void onInsertNode() {
+  void onInsertNode() {
     nodeSize++;
   }
 
-  protected void insertCase1(Node<K> n) {
+  void insertCase1(Node<K> n) {
     if (n.getParent() == null) {
       n.setBlack();
     }
@@ -140,8 +148,8 @@ public abstract class RedBlackTree<K> {
     assert node1 == null || node1.getParent() == null || node1.getParent().getLeft() == node1 || node1.getParent().getRight() == node1;
   }
 
-  protected void deleteNode(@Nonnull Node<K> n) {
-    modCount++;
+  protected void deleteNode(@NotNull Node<K> n) {
+    incModCount();
 
     Node<K> e = n;
     while (e.getParent() != null) e = e.getParent();
@@ -177,11 +185,11 @@ public abstract class RedBlackTree<K> {
     verifyProperties();
   }
 
-  @Nonnull
-  protected abstract Node<K> swapWithMaxPred(@Nonnull Node<K> nowAscendant, @Nonnull Node<K> nowDescendant);
+  @NotNull
+  protected abstract Node<K> swapWithMaxPred(@NotNull Node<K> nowAscendant, @NotNull Node<K> nowDescendant);
 
-  @Nonnull
-  protected Node<K> maximumNode(@Nonnull Node<K> n) {
+  @NotNull
+  protected Node<K> maximumNode(@NotNull Node<K> n) {
     while (n.getRight() != null) {
       n = n.getRight();
     }
@@ -298,19 +306,18 @@ public abstract class RedBlackTree<K> {
   public abstract static class Node<K> {
     protected Node<K> left;
     protected Node<K> right;
-    protected Node<K> parent = null;
+    protected Node<K> parent;
 
     private volatile byte myFlags;
-    protected static final byte COLOR_MASK = 1;
+    static final byte COLOR_MASK = 1;
 
-    protected boolean isFlagSet(byte mask) {
+    boolean isFlagSet(byte mask) {
       return BitUtil.isSet(myFlags, mask);
     }
 
-    protected void setFlag(byte mask, boolean value) {
+    void setFlag(byte mask, boolean value) {
       myFlags = BitUtil.set(myFlags, mask, value);
     }
-
 
     public Node<K> grandparent() {
       assert getParent() != null; // Not the root node
@@ -354,7 +361,7 @@ public abstract class RedBlackTree<K> {
       this.parent = parent;
     }
 
-    public abstract boolean processAliveKeys(@Nonnull Processor<? super K> processor);
+    public abstract boolean processAliveKeys(@NotNull Processor<? super K> processor);
 
     public abstract boolean hasAliveKey(boolean purgeDead);
 
@@ -364,7 +371,7 @@ public abstract class RedBlackTree<K> {
     private void setBlack() {
       setFlag(COLOR_MASK, true);
     }
-    public void setRed() {
+    void setRed() {
       setFlag(COLOR_MASK, false);
     }
     public void setColor(boolean isBlack) {
@@ -375,11 +382,11 @@ public abstract class RedBlackTree<K> {
   public int size() {
     return nodeSize;
   }
-  public int nodeSize() {
+  int nodeSize() {
     return nodeSize;
   }
 
-  public void verifyProperties() {
+  void verifyProperties() {
     //if (true) return;
     if (VERIFY) {
       verifyProperty1(root);
@@ -445,7 +452,8 @@ public abstract class RedBlackTree<K> {
   }
 
   public void clear() {
-    modCount++;
+    incModCount();
+
     root = null;
     nodeSize = 0;
   }

@@ -20,13 +20,14 @@ import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class LayeredIcon extends JBUI.AuxScalableJBIcon {
+public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.LayeredIcon");
   private final Icon[] myIcons;
   private Icon[] myScaledIcons;
@@ -94,9 +95,10 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon {
     return myScaledIcons;
   }
 
+  @NotNull
   @Override
-  public LayeredIcon withJBUIPreScaled(boolean preScaled) {
-    super.withJBUIPreScaled(preScaled);
+  public LayeredIcon withIconPreScaled(boolean preScaled) {
+    super.withIconPreScaled(preScaled);
     updateSize();
     return this;
   }
@@ -149,7 +151,6 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon {
   }
 
   /**
-   *
    * @param constraint is expected to be one of compass-directions or CENTER
    */
   public void setIcon(Icon icon, int layer, @MagicConstant(valuesFromClass = SwingConstants.class) int constraint) {
@@ -166,7 +167,7 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon {
     switch (constraint) {
       case SwingConstants.CENTER:
         x = (width - w) / 2;
-        y = (height - h) /2;
+        y = (height - h) / 2;
         break;
       case SwingConstants.NORTH:
         x = (width - w) / 2;
@@ -201,8 +202,7 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon {
         y = 0;
         break;
       default:
-        throw new IllegalArgumentException(
-                "The constraint should be one of SwingConstants' compass-directions [1..8] or CENTER [0], actual value is " + constraint);
+        throw new IllegalArgumentException("The constraint should be one of SwingConstants' compass-directions [1..8] or CENTER [0], actual value is " + constraint);
     }
     setIcon(icon, layer, x, y);
   }
@@ -216,13 +216,14 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon {
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    if (updateJBUIScale()) updateSize();
+    getScaleContext().update();
+
     Icon[] icons = myScaledIcons();
     for (int i = 0; i < icons.length; i++) {
       Icon icon = icons[i];
       if (icon == null || myDisabledLayers[i]) continue;
-      int xOffset = x + scaleVal(myXShift + myHShifts(i), Scale.INSTANCE);
-      int yOffset = y + scaleVal(myYShift + myVShifts(i), Scale.INSTANCE);
+      int xOffset = (int)Math.floor(x + scaleVal(myXShift + myHShifts(i), JBUI.ScaleType.OBJ_SCALE));
+      int yOffset = (int)Math.floor(y + scaleVal(myYShift + myVShifts(i), JBUI.ScaleType.OBJ_SCALE));
       icon.paintIcon(c, g, xOffset, yOffset);
     }
   }
@@ -237,26 +238,26 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon {
 
   @Override
   public int getIconWidth() {
-    if (myWidth <= 1 || updateJBUIScale()) {
-      updateSize();
-    }
-    return scaleVal(myWidth, Scale.INSTANCE);
+    getScaleContext().update();
+    if (myWidth <= 1) updateSize();
+
+    return (int)Math.ceil(scaleVal(myWidth, JBUI.ScaleType.OBJ_SCALE));
   }
 
   @Override
   public int getIconHeight() {
-    if (myHeight <= 1 || updateJBUIScale()) {
-      updateSize();
-    }
-    return scaleVal(myHeight, Scale.INSTANCE);
+    getScaleContext().update();
+    if (myHeight <= 1) updateSize();
+
+    return (int)Math.ceil(scaleVal(myHeight, JBUI.ScaleType.OBJ_SCALE));
   }
 
   private int myHShifts(int i) {
-    return scaleVal(myHShifts[i], Scale.JBUI);
+    return (int)Math.floor(scaleVal(myHShifts[i], JBUI.ScaleType.USR_SCALE));
   }
 
   private int myVShifts(int i) {
-    return scaleVal(myVShifts[i], Scale.JBUI);
+    return (int)Math.floor(scaleVal(myVShifts[i], JBUI.ScaleType.USR_SCALE));
   }
 
   protected void updateSize() {

@@ -34,6 +34,7 @@ import com.intellij.util.containers.ClassMap;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -50,9 +51,11 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   private final ClassMap<CustomCodeStyleSettings> myCustomSettings = new ClassMap<CustomCodeStyleSettings>();
 
-  @NonNls private static final String ADDITIONAL_INDENT_OPTIONS = "ADDITIONAL_INDENT_OPTIONS";
+  @NonNls
+  private static final String ADDITIONAL_INDENT_OPTIONS = "ADDITIONAL_INDENT_OPTIONS";
 
-  @NonNls private static final String FILETYPE = "fileType";
+  @NonNls
+  private static final String FILETYPE = "fileType";
   private CommonCodeStyleSettingsManager myCommonSettingsManager = new CommonCodeStyleSettingsManager(this);
 
   public CodeStyleSettings() {
@@ -207,7 +210,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   public final TypeToNameMap FIELD_TYPE_TO_NAME = new TypeToNameMap();
   public final TypeToNameMap STATIC_FIELD_TYPE_TO_NAME = new TypeToNameMap();
-  @NonNls public final TypeToNameMap PARAMETER_TYPE_TO_NAME = new TypeToNameMap();
+  @NonNls
+  public final TypeToNameMap PARAMETER_TYPE_TO_NAME = new TypeToNameMap();
   public final TypeToNameMap LOCAL_VARIABLE_TYPE_TO_NAME = new TypeToNameMap();
 
   //----------------- 'final' modifier settings -------
@@ -321,15 +325,20 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   public boolean HTML_SPACE_AFTER_TAG_NAME = false;
   public boolean HTML_SPACE_INSIDE_EMPTY_TAG = false;
 
-  @NonNls public String HTML_ELEMENTS_TO_INSERT_NEW_LINE_BEFORE = "body,div,p,form,h1,h2,h3";
-  @NonNls public String HTML_ELEMENTS_TO_REMOVE_NEW_LINE_BEFORE = "br";
-  @NonNls public String HTML_DO_NOT_INDENT_CHILDREN_OF = "html,body,thead,tbody,tfoot";
+  @NonNls
+  public String HTML_ELEMENTS_TO_INSERT_NEW_LINE_BEFORE = "body,div,p,form,h1,h2,h3";
+  @NonNls
+  public String HTML_ELEMENTS_TO_REMOVE_NEW_LINE_BEFORE = "br";
+  @NonNls
+  public String HTML_DO_NOT_INDENT_CHILDREN_OF = "html,body,thead,tbody,tfoot";
   public int HTML_DO_NOT_ALIGN_CHILDREN_OF_MIN_LINES = 200;
 
-  @NonNls public String HTML_KEEP_WHITESPACES_INSIDE = "span,pre,textarea";
-  @NonNls public String HTML_INLINE_ELEMENTS =
-          "a,abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd,label,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var";
-  @NonNls public String HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT = "title,h1,h2,h3,h4,h5,h6,p";
+  @NonNls
+  public String HTML_KEEP_WHITESPACES_INSIDE = "span,pre,textarea";
+  @NonNls
+  public String HTML_INLINE_ELEMENTS = "a,abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd,label,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var";
+  @NonNls
+  public String HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT = "title,h1,h2,h3,h4,h5,h6,p";
 
   // ---------------------------------------------------------------------------------------
 
@@ -351,7 +360,9 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   private volatile Pattern myFormatterOffPattern = null;
   private volatile Pattern myFormatterOnPattern = null;
 
-  @javax.annotation.Nullable
+  private final SoftMargins mySoftMargins = new SoftMargins();
+
+  @Nullable
   public Pattern getFormatterOffPattern() {
     if (myFormatterOffPattern == null && FORMATTER_TAGS_ENABLED && FORMATTER_TAGS_ACCEPT_REGEXP) {
       myFormatterOffPattern = getPatternOrDisableRegexp(FORMATTER_OFF_TAG);
@@ -448,6 +459,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
     myCommonSettingsManager.readExternal(element);
 
+    mySoftMargins.deserializeFrom(element);
+
     if (USE_SAME_INDENTS) IGNORE_SAME_INDENTS_FOR_LANGUAGES = true;
   }
 
@@ -457,6 +470,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     final CodeStyleSettings parentSettings = new CodeStyleSettings();
     DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<CodeStyleSettings>(this, parentSettings));
     List<CustomCodeStyleSettings> customSettings = new ArrayList<CustomCodeStyleSettings>(getCustomSettingsValues());
+    mySoftMargins.serializeInto(element);
 
     Collections.sort(customSettings, new Comparator<CustomCodeStyleSettings>() {
       @Override
@@ -642,11 +656,16 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   }
 
   private static void logIndentOptions(@Nonnull PsiFile file, @Nonnull FileIndentOptionsProvider provider, @Nonnull IndentOptions options) {
-    LOG.debug("Indent options returned by " + provider.getClass().getName() +
-              " for " + file.getName() +
-              ": indent size=" + options.INDENT_SIZE +
-              ", use tabs=" + options.USE_TAB_CHARACTER +
-              ", tab size=" + options.TAB_SIZE);
+    LOG.debug("Indent options returned by " +
+              provider.getClass().getName() +
+              " for " +
+              file.getName() +
+              ": indent size=" +
+              options.INDENT_SIZE +
+              ", use tabs=" +
+              options.USE_TAB_CHARACTER +
+              ", tab size=" +
+              options.TAB_SIZE);
   }
 
   @javax.annotation.Nullable
@@ -928,5 +947,53 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
     //noinspection deprecation
     return WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN;
+  }
+
+  /**
+   * Returns soft margins (visual indent guides positions) for the language. If language settings do not exists or language soft margins are
+   * empty, default (root) soft margins are returned.
+   *
+   * @param language The language to retrieve soft margins for or {@code null} for default soft margins.
+   * @return Language or default soft margins.
+   * @see #getDefaultSoftMargins()
+   */
+  @NotNull
+  public List<Integer> getSoftMargins(@Nullable Language language) {
+    if (language != null) {
+      CommonCodeStyleSettings languageSettings = myCommonSettingsManager.getCommonSettings(language);
+      if (languageSettings != null && !languageSettings.getSoftMargins().isEmpty()) {
+        return languageSettings.getSoftMargins();
+      }
+    }
+    return getDefaultSoftMargins();
+  }
+
+  /**
+   * Set soft margins (visual indent guides) for the language. Note: language code style settings must exist.
+   *
+   * @param language    The language to set soft margins for.
+   * @param softMargins The soft margins to set.
+   */
+  public void setSoftMargins(@NotNull Language language, List<Integer> softMargins) {
+    CommonCodeStyleSettings languageSettings = myCommonSettingsManager.getCommonSettings(language);
+    assert languageSettings != null : "Settings for language " + language.getDisplayName() + " do not exist";
+    languageSettings.setSoftMargins(softMargins);
+  }
+
+  /**
+   * @return Default (root) soft margins used for languages not defining them explicitly.
+   */
+  @NotNull
+  public List<Integer> getDefaultSoftMargins() {
+    return mySoftMargins.getValues();
+  }
+
+  /**
+   * Sets the default soft margins used for languages not defining them explicitly.
+   *
+   * @param softMargins The default soft margins.
+   */
+  public void setDefaultSoftMargins(List<Integer> softMargins) {
+    mySoftMargins.setValues(softMargins);
   }
 }

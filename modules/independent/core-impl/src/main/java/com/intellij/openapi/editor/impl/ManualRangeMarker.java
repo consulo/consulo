@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A range marker that has to be manually updated with {@link #getUpdatedRange(DocumentEvent, FrozenDocument)}.
@@ -50,7 +50,7 @@ public class ManualRangeMarker implements Segment {
   }
 
   @Nullable
-  public ManualRangeMarker getUpdatedRange(@Nonnull DocumentEvent event, @Nonnull FrozenDocument documentBefore) {
+  public ManualRangeMarker getUpdatedRange(@NotNull DocumentEvent event, @NotNull FrozenDocument documentBefore) {
     if (event instanceof RetargetRangeMarkers) {
       int start = ((RetargetRangeMarkers)event).getStartOffset();
       if (myStart >= start && myEnd <= ((RetargetRangeMarkers)event).getEndOffset()) {
@@ -69,7 +69,7 @@ public class ManualRangeMarker implements Segment {
       }
     }
 
-    TextRange range = RangeMarkerImpl.applyChange(event, myStart, myEnd, myGreedyLeft, myGreedyRight);
+    TextRange range = RangeMarkerImpl.applyChange(event, myStart, myEnd, myGreedyLeft, myGreedyRight, false);
     return range == null ? null : new ManualRangeMarker(range.getStartOffset(), range.getEndOffset(), myGreedyLeft, myGreedyRight, mySurviveOnExternalChange, null);
   }
 

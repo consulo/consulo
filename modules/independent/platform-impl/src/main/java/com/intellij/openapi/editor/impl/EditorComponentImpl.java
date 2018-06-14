@@ -49,6 +49,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.Grayer;
 import com.intellij.ui.components.Magnificator;
+import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
@@ -67,6 +68,7 @@ import javax.swing.text.*;
 import javax.swing.text.Segment;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.im.InputMethodRequests;
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +231,10 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
       else {
         UISettings.setupAntialiasing(gg);
       }
+      gg.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, myEditor.myFractionalMetricsHintValue);
+      AffineTransform origTx = PaintUtil.alignTxToInt(gg, PaintUtil.insets2offset(getInsets()), true, false, PaintUtil.RoundingMode.CEIL);
       myEditor.paint(gg);
+      if (origTx != null) gg.setTransform(origTx);
     }
     finally {
       myApplication.editorPaintFinish();
@@ -238,6 +243,10 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
 
   public void repaintEditorComponent() {
     repaint();
+  }
+
+  public void repaintEditorComponentExact(int x, int y, int width, int height) {
+    repaint(x, y, width, height);
   }
 
   public void repaintEditorComponent(int x, int y, int width, int height) {

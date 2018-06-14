@@ -39,6 +39,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -95,12 +96,14 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     return new DesktopDeferredIconImpl<>(this);
   }
 
+  @NotNull
   @Override
-  public void setScale(float scale) {
+  public Icon scale(float scale) {
     if (getScale() != scale && myDelegateIcon instanceof ScalableIcon) {
       myScaledDelegateIcon = TargetAWT.from(((ScalableIcon)myDelegateIcon).scale(scale));
-      super.setScale(scale);
+      super.scale(scale);
     }
+    return this;
   }
 
   @Override

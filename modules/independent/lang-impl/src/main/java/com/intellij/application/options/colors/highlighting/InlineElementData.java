@@ -23,8 +23,9 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Disposer;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
@@ -85,8 +86,8 @@ public class InlineElementData extends HighlightData {
     }
 
     @Override
-    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {
-      myDelegate.paint(editor, g, r);
+    public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle r, @NotNull TextAttributes textAttributes) {
+      myDelegate.paint(editor, g, r, textAttributes);
       if (drawBorder) {
         TextAttributes attributes = editor.getColorsScheme().getAttributes(BLINKING_HIGHLIGHTS_ATTRIBUTES);
         if (attributes != null && attributes.getEffectColor() != null) {

@@ -19,8 +19,9 @@ package com.intellij.openapi.editor.ex;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.util.Processor;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface DocumentEx extends Document {
@@ -59,7 +60,7 @@ public interface DocumentEx extends Document {
 
   boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker);
 
-  void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
+  void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
                            int start,
                            int end,
                            boolean greedyToLeft,

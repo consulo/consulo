@@ -29,10 +29,12 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -57,6 +59,8 @@ public class CommonCodeStyleSettings {
   private IndentOptions myIndentOptions;
   private final FileType myFileType;
   private boolean myForceArrangeMenuAvailable;
+
+  private final SoftMargins mySoftMargins = new SoftMargins();
 
   @NonNls
   private static final String INDENT_OPTIONS_TAG = "indentOptions";
@@ -166,6 +170,8 @@ public class CommonCodeStyleSettings {
     if (arrangementRulesContainer != null) {
       myArrangementSettings = ArrangementUtil.readExternal(arrangementRulesContainer, myLanguage);
     }
+
+    mySoftMargins.deserializeFrom(element);
   }
 
   public void writeExternal(Element element) throws WriteExternalException {
@@ -176,6 +182,7 @@ public class CommonCodeStyleSettings {
       supportedFields.add("FORCE_REARRANGE_MODE");
     }
     DefaultJDOMExternalizer.writeExternal(this, element, new SupportedFieldsDiffFilter(this, supportedFields, defaultSettings));
+    mySoftMargins.serializeInto(element);
     if (myIndentOptions != null) {
       IndentOptions defaultIndentOptions = defaultSettings != null ? defaultSettings.getIndentOptions() : null;
       Element indentOptionsElement = new Element(INDENT_OPTIONS_TAG);
@@ -1060,5 +1067,14 @@ public class CommonCodeStyleSettings {
     void setRecalculateForCommittedDocument(boolean value) {
       myInaccurate = value;
     }
+  }
+
+  @NotNull
+  public List<Integer> getSoftMargins() {
+    return mySoftMargins.getValues();
+  }
+
+  void setSoftMargins(List<Integer> values) {
+    mySoftMargins.setValues(values);
   }
 }

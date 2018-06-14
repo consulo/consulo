@@ -39,7 +39,7 @@ public class DesktopEmptyImageImpl extends EmptyIcon implements Image, SwingIcon
 
   private DesktopEmptyImageImpl(int width, int height) {
     super(width, height, false);
-    withJBUIPreScaled(false);
+    setIconPreScaled(false);
   }
 
   @Override

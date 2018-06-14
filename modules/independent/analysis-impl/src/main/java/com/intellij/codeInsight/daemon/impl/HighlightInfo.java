@@ -27,6 +27,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.annotation.ProblemGroup;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.HighlighterColors;
@@ -34,6 +35,7 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
@@ -46,9 +48,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -96,6 +99,18 @@ public class HighlightInfo implements Segment {
   private static final byte FILE_LEVEL_ANNOTATION_MASK = 16;
   private static final byte NEEDS_UPDATE_ON_TYPING_MASK = 32;
   PsiElement psiElement;
+
+  /**
+   * Returns the HighlightInfo instance from which the given range highlighter was created, or null if there isn't any.
+   */
+  @Nullable
+  public static HighlightInfo fromRangeHighlighter(@NotNull RangeHighlighter highlighter) {
+    Object errorStripeTooltip = highlighter.getErrorStripeTooltip();
+    if (errorStripeTooltip instanceof HighlightInfo) {
+      return (HighlightInfo) errorStripeTooltip;
+    }
+    return null;
+  }
 
   @Nonnull
   ProperTextRange getFixTextRange() {
@@ -162,6 +177,14 @@ public class HighlightInfo implements Segment {
   @Nonnull
   public HighlightSeverity getSeverity() {
     return severity;
+  }
+
+  /**
+   * modified in EDT only
+   */
+  public void setHighlighter(@Nullable RangeHighlighterEx highlighter) {
+    ApplicationManager.getApplication().assertIsDispatchThread();
+    this.highlighter = highlighter;
   }
 
   public boolean isAfterEndOfLine() {

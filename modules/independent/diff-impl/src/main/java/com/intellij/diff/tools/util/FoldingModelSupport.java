@@ -213,7 +213,10 @@ public class FoldingModelSupport {
     final int endOffset = document.getLineEndOffset(end - 1);
 
     FoldRegion value = editor.getFoldingModel().addFoldRegion(startOffset, endOffset, PLACEHOLDER);
-    if (value != null) value.setExpanded(expanded);
+    if (value != null) {
+      value.setExpanded(expanded);
+      value.putUserData(FoldRegion.MUTE_INNER_HIGHLIGHTERS, Boolean.TRUE);
+    }
     return value;
   }
 

@@ -50,6 +50,7 @@ public class ColorIcon extends EmptyIcon {
     myColorSize = icon.myColorSize;
   }
 
+  @Nonnull
   @Override
   protected ColorIcon copy() {
     return new ColorIcon(this);
@@ -77,8 +78,8 @@ public class ColorIcon extends EmptyIcon {
     }
   }
 
-  protected int getColorSize() {
-    return scaleVal(myColorSize);
+  private int getColorSize() {
+    return (int)Math.ceil(scaleVal(myColorSize));
   }
 
   @Override

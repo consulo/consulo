@@ -121,8 +121,8 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
     for (DesktopCaretImpl caret : myCarets) {
       Disposer.dispose(caret);
     }
-    mySelectionMarkerTree.dispose();
-    myPositionMarkerTree.dispose();
+    mySelectionMarkerTree.dispose(myEditor.getDocument());
+    myPositionMarkerTree.dispose(myEditor.getDocument());
   }
 
   public void updateVisualPosition() {

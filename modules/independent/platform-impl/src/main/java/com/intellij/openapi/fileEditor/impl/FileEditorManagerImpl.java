@@ -41,7 +41,6 @@ import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -1777,7 +1776,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             Pair<FileEditor[], FileEditorProvider[]> pair = openFileImpl2(uiAccess, eachWindow, newFile, editor == selected);
 
             if (newFilePair.second != null) {
-              DesktopTextEditorImpl openedEditor = EditorFileSwapper.findSinglePsiAwareEditor(pair.first);
+              TextEditor openedEditor = EditorFileSwapper.findSinglePsiAwareEditor(pair.first);
               if (openedEditor != null) {
                 openedEditor.getEditor().getCaretModel().moveToOffset(newFilePair.second);
                 openedEditor.getEditor().getScrollingModel().scrollToCaret(ScrollType.CENTER);

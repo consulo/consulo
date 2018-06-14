@@ -57,6 +57,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
+import java.util.function.IntFunction;
 
 /**
  * @author VISTALL
@@ -437,6 +439,11 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
 
   @Override
   public void setPurePaintingMode(boolean enabled) {
+
+  }
+
+  @Override
+  public void registerLineExtensionPainter(IntFunction<Collection<LineExtensionInfo>> lineExtensionPainter) {
 
   }
 

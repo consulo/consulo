@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class is an extension to range marker that tries to restore its range even in situations when target text referenced by it
  * is replaced.
- * <p/>
+ * <p>
  * Example: consider that the user selects all text at editor (Ctrl+A), copies it to the buffer (Ctrl+C) and performs paste (Ctrl+V).
  * All document text is replaced then but in essence it's the same, hence, we may want particular range markers to be still valid.
  *
@@ -39,45 +39,47 @@ import javax.annotation.Nullable;
 class PersistentRangeMarker extends RangeMarkerImpl {
   private LinesCols myLinesCols;
 
-  PersistentRangeMarker(DocumentEx document, int startOffset, int endOffset, boolean register) {
+  PersistentRangeMarker(@NotNull DocumentEx document, int startOffset, int endOffset, boolean register) {
     super(document, startOffset, endOffset, register);
     myLinesCols = ObjectUtils.assertNotNull(storeLinesAndCols(document, getStartOffset(), getEndOffset()));
   }
 
   @Nullable
-  static LinesCols storeLinesAndCols(Document myDocument, int startOffset, int endOffset) {
-    int myStartLine;
-    int myStartColumn;
-    int myEndLine;
-    int myEndColumn;
+  static LinesCols storeLinesAndCols(@NotNull Document myDocument, int startOffset, int endOffset) {
+    LineCol start = calcLineCol(myDocument, startOffset);
+    LineCol end = calcLineCol(myDocument, endOffset);
 
+    if (start == null || end == null) {
+      return null;
+    }
+    return new LinesCols(start.line, start.col, end.line, end.col);
+  }
+
+  private static LineCol calcLineCol(@NotNull Document document, int offset) {
     // document might have been changed already
-    if (startOffset <= myDocument.getTextLength()) {
-      myStartLine = myDocument.getLineNumber(startOffset);
-      myStartColumn = startOffset - myDocument.getLineStartOffset(myStartLine);
-      if (myStartColumn < 0) {
+    if (offset <= document.getTextLength()) {
+      int line = document.getLineNumber(offset);
+      int col = offset - document.getLineStartOffset(line);
+      if (col < 0) {
         return null;
       }
+      return new LineCol(line, col);
     }
-    else {
-      return null;
-    }
-    if (endOffset <= myDocument.getTextLength()) {
-      myEndLine = myDocument.getLineNumber(endOffset);
-      myEndColumn = endOffset - myDocument.getLineStartOffset(myEndLine);
-      if (myEndColumn < 0) {
-        return null;
-      }
-    }
-    else {
-      return null;
-    }
+    return null;
+  }
 
-    return new LinesCols(myStartLine, myStartColumn, myEndLine, myEndColumn);
+  private static class LineCol {
+    private final int line;
+    private final int col;
+
+    LineCol(int line, int col) {
+      this.line = line;
+      this.col = col;
+    }
   }
 
   @Nullable
-  static Pair<TextRange, LinesCols> translateViaDiff(@Nonnull final DocumentEventImpl event, @Nonnull LinesCols linesCols) {
+  static Pair<TextRange, LinesCols> translateViaDiff(@NotNull final DocumentEventImpl event, @NotNull LinesCols linesCols) {
     try {
       int myStartLine = event.translateLineViaDiffStrict(linesCols.myStartLine);
       Document document = event.getDocument();
@@ -111,11 +113,10 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Override
-  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
     if (!isValid()) return;
 
-    Pair<TextRange, LinesCols> pair =
-            applyChange(e, this, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight(), myLinesCols);
+    Pair<TextRange, LinesCols> pair = applyChange(e, this, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight(), isStickingToRight(), myLinesCols);
     if (pair == null) {
       invalidate(e);
       return;
@@ -127,14 +128,21 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Nullable
-  private static Pair<TextRange, LinesCols> applyChange(DocumentEvent event, Segment range, int intervalStart, int intervalEnd, boolean greedyLeft, boolean greedyRight, LinesCols linesCols) {
+  private static Pair<TextRange, LinesCols> applyChange(DocumentEvent event,
+                                                        Segment range,
+                                                        int intervalStart,
+                                                        int intervalEnd,
+                                                        boolean greedyLeft,
+                                                        boolean greedyRight,
+                                                        boolean stickingToRight,
+                                                        LinesCols linesCols) {
     final boolean shouldTranslateViaDiff = PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, range.getStartOffset(), range.getEndOffset());
     Pair<TextRange, LinesCols> translated = null;
     if (shouldTranslateViaDiff) {
       translated = translateViaDiff((DocumentEventImpl)event, linesCols);
     }
     if (translated == null) {
-      TextRange fallback = applyChange(event, intervalStart, intervalEnd, greedyLeft, greedyRight);
+      TextRange fallback = applyChange(event, intervalStart, intervalEnd, greedyLeft, greedyRight, stickingToRight);
       if (fallback == null) return null;
 
       LinesCols lc = storeLinesAndCols(event.getDocument(), fallback.getStartOffset(), fallback.getEndOffset());
@@ -149,8 +157,13 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   public String toString() {
     return "PersistentRangeMarker" +
            (isGreedyToLeft() ? "[" : "(") +
-           (isValid() ? "valid" : "invalid") + "," + getStartOffset() + "," + getEndOffset() +
-           " " + myLinesCols +
+           (isValid() ? "valid" : "invalid") +
+           "," +
+           getStartOffset() +
+           "," +
+           getEndOffset() +
+           " " +
+           myLinesCols +
            (isGreedyToRight() ? "]" : ")");
   }
 
@@ -160,7 +173,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
     private final int myEndLine;
     private final int myEndColumn;
 
-    LinesCols(int startLine, int startColumn, int endLine, int endColumn) {
+    private LinesCols(int startLine, int startColumn, int endLine, int endColumn) {
       myStartLine = startLine;
       myStartColumn = startColumn;
       myEndLine = endLine;

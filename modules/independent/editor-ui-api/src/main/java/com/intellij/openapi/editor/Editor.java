@@ -24,11 +24,13 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.Component;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
@@ -298,6 +300,42 @@ public interface Editor extends UserDataHolder {
    */
   @Nonnull
   VisualPosition xyToVisualPosition(@Nonnull Point2D p);
+
+  /**
+   * @since 2017.2
+   */
+  @NotNull
+  default Point offsetToXY(int offset) {
+    return offsetToXY(offset, false, false);
+  }
+
+  /**
+   * @see #offsetToVisualPosition(int, boolean, boolean)
+   * @since 2017.2
+   */
+  @NotNull
+  default Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
+    VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
+    return visualPositionToXY(visualPosition);
+  }
+
+  /**
+   * @since 2017.2
+   */
+  @NotNull
+  default Point2D offsetToPoint2D(int offset) {
+    return offsetToPoint2D(offset, false, false);
+  }
+
+  /**
+   * @see #offsetToVisualPosition(int, boolean, boolean)
+   * @since 2017.2
+   */
+  @NotNull
+  default Point2D offsetToPoint2D(int offset, boolean leanForward, boolean beforeSoftWrap) {
+    VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
+    return visualPositionToPoint2D(visualPosition);
+  }
 
   /**
    * Adds a listener for receiving notifications about mouse clicks in the editor and

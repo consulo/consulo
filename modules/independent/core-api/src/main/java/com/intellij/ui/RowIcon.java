@@ -20,21 +20,25 @@ import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class RowIcon extends JBUI.AuxScalableJBIcon {
+public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
   private final Alignment myAlignment;
 
   private int myWidth;
   private int myHeight;
 
-  public enum Alignment {TOP, CENTER, BOTTOM}
+  public enum Alignment {
+    TOP,
+    CENTER,
+    BOTTOM
+  }
 
   private final Icon[] myIcons;
   private Icon[] myScaledIcons;
@@ -121,17 +125,20 @@ public class RowIcon extends JBUI.AuxScalableJBIcon {
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    if (updateJBUIScale()) updateSize();
+    getScaleContext().update();
     int _x = x;
     int _y = y;
     for (Icon icon : myScaledIcons()) {
       if (icon == null) continue;
       switch (myAlignment) {
-        case TOP: _y = y;
+        case TOP:
+          _y = y;
           break;
-        case CENTER: _y = y + (myHeight - icon.getIconHeight())/2;
+        case CENTER:
+          _y = y + (myHeight - icon.getIconHeight()) / 2;
           break;
-        case BOTTOM: _y = y + (myHeight - icon.getIconHeight());
+        case BOTTOM:
+          _y = y + (myHeight - icon.getIconHeight());
           break;
       }
       icon.paintIcon(c, g, _x, _y);
@@ -142,14 +149,14 @@ public class RowIcon extends JBUI.AuxScalableJBIcon {
 
   @Override
   public int getIconWidth() {
-    if (updateJBUIScale()) updateSize();
-    return scaleVal(myWidth, Scale.INSTANCE);
+    getScaleContext().update();
+    return (int)Math.ceil(scaleVal(myWidth, JBUI.ScaleType.OBJ_SCALE));
   }
 
   @Override
   public int getIconHeight() {
-    if (updateJBUIScale()) updateSize();
-    return scaleVal(myHeight, Scale.INSTANCE);
+    getScaleContext().update();
+    return (int)Math.ceil(scaleVal(myHeight, JBUI.ScaleType.OBJ_SCALE));
   }
 
   private void updateSize() {
