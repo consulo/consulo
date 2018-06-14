@@ -16,9 +16,8 @@
 
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -113,7 +112,7 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> implements 
     return new EmptyIcon(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EmptyIcon withIconPreScaled(boolean preScaled) {
     if (myUseCache && isIconPreScaled() != preScaled) {

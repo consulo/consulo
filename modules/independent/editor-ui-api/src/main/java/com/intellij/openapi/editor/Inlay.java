@@ -3,7 +3,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.UserDataHolderEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A custom visual element displayed in editor. It is associated with a certain position in a document, but is not
@@ -40,13 +40,13 @@ public interface Inlay extends Disposable, UserDataHolderEx {
   /**
    * Returns current visual position of the inlay's left boundary.
    */
-  @NotNull
+  @Nonnull
   VisualPosition getVisualPosition();
 
   /**
    * Returns renderer, which defines size and representation for this inlay.
    */
-  @NotNull
+  @Nonnull
   EditorCustomElementRenderer getRenderer();
 
   /**

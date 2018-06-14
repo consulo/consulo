@@ -16,16 +16,16 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 interface IntervalTree<T> {
-  boolean processAll(@NotNull Processor<? super T> processor);
+  boolean processAll(@Nonnull Processor<? super T> processor);
 
-  boolean processOverlappingWith(int start, int end, @NotNull Processor<? super T> processor);
+  boolean processOverlappingWith(int start, int end, @Nonnull Processor<? super T> processor);
 
-  boolean processContaining(int offset, @NotNull Processor<? super T> processor);
+  boolean processContaining(int offset, @Nonnull Processor<? super T> processor);
 
-  boolean removeInterval(@NotNull T interval);
+  boolean removeInterval(@Nonnull T interval);
 
-  boolean processOverlappingWithOutside(int start, int end, @NotNull Processor<? super T> processor);
+  boolean processOverlappingWithOutside(int start, int end, @Nonnull Processor<? super T> processor);
 }

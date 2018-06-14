@@ -39,9 +39,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -96,7 +95,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     return new DesktopDeferredIconImpl<>(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon scale(float scale) {
     if (getScale() != scale && myDelegateIcon instanceof ScalableIcon) {

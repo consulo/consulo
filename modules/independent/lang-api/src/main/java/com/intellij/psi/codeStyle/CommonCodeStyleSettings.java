@@ -29,9 +29,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -1069,7 +1068,7 @@ public class CommonCodeStyleSettings {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<Integer> getSoftMargins() {
     return mySoftMargins.getValues();
   }

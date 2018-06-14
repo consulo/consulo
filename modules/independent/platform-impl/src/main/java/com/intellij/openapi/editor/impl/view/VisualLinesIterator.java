@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ public class VisualLinesIterator {
   private final FoldRegion[] myFoldRegions;
   private final List<? extends SoftWrap> mySoftWraps;
 
-  @NotNull
+  @Nonnull
   private Location myLocation;
   private Location myNextLocation;
 
-  public VisualLinesIterator(@NotNull DesktopEditorImpl editor, int startVisualLine) {
+  public VisualLinesIterator(@Nonnull DesktopEditorImpl editor, int startVisualLine) {
     myEditor = editor;
     SoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
     myDocument = myEditor.getDocument();

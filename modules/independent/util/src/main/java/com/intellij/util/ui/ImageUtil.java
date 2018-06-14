@@ -19,9 +19,8 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.RetinaImage;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -100,7 +99,7 @@ public class ImageUtil {
    * Wraps the {@code image} with {@link JBHiDPIScaledImage} according to {@code ctx} when applicable.
    */
   @Contract("null, _ -> null; !null, _ -> !null")
-  public static Image ensureHiDPI(@Nullable Image image, @NotNull JBUI.ScaleContext ctx) {
+  public static Image ensureHiDPI(@Nullable Image image, @Nonnull JBUI.ScaleContext ctx) {
     if (image == null) return null;
     if (UIUtil.isJreHiDPI(ctx)) {
       return RetinaImage.createFrom(image, ctx.getScale(SYS_SCALE), null);

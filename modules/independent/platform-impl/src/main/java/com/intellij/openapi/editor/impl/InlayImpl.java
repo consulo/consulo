@@ -8,23 +8,23 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.DocumentUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
   private static final Key<Integer> ORDER_KEY = Key.create("inlay.order.key");
 
-  @NotNull
+  @Nonnull
   private final DesktopEditorImpl myEditor;
   private final boolean myRelatedToPrecedingText;
   final int myOriginalOffset; // used for sorting of inlays, if they ever get merged into same offset after document modification
   int myOffsetBeforeDisposal = -1;
   private int myWidthInPixels;
-  @NotNull
+  @Nonnull
   private final EditorCustomElementRenderer myRenderer;
 
-  InlayImpl(@NotNull DesktopEditorImpl editor, int offset, boolean relatesToPreceedingText, @NotNull EditorCustomElementRenderer renderer) {
+  InlayImpl(@Nonnull DesktopEditorImpl editor, int offset, boolean relatesToPreceedingText, @Nonnull EditorCustomElementRenderer renderer) {
     super(editor.getDocument(), offset, offset, false);
     myEditor = editor;
     myRelatedToPrecedingText = relatesToPreceedingText;
@@ -57,7 +57,7 @@ class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
   }
 
   @Override
-  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
+  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
     super.changedUpdateImpl(e);
     if (isValid() && DocumentUtil.isInsideSurrogatePair(getDocument(), intervalStart())) {
       invalidate(e);
@@ -99,7 +99,7 @@ class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
     return myRelatedToPrecedingText;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getVisualPosition() {
     int offset = getOffset();
@@ -109,7 +109,7 @@ class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
     return new VisualPosition(pos.line, pos.column + order, true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorCustomElementRenderer getRenderer() {
     return myRenderer;

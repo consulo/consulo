@@ -17,7 +17,7 @@ package com.intellij.ui.paint;
 
 import com.intellij.ui.paint.LinePainter2D.StrokeType;
 import com.intellij.util.ui.RegionPainter;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 

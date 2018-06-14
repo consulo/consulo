@@ -20,9 +20,8 @@ import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -95,7 +94,7 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
     return myScaledIcons;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LayeredIcon withIconPreScaled(boolean preScaled) {
     super.withIconPreScaled(preScaled);

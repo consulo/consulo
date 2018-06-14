@@ -29,9 +29,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +63,7 @@ public class ImageLoader implements Serializable {
    * For internal usage.
    */
   public interface LoadFunction {
-    Image load(@Nullable LoadFunction delegate, @NotNull ImageDesc.Type type) throws IOException;
+    Image load(@Nullable LoadFunction delegate, @Nonnull ImageDesc.Type type) throws IOException;
   }
 
   public static class ImageDesc {
@@ -79,11 +78,11 @@ public class ImageLoader implements Serializable {
     public final Type type;
     public final boolean original; // path is not altered
 
-    public ImageDesc(@NotNull String path, @Nullable Class cls, double scale, @NotNull Type type) {
+    public ImageDesc(@Nonnull String path, @Nullable Class cls, double scale, @Nonnull Type type) {
       this(path, cls, scale, type, false);
     }
 
-    public ImageDesc(@NotNull String path, @Nullable Class cls, double scale, @NotNull Type type, boolean original) {
+    public ImageDesc(@Nonnull String path, @Nullable Class cls, double scale, @Nonnull Type type, boolean original) {
       this.path = path;
       this.cls = cls;
       this.scale = scale;
@@ -130,7 +129,7 @@ public class ImageLoader implements Serializable {
     Image loadImpl(final URL url, final InputStream stream, final double scale) throws IOException {
       LoadFunction f = new LoadFunction() {
         @Override
-        public Image load(@Nullable LoadFunction delegate, @NotNull Type type) throws IOException {
+        public Image load(@Nullable LoadFunction delegate, @Nonnull Type type) throws IOException {
           switch (type) {
             case SVG:
               throw new UnsupportedOperationException("svg is not supported");
@@ -208,12 +207,12 @@ public class ImageLoader implements Serializable {
     }
 
     @Nullable
-    public Image load(@NotNull ImageConverterChain converters) {
+    public Image load(@Nonnull ImageConverterChain converters) {
       return load(converters, true);
     }
 
     @Nullable
-    public Image load(@NotNull ImageConverterChain converters, boolean useCache) {
+    public Image load(@Nonnull ImageConverterChain converters, boolean useCache) {
       for (ImageDesc desc : this) {
         try {
           Image image = desc.load(useCache);
@@ -227,7 +226,7 @@ public class ImageLoader implements Serializable {
       return null;
     }
 
-    public static ImageDescList create(@NotNull String path, @Nullable Class cls, boolean dark, boolean allowFloatScaling, JBUI.ScaleContext ctx) {
+    public static ImageDescList create(@Nonnull String path, @Nullable Class cls, boolean dark, boolean allowFloatScaling, JBUI.ScaleContext ctx) {
       // Prefer retina images for HiDPI scale, because downscaling
       // retina images provides a better result than up-scaling non-retina images.
       boolean retina = JBUI.isHiDPI(ctx.getScale(PIX_SCALE));
@@ -358,7 +357,7 @@ public class ImageLoader implements Serializable {
    * Then wraps the image with {@link JBHiDPIScaledImage} if necessary.
    */
   @Nullable
-  public static Image loadFromUrl(@NotNull URL url, final boolean allowFloatScaling, boolean useCache, ImageFilter[] filters, final JBUI.ScaleContext ctx) {
+  public static Image loadFromUrl(@Nonnull URL url, final boolean allowFloatScaling, boolean useCache, ImageFilter[] filters, final JBUI.ScaleContext ctx) {
     // We can't check all 3rd party plugins and convince the authors to add @2x icons.
     // In IDE-managed HiDPI mode with scale > 1.0 we scale images manually.
 
@@ -381,7 +380,7 @@ public class ImageLoader implements Serializable {
     return allowFloatScaling ? scale : JBUI.isHiDPI(scale) ? 2f : 1f;
   }
 
-  @NotNull
+  @Nonnull
   public static Image scaleImage(Image image, double scale) {
     if (scale == 1.0) return image;
 
@@ -429,7 +428,7 @@ public class ImageLoader implements Serializable {
     return ImageConverterChain.create().withFilter(filter).withRetina().convert(image, desc);
   }
 
-  private static Image load(@NotNull final InputStream inputStream, double scale) {
+  private static Image load(@Nonnull final InputStream inputStream, double scale) {
     if (scale <= 0) throw new IllegalArgumentException("Scale must be 1 or greater");
     try {
       BufferExposingByteArrayOutputStream outputStream = new BufferExposingByteArrayOutputStream();

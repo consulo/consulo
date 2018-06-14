@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This class is an extension to range marker that tries to restore its range even in situations when target text referenced by it
@@ -39,13 +39,13 @@ import org.jetbrains.annotations.Nullable;
 class PersistentRangeMarker extends RangeMarkerImpl {
   private LinesCols myLinesCols;
 
-  PersistentRangeMarker(@NotNull DocumentEx document, int startOffset, int endOffset, boolean register) {
+  PersistentRangeMarker(@Nonnull DocumentEx document, int startOffset, int endOffset, boolean register) {
     super(document, startOffset, endOffset, register);
     myLinesCols = ObjectUtils.assertNotNull(storeLinesAndCols(document, getStartOffset(), getEndOffset()));
   }
 
   @Nullable
-  static LinesCols storeLinesAndCols(@NotNull Document myDocument, int startOffset, int endOffset) {
+  static LinesCols storeLinesAndCols(@Nonnull Document myDocument, int startOffset, int endOffset) {
     LineCol start = calcLineCol(myDocument, startOffset);
     LineCol end = calcLineCol(myDocument, endOffset);
 
@@ -55,7 +55,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
     return new LinesCols(start.line, start.col, end.line, end.col);
   }
 
-  private static LineCol calcLineCol(@NotNull Document document, int offset) {
+  private static LineCol calcLineCol(@Nonnull Document document, int offset) {
     // document might have been changed already
     if (offset <= document.getTextLength()) {
       int line = document.getLineNumber(offset);
@@ -79,7 +79,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Nullable
-  static Pair<TextRange, LinesCols> translateViaDiff(@NotNull final DocumentEventImpl event, @NotNull LinesCols linesCols) {
+  static Pair<TextRange, LinesCols> translateViaDiff(@Nonnull final DocumentEventImpl event, @Nonnull LinesCols linesCols) {
     try {
       int myStartLine = event.translateLineViaDiffStrict(linesCols.myStartLine);
       Document document = event.getDocument();
@@ -113,7 +113,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Override
-  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
+  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
     if (!isValid()) return;
 
     Pair<TextRange, LinesCols> pair = applyChange(e, this, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight(), isStickingToRight(), myLinesCols);

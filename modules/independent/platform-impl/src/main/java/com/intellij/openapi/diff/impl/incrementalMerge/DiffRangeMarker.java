@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -31,14 +31,14 @@ import java.util.Map;
 class DiffRangeMarker implements RangeMarker {
   private final RangeMarker myRangeMarker;
 
-  DiffRangeMarker(@NotNull Document document, @NotNull TextRange range, RangeInvalidListener listener) {
+  DiffRangeMarker(@Nonnull Document document, @Nonnull TextRange range, RangeInvalidListener listener) {
     myRangeMarker = document.createRangeMarker(range.getStartOffset(), range.getEndOffset());
     if (listener != null) {
       InvalidRangeDispatcher.addClient(document, this, listener);
     }
   }
 
-  public void removeListener(@NotNull RangeInvalidListener listener) {
+  public void removeListener(@Nonnull RangeInvalidListener listener) {
     InvalidRangeDispatcher.removeClient(getDocument(), this, listener);
   }
 
@@ -64,9 +64,9 @@ class DiffRangeMarker implements RangeMarker {
       }
     }
 
-    private static void addClient(@NotNull Document document,
-                                  @NotNull DiffRangeMarker marker,
-                                  @NotNull RangeInvalidListener listener) {
+    private static void addClient(@Nonnull Document document,
+                                  @Nonnull DiffRangeMarker marker,
+                                  @Nonnull RangeInvalidListener listener) {
       InvalidRangeDispatcher notifier = document.getUserData(KEY);
       if (notifier == null) {
         notifier = new InvalidRangeDispatcher();
@@ -77,15 +77,15 @@ class DiffRangeMarker implements RangeMarker {
       notifier.myDiffRangeMarkers.put(marker, listener);
     }
 
-    private static void removeClient(@NotNull Document document,
-                                     @NotNull DiffRangeMarker marker,
-                                     @NotNull RangeInvalidListener listener) {
+    private static void removeClient(@Nonnull Document document,
+                                     @Nonnull DiffRangeMarker marker,
+                                     @Nonnull RangeInvalidListener listener) {
       InvalidRangeDispatcher notifier = document.getUserData(KEY);
       assert notifier != null;
       notifier.onClientRemoved(document, marker, listener);
     }
 
-    private void onClientRemoved(@NotNull Document document, @NotNull DiffRangeMarker marker, @NotNull RangeInvalidListener listener) {
+    private void onClientRemoved(@Nonnull Document document, @Nonnull DiffRangeMarker marker, @Nonnull RangeInvalidListener listener) {
       if (myDiffRangeMarkers.remove(marker) == listener && myDiffRangeMarkers.isEmpty()) {
         document.putUserData(KEY, null);
         document.removeDocumentListener(this);
@@ -96,7 +96,7 @@ class DiffRangeMarker implements RangeMarker {
   /// delegates
 
   @Override
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return myRangeMarker.getDocument();
   }
@@ -143,12 +143,12 @@ class DiffRangeMarker implements RangeMarker {
 
   @Override
   @Nullable
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myRangeMarker.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myRangeMarker.putUserData(key, value);
   }
 }

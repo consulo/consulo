@@ -95,10 +95,9 @@ import consulo.ui.migration.AWTComponentProviderUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -1278,13 +1277,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Point2D offsetToPoint2D(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
     return myView.offsetToXY(offset, leanTowardsLargerOffsets, beforeSoftWrap);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
     Point2D point2D = offsetToPoint2D(offset, leanForward, beforeSoftWrap);
     return new Point((int)point2D.getX(), (int)point2D.getY());

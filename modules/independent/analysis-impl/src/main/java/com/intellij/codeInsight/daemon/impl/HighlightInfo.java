@@ -48,9 +48,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -104,7 +103,7 @@ public class HighlightInfo implements Segment {
    * Returns the HighlightInfo instance from which the given range highlighter was created, or null if there isn't any.
    */
   @Nullable
-  public static HighlightInfo fromRangeHighlighter(@NotNull RangeHighlighter highlighter) {
+  public static HighlightInfo fromRangeHighlighter(@Nonnull RangeHighlighter highlighter) {
     Object errorStripeTooltip = highlighter.getErrorStripeTooltip();
     if (errorStripeTooltip instanceof HighlightInfo) {
       return (HighlightInfo) errorStripeTooltip;

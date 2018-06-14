@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.util.containers.PeekableIterator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
@@ -53,10 +53,10 @@ public interface MarkupIterator<T> extends PeekableIterator<T> {
     }
   };
 
-  @NotNull
-  static <T> MarkupIterator<T> mergeIterators(@NotNull final MarkupIterator<T> iterator1,
-                                              @NotNull final MarkupIterator<T> iterator2,
-                                              @NotNull final Comparator<? super T> comparator) {
+  @Nonnull
+  static <T> MarkupIterator<T> mergeIterators(@Nonnull final MarkupIterator<T> iterator1,
+                                              @Nonnull final MarkupIterator<T> iterator2,
+                                              @Nonnull final Comparator<? super T> comparator) {
     return new MarkupIterator<T>() {
       @Override
       public void dispose() {
@@ -74,7 +74,7 @@ public interface MarkupIterator<T> extends PeekableIterator<T> {
         return choose().next();
       }
 
-      @NotNull
+      @Nonnull
       private MarkupIterator<T> choose() {
         T t1 = iterator1.hasNext() ? iterator1.peek() : null;
         T t2 = iterator2.hasNext() ? iterator2.peek() : null;

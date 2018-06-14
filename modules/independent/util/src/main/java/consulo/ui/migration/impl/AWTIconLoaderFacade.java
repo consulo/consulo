@@ -36,10 +36,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -283,7 +282,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
    * Creates new icon with the filter applied.
    */
   @Nullable
-  public static Icon filterIcon(@NotNull Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
+  public static Icon filterIcon(@Nonnull Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
     if (icon instanceof LazyIcon) icon = ((LazyIcon)icon).getOrComputeIcon();
     if (icon == null) return null;
 
@@ -375,7 +374,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     private volatile Object myRealIcon;
     private String myOriginalPath;
     private ClassLoader myClassLoader;
-    @NotNull
+    @Nonnull
     private URL myUrl;
     private volatile boolean dark;
     private final boolean svg;
@@ -395,7 +394,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       });
     }
 
-    private CachedImageIcon(@NotNull CachedImageIcon icon) {
+    private CachedImageIcon(@Nonnull CachedImageIcon icon) {
       myRealIcon = null; // to be computed
       myOriginalPath = icon.myOriginalPath;
       myClassLoader = icon.myClassLoader;
@@ -405,18 +404,18 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       useCacheOnLoad = icon.useCacheOnLoad;
     }
 
-    public CachedImageIcon(@NotNull URL url) {
+    public CachedImageIcon(@Nonnull URL url) {
       this(url, true);
     }
 
-    public CachedImageIcon(@NotNull URL url, boolean useCacheOnLoad) {
+    public CachedImageIcon(@Nonnull URL url, boolean useCacheOnLoad) {
       myUrl = url;
       dark = USE_DARK_ICONS;
       svg = url.toString().endsWith("svg");
       this.useCacheOnLoad = useCacheOnLoad;
     }
 
-    @NotNull
+    @Nonnull
     private synchronized ImageIcon getRealIcon() {
       return getRealIcon(null);
     }
@@ -431,7 +430,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       return icon instanceof ImageIcon ? (ImageIcon)icon : null;
     }
 
-    @NotNull
+    @Nonnull
     private synchronized ImageIcon getRealIcon(@Nullable JBUI.ScaleContext ctx) {
       if (!isValid()) {
         if (isLoaderDisabled()) return EMPTY_ICON;
@@ -486,7 +485,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       return 1f;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Icon scale(float scale) {
       if (scale == 1f) return this;
@@ -506,7 +505,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       return icon;
     }
 
-    private Image loadFromUrl(@NotNull JBUI.ScaleContext ctx) {
+    private Image loadFromUrl(@Nonnull JBUI.ScaleContext ctx) {
       return ImageLoader.loadFromUrl(myUrl, true, useCacheOnLoad, myFilters, ctx);
     }
 
@@ -530,7 +529,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
         }
       });
 
-      private Couple<Double> key(@NotNull JBUI.ScaleContext ctx) {
+      private Couple<Double> key(@Nonnull JBUI.ScaleContext ctx) {
         return new Couple<Double>(ctx.getScale(USR_SCALE) * ctx.getScale(OBJ_SCALE), ctx.getScale(SYS_SCALE));
       }
 
@@ -619,7 +618,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   /**
    * Do something with the temporarily registry value.
    */
-  private static <T> T doWithTmpRegValue(@NotNull String key, @NotNull Boolean tempValue, @NotNull Callable<T> action) {
+  private static <T> T doWithTmpRegValue(@Nonnull String key, @Nonnull Boolean tempValue, @Nonnull Callable<T> action) {
     RegistryValue regVal = Registry.get(key);
     boolean regValOrig = regVal.asBoolean();
     if (regValOrig != tempValue) regVal.setValue(tempValue);

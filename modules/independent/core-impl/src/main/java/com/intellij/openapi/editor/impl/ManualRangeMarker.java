@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A range marker that has to be manually updated with {@link #getUpdatedRange(DocumentEvent, FrozenDocument)}.
@@ -50,7 +50,7 @@ public class ManualRangeMarker implements Segment {
   }
 
   @Nullable
-  public ManualRangeMarker getUpdatedRange(@NotNull DocumentEvent event, @NotNull FrozenDocument documentBefore) {
+  public ManualRangeMarker getUpdatedRange(@Nonnull DocumentEvent event, @Nonnull FrozenDocument documentBefore) {
     if (event instanceof RetargetRangeMarkers) {
       int start = ((RetargetRangeMarkers)event).getStartOffset();
       if (myStart >= start && myEnd <= ((RetargetRangeMarkers)event).getEndOffset()) {

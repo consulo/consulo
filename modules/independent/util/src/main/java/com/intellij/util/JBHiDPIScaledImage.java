@@ -19,8 +19,8 @@ import com.intellij.ui.paint.PaintUtil.RoundingMode;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import org.imgscalr.Scalr;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -111,7 +111,7 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * @param rm the rounding mode to apply when converting width/height to the device space
    * @param type the type
    */
-  public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type, @NotNull RoundingMode rm) {
+  public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type, @Nonnull RoundingMode rm) {
     super(rm.round(width * JBUI.sysScale(gc)), rm.round(height * JBUI.sysScale(gc)), type);
     myImage = null;
     myUserWidth = width;
@@ -122,7 +122,7 @@ public class JBHiDPIScaledImage extends BufferedImage {
   /**
    * @see #JBHiDPIScaledImage(Image, double, double, int)
    */
-  public JBHiDPIScaledImage(@NotNull Image image, int width, int height, int type) {
+  public JBHiDPIScaledImage(@Nonnull Image image, int width, int height, int type) {
     this(image, (double)width, (double)height, type);
   }
 
@@ -135,7 +135,7 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * @param height the height in user coordinate space
    * @param type the type
    */
-  public JBHiDPIScaledImage(@NotNull Image image, double width, double height, int type) {
+  public JBHiDPIScaledImage(@Nonnull Image image, double width, double height, int type) {
     super(1, 1, type); // a dummy wrapper
     myImage = image;
     myUserWidth = width;

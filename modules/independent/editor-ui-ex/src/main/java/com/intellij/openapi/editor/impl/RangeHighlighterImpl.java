@@ -14,8 +14,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -57,11 +57,11 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   @MagicConstant(flags = {CHANGED_MASK, RENDERERS_CHANGED_MASK, FONT_STYLE_OR_COLOR_CHANGED_MASK})
   private @interface ChangeStatus {}
 
-  RangeHighlighterImpl(@NotNull MarkupModel model,
+  RangeHighlighterImpl(@Nonnull MarkupModel model,
                        int start,
                        int end,
                        int layer,
-                       @NotNull HighlighterTargetArea target,
+                       @Nonnull HighlighterTargetArea target,
                        TextAttributes textAttributes,
                        boolean greedyToLeft,
                        boolean greedyToRight) {
@@ -88,7 +88,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  public void setTextAttributes(@NotNull TextAttributes textAttributes) {
+  public void setTextAttributes(@Nonnull TextAttributes textAttributes) {
     TextAttributes old = myTextAttributes;
     myTextAttributes = textAttributes;
     if (old != textAttributes && (old == TextAttributes.ERASE_MARKER || textAttributes == TextAttributes.ERASE_MARKER)) {
@@ -119,7 +119,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public HighlighterTargetArea getTargetArea() {
     return isFlagSet(TARGET_AREA_IS_EXACT_MASK) ? HighlighterTargetArea.EXACT_RANGE : HighlighterTargetArea.LINES_IN_RANGE;
   }
@@ -243,13 +243,13 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  public void setEditorFilter(@NotNull MarkupEditorFilter filter) {
+  public void setEditorFilter(@Nonnull MarkupEditorFilter filter) {
     myFilter = filter;
     fireChanged(false, false);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public MarkupEditorFilter getEditorFilter() {
     return myFilter;
   }
@@ -315,7 +315,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @ChangeStatus
-  byte changeAttributesNoEvents(@NotNull Consumer<RangeHighlighterEx> change) {
+  byte changeAttributesNoEvents(@Nonnull Consumer<RangeHighlighterEx> change) {
     assert !isFlagSet(IN_BATCH_CHANGE_MASK);
     assert !isFlagSet(CHANGED_MASK);
     setFlag(IN_BATCH_CHANGE_MASK, true);

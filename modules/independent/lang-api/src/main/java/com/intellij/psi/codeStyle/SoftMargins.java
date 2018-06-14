@@ -17,8 +17,8 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +53,7 @@ class SoftMargins implements Cloneable {
     }
   }
 
-  @NotNull
+  @Nonnull
   List<Integer> getValues() {
     return myValues != null ? myValues : Collections.emptyList();
   }
@@ -97,13 +97,13 @@ class SoftMargins implements Cloneable {
     return sb.toString();
   }
 
-  public void serializeInto(@NotNull Element element) {
+  public void serializeInto(@Nonnull Element element) {
     if (myValues != null && myValues.size() > 0) {
       XmlSerializer.serializeInto(this, element);
     }
   }
 
-  public void deserializeFrom(@NotNull Element element) {
+  public void deserializeFrom(@Nonnull Element element) {
     XmlSerializer.deserializeInto(this, element);
   }
 }

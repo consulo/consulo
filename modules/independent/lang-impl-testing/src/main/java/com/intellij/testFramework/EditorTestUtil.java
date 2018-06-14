@@ -38,9 +38,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
@@ -235,7 +234,7 @@ public class EditorTestUtil {
       }
 
       @Override
-      public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle targetRegion, @NotNull TextAttributes textAttributes) {
+      public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle targetRegion, @Nonnull TextAttributes textAttributes) {
       }
     });
   }

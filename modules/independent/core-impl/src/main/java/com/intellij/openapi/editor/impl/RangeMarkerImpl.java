@@ -28,24 +28,24 @@ import com.intellij.openapi.util.UnfairTextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.RangeMarkerImpl");
 
-  @NotNull
+  @Nonnull
   private final Object myDocumentOrFile; // either VirtualFile (if any) or DocumentEx if no file associated
   RangeMarkerTree.RMNode<RangeMarkerEx> myNode;
 
   private final long myId;
   private static final StripedIDGenerator counter = new StripedIDGenerator();
 
-  RangeMarkerImpl(@NotNull DocumentEx document, int start, int end, boolean register) {
+  RangeMarkerImpl(@Nonnull DocumentEx document, int start, int end, boolean register) {
     this(document, start, end, register, false, false);
   }
 
-  private RangeMarkerImpl(@NotNull DocumentEx document, int start, int end, boolean register, boolean greedyToLeft, boolean greedyToRight) {
+  private RangeMarkerImpl(@Nonnull DocumentEx document, int start, int end, boolean register, boolean greedyToLeft, boolean greedyToRight) {
     if (start < 0) {
       throw new IllegalArgumentException("Wrong start: " + start + "; end=" + end);
     }
@@ -100,7 +100,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     return node == null ? -1 : node.intervalEnd() + node.computeDeltaUpToRoot();
   }
 
-  void invalidate(@NotNull final Object reason) {
+  void invalidate(@Nonnull final Object reason) {
     setValid(false);
     RangeMarkerTree.RMNode<RangeMarkerEx> node = myNode;
 
@@ -113,7 +113,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final DocumentEx getDocument() {
     Object file = myDocumentOrFile;
     return file instanceof VirtualFile ? (DocumentEx)FileDocumentManager.getInstance().getDocument((VirtualFile)file) : (DocumentEx)file;
@@ -160,7 +160,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Override
-  public final void documentChanged(@NotNull DocumentEvent e) {
+  public final void documentChanged(@Nonnull DocumentEvent e) {
     int oldStart = intervalStart();
     int oldEnd = intervalEnd();
     int docLength = getDocument().getTextLength();
@@ -214,7 +214,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     }
   }
 
-  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
+  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
     if (!isValid()) return;
 
     TextRange newRange = applyChange(e, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight(), isStickingToRight());
@@ -231,7 +231,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Nullable
-  static TextRange applyChange(@NotNull DocumentEvent e, int intervalStart, int intervalEnd, boolean isGreedyToLeft, boolean isGreedyToRight, boolean isStickingToRight) {
+  static TextRange applyChange(@Nonnull DocumentEvent e, int intervalStart, int intervalEnd, boolean isGreedyToLeft, boolean isGreedyToRight, boolean isStickingToRight) {
     if (intervalStart == intervalEnd) {
       return processIfOnePoint(e, intervalStart, isGreedyToRight, isStickingToRight);
     }
@@ -284,7 +284,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Nullable
-  private static TextRange processIfOnePoint(@NotNull DocumentEvent e, int intervalStart, boolean greedyRight, boolean stickyRight) {
+  private static TextRange processIfOnePoint(@Nonnull DocumentEvent e, int intervalStart, boolean greedyRight, boolean stickyRight) {
     int offset = e.getOffset();
     int oldLength = e.getOldLength();
     int oldEnd = offset + oldLength;

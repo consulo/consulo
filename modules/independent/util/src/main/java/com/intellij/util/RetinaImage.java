@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import com.intellij.ui.paint.PaintUtil.RoundingMode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -29,7 +29,7 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
   /**
    * @deprecated use {@link #createFrom(Image, float, ImageObserver)} instead
    */
-  @NotNull
+  @Nonnull
   public static Image createFrom(Image image, int scale, ImageObserver observer) {
     return createFrom(image, (float)scale, observer);
   }
@@ -44,29 +44,29 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
    * @param observer the raw image observer
    * @return the Retina-aware wrapper
    */
-  @NotNull
+  @Nonnull
   public static Image createFrom(Image image, double scale, ImageObserver observer) {
     int w = image.getWidth(observer);
     int h = image.getHeight(observer);
     return new JBHiDPIScaledImage(image, w / scale, h / scale, BufferedImage.TYPE_INT_ARGB);
   }
 
-  @NotNull
+  @Nonnull
   public static BufferedImage create(int width, int height, int type) {
     return new JBHiDPIScaledImage(width, height, type);
   }
 
-  @NotNull
+  @Nonnull
   public static BufferedImage create(Graphics2D g, int width, int height, int type) {
     return new JBHiDPIScaledImage(g, width, height, type);
   }
 
-  @NotNull
+  @Nonnull
   public static BufferedImage create(GraphicsConfiguration gc, int width, int height, int type) {
     return new JBHiDPIScaledImage(gc, width, height, type);
   }
 
-  @NotNull
+  @Nonnull
   public static BufferedImage create(GraphicsConfiguration gc, double width, double height, int type, RoundingMode rm) {
     return new JBHiDPIScaledImage(gc, width, height, type, rm);
   }

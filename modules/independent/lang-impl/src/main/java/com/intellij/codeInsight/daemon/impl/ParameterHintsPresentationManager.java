@@ -30,9 +30,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.GraphicsUtil;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -196,7 +195,7 @@ public class ParameterHintsPresentationManager implements Disposable {
     }
 
     @Override
-    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r, @NotNull TextAttributes textAttributes) {
+    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
       if (myText != null && (step > steps || startWidth != 0)) {
         TextAttributes attributes = editor.getColorsScheme().getAttributes(DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
         if (attributes != null) {

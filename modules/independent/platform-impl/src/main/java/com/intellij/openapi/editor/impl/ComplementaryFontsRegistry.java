@@ -25,8 +25,8 @@ import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -139,8 +139,8 @@ public class ComplementaryFontsRegistry {
   /**
    * @deprecated Use {{@link #getFontAbleToDisplay(int, int, FontPreferences, FontRenderContext)}} instead.
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, @NotNull FontPreferences preferences) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, @Nonnull FontPreferences preferences) {
     return getFontAbleToDisplay(codePoint, style, preferences, null);
   }
 
@@ -148,8 +148,8 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(@NotNull CharSequence text, int start, int end, @JdkConstants.FontStyle int style, @NotNull FontPreferences preferences, FontRenderContext context) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(@Nonnull CharSequence text, int start, int end, @JdkConstants.FontStyle int style, @Nonnull FontPreferences preferences, FontRenderContext context) {
     assert 0 <= start && start < end && end <= text.length() : "Start: " + start + ", end: " + end + ", length: " + text.length();
     if (end - start == 1) {
       // fast path for BMP code points
@@ -169,8 +169,8 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(@NotNull char[] text, int start, int end, @JdkConstants.FontStyle int style, @NotNull FontPreferences preferences, FontRenderContext context) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(@Nonnull char[] text, int start, int end, @JdkConstants.FontStyle int style, @Nonnull FontPreferences preferences, FontRenderContext context) {
     assert 0 <= start && start < end && end <= text.length : "Start: " + start + ", end: " + end + ", length: " + text.length;
     if (end - start == 1) {
       // fast path for BMP code points
@@ -186,11 +186,11 @@ public class ComplementaryFontsRegistry {
   }
 
   private static FontInfo getFontAbleToDisplay(int codePoint,
-                                               @NotNull char[] remainingText,
+                                               @Nonnull char[] remainingText,
                                                int start,
                                                int end,
                                                @JdkConstants.FontStyle int style,
-                                               @NotNull FontPreferences preferences,
+                                               @Nonnull FontPreferences preferences,
                                                FontRenderContext context) {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
@@ -226,8 +226,8 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, @NotNull FontPreferences preferences, FontRenderContext context) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, @Nonnull FontPreferences preferences, FontRenderContext context) {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
     boolean useLigatures = SystemInfo.isJetBrainsJvm && preferences.useLigatures();
@@ -261,8 +261,8 @@ public class ComplementaryFontsRegistry {
   /**
    * @deprecated Use {{@link #getFontAbleToDisplay(int, int, int, String, FontRenderContext)}}
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily) {
     return getFontAbleToDisplay(codePoint, size, style, defaultFontFamily, null);
   }
 
@@ -270,8 +270,8 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily, FontRenderContext context) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily, FontRenderContext context) {
     FontInfo result = doGetFontAbleToDisplay(codePoint, size, style, defaultFontFamily, false, context);
     if (result != null) {
       return result;
@@ -283,7 +283,7 @@ public class ComplementaryFontsRegistry {
   private static FontInfo doGetFontAbleToDisplay(int codePoint,
                                                  int size,
                                                  @JdkConstants.FontStyle int originalStyle,
-                                                 @NotNull String defaultFontFamily,
+                                                 @Nonnull String defaultFontFamily,
                                                  boolean useLigatures,
                                                  FontRenderContext context) {
     if (originalStyle < 0 || originalStyle > 3) originalStyle = Font.PLAIN;
@@ -315,7 +315,7 @@ public class ComplementaryFontsRegistry {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static FontInfo doGetFontAbleToDisplay(int codePoint,
                                                  char[] remainingText,
                                                  int start,

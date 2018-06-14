@@ -15,8 +15,8 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -39,22 +39,22 @@ public class InlayModelImpl implements InlayModel, Disposable {
   boolean myMoveInProgress;
   private List<Inlay> myInlaysAtCaret;
 
-  InlayModelImpl(@NotNull DesktopEditorImpl editor) {
+  InlayModelImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
     myInlayTree = new RangeMarkerTree<InlayImpl>(editor.getDocument()) {
-      @NotNull
+      @Nonnull
       @Override
-      protected RMNode<InlayImpl> createNewNode(@NotNull InlayImpl key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
+      protected RMNode<InlayImpl> createNewNode(@Nonnull InlayImpl key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
         return new RMNode<InlayImpl>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
           @Override
-          protected Getter<InlayImpl> createGetter(@NotNull InlayImpl interval) {
+          protected Getter<InlayImpl> createGetter(@Nonnull InlayImpl interval) {
             return interval;
           }
         };
       }
 
       @Override
-      void fireBeforeRemoved(@NotNull InlayImpl markerEx, @NotNull @NonNls Object reason) {
+      void fireBeforeRemoved(@Nonnull InlayImpl markerEx, @Nonnull @NonNls Object reason) {
         if (markerEx.myOffsetBeforeDisposal == -1) {
           if (myMoveInProgress) {
             // delay notification about invalidated inlay - folding model is not consistent at this point
@@ -127,7 +127,7 @@ public class InlayModelImpl implements InlayModel, Disposable {
 
   @Nullable
   @Override
-  public Inlay addInlineElement(int offset, boolean relatesToPrecedingText, @NotNull EditorCustomElementRenderer renderer) {
+  public Inlay addInlineElement(int offset, boolean relatesToPrecedingText, @Nonnull EditorCustomElementRenderer renderer) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     DocumentEx document = myEditor.getDocument();
     if (DocumentUtil.isInsideSurrogatePair(document, offset)) return null;
@@ -137,7 +137,7 @@ public class InlayModelImpl implements InlayModel, Disposable {
     return inlay;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Inlay> getInlineElementsInRange(int startOffset, int endOffset) {
     List<Inlay> result = new ArrayList<>();
@@ -165,7 +165,7 @@ public class InlayModelImpl implements InlayModel, Disposable {
   }
 
   @Override
-  public boolean hasInlineElementAt(@NotNull VisualPosition visualPosition) {
+  public boolean hasInlineElementAt(@Nonnull VisualPosition visualPosition) {
     int offset = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(visualPosition));
     int inlayCount = getInlineElementsInRange(offset, offset).size();
     if (inlayCount == 0) return false;
@@ -175,7 +175,7 @@ public class InlayModelImpl implements InlayModel, Disposable {
 
   @Nullable
   @Override
-  public Inlay getInlineElementAt(@NotNull VisualPosition visualPosition) {
+  public Inlay getInlineElementAt(@Nonnull VisualPosition visualPosition) {
     int offset = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(visualPosition));
     List<Inlay> inlays = getInlineElementsInRange(offset, offset);
     if (inlays.isEmpty()) return null;
@@ -187,7 +187,7 @@ public class InlayModelImpl implements InlayModel, Disposable {
 
   @Nullable
   @Override
-  public Inlay getElementAt(@NotNull Point point) {
+  public Inlay getElementAt(@Nonnull Point point) {
     if (myInlayTree.size() == 0) return null;
 
     int offset = myEditor.logicalPositionToOffset(myEditor.xyToLogicalPosition(point));
@@ -205,7 +205,7 @@ public class InlayModelImpl implements InlayModel, Disposable {
   }
 
   @Override
-  public void addListener(@NotNull Listener listener, @NotNull Disposable disposable) {
+  public void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable) {
     myDispatcher.addListener(listener, disposable);
   }
 

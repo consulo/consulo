@@ -27,8 +27,8 @@ import com.intellij.util.WalkingState;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import gnu.trove.TLongHashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -47,7 +47,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   private int keySize; // number of all intervals, counting all duplicates, some of them maybe gced
   final ReadWriteLock l = new ReentrantReadWriteLock();
 
-  protected abstract int compareEqualStartIntervals(@NotNull IntervalNode<T> i1, @NotNull IntervalNode<T> i2);
+  protected abstract int compareEqualStartIntervals(@Nonnull IntervalNode<T> i1, @Nonnull IntervalNode<T> i2);
   private final ReferenceQueue<T> myReferenceQueue = new ReferenceQueue<>();
   private int deadReferenceCount;
 
@@ -65,10 +65,10 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     //  private int deltaUpToRoot; // sum of all deltas up to the root (including this node' delta). Has valid value only if modCount == IntervalTreeImpl.this.modCount
     //  private boolean allDeltasUpAreNull;  // true if all deltas up the tree (including this node) are 0. Has valid value only if modCount == IntervalTreeImpl.this.modCount
 
-    @NotNull
+    @Nonnull
     private final IntervalTreeImpl<E> myIntervalTree;
 
-    IntervalNode(@NotNull IntervalTreeImpl<E> intervalTree, @NotNull E key, int start, int end) {
+    IntervalNode(@Nonnull IntervalTreeImpl<E> intervalTree, @Nonnull E key, int start, int end) {
       // maxEnd == 0 so to not disrupt existing maxes
       myIntervalTree = intervalTree;
       myStart = start;
@@ -93,7 +93,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     }
 
     @Override
-    public boolean processAliveKeys(@NotNull Processor<? super E> processor) {
+    public boolean processAliveKeys(@Nonnull Processor<? super E> processor) {
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0; i < intervals.size(); i++) {
         Getter<E> interval = intervals.get(i);
@@ -127,7 +127,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
 
     // removes interval and the node, if node became empty
     // returns true if node was removed
-    private boolean removeInterval(@NotNull E key) {
+    private boolean removeInterval(@Nonnull E key) {
       myIntervalTree.checkBelongsToTheTree(key, true);
       myIntervalTree.assertUnderWriteLock();
       for (int i = intervals.size() - 1; i >= 0; i--) {
@@ -160,7 +160,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
       }
     }
 
-    void addInterval(@NotNull E interval) {
+    void addInterval(@Nonnull E interval) {
       myIntervalTree.assertUnderWriteLock();
       intervals.add(createGetter(interval));
       if (isAttachedToTree()) { // for detached node, do not update tree node count
@@ -169,12 +169,12 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
       }
     }
 
-    protected Getter<E> createGetter(@NotNull E interval) {
+    protected Getter<E> createGetter(@Nonnull E interval) {
       return new WeakReferencedGetter<>(interval, myIntervalTree.myReferenceQueue);
     }
 
     private static class WeakReferencedGetter<T> extends WeakReference<T> implements Getter<T> {
-      private WeakReferencedGetter(@NotNull T referent, @NotNull ReferenceQueue<? super T> q) {
+      private WeakReferencedGetter(@Nonnull T referent, @Nonnull ReferenceQueue<? super T> q) {
         super(referent, q);
       }
 
@@ -294,7 +294,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
       return myEnd;
     }
 
-    @NotNull
+    @Nonnull
     public IntervalTreeImpl<E> getTree() {
       return myIntervalTree;
     }
@@ -384,7 +384,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
       assert isAcquired(l.writeLock()) : l.writeLock();
     }
   }
-  private static boolean isAcquired(@NotNull Lock l) {
+  private static boolean isAcquired(@Nonnull Lock l) {
     String s = l.toString();
     return s.contains("Locked by thread");
   }
@@ -398,13 +398,13 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     }
   }
 
-  @NotNull
-  protected abstract IntervalNode<T> createNewNode(@NotNull T key, int start, int end,
+  @Nonnull
+  protected abstract IntervalNode<T> createNewNode(@Nonnull T key, int start, int end,
                                                    boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer);
-  protected abstract IntervalNode<T> lookupNode(@NotNull T key);
-  protected abstract void setNode(@NotNull T key, @Nullable IntervalNode<T> node);
+  protected abstract IntervalNode<T> lookupNode(@Nonnull T key);
+  protected abstract void setNode(@Nonnull T key, @Nullable IntervalNode<T> node);
 
-  private int compareNodes(@NotNull IntervalNode<T> i1, int delta1, @NotNull IntervalNode<T> i2, int delta2, @NotNull List<IntervalNode<T>> invalid) {
+  private int compareNodes(@Nonnull IntervalNode<T> i1, int delta1, @Nonnull IntervalNode<T> i2, int delta2, @Nonnull List<IntervalNode<T>> invalid) {
     if (!i2.hasAliveKey(false)) {
       invalid.add(i2); //gced
     }
@@ -419,7 +419,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  public boolean processAll(@NotNull Processor<? super T> processor) {
+  public boolean processAll(@Nonnull Processor<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -432,7 +432,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
 
   private boolean process(@Nullable IntervalNode<T> root,
                           final int modCountBefore,
-                          @NotNull final Processor<? super T> processor) {
+                          @Nonnull final Processor<? super T> processor) {
     if (root == null) return true;
 
     WalkingState.TreeGuide<IntervalNode<T>> guide = getGuide();
@@ -444,7 +444,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  public boolean processOverlappingWith(int start, int end, @NotNull Processor<? super T> processor) {
+  public boolean processOverlappingWith(int start, int end, @Nonnull Processor<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -460,7 +460,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
                                          int end,
                                          int modCountBefore,
                                          int deltaUpToRootExclusive,
-                                         @NotNull Processor<? super T> processor) {
+                                         @Nonnull Processor<? super T> processor) {
     if (root == null) {
       return true;
     }
@@ -488,7 +488,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  public boolean processOverlappingWithOutside(int start, int end, @NotNull Processor<? super T> processor) {
+  public boolean processOverlappingWithOutside(int start, int end, @Nonnull Processor<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -503,7 +503,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
                                                 int end,
                                                 int modCountBefore,
                                                 int deltaUpToRootExclusive,
-                                                @NotNull Processor<? super T> processor) {
+                                                @Nonnull Processor<? super T> processor) {
     if (root == null) {
       return true;
     }
@@ -529,7 +529,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
 
 
   @Override
-  public boolean processContaining(int offset, @NotNull Processor<? super T> processor) {
+  public boolean processContaining(int offset, @Nonnull Processor<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -543,7 +543,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
                                     int offset,
                                     int modCountBefore,
                                     int deltaUpToRootExclusive,
-                                    @NotNull Processor<? super T> processor) {
+                                    @Nonnull Processor<? super T> processor) {
     if (root == null) {
       return true;
     }
@@ -570,8 +570,8 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     return processContaining(root.getRight(), offset, modCountBefore, delta, processor);
   }
 
-  @NotNull
-  private MarkupIterator<T> overlappingIterator(@NotNull final TextRangeInterval rangeInterval) {
+  @Nonnull
+  private MarkupIterator<T> overlappingIterator(@Nonnull final TextRangeInterval rangeInterval) {
     l.readLock().lock();
 
     try {
@@ -652,7 +652,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
         }
 
         // next node in in-order traversal
-        private IntervalNode<T> nextNode(@NotNull IntervalNode<T> root) {
+        private IntervalNode<T> nextNode(@Nonnull IntervalNode<T> root) {
           assert root.isValid() : root;
           int delta = deltaUpToRootExclusive + root.delta;
           int myMaxEnd = maxEndOf(root, deltaUpToRootExclusive);
@@ -695,7 +695,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     }
   }
 
-  private boolean overlaps(@Nullable IntervalNode<T> root, @NotNull TextRangeInterval rangeInterval, int deltaUpToRootExclusive) {
+  private boolean overlaps(@Nullable IntervalNode<T> root, @Nonnull TextRangeInterval rangeInterval, int deltaUpToRootExclusive) {
     if (root == null) return false;
     int delta = root.delta + deltaUpToRootExclusive;
     int start = root.intervalStart() + delta;
@@ -703,8 +703,8 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     return rangeInterval.intersects(start, end);
   }
 
-  @NotNull
-  IntervalNode<T> findOrInsert(@NotNull IntervalNode<T> node) {
+  @Nonnull
+  IntervalNode<T> findOrInsert(@Nonnull IntervalNode<T> node) {
     assertUnderWriteLock();
     node.setRed();
     node.setParent(null);
@@ -755,7 +755,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     return node;
   }
 
-  private void deleteNodes(@NotNull List<IntervalNode<T>> collectedAway) {
+  private void deleteNodes(@Nonnull List<IntervalNode<T>> collectedAway) {
     if (collectedAway.isEmpty()) return;
     try {
       l.writeLock().lock();
@@ -768,8 +768,8 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     }
   }
 
-  @NotNull
-  public IntervalTreeImpl.IntervalNode<T> addInterval(@NotNull T interval, int start, int end,
+  @Nonnull
+  public IntervalTreeImpl.IntervalNode<T> addInterval(@Nonnull T interval, int start, int end,
                                                       boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
     try {
       l.writeLock().lock();
@@ -839,10 +839,10 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   private IntTrinity checkMax(@Nullable IntervalNode<T> root,
                               int deltaUpToRootExclusive,
                               boolean assertInvalid,
-                              @NotNull AtomicBoolean allValid,
-                              @NotNull int[] keyCounter,
-                              @NotNull int[] nodeCounter,
-                              @NotNull TLongHashSet ids,
+                              @Nonnull AtomicBoolean allValid,
+                              @Nonnull int[] keyCounter,
+                              @Nonnull int[] nodeCounter,
+                              @Nonnull TLongHashSet ids,
                               boolean allDeltasUpAreNull) {
     if (root == null) return new IntTrinity(Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE);
     long packedOffsets = root.cachedDeltaUpToRoot;
@@ -898,9 +898,9 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     return new IntTrinity(minStart, maxStart, root.maxEnd + delta);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected Node<T> maximumNode(@NotNull Node<T> n) {
+  protected Node<T> maximumNode(@Nonnull Node<T> n) {
     IntervalNode<T> root = (IntervalNode<T>)n;
     pushDelta(root.getParent());
     pushDelta(root);
@@ -911,7 +911,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     return root;
   }
 
-  private void checkBelongsToTheTree(@NotNull T interval, boolean assertInvalid) {
+  private void checkBelongsToTheTree(@Nonnull T interval, boolean assertInvalid) {
     IntervalNode<T> root = lookupNode(interval);
     if (root == null) return;
     //noinspection NumberEquality
@@ -940,7 +940,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  public boolean removeInterval(@NotNull T interval) {
+  public boolean removeInterval(@Nonnull T interval) {
     if (!((RangeMarkerEx)interval).isValid()) return false;
     try {
       l.writeLock().lock();
@@ -968,14 +968,14 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   // run under write lock
-  void removeNode(@NotNull IntervalNode<T> node) {
+  void removeNode(@Nonnull IntervalNode<T> node) {
     deleteNode(node);
     IntervalNode<T> parent = node.getParent();
     correctMaxUp(parent);
   }
 
   @Override
-  protected void deleteNode(@NotNull Node<T> n) {
+  protected void deleteNode(@Nonnull Node<T> n) {
     assertUnderWriteLock();
     IntervalNode<T> node = (IntervalNode<T>)n;
     pushDeltaFromRoot(node);
@@ -1029,8 +1029,8 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  @NotNull
-  protected IntervalNode<T> swapWithMaxPred(@NotNull Node<T> root, @NotNull Node<T> maxPred) {
+  @Nonnull
+  protected IntervalNode<T> swapWithMaxPred(@Nonnull Node<T> root, @Nonnull Node<T> maxPred) {
     checkMax(false);
     IntervalNode<T> a = (IntervalNode<T>)root;
     IntervalNode<T> d = (IntervalNode<T>)maxPred;
@@ -1057,7 +1057,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     assert d.delta == 0 : d.delta;
     return a;
   }
-  private void swapNodes(@NotNull IntervalNode<T> n1, @NotNull IntervalNode<T> n2) {
+  private void swapNodes(@Nonnull IntervalNode<T> n1, @Nonnull IntervalNode<T> n2) {
     IntervalNode<T> l1 = n1.getLeft();
     IntervalNode<T> r1 = n1.getRight();
     IntervalNode<T> p1 = n1.getParent();
@@ -1103,7 +1103,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   // max of n.left's maxend, n.right's maxend and its own interval endOffset
-  void correctMax(@NotNull IntervalNode<T> node, int deltaUpToRoot) {
+  void correctMax(@Nonnull IntervalNode<T> node, int deltaUpToRoot) {
     if (!node.isValid()) return;
     int realMax = Math.max(Math.max(maxEndOf(node.getLeft(), deltaUpToRoot), maxEndOf(node.getRight(), deltaUpToRoot)),
                            deltaUpToRoot + node.intervalEnd());
@@ -1125,7 +1125,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  protected void rotateRight(@NotNull Node<T> n) {
+  protected void rotateRight(@Nonnull Node<T> n) {
     checkMax(false);
     IntervalNode<T> node1 = (IntervalNode<T>)n;
     IntervalNode<T> node2 = node1.getLeft();
@@ -1151,7 +1151,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  protected void rotateLeft(@NotNull Node<T> n) {
+  protected void rotateLeft(@Nonnull Node<T> n) {
     checkMax(false);
     IntervalNode<T> node1 = (IntervalNode<T>)n;
     IntervalNode<T> node2 = node1.getLeft();
@@ -1178,7 +1178,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   @Override
-  protected void replaceNode(@NotNull Node<T> node, Node<T> child) {
+  protected void replaceNode(@Nonnull Node<T> node, Node<T> child) {
     IntervalNode<T> myNode = (IntervalNode<T>)node;
     pushDelta(myNode);
     pushDelta((IntervalNode<T>)child);
@@ -1198,7 +1198,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     assert IntervalNode.modCount(packedOffsets) != getModCount() || IntervalNode.allDeltasUpAreNull(packedOffsets);
   }
 
-  private IntervalNode<T> findMinOverlappingWith(@Nullable IntervalNode<T> root, @NotNull Interval interval, int modCountBefore, int deltaUpToRootExclusive) {
+  private IntervalNode<T> findMinOverlappingWith(@Nullable IntervalNode<T> root, @Nonnull Interval interval, int modCountBefore, int deltaUpToRootExclusive) {
     if (root == null) {
       return null;
     }
@@ -1224,7 +1224,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     return findMinOverlappingWith(root.getRight(), interval, modCountBefore, delta);
   }
 
-  void changeData(@NotNull T interval, int start, int end,
+  void changeData(@Nonnull T interval, int start, int end,
                   boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
     try {
       l.writeLock().lock();
@@ -1288,7 +1288,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     }
   }
 
-  private void collectGced(@Nullable IntervalNode<T> root, @NotNull List<IntervalNode<T>> gced) {
+  private void collectGced(@Nullable IntervalNode<T> root, @Nonnull List<IntervalNode<T>> gced) {
     if (root == null) return;
     if (!root.hasAliveKey(true)) {
       gced.add(root);
@@ -1297,13 +1297,13 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     collectGced(root.getRight(), gced);
   }
 
-  void fireBeforeRemoved(@NotNull T markerEx, @NotNull @NonNls Object reason) {
+  void fireBeforeRemoved(@Nonnull T markerEx, @Nonnull @NonNls Object reason) {
   }
 
   private boolean firingBeforeRemove; // accessed under l.writeLock() only
 
   // must be called under l.writeLock()
-  void beforeRemove(@NotNull T markerEx, @NonNls @NotNull Object reason) {
+  void beforeRemove(@Nonnull T markerEx, @NonNls @Nonnull Object reason) {
     if (firingBeforeRemove) {
       throw new IllegalStateException();
     }
@@ -1318,33 +1318,33 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
 
   private static class IntervalTreeGuide<T extends MutableInterval> implements WalkingState.TreeGuide<IntervalNode<T>> {
     @Override
-    public IntervalNode<T> getNextSibling(@NotNull IntervalNode<T> element) {
+    public IntervalNode<T> getNextSibling(@Nonnull IntervalNode<T> element) {
       IntervalNode<T> parent = element.getParent();
       if (parent == null) return null;
       return parent.getLeft() == element ? parent.getRight() : null;
     }
 
     @Override
-    public IntervalNode<T> getPrevSibling(@NotNull IntervalNode<T> element) {
+    public IntervalNode<T> getPrevSibling(@Nonnull IntervalNode<T> element) {
       IntervalNode<T> parent = element.getParent();
       if (parent == null) return null;
       return parent.getRight() == element ? parent.getLeft() : null;
     }
 
     @Override
-    public IntervalNode<T> getFirstChild(@NotNull IntervalNode<T> element) {
+    public IntervalNode<T> getFirstChild(@Nonnull IntervalNode<T> element) {
       IntervalNode<T> left = element.getLeft();
       return left == null ? element.getRight() : left;
     }
 
     @Override
-    public IntervalNode<T> getParent(@NotNull IntervalNode<T> element) {
+    public IntervalNode<T> getParent(@Nonnull IntervalNode<T> element) {
       return element.getParent();
     }
   }
 
   private static final IntervalTreeGuide INTERVAL_TREE_GUIDE_INSTANCE = new IntervalTreeGuide();
-  @NotNull
+  @Nonnull
   private static <T> WalkingState.TreeGuide<IntervalNode<T>> getGuide() {
     //noinspection unchecked
     return (WalkingState.TreeGuide)INTERVAL_TREE_GUIDE_INSTANCE;
@@ -1360,18 +1360,18 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   }
 
   // combines iterators for two trees in one using specified comparator
-  @NotNull
-  static <T> MarkupIterator<T> mergingOverlappingIterator(@NotNull IntervalTreeImpl<T> tree1,
-                                                          @NotNull TextRangeInterval tree1Range,
-                                                          @NotNull IntervalTreeImpl<T> tree2,
-                                                          @NotNull TextRangeInterval tree2Range,
-                                                          @NotNull Comparator<? super T> comparator) {
+  @Nonnull
+  static <T> MarkupIterator<T> mergingOverlappingIterator(@Nonnull IntervalTreeImpl<T> tree1,
+                                                          @Nonnull TextRangeInterval tree1Range,
+                                                          @Nonnull IntervalTreeImpl<T> tree2,
+                                                          @Nonnull TextRangeInterval tree2Range,
+                                                          @Nonnull Comparator<? super T> comparator) {
     MarkupIterator<T> exact = tree1.overlappingIterator(tree1Range);
     MarkupIterator<T> lines = tree2.overlappingIterator(tree2Range);
     return MarkupIterator.mergeIterators(exact, lines, comparator);
   }
 
-  T findRangeMarkerAfter(@NotNull T marker) {
+  T findRangeMarkerAfter(@Nonnull T marker) {
     l.readLock().lock();
     try {
       IntervalNode<T> node = lookupNode(marker);
@@ -1402,7 +1402,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     }
   }
 
-  T findRangeMarkerBefore(@NotNull T marker) {
+  T findRangeMarkerBefore(@Nonnull T marker) {
     l.readLock().lock();
     try {
       IntervalNode<T> node = lookupNode(marker);

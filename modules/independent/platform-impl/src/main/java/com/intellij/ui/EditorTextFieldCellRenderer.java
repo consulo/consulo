@@ -40,9 +40,8 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -441,7 +440,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     }
 
     @Override
-    public boolean processRangeMarkers(@NotNull Processor<? super RangeMarker> processor) {
+    public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
       return myRangeMarkers.processAll(processor);
     }
 

@@ -39,9 +39,8 @@ import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogColorManager;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -348,7 +347,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
       mySelected = selected;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CheckboxColorIcon withIconPreScaled(boolean preScaled) {
       mySizedIcon = (SizedIcon)mySizedIcon.withIconPreScaled(preScaled);

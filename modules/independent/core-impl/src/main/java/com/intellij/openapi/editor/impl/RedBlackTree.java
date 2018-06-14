@@ -17,8 +17,8 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.util.BitUtil;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,7 +44,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
     return get();
   }
 
-  protected void rotateLeft(@NotNull Node<K> n) {
+  protected void rotateLeft(@Nonnull Node<K> n) {
     Node<K> r = n.getRight();
     replaceNode(n, r);
     n.setRight(r.getLeft());
@@ -55,7 +55,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
     n.setParent(r);
   }
 
-  protected void rotateRight(@NotNull Node<K> n) {
+  protected void rotateRight(@Nonnull Node<K> n) {
     Node<K> l = n.getLeft();
     replaceNode(n, l);
     n.setLeft(l.getRight());
@@ -66,7 +66,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
     n.setParent(l);
   }
 
-  protected void replaceNode(@NotNull Node<K> oldn, Node<K> newn) {
+  protected void replaceNode(@Nonnull Node<K> oldn, Node<K> newn) {
     Node<K> parent = oldn.getParent();
     if (parent == null) {
       root = newn;
@@ -148,7 +148,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
     assert node1 == null || node1.getParent() == null || node1.getParent().getLeft() == node1 || node1.getParent().getRight() == node1;
   }
 
-  protected void deleteNode(@NotNull Node<K> n) {
+  protected void deleteNode(@Nonnull Node<K> n) {
     incModCount();
 
     Node<K> e = n;
@@ -185,11 +185,11 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
     verifyProperties();
   }
 
-  @NotNull
-  protected abstract Node<K> swapWithMaxPred(@NotNull Node<K> nowAscendant, @NotNull Node<K> nowDescendant);
+  @Nonnull
+  protected abstract Node<K> swapWithMaxPred(@Nonnull Node<K> nowAscendant, @Nonnull Node<K> nowDescendant);
 
-  @NotNull
-  protected Node<K> maximumNode(@NotNull Node<K> n) {
+  @Nonnull
+  protected Node<K> maximumNode(@Nonnull Node<K> n) {
     while (n.getRight() != null) {
       n = n.getRight();
     }
@@ -361,7 +361,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
       this.parent = parent;
     }
 
-    public abstract boolean processAliveKeys(@NotNull Processor<? super K> processor);
+    public abstract boolean processAliveKeys(@Nonnull Processor<? super K> processor);
 
     public abstract boolean hasAliveKey(boolean purgeDead);
 

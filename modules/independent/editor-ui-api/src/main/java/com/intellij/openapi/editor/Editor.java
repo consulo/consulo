@@ -24,9 +24,8 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.Component;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -304,7 +303,7 @@ public interface Editor extends UserDataHolder {
   /**
    * @since 2017.2
    */
-  @NotNull
+  @Nonnull
   default Point offsetToXY(int offset) {
     return offsetToXY(offset, false, false);
   }
@@ -313,7 +312,7 @@ public interface Editor extends UserDataHolder {
    * @see #offsetToVisualPosition(int, boolean, boolean)
    * @since 2017.2
    */
-  @NotNull
+  @Nonnull
   default Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
     VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
     return visualPositionToXY(visualPosition);
@@ -322,7 +321,7 @@ public interface Editor extends UserDataHolder {
   /**
    * @since 2017.2
    */
-  @NotNull
+  @Nonnull
   default Point2D offsetToPoint2D(int offset) {
     return offsetToPoint2D(offset, false, false);
   }
@@ -331,7 +330,7 @@ public interface Editor extends UserDataHolder {
    * @see #offsetToVisualPosition(int, boolean, boolean)
    * @since 2017.2
    */
-  @NotNull
+  @Nonnull
   default Point2D offsetToPoint2D(int offset, boolean leanForward, boolean beforeSoftWrap) {
     VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
     return visualPositionToPoint2D(visualPosition);

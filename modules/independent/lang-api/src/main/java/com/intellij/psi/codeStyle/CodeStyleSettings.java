@@ -34,10 +34,9 @@ import com.intellij.util.containers.ClassMap;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -957,7 +956,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @return Language or default soft margins.
    * @see #getDefaultSoftMargins()
    */
-  @NotNull
+  @Nonnull
   public List<Integer> getSoftMargins(@Nullable Language language) {
     if (language != null) {
       CommonCodeStyleSettings languageSettings = myCommonSettingsManager.getCommonSettings(language);
@@ -974,7 +973,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @param language    The language to set soft margins for.
    * @param softMargins The soft margins to set.
    */
-  public void setSoftMargins(@NotNull Language language, List<Integer> softMargins) {
+  public void setSoftMargins(@Nonnull Language language, List<Integer> softMargins) {
     CommonCodeStyleSettings languageSettings = myCommonSettingsManager.getCommonSettings(language);
     assert languageSettings != null : "Settings for language " + language.getDisplayName() + " do not exist";
     languageSettings.setSoftMargins(softMargins);
@@ -983,7 +982,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   /**
    * @return Default (root) soft margins used for languages not defining them explicitly.
    */
-  @NotNull
+  @Nonnull
   public List<Integer> getDefaultSoftMargins() {
     return mySoftMargins.getValues();
   }

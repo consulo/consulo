@@ -2,8 +2,8 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.EventListener;
@@ -20,7 +20,7 @@ public interface InlayModel {
    * Same as {@link #addInlineElement(int, boolean, EditorCustomElementRenderer)}, making created element associated with following text.
    */
   @Nullable
-  default Inlay addInlineElement(int offset, @NotNull EditorCustomElementRenderer renderer) {
+  default Inlay addInlineElement(int offset, @Nonnull EditorCustomElementRenderer renderer) {
     return addInlineElement(offset, false, renderer);
   }
 
@@ -33,12 +33,12 @@ public interface InlayModel {
    *                               (see {@link Inlay#isRelatedToPrecedingText()})
    */
   @Nullable
-  Inlay addInlineElement(int offset, boolean relatesToPrecedingText,@NotNull EditorCustomElementRenderer renderer);
+  Inlay addInlineElement(int offset, boolean relatesToPrecedingText,@Nonnull EditorCustomElementRenderer renderer);
 
   /**
    * Returns a list of inline elements for a given offset range (both limits are inclusive). Returned list is sorted by offset.
    */
-  @NotNull
+  @Nonnull
   List<Inlay> getInlineElementsInRange(int startOffset, int endOffset);
 
   /**
@@ -64,7 +64,7 @@ public interface InlayModel {
    * Tells whether there exists an inline visual element at a given visual position.
    * Only visual position to the left of the element is recognized.
    */
-  default boolean hasInlineElementAt(@NotNull VisualPosition visualPosition) {
+  default boolean hasInlineElementAt(@Nonnull VisualPosition visualPosition) {
     return getInlineElementAt(visualPosition) != null;
   }
 
@@ -72,26 +72,26 @@ public interface InlayModel {
    * Return a custom visual element at at a given visual position. Only visual position to the left of the element is recognized.
    */
   @Nullable
-  Inlay getInlineElementAt(@NotNull VisualPosition visualPosition);
+  Inlay getInlineElementAt(@Nonnull VisualPosition visualPosition);
 
   /**
    * Return a custom visual element at given coordinates in editor's coordinate space,
    * or {@code null} if there's no element at given point.
    */
   @Nullable
-  Inlay getElementAt(@NotNull Point point);
+  Inlay getElementAt(@Nonnull Point point);
 
   /**
    * Adds a listener that will be notified after adding, updating and removal of custom visual elements.
    */
-  void addListener(@NotNull Listener listener, @NotNull Disposable disposable);
+  void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable);
 
   interface Listener extends EventListener {
-    void onAdded(@NotNull Inlay inlay);
+    void onAdded(@Nonnull Inlay inlay);
 
-    void onUpdated(@NotNull Inlay inlay);
+    void onUpdated(@Nonnull Inlay inlay);
 
-    void onRemoved(@NotNull Inlay inlay);
+    void onRemoved(@Nonnull Inlay inlay);
   }
 
   /**
@@ -99,15 +99,15 @@ public interface InlayModel {
    */
   abstract class SimpleAdapter implements Listener {
     @Override
-    public void onAdded(@NotNull Inlay inlay) {
+    public void onAdded(@Nonnull Inlay inlay) {
       onUpdated(inlay);
     }
 
     @Override
-    public void onUpdated(@NotNull Inlay inlay) {}
+    public void onUpdated(@Nonnull Inlay inlay) {}
 
     @Override
-    public void onRemoved(@NotNull Inlay inlay) {
+    public void onRemoved(@Nonnull Inlay inlay) {
       onUpdated(inlay);
     }
   }

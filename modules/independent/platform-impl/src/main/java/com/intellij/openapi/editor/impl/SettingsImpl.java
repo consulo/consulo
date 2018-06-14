@@ -38,9 +38,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -237,7 +236,7 @@ public class SettingsImpl implements EditorSettings {
     fireEditorRefresh();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Integer> getSoftMargins() {
     if (mySoftMargins != null) return mySoftMargins;

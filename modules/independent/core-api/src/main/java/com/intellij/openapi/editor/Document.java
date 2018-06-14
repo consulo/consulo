@@ -21,9 +21,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeListener;
 
@@ -217,7 +216,7 @@ public interface Document extends UserDataHolder {
    * @param endOffset   the end offset for the range of text covered by the marker.
    * @return the marker instance.
    */
-  @NotNull
+  @Nonnull
   default RangeMarker createRangeMarker(int startOffset, int endOffset) {
     return createRangeMarker(startOffset, endOffset, false);
   }

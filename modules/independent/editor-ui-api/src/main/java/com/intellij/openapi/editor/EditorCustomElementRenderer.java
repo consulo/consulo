@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -31,7 +31,7 @@ public interface EditorCustomElementRenderer {
   /**
    * Defines width of custom element (in pixels)
    */
-  int calcWidthInPixels(@NotNull Editor editor);
+  int calcWidthInPixels(@Nonnull Editor editor);
 
   /**
    * Implements painting for the custom region.
@@ -39,7 +39,7 @@ public interface EditorCustomElementRenderer {
    * @param targetRegion region where painting should be performed
    * @param textAttributes attributes of surrounding text
    */
-  void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle targetRegion, @NotNull TextAttributes textAttributes);
+  void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle targetRegion, @Nonnull TextAttributes textAttributes);
 
   /**
    * Returns a registered id of action group, which is to be used for displaying context menu for the given custom element.

@@ -7,8 +7,8 @@ import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.InlayModel;
 import com.intellij.openapi.editor.VisualPosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -19,12 +19,12 @@ public class InlayModelWindow implements InlayModel {
 
   @Nullable
   @Override
-  public Inlay addInlineElement(int offset, boolean relatesToPrecedingText, @NotNull EditorCustomElementRenderer renderer) {
+  public Inlay addInlineElement(int offset, boolean relatesToPrecedingText, @Nonnull EditorCustomElementRenderer renderer) {
     logUnsupported();
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Inlay> getInlineElementsInRange(int startOffset, int endOffset) {
     logUnsupported();
@@ -39,20 +39,20 @@ public class InlayModelWindow implements InlayModel {
 
   @Nullable
   @Override
-  public Inlay getInlineElementAt(@NotNull VisualPosition visualPosition) {
+  public Inlay getInlineElementAt(@Nonnull VisualPosition visualPosition) {
     logUnsupported();
     return null;
   }
 
   @Nullable
   @Override
-  public Inlay getElementAt(@NotNull Point point) {
+  public Inlay getElementAt(@Nonnull Point point) {
     logUnsupported();
     return null;
   }
 
   @Override
-  public void addListener(@NotNull Listener listener, @NotNull Disposable disposable) {
+  public void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable) {
     logUnsupported();
   }
 

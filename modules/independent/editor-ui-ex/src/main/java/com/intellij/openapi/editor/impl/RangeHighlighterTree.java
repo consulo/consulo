@@ -19,18 +19,18 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.util.Getter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
   private final MarkupModelEx myMarkupModel;
 
-  RangeHighlighterTree(@NotNull Document document, @NotNull MarkupModelEx markupModel) {
+  RangeHighlighterTree(@Nonnull Document document, @Nonnull MarkupModelEx markupModel) {
     super(document);
     myMarkupModel = markupModel;
   }
 
   @Override
-  protected int compareEqualStartIntervals(@NotNull IntervalNode<RangeHighlighterEx> i1, @NotNull IntervalNode<RangeHighlighterEx> i2) {
+  protected int compareEqualStartIntervals(@Nonnull IntervalNode<RangeHighlighterEx> i1, @Nonnull IntervalNode<RangeHighlighterEx> i2) {
     RHNode o1 = (RHNode)i1;
     RHNode o2 = (RHNode)i2;
     int d = o2.myLayer - o1.myLayer;
@@ -40,9 +40,9 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
     return super.compareEqualStartIntervals(i1, i2);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected RHNode createNewNode(@NotNull RangeHighlighterEx key, int start, int end,
+  protected RHNode createNewNode(@Nonnull RangeHighlighterEx key, int start, int end,
                                  boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
     return new RHNode(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight, layer);
   }
@@ -50,8 +50,8 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
   static class RHNode extends RMNode<RangeHighlighterEx> {
     final int myLayer;
 
-    RHNode(@NotNull RangeHighlighterTree rangeMarkerTree,
-           @NotNull final RangeHighlighterEx key,
+    RHNode(@Nonnull RangeHighlighterTree rangeMarkerTree,
+           @Nonnull final RangeHighlighterEx key,
            int start,
            int end,
            boolean greedyToLeft,
@@ -64,14 +64,14 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
 
     //range highlighters are strongly referenced
     @Override
-    protected Getter<RangeHighlighterEx> createGetter(@NotNull RangeHighlighterEx interval) {
+    protected Getter<RangeHighlighterEx> createGetter(@Nonnull RangeHighlighterEx interval) {
       //noinspection unchecked
       return (Getter<RangeHighlighterEx>)interval;
     }
   }
 
   @Override
-  void fireBeforeRemoved(@NotNull RangeHighlighterEx markerEx, @NotNull Object reason) {
+  void fireBeforeRemoved(@Nonnull RangeHighlighterEx markerEx, @Nonnull Object reason) {
     myMarkupModel.fireBeforeRemoved(markerEx);
   }
 }
