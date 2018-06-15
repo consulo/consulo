@@ -27,15 +27,15 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.containers.ContainerUtil;
-import org.jdesktop.swingx.combobox.ListComboBoxModel;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -156,7 +156,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
   }
 
   private void initLanguageCombo(List<Language> languages, Language selected) {
-    ListComboBoxModel<Language> model = new ListComboBoxModel<>(languages);
+    CollectionComboBoxModel<Language> model = new CollectionComboBoxModel<>(languages);
 
     myCurrentLanguageCombo = new ComboBox<>(model);
     myCurrentLanguageCombo.setSelectedItem(selected);

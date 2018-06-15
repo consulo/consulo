@@ -19,10 +19,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ContainerUtil;
-import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.tree.*;
 import java.util.*;
 
@@ -68,7 +67,7 @@ public class ColorOptionsTree extends Tree {
   }
 
   private static TreeModel createTreeModel()  {
-    return new DefaultTreeModel(new DefaultMutableTreeTableNode());
+    return new DefaultTreeModel(new DefaultMutableTreeNode());
   }
 
   private Collection<EditorSchemeAttributeDescriptor> getOrderedDescriptors(@Nonnull ColorAndFontOptions options) {

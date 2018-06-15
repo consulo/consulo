@@ -31,14 +31,14 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
-import org.jdesktop.swingx.renderer.DefaultTreeRenderer;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 
-public abstract class InspectionsConfigTreeRenderer extends DefaultTreeRenderer {
+public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer {
   protected abstract String getFilter();
 
   @Override

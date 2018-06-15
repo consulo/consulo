@@ -16,11 +16,11 @@
 package com.intellij.util.ui.table;
 
 import com.intellij.openapi.util.Iconable;
+import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.PopupMenuListenerAdapter;
 import com.intellij.util.ListWithSelection;
-import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -38,7 +38,7 @@ public class ComboBoxTableCellEditor extends DefaultCellEditor {
 
   public ComboBoxTableCellEditor() {
     //noinspection unchecked,UndesirableClassUsage
-    super(new JComboBox(new ListComboBoxModel(Collections.emptyList())));
+    super(new JComboBox(new CollectionComboBoxModel<>(Collections.emptyList())));
 
     comboBox = (JComboBox)getComponent();
 
@@ -69,7 +69,7 @@ public class ComboBoxTableCellEditor extends DefaultCellEditor {
     if (value instanceof ListWithSelection) {
       ListWithSelection options = (ListWithSelection)value;
       //noinspection unchecked
-      comboBox.setModel(new ListComboBoxModel(options));
+      comboBox.setModel(new CollectionComboBoxModel<>(options));
 
       if (options.getSelection() == null) {
         options.selectFirst();

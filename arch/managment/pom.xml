@@ -261,21 +261,6 @@
         <version>1.11-8</version>
       </dependency>
       <dependency>
-        <groupId>org.swinglabs</groupId>
-        <artifactId>swingx</artifactId>
-        <version>1.6.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.swinglabs</groupId>
-            <artifactId>swing-worker</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.jhlabs</groupId>
-            <artifactId>filters</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
         <groupId>javax.help</groupId>
         <artifactId>javahelp</artifactId>
         <version>2.0.05</version>
