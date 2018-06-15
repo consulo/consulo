@@ -19,18 +19,18 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Ref;
 import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.util.ui.AwtVisitor;
+import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
+import java.util.Collections;
 import java.util.List;
 
 public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider, DataProvider {
@@ -105,25 +105,9 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
   }
 
   public List<AnAction> getActions(boolean originalProvider) {
-    final Ref<ActionToolbar> toolbar = new Ref<ActionToolbar>();
-    if (myToolbar != null) {
-      new AwtVisitor(myToolbar) {
-        @Override
-        public boolean visit(Component component) {
-          if (component instanceof ActionToolbar) {
-            toolbar.set((ActionToolbar)component);
-            return true;
-          }
-          return false;
-        }
-      };
-    }
-
-    if (toolbar.get() != null) {
-      return toolbar.get().getActions(originalProvider);
-    }
-
-    return null;
+    JBIterable<ActionToolbar> toolbars = UIUtil.uiTraverser(myToolbar).traverse().filter(ActionToolbar.class);
+    if (toolbars.size() == 0) return Collections.emptyList();
+    return toolbars.flatten(toolbar -> toolbar.getActions()).toList();
   }
 
   public JComponent getComponent() {

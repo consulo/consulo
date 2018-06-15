@@ -2528,30 +2528,23 @@ public class UIUtil {
   }
 
   public static void removeScrollBorder(final Component c) {
-    new AwtVisitor(c) {
-      @Override
-      public boolean visit(final Component component) {
-        if (component instanceof JScrollPane) {
-          if (!hasNonPrimitiveParents(c, component)) {
-            final JScrollPane scrollPane = (JScrollPane)component;
-            Integer keepBorderSides = (Integer)scrollPane.getClientProperty(KEEP_BORDER_SIDES);
-            if (keepBorderSides != null) {
-              if (scrollPane.getBorder() instanceof LineBorder) {
-                Color color = ((LineBorder)scrollPane.getBorder()).getLineColor();
-                scrollPane.setBorder(new SideBorder(color, keepBorderSides.intValue()));
-              }
-              else {
-                scrollPane.setBorder(new SideBorder(getBoundsColor(), keepBorderSides.intValue()));
-              }
-            }
-            else {
-              scrollPane.setBorder(new SideBorder(getBoundsColor(), SideBorder.NONE));
-            }
-          }
+    for (JScrollPane scrollPane : uiTraverser(c).filter(JScrollPane.class)) {
+      if (!uiParents(scrollPane, true).takeWhile(Conditions.notEqualTo(c)).filter(Conditions.not(Conditions.instanceOf(JPanel.class, JLayeredPane.class))).isEmpty()) continue;
+
+      Integer keepBorderSides = getClientProperty(scrollPane, KEEP_BORDER_SIDES);
+      if (keepBorderSides != null) {
+        if (scrollPane.getBorder() instanceof LineBorder) {
+          Color color = ((LineBorder)scrollPane.getBorder()).getLineColor();
+          scrollPane.setBorder(new SideBorder(color, keepBorderSides.intValue()));
         }
-        return false;
+        else {
+          scrollPane.setBorder(new SideBorder(getBoundsColor(), keepBorderSides.intValue()));
+        }
       }
-    };
+      else {
+        scrollPane.setBorder(new SideBorder(getBoundsColor(), SideBorder.NONE));
+      }
+    }
   }
 
   public static boolean hasNonPrimitiveParents(Component stopParent, Component c) {

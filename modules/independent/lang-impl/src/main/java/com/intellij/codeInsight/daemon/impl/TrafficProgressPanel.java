@@ -29,9 +29,9 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.AwtVisitor;
-import javax.annotation.Nonnull;
+import com.intellij.util.ui.UIUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -81,8 +81,7 @@ class TrafficProgressPanel extends JPanel {
     fakeStatusLargeEnough.passStati = new ArrayList<ProgressableTextEditorHighlightingPass>();
     for (int i = 0; i < 3; i++) {
       fakeStatusLargeEnough.passStati
-              .add(new ProgressableTextEditorHighlightingPass(project, null, DaemonBundle.message("pass.wolf"), psiFile, editor, TextRange.EMPTY_RANGE, false,
-                                                              HighlightInfoProcessor.getEmpty()) {
+              .add(new ProgressableTextEditorHighlightingPass(project, null, DaemonBundle.message("pass.wolf"), psiFile, editor, TextRange.EMPTY_RANGE, false, HighlightInfoProcessor.getEmpty()) {
                 @Override
                 protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
                 }
@@ -102,7 +101,8 @@ class TrafficProgressPanel extends JPanel {
   }
 
   int getMinWidth() {
-    return Math.max(Math.max(Math.max(getLabelMinWidth(statistics), getLabelMinWidth(statusExtraLineLabel)), getLabelMinWidth(statusLabel)), getLabelMinWidth(new JLabel("<html><b>Slow inspections progress report long line</b></html>")));
+    return Math.max(Math.max(Math.max(getLabelMinWidth(statistics), getLabelMinWidth(statusExtraLineLabel)), getLabelMinWidth(statusLabel)),
+                    getLabelMinWidth(new JLabel("<html><b>Slow inspections progress report long line</b></html>")));
   }
 
   private int getLabelMinWidth(@Nonnull JLabel label) {
@@ -117,19 +117,8 @@ class TrafficProgressPanel extends JPanel {
     Rectangle paintTextR = new Rectangle();
     Rectangle paintViewR = new Rectangle(10000, 10000);
 
-    SwingUtilities.layoutCompoundLabel(
-            label,
-            getFontMetrics(getFont()),
-            text,
-            icon,
-            label.getVerticalAlignment(),
-            label.getHorizontalAlignment(),
-            label.getVerticalTextPosition(),
-            label.getHorizontalTextPosition(),
-            paintViewR,
-            paintIconR,
-            paintTextR,
-            label.getIconTextGap());
+    SwingUtilities.layoutCompoundLabel(label, getFontMetrics(getFont()), text, icon, label.getVerticalAlignment(), label.getHorizontalAlignment(), label.getVerticalTextPosition(),
+                                       label.getHorizontalTextPosition(), paintViewR, paintIconR, paintTextR, label.getIconTextGap());
 
     return paintTextR.width;
   }
@@ -203,26 +192,19 @@ class TrafficProgressPanel extends JPanel {
   }
 
   private void resetProgressBars(final boolean enabled, @Nullable final Boolean completed) {
-    new AwtVisitor(myPassStatuses) {
-      @Override
-      public boolean visit(Component component) {
-        if (component instanceof JProgressBar) {
-          JProgressBar progress = (JProgressBar)component;
-          progress.setEnabled(enabled);
-          if (completed != null) {
-            if (completed) {
-              progress.setValue(TrafficLightRenderer.MAX);
-              myProgressToText.get(progress).setText(MAX_TEXT);
-            }
-            else {
-              progress.setValue(0);
-              myProgressToText.get(progress).setText(MIN_TEXT);
-            }
-          }
+    for (JProgressBar progress : UIUtil.uiTraverser(myPassStatuses).traverse().filter(JProgressBar.class)) {
+      progress.setEnabled(enabled);
+      if (completed != null) {
+        if (completed) {
+          progress.setValue(TrafficLightRenderer.MAX);
+          myProgressToText.get(progress).setText(MAX_TEXT);
         }
-        return false;
+        else {
+          progress.setValue(0);
+          myProgressToText.get(progress).setText(MIN_TEXT);
+        }
       }
-    };
+    }
   }
 
   private void rebuildPassesProgress(@Nonnull TrafficLightRenderer.DaemonCodeAnalyzerStatus status) {
