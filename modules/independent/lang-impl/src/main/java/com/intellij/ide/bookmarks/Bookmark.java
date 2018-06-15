@@ -28,7 +28,6 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
@@ -50,15 +49,61 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Processor;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.style.StandardColors;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class Bookmark implements Navigatable {
-  private static final JBColor ICON_BACKGROUND_COLOR = new JBColor(new Color(0xffffcc), new Color(0x675133));
-  public static final Icon DEFAULT_ICON = new MyDefaultIcon();
+  //0..9  + A..Z
+  private static final Image[] ourMnemonicImageCache = new Image[36];
+
+  @Nonnull
+  public static Image getDefaultIcon() {
+    return AllIcons.Actions.Checked;
+  }
+
+  @Nonnull
+  private static Image getMnemonicIcon(char mnemonic) {
+    int index = mnemonic - 48;
+    if (index > 9) index -= 7;
+    if (index < 0 || index > ourMnemonicImageCache.length - 1) {
+      return createMnemonicIcon(mnemonic);
+    }
+
+    if (ourMnemonicImageCache[index] == null) {
+      ourMnemonicImageCache[index] = createMnemonicIcon(mnemonic);
+    }
+    return ourMnemonicImageCache[index];
+  }
+
+  @Nonnull
+  private static Image createMnemonicIcon(char cha) {
+    int width = AllIcons.Actions.Checked.getWidth();
+    int height = AllIcons.Actions.Checked.getHeight();
+
+    return ImageEffects.canvas(width, height, c -> {
+      // FIXME [VISTALL] make constant ??
+      c.setFillColor(TargetAWT.from(new JBColor(new Color(0xffffcc), new Color(0x675133))));
+      c.fillRect(0, 0, width, height);
+
+      c.setStrokeColor(StandardColors.GRAY);
+      c.rect(0, 0, width, height);
+      c.stroke();
+
+      c.setFontColor(ComponentColors.TEXT);
+      c.setFontFamily("Monospaced");
+      c.setFontSize(11);
+
+      c.fillText(Character.toString(cha), 3, -1.5, 0);
+    });
+  }
 
   private final VirtualFile myFile;
   @Nonnull
@@ -99,8 +144,7 @@ public class Bookmark implements Navigatable {
       if (myHighlighter != null) {
         myHighlighter.setGutterIconRenderer(new MyGutterIconRenderer(this));
 
-        TextAttributes textAttributes =
-                EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.BOOKMARKS_ATTRIBUTES);
+        TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.BOOKMARKS_ATTRIBUTES);
 
         Color stripeColor = textAttributes.getErrorStripeColor();
         myHighlighter.setErrorStripeMarkColor(stripeColor != null ? stripeColor : Color.black);
@@ -153,8 +197,12 @@ public class Bookmark implements Navigatable {
     if (!found.isNull()) found.get().dispose();
   }
 
-  public Icon getIcon() {
-    return myMnemonic == 0 ? DEFAULT_ICON : MnemonicIcon.getIcon(myMnemonic);
+  @Nonnull
+  public Image getIcon() {
+    if (myMnemonic == 0) {
+      return getDefaultIcon();
+    }
+    return getMnemonicIcon(myMnemonic);
   }
 
   public String getDescription() {
@@ -270,95 +318,6 @@ public class Bookmark implements Navigatable {
     return result.toString();
   }
 
-  static class MnemonicIcon implements Icon {
-    private static final MnemonicIcon[] cache = new MnemonicIcon[36];//0..9  + A..Z
-    private final char myMnemonic;
-
-    @Nonnull
-    static MnemonicIcon getIcon(char mnemonic) {
-      int index = mnemonic - 48;
-      if (index > 9)
-        index -= 7;
-      if (index < 0 || index > cache.length-1)
-        return new MnemonicIcon(mnemonic);
-      if (cache[index] == null)
-        cache[index] = new MnemonicIcon(mnemonic);
-      return cache[index];
-    }
-
-    private MnemonicIcon(char mnemonic) {
-      myMnemonic = mnemonic;
-    }
-
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      g.setColor(ICON_BACKGROUND_COLOR);
-      g.fillRect(x, y, getIconWidth(), getIconHeight());
-
-      g.setColor(JBColor.GRAY);
-      g.drawRect(x, y, getIconWidth(), getIconHeight());
-
-      g.setColor(JBColor.foreground());
-      final Font oldFont = g.getFont();
-      g.setFont(MNEMONIC_FONT);
-
-      ((Graphics2D)g).drawString(Character.toString(myMnemonic), x + 3, y + getIconHeight() - 1.5F);
-      g.setFont(oldFont);
-    }
-
-    @Override
-    public int getIconWidth() {
-      return DEFAULT_ICON.getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-      return DEFAULT_ICON.getIconHeight();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      MnemonicIcon that = (MnemonicIcon)o;
-
-      return myMnemonic == that.myMnemonic;
-    }
-
-    @Override
-    public int hashCode() {
-      return (int)myMnemonic;
-    }
-  }
-
-  private static class MyDefaultIcon implements Icon {
-    private static final Icon myIcon = AllIcons.Actions.Checked;
-
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      Graphics2D g2 = (Graphics2D)g.create();
-      try {
-        Color gutterBackground = EditorColors.GUTTER_BACKGROUND.getDefaultColor();
-        g2.setColor(gutterBackground);
-        g2.fillRoundRect(x, y, getIconWidth(), getIconHeight(), 4, 4);
-        myIcon.paintIcon(c, g2, x, y);
-      } finally {
-        g2.dispose();
-      }
-    }
-
-    @Override
-    public int getIconWidth() {
-      return myIcon.getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-      return myIcon.getIconHeight();
-    }
-  }
-
   private static class MyGutterIconRenderer extends GutterIconRenderer {
     private final Bookmark myBookmark;
 
@@ -369,7 +328,7 @@ public class Bookmark implements Navigatable {
     @Override
     @Nonnull
     public Icon getIcon() {
-      return myBookmark.getIcon();
+      return TargetAWT.to(myBookmark.getIcon());
     }
 
     @Override

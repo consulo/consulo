@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  */
 public class IconDescriptorUpdaters {
   private static final NotNullLazyValue<Image> ourVisibilityIconPlaceholder =
-          NotNullLazyValue.createValue(() -> ImageEffects.empty(AllIcons.Nodes.C_public.getHeight(), AllIcons.Nodes.C_public.getWidth()));
+          NotNullLazyValue.createValue(() -> ImageEffects.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
 
   private static final NullableFunction<ElementIconRequest, Image> ourIconCompute = request -> {
     final PsiElement element = request.myPointer.getElement();

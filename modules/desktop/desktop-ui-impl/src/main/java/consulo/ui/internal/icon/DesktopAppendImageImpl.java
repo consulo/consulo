@@ -28,11 +28,7 @@ import javax.swing.*;
  */
 public class DesktopAppendImageImpl extends RowIcon implements SwingIconWrapper, Image {
   public DesktopAppendImageImpl(int iconCount) {
-    super(iconCount);
-  }
-
-  public DesktopAppendImageImpl(int iconCount, Alignment alignment) {
-    super(iconCount, alignment);
+    super(iconCount, Alignment.CENTER);        
   }
 
   @Override

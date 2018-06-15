@@ -16,8 +16,10 @@
 package consulo.ui.image;
 
 import consulo.ui.UIInternal;
+import consulo.ui.image.canvas.Canvas2D;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -52,7 +54,12 @@ public final class ImageEffects {
   }
 
   @Nonnull
-  public static Image empty(int height, int width) {
+  public static Image empty(int width, int height) {
     return UIInternal.get()._ImageEffects_empty(width, height);
+  }
+
+  @Nonnull
+  public static Image canvas(int width, int height, @Nonnull Consumer<Canvas2D> consumer) {
+    return UIInternal.get()._ImageEffects_canvas(width, height, consumer);
   }
 }

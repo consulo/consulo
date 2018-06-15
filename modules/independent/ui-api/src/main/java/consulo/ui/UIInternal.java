@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.annotations.Internal;
 import consulo.ui.image.Image;
+import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.StaticPosition;
@@ -26,6 +27,7 @@ import consulo.util.ServiceLoaderUtil;
 import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -89,6 +91,8 @@ public abstract class UIInternal {
   public abstract Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1);
 
   public abstract Image _ImageEffects_empty(int width, int height);
+
+  public abstract Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer);
 
   abstract MenuItem _MenuItem_create(String text);
 

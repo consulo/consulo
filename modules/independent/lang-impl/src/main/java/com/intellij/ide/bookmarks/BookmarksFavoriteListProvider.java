@@ -26,6 +26,8 @@ import com.intellij.ui.CommonActionsPanel;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -100,7 +102,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         @Override
         protected void update(PresentationData presentation) {
           presentation.setPresentableText(bookmark.toString());
-          presentation.setIcon(bookmark.getIcon());
+          presentation.setIcon(TargetAWT.to(bookmark.getIcon()));
         }
       };
       child.setParent(myNode);
@@ -186,19 +188,19 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                                 int row,
                                 boolean hasFocus) {
     renderer.clear();
-    renderer.setIcon(Bookmark.DEFAULT_ICON);
+    renderer.setIcon(TargetAWT.to(Bookmark.getDefaultIcon()));
     if (value instanceof Bookmark) {
       Bookmark bookmark = (Bookmark)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
       if (renderer.getIcon() != null) {
         RowIcon icon = new RowIcon(3, RowIcon.Alignment.CENTER);
-        icon.setIcon(bookmark.getIcon(), 0);
+        icon.setIcon(TargetAWT.to(bookmark.getIcon()), 0);
         icon.setIcon(JBUI.scale(EmptyIcon.create(1)), 1);
         icon.setIcon(renderer.getIcon(), 2);
         renderer.setIcon(icon);
       }
       else {
-        renderer.setIcon(bookmark.getIcon());
+        renderer.setIcon(TargetAWT.to(bookmark.getIcon()));
       }
     }
     else {

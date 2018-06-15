@@ -18,6 +18,8 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.bookmarks.Bookmark;
+import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
@@ -181,14 +183,10 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
     IconDescriptor iconDescriptor = new IconDescriptor(original);
 
-    // TODO [VISTALL] disabled for now
-    //final Bookmark bookmarkAtFile = BookmarkManager.getInstance(project).findFileBookmark(file);
-    //if (bookmarkAtFile != null) {
-    //  final RowIcon composite = new RowIcon(2, RowIcon.Alignment.CENTER);
-    //  composite.setIcon(icon, 0);
-    //  composite.setIcon(bookmarkAtFile.getIcon(), 1);
-    //  icon = composite;
-    //}
+    final Bookmark bookmarkAtFile = BookmarkManager.getInstance(project).findFileBookmark(file);
+    if (bookmarkAtFile != null) {
+      iconDescriptor.setRightIcon(bookmarkAtFile.getIcon());
+    }
 
     if (!file.isWritable()) {
       iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);

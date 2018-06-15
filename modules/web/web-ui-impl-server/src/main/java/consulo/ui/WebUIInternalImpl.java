@@ -19,6 +19,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.vaadin.ui.UI;
 import consulo.annotations.Internal;
 import consulo.ui.image.Image;
+import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
@@ -33,6 +34,7 @@ import consulo.ui.style.StyleManager;
 import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -166,6 +168,11 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_empty(int width, int height) {
+    return null;
+  }
+
+  @Override
+  public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
     return null;
   }
 

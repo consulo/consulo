@@ -19,8 +19,10 @@ import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
 import consulo.ui.internal.icon.*;
+import consulo.ui.internal.image.DesktopCanvasImageImpl;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
@@ -32,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.net.URL;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -69,6 +72,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Image _ImageEffects_empty(int width, int height) {
     return DesktopEmptyImageImpl.get(width, height);
+  }
+
+  @Override
+  public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
+    return new DesktopCanvasImageImpl(width, height, consumer);
   }
 
   @Override

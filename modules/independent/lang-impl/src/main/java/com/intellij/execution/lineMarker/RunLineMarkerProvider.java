@@ -27,9 +27,9 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,9 +82,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
 
       return tooltip.length() == 0 ? null : tooltip.toString();
     };
-    return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), icon, Pass.LINE_MARKERS,
-                                          tooltipProvider, null,
-                                          GutterIconRenderer.Alignment.CENTER) {
+    return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), icon, Pass.LINE_MARKERS, tooltipProvider, null, GutterIconRenderer.Alignment.CENTER) {
       @Nullable
       @Override
       public GutterIconRenderer createGutterRenderer() {
