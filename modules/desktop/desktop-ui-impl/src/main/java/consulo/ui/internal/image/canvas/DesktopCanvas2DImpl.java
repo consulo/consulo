@@ -720,27 +720,23 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     return new Color(floatValues[0], floatValues[1], floatValues[2], (float)alpha);
   }
 
-  /**
-   *
-   */
   @Override
   public void rect(double x, double y, double w, double h) {
     currentPath = new GeneralPath();
     currentPath.append(new Rectangle2D.Double((state.dx + x) * state.scale, (state.dy + y) * state.scale, w * state.scale, h * state.scale), false);
   }
 
-  /**
-   *
-   */
   @Override
-  public void ellipse(double x, double y, double w, double h) {
+  public void arc(double x, double y, double r, double sAngle, double eAngle) {
+    // if we set x&y to zero - there will be only 1/4 circle - move it
+    x -= r;
+    y -= r;
+
+    // TODO [VISTALL] sAngle + eAngle not supported
     currentPath = new GeneralPath();
-    currentPath.append(new Ellipse2D.Double((state.dx + x) * state.scale, (state.dy + y) * state.scale, w * state.scale, h * state.scale), false);
+    currentPath.append(new Ellipse2D.Double((state.dx + x) * state.scale, (state.dy + y) * state.scale, r * state.scale * 2, r * state.scale * 2), false);
   }
 
-  /**
-   *
-   */
   @Override
   public void image(double x, double y, double w, double h, @Nonnull consulo.ui.image.Image src, boolean aspect, boolean flipH, boolean flipV) {
     if (w > 0 && h > 0) {

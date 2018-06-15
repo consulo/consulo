@@ -69,6 +69,10 @@ public final class RGBColor implements Serializable, ColorValue {
     this(red, green, blue, 1f);
   }
 
+  public RGBColor(RGBColor color, float alpha) {
+    this(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+  }
+
   public RGBColor(int red, int green, int blue, float alpha) {
     myRed = red;
     myGreen = green;

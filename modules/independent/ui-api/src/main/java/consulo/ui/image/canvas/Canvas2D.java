@@ -271,14 +271,9 @@ public interface Canvas2D {
   }
 
   /**
-   * Next fill or stroke should draw an ellipse.
-   *
-   * @param x
-   * @param y
-   * @param w
-   * @param h
+   * Next fill or stroke should draw an arc/curve (used to create circles, or parts of circles)
    */
-  void ellipse(double x, double y, double w, double h);
+  void arc(double x, double y, double r, double sAngle, double eAngle);
 
   /**
    * Draws the given image.

@@ -34,20 +34,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.ColorUtil;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
-import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StandardColors;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import java.awt.*;
-import java.awt.geom.Ellipse2D;
 
 public class ExecutionUtil {
   private static final Logger LOG = Logger.getInstance("com.intellij.execution.runners.ExecutionUtil");
@@ -57,10 +55,7 @@ public class ExecutionUtil {
   private ExecutionUtil() {
   }
 
-  public static void handleExecutionError(@Nonnull Project project,
-                                          @Nonnull String toolWindowId,
-                                          @Nonnull RunProfile runProfile,
-                                          @Nonnull ExecutionException e) {
+  public static void handleExecutionError(@Nonnull Project project, @Nonnull String toolWindowId, @Nonnull RunProfile runProfile, @Nonnull ExecutionException e) {
     handleExecutionError(project, toolWindowId, runProfile.getName(), e);
   }
 
@@ -68,10 +63,7 @@ public class ExecutionUtil {
     handleExecutionError(environment.getProject(), environment.getExecutor().getToolWindowId(), environment.getRunProfile().getName(), e);
   }
 
-  public static void handleExecutionError(@Nonnull final Project project,
-                                          @Nonnull final String toolWindowId,
-                                          @Nonnull String taskName,
-                                          @Nonnull ExecutionException e) {
+  public static void handleExecutionError(@Nonnull final Project project, @Nonnull final String toolWindowId, @Nonnull String taskName, @Nonnull ExecutionException e) {
     if (e instanceof RunCanceledByUserException) {
       return;
     }
@@ -143,10 +135,7 @@ public class ExecutionUtil {
 
   public static void restartIfActive(@Nonnull RunContentDescriptor descriptor) {
     ProcessHandler processHandler = descriptor.getProcessHandler();
-    if (processHandler != null
-        && processHandler.isStartNotified()
-        && !processHandler.isProcessTerminating()
-        && !processHandler.isProcessTerminated()) {
+    if (processHandler != null && processHandler.isStartNotified() && !processHandler.isProcessTerminating() && !processHandler.isProcessTerminated()) {
       restart(descriptor);
     }
   }
@@ -177,13 +166,11 @@ public class ExecutionUtil {
   public static void runConfiguration(@Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Executor executor) {
     ExecutionEnvironmentBuilder builder = createEnvironment(executor, configuration);
     if (builder != null) {
-      ExecutionManager.getInstance(configuration.getConfiguration().getProject()).restartRunProfile(builder
-                                                                                                            .activeTarget()
-                                                                                                            .build());
+      ExecutionManager.getInstance(configuration.getConfiguration().getProject()).restartRunProfile(builder.activeTarget().build());
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ExecutionEnvironmentBuilder createEnvironment(@Nonnull Executor executor, @Nonnull RunnerAndConfigurationSettings settings) {
     try {
       return ExecutionEnvironmentBuilder.create(executor, settings);
@@ -195,35 +182,19 @@ public class ExecutionUtil {
   }
 
   public static Icon getLiveIndicator(@Nullable final Icon base) {
-    return new LayeredIcon(base, new Icon() {
-      @SuppressWarnings("UseJBColor")
-      @Override
-      public void paintIcon(Component c, Graphics g, int x, int y) {
-        int iSize = JBUI.scale(4);
-        Graphics2D g2d = (Graphics2D)g.create();
-        try {
-          GraphicsUtil.setupAAPainting(g2d);
-          g2d.setColor(Color.GREEN);
-          Ellipse2D.Double shape =
-                  new Ellipse2D.Double(x + getIconWidth() - JBUI.scale(iSize), y + getIconHeight() - iSize, iSize, iSize);
-          g2d.fill(shape);
-          g2d.setColor(ColorUtil.withAlpha(Color.BLACK, .40));
-          g2d.draw(shape);
-        }
-        finally {
-          g2d.dispose();
-        }
-      }
+    int width = base == null ? 13 : base.getIconWidth();
+    int height = base == null ? 13 : base.getIconHeight();
+    return new LayeredIcon(base, TargetAWT.to(ImageEffects.canvas(width, height, ctx -> {
+      int iSize = 2;
 
-      @Override
-      public int getIconWidth() {
-        return base != null ? base.getIconWidth() : 13;
-      }
+      ctx.setFillColor(StandardColors.GREEN);
+      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
+      ctx.fill();
 
-      @Override
-      public int getIconHeight() {
-        return base != null ? base.getIconHeight() : 13;
-      }
-    });
+      ctx.setStrokeAlpha(0.4f);
+      ctx.setStrokeColor(StandardColors.BLACK);
+      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
+      ctx.stroke();
+    })));
   }
 }

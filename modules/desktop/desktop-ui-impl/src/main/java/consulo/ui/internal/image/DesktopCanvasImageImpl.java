@@ -57,7 +57,7 @@ public class DesktopCanvasImageImpl extends JBUI.CachingScalableJBIcon<DesktopCa
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
     if (myImage == null) {
-      BufferedImage image = UIUtil.createImage(g, myWidth, myHeight, BufferedImage.TYPE_INT_RGB);
+      BufferedImage image = UIUtil.createImage(g, myWidth, myHeight, BufferedImage.TYPE_INT_ARGB);
       Graphics graphics = image.createGraphics();
       GraphicsUtil.setupAAPainting(graphics);
 
