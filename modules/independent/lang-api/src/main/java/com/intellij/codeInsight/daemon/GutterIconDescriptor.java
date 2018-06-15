@@ -15,10 +15,10 @@
  */
 package com.intellij.codeInsight.daemon;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * Allows user to configure visible gutter icons.
@@ -39,7 +39,7 @@ public abstract class GutterIconDescriptor {
   public abstract String getName();
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 
@@ -62,12 +62,11 @@ public abstract class GutterIconDescriptor {
 
 
   public static class Option extends GutterIconDescriptor {
-
     private final String myId;
     private final String myName;
-    private final Icon myIcon;
+    private final Image myIcon;
 
-    public Option(@Nonnull String id, @Nonnull String name, Icon icon) {
+    public Option(@Nonnull String id, @Nonnull String name, Image icon) {
       myId = id;
       myName = name;
       myIcon = icon;
@@ -79,7 +78,7 @@ public abstract class GutterIconDescriptor {
 
     @Nullable
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return myIcon;
     }
 

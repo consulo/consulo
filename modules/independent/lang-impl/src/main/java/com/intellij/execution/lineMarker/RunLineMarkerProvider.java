@@ -27,6 +27,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotations.RequiredReadAction;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -115,7 +116,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.RunConfigurations.TestState.Run;
   }
 }

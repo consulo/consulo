@@ -41,11 +41,12 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -194,7 +195,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder());
         GutterIconDescriptor descriptor = myList.getItemAt(index);
-        Icon icon = descriptor == null ? null : descriptor.getIcon();
+        Icon icon = descriptor == null ? null : TargetAWT.to(descriptor.getIcon());
         JLabel label = new JLabel(icon == null ? EmptyIcon.ICON_16 : icon);
         label.setOpaque(true);
         label.setPreferredSize(new Dimension(25, -1));
