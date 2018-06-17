@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,21 @@ import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 2018-06-17
  */
-public interface ColorValue {
-  @Nonnull
-  RGBColor toRGB();
+final class WithAlphaColorValue implements ColorValue {
+  private final ColorValue myColorValue;
+  private final float myAlpha;
+
+  public WithAlphaColorValue(ColorValue colorValue, float alpha) {
+    myColorValue = colorValue;
+    myAlpha = alpha;
+  }
 
   @Nonnull
-  default ColorValue withAlpha(float value) {
-    return new WithAlphaColorValue(this, value);
+  @Override
+  public RGBColor toRGB() {
+    RGBColor rgbColor = myColorValue.toRGB();
+    return new RGBColor(rgbColor, myAlpha);
   }
 }

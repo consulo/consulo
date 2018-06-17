@@ -90,10 +90,10 @@ public class Bookmark implements Navigatable {
 
     return ImageEffects.canvas(width, height, c -> {
       // FIXME [VISTALL] make constant ??
-      c.setFillColor(TargetAWT.from(new JBColor(new Color(0xffffcc), new Color(0x675133))));
+      c.setFillStyle(TargetAWT.from(new JBColor(new Color(0xffffcc), new Color(0x675133))));
       c.fillRect(0, 0, width, height);
 
-      c.setStrokeColor(StandardColors.GRAY);
+      c.setStrokeStyle(StandardColors.GRAY);
       c.rect(0, 0, width, height);
       c.stroke();
 

@@ -187,12 +187,11 @@ public class ExecutionUtil {
     return new LayeredIcon(base, TargetAWT.to(ImageEffects.canvas(width, height, ctx -> {
       int iSize = 2;
 
-      ctx.setFillColor(StandardColors.GREEN);
+      ctx.setFillStyle(StandardColors.GREEN);
       ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
       ctx.fill();
 
-      ctx.setStrokeAlpha(0.4f);
-      ctx.setStrokeColor(StandardColors.BLACK);
+      ctx.setStrokeStyle(StandardColors.BLACK.withAlpha(0.4f));
       ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
       ctx.stroke();
     })));

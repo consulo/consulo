@@ -4,6 +4,7 @@ import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Requirements for implementing technologies:
@@ -74,7 +75,7 @@ public interface Canvas2D {
    *
    * @param value Hex representation of the color or {@link mxConstants#NONE}.
    */
-  void setStrokeColor(ColorValue value);
+  void setStrokeStyle(@Nullable ColorValue value);
 
   /**
    * Sets the dashed state. This should default to false if unset.
@@ -170,27 +171,11 @@ public interface Canvas2D {
   void setAlpha(double value);
 
   /**
-   * Default value 1. This method may add rendering overhead and should be
-   * used with care.
-   *
-   * @param value
-   */
-  void setFillAlpha(double value);
-
-  /**
-   * Default value 1. This method may add rendering overhead and should be
-   * used with care.
-   *
-   * @param value
-   */
-  void setStrokeAlpha(double value);
-
-  /**
    * Default value {@link mxConstants#NONE}.
    *
    * @param value Hex representation of the color or {@link mxConstants#NONE}.
    */
-  void setFillColor(ColorValue value);
+  void setFillStyle(@Nullable ColorValue value);
 
   /**
    * Prepares the canvas to draw a gradient.

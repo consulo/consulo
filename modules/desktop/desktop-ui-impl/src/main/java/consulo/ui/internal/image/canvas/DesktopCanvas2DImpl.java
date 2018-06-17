@@ -36,16 +36,6 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     /**
      *
      */
-    protected double fillAlpha = 1;
-
-    /**
-     *
-     */
-    protected double strokeAlpha = 1;
-
-    /**
-     *
-     */
     protected double scale = 1;
 
     /**
@@ -493,7 +483,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    * Caches color conversion as it is expensive.
    */
   @Override
-  public void setStrokeColor(ColorValue value) {
+  public void setStrokeStyle(ColorValue value) {
     // Lazy and cached instantiation strategy for all stroke properties
     if (state.strokeColorValue == null || !state.strokeColorValue.equals(value)) {
       state.strokeColorValue = value;
@@ -637,29 +627,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    *
    */
   @Override
-  public void setFillAlpha(double value) {
-    if (state.fillAlpha != value) {
-      state.fillAlpha = value;
-      state.fillColor = null;
-    }
-  }
-
-  /**
-   *
-   */
-  @Override
-  public void setStrokeAlpha(double value) {
-    if (state.strokeAlpha != value) {
-      state.strokeAlpha = value;
-      state.strokeColor = null;
-    }
-  }
-
-  /**
-   *
-   */
-  @Override
-  public void setFillColor(ColorValue value) {
+  public void setFillStyle(ColorValue value) {
     if (state.fillColorValue == null || !state.fillColorValue.equals(value)) {
       state.fillColorValue = value;
       state.fillColor = null;
@@ -695,13 +663,13 @@ public class DesktopCanvas2DImpl implements Canvas2D {
       x1 = (float)(x1 + w);
     }
 
-    Color c1 = convertColor(color1, 1);
+    Color c1 = convertColor(color1);
 
     if (alpha1 != 1) {
       c1 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), (int)(alpha1 * 255));
     }
 
-    Color c2 = convertColor(color2, 1);
+    Color c2 = convertColor(color2);
 
     if (alpha2 != 1) {
       c2 = new Color(c2.getRed(), c2.getGreen(), c2.getBlue(), (int)(alpha2 * 255));
@@ -714,10 +682,10 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   }
 
   @Nonnull
-  private Color convertColor(ColorValue colorValue, double alpha) {
+  private Color convertColor(ColorValue colorValue) {
     RGBColor rgbColor = colorValue.toRGB();
     float[] floatValues = rgbColor.getFloatValues();
-    return new Color(floatValues[0], floatValues[1], floatValues[2], (float)alpha);
+    return new Color(floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
   }
 
   @Override
@@ -1082,7 +1050,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    */
   public void plainText(double x, double y, double w, double h, String str, String align, String valign, boolean wrap, String format, String overflow, boolean clip, double rotation) {
     if (state.fontColor == null) {
-      state.fontColor = convertColor(state.fontColorValue, 1);
+      state.fontColor = convertColor(state.fontColorValue);
     }
 
     if (state.fontColor != null) {
@@ -1116,7 +1084,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
 
       if (state.fontBackgroundColorValue != null) {
         if (state.fontBackgroundColor == null) {
-          state.fontBackgroundColor = convertColor(state.fontBackgroundColorValue, 1);
+          state.fontBackgroundColor = convertColor(state.fontBackgroundColorValue);
         }
 
         if (state.fontBackgroundColor != null) {
@@ -1127,7 +1095,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
 
       if (state.fontBorderColorValue != null) {
         if (state.fontBorderColor == null) {
-          state.fontBorderColor = convertColor(state.fontBorderColorValue, 1);
+          state.fontBorderColor = convertColor(state.fontBorderColorValue);
         }
 
         if (state.fontBorderColor != null) {
@@ -1282,7 +1250,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     if (currentPath != null) {
       if (stroked) {
         if (state.strokeColor == null) {
-          state.strokeColor = convertColor(state.strokeColorValue, state.strokeAlpha);
+          state.strokeColor = convertColor(state.strokeColorValue);
         }
 
         if (state.strokeColor != null) {
@@ -1292,7 +1260,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
 
       if (filled) {
         if (state.gradientPaint == null && state.fillColor == null) {
-          state.fillColor = convertColor(state.fillColorValue, state.fillAlpha);
+          state.fillColor = convertColor(state.fillColorValue);
         }
       }
 
@@ -1326,7 +1294,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    */
   protected void paintShadow(boolean filled, boolean stroked) {
     if (state.shadowColor == null) {
-      state.shadowColor = convertColor(state.shadowColorValue, 1);
+      state.shadowColor = convertColor(state.shadowColorValue);
     }
 
     if (state.shadowColor != null) {
