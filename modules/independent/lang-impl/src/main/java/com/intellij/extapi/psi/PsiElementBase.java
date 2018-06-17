@@ -17,7 +17,6 @@
 package com.intellij.extapi.psi;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -32,14 +31,18 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredReadAction;
+import consulo.lang.LanguageVersion;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo("Use com.intellij.psi.impl.PsiElementBase")
 public abstract class PsiElementBase extends UserDataHolderBase implements NavigatablePsiElement {
   private static final Logger LOG = Logger.getInstance("#com.intellij.extapi.psi.PsiElementBase");
 
