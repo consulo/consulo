@@ -20,10 +20,11 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import java.io.IOException;
 
@@ -113,6 +114,12 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   public boolean tryRunReadAction(@Nonnull Runnable runnable) {
     runReadAction(runnable);
     return true;
+  }
+
+  @Nonnull
+  @Override
+  public UIAccess getLastUIAccess() {
+    return UIAccess.get();
   }
 
   @Override

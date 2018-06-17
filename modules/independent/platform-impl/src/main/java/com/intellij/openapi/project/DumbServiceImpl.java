@@ -48,6 +48,7 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ex.ApplicationEx2;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -482,7 +483,11 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   @Nullable
   private Pair<DumbModeTask, ProgressIndicatorEx> getNextTask(@Nullable DumbModeTask prevTask, @Nonnull ProgressIndicator indicator) {
     CompletableFuture<Pair<DumbModeTask, ProgressIndicatorEx>> result = new CompletableFuture<>();
-    UIUtil.invokeLaterIfNeeded(() -> {
+
+    ApplicationEx2 application = (ApplicationEx2)Application.get();
+    UIAccess lastUIAccess = application.getLastUIAccess();
+
+    lastUIAccess.giveIfNeed(() -> {
       if (myProject.isDisposed()) {
         result.completeExceptionally(new ProcessCanceledException());
         return;

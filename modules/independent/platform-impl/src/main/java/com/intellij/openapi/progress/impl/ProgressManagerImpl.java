@@ -19,7 +19,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.progress.util.*;
+import com.intellij.openapi.progress.util.PingProgress;
+import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import com.intellij.openapi.progress.util.ProgressWindow;
+import com.intellij.openapi.progress.util.SmoothProgressAdapter;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.SystemNotifications;
@@ -27,10 +30,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.platform.Platform;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
@@ -136,7 +140,8 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   @Override
   @Nonnull
   public Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task) {
-    ProgressIndicator progressIndicator = ApplicationManager.getApplication().isHeadlessEnvironment() ?
+    //TODO [VISTALL] web service hack
+    ProgressIndicator progressIndicator = ApplicationManager.getApplication().isHeadlessEnvironment() || Platform.current().isWebService() ?
                                           new EmptyProgressIndicator() :
                                           new BackgroundableProcessIndicator(task);
     return runProcessWithProgressAsynchronously(task, progressIndicator, null);

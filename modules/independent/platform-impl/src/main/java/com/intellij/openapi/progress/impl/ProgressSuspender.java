@@ -17,6 +17,7 @@ package com.intellij.openapi.progress.impl;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
@@ -24,6 +25,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorListenerAdapter;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,6 +33,8 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public class ProgressSuspender {
+  private static final Logger LOGGER = Logger.getInstance(ProgressSuspender.class);
+
   private static final Key<ProgressSuspender> PROGRESS_SUSPENDER = Key.create("PROGRESS_SUSPENDER");
 
   private final Object myLock = new Object();
@@ -44,7 +48,7 @@ public class ProgressSuspender {
     assert ProgressIndicatorProvider.getGlobalProgressIndicator() == progress;
     myThread = Thread.currentThread();
 
-    ((UserDataHolder) progress).putUserData(PROGRESS_SUSPENDER, this);
+    ((UserDataHolder)progress).putUserData(PROGRESS_SUSPENDER, this);
 
     new ProgressIndicatorListenerAdapter() {
       @Override
@@ -55,6 +59,11 @@ public class ProgressSuspender {
   }
 
   public static void markSuspendable(@Nonnull ProgressIndicator indicator) {
+    if (!(indicator instanceof ProgressIndicatorEx)) {
+      LOGGER.error("Indicator is not impl ProgressIndicatorEx: " + indicator);
+      return;
+    }
+
     new ProgressSuspender((ProgressIndicatorEx)indicator);
   }
 
@@ -76,7 +85,8 @@ public class ProgressSuspender {
       ProgressManagerImpl manager = (ProgressManagerImpl)ProgressManager.getInstance();
       if (suspended) {
         manager.addCheckCanceledHook(myHook);
-      } else {
+      }
+      else {
         manager.removeCheckCanceledHook(myHook);
 
         myLock.notifyAll();

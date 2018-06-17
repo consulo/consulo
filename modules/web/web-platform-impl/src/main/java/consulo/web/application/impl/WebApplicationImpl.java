@@ -15,6 +15,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
+import consulo.ui.UIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import org.jetbrains.annotations.NonNls;
@@ -93,7 +94,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Override
   public void assertIsDispatchThread() {
     if (!isDispatchThread()) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(Thread.currentThread().getName() + " is not ui thread");
     }
   }
 
@@ -242,6 +243,16 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Override
   public void assertTimeConsuming() {
 
+  }
+
+  @Nonnull
+  @Override
+  public UIAccess getLastUIAccess() {
+    WebSession currentSession = getCurrentSession();
+    if(currentSession == null) {
+      throw new IllegalArgumentException("No session");
+    }
+    return currentSession.getAccess();
   }
 
   @Override

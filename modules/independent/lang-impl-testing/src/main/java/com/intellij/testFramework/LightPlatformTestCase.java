@@ -92,15 +92,16 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IndexableFileSet;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import gnu.trove.THashMap;
-import junit.framework.TestCase;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.TestOnly;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.ui.UIAccess;
+import gnu.trove.THashMap;
+import junit.framework.TestCase;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -304,7 +305,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
 
         final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(ourProject);
-        startupManager.runStartupActivities();
+        startupManager.runStartupActivities(UIAccess.get());
         startupManager.startCacheUpdate();
       }
     }.execute().throwException();

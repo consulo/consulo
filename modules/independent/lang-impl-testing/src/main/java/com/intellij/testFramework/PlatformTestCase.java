@@ -62,6 +62,7 @@ import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.UIAccess;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
 
@@ -232,9 +233,9 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
   protected void runStartupActivities() {
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(myProject);
-    startupManager.runStartupActivities();
+    startupManager.runStartupActivities(UIAccess.get());
     startupManager.startCacheUpdate();
-    startupManager.runPostStartupActivities();
+    startupManager.runPostStartupActivities(UIAccess.get());
   }
 
   protected File getTempProjectDir() throws IOException {
@@ -508,10 +509,10 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     StartupManagerImpl sm = (StartupManagerImpl)StartupManager.getInstance(myProject);
 
     mm.projectOpened();
-    sm.runStartupActivities();
+    sm.runStartupActivities(UIAccess.get());
     sm.startCacheUpdate();
     // extra init for libraries
-    sm.runPostStartupActivities();
+    sm.runPostStartupActivities(UIAccess.get());
   }
 
   @Override

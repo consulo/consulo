@@ -16,9 +16,7 @@
 package consulo.testFramework;
 
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import consulo.lang.LanguageVersion;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -36,11 +34,14 @@ import com.intellij.testFramework.TestDataFile;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.FileComparisonFailure;
-import consulo.lang.util.LanguageVersionUtil;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.lang.LanguageVersion;
+import consulo.lang.util.LanguageVersionUtil;
+import consulo.testFramework.util.TestPathUtil;
+import consulo.ui.UIAccess;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,9 +66,9 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
 
   protected void runStartupActivities() {
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(myProject);
-    startupManager.runStartupActivities();
+    startupManager.runStartupActivities(UIAccess.get());
     startupManager.startCacheUpdate();
-    startupManager.runPostStartupActivities();
+    startupManager.runPostStartupActivities(UIAccess.get());
   }
 
   @Override

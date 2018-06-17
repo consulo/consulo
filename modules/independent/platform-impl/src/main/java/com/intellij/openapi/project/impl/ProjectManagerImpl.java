@@ -391,7 +391,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       TransactionGuard.getInstance().submitTransactionAndWait(() -> fireProjectOpened(project));
 
       final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-      startupManager.runStartupActivities();
+      startupManager.runStartupActivities(uiAccess);
 
       // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
       // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
@@ -402,7 +402,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
       GuiUtils.invokeLaterIfNeeded(() -> {
         if (!project.isDisposed()) {
-          startupManager.runPostStartupActivities();
+          startupManager.runPostStartupActivities(uiAccess);
 
 
           Application application = ApplicationManager.getApplication();
@@ -467,7 +467,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       uiAccess.giveAndWait(() -> fireProjectOpened(project));
 
       final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-      startupManager.runStartupActivities();
+      startupManager.runStartupActivities(uiAccess);
 
       // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
       // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
@@ -478,7 +478,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
       uiAccess.giveAndWaitIfNeed(() -> {
         if (!project.isDisposed()) {
-          startupManager.runPostStartupActivities();
+          startupManager.runPostStartupActivities(uiAccess);
 
           Application application = ApplicationManager.getApplication();
           if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {

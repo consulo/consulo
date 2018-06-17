@@ -54,6 +54,8 @@ import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
 import consulo.start.CommandLineArgs;
+import consulo.ui.AWTUIAccessImpl;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import sun.awt.AWTAccessor;
@@ -628,6 +630,12 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   public void assertTimeConsuming() {
     if (myHeadlessMode || ShutDownTracker.isShutdownHookRunning()) return;
     LOG.assertTrue(!isDispatchThread(), "This operation is time consuming and must not be called on EDT");
+  }
+
+  @Nonnull
+  @Override
+  public UIAccess getLastUIAccess() {
+    return AWTUIAccessImpl.ourInstance;
   }
 
   @Override

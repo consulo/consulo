@@ -110,6 +110,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import junit.framework.Assert;
 import junit.framework.ComparisonFailure;
@@ -1077,7 +1078,7 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
 
         DaemonCodeAnalyzerSettings.getInstance().setImportHintEnabled(false);
         ensureIndexesUpToDate(getProject());
-        ((StartupManagerImpl)StartupManagerEx.getInstanceEx(getProject())).runPostStartupActivities();
+        ((StartupManagerImpl)StartupManagerEx.getInstanceEx(getProject())).runPostStartupActivities(UIAccess.get());
       }
     });
   }

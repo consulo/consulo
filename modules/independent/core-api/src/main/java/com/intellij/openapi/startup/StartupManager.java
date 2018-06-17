@@ -17,7 +17,10 @@ package com.intellij.openapi.startup;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Allows to register activities which are run during project loading. Methods of StartupManager are typically
@@ -34,15 +37,30 @@ public abstract class StartupManager {
     return ServiceManager.getService(project, StartupManager.class);
   }
 
-  public abstract void registerPreStartupActivity(@Nonnull Runnable runnable);
+  @Deprecated
+  public void registerPreStartupActivity(@Nonnull Runnable runnable) {
+    registerPreStartupActivity(uiAccess -> runnable.run());
+  }
+
+  @Deprecated
+  public void registerStartupActivity(@Nonnull Runnable runnable) {
+    registerStartupActivity(uiAccess -> runnable.run());
+  }
+
+  @Deprecated
+  public void registerPostStartupActivity(@Nonnull Runnable runnable) {
+    registerPostStartupActivity(uiAccess -> runnable.run());
+  }
+
+  public abstract void registerPreStartupActivity(@Nonnull Consumer<UIAccess> consumer);
 
   /**
    * Registers an activity which is performed during project load while the "Loading Project"
    * progress bar is displayed. You may NOT access the PSI structures from the activity.
    *
-   * @param runnable the activity to execute.
+   * @param consumer the activity to execute.
    */
-  public abstract void registerStartupActivity(@Nonnull Runnable runnable);
+  public abstract void registerStartupActivity(@Nonnull Consumer<UIAccess> consumer);
 
   /**
    * Registers an activity which is performed during project load after the "Loading Project"
@@ -51,7 +69,7 @@ public abstract class StartupManager {
    * @param runnable the activity to execute.
    * @see StartupActivity#POST_STARTUP_ACTIVITY
    */
-  public abstract void registerPostStartupActivity(@Nonnull Runnable runnable);
+  public abstract void registerPostStartupActivity(@Nonnull Consumer<UIAccess> runnable);
 
   /**
    * Executes the specified runnable immediately if the initialization of the current project

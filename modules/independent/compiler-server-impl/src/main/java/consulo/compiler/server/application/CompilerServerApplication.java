@@ -42,6 +42,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
+import consulo.ui.UIAccess;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
@@ -609,6 +610,12 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   public boolean tryRunReadAction(@Nonnull Runnable action) {
     action.run();
     return true;
+  }
+
+  @Nonnull
+  @Override
+  public UIAccess getLastUIAccess() {
+    return UIAccess.get();
   }
 
   @Nonnull

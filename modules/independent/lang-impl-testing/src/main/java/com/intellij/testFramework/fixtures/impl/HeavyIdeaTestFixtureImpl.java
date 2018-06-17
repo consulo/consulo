@@ -57,11 +57,12 @@ import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.HeavyIdeaTestFixture;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -158,9 +159,9 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
         }
 
         StartupManagerImpl sm = (StartupManagerImpl)StartupManager.getInstance(myProject);
-        sm.runStartupActivities();
+        sm.runStartupActivities(UIAccess.get());
         sm.startCacheUpdate();
-        sm.runPostStartupActivities();
+        sm.runPostStartupActivities(UIAccess.get());
 
         ProjectManagerEx.getInstanceEx().openTestProject(myProject);
         LightPlatformTestCase.clearUncommittedDocuments(myProject);
