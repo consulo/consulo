@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.Disposable;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
@@ -43,14 +44,10 @@ public class WGwtTextBoxImpl extends AbstractComponent implements TextBox, Vaadi
 
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueListener<String> valueListener) {
-
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueListener<String> valueListener) {
-
+  public Disposable addValueListener(@Nonnull ValueListener<String> valueListener) {
+    return dataObject().addListener(ValueListener.class, valueListener);
   }
 
   @Override

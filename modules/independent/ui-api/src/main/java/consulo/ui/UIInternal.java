@@ -20,11 +20,13 @@ import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.util.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -79,6 +81,8 @@ public abstract class UIInternal {
   abstract Hyperlink _Components_hyperlink(String text);
 
   abstract ImageBox _Components_imageBox(Image image);
+
+  abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
   abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
 

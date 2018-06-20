@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.Disposable;
 import consulo.ui.RadioButton;
 import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
@@ -30,14 +31,12 @@ public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton,
     super(text, selected);
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueListener<Boolean> valueListener) {
-    addItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueListener<Boolean> valueListener) {
-    removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false));
+  public Disposable addValueListener(@Nonnull ValueListener<Boolean> valueListener) {
+    DesktopValueListenerAsItemListenerImpl<Boolean> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false);
+    addItemListener(listener);
+    return () -> removeItemListener(listener);
   }
 
   @Nonnull

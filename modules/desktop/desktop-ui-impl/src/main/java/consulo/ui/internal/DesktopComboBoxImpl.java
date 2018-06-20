@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ComboBox;
@@ -72,14 +73,12 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
     setSelectedItem(value);
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    addItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true));
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true));
+  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
+    DesktopValueListenerAsItemListenerImpl<E> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true);
+    addItemListener(listener);
+    return () -> removeItemListener(listener);
   }
 
   @SuppressWarnings("unchecked")

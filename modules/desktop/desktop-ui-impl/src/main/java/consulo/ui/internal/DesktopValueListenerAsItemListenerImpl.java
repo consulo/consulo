@@ -36,17 +36,6 @@ class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
     mySelectEvent = selectEvent;
   }
 
-  @Override
-  public int hashCode() {
-    return myValueListener.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof DesktopValueListenerAsItemListenerImpl &&
-           ((DesktopValueListenerAsItemListenerImpl)obj).myValueListener.equals(((DesktopValueListenerAsItemListenerImpl)obj).myValueListener);
-  }
-
   @RequiredUIAccess
   @Override
   @SuppressWarnings("unchecked")

@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBList;
@@ -76,14 +77,12 @@ public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingW
     myList.setSelectedValue(value, true);
   }
 
+  @Nonnull
   @Override
-  public void addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    myList.addListSelectionListener(new DesktopValueListenerAsListSelectionListener<>(this, myList, valueListener));
-  }
-
-  @Override
-  public void removeValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    myList.removeListSelectionListener(new DesktopValueListenerAsListSelectionListener<>(this, myList, valueListener));
+  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
+    DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, myList, valueListener);
+    myList.addListSelectionListener(listener);
+    return () -> myList.removeListSelectionListener(listener);
   }
 
   @SuppressWarnings("unchecked")

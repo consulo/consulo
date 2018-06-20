@@ -15,8 +15,10 @@
  */
 package consulo.ui;
 
-import javax.annotation.Nonnull;
+import com.intellij.openapi.Disposable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EventListener;
 
 /**
@@ -47,11 +49,10 @@ public interface ValueComponent<V> extends Component {
     void valueChanged(@Nonnull ValueEvent<V> event);
   }
 
-  void addValueListener(@Nonnull ValueComponent.ValueListener<V> valueListener);
+  @Nonnull
+  Disposable addValueListener(@Nonnull ValueComponent.ValueListener<V> valueListener);
 
-  void removeValueListener(@Nonnull ValueComponent.ValueListener<V> valueListener);
-
-  @javax.annotation.Nullable
+  @Nullable
   V getValue();
 
   @RequiredUIAccess

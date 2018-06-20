@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.util.IconLoader;
 import com.vaadin.ui.UI;
 import consulo.annotations.Internal;
 import consulo.ui.image.Image;
@@ -28,10 +27,12 @@ import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelImpl;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -42,10 +43,6 @@ import java.util.function.Consumer;
  */
 @Internal
 public class WebUIInternalImpl extends UIInternal {
-  static {
-    IconLoader.activate(); // TODO [VISTALL] hack until we not start Consulo app
-  }
-
   @Override
   CheckBox _Components_checkBox() {
     return new WGwtCheckBoxImpl();
@@ -139,6 +136,11 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   ImageBox _Components_imageBox(Image image) {
     return new WGwtImageBoxImpl(image);
+  }
+
+  @Override
+  ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
+    throw new UnsupportedOperationException(); //TODO [VISTALL]
   }
 
   @Override

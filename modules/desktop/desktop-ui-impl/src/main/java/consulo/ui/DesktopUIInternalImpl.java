@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
@@ -27,10 +26,12 @@ import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelImpl;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.net.URL;
 import java.util.Collection;
@@ -42,10 +43,6 @@ import java.util.function.Consumer;
  */
 @Internal
 public class DesktopUIInternalImpl extends UIInternal {
-  static {
-    IconLoader.activate(); // TODO [VISTALL] hack until we not start Consulo app
-  }
-
   @Override
   public Image _Images_image(URL url) {
     return new DesktopImageImpl(url);
@@ -226,6 +223,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   ImageBox _Components_imageBox(Image image) {
     return new DesktopImageBoxImpl(image);
+  }
+
+  @Override
+  ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
+    return new DesktopColorBoxImpl(colorValue);
   }
 
   @Override
