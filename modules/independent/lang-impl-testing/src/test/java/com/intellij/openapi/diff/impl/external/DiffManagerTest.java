@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class DiffManagerTest extends TestCase {
+public abstract class DiffManagerTest extends TestCase {
 
   public void testAdditionalTools() {
     DiffManagerImpl diffManager = new DiffManagerImpl();

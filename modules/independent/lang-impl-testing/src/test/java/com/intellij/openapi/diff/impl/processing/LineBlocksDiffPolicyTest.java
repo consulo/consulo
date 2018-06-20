@@ -8,7 +8,7 @@ import com.intellij.util.diff.FilesTooBigForDiffException;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-public class LineBlocksDiffPolicyTest extends TestCase{
+public abstract class LineBlocksDiffPolicyTest extends TestCase {
   public void test() throws FilesTooBigForDiffException {
     DiffPolicy.LineBlocks diffPolicy = new DiffPolicy.LineBlocks(ComparisonPolicy.DEFAULT);
     checkPolicy(diffPolicy, "abc\n123\n", "ABC\nXYZ\n");

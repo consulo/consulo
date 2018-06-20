@@ -34,7 +34,7 @@ import com.intellij.util.ui.UIUtil;
 /**
  * User: cdr
  */
-public class UsageViewTest extends LightPlatformCodeInsightTestCase{
+public abstract class UsageViewTest extends LightPlatformCodeInsightTestCase{
   public void testUsageViewDoesNotHoldPsiFilesOrDocuments() throws Exception {
     PsiFile psiFile = createFile("X.java", "public class X{} //iuggjhfg");
     Usage[] usages = new Usage[100];

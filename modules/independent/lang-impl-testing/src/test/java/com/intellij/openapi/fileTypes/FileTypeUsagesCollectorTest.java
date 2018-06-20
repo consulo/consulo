@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * @author Nikolay Matveev
  */
-public class FileTypeUsagesCollectorTest extends LightPlatformCodeInsightFixtureTestCase {
+public abstract class FileTypeUsagesCollectorTest extends LightPlatformCodeInsightFixtureTestCase {
 
   private void doTest(@Nonnull Collection<FileType> fileTypes) throws CollectUsagesException {
     final Set<UsageDescriptor> usages = new FileTypeUsagesCollector().getProjectUsages(getProject());

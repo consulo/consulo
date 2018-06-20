@@ -21,9 +21,10 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import javax.annotation.Nullable;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -32,6 +33,7 @@ import java.util.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 
+@Ignore
 public class GeneralCommandLineTest {
   @Test
   public void printCommandLine() {

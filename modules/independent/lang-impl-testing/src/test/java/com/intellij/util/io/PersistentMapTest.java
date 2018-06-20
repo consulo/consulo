@@ -12,13 +12,11 @@ import junit.framework.TestCase;
 import java.io.*;
 import java.util.*;
 
-import static com.intellij.util.io.StringEnumeratorTest.createRandomString;
-
 /**
  * @author Eugene Zhuravlev
  *         Date: Dec 19, 2007
  */
-public class PersistentMapTest extends TestCase {
+public abstract class PersistentMapTest extends TestCase {
   
   private PersistentHashMap<String, String> myMap;
   private File myFile;

@@ -17,10 +17,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.testFramework.rules.TempDirectory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +25,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class VMOptionsTest {
   @Rule public TempDirectory myTempDir = new TempDirectory();
 

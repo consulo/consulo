@@ -29,7 +29,7 @@ import gnu.trove.THashMap;
 import java.io.File;
 import java.util.Map;
 
-public class MacroManagerTest extends CodeInsightFixtureTestCase {
+public abstract class MacroManagerTest extends CodeInsightFixtureTestCase {
   private void doTest(String filePath, String str, String expected) throws Macro.ExecutionCancelledException {
     PsiFile file = myFixture.addFileToProject(filePath, "");
     String actual = MacroManager.getInstance().expandMacrosInString(str, false, getContext(file.getVirtualFile()));
