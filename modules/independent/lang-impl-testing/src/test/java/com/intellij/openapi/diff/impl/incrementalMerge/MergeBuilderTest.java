@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 import java.util.List;
 
-public class MergeBuilderTest extends TestCase {
+public abstract class MergeBuilderTest extends TestCase {
   private final MergeBuilder myMergeBuilder = new MergeBuilder(new ContextLogger("TEST"));
   private final Assertion CHECK = new Assertion();
 
