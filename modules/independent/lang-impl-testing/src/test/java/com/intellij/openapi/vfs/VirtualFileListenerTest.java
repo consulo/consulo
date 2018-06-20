@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * @author nik
  */
-public class VirtualFileListenerTest extends PlatformLangTestCase {
+public abstract class VirtualFileListenerTest extends PlatformLangTestCase {
   public void testFireEvent() throws IOException {
     final VirtualFile dir = getVirtualFile(createTempDir("vDir"));
     assertNotNull(dir);

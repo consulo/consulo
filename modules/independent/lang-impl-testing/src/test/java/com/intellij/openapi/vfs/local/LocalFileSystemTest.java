@@ -47,7 +47,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class LocalFileSystemTest extends PlatformLangTestCase {
+public abstract class LocalFileSystemTest extends PlatformLangTestCase {
   private LocalFileSystem myFS;
 
   @Override

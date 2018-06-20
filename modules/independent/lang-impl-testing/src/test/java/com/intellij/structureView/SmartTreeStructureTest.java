@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 import java.util.Comparator;
 
-public class SmartTreeStructureTest extends LightPlatformCodeInsightFixtureTestCase {
+public abstract class SmartTreeStructureTest extends LightPlatformCodeInsightFixtureTestCase {
   private final Queryable.PrintInfo myPrintInfo = new Queryable.PrintInfo();
   private TestTreeModel myModel;
 

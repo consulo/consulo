@@ -24,7 +24,7 @@ import java.io.IOException;
  * @author Denis Zhdanov
  * @since 4/18/11 2:47 PM
  */
-public class CutLineEndActionsTest extends LightPlatformCodeInsightTestCase {
+public abstract class CutLineEndActionsTest extends LightPlatformCodeInsightTestCase {
   
   public void testNonEmptyLineEnd() throws IOException {
     doTest(

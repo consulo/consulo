@@ -23,10 +23,13 @@
 package com.intellij.ide.severities;
 
 import com.intellij.lang.annotation.HighlightSeverity;
-import junit.framework.TestCase;
 import org.jdom.Element;
+import org.junit.Test;
 
-public class HighlightSeveritiesTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class HighlightSeveritiesTest  {
+  @Test
   public void testSeveritiesMigration() throws Exception{
     final Element element = new Element("temp");
     new HighlightSeverity(HighlightSeverity.ERROR.myName, 500).writeExternal(element);

@@ -37,6 +37,7 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,6 +48,7 @@ import static org.junit.Assume.assumeNotNull;
  * @author mike
  */
 @RunWith(JMock.class)
+@Ignore
 public class PathMacroManagerTest {
   private static final String APP_HOME = FileUtil.toSystemIndependentName(PathManager.getHomePath());
   private static final String USER_HOME = FileUtil.toSystemIndependentName(StringUtil.trimEnd(SystemProperties.getUserHome(), "/"));
@@ -69,7 +71,8 @@ public class PathMacroManagerTest {
 
     context.checking(new Expectations() {
       {
-        allowing(myApplication).isUnitTestMode(); will(returnValue(false));
+        allowing(myApplication).isUnitTestMode();
+        will(returnValue(false));
 
         // some tests leave invokeLater()'s after them
         allowing(myApplication).invokeLater(with(any(Runnable.class)), with(any(ModalityState.class)));
@@ -100,19 +103,26 @@ public class PathMacroManagerTest {
     final VirtualFile projectFile = context.mock(VirtualFile.class, "projectFile");
 
     context.checking(new Expectations() {{
-      allowing(myModule).isDisposed(); will(returnValue(false));
-      allowing(myProject).isDisposed(); will(returnValue(false));
+      allowing(myModule).isDisposed();
+      will(returnValue(false));
+      allowing(myProject).isDisposed();
+      will(returnValue(false));
 
-      allowing(projectFile).getPath(); will(returnValue(projectPath));
+      allowing(projectFile).getPath();
+      will(returnValue(projectPath));
 
       final String moduleFilePath = projectPath + "/module/module.iml";
 
-      allowing(myApplication).getComponent(with(equal(PathMacros.class))); will(returnValue(myPathMacros));
+      allowing(myApplication).getComponent(with(equal(PathMacros.class)));
+      will(returnValue(myPathMacros));
       allowing(myPathMacros).addMacroReplacements(with(any(ReplacePathToMacroMap.class)));
 
-      allowing(myProject).getBaseDir(); will(returnValue(projectFile));
-      allowing(myModule).getModuleDir(); will(returnValue(moduleFilePath));
-      allowing(myModule).getProject(); will(returnValue(myProject));
+      allowing(myProject).getBaseDir();
+      will(returnValue(projectFile));
+      allowing(myModule).getModuleDir();
+      will(returnValue(moduleFilePath));
+      allowing(myModule).getProject();
+      will(returnValue(myProject));
     }});
   }
 
@@ -122,40 +132,66 @@ public class PathMacroManagerTest {
 
     final ReplacePathToMacroMap replacePathMap = new ModulePathMacroManager(myPathMacros, myModule).getReplacePathMap();
     assertReplacements(replacePathMap, "file:/tmp/foo/module -> file:$MODULE_DIR$\n" +
-                 "file://tmp/foo/module -> file:/$MODULE_DIR$\n" +
-                 "file:///tmp/foo/module -> file://$MODULE_DIR$\n" +
-                 "jar:/tmp/foo/module -> jar:$MODULE_DIR$\n" +
-                 "jar://tmp/foo/module -> jar:/$MODULE_DIR$\n" +
-                 "jar:///tmp/foo/module -> jar://$MODULE_DIR$\n" +
-                 "/tmp/foo/module -> $MODULE_DIR$\n" +
-                 APP_HOME + " -> $APPLICATION_HOME_DIR$\n" +
-                 "file:" + APP_HOME + " -> file:$APPLICATION_HOME_DIR$\n" +
-                 "file:/" + APP_HOME + " -> file:/$APPLICATION_HOME_DIR$\n" +
-                 "file://" + APP_HOME + " -> file://$APPLICATION_HOME_DIR$\n" +
-                 "jar:" + APP_HOME + " -> jar:$APPLICATION_HOME_DIR$\n" +
-                 "jar:/" + APP_HOME + " -> jar:/$APPLICATION_HOME_DIR$\n" +
-                 "jar://" + APP_HOME + " -> jar://$APPLICATION_HOME_DIR$\n" +
-                 USER_HOME + " -> $USER_HOME$\n" +
-                 "file:" + USER_HOME + " -> file:$USER_HOME$\n" +
-                 "file:/" + USER_HOME + " -> file:/$USER_HOME$\n" +
-                 "file://" + USER_HOME + " -> file://$USER_HOME$\n" +
-                 "jar:" + USER_HOME + " -> jar:$USER_HOME$\n" +
-                 "jar:/" + USER_HOME + " -> jar:/$USER_HOME$\n" +
-                 "jar://" + USER_HOME + " -> jar://$USER_HOME$\n" +
-                 "file:/tmp/foo -> file:$MODULE_DIR$/..\n" +
-                 "file://tmp/foo -> file:/$MODULE_DIR$/..\n" +
-                 "file:///tmp/foo -> file://$MODULE_DIR$/..\n" +
-                 "jar:/tmp/foo -> jar:$MODULE_DIR$/..\n" +
-                 "jar://tmp/foo -> jar:/$MODULE_DIR$/..\n" +
-                 "jar:///tmp/foo -> jar://$MODULE_DIR$/..\n" +
-                 "/tmp/foo -> $MODULE_DIR$/..\n" +
-                 "file:/tmp -> file:$MODULE_DIR$/../..\n" +
-                 "file://tmp -> file:/$MODULE_DIR$/../..\n" +
-                 "file:///tmp -> file://$MODULE_DIR$/../..\n" +
-                 "jar:/tmp -> jar:$MODULE_DIR$/../..\n" +
-                 "jar://tmp -> jar:/$MODULE_DIR$/../..\n" +
-                 "jar:///tmp -> jar://$MODULE_DIR$/../..\n" +
-                 "/tmp -> $MODULE_DIR$/../..");
+                                       "file://tmp/foo/module -> file:/$MODULE_DIR$\n" +
+                                       "file:///tmp/foo/module -> file://$MODULE_DIR$\n" +
+                                       "jar:/tmp/foo/module -> jar:$MODULE_DIR$\n" +
+                                       "jar://tmp/foo/module -> jar:/$MODULE_DIR$\n" +
+                                       "jar:///tmp/foo/module -> jar://$MODULE_DIR$\n" +
+                                       "/tmp/foo/module -> $MODULE_DIR$\n" +
+                                       APP_HOME +
+                                       " -> $APPLICATION_HOME_DIR$\n" +
+                                       "file:" +
+                                       APP_HOME +
+                                       " -> file:$APPLICATION_HOME_DIR$\n" +
+                                       "file:/" +
+                                       APP_HOME +
+                                       " -> file:/$APPLICATION_HOME_DIR$\n" +
+                                       "file://" +
+                                       APP_HOME +
+                                       " -> file://$APPLICATION_HOME_DIR$\n" +
+                                       "jar:" +
+                                       APP_HOME +
+                                       " -> jar:$APPLICATION_HOME_DIR$\n" +
+                                       "jar:/" +
+                                       APP_HOME +
+                                       " -> jar:/$APPLICATION_HOME_DIR$\n" +
+                                       "jar://" +
+                                       APP_HOME +
+                                       " -> jar://$APPLICATION_HOME_DIR$\n" +
+                                       USER_HOME +
+                                       " -> $USER_HOME$\n" +
+                                       "file:" +
+                                       USER_HOME +
+                                       " -> file:$USER_HOME$\n" +
+                                       "file:/" +
+                                       USER_HOME +
+                                       " -> file:/$USER_HOME$\n" +
+                                       "file://" +
+                                       USER_HOME +
+                                       " -> file://$USER_HOME$\n" +
+                                       "jar:" +
+                                       USER_HOME +
+                                       " -> jar:$USER_HOME$\n" +
+                                       "jar:/" +
+                                       USER_HOME +
+                                       " -> jar:/$USER_HOME$\n" +
+                                       "jar://" +
+                                       USER_HOME +
+                                       " -> jar://$USER_HOME$\n" +
+                                       "file:/tmp/foo -> file:$MODULE_DIR$/..\n" +
+                                       "file://tmp/foo -> file:/$MODULE_DIR$/..\n" +
+                                       "file:///tmp/foo -> file://$MODULE_DIR$/..\n" +
+                                       "jar:/tmp/foo -> jar:$MODULE_DIR$/..\n" +
+                                       "jar://tmp/foo -> jar:/$MODULE_DIR$/..\n" +
+                                       "jar:///tmp/foo -> jar://$MODULE_DIR$/..\n" +
+                                       "/tmp/foo -> $MODULE_DIR$/..\n" +
+                                       "file:/tmp -> file:$MODULE_DIR$/../..\n" +
+                                       "file://tmp -> file:/$MODULE_DIR$/../..\n" +
+                                       "file:///tmp -> file://$MODULE_DIR$/../..\n" +
+                                       "jar:/tmp -> jar:$MODULE_DIR$/../..\n" +
+                                       "jar://tmp -> jar:/$MODULE_DIR$/../..\n" +
+                                       "jar:///tmp -> jar://$MODULE_DIR$/../..\n" +
+                                       "/tmp -> $MODULE_DIR$/../..");
   }
 
   @Test
@@ -164,33 +200,59 @@ public class PathMacroManagerTest {
 
     final ReplacePathToMacroMap replacePathMap = new ProjectPathMacroManager(myPathMacros, myProject).getReplacePathMap();
     assertReplacements(replacePathMap, "file:/tmp/foo -> file:$PROJECT_DIR$\n" +
-                 "file://tmp/foo -> file:/$PROJECT_DIR$\n" +
-                 "file:///tmp/foo -> file://$PROJECT_DIR$\n" +
-                 "jar:/tmp/foo -> jar:$PROJECT_DIR$\n" +
-                 "jar://tmp/foo -> jar:/$PROJECT_DIR$\n" +
-                 "jar:///tmp/foo -> jar://$PROJECT_DIR$\n" +
-                 "/tmp/foo -> $PROJECT_DIR$\n" +
-                 APP_HOME + " -> $APPLICATION_HOME_DIR$\n" +
-                 "file:" + APP_HOME + " -> file:$APPLICATION_HOME_DIR$\n" +
-                 "file:/" + APP_HOME + " -> file:/$APPLICATION_HOME_DIR$\n" +
-                 "file://" + APP_HOME + " -> file://$APPLICATION_HOME_DIR$\n" +
-                 "jar:" + APP_HOME + " -> jar:$APPLICATION_HOME_DIR$\n" +
-                 "jar:/" + APP_HOME + " -> jar:/$APPLICATION_HOME_DIR$\n" +
-                 "jar://" + APP_HOME + " -> jar://$APPLICATION_HOME_DIR$\n" +
-                 USER_HOME + " -> $USER_HOME$\n" +
-                 "file:" + USER_HOME + " -> file:$USER_HOME$\n" +
-                 "file:/" + USER_HOME + " -> file:/$USER_HOME$\n" +
-                 "file://" + USER_HOME + " -> file://$USER_HOME$\n" +
-                 "jar:" + USER_HOME + " -> jar:$USER_HOME$\n" +
-                 "jar:/" + USER_HOME + " -> jar:/$USER_HOME$\n" +
-                 "jar://" + USER_HOME + " -> jar://$USER_HOME$\n" +
-                 "file:/tmp -> file:$PROJECT_DIR$/..\n" +
-                 "file://tmp -> file:/$PROJECT_DIR$/..\n" +
-                 "file:///tmp -> file://$PROJECT_DIR$/..\n" +
-                 "jar:/tmp -> jar:$PROJECT_DIR$/..\n" +
-                 "jar://tmp -> jar:/$PROJECT_DIR$/..\n" +
-                 "jar:///tmp -> jar://$PROJECT_DIR$/..\n" +
-                 "/tmp -> $PROJECT_DIR$/..");
+                                       "file://tmp/foo -> file:/$PROJECT_DIR$\n" +
+                                       "file:///tmp/foo -> file://$PROJECT_DIR$\n" +
+                                       "jar:/tmp/foo -> jar:$PROJECT_DIR$\n" +
+                                       "jar://tmp/foo -> jar:/$PROJECT_DIR$\n" +
+                                       "jar:///tmp/foo -> jar://$PROJECT_DIR$\n" +
+                                       "/tmp/foo -> $PROJECT_DIR$\n" +
+                                       APP_HOME +
+                                       " -> $APPLICATION_HOME_DIR$\n" +
+                                       "file:" +
+                                       APP_HOME +
+                                       " -> file:$APPLICATION_HOME_DIR$\n" +
+                                       "file:/" +
+                                       APP_HOME +
+                                       " -> file:/$APPLICATION_HOME_DIR$\n" +
+                                       "file://" +
+                                       APP_HOME +
+                                       " -> file://$APPLICATION_HOME_DIR$\n" +
+                                       "jar:" +
+                                       APP_HOME +
+                                       " -> jar:$APPLICATION_HOME_DIR$\n" +
+                                       "jar:/" +
+                                       APP_HOME +
+                                       " -> jar:/$APPLICATION_HOME_DIR$\n" +
+                                       "jar://" +
+                                       APP_HOME +
+                                       " -> jar://$APPLICATION_HOME_DIR$\n" +
+                                       USER_HOME +
+                                       " -> $USER_HOME$\n" +
+                                       "file:" +
+                                       USER_HOME +
+                                       " -> file:$USER_HOME$\n" +
+                                       "file:/" +
+                                       USER_HOME +
+                                       " -> file:/$USER_HOME$\n" +
+                                       "file://" +
+                                       USER_HOME +
+                                       " -> file://$USER_HOME$\n" +
+                                       "jar:" +
+                                       USER_HOME +
+                                       " -> jar:$USER_HOME$\n" +
+                                       "jar:/" +
+                                       USER_HOME +
+                                       " -> jar:/$USER_HOME$\n" +
+                                       "jar://" +
+                                       USER_HOME +
+                                       " -> jar://$USER_HOME$\n" +
+                                       "file:/tmp -> file:$PROJECT_DIR$/..\n" +
+                                       "file://tmp -> file:/$PROJECT_DIR$/..\n" +
+                                       "file:///tmp -> file://$PROJECT_DIR$/..\n" +
+                                       "jar:/tmp -> jar:$PROJECT_DIR$/..\n" +
+                                       "jar://tmp -> jar:/$PROJECT_DIR$/..\n" +
+                                       "jar:///tmp -> jar://$PROJECT_DIR$/..\n" +
+                                       "/tmp -> $PROJECT_DIR$/..");
   }
 
   private static void assertReplacements(ReplacePathToMacroMap map, String replacements) {
@@ -218,40 +280,105 @@ public class PathMacroManagerTest {
     setUpMocks(USER_HOME + "/IdeaProjects/foo");
 
     final ReplacePathToMacroMap replacePathMap = new ModulePathMacroManager(myPathMacros, myModule).getReplacePathMap();
-    assertReplacements(replacePathMap, "file:" + USER_HOME + "/IdeaProjects/foo/module -> file:$MODULE_DIR$\n" +
-                 "file:/" + USER_HOME + "/IdeaProjects/foo/module -> file:/$MODULE_DIR$\n" +
-                 "file://" + USER_HOME + "/IdeaProjects/foo/module -> file://$MODULE_DIR$\n" +
-                 "jar:" + USER_HOME + "/IdeaProjects/foo/module -> jar:$MODULE_DIR$\n" +
-                 "jar:/" + USER_HOME + "/IdeaProjects/foo/module -> jar:/$MODULE_DIR$\n" +
-                 "jar://" + USER_HOME + "/IdeaProjects/foo/module -> jar://$MODULE_DIR$\n" +
-                 USER_HOME + "/IdeaProjects/foo/module -> $MODULE_DIR$\n" +
-                 APP_HOME + " -> $APPLICATION_HOME_DIR$\n" +
-                 "file:" + APP_HOME + " -> file:$APPLICATION_HOME_DIR$\n" +
-                 "file:/" + APP_HOME + " -> file:/$APPLICATION_HOME_DIR$\n" +
-                 "file://" + APP_HOME + " -> file://$APPLICATION_HOME_DIR$\n" +
-                 "jar:" + APP_HOME + " -> jar:$APPLICATION_HOME_DIR$\n" +
-                 "jar:/" + APP_HOME + " -> jar:/$APPLICATION_HOME_DIR$\n" +
-                 "jar://" + APP_HOME + " -> jar://$APPLICATION_HOME_DIR$\n" +
-                 "file:" + USER_HOME + "/IdeaProjects/foo -> file:$MODULE_DIR$/..\n" +
-                 "file:/" + USER_HOME + "/IdeaProjects/foo -> file:/$MODULE_DIR$/..\n" +
-                 "file://" + USER_HOME + "/IdeaProjects/foo -> file://$MODULE_DIR$/..\n" +
-                 "jar:" + USER_HOME + "/IdeaProjects/foo -> jar:$MODULE_DIR$/..\n" +
-                 "jar:/" + USER_HOME + "/IdeaProjects/foo -> jar:/$MODULE_DIR$/..\n" +
-                 "jar://" + USER_HOME + "/IdeaProjects/foo -> jar://$MODULE_DIR$/..\n" +
-                 USER_HOME + "/IdeaProjects/foo -> $MODULE_DIR$/..\n" +
-                 "file:" + USER_HOME + "/IdeaProjects -> file:$MODULE_DIR$/../..\n" +
-                 "file:/" + USER_HOME + "/IdeaProjects -> file:/$MODULE_DIR$/../..\n" +
-                 "file://" + USER_HOME + "/IdeaProjects -> file://$MODULE_DIR$/../..\n" +
-                 "jar:" + USER_HOME + "/IdeaProjects -> jar:$MODULE_DIR$/../..\n" +
-                 "jar:/" + USER_HOME + "/IdeaProjects -> jar:/$MODULE_DIR$/../..\n" +
-                 "jar://" + USER_HOME + "/IdeaProjects -> jar://$MODULE_DIR$/../..\n" +
-                 USER_HOME + "/IdeaProjects -> $MODULE_DIR$/../..\n" +
-                 USER_HOME + " -> $USER_HOME$\n" +
-                 "file:" + USER_HOME + " -> file:$USER_HOME$\n" +
-                 "file:/" + USER_HOME + " -> file:/$USER_HOME$\n" +
-                 "file://" + USER_HOME + " -> file://$USER_HOME$\n" +
-                 "jar:" + USER_HOME + " -> jar:$USER_HOME$\n" +
-                 "jar:/" + USER_HOME + " -> jar:/$USER_HOME$\n" +
-                 "jar://" + USER_HOME + " -> jar://$USER_HOME$");
+    assertReplacements(replacePathMap, "file:" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo/module -> file:$MODULE_DIR$\n" +
+                                       "file:/" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo/module -> file:/$MODULE_DIR$\n" +
+                                       "file://" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo/module -> file://$MODULE_DIR$\n" +
+                                       "jar:" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo/module -> jar:$MODULE_DIR$\n" +
+                                       "jar:/" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo/module -> jar:/$MODULE_DIR$\n" +
+                                       "jar://" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo/module -> jar://$MODULE_DIR$\n" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo/module -> $MODULE_DIR$\n" +
+                                       APP_HOME +
+                                       " -> $APPLICATION_HOME_DIR$\n" +
+                                       "file:" +
+                                       APP_HOME +
+                                       " -> file:$APPLICATION_HOME_DIR$\n" +
+                                       "file:/" +
+                                       APP_HOME +
+                                       " -> file:/$APPLICATION_HOME_DIR$\n" +
+                                       "file://" +
+                                       APP_HOME +
+                                       " -> file://$APPLICATION_HOME_DIR$\n" +
+                                       "jar:" +
+                                       APP_HOME +
+                                       " -> jar:$APPLICATION_HOME_DIR$\n" +
+                                       "jar:/" +
+                                       APP_HOME +
+                                       " -> jar:/$APPLICATION_HOME_DIR$\n" +
+                                       "jar://" +
+                                       APP_HOME +
+                                       " -> jar://$APPLICATION_HOME_DIR$\n" +
+                                       "file:" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo -> file:$MODULE_DIR$/..\n" +
+                                       "file:/" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo -> file:/$MODULE_DIR$/..\n" +
+                                       "file://" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo -> file://$MODULE_DIR$/..\n" +
+                                       "jar:" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo -> jar:$MODULE_DIR$/..\n" +
+                                       "jar:/" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo -> jar:/$MODULE_DIR$/..\n" +
+                                       "jar://" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo -> jar://$MODULE_DIR$/..\n" +
+                                       USER_HOME +
+                                       "/IdeaProjects/foo -> $MODULE_DIR$/..\n" +
+                                       "file:" +
+                                       USER_HOME +
+                                       "/IdeaProjects -> file:$MODULE_DIR$/../..\n" +
+                                       "file:/" +
+                                       USER_HOME +
+                                       "/IdeaProjects -> file:/$MODULE_DIR$/../..\n" +
+                                       "file://" +
+                                       USER_HOME +
+                                       "/IdeaProjects -> file://$MODULE_DIR$/../..\n" +
+                                       "jar:" +
+                                       USER_HOME +
+                                       "/IdeaProjects -> jar:$MODULE_DIR$/../..\n" +
+                                       "jar:/" +
+                                       USER_HOME +
+                                       "/IdeaProjects -> jar:/$MODULE_DIR$/../..\n" +
+                                       "jar://" +
+                                       USER_HOME +
+                                       "/IdeaProjects -> jar://$MODULE_DIR$/../..\n" +
+                                       USER_HOME +
+                                       "/IdeaProjects -> $MODULE_DIR$/../..\n" +
+                                       USER_HOME +
+                                       " -> $USER_HOME$\n" +
+                                       "file:" +
+                                       USER_HOME +
+                                       " -> file:$USER_HOME$\n" +
+                                       "file:/" +
+                                       USER_HOME +
+                                       " -> file:/$USER_HOME$\n" +
+                                       "file://" +
+                                       USER_HOME +
+                                       " -> file://$USER_HOME$\n" +
+                                       "jar:" +
+                                       USER_HOME +
+                                       " -> jar:$USER_HOME$\n" +
+                                       "jar:/" +
+                                       USER_HOME +
+                                       " -> jar:/$USER_HOME$\n" +
+                                       "jar://" +
+                                       USER_HOME +
+                                       " -> jar://$USER_HOME$");
   }
 }

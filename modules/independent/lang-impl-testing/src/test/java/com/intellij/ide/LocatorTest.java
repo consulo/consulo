@@ -23,7 +23,7 @@ import com.intellij.testFramework.PlatformLangTestCase;
 
 import java.io.File;
 
-public class LocatorTest extends PlatformLangTestCase {
+public abstract class LocatorTest extends PlatformLangTestCase {
   public void test() throws Exception {
     File locatorFile = new File(PathManager.getSystemPath() + "/" + ApplicationEx.LOCATOR_FILE_NAME);
     assertTrue(locatorFile.getPath(), locatorFile.canRead());

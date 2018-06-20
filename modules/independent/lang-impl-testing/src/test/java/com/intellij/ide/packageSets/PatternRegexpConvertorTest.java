@@ -11,14 +11,17 @@
 package com.intellij.ide.packageSets;
 
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class PatternRegexpConvertorTest extends TestCase {
-   public void testConvertToRegexp() throws Exception {
-     assertEquals("a\\.[^\\.]*", FilePatternPackageSet.convertToRegexp("a.*", '.'));
-     assertEquals("a\\.(.*\\.)?[^\\.]*", FilePatternPackageSet.convertToRegexp("a..*", '.'));
-     assertEquals("a\\/[^\\/]*", FilePatternPackageSet.convertToRegexp("a/*", '/'));
-     assertEquals("a\\/(.*\\/)?[^\\/]*", FilePatternPackageSet.convertToRegexp("a//*", '/'));
-     assertEquals("[^\\.]*", FilePatternPackageSet.convertToRegexp("*", '.'));
+import static org.junit.Assert.assertEquals;
+
+public class PatternRegexpConvertorTest {
+  @Test
+  public void testConvertToRegexp() throws Exception {
+    assertEquals("a\\.[^\\.]*", FilePatternPackageSet.convertToRegexp("a.*", '.'));
+    assertEquals("a\\.(.*\\.)?[^\\.]*", FilePatternPackageSet.convertToRegexp("a..*", '.'));
+    assertEquals("a\\/[^\\/]*", FilePatternPackageSet.convertToRegexp("a/*", '/'));
+    assertEquals("a\\/(.*\\/)?[^\\/]*", FilePatternPackageSet.convertToRegexp("a//*", '/'));
+    assertEquals("[^\\.]*", FilePatternPackageSet.convertToRegexp("*", '.'));
   }
 }

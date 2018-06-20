@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-public class FileDocumentManagerImplTest extends PlatformLangTestCase {
+public abstract class FileDocumentManagerImplTest extends PlatformLangTestCase {
   private FileDocumentManagerImpl myDocumentManager;
 
   public Boolean myReloadFromDisk;

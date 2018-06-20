@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class VfsUtilTest extends PlatformLangTestCase {
+public abstract class VfsUtilTest extends PlatformLangTestCase {
   @Override
   protected void runBareRunnable(Runnable runnable) throws Throwable {
     runnable.run();

@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  *         Date: 7/24/12
  */
-public class FileTypeIndexTest extends LightPlatformCodeInsightFixtureTestCase {
+public abstract class FileTypeIndexTest extends LightPlatformCodeInsightFixtureTestCase {
   public void testAddFileType() throws Exception {
     FileType foo = new FakeFileType() {
       @Override

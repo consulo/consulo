@@ -14,7 +14,7 @@ import consulo.annotations.RequiredDispatchThread;
 /**
  * @author peter
  */
-public class StatisticsManagerTest extends LightPlatformTestCase {
+public abstract class StatisticsManagerTest extends LightPlatformTestCase {
   @NonNls private static final String TEST_CONTEXT = "testContext";
 
   @RequiredDispatchThread

@@ -40,7 +40,7 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 09/16/2010
  */
-public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorTest {
+public abstract class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorTest {
 
   private boolean mySmartHome;
 

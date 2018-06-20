@@ -24,7 +24,7 @@ import consulo.testFramework.MockApplicationTestCase;
 import java.io.File;
 import java.io.IOException;
 
-public class GetPathPerformanceTest extends MockApplicationTestCase {
+public abstract class GetPathPerformanceTest extends MockApplicationTestCase {
   public void testGetPath() throws IOException, InterruptedException {
     final File dir = FileUtil.createTempDirectory("GetPath","");
     dir.deleteOnExit();

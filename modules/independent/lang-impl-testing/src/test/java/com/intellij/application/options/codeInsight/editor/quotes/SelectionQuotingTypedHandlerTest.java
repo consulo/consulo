@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 /**
  * @author oleg
  */
-public class SelectionQuotingTypedHandlerTest extends LightPlatformCodeInsightFixtureTestCase {
+public abstract class SelectionQuotingTypedHandlerTest extends LightPlatformCodeInsightFixtureTestCase {
 
   private boolean myPrevValue;
 

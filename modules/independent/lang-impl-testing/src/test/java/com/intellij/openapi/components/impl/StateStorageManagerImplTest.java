@@ -32,7 +32,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author mike
  */
-public class StateStorageManagerImplTest extends LightPlatformLangTestCase {
+public abstract class StateStorageManagerImplTest extends LightPlatformLangTestCase {
   private StateStorageManagerImpl myStateStorageManager;
 
   @RequiredDispatchThread

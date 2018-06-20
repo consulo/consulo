@@ -46,7 +46,7 @@ import java.util.concurrent.Future;
  * @author Dmitry Avdeev
  *         Date: 4/16/13
  */
-public class FileEditorManagerTest extends FileEditorManagerTestCase {
+public abstract class FileEditorManagerTest extends FileEditorManagerTestCase {
   public void testTabOrder() throws Exception {
 
     openFiles(STRING);

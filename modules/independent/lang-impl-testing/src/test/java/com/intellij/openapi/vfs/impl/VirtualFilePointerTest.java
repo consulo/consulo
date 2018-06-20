@@ -50,7 +50,7 @@ import java.util.List;
 /**
  *  @author dsl
  */
-public class VirtualFilePointerTest extends PlatformLangTestCase {
+public abstract class VirtualFilePointerTest extends PlatformLangTestCase {
   private VirtualFilePointerManagerImpl myVirtualFilePointerManager;
   private int numberOfPointersBefore;
   private final Disposable disposable = Disposer.newDisposable();

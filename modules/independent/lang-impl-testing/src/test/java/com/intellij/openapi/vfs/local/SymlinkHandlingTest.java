@@ -33,7 +33,7 @@ import java.util.Set;
 import static com.intellij.openapi.util.io.IoTestUtil.*;
 import static com.intellij.testFramework.PlatformTestUtil.assertPathsEqual;
 
-public class SymlinkHandlingTest extends SymlinkTestCase {
+public abstract class SymlinkHandlingTest extends SymlinkTestCase {
   public void testMissingLink() throws Exception {
     File missingFile = new File(myTempDir, "missing_file");
     assertTrue(missingFile.getPath(), !missingFile.exists() || missingFile.delete());

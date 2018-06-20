@@ -49,7 +49,7 @@ import java.io.IOException;
 /**
  * @author max
  */
-public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
+public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
   public void testNoGroupingRules() throws Exception {
     GroupNode groupNode = buildUsageTree(new int[]{2, 3, 0}, UsageGroupingRule.EMPTY_ARRAY);
 

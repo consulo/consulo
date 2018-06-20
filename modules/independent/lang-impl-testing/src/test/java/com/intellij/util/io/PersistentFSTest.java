@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class PersistentFSTest extends PlatformTestCase {
+public abstract class PersistentFSTest extends PlatformTestCase {
   public void testAccessingFileByID() throws Exception {
     File dir = createTempDirectory();
     File file = new File(dir, "test.txt");

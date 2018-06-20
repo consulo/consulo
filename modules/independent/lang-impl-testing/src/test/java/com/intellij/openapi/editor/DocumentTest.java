@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.testFramework.LightPlatformTestCase;
 
-public class DocumentTest extends LightPlatformTestCase {
+public abstract class DocumentTest extends LightPlatformTestCase {
   public void testCorrectlyAddingAndRemovingListeners() throws Exception {
     new WriteCommandAction.Simple(getProject()) {
       @Override

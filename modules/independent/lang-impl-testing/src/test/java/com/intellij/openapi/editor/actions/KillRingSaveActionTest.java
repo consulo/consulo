@@ -26,7 +26,7 @@ import java.awt.datatransfer.Transferable;
  * @author Denis Zhdanov
  * @since 4/19/11 6:15 PM
  */
-public class KillRingSaveActionTest extends AbstractRegionToKillRingTest {
+public abstract class KillRingSaveActionTest extends AbstractRegionToKillRingTest {
 
   protected void doTest(@Nonnull String text) throws Exception {
     configureFromFileText(getTestName(false) + ".txt", text);

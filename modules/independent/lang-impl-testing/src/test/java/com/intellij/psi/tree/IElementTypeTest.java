@@ -22,7 +22,7 @@ import java.util.Comparator;
 /**
  * @author gregsh
  */
-public class IElementTypeTest extends LightPlatformCodeInsightFixtureTestCase {
+public abstract class IElementTypeTest extends LightPlatformCodeInsightFixtureTestCase {
 
   // load all parser definitions, instantiate all lexers & parsers to initialize all IElementType constants
   @SuppressWarnings("UnusedDeclaration")

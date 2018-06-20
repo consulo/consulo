@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import javax.swing.*;
 import java.awt.*;
 
-public class SplitterTest extends TestCase{
+public abstract class SplitterTest extends TestCase {
 
   public void testResizeVert() {
     resizeTest(new Splitter(true));

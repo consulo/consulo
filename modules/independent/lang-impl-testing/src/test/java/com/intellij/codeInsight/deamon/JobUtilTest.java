@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class JobUtilTest extends MockApplicationTestCase {
+public abstract class JobUtilTest extends MockApplicationTestCase {
   public void testUnbalancedTaskJobUtilPerformance() {
     List<Integer> things = new ArrayList<Integer>(Collections.<Integer>nCopies(10000, null));
     int sum = 0;

@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @author kirillk
  * @since 10:04 AM/8/17/11
  */
-public class ActivityMonitorTest extends UsefulTestCase {
+public abstract class ActivityMonitorTest extends UsefulTestCase {
   private UiActivityMonitorImpl myMonitor;
   private ModalityState myCurrentState;
 

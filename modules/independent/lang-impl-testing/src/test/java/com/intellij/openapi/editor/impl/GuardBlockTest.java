@@ -7,7 +7,7 @@ import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 /**
  * @author cdr
  */
-public class GuardBlockTest extends LightPlatformCodeInsightTestCase {
+public abstract class GuardBlockTest extends LightPlatformCodeInsightTestCase {
   private static RangeMarker createGuard(final int start, final int end) {
     final Document document = getEditor().getDocument();
     return document.createGuardedBlock(start, end);

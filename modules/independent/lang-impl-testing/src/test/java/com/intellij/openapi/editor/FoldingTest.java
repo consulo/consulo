@@ -24,7 +24,7 @@ import org.junit.Assert;
 /**
  * @author max
  */
-public class FoldingTest extends AbstractEditorTest {
+public abstract class FoldingTest extends AbstractEditorTest {
   private FoldingModelEx myModel;
 
   @Override

@@ -36,7 +36,7 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 12/27/10 1:43 PM
  */
-public class BookmarkManagerTest extends AbstractEditorTest {
+public abstract class BookmarkManagerTest extends AbstractEditorTest {
   private final List<Bookmark> myBookmarks = new ArrayList<Bookmark>();
   
   @Override

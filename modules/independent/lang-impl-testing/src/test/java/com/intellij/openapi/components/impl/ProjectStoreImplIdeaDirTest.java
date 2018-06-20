@@ -23,7 +23,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import java.io.File;
 import java.io.IOException;
 
-public class ProjectStoreImplIdeaDirTest extends ProjectStoreBaseTestCase {
+public abstract class ProjectStoreImplIdeaDirTest extends ProjectStoreBaseTestCase {
   @Override
   protected File getTempProjectDir() throws IOException {
     final File projectDir = FileUtil.createTempDirectory(getTestName(true), "project");

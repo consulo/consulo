@@ -24,7 +24,7 @@ import java.io.IOException;
  * @author Denis Zhdanov
  * @since 4/18/11 3:39 PM
  */
-public class CutLineBackwardActionTest extends LightPlatformCodeInsightTestCase {
+public abstract class CutLineBackwardActionTest extends LightPlatformCodeInsightTestCase {
 
   public void testZeroPosition() throws IOException {
     String text = 

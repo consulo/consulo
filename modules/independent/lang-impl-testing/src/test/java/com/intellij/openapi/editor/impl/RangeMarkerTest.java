@@ -53,7 +53,7 @@ import java.util.*;
 /**
  * @author mike
  */
-public class RangeMarkerTest extends LightPlatformTestCase {
+public abstract class RangeMarkerTest extends LightPlatformTestCase {
   private PsiDocumentManagerImpl documentManager;
   private PsiToDocumentSynchronizer synchronizer;
   private Document document;

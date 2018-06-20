@@ -25,11 +25,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.ASTStructure;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
-import com.intellij.psi.tree.ILightLazyParseableElementType;
-import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.tree.*;
 import com.intellij.testFramework.FlyIdeaTestCase;
 import com.intellij.util.ThreeState;
 import com.intellij.util.diff.DiffTree;
@@ -399,108 +395,46 @@ public class PsiBuilderQuickTest extends FlyIdeaTestCase {
   }
 
   public void testLightChameleon() {
-    final IElementType CHAMELEON_2 = new MyLazyElementType("CHAMELEON_2") {
-      @Override
-      public FlyweightCapableTreeStructure<LighterASTNode> parseContents(LighterLazyParseableNode chameleon) {
-        final PsiBuilder builder = createBuilder(chameleon.getText());
-        parse(builder);
-        return builder.getLightTree();
-      }
+    final IElementType CHAMELEON_2 = new MyChameleon2Type();
+    final IElementType CHAMELEON_1 = new MyChameleon1Type(CHAMELEON_2);
 
-      @Override
-      public ASTNode parseContents(ASTNode chameleon) {
-        final PsiBuilder builder = createBuilder(chameleon.getText());
-        parse(builder);
-        return builder.getTreeBuilt().getFirstChildNode();
-      }
-
-      public void parse(PsiBuilder builder) {
-        final PsiBuilder.Marker root = builder.mark();
-        PsiBuilder.Marker error = null;
-        while (!builder.eof()) {
-          final String token = builder.getTokenText();
-          if ("?".equals(token)) error = builder.mark();
-          builder.advanceLexer();
-          if (error != null) {
-            error.error("test error 2");
-            error = null;
-          }
-        }
-        root.done(this);
-      }
-    };
-
-    final IElementType CHAMELEON_1 = new MyLazyElementType("CHAMELEON_1") {
-      @Override
-      public FlyweightCapableTreeStructure<LighterASTNode> parseContents(LighterLazyParseableNode chameleon) {
-        final PsiBuilder builder = createBuilder(chameleon.getText());
-        parse(builder);
-        return builder.getLightTree();
-      }
-
-      @Override
-      public ASTNode parseContents(ASTNode chameleon) {
-        final PsiBuilder builder = createBuilder(chameleon.getText());
-        parse(builder);
-        return builder.getTreeBuilt().getFirstChildNode();
-      }
-
-      public void parse(PsiBuilder builder) {
-        final PsiBuilder.Marker root = builder.mark();
-        PsiBuilder.Marker nested = null;
-        while (!builder.eof()) {
-          final String token = builder.getTokenText();
-          if ("[".equals(token) && nested == null) {
-            nested = builder.mark();
-          }
-          builder.advanceLexer();
-          if ("]".equals(token) && nested != null) {
-            nested.collapse(CHAMELEON_2);
-            nested.precede().done(OTHER);
-            nested = null;
-            builder.error("test error 1");
-          }
-        }
-        if (nested != null) nested.drop();
-        root.done(this);
-      }
-    };
-
-    doTest("ab{12[.?]}cd{x}", new Parser() {
-      @Override
-      public void parse(PsiBuilder builder) {
-        PsiBuilderUtil.advance(builder, 2);
-        PsiBuilder.Marker chameleon = builder.mark();
-        PsiBuilderUtil.advance(builder, 8);
-        chameleon.collapse(CHAMELEON_1);
-        PsiBuilderUtil.advance(builder, 2);
-        chameleon = builder.mark();
-        PsiBuilderUtil.advance(builder, 3);
-        chameleon.collapse(CHAMELEON_1);
-      }
-    }, "Element(ROOT)\n" +
-       "  PsiElement(LETTER)('a')\n" +
-       "  PsiElement(LETTER)('b')\n" +
-       "  Element(CHAMELEON_1)\n" +
-       "    PsiElement(OTHER)('{')\n" +
-       "    PsiElement(DIGIT)('1')\n" +
-       "    PsiElement(DIGIT)('2')\n" +
-       "    Element(OTHER)\n" +
-       "      Element(CHAMELEON_2)\n" +
-       "        PsiElement(OTHER)('[')\n" +
-       "        PsiElement(OTHER)('.')\n" +
-       "        PsiErrorElement:test error 2\n" +
-       "          PsiElement(OTHER)('?')\n" +
-       "        PsiElement(OTHER)(']')\n" +
-       "    PsiErrorElement:test error 1\n" +
-       "      <empty list>\n" +
-       "    PsiElement(OTHER)('}')\n" +
-       "  PsiElement(LETTER)('c')\n" +
-       "  PsiElement(LETTER)('d')\n" +
-       "  Element(CHAMELEON_1)\n" +
-       "    PsiElement(OTHER)('{')\n" +
-       "    PsiElement(LETTER)('x')\n" +
-       "    PsiElement(OTHER)('}')\n");
+    doTest("ab{12[.?]}cd{x}",
+           new Parser() {
+             @Override
+             public void parse(PsiBuilder builder) {
+               PsiBuilderUtil.advance(builder, 2);
+               PsiBuilder.Marker chameleon = builder.mark();
+               PsiBuilderUtil.advance(builder, 8);
+               chameleon.collapse(CHAMELEON_1);
+               PsiBuilderUtil.advance(builder, 2);
+               chameleon = builder.mark();
+               PsiBuilderUtil.advance(builder, 3);
+               chameleon.collapse(CHAMELEON_1);
+             }
+           },
+           "Element(ROOT)\n" +
+           "  PsiElement(LETTER)('a')\n" +
+           "  PsiElement(LETTER)('b')\n" +
+           "  Element(CHAMELEON_1)\n" +
+           "    PsiElement(OTHER)('{')\n" +
+           "    PsiElement(DIGIT)('1')\n" +
+           "    PsiElement(DIGIT)('2')\n" +
+           "    Element(OTHER)\n" +
+           "      Element(CHAMELEON_2)\n" +
+           "        PsiElement(OTHER)('[')\n" +
+           "        PsiElement(OTHER)('.')\n" +
+           "        PsiErrorElement:test error 2\n" +
+           "          PsiElement(OTHER)('?')\n" +
+           "        PsiElement(OTHER)(']')\n" +
+           "    PsiErrorElement:test error 1\n" +
+           "      <empty list>\n" +
+           "    PsiElement(OTHER)('}')\n" +
+           "  PsiElement(LETTER)('c')\n" +
+           "  PsiElement(LETTER)('d')\n" +
+           "  Element(CHAMELEON_1)\n" +
+           "    PsiElement(OTHER)('{')\n" +
+           "    PsiElement(LETTER)('x')\n" +
+           "    PsiElement(OTHER)('}')\n");
   }
 
   @SuppressWarnings("ConstantConditions")
@@ -764,6 +698,85 @@ public class PsiBuilderQuickTest extends FlyIdeaTestCase {
   private static class NullStream extends OutputStream {
     @Override
     public void write(final int b) throws IOException {
+    }
+  }
+
+
+  private static class MyChameleon1Type extends MyLazyElementType {
+    private final IElementType myCHAMELEON_2;
+
+    public MyChameleon1Type(IElementType CHAMELEON_2) {
+      super("CHAMELEON_1");
+      myCHAMELEON_2 = CHAMELEON_2;
+    }
+
+    @Override
+    public FlyweightCapableTreeStructure<LighterASTNode> parseContents(LighterLazyParseableNode chameleon) {
+      final PsiBuilder builder = createBuilder(chameleon.getText());
+      parse(builder);
+      return builder.getLightTree();
+    }
+
+    @Override
+    public ASTNode parseContents(@Nonnull ASTNode chameleon) {
+      final PsiBuilder builder = createBuilder(chameleon.getText());
+      parse(builder);
+      return builder.getTreeBuilt().getFirstChildNode();
+    }
+
+    public void parse(PsiBuilder builder) {
+      final PsiBuilder.Marker root = builder.mark();
+      PsiBuilder.Marker nested = null;
+      while (!builder.eof()) {
+        final String token = builder.getTokenText();
+        if ("[".equals(token) && nested == null) {
+          nested = builder.mark();
+        }
+        builder.advanceLexer();
+        if ("]".equals(token) && nested != null) {
+          nested.collapse(myCHAMELEON_2);
+          nested.precede().done(OTHER);
+          nested = null;
+          builder.error("test error 1");
+        }
+      }
+      if (nested != null) nested.drop();
+      root.done(this);
+    }
+  }
+
+  private static class MyChameleon2Type extends MyLazyElementType {
+    public MyChameleon2Type() {
+      super("CHAMELEON_2");
+    }
+
+    @Override
+    public FlyweightCapableTreeStructure<LighterASTNode> parseContents(LighterLazyParseableNode chameleon) {
+      final PsiBuilder builder = createBuilder(chameleon.getText());
+      parse(builder);
+      return builder.getLightTree();
+    }
+
+    @Override
+    public ASTNode parseContents(@Nonnull ASTNode chameleon) {
+      final PsiBuilder builder = createBuilder(chameleon.getText());
+      parse(builder);
+      return builder.getTreeBuilt().getFirstChildNode();
+    }
+
+    public void parse(PsiBuilder builder) {
+      final PsiBuilder.Marker root = builder.mark();
+      PsiBuilder.Marker error = null;
+      while (!builder.eof()) {
+        final String token = builder.getTokenText();
+        if ("?".equals(token)) error = builder.mark();
+        builder.advanceLexer();
+        if (error != null) {
+          error.error("test error 2");
+          error = null;
+        }
+      }
+      root.done(this);
     }
   }
 }

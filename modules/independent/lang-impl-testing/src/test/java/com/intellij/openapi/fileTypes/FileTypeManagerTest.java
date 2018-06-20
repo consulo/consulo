@@ -24,7 +24,7 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 
 import java.io.IOException;
 
-public class FileTypeManagerTest extends LightPlatformCodeInsightFixtureTestCase {
+public abstract class FileTypeManagerTest extends LightPlatformCodeInsightFixtureTestCase {
   public void testAutoDetectTextFileFromContents() throws IOException {
     VirtualFile vFile = myFixture.getTempDirFixture().createFile("test.xxxxxxxx");
     VfsUtil.saveText(vFile, "text");

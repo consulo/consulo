@@ -16,13 +16,15 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.annotation.Nonnull;
 
 import static org.junit.Assert.assertSame;
 
@@ -30,6 +32,7 @@ import static org.junit.Assert.assertSame;
  * @author Denis Zhdanov
  * @since Aug 25, 2010 3:20:41 PM
  */
+@Ignore
 public class DefaultLineWrapPositionStrategyTest {
 
   private static final String EDGE_MARKER = "<EDGE>";

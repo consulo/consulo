@@ -44,7 +44,7 @@ import java.util.function.Consumer;
 
 import static com.intellij.openapi.util.io.IoTestUtil.*;
 
-public class FileWatcherTest extends PlatformLangTestCase {
+public abstract class FileWatcherTest extends PlatformLangTestCase {
   private static final int INTER_RESPONSE_DELAY = 500;  // time to wait for a next event in a sequence
   private static final int NATIVE_PROCESS_DELAY = 60000;  // time to wait for a native watcher response
 

@@ -5,13 +5,16 @@
 package com.intellij.ide.search;
 
 import com.intellij.ide.ui.search.PorterStemmerUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * User: anna
  * Date: 15-Feb-2006
  */
-public class PorterStemmerTest extends TestCase {
+public class PorterStemmerTest {
+  @Test
   public void test() throws Exception {
     assertEquals("name", PorterStemmerUtil.stem("names"));
     assertEquals("j2ee", PorterStemmerUtil.stem("j2ee"));

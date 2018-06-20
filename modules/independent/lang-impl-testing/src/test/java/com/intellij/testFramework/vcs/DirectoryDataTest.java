@@ -16,7 +16,8 @@
 package com.intellij.testFramework.vcs;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import junit.framework.Assert;
+import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -27,6 +28,7 @@ import java.io.File;
  * Date: 7/19/12
  * Time: 8:24 PM
  */
+@Ignore
 public class DirectoryDataTest extends FileBasedTest {
   @Test
   public void testQuadro() throws Exception {

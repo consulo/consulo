@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
  * @author Kirill Kalishev
  * @author Konstantin Bulenkov
  */
-public class FilteringTreeBuilderTest extends BaseTreeTestCase  {
+public abstract class FilteringTreeBuilderTest extends BaseTreeTestCase  {
   private FilteringTreeBuilder myBuilder;
   private MyFilter myFilter;
   private Node myRoot;

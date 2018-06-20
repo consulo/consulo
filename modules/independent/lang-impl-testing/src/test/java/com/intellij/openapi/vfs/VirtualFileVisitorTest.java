@@ -23,17 +23,19 @@ import com.intellij.testFramework.PlatformUltraLiteTestFixture;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@Ignore
 public class VirtualFileVisitorTest {
   private static PlatformUltraLiteTestFixture myFixture;
   private static VirtualFile myRoot;

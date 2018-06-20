@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.testFramework.PlatformLangTestCase;
 import javax.annotation.Nonnull;
 
-public class IdeDocumentHistoryTest extends PlatformLangTestCase {
+public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
   private IdeDocumentHistoryImpl myHistory;
 
   private Mock.MyFileEditor  mySelectedEditor;

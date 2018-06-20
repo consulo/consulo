@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import javax.annotation.Nonnull;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 import static java.util.Arrays.asList;
@@ -28,6 +29,7 @@ import static org.junit.Assert.*;
  * @author Denis Zhdanov
  * @since 03/02/2011
  */
+@Ignore
 public class TextChangesStorageTest {
 
   private TextChangesStorage myStorage;  

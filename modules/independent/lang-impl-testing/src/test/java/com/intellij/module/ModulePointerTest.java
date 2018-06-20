@@ -27,7 +27,7 @@ import consulo.util.pointers.NamedPointer;
 /**
  * @author nik
  */
-public class ModulePointerTest extends PlatformTestCase {
+public abstract class ModulePointerTest extends PlatformTestCase {
   public void testCreateByName() throws Exception {
     final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(getProject(), "m");
     assertSame(pointer, ModuleUtilCore.createPointer(getProject(), "m"));

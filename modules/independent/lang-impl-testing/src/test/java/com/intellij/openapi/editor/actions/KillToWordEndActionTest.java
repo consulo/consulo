@@ -24,7 +24,7 @@ import java.io.IOException;
  * @author Denis Zhdanov
  * @since 04/19/2011
  */
-public class KillToWordEndActionTest extends LightPlatformCodeInsightTestCase {
+public abstract class KillToWordEndActionTest extends LightPlatformCodeInsightTestCase {
 
   public void testAtWordStart() throws IOException {
     doTest(

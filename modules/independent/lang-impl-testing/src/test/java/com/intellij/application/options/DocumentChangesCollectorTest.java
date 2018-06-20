@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
  * @author Denis Zhdanov
  * @since 10/12/2010
  */
-public class DocumentChangesCollectorTest {
+public abstract class DocumentChangesCollectorTest {
 
   private static final String TEXT = "0123456789abcdefghijklmnopqrstuvwxyz";
 
