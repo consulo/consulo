@@ -36,7 +36,7 @@ import java.awt.*;
 /**
  * @author Roman Chernyatchik
  */
-public class SMTestRunnerResultsFormTest extends BaseSMTRunnerTestCase {
+public abstract class SMTestRunnerResultsFormTest extends BaseSMTRunnerTestCase {
   private SMTRunnerConsoleView myConsole;
   private GeneralToSMTRunnerEventsConvertor myEventsProcessor;
   private TreeModel myTreeModel;

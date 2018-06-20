@@ -26,7 +26,7 @@ import java.io.File;
 /**
  * @author nik
  */
-public class UpdateBreakpointsAfterRenameTest extends XBreakpointsTestCase {
+public abstract class UpdateBreakpointsAfterRenameTest extends XBreakpointsTestCase {
   public void testRenameFile() throws Exception {
     final VirtualFile file = createFile("file.txt");
     XLineBreakpoint<?> b = putBreakpoint(file);

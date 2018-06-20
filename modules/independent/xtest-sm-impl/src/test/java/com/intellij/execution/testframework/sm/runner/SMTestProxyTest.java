@@ -24,7 +24,7 @@ import static com.intellij.execution.testframework.sm.runner.states.TestStateInf
 /**
  * @author Roman Chernyatchik
  */
-public class SMTestProxyTest extends BaseSMTRunnerTestCase {
+public abstract class SMTestProxyTest extends BaseSMTRunnerTestCase {
 
   public void testTestInstance() {
     mySimpleTest = createTestProxy("newTest");

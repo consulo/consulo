@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocalHistoryStorageTest extends IntegrationTestCase {
+public abstract class LocalHistoryStorageTest extends IntegrationTestCase {
   private LocalHistoryStorage myStorage;
 
   @Override

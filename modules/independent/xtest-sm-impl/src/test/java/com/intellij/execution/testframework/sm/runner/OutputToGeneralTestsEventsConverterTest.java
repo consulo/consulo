@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Roman.Chernyatchik
  */
-public class OutputToGeneralTestsEventsConverterTest extends BaseSMTRunnerTestCase {
+public abstract class OutputToGeneralTestsEventsConverterTest extends BaseSMTRunnerTestCase {
   private ProcessOutputConsumer myOutputConsumer;
   public MockGeneralTestEventsProcessorAdapter myEnventsProcessor;
 

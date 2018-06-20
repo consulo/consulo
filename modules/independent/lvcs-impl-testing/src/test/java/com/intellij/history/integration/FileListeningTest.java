@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class FileListeningTest extends IntegrationTestCase {
+public abstract class FileListeningTest extends IntegrationTestCase {
   public void testCreatingFiles() throws Exception {
     VirtualFile f = createFile("file.txt");
     assertEquals(2, getRevisionsFor(f).size());

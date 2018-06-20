@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Disposer;
 /**
  * @author Roman Chernyatchik
  */
-public class SMTRunnerUIActionsHandlerTest extends BaseSMTRunnerTestCase {
+public abstract class SMTRunnerUIActionsHandlerTest extends BaseSMTRunnerTestCase {
   private MockTestResultsViewer myResultsViewer;
   private TestConsoleProperties myProperties;
   private SMTRunnerUIActionsHandler myUIActionsHandler;

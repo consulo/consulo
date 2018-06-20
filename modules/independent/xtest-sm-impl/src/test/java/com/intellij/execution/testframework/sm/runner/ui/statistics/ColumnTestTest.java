@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
-public class ColumnTestTest extends BaseColumnRenderingTest {
+public abstract class ColumnTestTest extends BaseColumnRenderingTest {
 
   @Override
   protected void setUp() throws Exception {

@@ -21,7 +21,7 @@ import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
 
 import java.nio.charset.Charset;
 
-public class DirectoryHistoryDialogPatchCreationTest extends PatchingTestCase {
+public abstract class DirectoryHistoryDialogPatchCreationTest extends PatchingTestCase {
   public void testPatchCreation() throws Exception {
     myRoot.createChildData(null, "f1.txt");
     myRoot.createChildData(null, "f2.txt");

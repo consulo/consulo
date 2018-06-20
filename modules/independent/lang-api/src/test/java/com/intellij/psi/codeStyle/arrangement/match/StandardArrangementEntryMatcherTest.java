@@ -27,6 +27,7 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,6 +40,7 @@ import static org.junit.Assert.*;
  * @since 08/27/2012
  */
 @RunWith(JMock.class)
+@Ignore
 public class StandardArrangementEntryMatcherTest {
 
   private Mockery myMockery;

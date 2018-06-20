@@ -24,12 +24,12 @@ import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.core.tree.RootEntry;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import javax.annotation.Nonnull;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class SelectionCalculatorTest extends LocalHistoryTestCase {
+public abstract class SelectionCalculatorTest extends LocalHistoryTestCase {
   IdeaGateway gw = new MyIdeaGateway();
   LocalHistoryFacade vcs = new InMemoryLocalHistoryFacade();
 

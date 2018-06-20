@@ -20,12 +20,9 @@ import com.intellij.openapi.util.io.win32.FileInfo;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.TimeoutUtil;
-import javax.annotation.Nonnull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
 
@@ -140,6 +137,7 @@ public class FileAttributesReadingTest {
   }
 
   @Test
+  @Ignore
   public void linkToFile() throws Exception {
     assumeTrue(SystemInfo.areSymLinksSupported);
 
@@ -161,6 +159,7 @@ public class FileAttributesReadingTest {
   }
 
   @Test
+  @Ignore
   public void doubleLink() throws Exception {
     assumeTrue(SystemInfo.areSymLinksSupported);
 
@@ -183,6 +182,7 @@ public class FileAttributesReadingTest {
   }
 
   @Test
+  @Ignore
   public void linkToDirectory() throws Exception {
     assumeTrue(SystemInfo.areSymLinksSupported);
 

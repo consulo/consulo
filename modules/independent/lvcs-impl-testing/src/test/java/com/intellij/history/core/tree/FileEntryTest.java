@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+@Ignore
 public class FileEntryTest extends LocalHistoryTestCase {
   @Test
   @Ignore

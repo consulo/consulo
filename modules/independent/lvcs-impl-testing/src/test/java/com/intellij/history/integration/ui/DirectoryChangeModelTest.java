@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class DirectoryChangeModelTest extends IntegrationTestCase {
+public abstract class DirectoryChangeModelTest extends IntegrationTestCase {
   public void testNames() throws IOException {
     VirtualFile f = createDirectory("foo");
     f.rename(this, "bar");

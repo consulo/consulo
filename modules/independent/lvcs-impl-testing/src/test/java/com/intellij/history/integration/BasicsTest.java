@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-public class BasicsTest extends IntegrationTestCase {
+public abstract class BasicsTest extends IntegrationTestCase {
   public void testProcessingCommands() throws Exception {
     final VirtualFile[] f = new VirtualFile[1];
 

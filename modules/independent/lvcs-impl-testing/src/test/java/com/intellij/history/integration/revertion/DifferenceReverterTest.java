@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DifferenceReverterTest extends IntegrationTestCase {
+public abstract class DifferenceReverterTest extends IntegrationTestCase {
   public void testFileCreation() throws Exception {
     myRoot.createChildData(this, "foo.txt");
 

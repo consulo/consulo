@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class OutputLineSplitterTest extends UsefulTestCase {
+public abstract class OutputLineSplitterTest extends UsefulTestCase {
   private static final Key RED = Key.create(OutputLineSplitterTest.class + ".RED");
   private static final Key GREEN = Key.create(OutputLineSplitterTest.class + ".GREEN");
   private static final Key BLUE = Key.create(OutputLineSplitterTest.class + ".BLUE");

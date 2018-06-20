@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurableEP;
@@ -35,9 +34,9 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -151,8 +150,8 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     final Project tempProject = project;
 
     List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<>();
-    Collections.addAll(configurableEPs, ApplicationManager.getApplication().getExtensions(Configurable.APPLICATION_CONFIGURABLE));
-    Collections.addAll(configurableEPs, project.getExtensions(Configurable.PROJECT_CONFIGURABLE));
+    Collections.addAll(configurableEPs, Configurable.APPLICATION_CONFIGURABLE.getExtensions());
+    Collections.addAll(configurableEPs, Configurable.PROJECT_CONFIGURABLE.getExtensions(project));
 
     List<Configurable> result = ConfigurableExtensionPointUtil
             .buildConfigurablesList(configurableEPs, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));

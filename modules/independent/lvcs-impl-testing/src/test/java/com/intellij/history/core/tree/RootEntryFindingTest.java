@@ -18,8 +18,10 @@ package com.intellij.history.core.tree;
 
 import com.intellij.history.core.LocalHistoryTestCase;
 import com.intellij.history.core.Paths;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class RootEntryFindingTest extends LocalHistoryTestCase {
   private RootEntry root = new RootEntry();
 

@@ -40,11 +40,11 @@ import com.intellij.util.pico.DefaultPicoContainer;
 import consulo.application.ApplicationProperties;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.picocontainer.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;

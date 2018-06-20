@@ -19,10 +19,12 @@ package com.intellij.history.core.changes;
 import com.intellij.history.core.Content;
 import com.intellij.history.core.LocalHistoryTestCase;
 import com.intellij.history.core.tree.RootEntry;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+@Ignore
 public class StructuralChangesPurgingTest extends LocalHistoryTestCase {
   private final RootEntry root = new RootEntry();
 

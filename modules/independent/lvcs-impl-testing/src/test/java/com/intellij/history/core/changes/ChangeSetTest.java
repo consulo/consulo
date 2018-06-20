@@ -19,7 +19,7 @@ package com.intellij.history.core.changes;
 import com.intellij.history.core.LocalHistoryTestCase;
 import org.junit.Test;
 
-public class ChangeSetTest extends LocalHistoryTestCase {
+public abstract class ChangeSetTest extends LocalHistoryTestCase {
   @Test
   public void testIsCreational() {
     ChangeSet cs1 = cs(new CreateFileChange(nextId(), "file"));

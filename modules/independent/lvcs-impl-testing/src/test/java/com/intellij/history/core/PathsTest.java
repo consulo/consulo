@@ -19,7 +19,7 @@ package com.intellij.history.core;
 import com.intellij.util.containers.ContainerUtil;
 import org.junit.Test;
 
-public class PathsTest extends LocalHistoryTestCase {
+public abstract class PathsTest extends LocalHistoryTestCase {
   @Test
   public void testParent() {
     assertEquals("dir1/dir2", Paths.getParentOf("dir1/dir2/file"));

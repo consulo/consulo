@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * @author Roman Chernyatchik
  */
-public class TestsPresentationUtilTest extends BaseSMTRunnerTestCase {
+public abstract class TestsPresentationUtilTest extends BaseSMTRunnerTestCase {
   @NonNls private static final String FAKE_TEST_NAME = "my test";
   private TestsPresentationUtilTest.MyRenderer myRenderer;
   private UITestUtil.FragmentsContainer myFragContainer;

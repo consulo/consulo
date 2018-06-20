@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.File;
 
-public class IdeaGatewayTest extends IntegrationTestCase {
+public abstract class IdeaGatewayTest extends IntegrationTestCase {
   public void testFindingFile() throws Exception {
     assertEquals(myRoot, myGateway.findVirtualFile(myRoot.getPath()));
     assertNull(myGateway.findVirtualFile(myRoot.getPath() + "/nonexistent"));

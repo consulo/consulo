@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
-public class ColumnDurationTest extends BaseColumnRenderingTest {
+public abstract class ColumnDurationTest extends BaseColumnRenderingTest {
   
   public void testValueOf_NotRun() {
     assertEquals("<NOT RUN>", myColumn.valueOf(mySimpleTest));

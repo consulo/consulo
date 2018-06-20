@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.IOException;
 
-public class SelectionHistoryDialogTest extends LocalHistoryUITestCase {
+public abstract class SelectionHistoryDialogTest extends LocalHistoryUITestCase {
   private VirtualFile f;
   private FileDifferenceModel dm;
   private SelectionHistoryDialogModel m;

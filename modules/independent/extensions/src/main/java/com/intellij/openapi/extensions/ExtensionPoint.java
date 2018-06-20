@@ -16,7 +16,9 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.Disposable;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author AKireyev
@@ -39,7 +41,7 @@ public interface ExtensionPoint<T> {
   T[] getExtensions();
   boolean hasAnyExtensions();
 
-  @javax.annotation.Nullable
+  @Nullable
   T getExtension();
   boolean hasExtension(@Nonnull T extension);
 

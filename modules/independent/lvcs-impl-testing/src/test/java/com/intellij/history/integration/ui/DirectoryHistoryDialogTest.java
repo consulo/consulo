@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Disposer;
 import java.io.IOException;
 import java.util.Collections;
 
-public class DirectoryHistoryDialogTest extends LocalHistoryUITestCase {
+public abstract class DirectoryHistoryDialogTest extends LocalHistoryUITestCase {
   public void testDialogWorks() throws IOException {
     DirectoryHistoryDialog d = new DirectoryHistoryDialog(myProject, myGateway, myRoot);
     Disposer.dispose(d);

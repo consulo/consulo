@@ -8,6 +8,7 @@ import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.TimedCommitParser;
 import com.intellij.vcs.log.TimedVcsCommit;
 import com.intellij.vcs.log.impl.HashImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Kirill Likhodedov
  */
+@Ignore
 public class VcsLogJoinerTest {
 
   public void runTest(List<String> initial, List<String> updateBlock, List<String> oldRefs, List<String> newRefs, String expected) {

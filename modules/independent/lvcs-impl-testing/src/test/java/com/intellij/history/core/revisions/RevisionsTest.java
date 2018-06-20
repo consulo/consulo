@@ -22,8 +22,10 @@ import com.intellij.history.core.LocalHistoryTestCase;
 import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.history.core.changes.CreateFileChange;
 import com.intellij.history.core.tree.RootEntry;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class RevisionsTest extends LocalHistoryTestCase {
   ChangeSet cs = cs("Action", new CreateFileChange(nextId(), "f"));
 

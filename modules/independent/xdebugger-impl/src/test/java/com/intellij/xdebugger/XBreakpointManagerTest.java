@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class XBreakpointManagerTest extends XBreakpointsTestCase {
+public abstract class XBreakpointManagerTest extends XBreakpointsTestCase {
 
   public void testAddRemove() {
     XLineBreakpoint<MyBreakpointProperties> lineBreakpoint =

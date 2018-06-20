@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PatchCreatorTest extends PatchingTestCase {
+public abstract class PatchCreatorTest extends PatchingTestCase {
   public void testCreationPatch() throws Exception {
     myRoot.createChildData(null, "f.txt");
 

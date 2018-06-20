@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
-public class SMTRunnerConsoleTest extends BaseSMTRunnerTestCase {
+public abstract class SMTRunnerConsoleTest extends BaseSMTRunnerTestCase {
   private MyConsoleView myConsole;
   private GeneralToSMTRunnerEventsConvertor myEventsProcessor;
   private MockPrinter myMockResettablePrinter;

@@ -25,7 +25,7 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCa
 /**
  * @author Roman Chernyatchik
  */
-public class FileUrlLocationTest extends LightPlatformCodeInsightFixtureTestCase {
+public abstract class FileUrlLocationTest extends LightPlatformCodeInsightFixtureTestCase {
   public void testSpecNavigation() {
     VirtualFile file = myFixture.configureByText("my_example_spec.xml", "\n" + "<describe>\n" + "    <a id='1'></a>\n" + "</describe>\n" + "\n").getVirtualFile();
 

@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeTrue;
 
-public class FileAttributesNio2ReadingTest extends FileAttributesReadingTest {
+public abstract class FileAttributesNio2ReadingTest extends FileAttributesReadingTest {
   private static final String FORCE_USE_NIO_2_KEY;
   static {
     try {

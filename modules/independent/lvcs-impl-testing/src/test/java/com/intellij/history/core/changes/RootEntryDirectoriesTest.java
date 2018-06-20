@@ -23,6 +23,7 @@ import com.intellij.history.core.tree.RootEntry;
 import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class RootEntryDirectoriesTest extends LocalHistoryTestCase {
   private final RootEntry root = new RootEntry();
 

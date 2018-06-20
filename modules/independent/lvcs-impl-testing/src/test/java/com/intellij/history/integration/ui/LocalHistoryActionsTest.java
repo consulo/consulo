@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.IOException;
 
-public class LocalHistoryActionsTest extends LocalHistoryUITestCase {
+public abstract class LocalHistoryActionsTest extends LocalHistoryUITestCase {
   VirtualFile f;
   Editor editor;
   Document document;

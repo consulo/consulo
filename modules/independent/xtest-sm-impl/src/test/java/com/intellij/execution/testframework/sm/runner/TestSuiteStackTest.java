@@ -16,12 +16,11 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.testFramework.exceptionCases.AssertionErrorCase;
-import com.intellij.util.SystemProperties;
 
 /**
  * @author Roman Chernyatchik
  */
-public class TestSuiteStackTest extends BaseSMTRunnerTestCase {
+public abstract class TestSuiteStackTest extends BaseSMTRunnerTestCase {
   private TestSuiteStack myTestSuiteStack;
 
   @Override

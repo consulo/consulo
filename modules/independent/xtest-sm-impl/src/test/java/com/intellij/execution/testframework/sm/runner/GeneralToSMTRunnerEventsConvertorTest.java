@@ -51,7 +51,7 @@ import java.util.List;
 /**
  * @author Roman Chernyatchik
  */
-public class GeneralToSMTRunnerEventsConvertorTest extends BaseSMTRunnerTestCase {
+public abstract class GeneralToSMTRunnerEventsConvertorTest extends BaseSMTRunnerTestCase {
   private SMTRunnerConsoleView myConsole;
   private GeneralToSMTRunnerEventsConvertor myEventsProcessor;
   private TreeModel myTreeModel;

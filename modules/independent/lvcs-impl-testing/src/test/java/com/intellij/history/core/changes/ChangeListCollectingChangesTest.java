@@ -16,10 +16,12 @@
 
 package com.intellij.history.core.changes;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+@Ignore
 public class ChangeListCollectingChangesTest extends ChangeListTestCase {
   @Test
   public void tesChangesForFile() {

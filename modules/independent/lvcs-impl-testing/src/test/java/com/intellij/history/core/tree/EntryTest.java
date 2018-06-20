@@ -19,11 +19,13 @@ package com.intellij.history.core.tree;
 import com.intellij.history.core.LocalHistoryTestCase;
 import com.intellij.history.core.Paths;
 import com.intellij.history.core.revisions.Difference;
-import javax.annotation.Nonnull;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
+@Ignore
 public class EntryTest extends LocalHistoryTestCase {
   @Test
   public void testPathEquality() {

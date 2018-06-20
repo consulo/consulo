@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class VisitingTest extends IntegrationTestCase {
+public abstract class VisitingTest extends IntegrationTestCase {
   @Test
   public void testSimpleVisit() throws Exception {
     createFile("f.txt");

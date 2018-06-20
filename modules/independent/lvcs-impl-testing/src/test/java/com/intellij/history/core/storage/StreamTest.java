@@ -25,11 +25,13 @@ import com.intellij.history.core.tree.Entry;
 import com.intellij.history.core.tree.FileEntry;
 import com.intellij.history.core.tree.RootEntry;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.*;
 import java.util.List;
 
+@Ignore
 public class StreamTest extends LocalHistoryTestCase {
   private DataInputStream is;
   private DataOutputStream os;

@@ -26,7 +26,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-public class PurgingTest extends IntegrationTestCase {
+public abstract class PurgingTest extends IntegrationTestCase {
   @Override
   public void setUp() throws Exception {
     super.setUp();

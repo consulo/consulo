@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author Roman Chernyatchik
  */
-public class SMTRunnerStatisticsPanelTest extends BaseSMTRunnerTestCase {
+public abstract class SMTRunnerStatisticsPanelTest extends BaseSMTRunnerTestCase {
   private StatisticsPanel myStatisticsPanel;
   private SMTRunnerEventsListener myTestEventsListener;
   private SMTestProxy myRootSuite;

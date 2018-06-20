@@ -18,10 +18,12 @@ package com.intellij.history.core;
 
 import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.core.tree.RootEntry;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+@Ignore
 public class LocalVcsLabelsTest extends LocalHistoryTestCase {
   LocalHistoryFacade myVcs = new InMemoryLocalHistoryFacade();
   RootEntry myRoot = new RootEntry();

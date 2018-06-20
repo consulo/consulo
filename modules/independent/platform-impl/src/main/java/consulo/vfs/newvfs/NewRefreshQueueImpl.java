@@ -16,14 +16,8 @@
 package consulo.vfs.newvfs;
 
 import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
 import com.intellij.openapi.vfs.newvfs.RefreshSessionImpl;
-import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
 
@@ -32,28 +26,9 @@ import javax.annotation.Nonnull;
  * @since 2018-05-13
  */
 public class NewRefreshQueueImpl extends RefreshQueueImpl {
-  private static final Logger LOG = Logger.getInstance(NewRefreshQueueImpl.class);
-
   @Override
   public void execute(@Nonnull RefreshSessionImpl session) {
-    if (session.isAsynchronous()) {
-      queueSession(session, session.getTransaction());
-    }
-    else {
-      Application app = ApplicationManager.getApplication();
-      if (app.isWriteThread()) {
-        doScan(session);
-        session.fireEvents();
-      }
-      else {
-        if (((ApplicationEx)app).holdsReadLock()) {
-          LOG.error("Do not call synchronous refresh under read lock (except from WT) - this will cause a deadlock if there are any events to fire.");
-          return;
-        }
-        queueSession(session, TransactionGuard.getInstance().getContextTransaction());
-        session.waitFor();
-      }
-    }
+    queueSession(session, session.getTransaction());
   }
 
   @Nonnull

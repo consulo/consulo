@@ -24,7 +24,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.vfs.VirtualFile;
 
-public class GettingContentAtDateTest extends IntegrationTestCase {
+public abstract class GettingContentAtDateTest extends IntegrationTestCase {
   private VirtualFile f;
 
   @Override

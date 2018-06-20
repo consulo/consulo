@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SelectionReverterTest extends IntegrationTestCase {
+public abstract class SelectionReverterTest extends IntegrationTestCase {
   private VirtualFile f;
 
   @Override

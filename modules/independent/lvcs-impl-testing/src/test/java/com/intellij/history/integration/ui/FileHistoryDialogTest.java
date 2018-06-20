@@ -31,7 +31,7 @@ import com.intellij.util.text.DateFormatUtil;
 import java.io.IOException;
 import java.util.Date;
 
-public class FileHistoryDialogTest extends LocalHistoryUITestCase {
+public abstract class FileHistoryDialogTest extends LocalHistoryUITestCase {
   public void testDialogWorks() throws IOException {
     VirtualFile file = myRoot.createChildData(null, "f.txt");
 

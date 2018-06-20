@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Roman Chernyatchik
  */
-public class SMTRunnerStatisticsTableModelTest extends BaseSMTRunnerTestCase {
+public abstract class SMTRunnerStatisticsTableModelTest extends BaseSMTRunnerTestCase {
   private StatisticsTableModel myStatisticsTableModel;
   private SMTestProxy myRootSuite;
 

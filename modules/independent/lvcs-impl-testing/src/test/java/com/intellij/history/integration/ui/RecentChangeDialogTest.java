@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Disposer;
 
 import java.io.IOException;
 
-public class RecentChangeDialogTest extends LocalHistoryUITestCase {
+public abstract class RecentChangeDialogTest extends LocalHistoryUITestCase {
   public void testDialogWork() throws IOException {
     getVcs().beginChangeSet();
     myRoot.createChildData(null, "f.txt");

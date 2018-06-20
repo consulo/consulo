@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Roman Chernyatchik
  */
-public class ColumnResultsTest extends BaseColumnRenderingTest {
+public abstract class ColumnResultsTest extends BaseColumnRenderingTest {
 
   public void testPresentation_TestNotRun() {
     doRender(mySimpleTest);

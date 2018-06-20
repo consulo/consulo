@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import java.io.IOException;
 import java.util.List;
 
-public class ActionsTest extends IntegrationTestCase {
+public abstract class ActionsTest extends IntegrationTestCase {
   public void testSavingDocumentBeforeAndAfterAction() throws Exception {
     VirtualFile f = createFile("f.txt", "file1");
     setContent(f, "file2");

@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import java.io.IOException;
 import java.util.List;
 
-public class DirectoryHistoryDialogModelTest extends LocalHistoryUITestCase {
+public abstract class DirectoryHistoryDialogModelTest extends LocalHistoryUITestCase {
   private DirectoryHistoryDialogModel m;
 
   public void testTitle() throws IOException {

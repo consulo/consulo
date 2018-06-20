@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class LocalVcsChangeSetsTest extends LocalHistoryTestCase {
+public abstract class LocalVcsChangeSetsTest extends LocalHistoryTestCase {
   LocalHistoryFacade vcs = new InMemoryLocalHistoryFacade();
 
   @Test

@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-public class ExternalChangesAndRefreshingTest extends IntegrationTestCase {
+public abstract class ExternalChangesAndRefreshingTest extends IntegrationTestCase {
   public void testRefreshingSynchronously() throws Exception {
     doTestRefreshing(false);
   }

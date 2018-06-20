@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import java.io.IOException;
 import java.util.List;
 
-public class RevisionsAndDiffsTest extends IntegrationTestCase {
+public abstract class RevisionsAndDiffsTest extends IntegrationTestCase {
   public void testRevisions() throws Exception {
     VirtualFile f = createFile("file.txt", "old");
     setContent(f, "new");

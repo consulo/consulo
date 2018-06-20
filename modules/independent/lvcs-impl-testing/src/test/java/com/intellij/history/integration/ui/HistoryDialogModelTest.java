@@ -27,7 +27,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-public class HistoryDialogModelTest extends IntegrationTestCase {
+public abstract class HistoryDialogModelTest extends IntegrationTestCase {
   HistoryDialogModel m;
   VirtualFile f;
 

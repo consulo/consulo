@@ -19,10 +19,12 @@ package com.intellij.history.core;
 import com.intellij.history.core.revisions.RecentChange;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.core.tree.RootEntry;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+@Ignore
 public class LocalVcsRecentChangesTest extends LocalHistoryTestCase {
   LocalHistoryFacade vcs = new InMemoryLocalHistoryFacade();
   RootEntry root = new RootEntry();

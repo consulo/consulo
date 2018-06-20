@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class XDependentBreakpointsTest extends XBreakpointsTestCase {
+public abstract class XDependentBreakpointsTest extends XBreakpointsTestCase {
   private XDependentBreakpointManager myDependentBreakpointManager;
 
 
