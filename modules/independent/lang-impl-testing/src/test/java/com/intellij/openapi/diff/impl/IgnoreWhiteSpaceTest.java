@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 public class IgnoreWhiteSpaceTest extends TestCase {
   private ComparisonPolicy myPolicy;
 
-  public void testTrim() {
+  public void t_estTrim() {
     myPolicy = ComparisonPolicy.TRIM_SPACE;
     Object[] keys = myPolicy.getLineWrappers(new String[]{"a b", " a b ", "\ta b", "a  b"});
     assertEquals(keys[0], keys[1]);
