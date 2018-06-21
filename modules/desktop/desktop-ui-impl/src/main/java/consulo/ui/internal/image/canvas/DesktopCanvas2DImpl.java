@@ -195,10 +195,6 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    */
   protected Graphics2D graphics;
 
-  /**
-   * Specifies if text output should be rendered. Default is true.
-   */
-  protected boolean textEnabled = true;
 
   /**
    * Represents the current state of the canvas.
@@ -254,36 +250,8 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    * Constructs a new graphics export canvas.
    */
   public DesktopCanvas2DImpl(Graphics2D g) {
-    setGraphics(g);
+    graphics = g;
     state.g = g;
-  }
-
-  /**
-   * Sets the graphics instance.
-   */
-  public void setGraphics(Graphics2D value) {
-    graphics = value;
-  }
-
-  /**
-   * Returns the graphics instance.
-   */
-  public Graphics2D getGraphics() {
-    return graphics;
-  }
-
-  /**
-   * Returns true if text should be rendered.
-   */
-  public boolean isTextEnabled() {
-    return textEnabled;
-  }
-
-  /**
-   * Disables or enables text rendering.
-   */
-  public void setTextEnabled(boolean value) {
-    textEnabled = value;
   }
 
   /**

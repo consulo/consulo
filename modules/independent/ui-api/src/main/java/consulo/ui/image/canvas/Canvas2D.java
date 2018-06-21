@@ -7,20 +7,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Requirements for implementing technologies:
- * <p>
- * - Path rendering (move, line, quad, curve, arc)
- * - Images, flip v/h, aspect, alpha (PNG, JPG, GIF)
- * - Linear gradients (in all four directions)
- * - Transparency, fill and stroke
- * - Rotation, flip v/h
- * - Font rendering
- * - Dash patterns
- * - Clipping by path (not just rectangle)
- * - Alpha gradients (for glass effect)
- * - Encode result as image (PNG, JPG)
- * <p>
- * <p>
  * Based on jgraphx, BSD license
  */
 public interface Canvas2D {
@@ -58,6 +44,98 @@ public interface Canvas2D {
    * Restores the previous state of the canvas.
    */
   void restore();
+
+  /**
+   * Next fill or stroke should draw a rectangle.
+   */
+  void rect(double x, double y, double w, double h);
+
+  /**
+   * Next fill or stroke should draw a round rectangle.
+   */
+  default void roundRect(int x, int y, int width, int height, int radius) {
+    Canvas2DHelper.roundRectangle(this, x, y, width, height, radius);
+  }
+
+  /**
+   * Next fill should draw a rectangle.
+   */
+  default void fillRect(double x, double y, double w, double h) {
+    rect(x, y, w, h);
+    fill();
+  }
+
+  /**
+   * Next fill should draw a rectangle.
+   */
+  default void strokeRect(double x, double y, double w, double h) {
+    rect(x, y, w, h);
+    stroke();
+  }
+
+  /**
+   * Next fill or stroke should draw an arc/curve (used to create circles, or parts of circles)
+   */
+  void arc(double x, double y, double r, double sAngle, double eAngle);
+
+  /**
+   * Draws the given image.
+   */
+  void image(double x, double y, double w, double h, @Nonnull Image src, boolean aspect, boolean flipH, boolean flipV);
+
+  /**
+   * Draws the given string.
+   */
+  default void fillText(String text, double x, double y) {
+    fillText(text, x, y, 0);
+  }
+
+  /**
+   * Draws the given string.
+   */
+  void fillText(String text, double x, double y, double maxWidth);
+
+  /**
+   * Begins a new path.
+   */
+  void beginPath();
+
+  /**
+   * Moves to the given path.
+   */
+  void moveTo(double x, double y);
+
+  /**
+   * Draws a line to the given path.
+   */
+  void lineTo(double x, double y);
+
+  /**
+   * Draws a quadratic curve to the given point.
+   */
+  void quadraticCurveTo(double x1, double y1, double x2, double y2);
+
+  /**
+   * Draws a bezier curve to the given point.
+   */
+  void curveTo(double x1, double y1, double x2, double y2, double x3, double y3);
+
+  /**
+   * Closes the current path.
+   */
+  void closePath();
+
+  /**
+   * Paints the outline of the current path.
+   */
+  void stroke();
+
+  /**
+   * Fills the current path.
+   */
+  void fill();
+
+  // region unsupported
 
   /**
    * Uniformaly scales the canvas by the given amount.
@@ -155,86 +233,5 @@ public interface Canvas2D {
   void setShadowAlpha(double value);
 
   void setShadowOffset(double dx, double dy);
-
-  /**
-   * Next fill or stroke should draw a rectangle.
-   */
-  void rect(double x, double y, double w, double h);
-
-  /**
-   * Next fill or stroke should draw a round rectangle.
-   */
-  default void roundRect(int x, int y, int width, int height, int radius) {
-    Canvas2DHelper.roundRectangle(this, x, y, width, height, radius);
-  }
-
-  /**
-   * Next fill or stroke should draw a rectangle.
-   */
-  default void fillRect(double x, double y, double w, double h) {
-    rect(x, y, w, h);
-    fill();
-  }
-
-  /**
-   * Next fill or stroke should draw an arc/curve (used to create circles, or parts of circles)
-   */
-  void arc(double x, double y, double r, double sAngle, double eAngle);
-
-  /**
-   * Draws the given image.
-   */
-  void image(double x, double y, double w, double h, @Nonnull Image src, boolean aspect, boolean flipH, boolean flipV);
-
-  /**
-   * Draws the given string.
-   */
-  default void fillText(String text, double x, double y) {
-    fillText(text, x, y, 0);
-  }
-
-  /**
-   * Draws the given string.
-   */
-  void fillText(String text, double x, double y, double maxWidth);
-
-  /**
-   * Begins a new path.
-   */
-  void beginPath();
-
-  /**
-   * Moves to the given path.
-   */
-  void moveTo(double x, double y);
-
-  /**
-   * Draws a line to the given path.
-   */
-  void lineTo(double x, double y);
-
-  /**
-   * Draws a quadratic curve to the given point.
-   */
-  void quadraticCurveTo(double x1, double y1, double x2, double y2);
-
-  /**
-   * Draws a bezier curve to the given point.
-   */
-  void curveTo(double x1, double y1, double x2, double y2, double x3, double y3);
-
-  /**
-   * Closes the current path.
-   */
-  void closePath();
-
-  /**
-   * Paints the outline of the current path.
-   */
-  void stroke();
-
-  /**
-   * Fills the current path.
-   */
-  void fill();
+  // endregion
 }
