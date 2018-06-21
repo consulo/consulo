@@ -37,7 +37,9 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
 
@@ -181,6 +183,26 @@ public class ExecutionUtil {
     }
   }
 
+  @Nonnull
+  public static Image getIconWithLiveIndicator(@Nullable final Image base) {
+    int width = base == null ? 13 : base.getWidth();
+    int height = base == null ? 13 : base.getHeight();
+    return ImageEffects.layered(base, ImageEffects.canvas(width, height, ctx -> {
+      int iSize = 2;
+
+      ctx.setFillStyle(StandardColors.GREEN);
+      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.setStrokeStyle(StandardColors.BLACK.withAlpha(0.4f));
+      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
+      ctx.stroke();
+    }));
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #getLiveIndicatorIcon(Image)")
   public static Icon getLiveIndicator(@Nullable final Icon base) {
     int width = base == null ? 13 : base.getIconWidth();
     int height = base == null ? 13 : base.getIconHeight();

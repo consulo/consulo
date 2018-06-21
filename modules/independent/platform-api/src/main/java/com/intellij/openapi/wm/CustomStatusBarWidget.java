@@ -15,13 +15,29 @@
  */
 package com.intellij.openapi.wm;
 
+import consulo.awt.TargetAWT;
+import consulo.ui.Component;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * User: spLeaner
  */
 public interface CustomStatusBarWidget extends StatusBarWidget {
+  @Nonnull
+  default JComponent getComponent() {
+    Component uiComponent = getUIComponent();
+    if (uiComponent != null) {
+      return (JComponent)TargetAWT.to(uiComponent);
+    }
 
-  JComponent getComponent();
+    throw new AbstractMethodError();
+  }
 
+  @Nullable
+  default Component getUIComponent() {
+    return null;
+  }
 }

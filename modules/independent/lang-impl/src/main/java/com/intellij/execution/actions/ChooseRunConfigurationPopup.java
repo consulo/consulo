@@ -43,6 +43,8 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.ui.speedSearch.SpeedSearch;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -389,7 +391,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
         @Override
         public Icon getIcon() {
-          return RunManagerEx.getInstanceEx(project).getConfigurationIcon(getValue());
+          return TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(getValue()));
         }
 
         @Override
@@ -567,7 +569,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     public Icon getIcon() {
-      return RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(mySettings);
+      return TargetAWT.to(RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(mySettings));
     }
 
     @Override
@@ -606,7 +608,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       for (final Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
         final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), settings.getConfiguration());
         if (runner != null) {
-          result.add(new ActionWrapper(executor.getActionName(), executor.getIcon(), isFirst) {
+          result.add(new ActionWrapper(executor.getActionName(), TargetAWT.to(executor.getIcon()), isFirst) {
             @Override
             public void perform() {
               final RunManagerEx manager = RunManagerEx.getInstanceEx(project);
@@ -947,7 +949,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
             @Override
             protected void init() {
               setOKButtonText(executor.getStartActionText());
-              setOKButtonIcon(executor.getIcon());
+              setOKButtonIcon(TargetAWT.to(executor.getIcon()));
               myExecutor = executor;
               super.init();
             }
@@ -1095,7 +1097,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         final ItemWrapper wrapper = new ItemWrapper(configuration) {
           @Override
           public Icon getIcon() {
-            return RunManagerEx.getInstanceEx(project).getConfigurationIcon(configuration);
+            return TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(configuration));
           }
 
           @Override

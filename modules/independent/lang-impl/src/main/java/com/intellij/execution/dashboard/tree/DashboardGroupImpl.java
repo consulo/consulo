@@ -16,8 +16,7 @@
 package com.intellij.execution.dashboard.tree;
 
 import com.intellij.execution.dashboard.DashboardGroup;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author konstantin.aleev
@@ -25,9 +24,9 @@ import javax.swing.*;
 public class DashboardGroupImpl<T> implements DashboardGroup {
   private final T myValue;
   private final String myName;
-  private final Icon myIcon;
+  private final Image myIcon;
 
-  public DashboardGroupImpl(T value, String name, Icon icon) {
+  public DashboardGroupImpl(T value, String name, Image icon) {
     myValue = value;
     myName = name;
     myIcon = icon;
@@ -39,7 +38,7 @@ public class DashboardGroupImpl<T> implements DashboardGroup {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

@@ -19,11 +19,11 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.ContentManager;
-import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
-import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.shared.Rectangle2D;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -198,31 +198,17 @@ public interface ToolWindow extends BusyObject {
 
   @Nullable
   @RequiredUIAccess
-  Image getUIIcon();
-
-  @RequiredUIAccess
-  void setUIIcon(@Nullable Image image);
-
-  //TODO [VISTALL] awt & swing dependency
-
-  // region AWT & Swing dependency
-
-  /**
-   * @return window icon. Returns <code>null</code> if window has no icon.
-   */
-  @Nullable
-  @RequiredUIAccess
-  @Deprecated
-  @DeprecationInfo("Use #getIconUI()")
-  javax.swing.Icon getIcon();
+  Image getIcon();
 
   /**
    * Sets new window icon.
    */
   @RequiredUIAccess
-  @Deprecated
-  @DeprecationInfo("Use #setIconUI()")
-  void setIcon(@Nullable javax.swing.Icon icon);
+  void setIcon(@Nullable Image image);
+
+  //TODO [VISTALL] awt & swing dependency
+
+  // region AWT & Swing dependency
 
   @Nullable
   default javax.swing.JComponent getComponent() {

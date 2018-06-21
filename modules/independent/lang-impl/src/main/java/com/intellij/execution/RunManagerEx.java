@@ -20,10 +20,10 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -74,7 +74,8 @@ public abstract class RunManagerEx extends RunManager {
 
   public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable final String name);
 
-  public abstract Icon getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings);
+  @Nonnull
+  public abstract Image getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings);
 
   @Nonnull
   public abstract Collection<RunnerAndConfigurationSettings> getSortedConfigurations();

@@ -54,6 +54,9 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ErrorTreeView;
 import com.intellij.util.ui.MessageCategory;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -302,12 +305,12 @@ public class ExecutionHelper {
     }
     else if (consoles.size() > 1) {
       final JList list = new JBList(consoles);
-      final Icon icon = DefaultRunExecutor.getRunExecutorInstance().getIcon();
+      final Image icon = DefaultRunExecutor.getRunExecutorInstance().getIcon();
       list.setCellRenderer(new ListCellRendererWrapper<RunContentDescriptor>() {
         @Override
         public void customize(final JList list, final RunContentDescriptor value, final int index, final boolean selected, final boolean hasFocus) {
           setText(value.getDisplayName());
-          setIcon(icon);
+          setIcon(TargetAWT.to(icon));
         }
       });
 

@@ -22,10 +22,10 @@ import com.intellij.execution.ExecutorRegistry;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -46,18 +46,18 @@ public class DefaultRunExecutor extends Executor {
   }
 
   @Override
-  public Icon getToolWindowIcon() {
+  public Image getToolWindowIcon() {
     return AllIcons.Toolwindows.ToolWindowRun;
   }
 
   @Override
   @Nonnull
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Actions.Execute;
   }
 
   @Override
-  public Icon getDisabledIcon() {
+  public Image getDisabledIcon() {
     return AllIcons.Process.DisabledRun;
   }
 

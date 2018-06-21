@@ -21,10 +21,11 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
@@ -34,12 +35,15 @@ public abstract class Executor {
 
   public abstract String getToolWindowId();
 
-  public abstract Icon getToolWindowIcon();
+  public abstract Image getToolWindowIcon();
 
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
-  public abstract Icon getDisabledIcon();
+  @Nullable
+  public Image getDisabledIcon() {
+    return null;
+  }
 
   public abstract String getDescription();
 

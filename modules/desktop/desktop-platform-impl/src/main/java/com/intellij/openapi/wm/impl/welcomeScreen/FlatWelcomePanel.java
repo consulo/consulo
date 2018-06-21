@@ -39,6 +39,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ApplicationProperties;
+import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
@@ -148,7 +149,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
         }
       }
 
-      actionLinkRef.get().setIcon(IdeNotificationArea.createIconWithNotificationCount(actionLinkRef.get(), type1, types.size()));
+      actionLinkRef.get().setIcon(TargetAWT.to(IdeNotificationArea.createIconWithNotificationCount(type1, types.size())));
       panel.setVisible(true);
     };
     myEventLocation = () -> {

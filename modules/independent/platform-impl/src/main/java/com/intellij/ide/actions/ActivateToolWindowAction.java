@@ -27,6 +27,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.SizedIcon;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -95,7 +96,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     String title = toolWindow.getStripeTitle();
     presentation.setText(title);
     presentation.setDescription(IdeBundle.message("action.activate.tool.window", title));
-    Icon icon = toolWindow.getIcon();
+    Icon icon = TargetAWT.to(toolWindow.getIcon());
     if (EventLog.LOG_TOOL_WINDOW_ID.equals(myToolWindowId)) {
       icon = AllIcons.Ide.Info_notifications;
     }

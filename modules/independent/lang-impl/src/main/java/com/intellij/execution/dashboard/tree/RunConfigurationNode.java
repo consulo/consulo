@@ -31,10 +31,11 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.Content;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -68,7 +69,7 @@ class RunConfigurationNode  extends AbstractTreeNode<Pair<RunnerAndConfiguration
     presentation.addText(configurationSettings.getName(),
                          isStored ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.GRAY_ATTRIBUTES);
     RunDashboardContributor contributor = RunDashboardContributor.getContributor(configurationSettings.getType());
-    Icon icon = null;
+    Image icon = null;
     if (contributor != null) {
       DashboardRunConfigurationStatus status = contributor.getStatus(this);
       if (DashboardRunConfigurationStatus.STARTED.equals(status)) {
@@ -81,7 +82,7 @@ class RunConfigurationNode  extends AbstractTreeNode<Pair<RunnerAndConfiguration
     if (icon == null) {
       icon = RunManagerEx.getInstanceEx(getProject()).getConfigurationIcon(configurationSettings);
     }
-    presentation.setIcon(isStored ? icon : IconLoader.getDisabledIcon(icon));
+    presentation.setIcon(isStored ? TargetAWT.to(icon) : IconLoader.getDisabledIcon(TargetAWT.to(icon)));
 
     if (contributor != null) {
       contributor.updatePresentation(presentation, this);
@@ -95,7 +96,7 @@ class RunConfigurationNode  extends AbstractTreeNode<Pair<RunnerAndConfiguration
   }
 
   @Nullable
-  private Icon getExecutorIcon() {
+  private Image getExecutorIcon() {
     Content content = getContent();
     if (content != null) {
       if (!RunContentManagerImpl.isTerminated(content)) {

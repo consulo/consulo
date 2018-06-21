@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -51,7 +52,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
     setTitle(title);
 
     setOKButtonText(executor.getStartActionText());
-    setOKButtonIcon(executor.getIcon());
+    setOKButtonIcon(TargetAWT.to(executor.getIcon()));
 
     myConfigurable = new RunConfigurable(project, this);
     init();
@@ -121,7 +122,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
     final SingleConfigurableEditor dialog = new SingleConfigurableEditor(project, configurable, IdeModalityType.PROJECT) {
       {
         if (executor != null) setOKButtonText(executor.getActionName());
-        if (executor != null) setOKButtonIcon(executor.getIcon());
+        if (executor != null) setOKButtonIcon(TargetAWT.to(executor.getIcon()));
       }
     };
 

@@ -35,6 +35,7 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.ex.ToolWindowStripeButton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -335,7 +336,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
   public void updatePresentation() {
     updateState();
     updateText();
-    Icon icon = myDecorator.getToolWindow().getIcon();
+    Icon icon = TargetAWT.to(myDecorator.getToolWindow().getIcon());
     setIcon(icon);
     setDisabledIcon(IconLoader.getDisabledIcon(icon));
   }

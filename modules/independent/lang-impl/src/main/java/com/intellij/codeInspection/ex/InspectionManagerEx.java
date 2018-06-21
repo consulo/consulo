@@ -43,10 +43,10 @@ import com.intellij.ui.content.TabbedPaneContentUI;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -81,7 +81,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
           ToolWindow toolWindow =
                   toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
           ContentManager contentManager = toolWindow.getContentManager();
-          toolWindow.setUIIcon(AllIcons.Toolwindows.ToolWindowInspection);
+          toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
           new ContentManagerWatcher(toolWindow, contentManager);
           return contentManager;
         }

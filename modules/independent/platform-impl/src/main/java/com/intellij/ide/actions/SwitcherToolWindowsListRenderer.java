@@ -23,6 +23,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.SpeedSearchBase;
 import com.intellij.util.IconUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +79,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer {
   }
 
   private static Icon getIcon(ToolWindow toolWindow) {
-    Icon icon = toolWindow.getIcon();
+    Icon icon = TargetAWT.to(toolWindow.getIcon());
     if (icon == null) {
       return AllIcons.FileTypes.UiForm;
     }

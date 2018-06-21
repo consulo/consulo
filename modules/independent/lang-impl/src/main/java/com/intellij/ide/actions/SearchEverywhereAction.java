@@ -1158,7 +1158,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
             final String id = ((ActivateToolWindowAction)anAction).getToolWindowId();
             ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(id);
             if (toolWindow != null) {
-              icon = toolWindow.getIcon();
+              icon = TargetAWT.to(toolWindow.getIcon());
             }
           }
 

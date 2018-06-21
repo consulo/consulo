@@ -57,7 +57,7 @@ public class DependenciesAnalyzeManager implements PersistentStateComponent<Depe
                                                                      ToolWindowAnchor.RIGHT,
                                                                      project);
         myContentManager = toolWindow.getContentManager();
-        toolWindow.setUIIcon(AllIcons.Toolwindows.ToolWindowModuleDependencies);
+        toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowModuleDependencies);
         new ContentManagerWatcher(toolWindow, myContentManager);
       }
     });

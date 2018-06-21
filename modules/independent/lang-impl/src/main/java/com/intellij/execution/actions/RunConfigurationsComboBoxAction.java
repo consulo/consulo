@@ -37,9 +37,10 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;
@@ -104,7 +105,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
                                            final RunnerAndConfigurationSettings settings,
                                            final Project project) {
     try {
-      Icon icon = RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings);
+      Icon icon = TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings));
       ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
       List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(new Condition<RunnerAndConfigurationSettings>() {
         @Override
@@ -115,6 +116,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       if (runningDescriptors.size() == 1) {
         icon = ExecutionUtil.getLiveIndicator(icon);
       }
+      // FIXME [VISTALL] not supported by UI framework
       if (runningDescriptors.size() > 1) {
         icon = IconUtil.addText(icon, String.valueOf(runningDescriptors.size()));
       }

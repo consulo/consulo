@@ -3,9 +3,9 @@ package com.intellij.coverage;
 import com.intellij.execution.Executor;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class CoverageExecutor extends Executor {
 
@@ -29,19 +29,14 @@ public class CoverageExecutor extends Executor {
   }
 
   @Override
-  public Icon getToolWindowIcon() {
+  public Image getToolWindowIcon() {
     return AllIcons.General.RunWithCoverage;
   }
 
   @Override
   @Nonnull
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.General.RunWithCoverage;
-  }
-
-  @Override
-  public Icon getDisabledIcon() {
-    return null;
   }
 
   @Override

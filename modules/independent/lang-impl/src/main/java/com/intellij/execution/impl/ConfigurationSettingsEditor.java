@@ -30,6 +30,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.Convertor;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -211,7 +212,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
         @Override
         protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
           Executor executor = (Executor)value;
-          setIcon(executor.getIcon());
+          setIcon(TargetAWT.to(executor.getIcon()));
           append(executor.getId(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
       });

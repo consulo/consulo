@@ -190,7 +190,7 @@ class RunConfigurable extends BaseConfigurable {
             else if (userObject instanceof RunnerAndConfigurationSettingsImpl) {
               RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings)userObject;
               shared = runManager.isConfigurationShared(settings);
-              setIcon(RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(settings));
+              setIcon(TargetAWT.to(RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(settings)));
               configuration = settings;
               name = configuration.getName();
             }

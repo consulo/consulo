@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.dashboard;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author konstantin.aleev
@@ -23,5 +23,5 @@ import javax.swing.*;
 public interface DashboardGroup {
   String getName();
 
-  Icon getIcon();
+  Image getIcon();
 }

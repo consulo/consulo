@@ -6,6 +6,8 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.util.Key;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -183,7 +185,7 @@ public class MockRunManager extends RunManagerEx {
   }
 
   @Override
-  public Icon getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings) {
+  public Image getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings) {
     return null;
   }
 

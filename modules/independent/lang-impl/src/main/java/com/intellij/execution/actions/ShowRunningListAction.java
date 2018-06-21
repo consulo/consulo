@@ -29,7 +29,10 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -40,8 +43,9 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -150,8 +154,8 @@ public class ShowRunningListAction extends AnAction {
         for (Executor executor : executors) {
           state.append(System.identityHashCode(descriptor.getAttachedContent())).append("@").append(System.identityHashCode(executor.getIcon())).append(";");
           ProcessHandler processHandler = descriptor.getProcessHandler();
-          Icon icon = (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) ? AllIcons.Debugger.KillProcess : executor.getIcon();
-          JLabel label = new JLabel("<html><body><a href=\"\">" + descriptor.getDisplayName() + "</a></body></html>", icon, SwingConstants.LEADING);
+          consulo.ui.image.Image icon = (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) ? AllIcons.Debugger.KillProcess : executor.getIcon();
+          JLabel label = new JLabel("<html><body><a href=\"\">" + descriptor.getDisplayName() + "</a></body></html>", TargetAWT.to(icon), SwingConstants.LEADING);
           label.setIconTextGap(JBUI.scale(2));
           label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
           label.putClientProperty(KEY, Trinity.create(project, executor, descriptor));

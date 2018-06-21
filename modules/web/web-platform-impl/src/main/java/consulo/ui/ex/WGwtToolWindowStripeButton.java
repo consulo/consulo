@@ -19,14 +19,14 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.vaadin.ui.AbstractComponent;
+import consulo.ui.image.Image;
 import consulo.ui.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 import consulo.wm.impl.ToolWindowBase;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -61,10 +61,10 @@ public class WGwtToolWindowStripeButton extends AbstractComponent implements Too
     state.mySecondary = windowInfo.isSplit();
     state.caption = windowInfo.getId();
 
-    Icon icon = toolWindow.getIcon();
+    Image icon = toolWindow.getIcon();
 
     try {
-      state.myImageState = icon == null ? null : WGwtImageUrlCache.map((consulo.ui.image.Image)icon).getState();
+      state.myImageState = icon == null ? null : WGwtImageUrlCache.map(icon).getState();
     }
     catch (Exception e) {
       e.printStackTrace();

@@ -23,9 +23,9 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.Topic;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -43,7 +43,8 @@ public interface RunDashboardManager {
 
   String getToolWindowId();
 
-  Icon getToolWindowIcon();
+  @Nonnull
+  Image getToolWindowIcon();
 
   boolean isToolWindowAvailable();
 

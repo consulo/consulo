@@ -21,10 +21,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -39,18 +39,18 @@ public class DefaultDebugExecutor extends Executor {
   }
 
   @Override
-  public Icon getToolWindowIcon() {
+  public Image getToolWindowIcon() {
     return AllIcons.Toolwindows.ToolWindowDebugger;
   }
 
   @Override
   @Nonnull
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Actions.StartDebugger;
   }
 
   @Override
-  public Icon getDisabledIcon() {
+  public Image getDisabledIcon() {
     return AllIcons.Process.DisabledDebug;
   }
 

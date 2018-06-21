@@ -38,6 +38,8 @@ import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -146,7 +148,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
           public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             final ToolWindow toolWindow = (ToolWindow)value;
             label.setText(toolWindow.getStripeTitle());
-            label.setIcon(toolWindow.getIcon());
+            label.setIcon(TargetAWT.to(toolWindow.getIcon()));
             label.setBorder(JBUI.Borders.empty(4, 10));
             label.setForeground(UIUtil.getListForeground(isSelected));
             label.setBackground(UIUtil.getListBackground(isSelected));

@@ -39,7 +39,7 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
 
   @Override
   public AsyncResult<Void> getReady(@Nonnull Object requestor) {
-    return AsyncResult.done(null);
+    return AsyncResult.resolved(null);
   }
 
   @RequiredUIAccess

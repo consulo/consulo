@@ -35,6 +35,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -203,7 +204,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     private final Executor myExecutor;
 
     private ExecutorAction(@Nonnull final Executor executor) {
-      super(executor.getStartActionText(), executor.getDescription(), executor.getIcon());
+      super(executor.getStartActionText(), executor.getDescription(), TargetAWT.to(executor.getIcon()));
       getTemplatePresentation().setVisible(false);
       myExecutor = executor;
     }
@@ -268,14 +269,15 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
         return AllIcons.Actions.Restart;
       }
       if (runningDescriptors.isEmpty()) {
-        return myExecutor.getIcon();
+        return TargetAWT.to(myExecutor.getIcon());
       }
 
       if (runningDescriptors.size() == 1) {
-        return ExecutionUtil.getLiveIndicator(myExecutor.getIcon());
+        return TargetAWT.to(ExecutionUtil.getIconWithLiveIndicator(myExecutor.getIcon()));
       }
       else {
-        return IconUtil.addText(myExecutor.getIcon(), String.valueOf(runningDescriptors.size()));
+        // FIXME [VISTALL] not supported by UI framework
+        return IconUtil.addText(TargetAWT.to(myExecutor.getIcon()), String.valueOf(runningDescriptors.size()));
       }
     }
 

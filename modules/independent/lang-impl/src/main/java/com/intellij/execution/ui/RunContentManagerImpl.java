@@ -31,6 +31,7 @@ import com.intellij.ide.impl.ContentManagerWatcher;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -55,11 +56,14 @@ import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.*;
 
@@ -70,7 +74,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   private final Project myProject;
   private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new THashMap<>();
-  private final Map<String, Icon> myToolwindowIdToBaseIconMap = new THashMap<>();
+  private final Map<String, Image> myToolwindowIdToBaseIconMap = new THashMap<>();
   private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
 
   public RunContentManagerImpl(@Nonnull Project project, @Nonnull DockManager dockManager) {
@@ -79,7 +83,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     dockManager.register(DockableGridContainerFactory.TYPE, containerFactory);
     Disposer.register(myProject, containerFactory);
 
-    AppUIUtil.invokeOnEdt(() -> init(), myProject.getDisposed());
+    AppUIUtil.invokeOnEdt(this::init, myProject.getDisposed());
   }
 
   // must be called on EDT
@@ -122,6 +126,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   public void dispose() {
   }
 
+  @RequiredUIAccess
   private void registerToolWindow(@Nonnull final Executor executor, @Nonnull ToolWindowManagerEx toolWindowManager) {
     final String toolWindowId = executor.getToolWindowId();
     if (toolWindowManager.getToolWindow(toolWindowId) != null) {
@@ -155,7 +160,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     initToolWindow(executor, toolWindowId, executor.getToolWindowIcon(), contentManager);
   }
 
-  private void initToolWindow(@Nullable final Executor executor, String toolWindowId, Icon toolWindowIcon, ContentManager contentManager) {
+  private void initToolWindow(@Nullable final Executor executor, String toolWindowId, Image toolWindowIcon, ContentManager contentManager) {
     myToolwindowIdToBaseIconMap.put(toolWindowId, toolWindowIcon);
     contentManager.addContentManagerListener(new ContentManagerAdapter() {
       @Override
@@ -302,13 +307,13 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         public void startNotified(final ProcessEvent event) {
           UIUtil.invokeLaterIfNeeded(() -> {
             content.setIcon(ExecutionUtil.getLiveIndicator(descriptor.getIcon()));
-            toolWindow.setIcon(ExecutionUtil.getLiveIndicator(myToolwindowIdToBaseIconMap.get(toolWindowId)));
+            toolWindow.setIcon(ExecutionUtil.getIconWithLiveIndicator(myToolwindowIdToBaseIconMap.get(toolWindowId)));
           });
         }
 
         @Override
         public void processTerminated(final ProcessEvent event) {
-          ApplicationManager.getApplication().invokeLater(() -> {
+          Application.get().invokeLater(() -> {
             boolean alive = false;
             ContentManager manager = myToolwindowIdToContentManagerMap.get(toolWindowId);
             if (manager == null) return;
@@ -322,11 +327,11 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
                 }
               }
             }
-            Icon base = myToolwindowIdToBaseIconMap.get(toolWindowId);
-            toolWindow.setIcon(alive ? ExecutionUtil.getLiveIndicator(base) : base);
+            Image base = myToolwindowIdToBaseIconMap.get(toolWindowId);
+            toolWindow.setIcon(alive ? ExecutionUtil.getIconWithLiveIndicator(base) : base);
 
             Icon icon = descriptor.getIcon();
-            content.setIcon(icon == null ? executor.getDisabledIcon() : IconLoader.getTransparentIcon(icon));
+            content.setIcon(icon == null ? TargetAWT.to(executor.getDisabledIcon()) : IconLoader.getTransparentIcon(icon));
           });
         }
       };
@@ -491,7 +496,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     final Content content = ContentFactory.getInstance().createContent(descriptor.getComponent(), processDisplayName, true);
     content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
     Icon icon = descriptor.getIcon();
-    content.setIcon(icon == null ? executor.getToolWindowIcon() : icon);
+    content.setIcon(icon == null ? TargetAWT.to(executor.getToolWindowIcon()) : icon);
     return content;
   }
 

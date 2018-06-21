@@ -1047,7 +1047,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     ToolWindow window = registerToolWindow(bean.id, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
     final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(bean.id, myProject, window);
     toolWindow.setContentFactory(factory);
-    if (bean.icon != null && toolWindow.getIconObject() == null) {
+    if (bean.icon != null && toolWindow.getIcon() == null) {
       Image icon = IconLoader.findIcon(bean.icon, factory.getClass());
       if (icon == null) {
         try {
@@ -1056,7 +1056,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         catch (Exception ignored) {
         }
       }
-      toolWindow.setUIIcon(icon);
+      toolWindow.setIcon(icon);
     }
 
     WindowInfoImpl info = getInfo(bean.id);

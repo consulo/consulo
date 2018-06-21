@@ -39,16 +39,14 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakHashMap;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.*;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
@@ -1057,8 +1055,9 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     return tasks;
   }
 
+  @Nonnull
   @Override
-  public Icon getConfigurationIcon(@Nonnull final RunnerAndConfigurationSettings settings) {
+  public Image getConfigurationIcon(@Nonnull final RunnerAndConfigurationSettings settings) {
     final String uniqueID = settings.getUniqueID();
     RunnerAndConfigurationSettings selectedConfiguration = getSelectedConfiguration();
     String selectedId = selectedConfiguration != null ? selectedConfiguration.getUniqueID() : "";
@@ -1101,7 +1100,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       myIconCheckTimes.put(uniqueID, System.currentTimeMillis());
     }
 
-    return TargetAWT.to(icon);
+    return icon;
   }
 
   public RunnerAndConfigurationSettings getConfigurationById(@Nonnull final String id) {

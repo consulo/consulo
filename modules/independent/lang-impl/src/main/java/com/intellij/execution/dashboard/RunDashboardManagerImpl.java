@@ -42,10 +42,10 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentUI;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -142,8 +142,9 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
     return ToolWindowId.RUN_DASHBOARD;
   }
 
+  @Nonnull
   @Override
-  public Icon getToolWindowIcon() {
+  public Image getToolWindowIcon() {
     return AllIcons.Toolwindows.ToolWindowRun; // TODO [konstantin.aleev] provide new icon
   }
 

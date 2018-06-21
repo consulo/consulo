@@ -22,6 +22,8 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.util.Pair;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,8 +31,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;
 
   public RunContextAction(@Nonnull final Executor executor) {
-    super(ExecutionBundle.message("perform.action.with.context.configuration.action.name", executor.getStartActionText()), null,
-          executor.getIcon());
+    super(ExecutionBundle.message("perform.action.with.context.configuration.action.name", executor.getStartActionText()), null, TargetAWT.to(executor.getIcon()));
     myExecutor = executor;
   }
 

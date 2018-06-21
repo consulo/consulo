@@ -18,7 +18,6 @@ package consulo.wm.impl;
 import com.intellij.ide.UiActivity;
 import com.intellij.ide.UiActivityMonitor;
 import com.intellij.ide.impl.ContentManagerWatcher;
-import com.intellij.notification.EventLog;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ModalityState;
@@ -29,21 +28,18 @@ import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.ui.JBUI;
-import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
+import consulo.ui.shared.Rectangle2D;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -72,8 +68,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   private ActionCallback myActivation = new ActionCallback.Done();
 
-  // fixme [vistall] later replace for consulo.ui.Image
-  private Object myIcon;
+  private Image myIcon;
 
   private boolean myUseLastFocused = true;
 
@@ -441,12 +436,12 @@ public abstract class ToolWindowBase implements ToolWindowEx {
       // clear it first to avoid SOE
       myContentFactory = null;
 
-      if(!myToolWindowManager.isUnified()) {
+      if (!myToolWindowManager.isUnified()) {
         myContentManager.removeAllContents(false);
         contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
       }
       else {
-        if(contentFactory.isUnified()) {
+        if (contentFactory.isUnified()) {
           myContentManager.removeAllContents(false);
           contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
         }
@@ -471,62 +466,24 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  public void setUIIcon(@Nullable Image image) {
+  public void setIcon(@Nullable Image icon) {
     UIAccess.assertIsUIThread();
     Object oldIcon = myIcon;
-
-    myIcon = image;
-    myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, image);
+    myIcon = icon;
+    myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, icon);
   }
 
   @RequiredUIAccess
   @Nullable
   @Override
-  public Image getUIIcon() {
+  public Image getIcon() {
     UIAccess.assertIsUIThread();
-    if (myIcon instanceof Image) {
-      return (Image)myIcon;
-    }
-    return null;
-  }
-
-  /**
-   * FIXME [VISTALL] remove this method then swing dependency removed
-   */
-  @Nullable
-  public Object getIconObject() {
     return myIcon;
   }
 
   // TODO [VISTALL]  AWT & Swing dependency
   // region AWT & Swing dependency
   private static final Content EMPTY_CONTENT = new ContentImpl(new javax.swing.JLabel(), "", false);
-
-  @RequiredUIAccess
-  @Override
-  @Deprecated
-  public final javax.swing.Icon getIcon() {
-    UIAccess.assertIsUIThread();
-    if (myIcon instanceof Icon) {
-      return (Icon)myIcon;
-    }
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  @Deprecated
-  public void setIcon(final javax.swing.Icon icon) {
-    UIAccess.assertIsUIThread();
-    final javax.swing.Icon oldIcon = getIcon();
-    if (!EventLog.LOG_TOOL_WINDOW_ID.equals(getId())) {
-      if (oldIcon != icon && icon != null && !(icon instanceof LayeredIcon) && (icon.getIconHeight() != Math.floor(JBUI.scale(13f)) || icon.getIconWidth() != Math.floor(JBUI.scale(13f)))) {
-        LOG.warn("ToolWindow icons should be 13x13. Please fix ToolWindow (ID:  " + getId() + ") or icon " + icon);
-      }
-    }
-    myIcon = icon;
-    myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, icon);
-  }
 
   // endregion
 }

@@ -51,7 +51,7 @@ public class DependenciesToolWindow {
                                                                      project);
         myContentManager = toolWindow.getContentManager();
 
-        toolWindow.setUIIcon(AllIcons.Toolwindows.ToolWindowInspection);
+        toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
         new ContentManagerWatcher(toolWindow, myContentManager);
       }
     });

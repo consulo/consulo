@@ -17,24 +17,22 @@ package com.intellij.execution.dashboard;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.icons.AllIcons;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev
  */
 public class DashboardRunConfigurationStatus {
-  public static final DashboardRunConfigurationStatus STARTED = new DashboardRunConfigurationStatus(
-    ExecutionBundle.message("run.dashboard.started.group.name"), AllIcons.Toolwindows.ToolWindowRun);
-  public static final DashboardRunConfigurationStatus STOPPED = new DashboardRunConfigurationStatus(
-    ExecutionBundle.message("run.dashboard.stopped.group.name"), AllIcons.Actions.Suspend);
-  public static final DashboardRunConfigurationStatus FAILED = new DashboardRunConfigurationStatus(
-    ExecutionBundle.message("run.dashboard.failed.group.name"), AllIcons.General.Error);
+  public static final DashboardRunConfigurationStatus STARTED = new DashboardRunConfigurationStatus(ExecutionBundle.message("run.dashboard.started.group.name"), AllIcons.Toolwindows.ToolWindowRun);
+  public static final DashboardRunConfigurationStatus STOPPED = new DashboardRunConfigurationStatus(ExecutionBundle.message("run.dashboard.stopped.group.name"), AllIcons.Actions.Suspend);
+  public static final DashboardRunConfigurationStatus FAILED = new DashboardRunConfigurationStatus(ExecutionBundle.message("run.dashboard.failed.group.name"), AllIcons.General.Error);
 
   private final String myName;
-  private final Icon myIcon;
+  private final Image myIcon;
 
-  public DashboardRunConfigurationStatus(String name, Icon icon) {
+  public DashboardRunConfigurationStatus(String name, Image icon) {
     myName = name;
     myIcon = icon;
   }
@@ -43,7 +41,8 @@ public class DashboardRunConfigurationStatus {
     return myName;
   }
 
-  public Icon getIcon() {
+  @Nonnull
+  public Image getIcon() {
     return myIcon;
   }
 }
