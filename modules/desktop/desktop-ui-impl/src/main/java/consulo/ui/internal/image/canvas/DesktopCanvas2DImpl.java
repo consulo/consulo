@@ -2,10 +2,12 @@ package consulo.ui.internal.image.canvas;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.SizedIcon;
+import com.intellij.util.BitUtil;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.image.canvas.Canvas2DFont;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.style.StandardColors;
@@ -13,9 +15,10 @@ import consulo.ui.style.StandardColors;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.TextAttribute;
-import java.awt.geom.*;
-import java.text.AttributedString;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Stack;
 
 /**
@@ -78,50 +81,13 @@ public class DesktopCanvas2DImpl implements Canvas2D {
      */
     protected double miterLimit = 10;
 
-    /**
-     *
-     */
-    protected int fontStyle = 0;
+    protected Canvas2DFont myFontStyle = new Canvas2DFont(mxConstants.DEFAULT_FONTFAMILIES, 11);
 
-    /**
-     *
-     */
-    protected double fontSize = mxConstants.DEFAULT_FONTSIZE;
+    protected Font myFont;
 
-    /**
-     *
-     */
-    protected String fontFamily = mxConstants.DEFAULT_FONTFAMILIES;
+    protected TextAlign myTextAlign;
 
-    /**
-     *
-     */
-    protected ColorValue fontColorValue = StandardColors.BLACK;
-
-    /**
-     *
-     */
-    protected Color fontColor;
-
-    /**
-     *
-     */
-    protected ColorValue fontBackgroundColorValue;
-
-    /**
-     *
-     */
-    protected Color fontBackgroundColor;
-
-    /**
-     *
-     */
-    protected ColorValue fontBorderColorValue;
-
-    /**
-     *
-     */
-    protected Color fontBorderColor;
+    protected TextBaseline myTextBaseline;
 
     /**
      *
@@ -222,35 +188,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     }
   }
 
-  /**
-   * Specifies if absolute line heights should be used (px) in CSS. Default
-   * is false. Set this to true for backwards compatibility.
-   */
-  public static boolean ABSOLUTE_LINE_HEIGHT = false;
-
   private static final Logger log = Logger.getInstance(DesktopCanvas2DImpl.class);
-
-  /**
-   * Specifies the additional pixels when computing the text width for HTML labels.
-   * Default is 5.
-   */
-  public static int JAVA_TEXT_WIDTH_DELTA = 6;
-
-  /**
-   * Scale for rendering HTML output. Default is 1.
-   */
-  public static double HTML_SCALE = 1;
-
-  /**
-   * Unit to be used for HTML labels. Default is "pt". If you units within
-   * HTML labels are used, this should match those units to produce a
-   * consistent output. If the value is "px", then HTML_SCALE should be
-   * changed the match the ratio between px units for rendering HTML and
-   * the units used for rendering other graphics elements. This value is
-   * 0.6 on Linux and 0.75 on all other platforms.
-   */
-  public static String HTML_UNIT = "pt";
-
 
   /**
    * Reference to the graphics instance for painting.
@@ -270,37 +208,12 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   /**
    * Stack of states for save/restore.
    */
-  protected transient Stack<CanvasState> stack = new Stack<CanvasState>();
+  protected transient Stack<CanvasState> stack = new Stack<>();
 
   /**
    * Holds the current path.
    */
   protected transient GeneralPath currentPath;
-
-  /**
-   * Optional renderer pane to be used for HTML label rendering.
-   */
-  protected CellRendererPane rendererPane;
-
-  /**
-   * Font caching.
-   */
-  protected transient Font lastFont = null;
-
-  /**
-   * Font caching.
-   */
-  protected transient int lastFontStyle = 0;
-
-  /**
-   * Font caching.
-   */
-  protected transient int lastFontSize = 0;
-
-  /**
-   * Font caching.
-   */
-  protected transient String lastFontFamily = "";
 
   /**
    * Stroke caching.
@@ -343,14 +256,6 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   public DesktopCanvas2DImpl(Graphics2D g) {
     setGraphics(g);
     state.g = g;
-
-    // Initializes the cell renderer pane for drawing HTML markup
-    try {
-      rendererPane = new CellRendererPane();
-    }
-    catch (Exception e) {
-      log.error(e);
-    }
   }
 
   /**
@@ -549,67 +454,22 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     }
   }
 
-  /**
-   *
-   */
   @Override
-  public void setFontSize(double value) {
-    if (value != state.fontSize) {
-      state.fontSize = value;
+  public void setFont(@Nonnull Canvas2DFont style) {
+    if (!style.equals(state.myFontStyle)) {
+      state.myFontStyle = style;
+      state.myFont = null;
     }
   }
 
-  /**
-   *
-   */
   @Override
-  public void setFontColor(ColorValue value) {
-    if (state.fontColorValue == null || !state.fontColorValue.equals(value)) {
-      state.fontColorValue = value;
-      state.fontColor = null;
-    }
+  public void setTextAlign(@Nonnull TextAlign textAlign) {
+    state.myTextAlign = textAlign;
   }
 
-  /**
-   *
-   */
   @Override
-  public void setFontBackgroundColor(ColorValue value) {
-    if (state.fontBackgroundColorValue == null || !state.fontBackgroundColorValue.equals(value)) {
-      state.fontBackgroundColorValue = value;
-      state.fontBackgroundColor = null;
-    }
-  }
-
-  /**
-   *
-   */
-  @Override
-  public void setFontBorderColor(ColorValue value) {
-    if (state.fontBorderColorValue == null || !state.fontBorderColorValue.equals(value)) {
-      state.fontBorderColorValue = value;
-      state.fontBorderColor = null;
-    }
-  }
-
-  /**
-   *
-   */
-  @Override
-  public void setFontFamily(String value) {
-    if (!state.fontFamily.equals(value)) {
-      state.fontFamily = value;
-    }
-  }
-
-  /**
-   *
-   */
-  @Override
-  public void setFontStyle(int value) {
-    if (value != state.fontStyle) {
-      state.fontStyle = value;
-    }
+  public void setTextBaseline(@Nonnull TextBaseline baseline) {
+    state.myTextBaseline = baseline;
   }
 
   /**
@@ -645,8 +505,8 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     // LATER: Add lazy instantiation and check if paint already created
     float x1 = (float)((state.dx + x) * state.scale);
     float y1 = (float)((state.dy + y) * state.scale);
-    float x2 = (float)x1;
-    float y2 = (float)y1;
+    float x2 = x1;
+    float y2 = y1;
     h *= state.scale;
     w *= state.scale;
 
@@ -800,124 +660,24 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     return g2;
   }
 
-  /**
-   * Creates a HTML document around the given markup.
-   */
-  protected String createHtmlDocument(String text, String align, String valign, int w, int h, boolean wrap, String overflow, boolean clip) {
-    StringBuffer css = new StringBuffer();
-    css.append("display:inline;");
-    css.append("font-family:" + state.fontFamily + ";");
-    css.append("font-size:" + Math.round(state.fontSize) + HTML_UNIT + ";");
-    css.append("color:" + state.fontColorValue + ";");
-    // KNOWN: Line-height ignored in JLabel
-    css.append("line-height:" + (ABSOLUTE_LINE_HEIGHT ? Math.round(state.fontSize * mxConstants.LINE_HEIGHT) + " " + HTML_UNIT : mxConstants.LINE_HEIGHT) + ";");
-
-    boolean setWidth = false;
-
-    if ((state.fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD) {
-      css.append("font-weight:bold;");
-    }
-
-    if ((state.fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC) {
-      css.append("font-style:italic;");
-    }
-
-    if ((state.fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
-      css.append("text-decoration:underline;");
-    }
-
-    if (align != null) {
-      if (align.equals(mxConstants.ALIGN_CENTER)) {
-        css.append("text-align:center;");
-      }
-      else if (align.equals(mxConstants.ALIGN_RIGHT)) {
-        css.append("text-align:right;");
-      }
-    }
-
-    if (state.fontBackgroundColorValue != null) {
-      css.append("background-color:" + state.fontBackgroundColorValue + ";");
-    }
-
-    // KNOWN: Border ignored in JLabel
-    if (state.fontBorderColorValue != null) {
-      css.append("border:1pt solid " + state.fontBorderColorValue + ";");
-    }
-
-    // KNOWN: max-width/-height ignored in JLabel
-    if (clip) {
-      css.append("overflow:hidden;");
-      setWidth = true;
-    }
-    else if (overflow != null) {
-      if (overflow.equals("fill")) {
-        css.append("height:" + Math.round(h) + HTML_UNIT + ";");
-        setWidth = true;
-      }
-      else if (overflow.equals("width")) {
-        setWidth = true;
-
-        if (h > 0) {
-          css.append("height:" + Math.round(h) + HTML_UNIT + ";");
-        }
-      }
-    }
-
-    if (wrap) {
-      if (!clip) {
-        // NOTE: Max-width not available in Java
-        setWidth = true;
-      }
-
-      css.append("white-space:normal;");
-    }
-    else {
-      css.append("white-space:nowrap;");
-    }
-
-    if (setWidth && w > 0) {
-      css.append("width:" + Math.round(w) + HTML_UNIT + ";");
-    }
-
-    return createHtmlDocument(text, css.toString());
-  }
-
-  /**
-   * Creates a HTML document for the given text and CSS style.
-   */
-  protected String createHtmlDocument(String text, String style) {
-    return "<html><div style=\"" + style + "\">" + text + "</div></html>";
-  }
-
-  /**
-   * Hook to return the renderer for HTML formatted text. This implementation returns
-   * the shared instance of mxLighweightLabel.
-   */
-  protected JLabel getTextRenderer() {
-    return mxLightweightLabel.getSharedInstance();
-  }
-
-  /**
-   *
-   */
-  protected Point2D getMargin(String align, String valign) {
+  protected Point2D getMargin(TextAlign align, TextBaseline valign) {
     double dx = 0;
     double dy = 0;
 
     if (align != null) {
-      if (align.equals(mxConstants.ALIGN_CENTER)) {
+      if (align == TextAlign.center) {
         dx = -0.5;
       }
-      else if (align.equals(mxConstants.ALIGN_RIGHT)) {
+      else if (align == TextAlign.right) {
         dx = -1;
       }
     }
 
     if (valign != null) {
-      if (valign.equals(mxConstants.ALIGN_MIDDLE)) {
+      if (valign == TextBaseline.middle) {
         dy = -0.5;
       }
-      else if (valign.equals(mxConstants.ALIGN_BOTTOM)) {
+      else if (valign == TextBaseline.bottom) {
         dy = -1;
       }
     }
@@ -925,135 +685,20 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     return new Point2D.Double(dx, dy);
   }
 
-  /**
-   * Draws the given HTML text.
-   */
-  protected void htmlText(double x, double y, double w, double h, String str, String align, String valign, boolean wrap, String format, String overflow, boolean clip, double rotation) {
-    x += state.dx;
-    y += state.dy;
-
-    JLabel textRenderer = getTextRenderer();
-
-    if (textRenderer != null && rendererPane != null) {
-      // Use native scaling for HTML
-      AffineTransform previous = state.g.getTransform();
-      state.g.scale(state.scale * HTML_SCALE, state.scale * HTML_SCALE);
-      double rad = rotation * (Math.PI / 180);
-      state.g.rotate(rad, x, y);
-
-      // Renders the scaled text with a correction factor
-      // HTML_SCALE for the given HTML_UNIT
-      boolean widthFill = false;
-      boolean fill = false;
-
-      String original = str;
-
-      if (overflow != null) {
-        widthFill = overflow.equals("width");
-        fill = overflow.equals("fill");
-      }
-
-      str = createHtmlDocument(str, align, valign, (widthFill || fill) ? (int)Math.round(w) : 0, (fill) ? (int)Math.round(h) : 0, wrap, overflow, clip);
-      textRenderer.setText(str);
-      Dimension pref = textRenderer.getPreferredSize();
-      int prefWidth = pref.width;
-      int prefHeight = pref.height;
-
-      // Poor man's max-width
-      // TODO: Is this still needed?
-      if (((clip || wrap) && prefWidth > w / HTML_SCALE && w > 0) || (clip && prefHeight > h / HTML_SCALE && h > 0)) {
-        // TextWidthDelta is workaround for inconsistent word wrapping in Java
-        int cw = (int)Math.round((w) + ((wrap) ? JAVA_TEXT_WIDTH_DELTA : 0));
-        int ch = (int)Math.round(h);
-        str = createHtmlDocument(original, align, valign, cw, ch, wrap, overflow, clip);
-        textRenderer.setText(str);
-
-        pref = textRenderer.getPreferredSize();
-        prefWidth = pref.width;
-        prefHeight = pref.height + 2;
-      }
-
-      // Matches HTML output
-      if (clip && w > 0 && h > 0) {
-        prefWidth = Math.min(pref.width, (int)(w / HTML_SCALE));
-        prefHeight = Math.min(prefHeight, (int)(h / HTML_SCALE));
-        h = prefHeight * HTML_SCALE;
-      }
-      else if (!clip && wrap && w > 0 && h > 0) {
-        prefWidth = pref.width;
-        w = Math.max(pref.width, (int)(w / HTML_SCALE));
-        h = prefHeight * HTML_SCALE;
-        prefHeight = Math.max(prefHeight, (int)(h / HTML_SCALE));
-      }
-      else if (!clip && !wrap) {
-        if (w > 0 && w / HTML_SCALE < prefWidth) {
-          w = prefWidth * HTML_SCALE;
-        }
-
-        if (h > 0 && h / HTML_SCALE < prefHeight) {
-          h = prefHeight * HTML_SCALE;
-        }
-      }
-
-      Point2D margin = getMargin(align, valign);
-      x += margin.getX() * prefWidth * HTML_SCALE;
-      y += margin.getY() * prefHeight * HTML_SCALE;
-
-      if (w == 0) {
-        w = prefWidth * HTML_SCALE;
-      }
-
-      if (h == 0) {
-        h = prefHeight * HTML_SCALE;
-      }
-
-      rendererPane
-              .paintComponent(state.g, textRenderer, rendererPane, (int)Math.round(x / HTML_SCALE), (int)Math.round(y / HTML_SCALE), (int)Math.round(w / HTML_SCALE), (int)Math.round(h / HTML_SCALE),
-                              true);
-
-      state.g.setTransform(previous);
-    }
-  }
-
   @Override
   public void fillText(String text, double x, double y, double maxWidth) {
-    text(x, y, 0, 0, text, null, null, false, null, null, false, 0, null);
+    text(x, y, 0, 0, text, state.myTextAlign, state.myTextBaseline, false, 0);
   }
 
   /**
    * Draws the given text.
    */
-  private void text(double x,
-                    double y,
-                    double w,
-                    double h,
-                    String str,
-                    String align,
-                    String valign,
-                    boolean wrap,
-                    String format,
-                    String overflow,
-                    boolean clip,
-                    double rotation,
-                    String textDirection) {
-    // TODO: Add support for text direction
-    if (format != null && format.equals("html")) {
-      htmlText(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation);
-    }
-    else {
-      plainText(x, y, w, h, str, align, valign, wrap, format, overflow, clip, rotation);
-    }
-  }
-
-  /**
-   * Draws the given text.
-   */
-  public void plainText(double x, double y, double w, double h, String str, String align, String valign, boolean wrap, String format, String overflow, boolean clip, double rotation) {
-    if (state.fontColor == null) {
-      state.fontColor = convertColor(state.fontColorValue);
+  private void text(double x, double y, double w, double h, String str, TextAlign align, TextBaseline valign, boolean clip, double rotation) {
+    if (state.fillColor == null) {
+      state.fillColor = convertColor(state.fillColorValue);
     }
 
-    if (state.fontColor != null) {
+    if (state.fillColor != null) {
       x = (state.dx + x) * state.scale;
       y = (state.dy + y) * state.scale;
       w *= state.scale;
@@ -1072,7 +717,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
         textWidth = Math.max(textWidth, stringWidths[i]);
       }
 
-      int textHeight = (int)Math.round(lines.length * (fm.getFont().getSize() * mxConstants.LINE_HEIGHT));
+      int textHeight = Math.round(lines.length * (fm.getFont().getSize() * mxConstants.LINE_HEIGHT));
 
       if (clip && textHeight > h && h > 0) {
         textHeight = (int)h;
@@ -1082,58 +727,26 @@ public class DesktopCanvas2DImpl implements Canvas2D {
       x += margin.getX() * textWidth;
       y += margin.getY() * textHeight;
 
-      if (state.fontBackgroundColorValue != null) {
-        if (state.fontBackgroundColor == null) {
-          state.fontBackgroundColor = convertColor(state.fontBackgroundColorValue);
-        }
-
-        if (state.fontBackgroundColor != null) {
-          g2.setColor(state.fontBackgroundColor);
-          g2.fillRect((int)Math.round(x), (int)Math.round(y - 1), textWidth + 1, textHeight + 2);
-        }
-      }
-
-      if (state.fontBorderColorValue != null) {
-        if (state.fontBorderColor == null) {
-          state.fontBorderColor = convertColor(state.fontBorderColorValue);
-        }
-
-        if (state.fontBorderColor != null) {
-          g2.setColor(state.fontBorderColor);
-          g2.drawRect((int)Math.round(x), (int)Math.round(y - 1), textWidth + 1, textHeight + 2);
-        }
-      }
-
-      g2.setColor(state.fontColor);
+      g2.setColor(state.fillColor);
       y += fm.getHeight() - fm.getDescent() - (margin.getY() + 0.5);
 
       for (int i = 0; i < lines.length; i++) {
         double dx = 0;
 
         if (align != null) {
-          if (align.equals(mxConstants.ALIGN_CENTER)) {
+          if (align == TextAlign.center) {
             dx = (textWidth - stringWidths[i]) / 2;
           }
-          else if (align.equals(mxConstants.ALIGN_RIGHT)) {
+          else if (align == TextAlign.right) {
             dx = textWidth - stringWidths[i];
           }
         }
 
-        // Adds support for underlined text via attributed character iterator
         if (!lines[i].isEmpty()) {
-          if ((state.fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE) {
-            AttributedString as = new AttributedString(lines[i]);
-            as.addAttribute(TextAttribute.FONT, g2.getFont());
-            as.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-
-            g2.drawString(as.getIterator(), (int)Math.round(x + dx), (int)Math.round(y));
-          }
-          else {
-            g2.drawString(lines[i], (int)Math.round(x + dx), (int)Math.round(y));
-          }
+          g2.drawString(lines[i], (int)Math.round(x + dx), (int)Math.round(y));
         }
 
-        y += (int)Math.round(fm.getFont().getSize() * mxConstants.LINE_HEIGHT);
+        y += Math.round(fm.getFont().getSize() * mxConstants.LINE_HEIGHT);
       }
     }
   }
@@ -1142,7 +755,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    * Returns a new graphics instance with the correct color and font for
    * text rendering.
    */
-  protected final Graphics2D createTextGraphics(double x, double y, double w, double h, double rotation, boolean clip, String align, String valign) {
+  protected final Graphics2D createTextGraphics(double x, double y, double w, double h, double rotation, boolean clip, TextAlign align, TextBaseline valign) {
     Graphics2D g2 = state.g;
     updateFont();
 
@@ -1375,18 +988,16 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    *
    */
   protected void updateFont() {
-    int size = (int)Math.round(state.fontSize * state.scale);
-    int style = ((state.fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD) ? Font.BOLD : Font.PLAIN;
-    style += ((state.fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC) ? Font.ITALIC : Font.PLAIN;
+    if (state.myFont == null) {
+      Canvas2DFont fontStyle = state.myFontStyle;
+      int style = 0;
+      style = BitUtil.set(style, Font.ITALIC, BitUtil.isSet(fontStyle.getFontStyle(), consulo.ui.TextAttribute.STYLE_ITALIC));
+      style = BitUtil.set(style, Font.BOLD, BitUtil.isSet(fontStyle.getFontStyle(), consulo.ui.TextAttribute.STYLE_BOLD));
 
-    if (lastFont == null || !lastFontFamily.equals(state.fontFamily) || size != lastFontSize || style != lastFontStyle) {
-      lastFont = createFont(state.fontFamily, style, size);
-      lastFontFamily = state.fontFamily;
-      lastFontStyle = style;
-      lastFontSize = size;
+      state.myFont = createFont(fontStyle.getFontName(), style, fontStyle.getFontSize());
+
+      state.g.setFont(state.myFont);
     }
-
-    state.g.setFont(lastFont);
   }
 
   /**

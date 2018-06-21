@@ -24,6 +24,31 @@ import javax.annotation.Nullable;
  * Based on jgraphx, BSD license
  */
 public interface Canvas2D {
+  enum TextAlign {
+    left,
+    center,
+    right
+  }
+
+  enum TextBaseline {
+    top,
+    middle,
+    bottom
+  }
+
+  void setFont(@Nonnull Canvas2DFont style);
+
+  void setFillStyle(@Nullable ColorValue value);
+
+  /**
+   * Sets the stroke color.
+   */
+  void setStrokeStyle(@Nullable ColorValue value);
+
+  void setTextAlign(@Nonnull TextAlign textAlign);
+
+  void setTextBaseline(@Nonnull TextBaseline baseline);
+
   /**
    * Saves the current state of the canvas.
    */
@@ -70,14 +95,6 @@ public interface Canvas2D {
   void setStrokeWidth(double value);
 
   /**
-   * Sets the stroke color. This should default to {@link mxConstants#NONE}
-   * if unset.
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
-  void setStrokeStyle(@Nullable ColorValue value);
-
-  /**
    * Sets the dashed state. This should default to false if unset.
    *
    * @param value Boolean representing the dashed state.
@@ -113,81 +130,16 @@ public interface Canvas2D {
    */
   void setLineJoin(String value);
 
-  /**
-   * Sets the miterlimit. This should default to 10 if unset.
-   *
-   * @param value
-   */
   void setMiterLimit(double value);
-
-  /**
-   * Default value {@link mxConstants#DEFAULT_FONTSIZE}.
-   *
-   * @param value
-   */
-  void setFontSize(double value);
-
-  /**
-   * Default value "#000000".
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
-  void setFontColor(ColorValue value);
-
-  /**
-   * Default value {@link mxConstants#DEFAULT_FONTFAMILY}.
-   *
-   * @param value
-   */
-  void setFontFamily(String value);
-
-  /**
-   * Default value 0. See {@link mxConstants#STYLE_FONTSTYLE}.
-   *
-   * @param value
-   */
-  void setFontStyle(int value);
-
-  /**
-   * Default value "#000000".
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
-  void setFontBackgroundColor(ColorValue value);
-
-  /**
-   * Default value "#000000".
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
-  void setFontBorderColor(ColorValue value);
 
   /**
    * Default value 1. This method may add rendering overhead and should be
    * used with care.
-   *
-   * @param value
    */
   void setAlpha(double value);
 
   /**
-   * Default value {@link mxConstants#NONE}.
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
-  void setFillStyle(@Nullable ColorValue value);
-
-  /**
    * Prepares the canvas to draw a gradient.
-   *
-   * @param color1
-   * @param color2
-   * @param x
-   * @param y
-   * @param w
-   * @param h
-   * @param direction Direction may be null. Use default value
-   *                  {@link mxConstants#DIRECTION_SOUTH}.
    */
   void setGradient(ColorValue color1, ColorValue color2, double x, double y, double w, double h, String direction, double alpha1, double alpha2);
 
@@ -198,45 +150,19 @@ public interface Canvas2D {
    */
   void setShadow(boolean enabled);
 
-  /**
-   * Default value {@link mxConstants#NONE}.
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
   void setShadowColor(ColorValue value);
 
-  /**
-   * Default value {@link mxConstants#NONE}.
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
   void setShadowAlpha(double value);
 
-  /**
-   * Default value {@link mxConstants#NONE}.
-   *
-   * @param value Hex representation of the color or {@link mxConstants#NONE}.
-   */
   void setShadowOffset(double dx, double dy);
 
   /**
    * Next fill or stroke should draw a rectangle.
-   *
-   * @param x
-   * @param y
-   * @param w
-   * @param h
    */
   void rect(double x, double y, double w, double h);
 
   /**
    * Next fill or stroke should draw a round rectangle.
-   *
-   * @param x
-   * @param y
-   * @param width
-   * @param height
-   * @param radius
    */
   default void roundRect(int x, int y, int width, int height, int radius) {
     Canvas2DHelper.roundRectangle(this, x, y, width, height, radius);
@@ -244,11 +170,6 @@ public interface Canvas2D {
 
   /**
    * Next fill or stroke should draw a rectangle.
-   *
-   * @param x
-   * @param y
-   * @param w
-   * @param h
    */
   default void fillRect(double x, double y, double w, double h) {
     rect(x, y, w, h);
@@ -262,17 +183,15 @@ public interface Canvas2D {
 
   /**
    * Draws the given image.
-   *
-   * @param x
-   * @param y
-   * @param w
-   * @param h
-   * @param src
-   * @param aspect
-   * @param flipH
-   * @param flipV
    */
   void image(double x, double y, double w, double h, @Nonnull Image src, boolean aspect, boolean flipH, boolean flipV);
+
+  /**
+   * Draws the given string.
+   */
+  default void fillText(String text, double x, double y) {
+    fillText(text, x, y, 0);
+  }
 
   /**
    * Draws the given string.
@@ -286,39 +205,21 @@ public interface Canvas2D {
 
   /**
    * Moves to the given path.
-   *
-   * @param x
-   * @param y
    */
   void moveTo(double x, double y);
 
   /**
    * Draws a line to the given path.
-   *
-   * @param x
-   * @param y
    */
   void lineTo(double x, double y);
 
   /**
    * Draws a quadratic curve to the given point.
-   *
-   * @param x1
-   * @param y1
-   * @param x2
-   * @param y2
    */
   void quadraticCurveTo(double x1, double y1, double x2, double y2);
 
   /**
    * Draws a bezier curve to the given point.
-   *
-   * @param x1
-   * @param y1
-   * @param x2
-   * @param y2
-   * @param x3
-   * @param y3
    */
   void curveTo(double x1, double y1, double x2, double y2, double x3, double y3);
 
