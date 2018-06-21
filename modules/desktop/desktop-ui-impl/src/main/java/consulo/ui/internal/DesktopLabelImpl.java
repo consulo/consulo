@@ -18,12 +18,14 @@ package consulo.ui.internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.internal.base.SwingComponentDelegate;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.style.ComponentColors;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.function.Supplier;
 
@@ -62,6 +64,19 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
 
   @Nonnull
   @Override
+  public Label setImage(@Nullable Image icon) {
+    myComponent.setIcon(TargetAWT.to(icon));
+    return this;
+  }
+
+  @Nullable
+  @Override
+  public Image getImage() {
+    return TargetAWT.from(myComponent.getIcon());
+  }
+
+  @Nonnull
+  @Override
   public String getText() {
     return myComponent.getText();
   }
@@ -71,6 +86,19 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
   @Override
   public Label setText(@Nonnull String text) {
     myComponent.setText(text);
+    return this;
+  }
+
+  @Nullable
+  @Override
+  public String getTooltipText() {
+    return myComponent.getToolTipText();
+  }
+
+  @Nonnull
+  @Override
+  public Label setToolTipText(@Nullable String text) {
+    myComponent.setToolTipText(text);
     return this;
   }
 

@@ -18,11 +18,13 @@ package consulo.ui.internal;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.web.gwt.shared.ui.state.LabelState;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -51,6 +53,18 @@ public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWra
     return this;
   }
 
+  @Nullable
+  @Override
+  public String getTooltipText() {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public Label setToolTipText(@Nullable String text) {
+    return this;
+  }
+
   @Nonnull
   @Override
   public Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
@@ -70,6 +84,17 @@ public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWra
   @Override
   public Label setForeground(@Nonnull Supplier<ColorValue> colorValueSupplier) {
     return this;
+  }
+
+  @Nonnull
+  @Override
+  public Label setImage(@Nullable Image icon) {
+    return this;
+  }
+
+  @Override
+  public Image getImage() {
+    return null;
   }
 
   @Override

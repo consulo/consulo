@@ -25,22 +25,26 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.ui.NotificationsUtil;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.util.ui.JBUI;
+import com.intellij.util.messages.MessageBusConnection;
+import consulo.awt.TargetAWT;
+import consulo.ui.Label;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.TextAttribute;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.image.canvas.Canvas2DFont;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -49,36 +53,26 @@ import java.util.List;
 /**
  * @author spleaner
  */
-public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget, IconLikeCustomStatusBarWidget {
+public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCustomStatusBarWidget {
   public static final String WIDGET_ID = "Notifications";
   private StatusBar myStatusBar;
 
+  private consulo.ui.Label myLabel;
+
   public IdeNotificationArea() {
-    UISettings.getInstance().addUISettingsListener(new UISettingsListener() {
-      @Override
-      public void uiSettingsChanged(UISettings source) {
-        updateStatus();
-      }
-    }, this);
+    myLabel = Label.create();
+
     new ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         EventLog.toggleLog(getProject(), null);
         return true;
       }
-    }.installOn(this);
+    }.installOn(TargetAWT.to(myLabel));
 
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(LogModel.LOG_MODEL_CHANGED, new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            IdeNotificationArea.this.updateStatus();
-          }
-        });
-      }
-    });
+    MessageBusConnection connection = Application.get().getMessageBus().connect(this);
+    connection.subscribe(UISettingsListener.TOPIC, source -> updateStatus());
+    connection.subscribe(LogModel.LOG_MODEL_CHANGED, () -> Application.get().invokeLater(IdeNotificationArea.this::updateStatus));
   }
 
   @Override
@@ -98,7 +92,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
 
   @Nullable
   private Project getProject() {
-    return DataManager.getInstance().getDataContext((Component)myStatusBar).getData(CommonDataKeys.PROJECT);
+    return DataManager.getInstance().getDataContext(myStatusBar.getComponent()).getData(CommonDataKeys.PROJECT);
   }
 
   @Override
@@ -107,53 +101,69 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
     return WIDGET_ID;
   }
 
+  @RequiredUIAccess
   private void updateStatus() {
     final Project project = getProject();
     ArrayList<Notification> notifications = EventLog.getLogModel(project).getNotifications();
     applyIconToStatusAndToolWindow(project, createIconWithNotificationCount(notifications));
 
     int count = notifications.size();
-    setToolTipText(count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications");
+    myLabel.setToolTipText(count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications");
 
     myStatusBar.updateWidget(ID());
   }
 
-  private void applyIconToStatusAndToolWindow(Project project, LayeredIcon icon) {
+  @RequiredUIAccess
+  private void applyIconToStatusAndToolWindow(Project project, Image icon) {
     if (UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE) {
-      setVisible(true);
-      setIcon(icon);
+      myLabel.setVisible(true);
+      myLabel.setImage(icon);
     }
     else {
       ToolWindow eventLog = EventLog.getEventLog(project);
       if (eventLog != null) {
         eventLog.setIcon(icon);
       }
-      setVisible(false);
+      myLabel.setVisible(false);
     }
-  }
-
-  private LayeredIcon createIconWithNotificationCount(ArrayList<Notification> notifications) {
-    return createIconWithNotificationCount(this, getMaximumType(notifications), notifications.size());
   }
 
   @Nonnull
-  public static LayeredIcon createIconWithNotificationCount(JComponent component, NotificationType type, int size) {
-    LayeredIcon icon = new LayeredIcon(2);
-    icon.setIcon(getPendingNotificationsIcon(AllIcons.Ide.Notification.NoEvents, type), 0);
+  private Image createIconWithNotificationCount(ArrayList<Notification> notifications) {
+    return createIconWithNotificationCount(getMaximumType(notifications), notifications.size());
+  }
+
+  @Nonnull
+  public static Image createIconWithNotificationCount(NotificationType type, int size) {
+    Image mainIcon = getPendingNotificationsIcon(AllIcons.Ide.Notification.NoEvents, type);
     if (size > 0) {
-      //noinspection UseJBColor
-      Color textColor = type == NotificationType.ERROR ? new JBColor(Color.white, new Color(0xF2F2F2)) : new Color(0x333333);
-      icon.setIcon(new TextIcon(component, size < 10 ? String.valueOf(size) : "9+", textColor), 1);
+      int width = AllIcons.Ide.Notification.NoEvents.getWidth();
+      int height = AllIcons.Ide.Notification.NoEvents.getHeight();
+
+      mainIcon = ImageEffects.layered(mainIcon, ImageEffects.canvas(width, height, canvas2D -> {
+        canvas2D.setFont(new Canvas2DFont(NotificationsUtil.getFontName(), 9, TextAttribute.STYLE_BOLD));
+
+        // [FIXME] VISTALL remove awt dep
+        canvas2D.setFillStyle(TargetAWT.from(type == NotificationType.ERROR ? new JBColor(Color.white, new Color(0xF2F2F2)) : new Color(0x333333)));
+
+        canvas2D.setTextAlign(Canvas2D.TextAlign.center);
+        canvas2D.setTextBaseline(Canvas2D.TextBaseline.middle);
+
+        canvas2D.fillText(size < 10 ? String.valueOf(size) : "9+", width / 2 - 1, height / 2 - 2);
+      }));
     }
-    return icon;
+
+    return mainIcon;
   }
 
+  @Nullable
   @Override
-  public JComponent getComponent() {
-    return this;
+  public consulo.ui.Component getUIComponent() {
+    return myLabel;
   }
 
-  private static Icon getPendingNotificationsIcon(Icon defIcon, final NotificationType maximumType) {
+  @Nonnull
+  private static Image getPendingNotificationsIcon(Image defIcon, final NotificationType maximumType) {
     if (maximumType != null) {
       switch (maximumType) {
         case WARNING:
@@ -184,80 +194,5 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
     }
 
     return result;
-  }
-
-  private static class TextIcon implements Icon {
-    private final String myStr;
-    private final JComponent myComponent;
-    private final Color myTextColor;
-    private final int myWidth;
-    private final Font myFont;
-
-    public TextIcon(JComponent component, @Nonnull String str, @Nonnull Color textColor) {
-      myStr = str;
-      myComponent = component;
-      myTextColor = textColor;
-      myFont = new Font(NotificationsUtil.getFontName(), Font.BOLD, JBUI.scale(9));
-      myWidth = myComponent.getFontMetrics(myFont).stringWidth(myStr);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof TextIcon)) return false;
-
-      TextIcon icon = (TextIcon)o;
-
-      if (myWidth != icon.myWidth) return false;
-      if (!myComponent.equals(icon.myComponent)) return false;
-      if (!myStr.equals(icon.myStr)) return false;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int result = myStr.hashCode();
-      result = 31 * result + myComponent.hashCode();
-      result = 31 * result + myWidth;
-      return result;
-    }
-
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      UISettings.setupAntialiasing(g);
-
-      Font originalFont = g.getFont();
-      Color originalColor = g.getColor();
-      g.setFont(myFont);
-
-      x += (getIconWidth() - myWidth) / 2;
-      y += SimpleColoredComponent.getTextBaseLine(g.getFontMetrics(), getIconHeight());
-
-      if (SystemInfo.isLinux) {
-        if (myStr.length() == 1) {
-          x--;
-        }
-      }
-      else if (myStr.length() == 2) {
-        x++;
-      }
-
-      g.setColor(myTextColor);
-      g.drawString(myStr, x, y);
-
-      g.setFont(originalFont);
-      g.setColor(originalColor);
-    }
-
-    @Override
-    public int getIconWidth() {
-      return AllIcons.Ide.Notification.NoEvents.getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-      return AllIcons.Ide.Notification.NoEvents.getIconHeight();
-    }
   }
 }

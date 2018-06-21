@@ -15,10 +15,12 @@
  */
 package consulo.ui;
 
+import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -27,7 +29,12 @@ import java.util.function.Supplier;
  */
 public interface Label extends Component {
   @Nonnull
-  static Label create(@Nonnull String text) {
+  static Label create() {
+    return create(null);
+  }
+
+  @Nonnull
+  static Label create(@Nullable String text) {
     Label label = UIInternal.get()._Components_label(text);
     label.setHorizontalAlignment(HorizontalAlignment.LEFT);
     return label;
@@ -39,6 +46,12 @@ public interface Label extends Component {
   @RequiredUIAccess
   @Nonnull
   Label setText(@Nonnull String text);
+
+  @Nullable
+  String getTooltipText();
+
+  @Nonnull
+  Label setToolTipText(@Nullable String text);
 
   @Nonnull
   Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment);
@@ -52,4 +65,10 @@ public interface Label extends Component {
 
   @Nonnull
   Label setForeground(@Nonnull Supplier<ColorValue> colorValueSupplier);
+
+  @Nonnull
+  Label setImage(@Nullable Image icon);
+
+  @Nullable
+  Image getImage();
 }
