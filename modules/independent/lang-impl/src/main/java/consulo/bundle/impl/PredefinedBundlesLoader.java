@@ -17,12 +17,17 @@ package consulo.bundle.impl;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
+import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import consulo.bundle.PredefinedBundlesProvider;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,30 +38,47 @@ import java.util.List;
 public class PredefinedBundlesLoader implements ApplicationComponent {
   public static final Logger LOGGER = Logger.getInstance(PredefinedBundlesLoader.class);
 
+  private static class ContextImpl implements PredefinedBundlesProvider.Context {
+    private final List<Sdk> myBundles = new ArrayList<>();
+
+    @Override
+    @Nonnull
+    public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
+      Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(SdkTable.getInstance().getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
+      String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
+      SdkImpl sdk = new SdkImpl(uniqueSdkName, sdkType);
+      myBundles.add(sdk);
+      return sdk;
+    }
+
+    @Override
+    @Nonnull
+    public Sdk createSdk(@Nonnull SdkType sdkType, @Nonnull String sdkHome) {
+      return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
+    }
+  }
+
   @Override
   public void initComponent() {
     if (SystemProperties.is("consulo.disable.predefined.bundles")) {
       return;
     }
 
-    List<SdkImpl> bundles = new ArrayList<>();
+    ContextImpl context = new ContextImpl();
     for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
-      try {
-        provider.createBundles(bundles::add);
-      }
-      catch (Throwable e) {
-        LOGGER.error(e);
-      }
+      provider.createBundles(context);
     }
+
+    List<Sdk> bundles = context.myBundles;
 
     if (!bundles.isEmpty()) {
       SdkTable sdkTable = SdkTable.getInstance();
 
-      for (SdkImpl bundle : bundles) {
-        bundle.setPredefined(true);
+      for (Sdk bundle : bundles) {
+        ((SdkImpl)bundle).setPredefined(true);
       }
 
-      ((SdkTableImpl) sdkTable).addSdksUnsafe(bundles);
+      ((SdkTableImpl)sdkTable).addSdksUnsafe(bundles);
     }
   }
 }

@@ -69,7 +69,7 @@ public abstract class SdkType implements SdkTypeId {
 
   @Override
   @Nullable
-  public String getVersionString(Sdk sdk) {
+  public final String getVersionString(Sdk sdk) {
     return getVersionString(sdk.getHomePath());
   }
 
