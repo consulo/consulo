@@ -33,8 +33,8 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
   }
 
   @Override
-  public void add(@Nonnull E item) {
-    myItems.add(item);
+  public void add(@Nonnull E item, int index) {
+    myItems.add(index, item);
 
     myDispatcher.getMulticaster().itemAdded(item);
   }

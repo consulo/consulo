@@ -31,7 +31,11 @@ public interface MutableListModel<E> extends ListModel<E> {
     return UIInternal.get()._MutableListModel_create(items);
   }
 
-  void add(@Nonnull E e);
+  default void add(@Nonnull E e) {
+    add(e, getSize());
+  }
+
+  void add(@Nonnull E e, int index);
 
   void remove(@Nonnull E e);
 

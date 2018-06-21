@@ -24,6 +24,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.util.ObjectUtil;
+import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
@@ -274,6 +275,29 @@ public class BundleBox implements PseudoComponent {
 
         listModel.add(new ModuleExtensionBundleBoxItem(extension, sdkPointer));
       }
+    }
+  }
+
+  @Exported
+  public void addCustomBundleItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Image icon) {
+    CustomBundleBoxItem item = new CustomBundleBoxItem(key, presentableName, icon);
+
+    MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>)myOriginalComboBox.getListModel();
+
+    int itemCount = model.getSize();
+    if (itemCount > 0) {
+      int index = 0;
+      for (int i = 0; i < itemCount; i++) {
+        Object itemAt = model.get(i);
+
+        if (itemAt instanceof NullBundleBoxItem || itemAt instanceof CustomBundleBoxItem) {
+          index++;
+        }
+      }
+      model.add(item, index);
+    }
+    else {
+      model.add(item);
     }
   }
 
