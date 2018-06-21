@@ -139,9 +139,9 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
   @Nonnull
   @RequiredUIAccess
   public Component build() {
-    final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
+    final ProjectSdksModel sdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
 
-    final BundleBox box = new BundleBox(projectSdksModel, mySdkFilter, myNullItemName, myNullItemIcon);
+    final BundleBox box = new BundleBox(sdksModel, mySdkFilter, myNullItemName, myNullItemIcon);
 
     box.addModuleExtensionItems(myMutableModuleExtension, mySdkPointerFunction);
 

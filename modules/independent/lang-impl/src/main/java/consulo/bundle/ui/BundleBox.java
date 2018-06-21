@@ -21,11 +21,11 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
+import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
@@ -164,20 +164,24 @@ public class BundleBox implements PseudoComponent {
 
   private final ComboBox<BundleBoxItem> myOriginalComboBox;
 
-  public BundleBox(@Nonnull SdkModel sdksModel) {
-    this(sdksModel, null, false);
+  public BundleBox() {
+    this(BundleHolder.EMPTY, null, false);
   }
 
-  public BundleBox(@Nonnull SdkModel sdksModel, @Nullable Predicate<SdkTypeId> filter, boolean withNoneItem) {
-    this(sdksModel, filter, withNoneItem ? ProjectBundle.message("sdk.combo.box.item") : null, null);
+  public BundleBox(@Nonnull BundleHolder bundleHolder) {
+    this(bundleHolder, null, false);
   }
 
-  public BundleBox(@Nonnull SdkModel sdksModel, @Nullable Predicate<SdkTypeId> filter, @Nullable String nullItemName) {
-    this(sdksModel, filter, nullItemName, null);
+  public BundleBox(@Nonnull BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, boolean withNoneItem) {
+    this(bundleHolder, filter, withNoneItem ? ProjectBundle.message("sdk.combo.box.item") : null, null);
   }
 
-  public BundleBox(@Nonnull SdkModel sdksModel, @Nullable Predicate<SdkTypeId> filter, @Nullable final String nullItemName, @Nullable final Image nullIcon) {
-    myOriginalComboBox = ComboBox.create(model(sdksModel, filter, nullItemName));
+  public BundleBox(@Nonnull BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, @Nullable String nullItemName) {
+    this(bundleHolder, filter, nullItemName, null);
+  }
+
+  public BundleBox(@Nonnull BundleHolder bundleHolder, @Nullable Predicate<SdkTypeId> filter, @Nullable final String nullItemName, @Nullable final Image nullIcon) {
+    myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, nullItemName));
 
     myOriginalComboBox.setRender((render, index, value) -> {
       if (value instanceof InvalidBundleBoxItem) {
@@ -224,8 +228,10 @@ public class BundleBox implements PseudoComponent {
   }
 
   @Nonnull
-  private static ListModel<BundleBoxItem> model(@Nonnull SdkModel sdksModel, @Nullable Predicate<SdkTypeId> filter, String nullItemName) {
-    Sdk[] sdks = sdksModel.getSdks();
+  private static ListModel<BundleBoxItem> model(@Nonnull BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, String nullItemName) {
+    List<BundleBoxItem> list = new ArrayList<>();
+
+    Sdk[] sdks = holder.getBundles();
     if (filter != null) {
       List<Sdk> filtered = Arrays.stream(sdks).filter(sdk -> filter.test(sdk.getSdkType())).collect(Collectors.toList());
       sdks = filtered.toArray(new Sdk[filtered.size()]);
@@ -233,7 +239,6 @@ public class BundleBox implements PseudoComponent {
 
     Arrays.sort(sdks, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 
-    List<BundleBoxItem> list = new ArrayList<>();
     if (nullItemName != null) {
       list.add(new NullBundleBoxItem());
     }
@@ -276,6 +281,12 @@ public class BundleBox implements PseudoComponent {
         listModel.add(new ModuleExtensionBundleBoxItem(extension, sdkPointer));
       }
     }
+  }
+
+  public void addBundleItem(@Nonnull Sdk bundle) {
+    MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>)myOriginalComboBox.getListModel();
+
+    model.add(new BundleBoxItem(bundle));
   }
 
   @Exported

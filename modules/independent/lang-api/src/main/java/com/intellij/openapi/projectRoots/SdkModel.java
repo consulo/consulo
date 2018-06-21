@@ -15,18 +15,25 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import javax.annotation.Nullable;
+import consulo.bundle.BundleHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EventListener;
 
 /**
- * Represents the current state of the JDK list in the JDK and Global Libraries
- * configuration dialog.
+ * Represents the current state of the Bundle list in the Bundle configuration dialog.
  */
-public interface SdkModel {
+public interface SdkModel extends BundleHolder {
+  @Nonnull
+  @Override
+  default Sdk[] getBundles() {
+    return getSdks();
+  }
 
   /**
    * Returns the list of SDKs in the table.
+   *
    * @return the SDK list.
    */
   Sdk[] getSdks();
@@ -78,11 +85,11 @@ public interface SdkModel {
 
     /**
      * Called when the home directory of a JDK has been changed.
+     *
      * @param sdk        the changed JDK.
      * @param newSdkHome the new home directory.
      */
     void sdkHomeSelected(Sdk sdk, String newSdkHome);
-
   }
 
   /**

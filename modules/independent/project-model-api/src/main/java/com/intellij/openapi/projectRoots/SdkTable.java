@@ -20,13 +20,14 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredWriteAction;
+import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkTableListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
-public abstract class SdkTable {
+public abstract class SdkTable implements BundleHolder {
   @Nonnull
   public static SdkTable getInstance() {
     return ServiceManager.getService(SdkTable.class);
@@ -40,16 +41,17 @@ public abstract class SdkTable {
   @Nonnull
   public abstract Sdk[] getAllSdks();
 
+  @Nonnull
+  @Override
+  public Sdk[] getBundles() {
+    return getAllSdks();
+  }
+
   public abstract List<Sdk> getSdksOfType(SdkTypeId type);
 
-  @javax.annotation.Nullable
+  @Nullable
   public Sdk findMostRecentSdkOfType(final SdkTypeId type) {
-    return findMostRecentSdk(new Condition<Sdk>() {
-      @Override
-      public boolean value(Sdk sdk) {
-        return sdk.getSdkType() == type;
-      }
-    });
+    return findMostRecentSdk(sdk -> sdk.getSdkType() == type);
   }
 
   @Nullable
