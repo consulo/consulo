@@ -35,6 +35,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Producer;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,7 +67,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
     if (icon == null) {
       icon = DefaultExternalSystemUiAware.INSTANCE.getTaskIcon();
     }
-    setCellRenderer(new MyRenderer(project, TargetAWT.to(icon), ExternalSystemUtil.findConfigurationType(externalSystemId)));
+    setCellRenderer(new MyRenderer(project, icon, ExternalSystemUtil.findConfigurationType(externalSystemId)));
     setVisibleRowCount(ExternalSystemConstants.RECENT_TASKS_NUMBER);
 
     registerKeyboardAction(new ActionListener() {
@@ -133,13 +134,13 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
   private static class MyRenderer extends DefaultListCellRenderer {
 
     @Nonnull
-    private final Icon myGenericTaskIcon;
+    private final consulo.ui.image.Image myGenericTaskIcon;
     @Nonnull
     private final Project myProject;
-    @javax.annotation.Nullable
+    @Nullable
     private ConfigurationType myConfigurationType;
 
-    MyRenderer(@Nonnull Project project, @Nonnull Icon genericTaskIcon, @Nullable ConfigurationType configurationType) {
+    MyRenderer(@Nonnull Project project, @Nonnull consulo.ui.image.Image genericTaskIcon, @Nullable ConfigurationType configurationType) {
       myProject = project;
       myGenericTaskIcon = genericTaskIcon;
       myConfigurationType = configurationType;
@@ -171,7 +172,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
         }
         
         setText(text);
-        Icon icon = null;
+        Image icon = null;
         String executorId = taskInfo.getExecutorId();
         if (!StringUtil.isEmpty(executorId)) {
           Executor executor = ExecutorRegistry.getInstance().getExecutorById(executorId);
@@ -183,7 +184,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
         if (icon == null) {
           icon = myGenericTaskIcon;
         }
-        setIcon(icon);
+        setIcon(TargetAWT.to(icon));
       }
 
       return renderer;
