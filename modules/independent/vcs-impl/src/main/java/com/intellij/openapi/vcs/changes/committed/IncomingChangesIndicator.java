@@ -188,7 +188,7 @@ public class IncomingChangesIndicator {
     }
 
     @Override
-    public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+    public WidgetPresentation getPresentation() {
       return this;
     }
 

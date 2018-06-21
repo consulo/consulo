@@ -76,7 +76,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
   }
 
   @Override
-  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+  public WidgetPresentation getPresentation() {
     return null;
   }
 

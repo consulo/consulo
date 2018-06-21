@@ -55,7 +55,7 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  public WidgetPresentation getPresentation(@Nonnull final PlatformType type) {
+  public WidgetPresentation getPresentation() {
     return this;
   }
 

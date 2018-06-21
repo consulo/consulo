@@ -39,7 +39,7 @@ public class InsertOverwritePanel extends EditorBasedWidget implements StatusBar
     return "InsertOverwrite";
   }
 
-  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+  public WidgetPresentation getPresentation() {
     return this;
   }
 

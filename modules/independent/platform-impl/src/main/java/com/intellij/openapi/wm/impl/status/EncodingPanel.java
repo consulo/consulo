@@ -141,7 +141,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+  public WidgetPresentation getPresentation() {
     return null;
   }
 

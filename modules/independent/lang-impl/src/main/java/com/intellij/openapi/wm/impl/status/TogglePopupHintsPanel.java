@@ -99,7 +99,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   }
 
   @Override
-  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+  public WidgetPresentation getPresentation() {
     return this;
   }
 

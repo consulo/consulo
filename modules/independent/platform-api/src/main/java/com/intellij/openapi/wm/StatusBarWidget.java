@@ -31,15 +31,11 @@ import java.awt.event.MouseEvent;
  * User: spLeaner
  */
 public interface StatusBarWidget extends Disposable {
-  enum PlatformType {
-    DEFAULT, MAC
-  }
-
   @Nonnull
   String ID();
 
   @Nullable
-  WidgetPresentation getPresentation(@Nonnull PlatformType type);
+  WidgetPresentation getPresentation();
 
   void install(@Nonnull final StatusBar statusBar);
 

@@ -249,7 +249,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
 
   @Nullable
   @Override
-  public WidgetPresentation getPresentation(@Nonnull PlatformType platformType) {
+  public WidgetPresentation getPresentation() {
     return null;
   }
 

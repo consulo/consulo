@@ -259,7 +259,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
       @Override
       @Nullable
-      public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+      public WidgetPresentation getPresentation() {
         return null;
       }
 
@@ -564,7 +564,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
   private static JComponent wrap(@Nonnull final StatusBarWidget widget) {
     if (widget instanceof CustomStatusBarWidget) return ((CustomStatusBarWidget)widget).getComponent();
-    final StatusBarWidget.WidgetPresentation presentation = widget.getPresentation(SystemInfo.isMac ? StatusBarWidget.PlatformType.MAC : StatusBarWidget.PlatformType.DEFAULT);
+    final StatusBarWidget.WidgetPresentation presentation = widget.getPresentation();
     assert presentation != null : "Presentation should not be null!";
 
     JComponent wrapper;

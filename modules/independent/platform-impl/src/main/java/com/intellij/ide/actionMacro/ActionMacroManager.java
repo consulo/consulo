@@ -274,7 +274,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     }
 
     @Override
-    public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+    public WidgetPresentation getPresentation() {
       return myPresentation;
     }
 

@@ -277,7 +277,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
   }
 
   @Override
-  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
+  public WidgetPresentation getPresentation() {
     return null;
   }
 
