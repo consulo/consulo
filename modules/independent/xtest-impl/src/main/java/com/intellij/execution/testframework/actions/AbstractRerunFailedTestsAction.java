@@ -42,16 +42,17 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -179,19 +180,14 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
       performAction(environmentBuilder.runner(availableRunners.get(environment.getExecutor())));
     }
     else {
-      final JBList list = new JBList(availableRunners.keySet());
+      final JBList<Executor> list = new JBList<>(availableRunners.keySet());
       list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       list.setSelectedValue(environment.getExecutor(), true);
-      list.setCellRenderer(new DefaultListCellRenderer() {
-        @Nonnull
+      list.setCellRenderer(new ColoredListCellRenderer<Executor>() {
         @Override
-        public Component getListCellRendererComponent(@Nonnull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-          final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-          if (value instanceof Executor) {
-            setText(UIUtil.removeMnemonic(((Executor)value).getStartActionText()));
-            setIcon(((Executor)value).getIcon());
-          }
-          return component;
+        protected void customizeCellRenderer(@Nonnull JList<? extends Executor> list, Executor value, int index, boolean selected, boolean hasFocus) {
+          append(UIUtil.removeMnemonic(value.getStartActionText()));
+          setIcon(TargetAWT.to(value.getIcon()));
         }
       });
       //noinspection ConstantConditions
