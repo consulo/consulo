@@ -39,9 +39,10 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -58,7 +59,11 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   private final InfoAndProgressPanel myInfoAndProgressPanel;
   private IdeFrame myFrame;
 
-  private enum Position {LEFT, RIGHT, CENTER}
+  private enum Position {
+    LEFT,
+    RIGHT,
+    CENTER
+  }
 
   private static final String uiClassID = "IdeStatusBarUI";
 
@@ -83,10 +88,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     StatusBarWidget widget;
     String anchor;
 
-    static WidgetBean create(@Nonnull final StatusBarWidget widget,
-                             @Nonnull final Position position,
-                             @Nonnull final JComponent component,
-                             @Nonnull String anchor) {
+    static WidgetBean create(@Nonnull final StatusBarWidget widget, @Nonnull final Position position, @Nonnull final JComponent component, @Nonnull String anchor) {
       final WidgetBean bean = new WidgetBean();
       bean.widget = widget;
       bean.position = position;
@@ -545,10 +547,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   }
 
   @Override
-  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type,
-                                                @Nonnull String htmlBody,
-                                                @Nullable Icon icon,
-                                                @Nullable HyperlinkListener listener) {
+  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
     return myInfoAndProgressPanel.notifyByBalloon(type, htmlBody, icon, listener);
   }
 
@@ -557,10 +556,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     new NotificationPopup(this, content, backgroundColor);
   }
 
-  private void installWidget(@Nonnull final StatusBarWidget widget,
-                             @Nonnull final Position pos,
-                             @Nonnull final JComponent c,
-                             String anchor) {
+  private void installWidget(@Nonnull final StatusBarWidget widget, @Nonnull final Position pos, @Nonnull final JComponent c, String anchor) {
     myWidgetMap.put(widget.ID(), WidgetBean.create(widget, pos, c, anchor));
     widget.install(this);
     Disposer.register(this, widget);
@@ -568,8 +564,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
   private static JComponent wrap(@Nonnull final StatusBarWidget widget) {
     if (widget instanceof CustomStatusBarWidget) return ((CustomStatusBarWidget)widget).getComponent();
-    final StatusBarWidget.WidgetPresentation presentation =
-            widget.getPresentation(SystemInfo.isMac ? StatusBarWidget.PlatformType.MAC : StatusBarWidget.PlatformType.DEFAULT);
+    final StatusBarWidget.WidgetPresentation presentation = widget.getPresentation(SystemInfo.isMac ? StatusBarWidget.PlatformType.MAC : StatusBarWidget.PlatformType.DEFAULT);
     assert presentation != null : "Presentation should not be null!";
 
     JComponent wrapper;
@@ -767,9 +762,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
         final Rectangle r = getBounds();
         final Insets insets = getInsets();
         Icon icon = AllIcons.Ide.Statusbar_arrows;
-        icon.paintIcon(this, g,
-                       r.width - insets.right - icon.getIconWidth() + 1,
-                       r.height / 2 - icon.getIconHeight() / 2);
+        icon.paintIcon(this, g, r.width - insets.right - icon.getIconWidth() + 1, r.height / 2 - icon.getIconHeight() / 2);
       }
     }
   }
@@ -823,7 +816,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   private static final class IconPresentationWrapper extends JComponent implements StatusBarWrapper {
     private final StatusBarWidget.IconPresentation myPresentation;
     private final Consumer<MouseEvent> myClickConsumer;
-    private Icon myIcon;
+    private consulo.ui.image.Image myIcon;
 
     private IconPresentationWrapper(@Nonnull final StatusBarWidget.IconPresentation presentation) {
       myPresentation = presentation;
@@ -861,12 +854,12 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
       final Rectangle bounds = getBounds();
       final Insets insets = JBUI.insets(getInsets());
 
-      if (myIcon != null) {
-        final int iconWidth = myIcon.getIconWidth();
-        final int iconHeight = myIcon.getIconHeight();
+      Icon icon = TargetAWT.to(myIcon);
+      if (icon != null) {
+        final int iconWidth = icon.getIconWidth();
+        final int iconHeight = icon.getIconHeight();
 
-        myIcon.paintIcon(this, g, insets.left + (bounds.width - insets.left - insets.right - iconWidth) / 2,
-                         insets.top + (bounds.height - insets.top - insets.bottom - iconHeight) / 2);
+        icon.paintIcon(this, g, insets.left + (bounds.width - insets.left - insets.right - iconWidth) / 2, insets.top + (bounds.height - insets.top - insets.bottom - iconHeight) / 2);
       }
     }
 

@@ -20,6 +20,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.Disposable;
@@ -46,15 +47,14 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -89,18 +89,14 @@ public class HectorComponent extends JPanel {
     for (Language language : languages) {
       @SuppressWarnings("UseOfObsoleteCollectionType")
       final Hashtable<Integer, JLabel> sliderLabels = new Hashtable<Integer, JLabel>();
-      sliderLabels.put(1, new JLabel(EditorBundle.message("hector.none.slider.label")));
-      sliderLabels.put(2, new JLabel(EditorBundle.message("hector.syntax.slider.label")));
+      sliderLabels.put(1, new JLabel(EditorBundle.message("hector.none.slider.label"), AllIcons.Ide.HectorOff, SwingConstants.LEADING));
+      sliderLabels.put(2, new JLabel(EditorBundle.message("hector.syntax.slider.label"), AllIcons.Ide.HectorSyntax, SwingConstants.LEADING));
       if (notInLibrary) {
-        sliderLabels.put(3, new JLabel(EditorBundle.message("hector.inspections.slider.label")));
+        sliderLabels.put(3, new JLabel(EditorBundle.message("hector.inspections.slider.label"), AllIcons.Ide.HectorOn, SwingConstants.LEADING));
       }
 
       final JSlider slider = new JSlider(SwingConstants.VERTICAL, 1, notInLibrary ? 3 : 2, 1);
-      if (UIUtil.isUnderGTKLookAndFeel()) {
-        // default GTK+ slider UI is way too ugly
-        slider.putClientProperty("Slider.paintThumbArrowShape", true);
-        slider.setUI(new BasicSliderUI(slider));
-      }
+
       slider.setLabelTable(sliderLabels);
       UIUtil.setSliderIsFilled(slider, true);
       slider.setPaintLabels(true);

@@ -52,7 +52,7 @@ public class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe,
 
   @Override
   @Nonnull
-  public Icon getIcon() {
+  public consulo.ui.image.Image getIcon() {
     VirtualFile virtualFile = getCurrentFile();
     return virtualFile == null || virtualFile.isWritable() ? AllIcons.Ide.Readwrite : AllIcons.Ide.Readonly;
   }

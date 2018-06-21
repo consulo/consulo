@@ -31,10 +31,9 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -54,8 +53,10 @@ public class IncomingChangesIndicator {
     myCache = cache;
     final MessageBusConnection connection = bus.connect();
     connection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
+      @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
           public void run() {
             refreshIndicator();
           }
@@ -127,7 +128,7 @@ public class IncomingChangesIndicator {
   private static class IndicatorComponent implements StatusBarWidget, StatusBarWidget.IconPresentation {
     private StatusBar myStatusBar;
 
-    private Icon myCurrentIcon = AllIcons.Ide.IncomingChangesOff;
+    private consulo.ui.image.Image myCurrentIcon = AllIcons.Ide.IncomingChangesOff;
     private String myToolTipText;
 
     private IndicatorComponent() {
@@ -141,23 +142,27 @@ public class IncomingChangesIndicator {
       update(AllIcons.Ide.IncomingChangesOn, toolTipText);
     }
 
-    private void update(@Nonnull final Icon icon, @javax.annotation.Nullable final String toolTipText) {
+    private void update(@Nonnull final consulo.ui.image.Image icon, @Nullable final String toolTipText) {
       myCurrentIcon = icon;
       myToolTipText = toolTipText;
       if (myStatusBar != null) myStatusBar.updateWidget(ID());
     }
 
+    @Override
     @Nonnull
-    public Icon getIcon() {
+    public consulo.ui.image.Image getIcon() {
       return myCurrentIcon;
     }
 
+    @Override
     public String getTooltipText() {
       return myToolTipText;
     }
 
+    @Override
     public Consumer<MouseEvent> getClickConsumer() {
       return new Consumer<MouseEvent>() {
+        @Override
         public void consume(final MouseEvent mouseEvent) {
           if (myStatusBar != null) {
           DataContext dataContext = DataManager.getInstance().getDataContext((Component) myStatusBar);
@@ -165,6 +170,7 @@ public class IncomingChangesIndicator {
           if (project != null) {
             ToolWindow changesView = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
             changesView.show(new Runnable() {
+              @Override
               public void run() {
                 ChangesViewContentManager.getInstance(project).selectContent("Incoming");
               }
@@ -175,19 +181,23 @@ public class IncomingChangesIndicator {
       };
     }
 
+    @Override
     @Nonnull
     public String ID() {
       return "IncomingChanges";
     }
 
+    @Override
     public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
       return this;
     }
 
+    @Override
     public void install(@Nonnull StatusBar statusBar) {
       myStatusBar = statusBar;
     }
 
+    @Override
     public void dispose() {
       myStatusBar = null;
     }

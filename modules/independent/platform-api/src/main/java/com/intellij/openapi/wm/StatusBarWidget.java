@@ -20,10 +20,10 @@ import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.MouseEvent;
 
@@ -57,7 +57,7 @@ public interface StatusBarWidget extends Disposable {
 
   interface IconPresentation extends WidgetPresentation {
     @Nullable
-    Icon getIcon();
+    Image getIcon();
   }
 
   interface TextPresentation extends WidgetPresentation {

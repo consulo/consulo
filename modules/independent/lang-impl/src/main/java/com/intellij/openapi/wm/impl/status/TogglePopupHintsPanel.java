@@ -34,15 +34,14 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
-  private Icon myCurrentIcon;
+  private consulo.ui.image.Image myCurrentIcon;
   private String myToolTipText;
 
   public TogglePopupHintsPanel(@Nonnull final Project project) {
@@ -69,7 +68,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
 
   @Override
   @Nonnull
-  public Icon getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return myCurrentIcon;
   }
 
