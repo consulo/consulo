@@ -16,7 +16,6 @@
 package consulo.bundle.impl;
 
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -36,8 +35,6 @@ import java.util.List;
  * @since 15:05/22.11.13
  */
 public class PredefinedBundlesLoader implements ApplicationComponent {
-  public static final Logger LOGGER = Logger.getInstance(PredefinedBundlesLoader.class);
-
   private static class ContextImpl implements PredefinedBundlesProvider.Context {
     private final List<Sdk> myBundles = new ArrayList<>();
 
