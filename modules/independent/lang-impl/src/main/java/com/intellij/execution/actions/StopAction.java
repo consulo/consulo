@@ -36,6 +36,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.IconUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -233,7 +235,7 @@ class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
     for (final RunContentDescriptor descriptor : descriptors) {
       final ProcessHandler handler = descriptor.getProcessHandler();
       if (handler != null) {
-        HandlerItem item = new HandlerItem(descriptor.getDisplayName(), descriptor.getIcon(), false) {
+        HandlerItem item = new HandlerItem(descriptor.getDisplayName(), TargetAWT.to(descriptor.getIcon()), false) {
           @Override
           void stop() {
             ExecutionManagerImpl.stopProcess(descriptor);

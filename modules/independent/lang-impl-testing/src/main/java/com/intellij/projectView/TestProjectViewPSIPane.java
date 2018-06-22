@@ -14,9 +14,8 @@ import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -79,7 +78,7 @@ class TestProjectViewPSIPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  public Icon getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return null;
   }
 

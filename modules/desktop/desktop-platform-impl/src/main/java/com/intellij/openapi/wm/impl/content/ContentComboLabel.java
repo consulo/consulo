@@ -20,8 +20,8 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -83,10 +83,10 @@ public class ContentComboLabel extends BaseLabel {
       final Content content = myUi.myManager.getContent(i);
       assert content != null;
       String text = content.getDisplayName();
-      final Icon icon = content.getUserData(ToolWindow.SHOW_CONTENT_ICON) == Boolean.TRUE ? content.getIcon() : null;
+      final Image icon = content.getUserData(ToolWindow.SHOW_CONTENT_ICON) == Boolean.TRUE ? content.getIcon() : null;
       FontMetrics metrics = getFontMetrics(getFont());
       int eachTextWidth = metrics.stringWidth(text != null ? text : "");
-      int iconWidth = icon != null ? icon.getIconWidth() : 0;
+      int iconWidth = icon != null ? icon.getWidth() : 0;
       width = Math.max(eachTextWidth + iconWidth, width);
     }
 

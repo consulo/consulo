@@ -34,7 +34,7 @@ import static com.intellij.util.ui.JBUI.ScaleType.PIX_SCALE;
  * @author tav
  * @see ColorIcon
  */
-public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> implements consulo.ui.image.Image {
+public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
   private static final Map<Integer, EmptyIcon> cache = new HashMap<Integer, EmptyIcon>();
 
   public static final Icon ICON_16 = JBUI.scale(create(16));
@@ -172,16 +172,6 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> implements 
 
   public EmptyIconUIResource asUIResource() {
     return new EmptyIconUIResource(this);
-  }
-
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
-
-  @Override
-  public int getWidth() {
-    return getIconWidth();
   }
 
   public static class EmptyIconUIResource extends EmptyIcon implements UIResource {

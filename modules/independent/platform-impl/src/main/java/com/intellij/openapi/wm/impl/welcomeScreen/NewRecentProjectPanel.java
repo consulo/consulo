@@ -32,14 +32,16 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -265,7 +267,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               p.add(path, BorderLayout.SOUTH);
 
               List<String> extensions = ((ReopenProjectAction)value).getExtensions();
-              Icon moduleMainIcon = EmptyIcon.ICON_16;
+              Image moduleMainIcon = ImageEffects.empty(16, 16);
               if (!extensions.isEmpty()) {
                 for (String extensionId : extensions) {
                   ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);
@@ -275,7 +277,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
                   }
                 }
               }
-              final JLabel projectIcon = new JLabel("", moduleMainIcon, SwingConstants.LEFT) {
+              final JLabel projectIcon = new JLabel("", TargetAWT.to(moduleMainIcon), SwingConstants.LEFT) {
                 @Override
                 protected void paintComponent(Graphics g) {
                   getIcon().paintIcon(this, g, 0, (getHeight() - getIcon().getIconHeight()) / 2);

@@ -27,6 +27,8 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerListener;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -50,20 +52,20 @@ public interface RunnerLayoutUi  {
   Content addContent(@Nonnull Content content, int defaultTabId, @Nonnull PlaceInGrid defaultPlace, boolean defaultIsMinimized);
 
   @Nonnull
-  Content createContent(@Nonnull String contentId, @Nonnull JComponent component, @Nonnull String displayName, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable JComponent toFocus);
+  Content createContent(@Nonnull String contentId, @Nonnull JComponent component, @Nonnull String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
 
   @Nonnull
-  Content createContent(@Nonnull String contentId, @Nonnull ComponentWithActions contentWithActions, @Nonnull String displayName, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable JComponent toFocus);
+  Content createContent(@Nonnull String contentId, @Nonnull ComponentWithActions contentWithActions, @Nonnull String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
 
-  boolean removeContent(@javax.annotation.Nullable Content content, boolean dispose);
+  boolean removeContent(@Nullable Content content, boolean dispose);
 
-  @javax.annotation.Nullable
+  @Nullable
   Content findContent(@Nonnull String contentId);
 
   @Nonnull
   ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, final boolean forced);
   @Nonnull
-  ActionCallback selectAndFocus(@javax.annotation.Nullable Content content, boolean requestFocus, final boolean forced, final boolean implicit);
+  ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, final boolean forced, final boolean implicit);
 
   @Nonnull
   RunnerLayoutUi addListener(@Nonnull ContentManagerListener listener, @Nonnull Disposable parent);

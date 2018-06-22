@@ -32,10 +32,10 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 public abstract class RunTab implements DataProvider, Disposable {
   @Nonnull
@@ -94,7 +94,7 @@ public abstract class RunTab implements DataProvider, Disposable {
     if (logConsoleManager == null) {
       logConsoleManager = new LogConsoleManagerBase(myProject, mySearchScope) {
         @Override
-        protected Icon getDefaultIcon() {
+        protected Image getDefaultIcon() {
           return AllIcons.Debugger.Console_log;
         }
 

@@ -23,13 +23,14 @@ import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.AlertIcon;
 import com.intellij.ui.content.ContentManager;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.wm.ContentEx;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -39,12 +40,14 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;
   private String myDescription;
   private JComponent myComponent;
-  private Icon myIcon;
+
+  private Image myIcon;
+  private Image myLayeredIcon;
+
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
   private ContentManager myManager = null;
   private boolean myIsLocked = false;
   private boolean myPinnable = true;
-  private Icon myLayeredIcon = new LayeredIcon(2);
   private Disposable myDisposer = null;
   private boolean myShouldDisposeContent = true;
   private String myTabName;
@@ -61,7 +64,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private Computable<JComponent> myFocusRequest;
   private BusyObject myBusyObject;
   private String mySeparator;
-  private Icon myPopupIcon;
+  private Image myPopupIcon;
   private long myExecutionId;
 
   public ContentImpl(JComponent component, String displayName, boolean isPinnable) {
@@ -89,12 +92,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
 
   @Override
   public void setPreferredFocusableComponent(final JComponent c) {
-    setPreferredFocusedComponent(new Computable<JComponent>() {
-      @Override
-      public JComponent compute() {
-        return c;
-      }
-    });
+    setPreferredFocusedComponent(() -> c);
   }
 
   @Override
@@ -103,15 +101,15 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setIcon(Icon icon) {
-    Icon oldValue = getIcon();
+  public void setIcon(Image icon) {
+    Image oldValue = getIcon();
     myIcon = icon;
-    myLayeredIcon = LayeredIcon.create(myIcon, AllIcons.Nodes.PinToolWindow);
+    myLayeredIcon = ImageEffects.layered(myIcon, AllIcons.Nodes.PinToolWindow);
     myChangeSupport.firePropertyChange(PROP_ICON, oldValue, getIcon());
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     if (myIsLocked) {
       return myIcon == null ? AllIcons.Nodes.PinToolWindow : myLayeredIcon;
     }
@@ -230,9 +228,9 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   @Override
   public void setPinned(boolean locked) {
     if (isPinnable()) {
-      Icon oldIcon = getIcon();
+      Image oldIcon = getIcon();
       myIsLocked = locked;
-      Icon newIcon = getIcon();
+      Image newIcon = getIcon();
       myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, newIcon);
     }
   }
@@ -340,12 +338,12 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setPopupIcon(Icon icon) {
+  public void setPopupIcon(Image icon) {
     myPopupIcon = icon;
   }
 
   @Override
-  public Icon getPopupIcon() {
+  public Image getPopupIcon() {
     return myPopupIcon != null ? myPopupIcon : getIcon();
   }
 

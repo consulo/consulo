@@ -28,11 +28,11 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -52,7 +52,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
     addLogConsole(name, path, charset, skippedContent, getDefaultIcon(), runConfiguration);
   }
 
-  public void addLogConsole(final String name, final String path, @Nonnull Charset charset, final long skippedContent, Icon icon, @Nullable RunProfile runProfile) {
+  public void addLogConsole(final String name, final String path, @Nonnull Charset charset, final long skippedContent, Image icon, @Nullable RunProfile runProfile) {
     doAddLogConsole(new LogConsoleImpl(myProject, new File(path), charset, skippedContent, name, false, mySearchScope) {
       @Override
       public boolean isActive() {
@@ -61,7 +61,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
     }, path, icon, runProfile);
   }
 
-  private void doAddLogConsole(@Nonnull final LogConsoleBase log, String id, Icon icon, @Nullable RunProfile runProfile) {
+  private void doAddLogConsole(@Nonnull final LogConsoleBase log, String id, Image icon, @Nullable RunProfile runProfile) {
     if (runProfile instanceof RunConfigurationBase) {
       ((RunConfigurationBase)runProfile).customizeLogConsole(log);
     }
@@ -94,7 +94,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
     addAdditionalTabComponent(tabComponent, id, getDefaultIcon());
   }
 
-  public Content addAdditionalTabComponent(@Nonnull AdditionalTabComponent tabComponent, @Nonnull String id, @Nullable Icon icon) {
+  public Content addAdditionalTabComponent(@Nonnull AdditionalTabComponent tabComponent, @Nonnull String id, @Nullable Image icon) {
     Content logContent = getUi().createContent(id, (ComponentWithActions)tabComponent, tabComponent.getTabTitle(), icon,
                                                tabComponent.getPreferredFocusableComponent());
     myAdditionalContent.put(tabComponent, logContent);
@@ -118,7 +118,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
     }
   }
 
-  protected abstract Icon getDefaultIcon();
+  protected abstract Image getDefaultIcon();
 
   protected abstract RunnerLayoutUi getUi();
 

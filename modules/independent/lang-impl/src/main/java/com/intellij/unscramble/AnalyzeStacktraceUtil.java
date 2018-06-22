@@ -43,9 +43,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -61,7 +61,7 @@ public class AnalyzeStacktraceUtil {
 
   public static void printStacktrace(final ConsoleView consoleView, final String unscrambledTrace) {
     consoleView.clear();
-    consoleView.print(unscrambledTrace+"\n", ConsoleViewContentType.ERROR_OUTPUT);
+    consoleView.print(unscrambledTrace + "\n", ConsoleViewContentType.ERROR_OUTPUT);
     consoleView.scrollTo(0);
   }
 
@@ -78,29 +78,22 @@ public class AnalyzeStacktraceUtil {
     addConsole(project, consoleFactory, tabTitle, text, null);
   }
 
-  public static RunContentDescriptor addConsole(Project project,
-                                                @Nullable ConsoleFactory consoleFactory,
-                                                final String tabTitle,
-                                                String text,
-                                                @Nullable Icon icon) {
+  public static RunContentDescriptor addConsole(Project project, @Nullable ConsoleFactory consoleFactory, final String tabTitle, String text, @Nullable consulo.ui.image.Image icon) {
     final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
     builder.filters(Extensions.getExtensions(EP_NAME, project));
     final ConsoleView consoleView = builder.getConsole();
 
     final DefaultActionGroup toolbarActions = new DefaultActionGroup();
-    JComponent consoleComponent = consoleFactory != null
-                                  ? consoleFactory.createConsoleComponent(consoleView, toolbarActions)
-                                  : new MyConsolePanel(consoleView, toolbarActions);
-    final RunContentDescriptor descriptor =
-            new RunContentDescriptor(consoleView, null, consoleComponent, tabTitle, icon) {
-              @Override
-              public boolean isContentReuseProhibited() {
-                return true;
-              }
-            };
+    JComponent consoleComponent = consoleFactory != null ? consoleFactory.createConsoleComponent(consoleView, toolbarActions) : new MyConsolePanel(consoleView, toolbarActions);
+    final RunContentDescriptor descriptor = new RunContentDescriptor(consoleView, null, consoleComponent, tabTitle, icon) {
+      @Override
+      public boolean isContentReuseProhibited() {
+        return true;
+      }
+    };
 
     final Executor executor = DefaultRunExecutor.getRunExecutorInstance();
-    for (AnAction action: consoleView.createConsoleActions()) {
+    for (AnAction action : consoleView.createConsoleActions()) {
       toolbarActions.add(action);
     }
     toolbarActions.add(new AnnotateStackTraceAction((ConsoleViewImpl)consoleView));
@@ -117,7 +110,7 @@ public class AnalyzeStacktraceUtil {
     public MyConsolePanel(ExecutionConsole consoleView, ActionGroup toolbarActions) {
       super(new BorderLayout());
       JPanel toolbarPanel = new JPanel(new BorderLayout());
-      toolbarPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions,false).getComponent());
+      toolbarPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false).getComponent());
       add(toolbarPanel, BorderLayout.WEST);
       add(consoleView.getComponent(), BorderLayout.CENTER);
     }

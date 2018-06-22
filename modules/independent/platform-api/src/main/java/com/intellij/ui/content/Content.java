@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.Component;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 
@@ -62,9 +63,10 @@ public interface Content extends UserDataHolder, ComponentContainer {
     throw new AbstractMethodError();
   }
 
-  void setIcon(Icon icon);
+  void setIcon(Image icon);
 
-  Icon getIcon();
+  @Nullable
+  Image getIcon();
 
   void setDisplayName(String displayName);
 
@@ -146,9 +148,10 @@ public interface Content extends UserDataHolder, ComponentContainer {
 
   void setSeparator(String separator);
 
-  void setPopupIcon(Icon icon);
+  void setPopupIcon(@Nullable Image icon);
 
-  Icon getPopupIcon();
+  @Nullable
+  Image getPopupIcon();
 
   /**
    * @param executionId supposed to identify group of contents (for example "Before Launch" tasks and the main Run Configuration)

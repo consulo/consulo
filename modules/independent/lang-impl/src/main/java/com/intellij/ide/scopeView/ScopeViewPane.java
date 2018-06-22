@@ -103,7 +103,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  public Icon getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return AllIcons.Ide.LocalScope;
   }
 

@@ -59,7 +59,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  public Icon getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return AllIcons.General.ProjectTab;
   }
 

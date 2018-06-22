@@ -32,9 +32,9 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SideBorder;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -134,7 +134,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
   }
 
   @Nullable
-  protected Icon getConsoleIcon() {
+  protected consulo.ui.image.Image getConsoleIcon() {
     return null;
   }
 

@@ -61,9 +61,9 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -143,7 +143,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   public abstract String getTitle();
 
-  public abstract Icon getIcon();
+  @Nonnull
+  public abstract consulo.ui.image.Image getIcon();
 
   @Nonnull
   public abstract String getId();

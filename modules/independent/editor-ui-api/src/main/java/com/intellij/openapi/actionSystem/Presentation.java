@@ -19,6 +19,9 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -217,6 +220,14 @@ public final class Presentation implements Cloneable {
 
   public Icon getIcon() {
     return myIcon;
+  }
+
+  public void setIcon(@Nullable Image image) {
+    setIcon(TargetAWT.to(image));
+  }
+
+  public void setIcon(@Nullable SwingImageRef image) {
+    setIcon((Icon) image);
   }
 
   public void setIcon(@Nullable Icon icon) {

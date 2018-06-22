@@ -22,6 +22,8 @@ import com.intellij.ui.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.IJSwingUtilities;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -118,8 +120,6 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   }
 
 
-
-
   private class MyTabbedPaneWrapper extends TabbedPaneWrapper.AsJTabbedPane {
     public MyTabbedPaneWrapper(int tabPlacement) {
       super(tabPlacement);
@@ -211,8 +211,8 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
 
       /**
        * @return content at the specified location.  <code>x</code> and <code>y</code> are in
-       *         tabbed pane coordinate system. The method returns <code>null</code> if there is no contnt at the
-       *         specified location.
+       * tabbed pane coordinate system. The method returns <code>null</code> if there is no contnt at the
+       * specified location.
        */
       private Content getContentAt(int x, int y) {
         TabbedPaneUI ui = getUI();
@@ -283,11 +283,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   private class MyContentManagerListener extends ContentManagerAdapter {
     public void contentAdded(ContentManagerEvent event) {
       Content content = event.getContent();
-      myTabbedPaneWrapper.insertTab(content.getTabName(),
-                                    content.getIcon(),
-                                    content.getComponent(),
-                                    content.getDescription(),
-                                    event.getIndex());
+      myTabbedPaneWrapper.insertTab(content.getTabName(), TargetAWT.to(content.getIcon()), content.getComponent(), content.getDescription(), event.getIndex());
       content.addPropertyChangeListener(TabbedPaneContentUI.this);
     }
 

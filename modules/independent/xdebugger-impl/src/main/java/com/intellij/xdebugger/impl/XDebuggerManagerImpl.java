@@ -54,11 +54,12 @@ import com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.ExecutionPointHighlighter;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
+import consulo.ui.image.Image;
+import consulo.xdebugger.XDebugProcessStarter;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -177,7 +178,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
 
   @Override
   @Nonnull
-  public XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull consulo.xdebugger.XDebugProcessStarter processStarter)
+  public XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull XDebugProcessStarter processStarter)
           throws ExecutionException {
     return startSession(environment.getContentToReuse(), processStarter, new XDebugSessionImpl(environment, this));
   }
@@ -186,7 +187,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
   @Nonnull
   public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
                                               @Nullable RunContentDescriptor contentToReuse,
-                                              @Nonnull consulo.xdebugger.XDebugProcessStarter starter) throws ExecutionException {
+                                              @Nonnull XDebugProcessStarter starter) throws ExecutionException {
     return startSessionAndShowTab(sessionName, contentToReuse, false, starter);
   }
 
@@ -195,17 +196,17 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
   public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
                                               @Nullable RunContentDescriptor contentToReuse,
                                               boolean showToolWindowOnSuspendOnly,
-                                              @Nonnull consulo.xdebugger.XDebugProcessStarter starter) throws ExecutionException {
+                                              @Nonnull XDebugProcessStarter starter) throws ExecutionException {
     return startSessionAndShowTab(sessionName, null, contentToReuse, showToolWindowOnSuspendOnly, starter);
   }
 
   @Nonnull
   @Override
   public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                              Icon icon,
+                                              Image icon,
                                               @Nullable RunContentDescriptor contentToReuse,
                                               boolean showToolWindowOnSuspendOnly,
-                                              @Nonnull consulo.xdebugger.XDebugProcessStarter starter) throws ExecutionException {
+                                              @Nonnull XDebugProcessStarter starter) throws ExecutionException {
     XDebugSessionImpl session =
             startSession(contentToReuse, starter, new XDebugSessionImpl(null, this, sessionName, icon, showToolWindowOnSuspendOnly, contentToReuse));
 
@@ -218,7 +219,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
   }
 
   private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse,
-                                         @Nonnull consulo.xdebugger.XDebugProcessStarter processStarter,
+                                         @Nonnull XDebugProcessStarter processStarter,
                                          @Nonnull XDebugSessionImpl session) throws ExecutionException {
     XDebugProcess process = processStarter.start(session);
     myProject.getMessageBus().syncPublisher(TOPIC).processStarted(process);

@@ -56,6 +56,7 @@ import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.frame.*;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,7 +86,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
   @Nonnull
   public static XDebugSessionTab create(@Nonnull XDebugSessionImpl session,
-                                        @Nullable Icon icon,
+                                        @Nullable Image icon,
                                         @Nullable ExecutionEnvironment environment,
                                         @Nullable RunContentDescriptor contentToReuse) {
     if (contentToReuse != null && SystemProperties.getBooleanProperty("xdebugger.reuse.session.tab", false)) {
@@ -109,7 +110,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     return myUi;
   }
 
-  private XDebugSessionTab(@Nonnull XDebugSessionImpl session, @Nullable Icon icon, @Nullable ExecutionEnvironment environment) {
+  private XDebugSessionTab(@Nonnull XDebugSessionImpl session, @Nullable Image icon, @Nullable ExecutionEnvironment environment) {
     super(session.getProject(), "Debug", session.getSessionName(), GlobalSearchScope.allScope(session.getProject()));
 
     setSession(session, environment, icon);
@@ -143,7 +144,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
   }
 
-  private void setSession(@Nonnull XDebugSessionImpl session, @Nullable ExecutionEnvironment environment, @Nullable Icon icon) {
+  private void setSession(@Nonnull XDebugSessionImpl session, @Nullable ExecutionEnvironment environment, @Nullable Image icon) {
     myEnvironment = environment;
     mySession = session;
     mySessionData = session.getSessionData();

@@ -21,7 +21,8 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
-import com.intellij.util.ui.WatermarkIcon;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -114,10 +115,10 @@ public class BaseLabel extends JLabel {
       final boolean show = Boolean.TRUE.equals(content.getUserData(ToolWindow.SHOW_CONTENT_ICON));
       if (show) {
         if (isSelected) {
-          setIcon(content.getIcon());
+          setIcon(TargetAWT.to(content.getIcon()));
         }
         else {
-          setIcon(content.getIcon() != null ? new WatermarkIcon(content.getIcon(), .5f) : null);
+          setIcon(content.getIcon() != null ? TargetAWT.to(ImageEffects.transparent(content.getIcon(), .5f)) : null);
         }
       }
       else {

@@ -42,7 +42,6 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
@@ -56,15 +55,14 @@ import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 
 public class RunContentManagerImpl implements RunContentManager, Disposable {
@@ -306,7 +304,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         @Override
         public void startNotified(final ProcessEvent event) {
           UIUtil.invokeLaterIfNeeded(() -> {
-            content.setIcon(ExecutionUtil.getLiveIndicator(descriptor.getIcon()));
+            content.setIcon(ExecutionUtil.getIconWithLiveIndicator(descriptor.getIcon()));
             toolWindow.setIcon(ExecutionUtil.getIconWithLiveIndicator(myToolwindowIdToBaseIconMap.get(toolWindowId)));
           });
         }
@@ -330,8 +328,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
             Image base = myToolwindowIdToBaseIconMap.get(toolWindowId);
             toolWindow.setIcon(alive ? ExecutionUtil.getIconWithLiveIndicator(base) : base);
 
-            Icon icon = descriptor.getIcon();
-            content.setIcon(icon == null ? TargetAWT.to(executor.getDisabledIcon()) : IconLoader.getTransparentIcon(icon));
+            Image icon = descriptor.getIcon();
+            content.setIcon(icon == null ? executor.getDisabledIcon() : ImageEffects.transparent(icon));
           });
         }
       };
@@ -495,8 +493,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     final String processDisplayName = descriptor.getDisplayName();
     final Content content = ContentFactory.getInstance().createContent(descriptor.getComponent(), processDisplayName, true);
     content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
-    Icon icon = descriptor.getIcon();
-    content.setIcon(icon == null ? TargetAWT.to(executor.getToolWindowIcon()) : icon);
+    Image icon = descriptor.getIcon();
+    content.setIcon(icon == null ? executor.getToolWindowIcon() : icon);
     return content;
   }
 

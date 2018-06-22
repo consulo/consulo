@@ -74,7 +74,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  public Icon getIcon() {
+  public consulo.ui.image.Image getIcon() {
     return AllIcons.General.PackagesTab;
   }
 

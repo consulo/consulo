@@ -18,15 +18,16 @@ package com.intellij.xdebugger;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -57,7 +58,7 @@ public abstract class XDebuggerManager {
 
   /**
    * Start a new debugging session. Use this method only if debugging is started by using standard 'Debug' action i.e. this methods is called
-   * from {@link com.intellij.execution.runners.ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
+   * from {@link ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
    */
   @Nonnull
   public XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull XDebugProcessStarter processStarter) throws ExecutionException {
@@ -70,7 +71,7 @@ public abstract class XDebuggerManager {
    * @param sessionName title of 'Debug' tool window
    */
   @Nonnull
-  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName, @javax.annotation.Nullable RunContentDescriptor contentToReuse, @Nonnull XDebugProcessStarter starter)
+  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName, @Nullable RunContentDescriptor contentToReuse, @Nonnull XDebugProcessStarter starter)
           throws ExecutionException {
     return startSessionAndShowTab(sessionName, contentToReuse, (consulo.xdebugger.XDebugProcessStarter)starter);
   }
@@ -98,7 +99,7 @@ public abstract class XDebuggerManager {
    */
   @Nonnull
   public abstract XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                                       @javax.annotation.Nullable Icon icon,
+                                                       @Nullable Image icon,
                                                        @Nullable RunContentDescriptor contentToReuse,
                                                        boolean showToolWindowOnSuspendOnly,
                                                        @Nonnull consulo.xdebugger.XDebugProcessStarter starter) throws ExecutionException;
@@ -106,7 +107,7 @@ public abstract class XDebuggerManager {
 
   /**
    * Start a new debugging session. Use this method only if debugging is started by using standard 'Debug' action i.e. this methods is called
-   * from {@link com.intellij.execution.runners.ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
+   * from {@link ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
    */
   @Nonnull
   public abstract XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull consulo.xdebugger.XDebugProcessStarter processStarter)

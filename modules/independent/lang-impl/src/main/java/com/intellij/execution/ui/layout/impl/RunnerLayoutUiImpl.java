@@ -38,10 +38,11 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerListener;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.switcher.SwitchProvider;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -123,14 +124,14 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
 
   @Override
   @Nonnull
-  public Content createContent(@Nonnull String id, @Nonnull JComponent component, @Nonnull String displayName, @Nullable Icon icon, @Nullable JComponent focusable) {
+  public Content createContent(@Nonnull String id, @Nonnull JComponent component, @Nonnull String displayName, @Nullable Image icon, @Nullable JComponent focusable) {
     return createContent(id, new ComponentWithActions.Impl(component), displayName, icon, focusable);
   }
 
   @Override
   @Nonnull
   public Content createContent(@Nonnull final String contentId, @Nonnull final ComponentWithActions withActions, @Nonnull final String displayName,
-                               @Nullable final Icon icon,
+                               @Nullable final Image icon,
                                @Nullable final JComponent toFocus) {
     final Content content = getContentFactory().createContent(withActions.getComponent(), displayName, false);
     content.putUserData(CONTENT_TYPE, contentId);

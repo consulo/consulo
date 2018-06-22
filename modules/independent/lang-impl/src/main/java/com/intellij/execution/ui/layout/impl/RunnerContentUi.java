@@ -59,6 +59,7 @@ import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -947,7 +948,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     }
     tab.setHidden(hidden);
     if (icon == null && contents.size() == 1) {
-      icon = contents.get(0).getIcon();
+      icon = TargetAWT.to(contents.get(0).getIcon());
     }
 
     tab.setDragOutDelegate(myTabs.getTabs().size() > 1 || !isOriginal() ? myDragOutDelegate : null);
