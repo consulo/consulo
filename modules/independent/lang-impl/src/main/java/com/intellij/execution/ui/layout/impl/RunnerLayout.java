@@ -27,12 +27,12 @@ import com.intellij.ui.content.Content;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.*;
 
 public class RunnerLayout  {
@@ -224,7 +224,7 @@ public class RunnerLayout  {
 
 
   @Nonnull
-  public TabImpl.Default setDefault(int tabID, String displayName, Icon icon) {
+  public TabImpl.Default setDefault(int tabID, String displayName, Image icon) {
     final TabImpl.Default tab = new TabImpl.Default(tabID, displayName, icon);
     myDefaultTabs.put(tabID, tab);
     return tab;

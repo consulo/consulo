@@ -61,9 +61,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -560,7 +560,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     if (myCurrentOver == null && current != null) {
       myCurrentOver = current;
       Presentation presentation = dockable.getPresentation();
-      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(presentation.getIcon());
+      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(TargetAWT.from(presentation.getIcon()));
       myCurrentOverImg = myCurrentOver.startDropOver(myCurrentOverInfo, dropTarget);
     }
 
@@ -921,7 +921,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
       return false;
     }
 
-    Icon icon = t.getIcon();
+    consulo.ui.image.Image icon = t.getIcon();
 
     GridImpl grid = getGridFor(tab);
     boolean hasToolbarContent = grid.updateGridUI();
@@ -948,7 +948,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     }
     tab.setHidden(hidden);
     if (icon == null && contents.size() == 1) {
-      icon = TargetAWT.to(contents.get(0).getIcon());
+      icon = contents.get(0).getIcon();
     }
 
     tab.setDragOutDelegate(myTabs.getTabs().size() > 1 || !isOriginal() ? myDragOutDelegate : null);

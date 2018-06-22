@@ -16,14 +16,14 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 abstract class AbstractTab {
 
   int myIndex;
   int myDefaultIndex = -1;
   String myDisplayName;
-  Icon myIcon;
+  Image myIcon;
 
   float myLeftProportion = .2f;
   float myRightProportion = .2f;

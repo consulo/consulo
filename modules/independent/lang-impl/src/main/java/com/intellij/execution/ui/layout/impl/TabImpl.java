@@ -18,8 +18,7 @@ package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.execution.ui.layout.PlaceInGrid;
 import com.intellij.execution.ui.layout.Tab;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class TabImpl extends AbstractTab implements Tab {
   TabImpl() {
@@ -39,7 +38,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myDisplayName;
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
@@ -155,7 +154,7 @@ public class TabImpl extends AbstractTab implements Tab {
 
   public static class Default extends AbstractTab {
 
-    public Default(final int index, final String displayName, final Icon icon) {
+    public Default(final int index, final String displayName, final Image icon) {
       myIndex = index;
       myDefaultIndex = index;
       myDisplayName = displayName;

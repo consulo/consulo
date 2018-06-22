@@ -16,15 +16,15 @@
 
 package com.intellij.execution.ui.layout;
 
-import javax.annotation.Nullable;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface LayoutStateDefaults {
   @Nonnull
     //this
-  LayoutStateDefaults initTabDefaults(int tabId, @javax.annotation.Nullable String defaultTabText, @Nullable Icon defaultTabIcon);
+  LayoutStateDefaults initTabDefaults(int tabId, @Nullable String defaultTabText, @Nullable Image defaultTabIcon);
 
   @Nonnull
     // this

@@ -29,6 +29,7 @@ import com.intellij.ui.docking.DockableContent;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
@@ -176,7 +177,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
     if (myCurrentOver == null && current != null) {
       myCurrentOver = current;
       Presentation presentation = content.getPresentation();
-      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(presentation.getIcon());
+      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(TargetAWT.from(presentation.getIcon()));
       myCurrentOverImg = myCurrentOver.startDropOver(myCurrentOverInfo, point);
     }
 

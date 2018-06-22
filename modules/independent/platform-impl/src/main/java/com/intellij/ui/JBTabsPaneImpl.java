@@ -23,8 +23,8 @@ import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -98,7 +98,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
   }
 
   @Override
-  public void insertTab(String title, Icon icon, Component c, String tip, int index) {
+  public void insertTab(String title, consulo.ui.image.Image icon, Component c, String tip, int index) {
     assert c instanceof JComponent;
     myTabs.addTab(new TabInfo((JComponent)c).setText(title).setTooltipText(tip).setIcon(icon), index);
   }
@@ -197,7 +197,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
   }
 
   @Override
-  public void setIconAt(int index, Icon icon) {
+  public void setIconAt(int index, consulo.ui.image.Image icon) {
     getTabAt(index).setIcon(icon);
   }
 

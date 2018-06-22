@@ -61,8 +61,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -262,7 +262,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     tab.setDefaultWaveColor(color);
   }
 
-  void setIconAt(final int index, final Icon icon) {
+  void setIconAt(final int index, final consulo.ui.image.Image icon) {
     myTabs.getTabAt(index).setIcon(icon);
   }
 
@@ -316,7 +316,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     return info != null ? info.getComponent() : null;
   }
 
-  public void insertTab(final VirtualFile file, final Icon icon, final JComponent comp, final String tooltip, final int indexToInsert) {
+  public void insertTab(final VirtualFile file, final consulo.ui.image.Image icon, final JComponent comp, final String tooltip, final int indexToInsert) {
 
     TabInfo tab = myTabs.findInfo(file);
     if (tab != null) return;

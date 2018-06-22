@@ -19,10 +19,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -33,9 +35,10 @@ import java.awt.event.HierarchyListener;
  * @author evgeny.zakrevsky
  */
 public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
-  @NonNls public static final String LABEL_FROM_TABBED_PANE = "JBTabbedPane.labelFromTabbedPane";
+  @NonNls
+  public static final String LABEL_FROM_TABBED_PANE = "JBTabbedPane.labelFromTabbedPane";
   private int previousSelectedIndex = -1;
-  
+
   public JBTabbedPane() {
   }
 
@@ -57,6 +60,14 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
     repaint();
   }
 
+  public void setIconAt(int index, Image icon) {
+    setIconAt(index, TargetAWT.to(icon));
+  }
+
+  public void insertTab(String title, Image icon, Component component, String tip, int index) {
+    insertTab(title, TargetAWT.to(icon), component, tip, index);
+  }
+
   @Override
   public void insertTab(String title, Icon icon, Component component, String tip, int index) {
     super.insertTab(title, icon, component, tip, index);
@@ -64,7 +75,7 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
     //set custom label for correct work spotlighting in settings
     JLabel label = new JLabel(title);
     label.setIcon(icon);
-    label.setBorder(new EmptyBorder(1,1,1,1));
+    label.setBorder(new EmptyBorder(1, 1, 1, 1));
     setTabComponentAt(index, label);
     updateSelectedTabForeground();
     label.putClientProperty(LABEL_FROM_TABBED_PANE, Boolean.TRUE);
@@ -117,9 +128,8 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
   @Override
   public void removeNotify() {
     super.removeNotify();
-    if (!ScreenUtil.isStandardAddRemoveNotify(this))
-      return;
-    for (int i=0; i<getTabCount(); i++) {
+    if (!ScreenUtil.isStandardAddRemoveNotify(this)) return;
+    for (int i = 0; i < getTabCount(); i++) {
       getComponentAt(i).removeHierarchyListener(this);
     }
   }

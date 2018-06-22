@@ -45,20 +45,19 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.*;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.migration.AWTComponentProviderUtil;
 
 import javax.annotation.Nonnull;
@@ -403,7 +402,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     }
   }
 
-  private void setIconAt(final int index, final Icon icon) {
+  private void setIconAt(final int index, final consulo.ui.image.Image icon) {
     if (myTabbedPane != null) {
       myTabbedPane.setIconAt(index, icon);
     }
@@ -677,7 +676,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
 
         final VirtualFile file = editor.getFile();
         final Icon template = AllIcons.FileTypes.Text;
-        myTabbedPane.insertTab(file, EmptyIcon.create(template.getIconWidth(), template.getIconHeight()), new TComp(this, (DesktopEditorWithProviderComposite)editor), null, indexToInsert);
+        myTabbedPane.insertTab(file, ImageEffects.empty(template.getIconWidth(), template.getIconHeight()), new TComp(this, (DesktopEditorWithProviderComposite)editor), null, indexToInsert);
         trimToSize(UISettings.getInstance().getEditorTabLimit(), file, false);
         if (selectEditor) {
           setSelectedEditor((DesktopEditorWithProviderComposite)editor, focusEditor);
@@ -873,16 +872,17 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
   /**
    * @return icon which represents file's type and modification status
    */
-  private Icon getFileIcon(@Nonnull final VirtualFile file) {
+  @Nullable
+  private consulo.ui.image.Image getFileIcon(@Nonnull final VirtualFile file) {
     if (!file.isValid()) {
-      return TargetAWT.to(UnknownFileType.INSTANCE.getIcon());
+      return UnknownFileType.INSTANCE.getIcon();
     }
 
-    final Icon baseIcon = TargetAWT.to(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject()));
+    final Image baseIcon = VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
 
     int count = 1;
 
-    final Icon pinIcon;
+    final Image pinIcon;
     final DesktopEditorComposite composite = findFileComposite(file);
     if (composite != null && composite.isPinned()) {
       count++;
@@ -892,26 +892,33 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
       pinIcon = null;
     }
 
-    final Icon modifiedIcon;
-    UISettings settings = UISettings.getInstance();
-    if (settings.getMarkModifiedTabsWithAsterisk() || !settings.getHideTabsIfNeed()) {
-      modifiedIcon = settings.getMarkModifiedTabsWithAsterisk() && composite != null && composite.isModified() ? MODIFIED_ICON : GAP_ICON;
-      count++;
+    // FIXME [VISTALL] not supported for now
+    Icon modifiedIcon = null;
+    //UISettings settings = UISettings.getInstance();
+    //if (settings.getMarkModifiedTabsWithAsterisk() || !settings.getHideTabsIfNeed()) {
+    //  modifiedIcon = settings.getMarkModifiedTabsWithAsterisk() && composite != null && composite.isModified() ? MODIFIED_ICON : GAP_ICON;
+    //  count++;
+    //}
+    //else {
+    //  modifiedIcon = null;
+    //}
+    //
+    //if (count == 1) return baseIcon;
+
+    if(pinIcon != null && modifiedIcon == null) {
+      return ImageEffects.layered(baseIcon, pinIcon);
     }
-    else {
-      modifiedIcon = null;
-    }
 
-    if (count == 1) return baseIcon;
-
-    int i = 0;
-    final LayeredIcon result = new LayeredIcon(count);
-    int xShift = !settings.getHideTabsIfNeed() ? 4 : 0;
-    result.setIcon(baseIcon, i++, xShift, 0);
-    if (pinIcon != null) result.setIcon(pinIcon, i++, xShift, 0);
-    if (modifiedIcon != null) result.setIcon(modifiedIcon, i++);
-
-    return JBUI.scale(result);
+    // FIXME [VISTALL] not supported for now
+    //int i = 0;
+    //final LayeredIcon result = new LayeredIcon(count);
+    //int xShift = !settings.getHideTabsIfNeed() ? 4 : 0;
+    //result.setIcon(baseIcon, i++, xShift, 0);
+    //if (pinIcon != null) result.setIcon(pinIcon, i++, xShift, 0);
+    //if (modifiedIcon != null) result.setIcon(modifiedIcon, i++);
+    //
+    //return JBUI.scale(result);
+    return baseIcon;
   }
 
   @Override

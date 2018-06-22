@@ -47,6 +47,7 @@ import com.intellij.util.ui.update.LazyUiDisposable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Internal;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -617,7 +618,7 @@ public abstract class JBTabsImpl extends JComponent
     mySingleRowLayout.myMorePopup = new JBPopupMenu();
     for (final TabInfo each : myVisibleInfos) {
       if (!mySingleRowLayout.isTabHidden(each)) continue;
-      final JBMenuItem item = new JBMenuItem(each.getText(), each.getIcon());
+      final JBMenuItem item = new JBMenuItem(each.getText(), TargetAWT.to(each.getIcon()));
       item.setForeground(each.getDefaultForeground());
       item.setBackground(each.getTabColor());
       mySingleRowLayout.myMorePopup.add(item);
@@ -1122,7 +1123,7 @@ public abstract class JBTabsImpl extends JComponent
 
   private void updateIcon(final TabInfo tabInfo) {
     updateTab(() -> {
-      myInfo2Label.get(tabInfo).setIcon(tabInfo.getIcon());
+      myInfo2Label.get(tabInfo).setIcon(TargetAWT.to(tabInfo.getIcon()));
       return true;
     }, tabInfo);
   }

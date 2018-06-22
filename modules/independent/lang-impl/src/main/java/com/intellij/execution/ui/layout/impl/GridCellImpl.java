@@ -41,11 +41,10 @@ import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -258,7 +257,7 @@ public class GridCellImpl implements GridCell {
     }
 
     return info.
-            setIcon(TargetAWT.to(content.getIcon())).
+            setIcon(content.getIcon()).
             setText(content.getDisplayName()).
             setTooltipText(content.getDescription()).
             setActionsContextComponent(content.getActionsContextComponent()).

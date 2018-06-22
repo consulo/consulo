@@ -25,8 +25,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.util.IJSwingUtilities;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -116,10 +116,7 @@ public class TabbedPaneWrapper  {
     return myTabbedPaneHolder;
   }
 
-  /**
-   * @see javax.swing.JTabbedPane#addTab(java.lang.String, javax.swing.Icon, java.awt.Component, java.lang.String)
-   */
-  public final synchronized void addTab(final String title, final Icon icon, final JComponent component, final String tip) {
+  public final synchronized void addTab(final String title, final consulo.ui.image.Image icon, final JComponent component, final String tip) {
     insertTab(title, icon, component, tip, myTabbedPane.getTabCount());
   }
 
@@ -127,7 +124,7 @@ public class TabbedPaneWrapper  {
     insertTab(title, null, component, null, myTabbedPane.getTabCount());
   }
 
-  public synchronized void insertTab(final String title, final Icon icon, final JComponent component, final String tip, final int index) {
+  public synchronized void insertTab(final String title, final consulo.ui.image.Image icon, final JComponent component, final String tip, final int index) {
     myTabbedPane.insertTab(title, icon, createTabWrapper(component), tip, index);
   }
 
@@ -258,7 +255,7 @@ public class TabbedPaneWrapper  {
   /**
    * @see javax.swing.JTabbedPane#setIconAt(int, javax.swing.Icon)
    */
-  public final void setIconAt(final int index, final Icon icon) {
+  public final void setIconAt(final int index, final consulo.ui.image.Image icon) {
     assertIsDispatchThread();
     myTabbedPane.setIconAt(index, icon);
   }

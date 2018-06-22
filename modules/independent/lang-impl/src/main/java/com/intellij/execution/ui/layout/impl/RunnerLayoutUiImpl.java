@@ -79,7 +79,7 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
 
   @Nonnull
   @Override
-  public LayoutStateDefaults initTabDefaults(int id, String text, Icon icon) {
+  public LayoutStateDefaults initTabDefaults(int id, String text, Image icon) {
     getLayout().setDefault(id, text, icon);
     return this;
   }

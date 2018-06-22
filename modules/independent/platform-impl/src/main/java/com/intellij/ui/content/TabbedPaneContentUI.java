@@ -22,10 +22,9 @@ import com.intellij.ui.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.IJSwingUtilities;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -109,7 +108,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
       Content content = (Content)e.getSource();
       int index = myTabbedPaneWrapper.indexOfComponent(content.getComponent());
       if (index != -1) {
-        myTabbedPaneWrapper.setIconAt(index, (Icon)e.getNewValue());
+        myTabbedPaneWrapper.setIconAt(index, (Image)e.getNewValue());
       }
     }
   }
@@ -283,7 +282,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   private class MyContentManagerListener extends ContentManagerAdapter {
     public void contentAdded(ContentManagerEvent event) {
       Content content = event.getContent();
-      myTabbedPaneWrapper.insertTab(content.getTabName(), TargetAWT.to(content.getIcon()), content.getComponent(), content.getDescription(), event.getIndex());
+      myTabbedPaneWrapper.insertTab(content.getTabName(), content.getIcon(), content.getComponent(), content.getDescription(), event.getIndex());
       content.addPropertyChangeListener(TabbedPaneContentUI.this);
     }
 

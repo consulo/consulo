@@ -26,11 +26,10 @@ import com.intellij.ui.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.AlertIcon;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -60,7 +59,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
 
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
 
-  private Icon myIcon;
+  private consulo.ui.image.Image myIcon;
   private String myPlace;
   private Object myObject;
   private JComponent mySideComponent;
@@ -146,9 +145,10 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return this;
   }
 
-  public TabInfo setIcon(Icon icon) {
-    Icon old = myIcon;
-    if (!IconDeferrer.getInstance().equalIcons(TargetAWT.from(old), TargetAWT.from(icon))) {
+  @Nonnull
+  public TabInfo setIcon(consulo.ui.image.Image icon) {
+    Image old = myIcon;
+    if (!IconDeferrer.getInstance().equalIcons(old, icon)) {
       myIcon = icon;
       myChangeSupport.firePropertyChange(ICON, old, icon);
     }
@@ -179,7 +179,8 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return myText;
   }
 
-  public Icon getIcon() {
+  @Nullable
+  public Image getIcon() {
     return myIcon;
   }
 

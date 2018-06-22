@@ -15,10 +15,12 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.image.Image;
+
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import java.awt.event.MouseListener;
 import java.awt.*;
+import java.awt.event.MouseListener;
 
 public interface TabbedPane {
   JComponent getComponent();
@@ -31,7 +33,7 @@ public interface TabbedPane {
 
   int getTabCount();
 
-  void insertTab(String title, Icon icon, Component c, String tip, int index);
+  void insertTab(String title, Image icon, Component c, String tip, int index);
 
   void setTabPlacement(int tabPlacement);
 
@@ -59,7 +61,7 @@ public interface TabbedPane {
 
   void setComponentAt(int index, Component c);
 
-  void setIconAt(int index, Icon icon);
+  void setIconAt(int index, Image icon);
 
   void setEnabledAt(int index, boolean enabled);
 
