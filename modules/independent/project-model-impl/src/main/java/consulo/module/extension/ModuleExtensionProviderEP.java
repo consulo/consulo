@@ -140,7 +140,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Class<MutableModuleExtension> getMutableClass() {
     Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>> value = myMutableValue.getValue();
     return value == null ? null : value.getFirst();
@@ -165,7 +165,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     return key;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Deprecated
   @DeprecationInfo(value = "Use ModuleExtensionProviders#findProvider(String)", until = "2.0")
   public static ModuleExtensionProviderEP findProviderEP(@Nonnull String id) {
