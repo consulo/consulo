@@ -204,10 +204,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
   @Override
   @Nonnull
   public Project getProject() {
-    final PsiManager manager = getManager();
-    if (manager == null) throw new PsiInvalidElementAccessException(this);
-
-    return manager.getProject();
+    return getManager().getProject();
   }
 
   @Override

@@ -216,10 +216,6 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   @Nonnull
   public Project getProject() {
     final PsiManager manager = getManager();
-    if (manager == null) {
-      throw new PsiInvalidElementAccessException(this);
-    }
-
     return manager.getProject();
   }
 
@@ -321,6 +317,11 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   @Nonnull
   @Override
   public PsiManager getManager() {
-    return PsiManager.getInstance(getProject());
+    try {
+      return PsiManager.getInstance(getProject());
+    }
+    catch (StackOverflowError e) {
+      throw new IllegalArgumentException("Implementation conflict getProject() + getManager()", e);
+    }
   }
 }
