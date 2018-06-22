@@ -21,7 +21,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
-import consulo.ui.migration.ToSwingWrapper;
+import consulo.awt.internal.SwingComponentWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,12 +31,12 @@ import javax.swing.*;
  * @author VISTALL
  * @since 27-Oct-17
  */
-public class SwingComponentDelegate<T extends JComponent> implements Component, ToSwingWrapper, SomeUIWrapper {
+public class SwingComponentDelegate<T extends JComponent> implements Component, SwingComponentWrapper, SomeUIWrapper {
   protected T myComponent;
 
   @Nonnull
   @Override
-  public java.awt.Component toAWT() {
+  public java.awt.Component toAWTComponent() {
     return myComponent;
   }
 
@@ -77,7 +77,7 @@ public class SwingComponentDelegate<T extends JComponent> implements Component, 
   @Nonnull
   @Override
   public UIDataObject dataObject() {
-    javax.swing.JComponent component = (javax.swing.JComponent)toAWT();
+    javax.swing.JComponent component = (javax.swing.JComponent)toAWTComponent();
     UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
     if (dataObject == null) {
       component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());

@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.awt.TargetAWT;
 import consulo.ui.ItemPresentation;
-import consulo.ui.TargetAWTImpl;
+import consulo.awt.TargetAWTImpl;
 import consulo.ui.TextAttribute;
 
 import javax.annotation.Nonnull;

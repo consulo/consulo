@@ -18,7 +18,7 @@ package consulo.ui.internal.image;
 import com.intellij.ui.LayeredIcon;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.internal.SwingIconWrapper;
+import consulo.awt.internal.SwingIconWrapper;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

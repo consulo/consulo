@@ -16,10 +16,11 @@
 package consulo.awt;
 
 import com.intellij.util.ui.JBUI;
+import consulo.awt.internal.SwingComponentWrapper;
+import consulo.awt.internal.SwingIconWrapper;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
 import consulo.ui.image.Image;
-import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
@@ -64,8 +65,8 @@ public class TargetAWT {
 
   @Nonnull
   public static java.awt.Component to(@Nonnull Component component) {
-    if (component instanceof ToSwingWrapper) {
-      return ((ToSwingWrapper)component).toAWT();
+    if (component instanceof SwingComponentWrapper) {
+      return ((SwingComponentWrapper)component).toAWTComponent();
     }
     else if (component instanceof java.awt.Component) {
       return (java.awt.Component)component;
@@ -96,7 +97,10 @@ public class TargetAWT {
       return null;
     }
 
-    if (image instanceof Icon) {
+    if(image instanceof SwingIconWrapper) {
+      return ((SwingIconWrapper) image).toSwingIcon();
+    }
+    else if (image instanceof Icon) {
       return (Icon)image;
     }
 

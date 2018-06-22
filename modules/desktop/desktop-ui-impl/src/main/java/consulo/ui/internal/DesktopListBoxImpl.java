@@ -20,7 +20,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBList;
 import consulo.ui.*;
-import consulo.ui.migration.ToSwingWrapper;
+import consulo.awt.internal.SwingComponentWrapper;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
 
@@ -33,7 +33,7 @@ import java.awt.Component;
  * @author VISTALL
  * @since 12-Sep-17
  */
-public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingWrapper {
+public class DesktopListBoxImpl<E> implements ListBox<E>, SwingComponentWrapper, SwingWrapper {
   private JBList<E> myList;
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
 
@@ -128,7 +128,7 @@ public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingW
 
   @Nonnull
   @Override
-  public Component toAWT() {
+  public Component toAWTComponent() {
     return myRootPanel;
   }
 }

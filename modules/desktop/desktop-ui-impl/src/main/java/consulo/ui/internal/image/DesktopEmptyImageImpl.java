@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.ui.image.Image;
-import consulo.ui.internal.SwingIconWrapper;
+import consulo.awt.internal.SwingIconWrapper;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

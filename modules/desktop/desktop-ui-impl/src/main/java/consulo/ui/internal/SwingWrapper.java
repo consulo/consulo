@@ -22,7 +22,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
-import consulo.ui.migration.ToSwingWrapper;
+import consulo.awt.internal.SwingComponentWrapper;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -40,7 +40,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public interface SwingWrapper extends SomeUIWrapper, ToSwingWrapper {
+public interface SwingWrapper extends SomeUIWrapper, SwingComponentWrapper {
   @Nullable
   @Override
   default Component getParentComponent() {
@@ -57,14 +57,14 @@ public interface SwingWrapper extends SomeUIWrapper, ToSwingWrapper {
 
   @Nonnull
   @Override
-  default java.awt.Component toAWT() {
+  default java.awt.Component toAWTComponent() {
     return (java.awt.Component)this;
   }
 
   @Nonnull
   @Override
   default UIDataObject dataObject() {
-    javax.swing.JComponent component = (javax.swing.JComponent)toAWT();
+    javax.swing.JComponent component = (javax.swing.JComponent)toAWTComponent();
     UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
     if (dataObject == null) {
       component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
@@ -74,7 +74,7 @@ public interface SwingWrapper extends SomeUIWrapper, ToSwingWrapper {
 
   @Override
   default void bordersChanged() {
-    JComponent component = (JComponent)toAWT();
+    JComponent component = (JComponent)toAWTComponent();
 
     component.setBorder(null);
 

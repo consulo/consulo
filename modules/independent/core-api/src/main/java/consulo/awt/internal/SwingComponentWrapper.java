@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.migration;
+package consulo.awt.internal;
+
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
-
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 12-Sep-17
  */
-public interface ToSwingWrapper extends consulo.ui.Component {
+@Deprecated
+@DeprecationInfo("Internal class, don't use it in plugins")
+public interface SwingComponentWrapper extends Component {
   @Nonnull
-  Component toAWT();
+  java.awt.Component toAWTComponent();
 }

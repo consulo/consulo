@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.awt.internal;
+
+import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
+@Deprecated
+@DeprecationInfo("Internal class, don't use it in plugins")
 public interface SwingIconWrapper {
   @Nonnull
-  Icon toSwingIcon();
+  javax.swing.Icon toSwingIcon();
 }

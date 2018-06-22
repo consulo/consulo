@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.ui.roots.ScalableIconComponent;
+import consulo.awt.internal.SwingIconWrapper;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

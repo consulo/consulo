@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.awt;
 
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
-import consulo.awt.TargetAWT;
+import consulo.ui.TextAttribute;
 import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;
