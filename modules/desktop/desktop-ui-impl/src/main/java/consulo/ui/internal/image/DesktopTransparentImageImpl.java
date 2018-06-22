@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal.icon;
+package consulo.ui.internal.image;
 
 import com.intellij.ui.RetrievableIcon;
 import consulo.awt.TargetAWT;

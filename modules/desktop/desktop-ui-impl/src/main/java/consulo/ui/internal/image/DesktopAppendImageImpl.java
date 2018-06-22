@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,35 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal.icon;
+package consulo.ui.internal.image;
 
-import com.intellij.ui.LayeredIcon;
-import consulo.awt.TargetAWT;
+import com.intellij.ui.RowIcon;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SwingIconWrapper;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.util.Arrays;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 2018-05-07
  */
-public class DesktopLayeredImageImpl extends LayeredIcon implements SwingIconWrapper, Image {
-  @Nonnull
-  public static Icon[] remap(consulo.ui.image.Image[] icons) {
-    return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
+public class DesktopAppendImageImpl extends RowIcon implements SwingIconWrapper, Image {
+  public DesktopAppendImageImpl(int iconCount) {
+    super(iconCount, Alignment.CENTER);        
   }
 
-  public DesktopLayeredImageImpl(@Nonnull consulo.ui.image.Image... images) {
-    super(remap(images));
-  }
-
-  @Nonnull
   @Override
-  public Icon toSwingIcon() {
-    return this;
+  public int getHeight() {
+    return getIconHeight();
   }
 
   @Override
@@ -49,8 +41,9 @@ public class DesktopLayeredImageImpl extends LayeredIcon implements SwingIconWra
     return getIconWidth();
   }
 
+  @Nonnull
   @Override
-  public int getHeight() {
-    return getIconHeight();
+  public Icon toSwingIcon() {
+    return this;
   }
 }

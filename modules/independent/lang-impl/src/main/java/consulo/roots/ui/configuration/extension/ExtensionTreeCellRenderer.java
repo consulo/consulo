@@ -15,11 +15,11 @@
  */
 package consulo.roots.ui.configuration.extension;
 
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 
@@ -45,7 +45,7 @@ public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRend
       ColoredTreeCellRenderer textRenderer = getTextRenderer();
 
       boolean enabled = extensionCheckedTreeNode.isEnabled();
-      textRenderer.setIcon(enabled ? providerEP.getIcon() : IconLoader.getTransparentIcon(providerEP.getIcon()));
+      textRenderer.setIcon(enabled ? providerEP.getIcon() : ImageEffects.transparent(providerEP.getIcon()));
       if (enabled) {
         textRenderer.append(providerEP.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }

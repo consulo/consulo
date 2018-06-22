@@ -44,6 +44,11 @@ public final class ImageEffects {
     return UIInternal.get()._ImageEffects_transparent(original, alpha);
   }
 
+  @Nonnull
+  public static Image grayed(@Nonnull Image original) {
+    return UIInternal.get()._ImageEffects_grayed(original);
+  }
+
   /**
    * Return composize image, where height is max of i0&i1, and width is sum of both
    * Return will be displayed like [i0][i1]

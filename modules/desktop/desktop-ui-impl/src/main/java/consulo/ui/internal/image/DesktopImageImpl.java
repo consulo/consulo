@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,48 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal.icon;
+package consulo.ui.internal.image;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.ConcurrentFactoryMap;
-import com.intellij.util.ui.EmptyIcon;
+import com.intellij.openapi.util.IconLoader;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SwingIconWrapper;
-
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
-import java.util.concurrent.ConcurrentMap;
+import java.net.URL;
 
 /**
  * @author VISTALL
- * @since 2018-05-07
+ * @since 13-Jun-16
  */
-public class DesktopEmptyImageImpl extends EmptyIcon implements Image, SwingIconWrapper {
-  private static final ConcurrentMap<Pair<Integer, Integer>, DesktopEmptyImageImpl> cache = ConcurrentFactoryMap.createMap(p -> new DesktopEmptyImageImpl(p.getFirst(), p.getSecond()));
+public class DesktopImageImpl implements Image, SwingIconWrapper {
+  private Icon myIcon;
 
-  @Nonnull
-  public static DesktopEmptyImageImpl get(int width, int height) {
-    return cache.get(Pair.create(height, width));
-  }
-
-  private DesktopEmptyImageImpl(int width, int height) {
-    super(width, height, false);
-    setIconPreScaled(false);
+  public DesktopImageImpl(URL url) {
+    myIcon = IconLoader.findIcon(url);
   }
 
   @Override
   public int getHeight() {
-    return getIconHeight();
+    return myIcon.getIconHeight();
   }
 
   @Override
   public int getWidth() {
-    return getIconWidth();
+    return myIcon.getIconWidth();
   }
 
   @Nonnull
   @Override
   public Icon toSwingIcon() {
-    return this;
+    return myIcon;
   }
 }

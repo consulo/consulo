@@ -27,12 +27,11 @@ import com.intellij.execution.ui.RunContentManagerImpl;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.Content;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +81,7 @@ class RunConfigurationNode  extends AbstractTreeNode<Pair<RunnerAndConfiguration
     if (icon == null) {
       icon = RunManagerEx.getInstanceEx(getProject()).getConfigurationIcon(configurationSettings);
     }
-    presentation.setIcon(isStored ? TargetAWT.to(icon) : IconLoader.getDisabledIcon(TargetAWT.to(icon)));
+    presentation.setIcon(isStored ? icon : ImageEffects.grayed(icon));
 
     if (contributor != null) {
       contributor.updatePresentation(presentation, this);

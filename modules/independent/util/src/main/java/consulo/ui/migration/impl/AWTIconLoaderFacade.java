@@ -36,9 +36,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -71,8 +71,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   private final Map<Icon, Icon> myIcon2DisabledIcon = new WeakHashMap<Icon, Icon>(200);
 
   private static boolean USE_DARK_ICONS = UIUtil.isUnderDarcula();
-
-  private volatile static int clearCacheCounter;
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
     @NonNls
@@ -379,7 +377,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     private volatile boolean dark;
     private final boolean svg;
     private final boolean useCacheOnLoad;
-    private int myClearCacheCounter = clearCacheCounter;
 
     private ImageFilter[] myFilters = EMPTY_FILTER_ARRAY;
     private final MyScaledIconsCache myScaledIconsCache = new MyScaledIconsCache();
@@ -434,7 +431,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     private synchronized ImageIcon getRealIcon(@Nullable JBUI.ScaleContext ctx) {
       if (!isValid()) {
         if (isLoaderDisabled()) return EMPTY_ICON;
-        myClearCacheCounter = clearCacheCounter;
         myRealIcon = null;
         dark = USE_DARK_ICONS;
         myScaledIconsCache.clear();
@@ -456,7 +452,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
 
     private boolean isValid() {
-      return dark == USE_DARK_ICONS && myClearCacheCounter == clearCacheCounter;
+      return dark == USE_DARK_ICONS;
     }
 
     @Override

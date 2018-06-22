@@ -164,6 +164,11 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public Image _ImageEffects_grayed(@Nonnull Image original) {
+    return null;
+  }
+
+  @Override
   public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
     return null;
   }

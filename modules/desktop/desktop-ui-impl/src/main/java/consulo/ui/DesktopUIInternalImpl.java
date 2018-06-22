@@ -20,8 +20,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
-import consulo.ui.internal.icon.*;
-import consulo.ui.internal.image.DesktopCanvasImageImpl;
+import consulo.ui.internal.image.*;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
@@ -56,6 +55,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
     return new DesktopTransparentImageImpl(original, alpha);
+  }
+
+  @Override
+  public Image _ImageEffects_grayed(@Nonnull Image original) {
+    return DesktopDisabledImageImpl.of(original);
   }
 
   @Override

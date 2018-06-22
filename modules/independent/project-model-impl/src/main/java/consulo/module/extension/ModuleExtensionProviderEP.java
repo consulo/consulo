@@ -28,10 +28,10 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.annotations.DeprecationInfo;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ModuleRootLayer;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,20 +74,19 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     return myInternalIndex;
   }
 
-  private NotNullLazyValue<Icon> myIconValue = new NotNullLazyValue<Icon>() {
+  private NotNullLazyValue<Image> myIconValue = new NotNullLazyValue<Image>() {
     @Nonnull
     @Override
-    protected Icon compute() {
+    protected Image compute() {
       if (StringUtil.isEmpty(icon)) {
         return AllIcons.Toolbar.Unknown;
       }
-      Icon temp = IconLoader.findIcon(icon, getLoaderForClass());
+      Image temp = IconLoader.findIcon(icon, getLoaderForClass());
       return temp == null ? AllIcons.Toolbar.Unknown : temp;
     }
   };
 
-  private NullableLazyValue<Pair<Class<ModuleExtension>, Constructor<ModuleExtension>>> myImmutableValue =
-          NullableLazyValue.of(() -> this.<ModuleExtension>resolveFor(immutableClass));
+  private NullableLazyValue<Pair<Class<ModuleExtension>, Constructor<ModuleExtension>>> myImmutableValue = NullableLazyValue.of(() -> this.<ModuleExtension>resolveFor(immutableClass));
 
   private NullableLazyValue<Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>>> myMutableValue =
           NullableLazyValue.of(() -> this.<MutableModuleExtension>resolveFor(mutableClass));
@@ -148,7 +147,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   }
 
   @Nonnull
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIconValue.getValue();
   }
 

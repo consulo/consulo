@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import consulo.util.ServiceLoaderUtil;
@@ -180,14 +181,22 @@ public final class IconLoader {
    * @return <code>ImageIcon</code> constructed from disabled image of passed icon.
    */
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use ImageEffects#grayed()")
   public static Icon getDisabledIcon(@Nullable Icon icon) {
     return ourIconLoaderFacade.getDisabledIcon(icon);
   }
 
+  @Nullable
+  @Deprecated
+  @DeprecationInfo("Use ImageEffects#transparent()")
   public static Icon getTransparentIcon(@Nonnull final Icon icon) {
     return getTransparentIcon(icon, 0.5f);
   }
 
+  @Nullable
+  @Deprecated
+  @DeprecationInfo("Use ImageEffects#transparent()")
   public static Icon getTransparentIcon(@Nonnull final Icon icon, final float alpha) {
     return ourIconLoaderFacade.getTransparentIcon(icon, alpha);
   }

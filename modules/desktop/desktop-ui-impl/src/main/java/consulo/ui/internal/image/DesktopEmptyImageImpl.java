@@ -13,22 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal.icon;
+package consulo.ui.internal.image;
 
-import com.intellij.ui.RowIcon;
+import com.intellij.openapi.util.Pair;
+import com.intellij.util.containers.ConcurrentFactoryMap;
+import com.intellij.util.ui.EmptyIcon;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SwingIconWrapper;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
  * @since 2018-05-07
  */
-public class DesktopAppendImageImpl extends RowIcon implements SwingIconWrapper, Image {
-  public DesktopAppendImageImpl(int iconCount) {
-    super(iconCount, Alignment.CENTER);        
+public class DesktopEmptyImageImpl extends EmptyIcon implements Image, SwingIconWrapper {
+  private static final ConcurrentMap<Pair<Integer, Integer>, DesktopEmptyImageImpl> cache = ConcurrentFactoryMap.createMap(p -> new DesktopEmptyImageImpl(p.getFirst(), p.getSecond()));
+
+  @Nonnull
+  public static DesktopEmptyImageImpl get(int width, int height) {
+    return cache.get(Pair.create(height, width));
+  }
+
+  private DesktopEmptyImageImpl(int width, int height) {
+    super(width, height, false);
+    setIconPreScaled(false);
   }
 
   @Override
