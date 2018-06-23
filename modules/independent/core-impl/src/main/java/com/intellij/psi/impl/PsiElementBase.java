@@ -321,7 +321,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
       return PsiManager.getInstance(getProject());
     }
     catch (StackOverflowError e) {
-      throw new IllegalArgumentException("Implementation conflict getProject() + getManager()", e);
+      throw new IllegalArgumentException("Implementation conflict getProject() + getManager(): Class: " + getClass().getName() , e);
     }
   }
 }
