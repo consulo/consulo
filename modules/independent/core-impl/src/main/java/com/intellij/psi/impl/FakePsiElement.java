@@ -21,6 +21,7 @@ import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredWriteAction;
@@ -148,5 +149,12 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
   @Override
   public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
     return null;
+  }
+
+  @Nonnull
+  @Override
+  public PsiManager getManager() {
+    final PsiElement parent = getParent();
+    return parent != null ? parent.getManager() : null;
   }
 }
