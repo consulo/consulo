@@ -35,9 +35,10 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
+import consulo.util.ui.tree.TreeDecorationUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -99,6 +100,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
     CollectionListModel<Object> model = new CollectionListModel<>();
     myList = new JBList<>(model);
+    myList.setBackground(TreeDecorationUtil.getTreeBackground());
     myList.setCellRenderer(new ColoredListCellRenderer<Object>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
