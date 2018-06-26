@@ -16,73 +16,105 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import com.intellij.openapi.actionSystem.impl.*;
-import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
+import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.DoubleClickListener;
-import com.intellij.ui.InplaceButton;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.UIBundle;
-import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
-import com.intellij.util.BitUtil;
 import com.intellij.util.NotNullProducer;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.util.ui.ToolwindowPaintUtil;
+import consulo.ui.image.Image;
+import consulo.ui.laf.MorphColor;
+import consulo.util.ui.tree.TreeDecorationUtil;
 import consulo.wm.impl.ToolWindowManagerBase;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.plaf.PanelUI;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author pegov
  */
-public abstract class DesktopToolWindowHeader extends JPanel implements Disposable, UISettingsListener {
-  @NonNls private static final String HIDE_ACTIVE_WINDOW_ACTION_ID = "HideActiveWindow";
-  @NonNls private static final String HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID = "HideSideWindows";
+public abstract class DesktopToolWindowHeader extends JPanel implements Disposable {
+  private class GearAction extends AnAction {
+    private NotNullProducer<ActionGroup> myGearProducer;
 
-  private ToolWindow myToolWindow;
-  private WindowInfoImpl myInfo;
-  private final DesktopToolWindowHeader.ActionButton myHideButton;
-  private BufferedImage myImage;
-  private BufferedImage myActiveImage;
-  private ToolWindowType myImageType;
-  private final JPanel myButtonPanel;
-  private final DesktopToolWindowHeader.ActionButton myGearButton;
+    public GearAction(NotNullProducer<ActionGroup> gearProducer) {
+      super("Show options", null, AllIcons.General.GearPlain);
+      myGearProducer = gearProducer;
+    }
 
-  private final PresentationFactory myPresentationFactory = new PresentationFactory();
-  private final ToolbarUpdater myUpdater;
-  private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
-  private List<AnAction> myVisibleActions = ContainerUtil.newArrayListWithCapacity(2);
+    @RequiredDispatchThread
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      final InputEvent inputEvent = e.getInputEvent();
+      final ActionPopupMenu popupMenu =
+              ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE, myGearProducer.produce(), new MenuItemPresentationFactory(true));
 
-  public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull WindowInfoImpl info, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
+      int x = 0;
+      int y = 0;
+      if (inputEvent instanceof MouseEvent) {
+        x = ((MouseEvent)inputEvent).getX();
+        y = ((MouseEvent)inputEvent).getY();
+      }
+
+      popupMenu.getComponent().show(inputEvent.getComponent(), x, y);
+    }
+  }
+
+  private class HideAction extends AnAction implements DumbAware {
+
+    @RequiredDispatchThread
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      hideToolWindow();
+    }
+
+    @RequiredDispatchThread
+    @Override
+    public final void update(@Nonnull final AnActionEvent event) {
+      Presentation presentation = event.getPresentation();
+
+      presentation.setText(UIBundle.message("tool.window.hide.action.name"));
+      presentation.setIcon(getHideIcon(myToolWindow));
+    }
+
+    private Image getHideIcon(ToolWindow toolWindow) {
+      ToolWindowAnchor anchor = toolWindow.getAnchor();
+      if (anchor == ToolWindowAnchor.BOTTOM) {
+        return AllIcons.General.HideDownPart;
+      }
+      else if (anchor == ToolWindowAnchor.RIGHT) {
+        return AllIcons.General.HideRightPart;
+      }
+
+      return AllIcons.General.HideLeftPart;
+    }
+  }
+
+  private final ToolWindow myToolWindow;
+
+  private final DefaultActionGroup myAdditionalActionGroup = new DefaultActionGroup();
+
+  private ActionToolbar myToolbar;
+
+  public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
     super(new BorderLayout());
 
     myToolWindow = toolWindow;
-    myInfo = info;
 
     JPanel westPanel = new JPanel() {
       @Override
@@ -106,75 +138,19 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     add(westPanel, BorderLayout.CENTER);
 
     westPanel.add(toolWindow.getContentUI().getTabComponent());
-    toolWindow.getContentUI().initMouseListeners(westPanel, toolWindow.getContentUI());
 
-    JPanel eastPanel = new JPanel();
-    eastPanel.setOpaque(false);
-    eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.X_AXIS));
-    eastPanel.setBorder(JBUI.Borders.empty(0, 3));
-    add(eastPanel, BorderLayout.EAST);
+    DesktopToolWindowContentUi.initMouseListeners(westPanel, toolWindow.getContentUI());
 
-    myGearButton = new ActionButton(new AnAction() {
-      @RequiredDispatchThread
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        final InputEvent inputEvent = e.getInputEvent();
-        final ActionPopupMenu popupMenu =
-                ((ActionManagerImpl)ActionManager.getInstance())
-                        .createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE, gearProducer.produce(), new MenuItemPresentationFactory(true));
+    myToolbar = ActionManager.getInstance().createActionToolbar("ToolwindowHeader", new DefaultActionGroup(myAdditionalActionGroup, new GearAction(gearProducer), new HideAction()), true);
+    myToolbar.setTargetComponent(this);
+    myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+    myToolbar.setReservePlaceAutoPopupIcon(false);
 
-        int x = 0;
-        int y = 0;
-        if (inputEvent instanceof MouseEvent) {
-          x = ((MouseEvent)inputEvent).getX();
-          y = ((MouseEvent)inputEvent).getY();
-        }
+    JComponent component = myToolbar.getComponent();
+    component.setBorder(JBUI.Borders.empty());
+    component.setOpaque(false);
 
-        popupMenu.getComponent().show(inputEvent.getComponent(), x, y);
-      }
-    }, AllIcons.General.Gear) {
-      @Override
-      protected Icon getActiveHoveredIcon() {
-        return AllIcons.General.GearHover;
-      }
-    };
-
-    myHideButton = new ActionButton(new HideAction() {
-      @RequiredDispatchThread
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        hideToolWindow();
-      }
-    }, new HideSideAction() {
-      @RequiredDispatchThread
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        sideHidden();
-      }
-    }, AllIcons.General.HideLeft, null, null) {
-      @Override
-      protected Icon getActiveIcon() {
-        return getHideToolWindowIcon(myToolWindow);
-      }
-
-      @Override
-      protected Icon getAlternativeIcon() {
-        return getHideIcon(myToolWindow);
-      }
-
-      @Override
-      protected Icon getActiveHoveredIcon() {
-        return getHideToolWindowHoveredIcon(myToolWindow);
-      }
-
-      @Override
-      protected Icon getAlternativeHoveredIcon() {
-        return getHideHoveredIcon(myToolWindow);
-      }
-    };
-
-    addDefaultActions(eastPanel);
-    myButtonPanel = eastPanel;
+    add(wrapAndFillVertical(component), BorderLayout.EAST);
 
     westPanel.addMouseListener(new PopupHandler() {
       @Override
@@ -182,6 +158,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         toolWindow.getContentUI().showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
       }
     });
+
     westPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -208,24 +185,11 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
       }
     });
 
-    setOpaque(true);
-    setBorder(JBUI.Borders.empty(TabsUtil.TABS_BORDER, 1, TabsUtil.TABS_BORDER, 1));
+    setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? TreeDecorationUtil.getTreeBackground() : UIUtil.getPanelBackground()));
 
-    UISettings.getInstance().addUISettingsListener(this, toolWindow.getContentUI());
-    myUpdater = new ToolbarUpdater(this) {
-      @Override
-      protected void updateActionsImpl(boolean transparentOnly, boolean forced) {
-        DesktopToolWindowHeader.this.updateActionsImpl(transparentOnly, forced);
-      }
+    setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), TabsUtil.TABS_BORDER, 0, TabsUtil.TABS_BORDER, 0));
 
-      @Override
-      protected void updateActionTooltips() {
-        for (ActionButton actionButton : UIUtil.uiTraverser().withRoot(myButtonPanel).preOrderDfsTraversal().filter(ActionButton.class)) {
-          actionButton.updateTooltip();
-        }
-      }
-    };
-    new DoubleClickListener(){
+    new DoubleClickListener() {
       @Override
       protected boolean onDoubleClick(MouseEvent event) {
         ToolWindowManagerBase mgr = toolWindow.getToolWindowManager();
@@ -233,413 +197,48 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         return true;
       }
     }.installOn(westPanel);
-    westPanel.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseReleased(final MouseEvent e) {
-        Runnable runnable = new Runnable() {
-          @Override
-          public void run() {
-            DesktopToolWindowHeader.this.dispatchEvent(SwingUtilities.convertMouseEvent(e.getComponent(), e, DesktopToolWindowHeader.this));
-          }
-        };
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(runnable);
-      }
-    });
   }
 
-  @Override
-  public void uiSettingsChanged(UISettings source) {
-    clearCaches();
-  }
-
-  private void addDefaultActions(JPanel eastPanel) {
-    eastPanel.add(myGearButton);
-    eastPanel.add(Box.createHorizontalStrut(JBUI.scale(6)));
-    eastPanel.add(myHideButton);
-    eastPanel.add(Box.createHorizontalStrut(JBUI.scale(1)));
+  @Nonnull
+  private JPanel wrapAndFillVertical(JComponent owner) {
+    JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, false, true));
+    panel.add(owner);
+    panel.setOpaque(false);
+    return panel;
   }
 
   @Override
   public void dispose() {
     removeAll();
-    myToolWindow = null;
-    myInfo = null;
   }
 
   public void setAdditionalTitleActions(AnAction[] actions) {
-    myActionGroup.removeAll();
-    myActionGroup.addAll(actions);
-    myUpdater.updateActions(false, true);
-  }
+    myAdditionalActionGroup.removeAll();
+    myAdditionalActionGroup.addAll(actions);
+    if (actions.length > 0) {
+      myAdditionalActionGroup.addSeparator();
+    }
 
-  private void updateActionsImpl(boolean transparentOnly, boolean forced) {
-    List<AnAction> newVisibleActions = ContainerUtil.newArrayListWithCapacity(myVisibleActions.size());
-    DataContext dataContext = DataManager.getInstance().getDataContext(this);
-
-    Utils.expandActionGroup(myActionGroup, newVisibleActions, myPresentationFactory, dataContext,
-                            ActionPlaces.TOOLWINDOW_TITLE, myUpdater.getActionManager(), transparentOnly);
-
-    if (forced || !newVisibleActions.equals(myVisibleActions)) {
-      myVisibleActions = newVisibleActions;
-
-      myButtonPanel.removeAll();
-      boolean actionAdded = false;
-      for (final AnAction action : newVisibleActions) {
-        if (action == null) continue;
-        final Presentation presentation = myPresentationFactory.getPresentation(action);
-        myButtonPanel.add(new ActionButton(action, presentation.getIcon()) {
-          @Override
-          protected Icon getActiveHoveredIcon() {
-            Icon icon = presentation.getHoveredIcon();
-            return icon != null ? icon : super.getActiveHoveredIcon();
-          }
-        });
-        myButtonPanel.add(Box.createHorizontalStrut(JBUI.scale(9)));
-        actionAdded = true;
-      }
-      if (actionAdded) {
-        myButtonPanel.add(new JLabel(AllIcons.General.Divider));
-        myButtonPanel.add(Box.createHorizontalStrut(JBUI.scale(6)));
-      }
-      addDefaultActions(myButtonPanel);
-
-      revalidate();
-      repaint();
+    if (myToolbar != null) {
+      myToolbar.updateActionsImmediately();
     }
   }
 
-  private static Icon getHideToolWindowIcon(ToolWindow toolWindow) {
-    ToolWindowAnchor anchor = toolWindow.getAnchor();
-    if (anchor == ToolWindowAnchor.BOTTOM) {
-      return AllIcons.General.HideDownPart;
-    }
-    else if (anchor == ToolWindowAnchor.RIGHT) {
-      return AllIcons.General.HideRightPart;
-    }
-
-    return AllIcons.General.HideLeftPart;
+  protected boolean isActive() {
+    return myToolWindow.isActive();
   }
-
-  private static Icon getHideIcon(ToolWindow toolWindow) {
-    ToolWindowAnchor anchor = toolWindow.getAnchor();
-    if (anchor == ToolWindowAnchor.BOTTOM) {
-      return AllIcons.General.HideDown;
-    }
-    else if (anchor == ToolWindowAnchor.RIGHT) {
-      return AllIcons.General.HideRight;
-    }
-
-    return AllIcons.General.HideLeft;
-  }
-
-  private static Icon getHideToolWindowHoveredIcon(ToolWindow toolWindow) {
-    ToolWindowAnchor anchor = toolWindow.getAnchor();
-    if (anchor == ToolWindowAnchor.BOTTOM) {
-      return AllIcons.General.HideDownPartHover;
-    }
-    else if (anchor == ToolWindowAnchor.RIGHT) {
-      return AllIcons.General.HideRightPartHover;
-    }
-
-    return AllIcons.General.HideLeftPartHover;
-  }
-
-  private static Icon getHideHoveredIcon(ToolWindow toolWindow) {
-    ToolWindowAnchor anchor = toolWindow.getAnchor();
-    if (anchor == ToolWindowAnchor.BOTTOM) {
-      return AllIcons.General.HideDownHover;
-    }
-    else if (anchor == ToolWindowAnchor.RIGHT) {
-      return AllIcons.General.HideRightHover;
-    }
-
-    return AllIcons.General.HideLeftHover;
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    Rectangle r = getBounds();
-    Graphics2D g2d = (Graphics2D)g;
-    Shape clip = g2d.getClip();
-
-    ToolWindowType type = myToolWindow.getType();
-
-    Image image;
-    if (isActive()) {
-      if (myActiveImage == null || /*myActiveImage.getHeight() != r.height ||*/ type != myImageType) {
-        myActiveImage = drawToBuffer(true, r.height, myToolWindow.getType() == ToolWindowType.FLOATING);
-      }
-
-      image = myActiveImage;
-    } else {
-      if (myImage == null || /*myImage.getHeight() != r.height ||*/ type != myImageType) {
-        myImage = drawToBuffer(false, r.height, myToolWindow.getType() == ToolWindowType.FLOATING);
-      }
-
-      image = myImage;
-    }
-
-    myImageType = myToolWindow.getType();
-
-    Rectangle clipBounds = clip.getBounds();
-    for (int x = clipBounds.x; x < clipBounds.x + clipBounds.width; x+=150) {
-      UIUtil.drawImage(g, image, x, 0, null);
-    }
-  }
-
-  private static BufferedImage drawToBuffer(boolean active, int height, boolean floating) {
-    final int width = 150;
-
-    BufferedImage image = UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D g = image.createGraphics();
-    ToolwindowPaintUtil.drawHeader(g, 0, width, height, active, true, !floating, true);
-    g.dispose();
-
-    return image;
-  }
-
-  @Override
-  public void setUI(PanelUI ui) {
-    clearCaches();
-
-    super.setUI(ui);
-  }
-
-  public void clearCaches() {
-    myImage = null;
-    myActiveImage = null;
-  }
-
-  @Override
-  protected void paintChildren(Graphics g) {
-    Graphics2D graphics = (Graphics2D) g.create();
-
-    UIUtil.applyRenderingHints(graphics);
-    super.paintChildren(graphics);
-
-    Rectangle r = getBounds();
-    if (!isActive() && !UIUtil.isUnderDarkBuildInLaf()) {
-      graphics.setColor(new Color(255, 255, 255, 30));
-      graphics.fill(r);
-    }
-
-    graphics.dispose();
-  }
-
-  protected abstract boolean isActive();
 
   protected abstract void hideToolWindow();
-
-  protected abstract void sideHidden();
-
-  protected abstract void toolWindowTypeChanged(ToolWindowType type);
 
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
-    return new Dimension(size.width, TabsUtil.getTabsHeight());
+    return new Dimension(size.width, TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2);
   }
 
   @Override
   public Dimension getMinimumSize() {
     Dimension size = super.getMinimumSize();
-    return new Dimension(size.width, TabsUtil.getTabsHeight());
-  }
-
-  private class ActionButton extends Wrapper implements ActionListener, AltStateManager.AltListener {
-    private final InplaceButton myButton;
-    private final AnAction myAction;
-    private final AnAction myAlternativeAction;
-    private final Icon myActiveIcon;
-    private final Icon myInactiveIcon;
-    private final Icon myAlternativeIcon;
-
-    private AnAction myCurrentAction;
-
-    public ActionButton(AnAction action, AnAction alternativeAction, @Nonnull Icon activeIcon, Icon inactiveIcon,
-                        Icon alternativeIcon) {
-      myAction = action;
-      myAlternativeAction = alternativeAction;
-
-      myActiveIcon = activeIcon;
-      myInactiveIcon = inactiveIcon;
-      myAlternativeIcon = alternativeIcon;
-
-      myCurrentAction = myAction;
-
-      myButton = new InplaceButton(getToolTipTextByAction(action),
-                                   EmptyIcon.ICON_16, this) {
-        @Override
-        public boolean isActive() {
-          return ActionButton.this.isActive();
-        }
-      };
-
-      myButton.setHoveringEnabled(!SystemInfo.isMac);
-      setContent(myButton);
-      setOpaque(false);
-
-      setIcon(getActiveIcon(), getInactiveIcon() == null ? getActiveIcon() : getInactiveIcon(), getActiveHoveredIcon());
-
-      PropertyChangeListener listener = new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-          if (myAlternativeAction == null) return;
-          if ("ancestor".equals(evt.getPropertyName())) {
-            if (evt.getNewValue() == null) {
-              AltStateManager.getInstance().removeListener(ActionButton.this);
-              switchAlternativeAction(false);
-            }
-            else {
-              AltStateManager.getInstance().addListener(ActionButton.this);
-            }
-          }
-        }
-      };
-
-      addPropertyChangeListener(listener);
-    }
-
-    public void updateTooltip() {
-      myButton.setToolTipText(getToolTipTextByAction(myCurrentAction));
-    }
-
-    protected Icon getActiveIcon() {
-      return myActiveIcon;
-    }
-
-    protected Icon getActiveHoveredIcon() {
-      return myActiveIcon;
-    }
-
-    protected Icon getInactiveIcon() {
-      return myInactiveIcon;
-    }
-
-    protected Icon getAlternativeIcon() {
-      return myAlternativeIcon;
-    }
-
-    protected Icon getAlternativeHoveredIcon() {
-      return myAlternativeIcon;
-    }
-
-    private void switchAlternativeAction(boolean b) {
-      if (b && myCurrentAction == myAlternativeAction) return;
-      if (!b && myCurrentAction != myAlternativeAction) return;
-
-      setIcon(b ? getAlternativeIcon() : getActiveIcon(),
-              b ? getAlternativeIcon() : getInactiveIcon() == null ? getActiveIcon() : getInactiveIcon(),
-              b ? getAlternativeHoveredIcon() : getActiveHoveredIcon());
-      myCurrentAction = b ? myAlternativeAction : myAction;
-
-      setToolTipText(getToolTipTextByAction(myCurrentAction));
-
-      repaint();
-    }
-
-    public ActionButton(AnAction action, @Nonnull Icon activeIcon, Icon inactiveIcon) {
-      this(action, null, activeIcon, inactiveIcon, null);
-    }
-
-    public ActionButton(AnAction action, Icon activeIcon) {
-      this(action, activeIcon, activeIcon);
-    }
-
-    @Override
-    @RequiredDispatchThread
-    public void actionPerformed(final ActionEvent e) {
-      AnAction action =
-              myAlternativeAction != null && BitUtil.isSet(e.getModifiers(), InputEvent.ALT_MASK) ? myAlternativeAction : myAction;
-      final DataContext dataContext = DataManager.getInstance().getDataContext(this);
-      final ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-      InputEvent inputEvent = e.getSource() instanceof InputEvent ? (InputEvent) e.getSource() : null;
-      final AnActionEvent event =
-              new AnActionEvent(inputEvent, dataContext, ActionPlaces.TOOLWINDOW_TITLE, action.getTemplatePresentation(),
-                                ActionManager.getInstance(),
-                                0);
-      actionManager.fireBeforeActionPerformed(action, dataContext, event);
-      final Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
-      if (component != null && !component.isShowing()) {
-        return;
-      }
-
-      action.actionPerformed(event);
-    }
-
-    public boolean isActive() {
-      return DesktopToolWindowHeader.this.isActive();
-    }
-
-    public void setIcon(final Icon active, Icon inactive, Icon hovered) {
-      myButton.setIcons(active, inactive, hovered);
-    }
-
-    @Override
-    public void setToolTipText(final String text) {
-      myButton.setToolTipText(text);
-    }
-
-    @Override
-    public void altPressed() {
-      PointerInfo info = MouseInfo.getPointerInfo();
-      if (info != null) {
-        Point p = info.getLocation();
-        SwingUtilities.convertPointFromScreen(p, this);
-        switchAlternativeAction(myButton.getBounds().contains(p));
-      }
-    }
-
-    @Override
-    public void altReleased() {
-      switchAlternativeAction(false);
-    }
-  }
-
-  private static String getToolTipTextByAction(AnAction action) {
-    String text = KeymapUtil.createTooltipText(action.getTemplatePresentation().getText(), action);
-
-    if (action instanceof HideAction) {
-      text += String.format(" (Click with %s to Hide Side)", KeymapUtil.getShortcutText(KeyboardShortcut.fromString("pressed ALT")));
-    }
-
-    return text;
-  }
-
-  private abstract class HideSideAction extends AnAction implements DumbAware {
-    @NonNls public static final String HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID = DesktopToolWindowHeader.HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID;
-
-    public HideSideAction() {
-      copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID));
-      getTemplatePresentation().setText(UIBundle.message("tool.window.hideSide.action.name"));
-    }
-
-    @RequiredDispatchThread
-    @Override
-    public abstract void actionPerformed(@Nonnull final AnActionEvent e);
-
-    @RequiredDispatchThread
-    @Override
-    public final void update(@Nonnull final AnActionEvent event) {
-      final Presentation presentation = event.getPresentation();
-      presentation.setEnabled(myInfo.isVisible());
-    }
-  }
-
-  private abstract class HideAction extends AnAction implements DumbAware {
-    @NonNls public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = DesktopToolWindowHeader.HIDE_ACTIVE_WINDOW_ACTION_ID;
-
-    public HideAction() {
-      copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_WINDOW_ACTION_ID));
-      getTemplatePresentation().setText(UIBundle.message("tool.window.hide.action.name"));
-    }
-
-    @RequiredDispatchThread
-    @Override
-    public final void update(@Nonnull final AnActionEvent event) {
-      final Presentation presentation = event.getPresentation();
-      presentation.setEnabled(myInfo.isVisible());
-    }
+    return new Dimension(size.width, TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2);
   }
 }

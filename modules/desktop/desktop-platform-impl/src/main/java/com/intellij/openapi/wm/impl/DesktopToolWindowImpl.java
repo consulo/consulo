@@ -30,6 +30,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowBase;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
@@ -49,13 +50,13 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     }
   };
 
-  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, boolean canCloseContent, @javax.annotation.Nullable JComponent component) {
+  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, boolean canCloseContent, @Nullable JComponent component) {
     super(toolWindowManager, id, canCloseContent, component);
   }
 
   @RequiredUIAccess
   @Override
-  protected void init(boolean canCloseContent, @javax.annotation.Nullable Object component) {
+  protected void init(boolean canCloseContent, @Nullable Object component) {
     final ContentFactory contentFactory = ContentFactory.getInstance();
     myContentUI = new DesktopToolWindowContentUi(this);
     ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
@@ -111,7 +112,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     return myAvailable && myComponent != null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public final JComponent getComponent() {
     return myComponent;

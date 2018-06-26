@@ -16,8 +16,9 @@
 package consulo.ui.laf;
 
 import com.intellij.util.NotNullProducer;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
@@ -29,28 +30,42 @@ import java.awt.image.ColorModel;
  * @since 17-Jun-17
  */
 public class MorphColor extends Color {
-  public static Color of(@Nonnull NotNullProducer<Color> func) {
-    Color color = func.produce();
-    return new MorphColor(color, func);
-  }
-
   private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
 
+  @Nonnull
+  public static Color of(@Nonnull NotNullProducer<Color> func) {
+    Color color = func.produce();
+    return new MorphColor(color, ourTracker, func);
+  }
+
+  @Nonnull
+  public static Color ofWithoutCache(@Nonnull NotNullProducer<Color> func) {
+    Color color = func.produce();
+    return new MorphColor(color, null, func);
+  }
+
+  @Nullable
+  private UIModificationTracker myModificationTracker;
   @Nonnull
   private final NotNullProducer<Color> myColorProducer;
   private long myLastModificationCount;
 
   private Color myLastComputedColor;
 
-  private MorphColor(Color color, @Nonnull NotNullProducer<Color> function) {
+  private MorphColor(Color color, @Nullable UIModificationTracker modificationTracker, @Nonnull NotNullProducer<Color> function) {
     super(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     myLastComputedColor = color;
+    myModificationTracker = modificationTracker;
     myColorProducer = function;
-    myLastModificationCount = ourTracker.getModificationCount();
+    myLastModificationCount = modificationTracker == null ? -1 : ourTracker.getModificationCount();
   }
 
+  @Nonnull
   private Color getColor() {
-    long modificationCount = ourTracker.getModificationCount();
+    if (myModificationTracker == null) {
+      return myColorProducer.produce();
+    }
+    long modificationCount = myModificationTracker.getModificationCount();
     if (myLastModificationCount == modificationCount) {
       return myLastComputedColor;
     }

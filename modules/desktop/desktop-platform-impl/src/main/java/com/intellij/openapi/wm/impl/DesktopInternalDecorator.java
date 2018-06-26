@@ -97,25 +97,10 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     setFocusable(false);
     setFocusTraversalPolicy(new LayoutFocusTraversalPolicy());
 
-    myHeader = new DesktopToolWindowHeader(toolWindow, info, () -> createPopupGroup(true)) {
-      @Override
-      protected boolean isActive() {
-        return myToolWindow.isActive();
-      }
-
+    myHeader = new DesktopToolWindowHeader(toolWindow, () -> createPopupGroup(true)) {
       @Override
       protected void hideToolWindow() {
         fireHidden();
-      }
-
-      @Override
-      protected void toolWindowTypeChanged(@Nonnull ToolWindowType type) {
-        fireTypeChanged(type);
-      }
-
-      @Override
-      protected void sideHidden() {
-        fireHiddenSide();
       }
     };
 
