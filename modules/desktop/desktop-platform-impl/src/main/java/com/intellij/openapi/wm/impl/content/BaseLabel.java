@@ -50,17 +50,11 @@ public class BaseLabel extends JLabel {
   @Override
   public Font getFont() {
     Font f = UIUtil.getLabelFont();
-    f = f.deriveFont(f.getStyle(), Math.max(11, f.getSize() - 2));
     if (myBold) {
       f = f.deriveFont(Font.BOLD);
     }
 
     return f;
-  }
-
-  public static Font getLabelFont() {
-    Font f = UIUtil.getLabelFont();
-    return f.deriveFont(f.getStyle(), Math.max(11, f.getSize() - 2));
   }
 
   public void setActiveFg(final Color fg) {

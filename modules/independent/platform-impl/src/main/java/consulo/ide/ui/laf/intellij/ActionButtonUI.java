@@ -16,6 +16,7 @@
 package consulo.ide.ui.laf.intellij;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
@@ -84,7 +85,7 @@ public class ActionButtonUI extends ComponentUI {
 
     icon.paintIcon(null, g, iconRect.x, iconRect.y);
 
-    UIUtil.applyRenderingHints(g);
+    UISettings.setupAntialiasing(g);
     g.setColor(c.isButtonEnabled() ? c.getForeground() : UIUtil.getInactiveTextColor());
     SwingUtilities2.drawStringUnderlineCharAt(c, g, text, getMnemonicCharIndex(c, action, text), textRect.x, textRect.y + fm.getAscent());
   }

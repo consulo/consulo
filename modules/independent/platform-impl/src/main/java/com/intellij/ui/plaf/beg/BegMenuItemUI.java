@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.plaf.beg;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.impl.ActionMenuItem;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.SystemInfo;
@@ -32,7 +33,6 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
@@ -87,7 +87,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
 
   @Override
   public void paint(Graphics g, JComponent comp) {
-    UIUtil.applyRenderingHints(g);
+    UISettings.setupAntialiasing(g);
     JMenuItem jmenuitem = (JMenuItem)comp;
     ButtonModel buttonmodel = jmenuitem.getModel();
     int mnemonicIndex = jmenuitem.getDisplayedMnemonicIndex();

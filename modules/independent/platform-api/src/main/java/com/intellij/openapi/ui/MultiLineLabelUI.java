@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.ui;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
@@ -323,7 +323,7 @@ public class MultiLineLabelUI extends BasicLabelUI {
   }
 
   protected void drawString(Graphics g, String s, int accChar, int textX, int textY) {
-    UIUtil.applyRenderingHints(g);
+    UISettings.setupAntialiasing(g);
     if (s.indexOf('\n') == -1)
       BasicGraphicsUtils.drawString(g, s, accChar, textX, textY);
     else {

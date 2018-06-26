@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.ui.laf.modern;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.ui.plaf.beg.BegResources;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
@@ -60,7 +61,7 @@ public class ModernMenuUI extends BasicMenuUI {
 
   @Override
   public void paint(Graphics g, JComponent comp) {
-    UIUtil.applyRenderingHints(g);
+    UISettings.setupAntialiasing(g);
     JMenu jMenu = (JMenu)comp;
     ButtonModel buttonmodel = jMenu.getModel();
     int mnemonicIndex = jMenu.getDisplayedMnemonicIndex();
