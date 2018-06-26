@@ -51,10 +51,9 @@ import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
@@ -214,11 +213,6 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
       @Override
       public String toString() {
         return getTitle() + " " + super.toString();
-      }
-
-      @Override
-      public DefaultMutableTreeNode getSelectedNode() {
-        return PackageViewPane.this.getSelectedNode();
       }
     };
   }

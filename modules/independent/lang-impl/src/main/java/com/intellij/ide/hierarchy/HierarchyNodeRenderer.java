@@ -17,6 +17,7 @@
 package com.intellij.ide.hierarchy;
 
 import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ public final class HierarchyNodeRenderer extends NodeRenderer {
     setOpaque(false);
   }
 
+  @RequiredDispatchThread
   @Override
   public void customizeCellRenderer(final JTree tree, final Object value, final boolean selected, final boolean expanded, final boolean leaf,
                                     final int row, final boolean hasFocus) {

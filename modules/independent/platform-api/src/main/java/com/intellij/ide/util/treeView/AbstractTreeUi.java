@@ -44,9 +44,9 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
@@ -71,12 +71,16 @@ public class AbstractTreeUi {
   private final Comparator<TreeNode> myNodeComparator = new Comparator<TreeNode>() {
     @Override
     public int compare(TreeNode n1, TreeNode n2) {
-      if (isLoadingNode(n1) || isLoadingNode(n2)) return 0;
+      if (isLoadingNode(n1) && isLoadingNode(n2)) return 0;
+      if (isLoadingNode(n1)) return -1;
+      if (isLoadingNode(n2)) return 1;
 
       NodeDescriptor nodeDescriptor1 = getDescriptorFrom(n1);
       NodeDescriptor nodeDescriptor2 = getDescriptorFrom(n2);
 
-      if (nodeDescriptor1 == null || nodeDescriptor2 == null) return 0;
+      if (nodeDescriptor1 == null && nodeDescriptor2 == null) return 0;
+      if (nodeDescriptor1 == null) return -1;
+      if (nodeDescriptor2 == null) return 1;
 
       return myNodeDescriptorComparator != null ? myNodeDescriptorComparator.compare(nodeDescriptor1, nodeDescriptor2) : nodeDescriptor1.getIndex() - nodeDescriptor2.getIndex();
     }
@@ -975,7 +979,7 @@ public class AbstractTreeUi {
       Object eachParent = element;
       boolean updateStructureOfElement = updateStructure;
       while (eachParent != null) {
-        DefaultMutableTreeNode node = getNodeForElement(eachParent, false);
+        DefaultMutableTreeNode node = getFirstNode(element);
         if (node != null) {
           addSubtreeToUpdate(node, updateStructureOfElement);
           break;
@@ -1061,7 +1065,7 @@ public class AbstractTreeUi {
           final NodeDescriptor descriptor = getDescriptorFrom(path.getLastPathComponent());
           if (descriptor != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-            maybeYeild((AsyncRunnable)() -> (AsyncResult<?>)update(descriptor, false).doWhenDone(new TreeRunnable("AbstractTreeUi.updateRow: inner") {
+            maybeYield((AsyncRunnable)() -> (AsyncResult<?>)update(descriptor, false).doWhenDone(new TreeRunnable("AbstractTreeUi.updateRow: inner") {
               @Override
               public void perform() {
                 updateRow(row + 1, pass);
@@ -1512,7 +1516,7 @@ public class AbstractTreeUi {
                   removeLoading(node1, false);
                 }
                 else {
-                  maybeYeild((AsyncRunnable)() -> {
+                  maybeYield((AsyncRunnable)() -> {
                     expand(element, null);
                     return AsyncResult.done(null);
                   }, pass, node1);
@@ -1624,7 +1628,7 @@ public class AbstractTreeUi {
                                               final boolean wasExpaned,
                                               @Nullable final LoadedChildren preloaded) {
     final List<TreeNode> childNodes = TreeUtil.listChildren(node);
-    return maybeYeild((AsyncRunnable)() -> {
+    return maybeYield((AsyncRunnable)() -> {
       if (pass.isExpired()) return AsyncResult.rejected();
       if (childNodes.isEmpty()) return AsyncResult.done(null);
 
@@ -1638,7 +1642,7 @@ public class AbstractTreeUi {
 
         final boolean childForceUpdate = isChildNodeForceUpdate(eachChild, forceUpdate, wasExpaned);
 
-        asyncResults.add(maybeYeild((AsyncRunnable)() -> {
+        asyncResults.add(maybeYield((AsyncRunnable)() -> {
           NodeDescriptor descriptor = preloaded != null ? preloaded.getDescriptor(getElementFor(eachChild)) : null;
           NodeDescriptor descriptorFromNode = getDescriptorFrom(eachChild);
           if (isValid(descriptor)) {
@@ -1678,7 +1682,7 @@ public class AbstractTreeUi {
   }
 
   @Nonnull
-  private AsyncResult<?> maybeYeild(@Nonnull final AsyncRunnable processRunnable, @Nonnull final TreeUpdatePass pass, final DefaultMutableTreeNode node) {
+  private AsyncResult<?> maybeYield(@Nonnull final AsyncRunnable processRunnable, @Nonnull final TreeUpdatePass pass, final DefaultMutableTreeNode node) {
     if (isRerunNeeded(pass)) {
       getUpdater().requeue(pass);
       return AsyncResult.rejected();
@@ -1700,7 +1704,7 @@ public class AbstractTreeUi {
               @Override
               public void perform() {
                 if (!pass.isExpired()) {
-                  queueUpdate(node);
+                  queueUpdate(getElementFor(node));
                 }
               }
             });
@@ -1708,7 +1712,6 @@ public class AbstractTreeUi {
           }
           else {
             try {
-              //noinspection unchecked
               execute(processRunnable).notify((AsyncResult)result);
             }
             catch (ProcessCanceledException e) {

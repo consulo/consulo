@@ -241,7 +241,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public Color getFileColorFor(Object object) {
-          return ProjectViewTree.getColorForObject(object, myProject, toPsiConverter);
+          return ProjectViewTree.getColorForElement(toPsiConverter.fun(object));
         }
       };
 
@@ -302,7 +302,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public Color getFileColorFor(Object object) {
-          return ProjectViewTree.getColorForObject(object, myProject, toPsiConverter);
+          return ProjectViewTree.getColorForElement(toPsiConverter.fun(object));
         }
       };
     }

@@ -65,6 +65,7 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.vfs.ArchiveFileSystem;
 import javax.annotation.Nonnull;
 
@@ -147,6 +148,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
       }
     });
     myTree.setCellRenderer(new NodeRenderer() {
+      @RequiredDispatchThread
       @Override
       public void customizeCellRenderer(JTree tree,
                                         Object value,

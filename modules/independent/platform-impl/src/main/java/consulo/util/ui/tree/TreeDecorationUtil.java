@@ -39,7 +39,8 @@ public class TreeDecorationUtil {
       ((BasicTreeUI)treeUI).setLeftChildIndent(JBUI.scale(10));
     }
 
-    tree.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
+    Font treeFont = UIUtil.getTreeFont();
+    tree.setFont(treeFont.deriveFont(treeFont.getSize() + JBUI.scale(1f)));
     tree.setBackground(getTreeBackground());
   }
 

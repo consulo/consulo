@@ -33,10 +33,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiDirectory;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultTreeModel;
 
 public class ProjectViewPane extends AbstractProjectViewPSIPane {
@@ -84,11 +82,6 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
       @Override
       public String toString() {
         return getTitle() + " " + super.toString();
-      }
-
-      @Override
-      public DefaultMutableTreeNode getSelectedNode() {
-        return ProjectViewPane.this.getSelectedNode();
       }
     };
   }

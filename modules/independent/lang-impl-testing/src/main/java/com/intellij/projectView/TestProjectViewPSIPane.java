@@ -16,7 +16,6 @@ import com.intellij.openapi.startup.StartupManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
@@ -69,12 +68,7 @@ class TestProjectViewPSIPane extends AbstractProjectViewPSIPane {
 
   @Override
   protected ProjectViewTree createTree(DefaultTreeModel treeModel) {
-    return new ProjectViewTree(myProject, treeModel) {
-      @Override
-      public DefaultMutableTreeNode getSelectedNode() {
-        return null;
-      }
-    };
+    return new ProjectViewTree(myProject, treeModel) {};
   }
 
   @Override

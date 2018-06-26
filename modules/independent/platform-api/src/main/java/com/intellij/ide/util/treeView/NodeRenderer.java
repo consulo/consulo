@@ -26,6 +26,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 
@@ -41,6 +43,9 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
   @RequiredDispatchThread
   @Override
   public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    Font font = UIUtil.getTreeFont();
+    setFont(font.deriveFont(font.getSize() + JBUI.scale(1f)));
+
     Color color = null;
     NodeDescriptor descriptor = null;
     if (value instanceof DefaultMutableTreeNode) {

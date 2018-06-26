@@ -30,6 +30,8 @@ import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.Range;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -361,6 +363,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup {
 
   private class MyRenderer extends SimpleNodeRenderer {
 
+    @RequiredDispatchThread
     @Override
     public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       final boolean shouldPaintSelected = (getTreeStep().isSelectable(value, extractUserObject(value)) && selected) || (getTreeStep().isSelectable(value, extractUserObject(value)) && hasFocus);
