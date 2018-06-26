@@ -15,11 +15,9 @@
  */
 package com.intellij.openapi.wm.impl.commands;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusWatcher;
@@ -146,9 +144,7 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
   @Nonnull
   private AsyncResult<Void> requestFocus(@Nonnull final Component c) {
     final AsyncResult<Void> result = new AsyncResult<>();
-    Disposable disposable = Disposer.newDisposable("requestFocus");
-    final Alarm checkerAlarm = new Alarm(disposable);
-    result.doWhenProcessed(() -> Disposer.dispose(disposable));
+    final Alarm checkerAlarm = new Alarm();
 
     Runnable checker = new Runnable() {
       final long startTime = System.currentTimeMillis();
