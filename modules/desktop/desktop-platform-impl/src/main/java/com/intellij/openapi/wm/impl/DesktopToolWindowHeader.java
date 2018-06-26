@@ -20,7 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
@@ -49,7 +49,7 @@ import java.awt.event.MouseEvent;
  * @author pegov
  */
 public abstract class DesktopToolWindowHeader extends JPanel implements Disposable {
-  private class GearAction extends AnAction {
+  private class GearAction extends DumbAwareAction {
     private NotNullProducer<ActionGroup> myGearProducer;
 
     public GearAction(NotNullProducer<ActionGroup> gearProducer) {
@@ -75,7 +75,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     }
   }
 
-  private class HideAction extends AnAction implements DumbAware {
+  private class HideAction extends DumbAwareAction {
 
     @RequiredDispatchThread
     @Override
