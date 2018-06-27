@@ -3,6 +3,7 @@ package consulo.ui.internal.image.canvas;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.SizedIcon;
 import com.intellij.util.BitUtil;
+import com.intellij.util.ui.JBUI;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;
 import consulo.awt.TargetAWT;
@@ -972,7 +973,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    * Hook for subclassers to implement font caching.
    */
   protected Font createFont(String family, int style, int size) {
-    return new Font(getFontName(family), style, size);
+    return new Font(getFontName(family), style, JBUI.scaleFontSize(size));
   }
 
   /**
