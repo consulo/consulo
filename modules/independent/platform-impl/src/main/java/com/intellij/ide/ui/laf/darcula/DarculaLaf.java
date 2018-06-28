@@ -90,10 +90,8 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
   @Override
   public UIDefaults getDefaults() {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("getDefaults");
-      superMethod.setAccessible(true);
-      final UIDefaults metalDefaults = (UIDefaults)superMethod.invoke(new MetalLookAndFeel());
-      final UIDefaults defaults = (UIDefaults)superMethod.invoke(base);
+      final UIDefaults metalDefaults = new MetalLookAndFeel().getDefaults();
+      final UIDefaults defaults = base.getDefaults();
       if (SystemInfo.isLinux && !Registry.is("darcula.use.native.fonts.on.linux")) {
         Font font = findFont("DejaVu Sans");
         if (font != null) {
