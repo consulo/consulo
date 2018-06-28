@@ -85,15 +85,7 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     Shadow.Bottom_left.paintIcon(component, g, 0, height - bottomLeftHeight);
   }
 
-  private static void drawLine(@Nonnull JComponent component,
-                               @Nonnull Graphics g,
-                               @Nonnull Icon icon,
-                               int fullLength,
-                               int start,
-                               int end,
-                               int step,
-                               int start2,
-                               boolean horizontal) {
+  private static void drawLine(@Nonnull JComponent component, @Nonnull Graphics g, @Nonnull Icon icon, int fullLength, int start, int end, int step, int start2, boolean horizontal) {
     int length = fullLength - start - end;
     int count = length / step;
     int calcLength = step * count;
@@ -113,10 +105,12 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     if (calcLength < length) {
       ImageIcon imageIcon = (ImageIcon)IconLoader.getIconSnapshot(icon);
       if (horizontal) {
-        UIUtil.drawImage(g, imageIcon.getImage(), lastValue, start2, length - calcLength, imageIcon.getIconHeight(), component);
+        UIUtil.drawImage(g, imageIcon.getImage(), new Rectangle(lastValue, start2, length - calcLength, imageIcon.getIconHeight()), new Rectangle(0, 0, length - calcLength, imageIcon.getIconHeight()),
+                         component);
       }
       else {
-        UIUtil.drawImage(g, imageIcon.getImage(), start2, lastValue, imageIcon.getIconWidth(), length - calcLength, component);
+        UIUtil.drawImage(g, imageIcon.getImage(), new Rectangle(start2, lastValue, imageIcon.getIconWidth(), length - calcLength), new Rectangle(0, 0, imageIcon.getIconWidth(), length - calcLength),
+                         component);
       }
     }
   }
@@ -130,10 +124,7 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
   }
 
   @Override
-  public void paintPointingShape(@Nonnull Rectangle bounds,
-                                 @Nonnull Point pointTarget,
-                                 @Nonnull Balloon.Position position,
-                                 @Nonnull Graphics2D g) {
+  public void paintPointingShape(@Nonnull Rectangle bounds, @Nonnull Point pointTarget, @Nonnull Balloon.Position position, @Nonnull Graphics2D g) {
     int x, y, length;
 
     if (position == Balloon.Position.above) {

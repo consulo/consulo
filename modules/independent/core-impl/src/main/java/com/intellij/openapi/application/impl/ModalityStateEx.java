@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,39 +27,43 @@ import java.util.Collections;
 import java.util.List;
 
 public class ModalityStateEx extends ModalityState {
-  private final WeakList myModalEntities = new WeakList();
+  private final WeakList<Object> myModalEntities = new WeakList<>();
 
-  public ModalityStateEx() { } // used by reflection to initialize NON_MODAL
+  @SuppressWarnings("unused")
+  public ModalityStateEx() {
+  } // used by reflection to initialize NON_MODAL
 
-  public ModalityStateEx(@Nonnull Object[] modalEntities) {
+  ModalityStateEx(@Nonnull Object... modalEntities) {
     Collections.addAll(myModalEntities, modalEntities);
   }
 
-  private List<Object> getModalEntities() {
-    ArrayList<Object> result = new ArrayList<Object>();
-    for (Object entity : myModalEntities) {
-      result.add(entity);
-    }
-    return result;
+  List<Object> getModalEntities() {
+    return myModalEntities.toStrongList();
   }
 
   @Nonnull
-  public ModalityState appendProgress(@Nonnull ProgressIndicator progress){
+  public ModalityState appendProgress(@Nonnull ProgressIndicator progress) {
     return appendEntity(progress);
   }
 
   @Nonnull
-  ModalityStateEx appendEntity(@Nonnull Object anEntity){
+  ModalityStateEx appendEntity(@Nonnull Object anEntity) {
     List<Object> modalEntities = getModalEntities();
-    List<Object> list = new ArrayList<Object>(modalEntities.size() + 1);
+    List<Object> list = new ArrayList<>(modalEntities.size() + 1);
     list.addAll(modalEntities);
     list.add(anEntity);
     return new ModalityStateEx(list.toArray());
   }
 
+  void forceModalEntities(List<Object> entities) {
+    myModalEntities.clear();
+    myModalEntities.addAll(entities);
+  }
+
   @Override
-  public boolean dominates(@Nonnull ModalityState anotherState){
+  public boolean dominates(@Nonnull ModalityState anotherState) {
     if (anotherState == ModalityState.any()) return false;
+    if (myModalEntities.isEmpty()) return false;
 
     List<Object> otherEntities = ((ModalityStateEx)anotherState).getModalEntities();
     for (Object entity : getModalEntities()) {
@@ -70,24 +74,7 @@ public class ModalityStateEx extends ModalityState {
 
   @NonNls
   public String toString() {
-    List<Object> modalEntities = getModalEntities();
-    return modalEntities.isEmpty() ? "ModalityState.NON_MODAL" : "ModalityState:" + StringUtil.join(modalEntities, ", ");
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ModalityStateEx)) return false;
-
-    List<Object> entities = getModalEntities();
-    if (entities.isEmpty()) return false; // e.g. NON_MODAL isn't equal to ANY
-
-    return entities.equals(((ModalityStateEx)o).getModalEntities());
-  }
-
-  @Override
-  public int hashCode() {
-    return getModalEntities().hashCode();
+    return this == NON_MODAL ? "ModalityState.NON_MODAL" : "ModalityState:{" + StringUtil.join(getModalEntities(), it -> "[" + it + "]", ", ") + "}";
   }
 
   void removeModality(Object modalEntity) {

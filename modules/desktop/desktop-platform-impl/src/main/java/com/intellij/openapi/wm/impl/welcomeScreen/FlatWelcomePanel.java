@@ -32,7 +32,6 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.PopupFactoryImpl;
-import com.intellij.util.ParameterizedRunnable;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
@@ -43,22 +42,23 @@ import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
-import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
   private FlatWelcomeFrame myFlatWelcomeFrame;
-  public ParameterizedRunnable<List<NotificationType>> myEventListener;
+  public Consumer<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
   @RequiredDispatchThread

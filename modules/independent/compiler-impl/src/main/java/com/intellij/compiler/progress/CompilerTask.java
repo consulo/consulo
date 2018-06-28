@@ -54,6 +54,7 @@ import com.intellij.util.ui.MessageCategory;
 import com.intellij.util.ui.UIUtil;
 import consulo.compiler.impl.CompilerManagerImpl;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Semaphore;
@@ -95,11 +96,6 @@ public class CompilerTask extends Task.Backgroundable {
   }
 
   @Override
-  public String getProcessId() {
-    return "compilation";
-  }
-
-  @Override
   public DumbModeAction getDumbModeAction() {
     return DumbModeAction.WAIT;
   }
@@ -114,7 +110,7 @@ public class CompilerTask extends Task.Backgroundable {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public NotificationInfo getNotificationInfo() {
     return new NotificationInfo(myErrorCount > 0 ? "Compiler (errors)" : "Compiler (success)", "Compilation Finished",
                                 myErrorCount + " Errors, " + myWarningCount + " Warnings", true);

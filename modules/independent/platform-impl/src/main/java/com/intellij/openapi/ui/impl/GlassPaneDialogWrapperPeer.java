@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
-import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.JBInsets;
@@ -59,14 +58,14 @@ import java.lang.ref.WeakReference;
 /**
  * @author spleaner
  */
-public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements FocusTrackbackProvider {
+public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer");
 
-  private DialogWrapper myWrapper;
+  private final DialogWrapper myWrapper;
   private WindowManagerEx myWindowManager;
   private Project myProject;
   private MyDialog myDialog;
-  private boolean myCanBeParent;
+  private final boolean myCanBeParent;
   private String myTitle;
 
   public GlassPaneDialogWrapperPeer(DialogWrapper wrapper, Project project, boolean canBeParent) throws GlasspanePeerUnavailableException {
@@ -124,7 +123,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
 
-    Window owner = parent instanceof Window ? (Window)parent : (Window)SwingUtilities.getAncestorOfClass(Window.class, parent);
+    Window owner = UIUtil.getWindow(parent);
     if (!(owner instanceof Dialog) && !(owner instanceof Frame)) {
       owner = JOptionPane.getRootFrame();
     }
@@ -155,14 +154,6 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     else {
       throw new GlasspanePeerUnavailableException();
     }
-  }
-
-  @Override
-  public FocusTrackback getFocusTrackback() {
-    if (myDialog != null) {
-      return myDialog.getFocusTrackback();
-    }
-    return null;
   }
 
   @Override
@@ -308,19 +299,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
 
     SwingUtilities.convertPointFromScreen(_p, pane);
 
-    final Insets insets = myDialog.getInsets();
-
-    // todo: fix coords to include shadow (border) paddings
-    // todo: reimplement dragging in every client to calculate window position properly
-    int _x = _p.x - insets.left;
-    int _y = _p.y - insets.top;
-
-    final Container container = myDialog.getTransparentPane();
-
-    _x = _x > 0 ? (_x + myDialog.getWidth() < container.getWidth() ? _x : container.getWidth() - myDialog.getWidth()) : 0;
-    _y = _y > 0 ? (_y + myDialog.getHeight() < container.getHeight() ? _y : container.getHeight() - myDialog.getHeight()) : 0;
-
-    myDialog.setLocation(_x, _y);
+    myDialog.setLocation(_p.x, _p.y);
   }
 
   @Override
@@ -383,10 +362,15 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     final StackingPopupDispatcher stackingPopupDispatcher = StackingPopupDispatcher.getInstance();
     stackingPopupDispatcher.hidePersistentPopups();
 
-    Disposer.register(myDialog, stackingPopupDispatcher::restorePersistentPopups);
+    Disposer.register(myDialog, new Disposable() {
+      @Override
+      public void dispose() {
+        stackingPopupDispatcher.restorePersistentPopups();
+      }
+    });
   }
 
-  private static class MyDialog extends JPanel implements Disposable, DialogWrapperDialog, DataProvider, FocusTrackback.Provider {
+  private static class MyDialog extends JPanel implements Disposable, DialogWrapperDialog, DataProvider {
     private final WeakReference<DialogWrapper> myDialogWrapper;
     private final IdeGlassPaneEx myPane;
     private JComponent myContentPane;
@@ -394,7 +378,6 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     private BufferedImage shadow;
     private int shadowWidth;
     private int shadowHeight;
-
     private final JLayeredPane myTransparentPane;
     private JButton myDefaultButton;
     private final Container myWrapperPane;
@@ -408,7 +391,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
                                                 AllIcons.Ide.Shadow.Right.getIconWidth()));
 
       myPane = pane;
-      myDialogWrapper = new WeakReference<DialogWrapper>(wrapper);
+      myDialogWrapper = new WeakReference<>(wrapper);
 //      myProject = new WeakReference<Project>(project);
 
       myRootPane = new MyRootPane(this); // be careful with DialogWrapper.dispose()!
@@ -444,7 +427,8 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
                 if (myCachedSize == null) {
                   myCachedSize = c.getPreferredSize();
                   location = getLocationInCenter(myCachedSize, c.getLocation());
-                } else {
+                }
+                else {
                   location = c.getLocation();
                 }
 
@@ -453,11 +437,12 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
 
                 final DialogWrapper dialogWrapper = myDialogWrapper.get();
                 if (dialogWrapper != null) {
-                  final int width = (int) (_width * dialogWrapper.getHorizontalStretch());
-                  final int height = (int) (_height * dialogWrapper.getVerticalStretch());
-                  c.setBounds((int) location.getX(), (int) location.getY(), width, height);
-                } else {
-                  c.setBounds((int) location.getX(), (int) location.getY(), (int) _width, (int) _height);
+                  final int width = (int)(_width * dialogWrapper.getHorizontalStretch());
+                  final int height = (int)(_height * dialogWrapper.getVerticalStretch());
+                  c.setBounds((int)location.getX(), (int)location.getY(), width, height);
+                }
+                else {
+                  c.setBounds((int)location.getX(), (int)location.getY(), (int)_width, (int)_height);
                 }
               }
             }
@@ -477,10 +462,6 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
       });
 
       return result;
-    }
-
-    public Container getTransparentPane() {
-      return myTransparentPane;
     }
 
     private TransparentLayeredPane getExistingTransparentPane() {
@@ -535,7 +516,9 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
         myTransparentPane.repaint();
 
         if (myPreviouslyFocusedComponent != null) {
-          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myPreviouslyFocusedComponent);
+          IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+            IdeFocusManager.getGlobalInstance().requestFocus(myPreviouslyFocusedComponent, true);
+          });
           myPreviouslyFocusedComponent = null;
         }
 
@@ -572,7 +555,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     }
 
     @Override
-    public void setBounds(int x, int y, final int width, final int height) {
+    public void setBounds(int x, int y, int width, int height) {
       final Container p = myTransparentPane;
       if (p != null) {
         Rectangle bounds = new Rectangle(p.getWidth() - width, p.getHeight() - height);
@@ -651,11 +634,6 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
       super.setSize(rect.width, rect.height);
     }
 
-    @Override
-    public FocusTrackback getFocusTrackback() {
-      return null;
-    }
-
     @Nullable
     private Point getLocationInCenter(Dimension size, @Nullable Point _default) {
       if (myTransparentPane != null) {
@@ -696,6 +674,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
 
     @Override
     public void dispose() {
+      DialogWrapper.cleanupRootPane(this);
       myDialog = null;
     }
 

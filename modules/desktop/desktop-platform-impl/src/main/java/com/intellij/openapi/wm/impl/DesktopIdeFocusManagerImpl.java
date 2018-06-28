@@ -22,10 +22,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.FocusCommand;
-import com.intellij.openapi.wm.FocusRequestor;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +35,7 @@ public class DesktopIdeFocusManagerImpl extends IdeFocusManager {
 
   public DesktopIdeFocusManagerImpl(DesktopToolWindowManagerImpl twManager) {
     myToolWindowManager = twManager;
+    WeakFocusStackManager.getInstance();
   }
 
   @Override

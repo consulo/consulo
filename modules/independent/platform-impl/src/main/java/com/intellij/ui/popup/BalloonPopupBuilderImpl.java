@@ -25,10 +25,9 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -68,7 +67,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   private boolean myDialogMode;
   private String myTitle;
   private Insets myContentInsets = JBUI.insets(2);
-  private boolean myShadow = UIUtil.isUnderDarcula();
+  private boolean myShadow = true;
   private boolean mySmallVariant = false;
 
   private Dimension myPointerSize;

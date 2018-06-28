@@ -414,7 +414,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     final Balloon balloon =
             JBPopupFactory.getInstance().createBalloonBuilder(panel.getProgressPanel()).setFadeoutTime(0).setFillColor(Gray.TRANSPARENT).setShowCallout(false).setBorderColor(Gray.TRANSPARENT)
                     .setBorderInsets(JBUI.emptyInsets()).setAnimationCycle(0).setCloseButtonEnabled(false).setHideOnClickOutside(false).setDisposable(inline).setHideOnFrameResize(false)
-                    .setHideOnKeyOutside(false).setBlockClicksThroughBalloon(true).setHideOnAction(false).createBalloon();
+                    .setHideOnKeyOutside(false).setShadow(false).setBlockClicksThroughBalloon(true).setHideOnAction(false).createBalloon();
     if (balloonLayout != null) {
       class MyListener implements JBPopupListener, Runnable {
         @Override

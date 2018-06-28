@@ -1422,7 +1422,7 @@ public class UIUtil {
   @Deprecated
   @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderNimbusLookAndFeel() {
-    return UIManager.getLookAndFeel().getName().contains("Nimbus");
+    return false;
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})

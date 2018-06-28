@@ -47,53 +47,66 @@ public class BalloonLayoutConfiguration {
   public final int allActionsOffset;
   public final int beforeGearSpace;
 
-  public static final int FixedWidth;
-  public static final int MaxWidth;
+  public static int MaxFullContentWidth() {
+    return JBUI.scale(350);
+  }
 
-  public static final int MaxFullContentWidth = JBUI.scale(350);
-  public static final String MaxFullContentWidthStyle = "width:" + MaxFullContentWidth + "px;";
+  @Nonnull
+  public static String MaxFullContentWidthStyle() {
+    return "width:" + MaxFullContentWidth() + "px;";
+  }
 
-  public static final int MinWidth = JBUI.scale(100);
+  public static int MinWidth() {
+    return JBUI.scale(100);
+  }
 
-  public static final String MaxWidthStyle;
+  private static final int RawWidth;
+  private static final int RawStyleWidth;
 
   static {
     int width;
-    int styleWidth;
 
     if (SystemInfo.isMac) {
       width = 360;
-      styleWidth = 240;
+      RawStyleWidth = 240;
     }
     else if (SystemInfo.isLinux) {
       width = 410;
-      styleWidth = 270;
+      RawStyleWidth = 270;
     }
     else {
       width = 330;
-      styleWidth = 205;
+      RawStyleWidth = 205;
     }
 
     width += AllIcons.Ide.Notification.Shadow.Left.getIconWidth();
     width += AllIcons.Ide.Notification.Shadow.Right.getIconWidth();
 
-    FixedWidth = JBUI.scale(width);
-    MaxWidth = JBUI.scale(width - 60);
-    MaxWidthStyle = "width:" + JBUI.scale(styleWidth) + "px;";
+    RawWidth = width;
   }
 
-  public static final int NotificationSpace = JBUI.scale(10);
+  public static int FixedWidth() {
+    return JBUI.scale(RawWidth);
+  }
+
+  public static int MaxWidth() {
+    return JBUI.scale(RawWidth - 60);
+  }
+
+  public static String MaxWidthStyle() {
+    return "width:" + JBUI.scale(RawStyleWidth) + "px;";
+  }
 
   @Nonnull
   public static BalloonLayoutConfiguration create(@Nonnull Notification notification,
                                                   @Nonnull BalloonLayoutData layoutData,
                                                   boolean actions) {
-    boolean title = notification.hasTitle();
-    boolean content = notification.hasContent();
-    if (title && content && actions) {
+    boolean hasTitle = notification.hasTitle();
+    boolean hasContent = notification.hasContent();
+    if (hasTitle && hasContent && actions) {
       return treeLines();
     }
-    if (content && NotificationsManagerImpl.calculateContentHeight(title || actions ? 1 : 2) < layoutData.fullHeight) {
+    if (hasContent && NotificationsManagerImpl.calculateContentHeight(hasTitle || actions ? 1 : 2) < layoutData.fullHeight) {
       return treeLines();
     }
     return twoLines();
