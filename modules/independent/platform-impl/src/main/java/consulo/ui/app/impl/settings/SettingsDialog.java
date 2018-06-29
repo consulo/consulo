@@ -16,19 +16,20 @@
 package consulo.ui.app.impl.settings;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.util.Couple;
 import consulo.ui.*;
-import consulo.ui.app.WindowWrapper;
+import consulo.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.shared.Size;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 25-Oct-17
  */
-public class SettingsDialog extends WindowWrapper {
+public class SettingsDialog extends WholeLeftWindowWrapper {
   private Configurable[] myConfigurables;
 
   public SettingsDialog(Configurable[] configurables) {
@@ -45,7 +46,7 @@ public class SettingsDialog extends WindowWrapper {
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createCenterComponent() {
+  protected Couple<Component> createCompoents() {
     TreeModel<Configurable> configurableTreeModel = new TreeModel<Configurable>() {
       @Override
       public void fetchChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
@@ -90,13 +91,6 @@ public class SettingsDialog extends WindowWrapper {
       }
     });
 
-    SplitLayout splitLayout = SplitLayout.createHorizontal();
-    splitLayout.setProportion(30);
-
-    splitLayout.setFirstComponent(component);
-
-    splitLayout.setSecondComponent(rightPart);
-
-    return splitLayout;
+    return Couple.of(component, rightPart);
   }
 }

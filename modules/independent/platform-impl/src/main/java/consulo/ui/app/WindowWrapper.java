@@ -18,6 +18,10 @@ package consulo.ui.app;
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
+import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.style.ComponentColors;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -59,9 +63,27 @@ public abstract class WindowWrapper {
     if (defaultSize != null) {
       myWindow.setSize(defaultSize);
     }
+
+    Layout rootLayout = buildRootLayout();
+    myWindow.setContent(rootLayout);
+
+    myWindow.show();
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  protected Layout buildRootLayout() {
     DockLayout rootLayout = DockLayout.create();
     rootLayout.center(createCenterComponent());
-    myWindow.setContent(rootLayout);
+    rootLayout.bottom(buildButtonsLayout());
+    return rootLayout;
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  protected Layout buildButtonsLayout() {
+    DockLayout dockLayout = DockLayout.create();
+    dockLayout.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
 
     HorizontalLayout bottomLayout = HorizontalLayout.create();
     Button okButton = Button.create("OK", () -> close());
@@ -69,9 +91,9 @@ public abstract class WindowWrapper {
     Button cancelButton = Button.create("Cancel", () -> close());
     bottomLayout.add(cancelButton);
 
-    rootLayout.bottom(bottomLayout);
+    bottomLayout.addBorders(BorderStyle.EMPTY, null, 5);
 
-    myWindow.show();
+    return dockLayout.right(bottomLayout);
   }
 
   @RequiredUIAccess
