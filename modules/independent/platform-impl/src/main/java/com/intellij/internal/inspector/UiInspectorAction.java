@@ -48,6 +48,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 import net.miginfocom.swing.MigLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -1034,7 +1036,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private static Icon createColorIcon(Color color1, Color color2) {
-    return JBUI.scale(new TwoColorsIcon(11, color1, color2));
+    return TargetAWT.to(ImageEffects.twoColorFilled(11, 11, TargetAWT.from(color1), TargetAWT.from(color2)));
   }
 
 

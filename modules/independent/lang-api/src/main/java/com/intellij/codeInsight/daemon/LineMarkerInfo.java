@@ -27,9 +27,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.Function;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -43,16 +46,39 @@ public class LineMarkerInfo<T extends PsiElement> {
   public RangeHighlighter highlighter;
 
   public final int updatePass;
-  @Nullable private final Function<? super T, String> myTooltipProvider;
+  @Nullable
+  private final Function<? super T, String> myTooltipProvider;
   private AnAction myNavigateAction = new NavigateAction<>(this);
   @Nonnull
   private final GutterIconRenderer.Alignment myIconAlignment;
-  @Nullable private final GutterIconNavigationHandler<T> myNavigationHandler;
+  @Nullable
+  private final GutterIconNavigationHandler<T> myNavigationHandler;
+
+  public LineMarkerInfo(@Nonnull T element,
+                        @Nonnull TextRange range,
+                        @Nonnull Image icon,
+                        int updatePass,
+                        @Nullable Function<? super T, String> tooltipProvider,
+                        @Nullable GutterIconNavigationHandler<T> navHandler,
+                        @Nonnull GutterIconRenderer.Alignment alignment) {
+    this(element, range, TargetAWT.to(icon), updatePass, tooltipProvider, navHandler, alignment);
+  }
+
+  public LineMarkerInfo(@Nonnull T element,
+                        @Nonnull TextRange range,
+                        @Nonnull SwingImageRef icon,
+                        int updatePass,
+                        @Nullable Function<? super T, String> tooltipProvider,
+                        @Nullable GutterIconNavigationHandler<T> navHandler,
+                        @Nonnull GutterIconRenderer.Alignment alignment) {
+    this(element, range, TargetAWT.to(icon), updatePass, tooltipProvider, navHandler, alignment);
+  }
 
   /**
    * Creates a line marker info for the element.
+   *
    * @param element         the element for which the line marker is created.
-   * @param range     the range (relative to beginning of file) with which the marker is associated
+   * @param range           the range (relative to beginning of file) with which the marker is associated
    * @param icon            the icon to show in the gutter for the line marker
    * @param updatePass      the ID of the daemon pass during which the marker should be recalculated
    * @param tooltipProvider the callback to calculate the tooltip for the gutter icon
@@ -62,8 +88,8 @@ public class LineMarkerInfo<T extends PsiElement> {
                         @Nonnull TextRange range,
                         Icon icon,
                         int updatePass,
-                        @javax.annotation.Nullable Function<? super T, String> tooltipProvider,
-                        @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
+                        @Nullable Function<? super T, String> tooltipProvider,
+                        @Nullable GutterIconNavigationHandler<T> navHandler,
                         @Nonnull GutterIconRenderer.Alignment alignment) {
     myIcon = icon;
     myTooltipProvider = tooltipProvider;
@@ -83,7 +109,7 @@ public class LineMarkerInfo<T extends PsiElement> {
                         Icon icon,
                         int updatePass,
                         @Nullable Function<? super T, String> tooltipProvider,
-                        @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
+                        @Nullable GutterIconNavigationHandler<T> navHandler,
                         @Nonnull GutterIconRenderer.Alignment alignment) {
     this(element, new TextRange(startOffset, startOffset), icon, updatePass, tooltipProvider, navHandler, alignment);
   }
@@ -91,22 +117,17 @@ public class LineMarkerInfo<T extends PsiElement> {
   /**
    * @deprecated use {@link LineMarkerInfo#LineMarkerInfo(PsiElement, TextRange, Icon, int, Function, GutterIconNavigationHandler, GutterIconRenderer.Alignment)} instead
    */
-  public LineMarkerInfo(@Nonnull T element,
-                        int startOffset,
-                        Icon icon,
-                        int updatePass,
-                        @javax.annotation.Nullable Function<? super T, String> tooltipProvider,
-                        @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler) {
+  public LineMarkerInfo(@Nonnull T element, int startOffset, Icon icon, int updatePass, @Nullable Function<? super T, String> tooltipProvider, @Nullable GutterIconNavigationHandler<T> navHandler) {
     this(element, startOffset, icon, updatePass, tooltipProvider, navHandler, GutterIconRenderer.Alignment.RIGHT);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public GutterIconRenderer createGutterRenderer() {
     if (myIcon == null) return null;
     return new LineMarkerGutterIconRenderer<>(this);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getLineMarkerTooltip() {
     if (myTooltipProvider == null) return null;
     T element = getElement();
@@ -122,7 +143,7 @@ public class LineMarkerInfo<T extends PsiElement> {
     myNavigateAction = navigateAction;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public GutterIconNavigationHandler<T> getNavigationHandler() {
     return myNavigationHandler;
   }
@@ -171,12 +192,11 @@ public class LineMarkerInfo<T extends PsiElement> {
     }
 
     protected boolean looksTheSameAs(@Nonnull LineMarkerGutterIconRenderer renderer) {
-      return
-              myInfo.getElement() != null &&
-              renderer.myInfo.getElement() != null &&
-              myInfo.getElement() == renderer.myInfo.getElement() &&
-              Comparing.equal(myInfo.myTooltipProvider, renderer.myInfo.myTooltipProvider) &&
-              Comparing.equal(myInfo.myIcon, renderer.myInfo.myIcon);
+      return myInfo.getElement() != null &&
+             renderer.myInfo.getElement() != null &&
+             myInfo.getElement() == renderer.myInfo.getElement() &&
+             Comparing.equal(myInfo.myTooltipProvider, renderer.myInfo.myTooltipProvider) &&
+             Comparing.equal(myInfo.myIcon, renderer.myInfo.myIcon);
     }
 
     @Override
@@ -193,6 +213,6 @@ public class LineMarkerInfo<T extends PsiElement> {
 
   @Override
   public String toString() {
-    return "("+startOffset+","+endOffset+") -> "+elementRef;
+    return "(" + startOffset + "," + endOffset + ") -> " + elementRef;
   }
 }

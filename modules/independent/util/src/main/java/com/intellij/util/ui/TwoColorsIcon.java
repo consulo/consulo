@@ -18,9 +18,10 @@ package com.intellij.util.ui;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -28,6 +29,8 @@ import java.awt.image.BufferedImage;
  * @author Vassiliy Kudryashov
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("See ImageEffects#twoColorFilled()")
 public class TwoColorsIcon extends ColorIcon {
   @Nonnull
   private final Color mySecondColor;

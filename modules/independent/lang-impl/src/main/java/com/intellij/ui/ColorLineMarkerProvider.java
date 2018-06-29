@@ -26,17 +26,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
-import com.intellij.util.ui.ColorIcon;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.TwoColorsIcon;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -45,11 +42,11 @@ import java.util.List;
  */
 public final class ColorLineMarkerProvider implements LineMarkerProvider {
   private static class MyInfo extends MergeableLineMarkerInfo<PsiElement> {
-    private final Color myColor;
+    private final ColorValue myColor;
 
     @RequiredReadAction
-    public MyInfo(@Nonnull final PsiElement element, final Color color, final ElementColorProvider colorProvider) {
-      super(element, element.getTextRange(), new ColorIcon(JBUI.scaleFontSize(12), color), Pass.UPDATE_ALL, FunctionUtil.nullConstant(), new GutterIconNavigationHandler<PsiElement>() {
+    public MyInfo(@Nonnull final PsiElement element, ColorValue color, final ElementColorProvider colorProvider) {
+      super(element, element.getTextRange(), ImageEffects.colorFilled(12, 12, color), Pass.UPDATE_ALL, FunctionUtil.nullConstant(), new GutterIconNavigationHandler<PsiElement>() {
         @Override
         @RequiredDispatchThread
         public void navigate(MouseEvent e, PsiElement elt) {
@@ -58,7 +55,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
           final Editor editor = PsiUtilBase.findEditor(element);
           assert editor != null;
 
-          ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true, c -> {
+          ColorChooser.chooseColor(editor.getComponent(), "Choose Color", TargetAWT.to(color), true, c -> {
             if (c != null) {
               WriteCommandAction.runWriteCommandAction(element.getProject(), () -> colorProvider.setColorTo(element, TargetAWT.from(c)));
             }
@@ -73,10 +70,11 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
       return info instanceof MyInfo;
     }
 
+    @Nonnull
     @Override
-    public Icon getCommonIcon(@Nonnull List<MergeableLineMarkerInfo> infos) {
+    public Image getCommonIcon(@Nonnull List<MergeableLineMarkerInfo> infos) {
       if (infos.size() == 2 && infos.get(0) instanceof MyInfo && infos.get(1) instanceof MyInfo) {
-        return new TwoColorsIcon(JBUI.scale(12), ((MyInfo)infos.get(1)).myColor, ((MyInfo)infos.get(0)).myColor);
+        return ImageEffects.twoColorFilled(12, 12, ((MyInfo)infos.get(1)).myColor, ((MyInfo)infos.get(0)).myColor);
       }
       return AllIcons.Gutter.Colors;
     }
@@ -96,7 +94,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     for (ElementColorProvider colorProvider : myExtensions) {
       final ColorValue color = colorProvider.getColorFrom(element);
       if (color != null) {
-        MyInfo info = new MyInfo(element, TargetAWT.to(color), colorProvider);
+        MyInfo info = new MyInfo(element, color, colorProvider);
         NavigateAction.setNavigateAction(info, "Choose color", null);
         return info;
       }

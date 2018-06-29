@@ -16,6 +16,8 @@
 package com.intellij.util.ui;
 
 import com.intellij.ui.Gray;
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -23,6 +25,8 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("Desktop only")
 public class ColorIcon extends EmptyIcon {
   private final Color myColor;
   private boolean myBorder;
