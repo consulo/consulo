@@ -16,8 +16,10 @@
 
 package com.intellij.codeInsight.lookup;
 
+import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
@@ -25,6 +27,7 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Contract;
@@ -39,7 +42,7 @@ import java.util.Set;
 /**
  * @author peter
  * @see LookupElementDecorator
- * @see com.intellij.codeInsight.completion.PrioritizedLookupElement
+ * @see PrioritizedLookupElement
  */
 public final class LookupElementBuilder extends LookupElement {
   @Nonnull
@@ -59,7 +62,7 @@ public final class LookupElementBuilder extends LookupElement {
   private LookupElementBuilder(@Nonnull String lookupString,
                                @Nonnull Object object,
                                @Nullable InsertHandler<LookupElement> insertHandler,
-                               @javax.annotation.Nullable LookupElementRenderer<LookupElement> renderer,
+                               @Nullable LookupElementRenderer<LookupElement> renderer,
                                @Nullable LookupElementPresentation hardcodedPresentation,
                                @Nonnull Set<String> allLookupStrings,
                                boolean caseSensitive) {
@@ -108,7 +111,7 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   /**
-   * @deprecated use {@link #withInsertHandler(com.intellij.codeInsight.completion.InsertHandler)}
+   * @deprecated use {@link #withInsertHandler(InsertHandler)}
    */
   @Contract(value = "", pure = true)
   public LookupElementBuilder setInsertHandler(@Nullable InsertHandler<LookupElement> insertHandler) {
@@ -116,7 +119,7 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   @Contract(value = "", pure = true)
-  public LookupElementBuilder withInsertHandler(@javax.annotation.Nullable InsertHandler<LookupElement> insertHandler) {
+  public LookupElementBuilder withInsertHandler(@Nullable InsertHandler<LookupElement> insertHandler) {
     return new LookupElementBuilder(myLookupString, myObject, insertHandler, myRenderer, myHardcodedPresentation, myAllLookupStrings, myCaseSensitive);
   }
 
@@ -140,10 +143,10 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   /**
-   * @deprecated use {@link #withIcon(javax.swing.Icon)}
+   * @deprecated use {@link #withIcon(Icon)}
    */
   @Contract(value = "", pure = true)
-  public LookupElementBuilder setIcon(@javax.annotation.Nullable Icon icon) {
+  public LookupElementBuilder setIcon(@Nullable Icon icon) {
     return withIcon(icon);
   }
 
@@ -154,7 +157,7 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   @Contract(value = "", pure = true)
-  public LookupElementBuilder withIcon(@Nullable consulo.ui.image.Image icon) {
+  public LookupElementBuilder withIcon(@Nullable Image icon) {
     return withIcon(TargetAWT.to(icon));
   }
 
@@ -208,7 +211,7 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @param caseSensitive if this lookup item should be completed in the same letter case as prefix
    * @return modified builder
-   * @see com.intellij.codeInsight.completion.CompletionResultSet#caseInsensitive()
+   * @see CompletionResultSet#caseInsensitive()
    */
   @Contract(value = "", pure = true)
   public LookupElementBuilder withCaseSensitivity(boolean caseSensitive) {
@@ -216,7 +219,7 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   /**
-   * @deprecated use {@link #withItemTextForeground(java.awt.Color)}
+   * @deprecated use {@link #withItemTextForeground(Color)}
    */
   @Contract(value = "", pure = true)
   public LookupElementBuilder setItemTextForeground(@Nonnull Color itemTextForeground) {
