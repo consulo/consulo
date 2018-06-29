@@ -76,10 +76,6 @@
     <applicationService serviceInterface="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"
                         serviceImplementation="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
 
-
-    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
-                        serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
-
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
                         serviceImplementation="consulo.start.DesktopWelcomeFrameManager"/>
 
@@ -103,5 +99,12 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"/>
+
+    <fileChooseDialogProvider implementation="consulo.fileChooser.impl.system.WindowsFileChooseDialogProvider"/>
+    <fileChooseDialogProvider implementation="consulo.fileChooser.impl.system.MacFileChooseDialogProvider"/>
+    <fileChooseDialogProvider implementation="consulo.fileChooser.impl.DesktopFileChooseDialogProvider" order="last"/>
+
+    <fileSaveDialogProvider implementation="consulo.fileChooser.impl.system.MacFileSaveDialogProvider"/>
+    <fileSaveDialogProvider implementation="consulo.fileChooser.impl.DesktopFileSaveDialogProvider" order="last"/>
   </extensions>
 </idea-plugin>

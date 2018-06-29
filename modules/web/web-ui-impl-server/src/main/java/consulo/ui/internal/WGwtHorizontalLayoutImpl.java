@@ -35,6 +35,9 @@ import java.util.List;
 public class WGwtHorizontalLayoutImpl extends AbstractComponentContainer implements HorizontalLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
 
+  public WGwtHorizontalLayoutImpl(int gapInPixesl) {
+  }
+
   @Override
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);

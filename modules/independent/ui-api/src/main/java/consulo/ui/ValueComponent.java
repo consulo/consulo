@@ -20,6 +20,7 @@ import com.intellij.openapi.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EventListener;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -54,6 +55,11 @@ public interface ValueComponent<V> extends Component {
 
   @Nullable
   V getValue();
+
+  @Nonnull
+  default V getValueOrError() {
+    return Objects.requireNonNull(getValue(), "value required");
+  }
 
   @RequiredUIAccess
   default void setValue(V value) {

@@ -30,7 +30,9 @@ public interface FileChooserDialog {
    */
   @Deprecated
   @Nonnull
-  VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable Project project);
+  default VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable Project project) {
+    return toSelect == null ? choose(project) : choose(project, toSelect);
+  }
 
   /**
    * Choose one or more files

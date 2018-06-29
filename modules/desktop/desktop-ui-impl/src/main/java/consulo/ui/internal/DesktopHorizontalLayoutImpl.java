@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
@@ -28,8 +29,8 @@ import javax.swing.*;
  * @since 12-Jun-16
  */
 public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLayout, SwingWrapper {
-  public DesktopHorizontalLayoutImpl() {
-    super(new com.intellij.ui.components.panels.HorizontalLayout(0));
+  public DesktopHorizontalLayoutImpl(int gapInPixesl) {
+    super(new com.intellij.ui.components.panels.HorizontalLayout(JBUI.scale(gapInPixesl)));
   }
 
   @RequiredUIAccess

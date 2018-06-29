@@ -1172,6 +1172,9 @@
     <extensionPoint name="remote.credentialsType" interface="com.intellij.remote.ext.CredentialsTypeEx"/>
     <extensionPoint name="remote.credentialsLanguageContribution"
                     interface="com.intellij.remote.ext.CredentialsLanguageContribution"/>
+
+    <extensionPoint name="fileChooseDialogProvider" interface="consulo.ui.fileOperateDialog.FileChooseDialogProvider" />
+    <extensionPoint name="fileSaveDialogProvider" interface="consulo.ui.fileOperateDialog.FileSaveDialogProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1339,6 +1342,12 @@
                         serviceImplementation="consulo.ide.webService.WebServicesConfiguration"/>
 
     <applicationService serviceImplementation="consulo.auth.ServiceAuthConfiguration"/>
+
+
+    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
+                        serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
+
+    <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings" />
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>

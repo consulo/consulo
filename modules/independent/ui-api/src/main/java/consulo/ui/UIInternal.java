@@ -62,7 +62,7 @@ public abstract class UIInternal {
 
   abstract TableLayout _Layouts_table(StaticPosition fillOption);
 
-  abstract HorizontalLayout _Layouts_horizontal();
+  abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
 
   abstract Label _Components_label(String text);
 

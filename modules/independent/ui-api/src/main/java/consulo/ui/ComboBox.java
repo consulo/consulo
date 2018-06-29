@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -44,6 +45,20 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
     public Builder<K> add(K key, String value) {
       myValues.put(key, value);
+      return this;
+    }
+
+    public Builder<K> add(K[] iterable, Function<K, String> map) {
+      for (K k : iterable) {
+        add(k, map.apply(k));
+      }
+      return this;
+    }
+
+    public Builder<K> add(Iterable<? extends K> iterable, Function<K, String> map) {
+      for (K k : iterable) {
+        add(k, map.apply(k));
+      }
       return this;
     }
 
@@ -79,4 +94,13 @@ public interface ComboBox<E> extends ValueComponent<E> {
   void setRender(@Nonnull ListItemRender<E> render);
 
   void setValueByIndex(int index);
+
+  @RequiredUIAccess
+  default void setValueByCondition(@Nonnull Predicate<E> predicate) {
+    for (E e : getListModel()) {
+      if (predicate.test(e)) {
+        setValue(e);
+      }
+    }
+  }
 }

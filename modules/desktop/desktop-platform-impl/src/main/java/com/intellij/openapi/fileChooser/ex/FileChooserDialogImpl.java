@@ -142,16 +142,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     return myChosenFiles;
   }
 
-
-  @Nonnull
-  @Override
-  public VirtualFile[] choose(@javax.annotation.Nullable final VirtualFile toSelect, @Nullable final Project project) {
-    if (toSelect == null) {
-      return choose(project);
-    }
-    return choose(project, toSelect);
-  }
-
   @Override
   public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     init();

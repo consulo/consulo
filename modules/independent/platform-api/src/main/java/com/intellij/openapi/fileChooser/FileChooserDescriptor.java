@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.image.Image;
@@ -56,7 +57,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private boolean myTreeRootVisible = false;
   private boolean myShowHiddenFiles = false;
   private Condition<VirtualFile> myFileFilter = null;
-  private boolean myForcedToUseIdeaFileChooser = false;
+  private String myForceOperateDialogProviderId = null;
 
   /**
    * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.
@@ -322,12 +323,22 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return !file.isDirectory() && myChooseFiles;
   }
 
-  public boolean isForcedToUseIdeaFileChooser() {
-    return myForcedToUseIdeaFileChooser;
+  @Nullable
+  public String getForceOperateDialogProviderId() {
+    return myForceOperateDialogProviderId;
   }
 
+  public void setForceOperateDialogProviderId(@Nullable String forceOperateDialogProviderId) {
+    myForceOperateDialogProviderId = forceOperateDialogProviderId;
+  }
+
+  public void setUseApplicationDialog() {
+    myForceOperateDialogProviderId = FileOperateDialogProvider.APPLICATION_ID;
+  }
+
+  @Deprecated
   public void setForcedToUseIdeaFileChooser(boolean forcedToUseIdeaFileChooser) {
-    myForcedToUseIdeaFileChooser = forcedToUseIdeaFileChooser;
+    setForceOperateDialogProviderId(forcedToUseIdeaFileChooser ? FileOperateDialogProvider.APPLICATION_ID : null);
   }
 
   private boolean acceptAsJarFile(VirtualFile file) {

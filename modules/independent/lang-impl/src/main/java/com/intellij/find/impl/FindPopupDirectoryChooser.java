@@ -83,7 +83,7 @@ public class FindPopupDirectoryChooser extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        descriptor.setForcedToUseIdeaFileChooser(true);
+        descriptor.setUseApplicationDialog();
         myFindPopupPanel.getCanClose().set(false);
         FileChooser.chooseFiles(descriptor, myProject, myFindPopupPanel, null,
                                 new FileChooser.FileChooserConsumer() {

@@ -179,15 +179,9 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
   @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable Project project) {
+  public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelectFiles) {
+    VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
     choose(toSelect, files -> {
     });
-    return virtualFiles;
-  }
-
-  @Nonnull
-  @Override
-  public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
-    return choose(toSelect.length > 0 ? toSelect[0] : null, project);
-  }
+    return virtualFiles;  }
 }

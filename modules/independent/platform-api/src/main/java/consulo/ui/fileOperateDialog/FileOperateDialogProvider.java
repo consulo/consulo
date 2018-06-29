@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.fileOperateDialog;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2018-06-28
  */
-public interface HorizontalLayout extends Layout {
-  @Nonnull
-  static HorizontalLayout create() {
-    return create(0);
-  }
+public interface FileOperateDialogProvider {
+  String APPLICATION_ID = "application";
 
   @Nonnull
-  static HorizontalLayout create(int gapInPixesl) {
-    return UIInternal.get()._Layouts_horizontal(gapInPixesl);
-  }
+  String getId();
 
   @Nonnull
-  @RequiredUIAccess
-  default HorizontalLayout add(@Nonnull PseudoComponent component) {
-    return add(component.getComponent());
-  }
+  String getName();
 
-  @Nonnull
-  @RequiredUIAccess
-  HorizontalLayout add(@Nonnull Component component);
+  default boolean isAvaliable() {
+    return true;
+  }
 }

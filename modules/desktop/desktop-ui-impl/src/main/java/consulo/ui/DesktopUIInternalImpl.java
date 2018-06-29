@@ -220,8 +220,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  HorizontalLayout _Layouts_horizontal() {
-    return new DesktopHorizontalLayoutImpl();
+  HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
+    return new DesktopHorizontalLayoutImpl(gapInPixesl);
   }
 
   @Override

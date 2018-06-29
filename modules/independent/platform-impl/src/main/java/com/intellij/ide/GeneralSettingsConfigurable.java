@@ -18,10 +18,19 @@ package com.intellij.ide;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
+import com.intellij.util.ObjectUtil;
+import consulo.fileChooser.FileOperateDialogSettings;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
+import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
+import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
+import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSettingsConfigurable.MyComponent> implements SearchableConfigurable {
 
@@ -44,6 +53,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     private RadioButton myTerminateProcessRadioButton;
     private RadioButton myDisconnectRadioButton;
     private RadioButton myAskRadioButton;
+
+    private ComboBox<FileOperateDialogProvider> myFileChooseDialogBox;
+    private ComboBox<FileOperateDialogProvider> myFileSaveDialogBox;
 
     private VerticalLayout myRootLayout;
 
@@ -89,6 +101,28 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       processLayout.add(myAskRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.ask")).toGroup(processGroup));
 
       myRootLayout.add(LabeledLayout.create(IdeBundle.message("group.settings.process.tab.close"), processLayout));
+
+      HorizontalLayout fileDialogsLayout = HorizontalLayout.create(10);
+
+      ComboBox.Builder<FileOperateDialogProvider> fileChooseDialogBox = ComboBox.<FileOperateDialogProvider>builder();
+      for (FileChooseDialogProvider fileChooseDialogProvider : FileChooseDialogProvider.EP_NAME.getExtensions()) {
+        if (fileChooseDialogProvider.isAvaliable()) {
+          fileChooseDialogBox.add(fileChooseDialogProvider, fileChooseDialogProvider.getName());
+        }
+      }
+
+      fileDialogsLayout.add(LabeledComponents.left("File/Path Choose Dialog Type", myFileChooseDialogBox = fileChooseDialogBox.build()));
+
+      ComboBox.Builder<FileOperateDialogProvider> fileSaveDialogBox = ComboBox.<FileOperateDialogProvider>builder();
+      for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensions()) {
+        if (fileSaveDialogProvider.isAvaliable()) {
+          fileSaveDialogBox.add(fileSaveDialogProvider, fileSaveDialogProvider.getName());
+        }
+      }
+
+      fileDialogsLayout.add(LabeledComponents.left("File Save Dialog Type", myFileSaveDialogBox = fileSaveDialogBox.build()));
+
+      myRootLayout.add(LabeledLayout.create("File Dialogs", fileDialogsLayout));
     }
 
     @Nonnull
@@ -119,6 +153,10 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     isModified |= settings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
     isModified |= settings.getConfirmOpenNewProject() != getConfirmOpenNewProject(component);
 
+    FileOperateDialogSettings dialogSettings = FileOperateDialogSettings.getInstance();
+    isModified |= isModified(dialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
+    isModified |= isModified(dialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
+
     int inactiveTimeout = -1;
     try {
       inactiveTimeout = Integer.parseInt(component.myTfInactiveTimeout.getValue());
@@ -130,6 +168,16 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     isModified |= settings.isUseSafeWrite() != component.myChkUseSafeWrite.getValue();
 
     return isModified;
+  }
+
+  private boolean isModified(@Nullable String id, ComboBox<FileOperateDialogProvider> comboBox) {
+    FileOperateDialogProvider value = comboBox.getValueOrError();
+
+    if (id == null && FileOperateDialogProvider.APPLICATION_ID.equals(value.getId())) {
+      return false;
+    }
+
+    return !Objects.equals(id, value.getId());
   }
 
   @RequiredUIAccess
@@ -155,6 +203,23 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     catch (NumberFormatException ignored) {
     }
     settings.setUseSafeWrite(component.myChkUseSafeWrite.getValue());
+
+    FileOperateDialogSettings dialogSettings = FileOperateDialogSettings.getInstance();
+
+    apply(component.myFileChooseDialogBox, dialogSettings::setFileChooseDialogId);
+    apply(component.myFileSaveDialogBox, dialogSettings::setFileSaveDialogId);
+  }
+
+  private void apply(ComboBox<FileOperateDialogProvider> comboBox, Consumer<String> func) {
+    FileOperateDialogProvider value = comboBox.getValueOrError();
+
+    String id = value.getId();
+    if (FileOperateDialogProvider.APPLICATION_ID.equals(id)) {
+      func.accept(null);
+      return;
+    }
+
+    func.accept(id);
   }
 
   @RequiredUIAccess
@@ -192,6 +257,18 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         component.myOpenProjectInSameWindow.setValue(true);
         break;
     }
+
+    FileOperateDialogSettings dialogSettings = FileOperateDialogSettings.getInstance();
+
+    reset(component.myFileChooseDialogBox, dialogSettings::getFileChooseDialogId);
+    reset(component.myFileSaveDialogBox, dialogSettings::getFileSaveDialogId);
+  }
+
+  @RequiredUIAccess
+  private void reset(ComboBox<FileOperateDialogProvider> comboBox, Supplier<String> idGetter) {
+    String id = ObjectUtil.notNull(idGetter.get(), FileOperateDialogProvider.APPLICATION_ID);
+
+    comboBox.setValueByCondition(it -> it.getId().equals(id));
   }
 
   private static int getConfirmOpenNewProject(MyComponent component) {

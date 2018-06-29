@@ -55,9 +55,6 @@
   </project-components>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
-                        serviceImplementation="consulo.web.fileChooser.WebFileChooserFactory"/>
-
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
                         serviceImplementation="consulo.web.start.WebWelcomeFrameManager"/>
 
@@ -75,5 +72,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="consulo.vfs.newvfs.NewRefreshQueueImpl"/>
+
+    <fileChooseDialogProvider implementation="consulo.web.fileChooser.impl.WebFileChooseDialogProvider" order="last"/>
   </extensions>
 </idea-plugin>

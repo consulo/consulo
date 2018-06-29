@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileChooser;
+package consulo.web.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
@@ -24,6 +24,8 @@ import com.intellij.util.Consumer;
 import consulo.ui.*;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.Size;
+import consulo.web.fileChooser.FileTreeComponent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

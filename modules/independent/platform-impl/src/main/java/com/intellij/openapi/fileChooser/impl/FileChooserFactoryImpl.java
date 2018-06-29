@@ -18,75 +18,38 @@ package com.intellij.openapi.fileChooser.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
-import com.intellij.openapi.fileChooser.FileSaverDialog;
-import com.intellij.openapi.fileChooser.FileTextField;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
-import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
-import com.intellij.openapi.fileChooser.ex.FileSaverDialogImpl;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.fileChooser.ex.FileTextFieldImpl;
 import com.intellij.openapi.fileChooser.ex.LocalFsFinder;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.ui.mac.MacFileSaverDialog;
-import com.intellij.ui.mac.MacPathChooserDialog;
-import com.intellij.ui.win.WinPathChooserDialog;
-import com.intellij.util.SystemProperties;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
+import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
+import consulo.fileChooser.FileOperateDialogSettings;
+import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override
   public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    if (useNativeMacChooser(descriptor)) {
-      return new MacPathChooserDialog(descriptor, parent, project);
-    }
-    if (parent != null) {
-      return new FileChooserDialogImpl(descriptor, parent, project);
-    }
-    else {
-      return new FileChooserDialogImpl(descriptor, project);
-    }
+    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.EP_NAME).createFileChooser(descriptor, project, parent);
   }
 
   @Nonnull
   @Override
   public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    if (useNativeMacChooser(descriptor)) {
-      return new MacPathChooserDialog(descriptor, parent, project);
-    }
-    else if (useNativeWinChooser()) {
-      return new WinPathChooserDialog(descriptor, parent, project);
-    }
-    else if (parent != null) {
-      return new FileChooserDialogImpl(descriptor, parent, project);
-    }
-    else {
-      return new FileChooserDialogImpl(descriptor, project);
-    }
-  }
-
-  private static boolean useNativeWinChooser() {
-    return SystemInfo.isWindows && Registry.is("ide.win.file.chooser.native");
-  }
-
-  private static boolean useNativeMacChooser(final FileChooserDescriptor descriptor) {
-    return SystemInfo.isMac &&
-           !descriptor.isForcedToUseIdeaFileChooser() &&
-           SystemProperties.getBooleanProperty("native.mac.file.chooser.enabled", true) &&
-           Registry.is("ide.mac.file.chooser.native") &&
-           SystemInfo.isJetbrainsJvm;
+    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.EP_NAME).createPathChooser(descriptor, project, parent);
   }
 
   @Nonnull
@@ -116,12 +79,44 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override
   public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project) {
-    return (SystemInfo.isMac && Registry.is("ide.mac.native.save.dialog")) ? new MacFileSaverDialog(descriptor, project) : new FileSaverDialogImpl(descriptor, project);
+    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, project, null);
   }
 
   @Nonnull
   @Override
   public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
-    return (SystemInfo.isMac && Registry.is("ide.mac.native.save.dialog")) ? new MacFileSaverDialog(descriptor, parent) : new FileSaverDialogImpl(descriptor, parent);
+    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, null, parent);
+  }
+
+  @Nonnull
+  private static <T extends FileOperateDialogProvider> T findProvider(@Nonnull FileChooserDescriptor fileChooserDescriptor,
+                                                                      @Nonnull Function<FileOperateDialogSettings, String> idFunc,
+                                                                      @Nonnull ExtensionPointName<T> ep) {
+    T[] extensions = ep.getExtensions();
+
+    String forceOperateDialogProviderId = fileChooserDescriptor.getForceOperateDialogProviderId();
+    if (forceOperateDialogProviderId != null) {
+      for (T extension : extensions) {
+        if (forceOperateDialogProviderId.equals(extension.getId()) && extension.isAvaliable()) {
+          return extension;
+        }
+      }
+
+      throw new IllegalArgumentException("Unknown file operate id");
+    }
+
+    FileOperateDialogSettings settings = FileOperateDialogSettings.getInstance();
+
+    String targetId = idFunc.apply(settings);
+
+    if (targetId != null) {
+      for (T extension : extensions) {
+        if (targetId.equals(extension.getId()) && extension.isAvaliable()) {
+          return extension;
+        }
+      }
+    }
+
+    return ObjectUtil.notNull(ContainerUtil.find(extensions, t -> FileOperateDialogProvider.APPLICATION_ID.equals(t.getId())));
   }
 }
