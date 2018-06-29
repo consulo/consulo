@@ -43,11 +43,6 @@ public class DesktopFileChooseDialogProvider implements FileChooseDialogProvider
     return "application";
   }
 
-  @Override
-  public boolean isAvaliable() {
-    return true;
-  }
-
   @Nonnull
   @Override
   public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
