@@ -40,8 +40,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.AccessRule;
+import consulo.ui.laf.MorphColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,7 +67,7 @@ public class LookupCellRenderer implements ListCellRenderer {
   private final FontMetrics myNormalMetrics;
   private final FontMetrics myBoldMetrics;
 
-  public static final Color BACKGROUND_COLOR = new JBColor(() -> (JBColor.isBright() ? new Color(235, 244, 254) : JBColor.background()));
+  public static final Color BACKGROUND_COLOR = MorphColor.of(UIUtil::getPanelBackground);
   public static final Color FOREGROUND_COLOR = JBColor.foreground();
   private static final Color GRAYED_FOREGROUND_COLOR = new JBColor(Gray._160, Gray._110);
   private static final Color SELECTED_BACKGROUND_COLOR = new Color(0, 82, 164);
