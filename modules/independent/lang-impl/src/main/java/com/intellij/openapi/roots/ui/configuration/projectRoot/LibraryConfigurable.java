@@ -27,6 +27,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryPro
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -177,15 +178,8 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
   }
 
   @Override
-  public Icon getIcon(boolean open) {
+  public Image getIcon(boolean open) {
     return LibraryPresentationManager.getInstance().getNamedLibraryIcon(myLibrary, myContext);
-  }
-
-  @Override
-  @Nullable
-  @NonNls
-  public String getHelpTopic() {
-    return "preferences.jdkGlobalLibs";  //todo
   }
 
   public void updateComponent() {

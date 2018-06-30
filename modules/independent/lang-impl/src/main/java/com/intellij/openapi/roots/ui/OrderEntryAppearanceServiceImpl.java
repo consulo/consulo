@@ -34,19 +34,18 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import consulo.awt.TargetAWT;
+import com.intellij.util.io.URLUtil;
 import consulo.bundle.SdkUtil;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
@@ -68,7 +67,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @Override
   public CellAppearanceEx forLibrary(Project project, @Nonnull final Library library, final boolean hasInvalidRoots) {
     final StructureConfigurableContext context = ProjectStructureConfigurable.getInstance(project).getContext();
-    final Icon icon = LibraryPresentationManager.getInstance().getCustomIcon(library, context);
+    final Image icon = LibraryPresentationManager.getInstance().getCustomIcon(library, context);
 
     final String name = library.getName();
     if (name != null) {
@@ -83,7 +82,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       return forVirtualFilePointer(new LightFilePointer(files[0]));
     }
 
-    final String url = StringUtil.trimEnd(files[0], ArchiveFileSystem.ARCHIVE_SEPARATOR);
+    final String url = StringUtil.trimEnd(files[0], URLUtil.ARCHIVE_SEPARATOR);
     return SimpleTextCellAppearance.regular(PathUtil.getFileName(url),  AllIcons.Nodes.PpLib);
   }
 
@@ -97,7 +96,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     String name = jdk.getName();
     CompositeAppearance appearance = new CompositeAppearance();
     SdkType sdkType = (SdkType)jdk.getSdkType();
-    appearance.setIcon(TargetAWT.to(SdkUtil.getIcon(jdk)));
+    appearance.setIcon(SdkUtil.getIcon(jdk));
     SimpleTextAttributes attributes = getTextAttributes(sdkType.sdkHasValidPath(jdk), selected);
     CompositeAppearance.DequeEnd ending = appearance.getEnding();
     ending.addText(name, attributes);
@@ -137,12 +136,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   }
 
   @Nonnull
-  private static Icon sourceFolderIcon(final boolean testSource) {
-    return testSource ? AllIcons.Nodes.TestPackage : AllIcons.Nodes.Package;
-  }
-
-  @Nonnull
-  private static CellAppearanceEx normalOrRedWaved(@Nonnull final String text, @Nullable final Icon icon, final boolean waved) {
+  private static CellAppearanceEx normalOrRedWaved(@Nonnull final String text, @Nullable final Image icon, final boolean waved) {
     return waved ? new SimpleTextCellAppearance(text, icon, new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, null, JBColor.RED))
                  : SimpleTextCellAppearance.regular(text, icon);
   }
@@ -155,7 +149,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   }
 
   @Nonnull
-  private static CellAppearanceEx formatRelativePath(@Nonnull final ContentFolder folder, @Nonnull final consulo.ui.image.Image icon) {
+  private static CellAppearanceEx formatRelativePath(@Nonnull final ContentFolder folder, @Nonnull final Image icon) {
     LightFilePointer folderFile = new LightFilePointer(folder.getUrl());
     VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(folder.getContentEntry().getUrl());
     if (file == null) return FileAppearanceService.getInstance().forInvalidUrl(folderFile.getPresentableUrl());
@@ -175,6 +169,6 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     }
 
     relativePath = StringUtil.isEmpty(relativePath) ? "." + File.separatorChar : relativePath;
-    return new SimpleTextCellAppearance(relativePath, TargetAWT.to(icon), textAttributes);
+    return new SimpleTextCellAppearance(relativePath, icon, textAttributes);
   }
 }

@@ -45,11 +45,12 @@ import com.intellij.packaging.impl.artifacts.PackagingElementPath;
 import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.LibraryElementType;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -75,8 +76,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     return "ArtifactsStructureConfigurable.UI";
   }
 
-  public void init(StructureConfigurableContext context, ModuleStructureConfigurable moduleStructureConfigurable,
-                   ProjectLibrariesConfigurable projectLibrariesConfig) {
+  public void init(StructureConfigurableContext context, ModuleStructureConfigurable moduleStructureConfigurable, ProjectLibrariesConfigurable projectLibrariesConfig) {
     super.init(context);
     myPackagingEditorContext = new ArtifactsStructureConfigurableContextImpl(myContext, myProject, myDefaultSettings, new ArtifactAdapter() {
       @Override
@@ -124,14 +124,12 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   }
 
   private void updateLibraryElements(final Artifact artifact, final Library library, final String oldName, final String newName) {
-    if (ArtifactUtil.processPackagingElements(myPackagingEditorContext.getRootElement(artifact), LibraryElementType.getInstance(),
-                                              new PackagingElementProcessor<LibraryPackagingElement>() {
-                                                @Override
-                                                public boolean process(@Nonnull LibraryPackagingElement element,
-                                                                       @Nonnull PackagingElementPath path) {
-                                                  return !isResolvedToLibrary(element, library, oldName);
-                                                }
-                                              }, myPackagingEditorContext, false, artifact.getArtifactType())) {
+    if (ArtifactUtil.processPackagingElements(myPackagingEditorContext.getRootElement(artifact), LibraryElementType.getInstance(), new PackagingElementProcessor<LibraryPackagingElement>() {
+      @Override
+      public boolean process(@Nonnull LibraryPackagingElement element, @Nonnull PackagingElementPath path) {
+        return !isResolvedToLibrary(element, library, oldName);
+      }
+    }, myPackagingEditorContext, false, artifact.getArtifactType())) {
       return;
     }
     myPackagingEditorContext.editLayout(artifact, new Runnable() {
@@ -159,7 +157,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     if (!element.getLibraryName().equals(name)) {
       return false;
     }
-    
+
     final LibraryTable table = library.getTable();
     if (table != null) {
       return table.getTableLevel().equals(element.getLevel());
@@ -257,7 +255,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
         final ArtifactType[] types = ArtifactType.EP_NAME.getExtensions();
         List<AnAction> list = new ArrayList<AnAction>(types.length);
         for (ArtifactType type : types) {
-          if(type.isAvailableForAdd(myContext.getModulesConfigurator()))  {
+          if (type.isAvailableForAdd(myContext.getModulesConfigurator())) {
             list.add(createAddArtifactAction(type));
           }
         }
@@ -378,9 +376,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     private final ArtifactType myType;
     private final ArtifactTemplate myArtifactTemplate;
 
-    public AddArtifactAction(@Nonnull ArtifactType type, @Nonnull ArtifactTemplate artifactTemplate, final @Nonnull String actionText,
-                             final Icon icon) {
-      super(actionText, null, icon);
+    public AddArtifactAction(@Nonnull ArtifactType type, @Nonnull ArtifactTemplate artifactTemplate, final @Nonnull String actionText, final Image icon) {
+      super(actionText, null, TargetAWT.to(icon));
       myType = type;
       myArtifactTemplate = artifactTemplate;
     }

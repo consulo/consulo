@@ -31,13 +31,14 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentConfigurator
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable;
-import com.intellij.ui.*;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.ComboboxWithBrowseButton;
+import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.SortedComboBoxModel;
 import com.intellij.util.ui.FormBuilder;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -76,13 +77,13 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
         }
       }
     });
-    myServerComboBox.getComboBox().setRenderer(new ColoredListCellRendererWrapper<String>() {
+    myServerComboBox.getComboBox().setRenderer(new ColoredListCellRenderer<String>() {
       @Override
-      protected void doCustomize(JList list, String value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList<? extends String> list, String value, int index, boolean selected, boolean hasFocus) {
         if (value == null) return;
         RemoteServer<S> server = RemoteServersManager.getInstance().findByName(value, type);
         SimpleTextAttributes attributes = server == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES;
-        setIcon(server != null ? TargetAWT.to(server.getType().getIcon()) : null);
+        setIcon(server != null ? server.getType().getIcon() : null);
         append(value, attributes);
       }
     });
@@ -95,12 +96,12 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
     });
     mySourceListModel.addAll(deploymentConfigurator.getAvailableDeploymentSources());
     mySourceComboBox = new ComboBox(mySourceListModel);
-    mySourceComboBox.setRenderer(new ListCellRendererWrapper<DeploymentSource>() {
+    mySourceComboBox.setRenderer(new ColoredListCellRenderer<DeploymentSource>() {
       @Override
-      public void customize(JList list, DeploymentSource value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList<? extends DeploymentSource> list, DeploymentSource value, int index, boolean selected, boolean hasFocus) {
         if (value == null) return;
         setIcon(value.getIcon());
-        setText(value.getPresentableName());
+        append(value.getPresentableName());
       }
     });
 

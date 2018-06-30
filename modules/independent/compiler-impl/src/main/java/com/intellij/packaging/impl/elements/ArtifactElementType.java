@@ -20,15 +20,15 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.ComplexPackagingElementType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.Processor;
-import javax.annotation.Nonnull;
+import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -46,7 +46,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 

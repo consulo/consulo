@@ -21,11 +21,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPropertiesPanel;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -50,7 +50,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
   }
 
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
     return true;

@@ -17,11 +17,10 @@ package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx {
@@ -40,15 +39,6 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
     final String secondaryText = getSecondaryText();
     if (!StringUtil.isEmptyOrSpaces(secondaryText)) {
       component.append(" (" + secondaryText + ")", myCommentAttributes);
-    }
-  }
-
-  public void customize(@Nonnull final HtmlListCellRenderer renderer) {
-    renderer.setIcon(getIcon());
-    renderer.append(getPrimaryText(), myTextAttributes);
-    final String secondaryText = getSecondaryText();
-    if (!StringUtil.isEmptyOrSpaces(secondaryText)) {
-      renderer.append(" (" + secondaryText + ")", myCommentAttributes);
     }
   }
 

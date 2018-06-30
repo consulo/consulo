@@ -25,6 +25,7 @@ import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.*;
+import consulo.awt.TargetAWT;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
@@ -84,7 +85,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     Artifact artifact = pointers.get(0).get();
     if (artifact == null)
       return getIcon();
-    return artifact.getArtifactType().getIcon();
+    return TargetAWT.to(artifact.getArtifactType().getIcon());
   }
 
   @Override

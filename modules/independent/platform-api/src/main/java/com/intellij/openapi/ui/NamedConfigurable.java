@@ -20,8 +20,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -115,7 +116,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
   public abstract JComponent createOptionsPanel();
 
   @Nullable
-  public Icon getIcon(boolean expanded) {
+  public Image getIcon(boolean expanded) {
     return null;
   }
 }

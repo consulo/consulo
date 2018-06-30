@@ -28,9 +28,10 @@ import com.intellij.packaging.impl.elements.FilePathValidator;
 import com.intellij.packaging.impl.elements.PackagingElementFactoryImpl;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -47,7 +48,7 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.PpJar;
   }
 
@@ -59,7 +60,7 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
 
   @Override
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
-                                                      @javax.annotation.Nullable String baseName,
+                                                      @Nullable String baseName,
                                                       @Nonnull ArtifactEditorContext context) {
     final String initialValue = PackagingElementFactoryImpl.suggestFileName(parent, baseName != null ? baseName : "archive", ".zip");
     String path =

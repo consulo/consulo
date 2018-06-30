@@ -28,9 +28,9 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProject
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
-import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
 import consulo.bundle.ui.SdkEditor;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -88,8 +88,8 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   }
 
   @Override
-  public Icon getIcon(boolean open) {
-    return TargetAWT.to(SdkUtil.getIcon(mySdk));
+  public Image getIcon(boolean open) {
+    return SdkUtil.getIcon(mySdk);
   }
 
   @Override

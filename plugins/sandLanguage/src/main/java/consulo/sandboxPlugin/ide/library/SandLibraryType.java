@@ -25,10 +25,11 @@ import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
-
 import javax.swing.*;
 
 /**
@@ -51,7 +52,7 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
     return moduleRootModel.getExtension(SandModuleExtension.class) != null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getCreateActionName() {
     return "test";
@@ -63,7 +64,7 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public LibraryPropertiesEditor createPropertiesEditor(@Nonnull LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
     return null;
@@ -71,7 +72,7 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Static;
   }
 }

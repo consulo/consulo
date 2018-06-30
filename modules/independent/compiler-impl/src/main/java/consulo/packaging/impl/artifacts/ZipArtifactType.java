@@ -21,9 +21,9 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +36,7 @@ public class ZipArtifactType extends ArtifactType {
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 

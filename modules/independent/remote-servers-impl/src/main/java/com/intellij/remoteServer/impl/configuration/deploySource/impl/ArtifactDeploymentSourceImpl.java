@@ -8,9 +8,9 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -63,7 +63,7 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     final Artifact artifact = getArtifact();
     return artifact != null ? artifact.getArtifactType().getIcon() : null;
   }

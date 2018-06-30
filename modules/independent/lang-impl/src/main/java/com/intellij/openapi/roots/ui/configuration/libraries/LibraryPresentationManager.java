@@ -22,10 +22,10 @@ import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
@@ -38,13 +38,13 @@ public abstract class LibraryPresentationManager {
   }
 
   @Nonnull
-  public abstract Icon getNamedLibraryIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
+  public abstract Image getNamedLibraryIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
 
   @Nullable
-  public abstract Icon getCustomIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
+  public abstract Image getCustomIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
 
   @Nonnull
-  public abstract List<Icon> getCustomIcons(@Nonnull Library library, @Nullable StructureConfigurableContext context);
+  public abstract List<Image> getCustomIcons(@Nonnull Library library, @Nullable StructureConfigurableContext context);
 
   @Nonnull
   public abstract List<String> getDescriptions(@Nonnull Library library, StructureConfigurableContext context);

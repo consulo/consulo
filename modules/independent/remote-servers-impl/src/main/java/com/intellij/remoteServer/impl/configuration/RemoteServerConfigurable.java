@@ -14,11 +14,12 @@ import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -132,22 +133,26 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
     myServerName = name;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return myNew || myConfigurable.isModified() || !myServerName.equals(myServer.getName());
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     myConfigurable.apply();
     myNew = false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     myConfigurable.reset();
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     myConfigurable.disposeUIResources();
@@ -155,7 +160,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
 
   @Nullable
   @Override
-  public Icon getIcon(boolean expanded) {
-    return TargetAWT.to(myServer.getType().getIcon());
+  public Image getIcon(boolean expanded) {
+    return myServer.getType().getIcon();
   }
 }

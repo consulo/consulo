@@ -15,15 +15,13 @@
  */
 package com.intellij.openapi.roots.ui;
 
-import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
+
 import javax.annotation.Nonnull;
 
 public interface CellAppearanceEx {
   @Nonnull
   String getText();
-
-  void customize(@Nonnull HtmlListCellRenderer renderer);
 
   void customize(@Nonnull SimpleColoredComponent component);
 }

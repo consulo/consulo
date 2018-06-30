@@ -16,34 +16,33 @@
 package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
-import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.swing.*;
-
 // todo: move to lang-impl ?
 public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
-  private Icon myIcon;
+  private Image myIcon;
   private final SimpleTextAttributes myTextAttributes;
   private final String myText;
 
-  public static SimpleTextCellAppearance regular(@Nonnull final String text, @Nullable final Icon icon) {
+  public static SimpleTextCellAppearance regular(@Nonnull final String text, @Nullable final Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance invalid(@Nonnull final String text, @Nullable final Icon icon) {
+  public static SimpleTextCellAppearance invalid(@Nonnull final String text, @Nullable final Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance synthetic(@Nonnull final String text, @Nullable final Icon icon) {
+  public static SimpleTextCellAppearance synthetic(@Nonnull final String text, @Nullable final Image icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
   }
 
   public SimpleTextCellAppearance(@Nonnull final String text,
-                                  @Nullable final Icon icon,
+                                  @Nullable final Image icon,
                                   @Nonnull final SimpleTextAttributes textAttributes) {
     myIcon = icon;
     myTextAttributes = textAttributes;
@@ -56,15 +55,9 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
     component.append(myText, myTextAttributes);
   }
 
-  @Override
-  public void customize(@Nonnull final HtmlListCellRenderer renderer) {
-    renderer.setIcon(myIcon);
-    renderer.append(myText, myTextAttributes);
-  }
-
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
@@ -80,7 +73,7 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  public void setIcon(@Nullable final Icon icon) {
+  public void setIcon(@Nullable final Image icon) {
     myIcon = icon;
   }
 }

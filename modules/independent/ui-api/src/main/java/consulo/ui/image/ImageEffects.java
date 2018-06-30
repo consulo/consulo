@@ -60,6 +60,11 @@ public final class ImageEffects {
   }
 
   @Nonnull
+  public static Image empty(int widthAndHeight) {
+    return empty(widthAndHeight);
+  }
+
+  @Nonnull
   public static Image empty(int width, int height) {
     return UIInternal.get()._ImageEffects_empty(width, height);
   }

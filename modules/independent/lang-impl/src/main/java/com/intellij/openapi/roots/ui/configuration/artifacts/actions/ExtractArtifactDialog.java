@@ -47,7 +47,7 @@ public class ExtractArtifactDialog extends DialogWrapper implements IExtractArti
       myTypeBox.addItem(type);
     }
     myTypeBox.setSelectedItem(PlainArtifactType.getInstance());
-    myTypeBox.setRenderer(new ArtifactTypeCellRenderer(myTypeBox.getRenderer()));
+    myTypeBox.setRenderer(new ArtifactTypeCellRenderer());
     myNameField.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
       protected void textChanged(DocumentEvent e) {

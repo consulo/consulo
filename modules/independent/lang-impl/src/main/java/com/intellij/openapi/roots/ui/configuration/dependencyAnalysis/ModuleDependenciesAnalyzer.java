@@ -161,8 +161,7 @@ public class ModuleDependenciesAnalyzer {
      * @param urlExplanations   the url explanations to accumulate
      * @param orderExplanations the explanations for order entries
      */
-    public PathWalker(Map<String, List<OrderPath>> urlExplanations,
-                      Map<OrderEntry, List<OrderPath>> orderExplanations) {
+    public PathWalker(Map<String, List<OrderPath>> urlExplanations, Map<OrderEntry, List<OrderPath>> orderExplanations) {
       myUrlExplanations = urlExplanations;
       myOrderExplanations = orderExplanations;
     }
@@ -212,7 +211,7 @@ public class ModuleDependenciesAnalyzer {
                   addUrlPath(p, e.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance()));
                   addUrlPath(p, e.getCompilerOutputUrl(ProductionResourceContentFolderTypeProvider.getInstance()));
                   boolean includeTests = !myCompile ? !myProduction : level > 0 && !myProduction;
-                  if(includeTests) {
+                  if (includeTests) {
                     addUrlPath(p, e.getCompilerOutputUrl(TestContentFolderTypeProvider.getInstance()));
                     addUrlPath(p, e.getCompilerOutputUrl(TestResourceContentFolderTypeProvider.getInstance()));
                   }
@@ -246,7 +245,7 @@ public class ModuleDependenciesAnalyzer {
      * @param u the url to update
      */
     private void addUrlPath(OrderPath p, @Nullable String u) {
-      if(u == null) {
+      if (u == null) {
         return;
       }
       final List<OrderPath> orderPaths = myUrlExplanations.get(u);
@@ -383,7 +382,7 @@ public class ModuleDependenciesAnalyzer {
     @Nonnull
     @Override
     public CellAppearanceEx getAppearance(boolean isSelected) {
-      return OrderEntryAppearanceService.getInstance().forOrderEntry(myEntry.getOwnerModule().getProject(), myEntry, isSelected);
+      return OrderEntryAppearanceService.getInstance().forOrderEntry(myEntry);
     }
   }
 

@@ -15,17 +15,17 @@
  */
 package com.intellij.remoteServer.configuration.deployment;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 
 /**
  * @author nik
  */
 public interface DeploymentSource {
-  @javax.annotation.Nullable
+  @Nullable
   File getFile();
 
   @Nullable
@@ -34,8 +34,8 @@ public interface DeploymentSource {
   @Nonnull
   String getPresentableName();
 
-  @javax.annotation.Nullable
-  Icon getIcon();
+  @Nullable
+  Image getIcon();
 
   boolean isValid();
 

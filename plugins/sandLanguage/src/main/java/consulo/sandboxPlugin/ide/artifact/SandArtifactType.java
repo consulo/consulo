@@ -23,11 +23,11 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
+import consulo.ui.image.Image;
+import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -52,7 +52,7 @@ public class SandArtifactType extends ArtifactType {
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 

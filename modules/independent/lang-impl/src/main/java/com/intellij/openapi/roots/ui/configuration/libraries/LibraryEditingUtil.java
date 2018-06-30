@@ -39,6 +39,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.util.ParameterizedRunnable;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -174,7 +176,7 @@ public class LibraryEditingUtil {
 
           @Override
           public Icon getIconFor(LibraryType aValue) {
-            return aValue != null ? aValue.getIcon() : AllIcons.Nodes.PpLib;
+            return aValue != null ? TargetAWT.to(aValue.getIcon()) : AllIcons.Nodes.PpLib;
           }
 
           @Override

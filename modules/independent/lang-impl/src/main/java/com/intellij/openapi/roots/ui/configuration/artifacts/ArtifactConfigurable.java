@@ -68,7 +68,7 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
       artifactTypeBox.addItem(type);
     }
 
-    artifactTypeBox.setRenderer(new ArtifactTypeCellRenderer(artifactTypeBox.getRenderer()));
+    artifactTypeBox.setRenderer(new ArtifactTypeCellRenderer());
 
     artifactTypeBox.setSelectedItem(getArtifact().getArtifactType());
     artifactTypeBox.addActionListener(new ActionListener() {

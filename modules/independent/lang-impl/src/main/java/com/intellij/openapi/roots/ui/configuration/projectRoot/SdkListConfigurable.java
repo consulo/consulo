@@ -41,12 +41,11 @@ import com.intellij.openapi.ui.NonEmptyInputValidator;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -225,7 +224,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @Nonnull
   private static MyNode createSdkGroupNode(SdkType key) {
-    return new MyNode(new TextConfigurable<SdkType>(key, key.getPresentableName(), "", "", TargetAWT.to(key.getGroupIcon())), true);
+    return new MyNode(new TextConfigurable<>(key, key.getPresentableName(), "", "", key.getGroupIcon()), true);
   }
 
   @Nonnull

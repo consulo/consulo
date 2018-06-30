@@ -15,22 +15,19 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.packaging.artifacts.ArtifactType;
+import com.intellij.ui.ColoredListCellRenderer;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author nik
  */
-public class ArtifactTypeCellRenderer extends ListCellRendererWrapper<ArtifactType> {
-  public ArtifactTypeCellRenderer(final ListCellRenderer listCellRenderer) {
-    super();
-  }
-
+public class ArtifactTypeCellRenderer extends ColoredListCellRenderer<ArtifactType> {
   @Override
-  public void customize(JList list, ArtifactType type, int index, boolean selected, boolean hasFocus) {
-    setIcon(type.getIcon());
-    setText(type.getPresentableName());
+  protected void customizeCellRenderer(@Nonnull JList<? extends ArtifactType> list, ArtifactType value, int index, boolean selected, boolean hasFocus) {
+    setIcon(value.getIcon());
+    append(value.getPresentableName());
   }
 }

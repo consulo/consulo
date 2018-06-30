@@ -8,6 +8,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -78,7 +80,7 @@ public class UsageInArtifact extends ProjectStructureElementUsage {
 
   @Override
   public Icon getIcon() {
-    return myOriginalArtifact.getArtifactType().getIcon();
+    return TargetAWT.to(myOriginalArtifact.getArtifactType().getIcon());
   }
 
   @Nullable

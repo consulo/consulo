@@ -20,6 +20,8 @@ import com.intellij.ide.util.ElementsChooser;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.ui.JBColor;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -67,6 +69,6 @@ public class ArtifactChooser extends ElementsChooser<ArtifactPointer> {
   @Override
   protected Icon getItemIcon(@Nonnull ArtifactPointer value) {
     final Artifact artifact = value.get();
-    return artifact != null ? artifact.getArtifactType().getIcon() : null;
+    return artifact != null ? TargetAWT.to(artifact.getArtifactType().getIcon()) : null;
   }
 }

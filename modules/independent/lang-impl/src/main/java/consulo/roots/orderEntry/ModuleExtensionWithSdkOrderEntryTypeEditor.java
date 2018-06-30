@@ -23,7 +23,6 @@ import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
-import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
 
@@ -54,7 +53,6 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
   @Override
   public CellAppearanceEx getCellAppearance(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     Sdk sdk = orderEntry.getSdk();
-    return new SimpleTextCellAppearance(orderEntry.getPresentableName(), TargetAWT.to(SdkUtil.getIcon(sdk)),
-                                        sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
+    return new SimpleTextCellAppearance(orderEntry.getPresentableName(), SdkUtil.getIcon(sdk), sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
   }
 }

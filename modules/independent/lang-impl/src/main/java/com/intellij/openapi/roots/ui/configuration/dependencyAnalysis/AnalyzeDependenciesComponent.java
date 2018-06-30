@@ -42,11 +42,11 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -543,11 +543,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
           component.append(" (" + PathUtil.getParentPath(p) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
         }
 
-        @Override
-        public void customize(@Nonnull final HtmlListCellRenderer renderer) {
-          throw new UnsupportedOperationException("Rendering in combo box not supported yet.");
-        }
-
         @Nonnull
         @Override
         public String getText() {
@@ -614,11 +609,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
               component.append("<This Module>", SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
             }
 
-            @Override
-            public void customize(@Nonnull final HtmlListCellRenderer renderer) {
-              throw new UnsupportedOperationException("Rendering in combo box not supported yet.");
-            }
-
             @Nonnull
             @Override
             public String getText() {
@@ -630,7 +620,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
           return OrderEntryAppearanceService.getInstance().forModule(e.getOwnerModule());
         }
       }
-      return OrderEntryAppearanceService.getInstance().forOrderEntry(myModule.getProject(), myExplanation.entry(), selected);
+      return OrderEntryAppearanceService.getInstance().forOrderEntry(myExplanation.entry());
     }
 
     /**

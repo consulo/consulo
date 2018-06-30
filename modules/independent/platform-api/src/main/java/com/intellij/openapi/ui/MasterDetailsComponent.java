@@ -42,11 +42,12 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
@@ -878,7 +879,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     @Nullable
-    public Icon getIcon(boolean expanded) {
+    public Image getIcon(boolean expanded) {
       // thanks to invokeLater() in TreeUtil.showAndSelect(), we can get calls to getIcon() after the tree has been disposed
       final NamedConfigurable configurable = getConfigurable();
       if (configurable != null) {

@@ -17,10 +17,10 @@ package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -40,7 +40,7 @@ public abstract class LibraryPresentationProvider<P extends LibraryProperties> {
   }
 
   @Nullable
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   @Nullable
   public String getDescription(@Nonnull P properties) {

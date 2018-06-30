@@ -19,12 +19,12 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
-import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.Iterator;
 public class CompositeAppearance implements ModifiableCellAppearanceEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.util.CompositeAppearance");
 
-  private Icon myIcon;
+  private Image myIcon;
   private final ArrayList<TextSection> mySections = new ArrayList<TextSection>();
   private int myInsertionIndex = 0;
 
@@ -50,25 +50,14 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  public void customize(@Nonnull final HtmlListCellRenderer renderer) {
-    synchronized (mySections) {
-      for (TextSection section : mySections) {
-        final TextAttributes attributes = section.getTextAttributes();
-        renderer.append(section.getText(), SimpleTextAttributes.fromTextAttributes(attributes));
-      }
-      renderer.setIcon(myIcon);
-    }
-  }
-
-  @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     synchronized (mySections) {
       return myIcon;
     }
   }
 
   @Override
-  public void setIcon(@Nullable final Icon icon) {
+  public void setIcon(@Nullable final Image icon) {
     synchronized (mySections) {
       myIcon = icon;
     }

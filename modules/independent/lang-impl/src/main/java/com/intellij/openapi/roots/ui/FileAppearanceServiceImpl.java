@@ -22,21 +22,16 @@ import com.intellij.openapi.roots.ui.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
-import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
-import consulo.awt.TargetAWT;
 import consulo.vfs.ArchiveFileSystem;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 public class FileAppearanceServiceImpl extends FileAppearanceService {
   private static CellAppearanceEx EMPTY = new CellAppearanceEx() {
     @Override
     public void customize(@Nonnull SimpleColoredComponent component) { }
-
-    @Override
-    public void customize(@Nonnull HtmlListCellRenderer renderer) { }
 
     @Nonnull
     @Override
@@ -85,7 +80,7 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     final FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
     final File parent = file.getParentFile();
     final CompositeAppearance appearance = CompositeAppearance.textComment(name, parent.getAbsolutePath());
-    appearance.setIcon(TargetAWT.to(fileType.getIcon()));
+    appearance.setIcon(fileType.getIcon());
     return appearance;
   }
 

@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.roots.ui;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public interface ModifiableCellAppearanceEx extends CellAppearanceEx {
-  void setIcon(@Nullable Icon icon);
+  void setIcon(@Nullable Image icon);
 
   @Nullable
-  Icon getIcon();
+  Image getIcon();
 }

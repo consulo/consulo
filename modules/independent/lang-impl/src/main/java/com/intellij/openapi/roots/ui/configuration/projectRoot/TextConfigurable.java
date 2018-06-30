@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.ui.PanelWithText;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 
@@ -30,14 +31,14 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
   private final T myObject;
   private final String myBannerSlogan;
   private final String myDisplayName;
-  private final Icon myClosedIcon;
+  private final Image myClosedIcon;
   private final String myDescriptionText;
 
   public TextConfigurable(final T object,
                           final String displayName,
                           final String bannerSlogan,
                           final String descriptionText,
-                          final Icon closedIcon) {
+                          final Image closedIcon) {
     myDisplayName = displayName;
     myBannerSlogan = bannerSlogan;
     myDescriptionText = descriptionText;
@@ -93,7 +94,7 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
   }
 
   @Override
-  public Icon getIcon(final boolean open) {
+  public Image getIcon(final boolean open) {
     return myClosedIcon;
   }
 

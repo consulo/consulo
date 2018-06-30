@@ -43,9 +43,9 @@ import consulo.bundle.SdkUtil;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -117,7 +117,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
       presentation.setTooltip(StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
     }
     else if(orderEntry instanceof OrderEntryWithTracking) {
-      Icon icon = null;
+      Image icon = null;
       CellAppearanceEx cellAppearance = OrderEntryAppearanceService.getInstance().forOrderEntry(orderEntry);
       if(cellAppearance instanceof ModifiableCellAppearanceEx) {
         icon = ((ModifiableCellAppearanceEx)cellAppearance).getIcon();
@@ -126,7 +126,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     }
   }
 
-  private static Icon getIconForLibrary(OrderEntry orderEntry) {
+  private static Image getIconForLibrary(OrderEntry orderEntry) {
     if (orderEntry instanceof LibraryOrderEntry) {
       Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
       if (library != null) {

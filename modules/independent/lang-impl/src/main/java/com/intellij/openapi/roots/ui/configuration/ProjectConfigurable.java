@@ -16,8 +16,6 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.ui.ScrollPaneFactory;
-import consulo.compiler.CompilerConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.application.ApplicationManager;
@@ -44,12 +42,15 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
+import com.intellij.ui.ScrollPaneFactory;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.compiler.CompilerConfiguration;
 import consulo.roots.ui.configuration.WholeWestConfigurable;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -235,7 +236,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   }
 
   @Override
-  public Icon getIcon(boolean open) {
+  public Image getIcon(boolean open) {
     return AllIcons.Nodes.ProjectTab;
   }
 

@@ -24,26 +24,26 @@ import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import consulo.packaging.impl.elements.ZipArchivePackagingElement;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
 import com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
+import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.packaging.impl.elements.ZipArchivePackagingElement;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.ui.image.Image;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -334,7 +334,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
     @Nonnull
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return AllIcons.Nodes.Artifact;
     }
 

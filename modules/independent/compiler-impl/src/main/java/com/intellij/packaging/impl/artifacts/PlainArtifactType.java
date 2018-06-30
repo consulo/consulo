@@ -21,10 +21,10 @@ import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -43,7 +43,7 @@ public class PlainArtifactType extends ArtifactType {
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 

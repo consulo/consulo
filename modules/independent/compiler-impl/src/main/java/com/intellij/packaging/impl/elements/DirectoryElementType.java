@@ -25,9 +25,9 @@ import com.intellij.packaging.elements.CompositePackagingElementType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -43,7 +43,7 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
 
   @Nonnull
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Actions.NewFolder;
   }
 

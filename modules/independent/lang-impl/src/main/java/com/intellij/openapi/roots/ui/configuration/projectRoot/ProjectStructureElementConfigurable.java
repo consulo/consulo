@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.NamedConfigurable;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -37,7 +37,7 @@ public abstract class ProjectStructureElementConfigurable<T> extends NamedConfig
 
   @Override
   @Nullable
-  public Icon getIcon(boolean open) {
+  public Image getIcon(boolean open) {
     return null;
   }
 }

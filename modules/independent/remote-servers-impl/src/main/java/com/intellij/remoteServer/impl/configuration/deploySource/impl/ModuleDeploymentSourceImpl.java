@@ -24,11 +24,11 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.image.Image;
 import consulo.util.pointers.NamedPointer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -89,7 +89,7 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Module;
   }
 

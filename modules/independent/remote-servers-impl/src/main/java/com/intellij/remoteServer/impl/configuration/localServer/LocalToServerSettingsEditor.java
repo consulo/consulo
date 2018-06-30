@@ -26,11 +26,13 @@ import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfigurator;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedComboBoxModel;
 import com.intellij.util.ui.FormBuilder;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -63,12 +65,12 @@ public class LocalToServerSettingsEditor<S extends ServerConfiguration, D extend
     });
     mySourceListModel.addAll(deploymentConfigurator.getAvailableDeploymentSources());
     mySourceComboBox = new ComboBox(mySourceListModel);
-    mySourceComboBox.setRenderer(new ListCellRendererWrapper<DeploymentSource>() {
+    mySourceComboBox.setRenderer(new ColoredListCellRenderer<DeploymentSource>() {
       @Override
-      public void customize(JList list, DeploymentSource value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList list, DeploymentSource value, int index, boolean selected, boolean hasFocus) {
         if (value == null) return;
         setIcon(value.getIcon());
-        setText(value.getPresentableName());
+        append(value.getPresentableName());
       }
     });
 
@@ -82,7 +84,7 @@ public class LocalToServerSettingsEditor<S extends ServerConfiguration, D extend
   }
 
 
-  private void onDeploymentSourceChanged(@javax.annotation.Nullable D configuration) {
+  private void onDeploymentSourceChanged(@Nullable D configuration) {
     DeploymentSource selected = mySourceListModel.getSelectedItem();
     if (Comparing.equal(selected, myLastSelection)) {
       if (configuration != null && myDeploymentSettingsEditor != null) {

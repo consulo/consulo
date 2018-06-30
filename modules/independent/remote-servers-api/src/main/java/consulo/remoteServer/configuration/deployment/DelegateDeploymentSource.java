@@ -17,9 +17,10 @@ package consulo.remoteServer.configuration.deployment;
 
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -33,13 +34,13 @@ public class DelegateDeploymentSource implements DeploymentSource {
     myDelegate = delegate;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public File getFile() {
     return myDelegate.getFile();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getFilePath() {
     return myDelegate.getFilePath();
@@ -51,9 +52,9 @@ public class DelegateDeploymentSource implements DeploymentSource {
     return myDelegate.getPresentableName();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myDelegate.getIcon();
   }
 

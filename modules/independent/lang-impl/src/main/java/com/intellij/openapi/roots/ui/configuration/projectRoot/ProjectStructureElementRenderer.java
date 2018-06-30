@@ -25,6 +25,7 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +51,7 @@ class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
       }
 
       final String displayName = node.getDisplayName();
-      final Icon icon = namedConfigurable.getIcon(expanded);
+      final Image icon = namedConfigurable.getIcon(expanded);
       setIcon(icon);
       setToolTipText(null);
       setFont(UIUtil.getTreeFont());

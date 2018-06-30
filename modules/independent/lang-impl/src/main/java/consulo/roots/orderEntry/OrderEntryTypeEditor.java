@@ -15,7 +15,7 @@
  */
 package consulo.roots.orderEntry;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.project.Project;
@@ -29,6 +29,7 @@ import com.intellij.openapi.util.KeyedExtensionFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -39,8 +40,7 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
   ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.orderEntryTypeEditor");
 
   KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY =
-          new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME,
-                                                                          ApplicationManager.getApplication().getPicoContainer()) {
+          new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get().getPicoContainer()) {
             @Override
             public OrderEntryTypeEditor getByKey(@Nonnull OrderEntryType key) {
               // special hack for unknown order entry type

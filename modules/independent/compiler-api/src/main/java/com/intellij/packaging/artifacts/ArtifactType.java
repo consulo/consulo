@@ -23,11 +23,11 @@ import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.ui.ArtifactProblemsHolder;
 import com.intellij.packaging.ui.PackagingSourceItem;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -64,7 +64,7 @@ public abstract class ArtifactType {
   }                                
 
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   @Nullable
   public String getDefaultPathFor(@Nonnull PackagingSourceItem sourceItem) {

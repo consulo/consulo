@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -22,6 +24,8 @@ import javax.swing.*;
 import static com.intellij.ui.SimpleColoredComponent.formatLink;
 import static com.intellij.ui.SimpleColoredComponent.formatText;
 
+@Deprecated
+@DeprecationInfo("Not used")
 public abstract class HtmlListCellRenderer<T> extends ListCellRendererWrapper<T> {
   private StringBuilder myText;
 

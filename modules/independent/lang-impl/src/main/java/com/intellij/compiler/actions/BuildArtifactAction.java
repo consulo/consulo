@@ -46,11 +46,13 @@ import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import gnu.trove.TIntArrayList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -79,7 +81,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
     List<ArtifactPopupItem> items = new ArrayList<ArtifactPopupItem>();
     if (artifacts.size() > 1) {
-      items.add(0, new ArtifactPopupItem(null, "All Artifacts", EmptyIcon.ICON_16));
+      items.add(0, new ArtifactPopupItem(null, "All Artifacts", ImageEffects.empty(16)));
     }
     Set<Artifact> selectedArtifacts = new HashSet<Artifact>(ArtifactsWorkspaceSettings.getInstance(project).getArtifactsToBuild());
     TIntArrayList selectedIndices = new TIntArrayList();
@@ -266,9 +268,9 @@ public class BuildArtifactAction extends DumbAwareAction {
   private static class ArtifactPopupItem {
     @Nullable private final Artifact myArtifact;
     private final String myText;
-    private final Icon myIcon;
+    private final Image myIcon;
 
-    private ArtifactPopupItem(@Nullable Artifact artifact, String text, Icon icon) {
+    private ArtifactPopupItem(@Nullable Artifact artifact, String text, Image icon) {
       myArtifact = artifact;
       myText = text;
       myIcon = icon;
@@ -283,7 +285,7 @@ public class BuildArtifactAction extends DumbAwareAction {
       return myText;
     }
 
-    public Icon getIcon() {
+    public Image getIcon() {
       return myIcon;
     }
 
@@ -314,7 +316,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
     @Override
     public Icon getIconFor(ArtifactPopupItem aValue) {
-      return aValue.getIcon();
+      return TargetAWT.to(aValue.getIcon());
     }
 
     @Nonnull

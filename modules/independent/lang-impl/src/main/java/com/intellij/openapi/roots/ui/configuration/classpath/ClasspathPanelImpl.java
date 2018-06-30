@@ -519,7 +519,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private static CellAppearanceEx getCellAppearance(final ClasspathTableItem<?> item, final StructureConfigurableContext context, final boolean selected) {
     final OrderEntryAppearanceService service = OrderEntryAppearanceService.getInstance();
     final OrderEntry entry = item.getEntry();
-    return service.forOrderEntry(context.getProject(), entry, selected);
+    return service.forOrderEntry(entry);
   }
 
   private static class TableItemRenderer extends ColoredTableCellRenderer {
