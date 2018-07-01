@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -34,15 +35,16 @@ import java.util.List;
 public class GwtDockLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-    getWidget().clear();
+    GwtDockLayoutImpl dockLayout = getWidget();
+    dockLayout.clear();
 
+    boolean noCenterElement = true;
     List<ComponentConnector> childComponents = getChildComponents();
     for (int i = 0; i < childComponents.size(); i++) {
       ComponentConnector connector = childComponents.get(i);
       DockLayoutState.Constraint constraint = getState().myConstraints.get(i);
 
       Widget widget = GwtUIUtil.fillAndReturn(connector.getWidget());
-      GwtDockLayoutImpl dockLayout = getWidget();
       switch (constraint) {
         case TOP:
           dockLayout.add(widget, GwtDockLayoutImpl.NORTH);
@@ -57,12 +59,21 @@ public class GwtDockLayoutImplConnector extends GwtLayoutConnector {
           dockLayout.add(widget, GwtDockLayoutImpl.EAST);
           break;
         case CENTER:
-          dockLayout.add(widget, GwtDockLayoutImpl.CENTER);
-          dockLayout.setCellHeight(widget, "100%");
-          dockLayout.setCellWidth(widget, "100%");
+          setCenterWidget(dockLayout, widget);
+          noCenterElement = false;
           break;
       }
     }
+
+    if (noCenterElement) {
+      setCenterWidget(dockLayout, new SimplePanel());
+    }
+  }
+
+  private static void setCenterWidget(GwtDockLayoutImpl dockLayout, Widget widget) {
+    dockLayout.add(widget, GwtDockLayoutImpl.CENTER);
+    dockLayout.setCellHeight(widget, "100%");
+    dockLayout.setCellWidth(widget, "100%");
   }
 
   @Override
