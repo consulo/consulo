@@ -21,6 +21,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
 import consulo.ui.internal.image.*;
+import consulo.ui.layout.SwipeLayout;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
@@ -150,6 +151,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   VerticalLayout _Layouts_vertical() {
     return new DesktopVerticalLayoutImpl();
+  }
+
+  @Override
+  public SwipeLayout _Layouts_swipe() {
+    return new DesktopSwipeLayoutImpl();
   }
 
   @Override

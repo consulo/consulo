@@ -23,6 +23,7 @@ import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.internal.image.WGwtTransparentImageImpl;
+import consulo.ui.layout.SwipeLayout;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
@@ -61,6 +62,11 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   VerticalLayout _Layouts_vertical() {
     return new WGwtVerticalLayoutImpl();
+  }
+
+  @Override
+  public SwipeLayout _Layouts_swipe() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

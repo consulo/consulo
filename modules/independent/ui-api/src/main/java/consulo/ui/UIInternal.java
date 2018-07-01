@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.annotations.Internal;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.layout.SwipeLayout;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.ColorValue;
@@ -51,6 +52,8 @@ public abstract class UIInternal {
   abstract WrappedLayout _Layouts_wrapped();
 
   abstract VerticalLayout _Layouts_vertical();
+
+  public abstract SwipeLayout _Layouts_swipe();
 
   abstract SplitLayout _Layouts_horizontalSplit();
 
