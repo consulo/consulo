@@ -31,23 +31,19 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.ui.PopupHandler;
-import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.content.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
-import com.intellij.ui.switcher.SwitchProvider;
-import com.intellij.ui.switcher.SwitchTarget;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import com.intellij.util.ui.update.ComparableObject;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -58,7 +54,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, DataProvider, SwitchProvider {
+public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, DataProvider {
   public static final String POPUP_PLACE = ToolWindowContentUI.POPUP_PLACE;
   // when client property is put in toolwindow component, hides toolwindow label
   public static final String HIDE_ID_LABEL = ToolWindowContentUI.HIDE_ID_LABEL;
@@ -113,11 +109,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
   @Override
   public JComponent getComponent() {
     return myContent;
-  }
-
-  @Override
-  public boolean isCycleRoot() {
-    return true;
   }
 
   public JComponent getTabComponent() {
@@ -205,8 +196,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       myWindow.hide(null);
     }
   }
-
-
 
   @Override
   public void doLayout() {
@@ -482,7 +471,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (PlatformDataKeys.TOOL_WINDOW == dataId) return myWindow;
 
@@ -490,13 +479,8 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       return computeCloseTarget();
     }
 
-    if (SwitchProvider.KEY == dataId && myType == ToolWindowContentUiType.TABBED) {
-      return this;
-    }
-
     return null;
   }
-
 
   private CloseAction.CloseTarget computeCloseTarget() {
     if (myManager.canCloseContents()) {
@@ -611,64 +595,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
           popup.handleSelect(true);
         }
       }, 30);
-    }
-  }
-
-  @Override
-  public List<SwitchTarget> getTargets(boolean onlyVisible, boolean originalProvider) {
-    List<SwitchTarget> result = new ArrayList<SwitchTarget>();
-
-    if (myType == ToolWindowContentUiType.TABBED) {
-      for (int i = 0; i < myManager.getContentCount(); i++) {
-        result.add(new ContentSwitchTarget(myManager.getContent(i)));
-      }
-    }
-
-    return result;
-  }
-
-  @Override
-  public SwitchTarget getCurrentTarget() {
-    return new ContentSwitchTarget(myManager.getSelectedContent());
-  }
-
-  private class ContentSwitchTarget extends ComparableObject.Impl implements SwitchTarget {
-
-    private Content myContent;
-
-    private ContentSwitchTarget(Content content) {
-      myContent = content;
-    }
-
-    @Override
-    public ActionCallback switchTo(boolean requestFocus) {
-      return myManager.setSelectedContentCB(myContent, requestFocus);
-    }
-
-    @Override
-    public boolean isVisible() {
-      return true;
-    }
-
-    @Override
-    public RelativeRectangle getRectangle() {
-      return myTabsLayout.getRectangleFor(myContent);
-    }
-
-    @Override
-    public Component getComponent() {
-      return myManager.getComponent();
-    }
-
-    @Override
-    public String toString() {
-      return myContent.getDisplayName();
-    }
-
-    @Nonnull
-    @Override
-    public Object[] getEqualityObjects() {
-      return new Object[] {myContent};
     }
   }
 }

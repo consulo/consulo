@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.switcher;
+package consulo.ui.layout;
 
-import com.intellij.openapi.util.Key;
-
-import java.util.List;
-
-public interface SwitchProvider extends QuickAccessProvider {
-  Key<SwitchProvider> KEY = Key.create("SwitchProvider");
-
-  List<SwitchTarget> getTargets(boolean onlyVisible, boolean originalProvider);
-
-  SwitchTarget getCurrentTarget();
+/**
+ * @author VISTALL
+ * @since 2018-07-03
+ */
+public interface ScrollLayout {
 }

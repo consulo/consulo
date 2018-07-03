@@ -30,7 +30,6 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.switcher.SwitchTarget;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsListener;
@@ -49,8 +48,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class GridCellImpl implements GridCell {
@@ -142,9 +139,8 @@ public class GridCellImpl implements GridCell {
       public UiDecoration getDecoration() {
         return new UiDecoration(null, new Insets(1, -1, 1, -1));
       }
-    }).setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal())
-            .setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true)
-            .setProvideSwitchTargets(false).setTabDraggingEnabled(true).setSideComponentOnTabs(false);
+    }).setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal()).setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true).setTabDraggingEnabled(true)
+            .setSideComponentOnTabs(false);
 
     myTabs.addTabMouseListener(new MouseAdapter() {
       @Override
@@ -179,8 +175,7 @@ public class GridCellImpl implements GridCell {
   }
 
   public void rebuildPopupGroup() {
-    myTabs.setPopupGroup(myContext.getCellPopupGroup(ViewContext.CELL_POPUP_PLACE),
-                         ViewContext.CELL_POPUP_PLACE, true);
+    myTabs.setPopupGroup(myContext.getCellPopupGroup(ViewContext.CELL_POPUP_PLACE), ViewContext.CELL_POPUP_PLACE, true);
   }
 
   public PlaceInGrid getPlaceInGrid() {
@@ -236,10 +231,9 @@ public class GridCellImpl implements GridCell {
   }
 
   private TabInfo createTabInfoFor(Content content) {
-    final TabInfo tabInfo = updatePresentation(new TabInfo(new ProviderWrapper(content, myContext)), content)
-            .setObject(content)
-            .setPreferredFocusableComponent(content.getPreferredFocusableComponent())
-            .setActionsContextComponent(content.getActionsContextComponent());
+    final TabInfo tabInfo =
+            updatePresentation(new TabInfo(new ProviderWrapper(content, myContext)), content).setObject(content).setPreferredFocusableComponent(content.getPreferredFocusableComponent())
+                    .setActionsContextComponent(content.getActionsContextComponent());
 
     myContents.remove(content);
     myContents.put(content, tabInfo);
@@ -290,16 +284,6 @@ public class GridCellImpl implements GridCell {
 
   public boolean isMinimized(Content content) {
     return myMinimizedContents.contains(content);
-  }
-
-  public List<SwitchTarget> getTargets(boolean onlyVisible) {
-    if (myTabs.getPresentation().isHideTabs()) return new ArrayList<>();
-
-    return myTabs.getTargets(onlyVisible, false);
-  }
-
-  public SwitchTarget getTargetForSelection() {
-    return myTabs.getCurrentTarget();
   }
 
   public boolean contains(Component c) {

@@ -17,6 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -26,9 +27,9 @@ import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.List;
 
@@ -121,7 +122,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-      e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
+      e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e, LaterInvocator.isInModalContext()));
     }
 
     @Nonnull
@@ -139,7 +140,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
           result.add(AnSeparator.getInstance());
         }
 
-        List<AnAction> actions = toolbar.getActions(false);
+        List<AnAction> actions = toolbar.getActions();
         for (AnAction action : actions) {
           if (action instanceof ToggleAction && !result.contains(action)) {
             result.add(action);

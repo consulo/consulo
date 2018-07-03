@@ -20,16 +20,15 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.switcher.SwitchProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public interface JBTabs extends SwitchProvider {
+public interface JBTabs {
 
   @Nonnull
   TabInfo addTab(TabInfo info, int index);
@@ -72,7 +71,6 @@ public interface JBTabs extends SwitchProvider {
 
   JBTabs setSelectionChangeHandler(SelectionChangeHandler handler);
 
-  @Override
   @Nonnull
   JComponent getComponent();
 
@@ -90,8 +88,6 @@ public interface JBTabs extends SwitchProvider {
   JBTabs setNavigationActionsEnabled(boolean enabled);
 
   boolean isDisposed();
-
-  JBTabs setAdditionalSwitchProviderWhenOriginal(SwitchProvider delegate);
 
   void resetDropOver(TabInfo tabInfo);
   Image startDropOver(TabInfo tabInfo, RelativePoint point);

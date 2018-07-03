@@ -37,7 +37,6 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerListener;
 import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.ui.switcher.SwitchProvider;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -379,7 +378,7 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key dataId) {
-    if (SwitchProvider.KEY == dataId || QuickActionProvider.KEY == dataId || RunnerContentUi.KEY == dataId) {
+    if (QuickActionProvider.KEY == dataId || RunnerContentUi.KEY == dataId) {
       return myContentUI;
     }
     return null;

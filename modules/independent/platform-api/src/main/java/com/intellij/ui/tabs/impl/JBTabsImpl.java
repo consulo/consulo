@@ -29,10 +29,7 @@ import com.intellij.openapi.wm.*;
 import com.intellij.ui.Gray;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.ui.switcher.SwitchProvider;
-import com.intellij.ui.switcher.SwitchTarget;
 import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowPassInfo;
@@ -42,7 +39,6 @@ import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
-import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Internal;
@@ -70,7 +66,7 @@ import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 /**
  * Consulo tab panel
  *
- * For implementation use {@link com.intellij.ui.tabs.impl.JBEditorTabs} or {@link com.intellij.ui.TabbedPaneWrapper}
+ * For implementation use {@link JBEditorTabs} or {@link com.intellij.ui.TabbedPaneWrapper}
  */
 public abstract class JBTabsImpl extends JComponent
         implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable,
@@ -177,8 +173,6 @@ public abstract class JBTabsImpl extends JComponent
   private boolean myNavigationActionsEnabled = true;
   private boolean myUseBufferedPaint = true;
 
-  private boolean myOwnSwitchProvider = true;
-  private SwitchProvider mySwitchDelegate;
   protected TabInfo myDropInfo;
   private int myDropInfoIndex;
   protected boolean myShowDropLocation = true;
@@ -373,12 +367,6 @@ public abstract class JBTabsImpl extends JComponent
   @Override
   public final boolean isDisposed() {
     return myDisposed;
-  }
-
-  @Override
-  public JBTabs setAdditionalSwitchProviderWhenOriginal(SwitchProvider delegate) {
-    mySwitchDelegate = delegate;
-    return this;
   }
 
   public static Image getComponentImage(TabInfo info) {
@@ -2329,10 +2317,6 @@ public abstract class JBTabsImpl extends JComponent
       if (value != null) return value;
     }
 
-    if (SwitchProvider.KEY == dataId && myOwnSwitchProvider) {
-      return this;
-    }
-
     if (QuickActionProvider.KEY == dataId) {
       return this;
     }
@@ -2459,12 +2443,6 @@ public abstract class JBTabsImpl extends JComponent
     return myTabDraggingEnabled;
   }
 
-  @Override
-  public JBTabsPresentation setProvideSwitchTargets(boolean provide) {
-    myOwnSwitchProvider = provide;
-    return this;
-  }
-
   void reallocate(TabInfo source, TabInfo target) {
     if (source == target || source == null || target == null) return;
 
@@ -2493,82 +2471,6 @@ public abstract class JBTabsImpl extends JComponent
     myUseBufferedPaint = useBufferedPaint;
     revalidate();
     repaint();
-  }
-
-  @Override
-  public List<SwitchTarget> getTargets(boolean onlyVisible, boolean originalProvider) {
-    ArrayList<SwitchTarget> result = new ArrayList<>();
-    for (TabInfo each : myVisibleInfos) {
-      result.add(new TabTarget(each));
-    }
-
-    if (originalProvider && mySwitchDelegate != null) {
-      List<SwitchTarget> additional = mySwitchDelegate.getTargets(onlyVisible, false);
-      if (additional != null) {
-        result.addAll(additional);
-      }
-    }
-
-    return result;
-  }
-
-
-  @Override
-  public SwitchTarget getCurrentTarget() {
-    if (mySwitchDelegate != null) {
-      SwitchTarget selection = mySwitchDelegate.getCurrentTarget();
-      if (selection != null) return selection;
-    }
-
-    return new TabTarget(getSelectedInfo());
-  }
-
-  private class TabTarget extends ComparableObject.Impl implements SwitchTarget {
-
-    private final TabInfo myInfo;
-
-    private TabTarget(TabInfo info) {
-      myInfo = info;
-    }
-
-    @Override
-    public ActionCallback switchTo(boolean requestFocus) {
-      return select(myInfo, requestFocus);
-    }
-
-    @Override
-    public boolean isVisible() {
-      return getRectangle() != null;
-    }
-
-    @Override
-    public RelativeRectangle getRectangle() {
-      TabLabel label = myInfo2Label.get(myInfo);
-      if (label.getRootPane() == null) return null;
-
-      Rectangle b = label.getBounds();
-      b.x += 2;
-      b.width -= 4;
-      b.y += 2;
-      b.height -= 4;
-      return new RelativeRectangle(label.getParent(), b);
-    }
-
-    @Override
-    public Component getComponent() {
-      return myInfo2Label.get(myInfo);
-    }
-
-    @Override
-    public String toString() {
-      return myInfo.getText();
-    }
-
-    @Nonnull
-    @Override
-    public Object[] getEqualityObjects() {
-      return new Object[]{myInfo};
-    }
   }
 
   @Override

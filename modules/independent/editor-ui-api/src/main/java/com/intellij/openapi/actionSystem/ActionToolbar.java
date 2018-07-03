@@ -15,11 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.ui.switcher.SwitchProvider;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -30,7 +28,7 @@ import java.util.List;
  *
  * @see ActionManager#createActionToolbar(String, ActionGroup, boolean)
  */
-public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
+public interface ActionToolbar {
   String ACTION_TOOLBAR_PROPERTY_KEY = "ACTION_TOOLBAR";
 
   /**
@@ -59,7 +57,7 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
   /**
    * @return component which represents the tool bar on UI
    */
-  @Override
+  @Nonnull
   JComponent getComponent();
 
   /**
@@ -94,8 +92,8 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
   /**
    * Sets toolbar orientation
    *
-   * @see javax.swing.SwingConstants#HORIZONTAL
-   * @see javax.swing.SwingConstants#VERTICAL
+   * @see SwingConstants#HORIZONTAL
+   * @see SwingConstants#VERTICAL
    */
   void setOrientation(int orientation);
 

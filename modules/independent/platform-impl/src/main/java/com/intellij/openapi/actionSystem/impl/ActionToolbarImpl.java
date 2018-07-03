@@ -27,7 +27,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -38,7 +37,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
-import com.intellij.ui.switcher.SwitchTarget;
+import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
@@ -46,9 +45,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -60,7 +59,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ActionToolbarImpl extends JPanel implements ActionToolbar {
+public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickActionProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.actionSystem.impl.ActionToolbarImpl");
 
   private static final List<ActionToolbarImpl> ourToolbars = new LinkedList<>();
@@ -1218,7 +1217,6 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
     }
   }
 
-
   @Override
   public void setReservePlaceAutoPopupIcon(final boolean reserve) {
     myReservePlaceAutoPopupIcon = reserve;
@@ -1230,69 +1228,9 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
   }
 
   @Override
-  public List<SwitchTarget> getTargets(boolean onlyVisible, boolean originalProvider) {
-    ArrayList<SwitchTarget> result = new ArrayList<>();
-
-    if (getBounds().width * getBounds().height <= 0) return result;
-
-    for (int i = 0; i < getComponentCount(); i++) {
-      Component each = getComponent(i);
-      if (each instanceof ActionButton) {
-        result.add(new ActionTarget((ActionButton)each));
-      }
-    }
-    return result;
-  }
-
-  private static class ActionTarget implements SwitchTarget {
-    private final ActionButton myButton;
-
-    private ActionTarget(ActionButton button) {
-      myButton = button;
-    }
-
-    @Override
-    public ActionCallback switchTo(boolean requestFocus) {
-      myButton.click();
-      return ActionCallback.DONE;
-    }
-
-    @Override
-    public boolean isVisible() {
-      return myButton.isVisible();
-    }
-
-    @Override
-    public RelativeRectangle getRectangle() {
-      return new RelativeRectangle(myButton.getParent(), myButton.getBounds());
-    }
-
-    @Override
-    public Component getComponent() {
-      return myButton;
-    }
-
-    @Override
-    public String toString() {
-      return myButton.getAction().toString();
-    }
-  }
-
-  @Override
-  public SwitchTarget getCurrentTarget() {
-    return null;
-  }
-
-  @Override
-  public boolean isCycleRoot() {
-    return false;
-  }
-
-  @Override
   public List<AnAction> getActions(boolean originalProvider) {
     return getActions();
   }
-
 
   @Nonnull
   @Override
