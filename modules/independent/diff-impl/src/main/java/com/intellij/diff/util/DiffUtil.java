@@ -100,11 +100,12 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
@@ -129,8 +130,8 @@ public class DiffUtil {
     return editor.getUserData(DiffManagerImpl.EDITOR_IS_DIFF_KEY) != null;
   }
 
-  @javax.annotation.Nullable
-  public static EditorHighlighter initEditorHighlighter(@javax.annotation.Nullable Project project,
+  @Nullable
+  public static EditorHighlighter initEditorHighlighter(@Nullable Project project,
                                                         @Nonnull DocumentContent content,
                                                         @Nonnull CharSequence text) {
     EditorHighlighter highlighter = createEditorHighlighter(project, content);
@@ -146,8 +147,8 @@ public class DiffUtil {
     return highlighter;
   }
 
-  @javax.annotation.Nullable
-  private static EditorHighlighter createEditorHighlighter(@javax.annotation.Nullable Project project, @Nonnull DocumentContent content) {
+  @Nullable
+  private static EditorHighlighter createEditorHighlighter(@Nullable Project project, @Nonnull DocumentContent content) {
     FileType type = content.getContentType();
     VirtualFile file = content.getHighlightFile();
     Language language = content.getUserData(DiffUserDataKeys.LANGUAGE);
@@ -178,7 +179,7 @@ public class DiffUtil {
     if (highlighter != null) editor.setHighlighter(highlighter);
   }
 
-  public static void setEditorCodeStyle(@Nullable Project project, @Nonnull EditorEx editor, @javax.annotation.Nullable FileType fileType) {
+  public static void setEditorCodeStyle(@Nullable Project project, @Nonnull EditorEx editor, @Nullable FileType fileType) {
     if (project != null && fileType != null) {
       CodeStyleFacade codeStyleFacade = CodeStyleFacade.getInstance(project);
       editor.getSettings().setTabSize(codeStyleFacade.getTabSize(fileType));
@@ -195,12 +196,12 @@ public class DiffUtil {
   }
 
   @Nonnull
-  public static EditorEx createEditor(@Nonnull Document document, @javax.annotation.Nullable Project project, boolean isViewer) {
+  public static EditorEx createEditor(@Nonnull Document document, @Nullable Project project, boolean isViewer) {
     return createEditor(document, project, isViewer, false);
   }
 
   @Nonnull
-  public static EditorEx createEditor(@Nonnull Document document, @javax.annotation.Nullable Project project, boolean isViewer, boolean enableFolding) {
+  public static EditorEx createEditor(@Nonnull Document document, @Nullable Project project, boolean isViewer, boolean enableFolding) {
     EditorFactory factory = EditorFactory.getInstance();
     EditorEx editor = (EditorEx)(isViewer ? factory.createViewer(document, project) : factory.createEditor(document, project));
 
@@ -222,7 +223,7 @@ public class DiffUtil {
     return editor;
   }
 
-  public static void configureEditor(@Nonnull EditorEx editor, @Nonnull DocumentContent content, @javax.annotation.Nullable Project project) {
+  public static void configureEditor(@Nonnull EditorEx editor, @Nonnull DocumentContent content, @Nullable Project project) {
     setEditorHighlighter(project, editor, content);
     setEditorCodeStyle(project, editor, content.getContentType());
     editor.reinitSettings();
@@ -245,24 +246,24 @@ public class DiffUtil {
     }
   }
 
-  public static void moveCaret(@javax.annotation.Nullable final Editor editor, int line) {
+  public static void moveCaret(@Nullable final Editor editor, int line) {
     if (editor == null) return;
     editor.getCaretModel().removeSecondaryCarets();
     editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(line, 0));
   }
 
-  public static void scrollEditor(@javax.annotation.Nullable final Editor editor, int line, boolean animated) {
+  public static void scrollEditor(@Nullable final Editor editor, int line, boolean animated) {
     scrollEditor(editor, line, 0, animated);
   }
 
-  public static void scrollEditor(@javax.annotation.Nullable final Editor editor, int line, int column, boolean animated) {
+  public static void scrollEditor(@Nullable final Editor editor, int line, int column, boolean animated) {
     if (editor == null) return;
     editor.getCaretModel().removeSecondaryCarets();
     editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(line, column));
     scrollToCaret(editor, animated);
   }
 
-  public static void scrollToPoint(@javax.annotation.Nullable Editor editor, @Nonnull Point point, boolean animated) {
+  public static void scrollToPoint(@Nullable Editor editor, @Nonnull Point point, boolean animated) {
     if (editor == null) return;
     if (!animated) editor.getScrollingModel().disableAnimation();
     editor.getScrollingModel().scrollHorizontally(point.x);
@@ -270,7 +271,7 @@ public class DiffUtil {
     if (!animated) editor.getScrollingModel().enableAnimation();
   }
 
-  public static void scrollToCaret(@javax.annotation.Nullable Editor editor, boolean animated) {
+  public static void scrollToCaret(@Nullable Editor editor, boolean animated) {
     if (editor == null) return;
     if (!animated) editor.getScrollingModel().disableAnimation();
     editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
@@ -278,14 +279,14 @@ public class DiffUtil {
   }
 
   @Nonnull
-  public static Point getScrollingPosition(@javax.annotation.Nullable Editor editor) {
+  public static Point getScrollingPosition(@Nullable Editor editor) {
     if (editor == null) return new Point(0, 0);
     ScrollingModel model = editor.getScrollingModel();
     return new Point(model.getHorizontalScrollOffset(), model.getVerticalScrollOffset());
   }
 
   @Nonnull
-  public static LogicalPosition getCaretPosition(@javax.annotation.Nullable Editor editor) {
+  public static LogicalPosition getCaretPosition(@Nullable Editor editor) {
     return editor != null ? editor.getCaretModel().getLogicalPosition() : new LogicalPosition(0, 0);
   }
 
@@ -294,12 +295,12 @@ public class DiffUtil {
   //
 
   @Nonnull
-  public static Icon getArrowIcon(@Nonnull Side sourceSide) {
+  public static Image getArrowIcon(@Nonnull Side sourceSide) {
     return sourceSide.select(AllIcons.Diff.ArrowRight, AllIcons.Diff.Arrow);
   }
 
   @Nonnull
-  public static Icon getArrowDownIcon(@Nonnull Side sourceSide) {
+  public static Image getArrowDownIcon(@Nonnull Side sourceSide) {
     return sourceSide.select(AllIcons.Diff.ArrowRightDown, AllIcons.Diff.ArrowLeftDown);
   }
 
@@ -332,7 +333,7 @@ public class DiffUtil {
     addActionBlock(group, Arrays.asList(actions));
   }
 
-  public static void addActionBlock(@Nonnull DefaultActionGroup group, @javax.annotation.Nullable List<? extends AnAction> actions) {
+  public static void addActionBlock(@Nonnull DefaultActionGroup group, @Nullable List<? extends AnAction> actions) {
     if (actions == null || actions.isEmpty()) return;
     group.addSeparator();
 
@@ -350,7 +351,7 @@ public class DiffUtil {
   }
 
   @Nonnull
-  public static String createTooltipText(@Nonnull String text, @javax.annotation.Nullable String appendix) {
+  public static String createTooltipText(@Nonnull String text, @Nullable String appendix) {
     StringBuilder result = new StringBuilder();
     result.append("<html><body>");
     result.append(text);
@@ -364,7 +365,7 @@ public class DiffUtil {
   }
 
   @Nonnull
-  public static String createNotificationText(@Nonnull String text, @javax.annotation.Nullable String appendix) {
+  public static String createNotificationText(@Nonnull String text, @Nullable String appendix) {
     StringBuilder result = new StringBuilder();
     result.append("<html><body>");
     result.append(text);
@@ -380,7 +381,7 @@ public class DiffUtil {
   public static void showSuccessPopup(@Nonnull String message,
                                       @Nonnull RelativePoint point,
                                       @Nonnull Disposable disposable,
-                                      @javax.annotation.Nullable Runnable hyperlinkHandler) {
+                                      @Nullable Runnable hyperlinkHandler) {
     HyperlinkListener listener = null;
     if (hyperlinkHandler != null) {
       listener = new HyperlinkAdapter() {
@@ -447,8 +448,8 @@ public class DiffUtil {
     return result;
   }
 
-  @javax.annotation.Nullable
-  private static JComponent createTitleWithNotifications(@javax.annotation.Nullable JComponent title,
+  @Nullable
+  private static JComponent createTitleWithNotifications(@Nullable JComponent title,
                                                          @Nonnull DiffContent content) {
     List<JComponent> notifications = getCustomNotifications(content);
     if (notifications.isEmpty()) return title;
@@ -459,12 +460,12 @@ public class DiffUtil {
     return createStackedComponents(components, TITLE_GAP);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static JComponent createTitle(@Nonnull String title,
                                         @Nonnull DiffContent content,
                                         boolean equalCharsets,
                                         boolean equalSeparators,
-                                        @javax.annotation.Nullable Editor editor) {
+                                        @Nullable Editor editor) {
     if (content instanceof EmptyContent) return null;
 
     Charset charset = equalCharsets ? null : ((DocumentContent)content).getCharset();
@@ -481,8 +482,8 @@ public class DiffUtil {
 
   @Nonnull
   public static JComponent createTitle(@Nonnull String title,
-                                       @javax.annotation.Nullable Charset charset,
-                                       @javax.annotation.Nullable LineSeparator separator,
+                                       @Nullable Charset charset,
+                                       @Nullable LineSeparator separator,
                                        boolean readOnly) {
     if (readOnly) title += " " + DiffBundle.message("diff.content.read.only.content.title.suffix");
 
@@ -569,16 +570,16 @@ public class DiffUtil {
   // Focus
   //
 
-  public static boolean isFocusedComponent(@javax.annotation.Nullable Component component) {
+  public static boolean isFocusedComponent(@Nullable Component component) {
     return isFocusedComponent(null, component);
   }
 
-  public static boolean isFocusedComponent(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Component component) {
+  public static boolean isFocusedComponent(@Nullable Project project, @Nullable Component component) {
     if (component == null) return false;
     return IdeFocusManager.getInstance(project).getFocusedDescendantFor(component) != null;
   }
 
-  public static void requestFocus(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Component component) {
+  public static void requestFocus(@Nullable Project project, @Nullable Component component) {
     if (component == null) return;
     IdeFocusManager.getInstance(project).requestFocus(component, true);
   }
@@ -615,7 +616,7 @@ public class DiffUtil {
                                                          config.policy, config.squashFragments, config.trimFragments);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static MergeInnerDifferences compareThreesideInner(@Nonnull List<CharSequence> chunks,
                                                             @Nonnull ComparisonPolicy comparisonPolicy,
                                                             @Nonnull ProgressIndicator indicator) {
@@ -677,8 +678,8 @@ public class DiffUtil {
     return new MergeInnerDifferences(textRanges.get(0), textRanges.get(1), textRanges.get(2));
   }
 
-  private static boolean isChunksEquals(@javax.annotation.Nullable CharSequence chunk1,
-                                        @javax.annotation.Nullable CharSequence chunk2,
+  private static boolean isChunksEquals(@Nullable CharSequence chunk1,
+                                        @Nullable CharSequence chunk2,
                                         @Nonnull ComparisonPolicy comparisonPolicy) {
     if (chunk1 == null) chunk1 = "";
     if (chunk2 == null) chunk2 = "";
@@ -1065,10 +1066,10 @@ public class DiffUtil {
   //
 
   @RequiredDispatchThread
-  public static void executeWriteCommand(@javax.annotation.Nullable Project project,
+  public static void executeWriteCommand(@Nullable Project project,
                                          @Nonnull Document document,
-                                         @javax.annotation.Nullable String commandName,
-                                         @javax.annotation.Nullable String commandGroupId,
+                                         @Nullable String commandName,
+                                         @Nullable String commandGroupId,
                                          @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                          boolean underBulkUpdate,
                                          @Nonnull Runnable task) {
@@ -1092,8 +1093,8 @@ public class DiffUtil {
 
   @RequiredDispatchThread
   public static void executeWriteCommand(@Nonnull final Document document,
-                                         @javax.annotation.Nullable final Project project,
-                                         @javax.annotation.Nullable final String commandName,
+                                         @Nullable final Project project,
+                                         @Nullable final String commandName,
                                          @Nonnull final Runnable task) {
     executeWriteCommand(project, document, commandName, null, UndoConfirmationPolicy.DEFAULT, false, task);
   }
@@ -1115,19 +1116,19 @@ public class DiffUtil {
   }
 
   @RequiredDispatchThread
-  public static boolean makeWritable(@javax.annotation.Nullable Project project, @Nonnull Document document) {
+  public static boolean makeWritable(@Nullable Project project, @Nonnull Document document) {
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null || !file.isValid()) return document.isWritable();
     return makeWritable(project, file) && document.isWritable();
   }
 
   @RequiredDispatchThread
-  public static boolean makeWritable(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file) {
+  public static boolean makeWritable(@Nullable Project project, @Nonnull VirtualFile file) {
     if (project == null) project = ProjectManager.getInstance().getDefaultProject();
     return !ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles();
   }
 
-  public static void putNonundoableOperation(@javax.annotation.Nullable Project project, @Nonnull Document document) {
+  public static void putNonundoableOperation(@Nullable Project project, @Nonnull Document document) {
     UndoManager undoManager = project != null ? UndoManager.getInstance(project) : UndoManager.getGlobalInstance();
     if (undoManager != null) {
       DocumentReference ref = DocumentReferenceManager.getInstance().create(document);
@@ -1171,7 +1172,7 @@ public class DiffUtil {
     return mode;
   }
 
-  public static void closeWindow(@javax.annotation.Nullable Window window, boolean modalOnly, boolean recursive) {
+  public static void closeWindow(@Nullable Window window, boolean modalOnly, boolean recursive) {
     if (window == null) return;
 
     Component component = window;
@@ -1199,7 +1200,7 @@ public class DiffUtil {
   // UserData
   //
 
-  public static <T> UserDataHolderBase createUserDataHolder(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public static <T> UserDataHolderBase createUserDataHolder(@Nonnull Key<T> key, @Nullable T value) {
     UserDataHolderBase holder = new UserDataHolderBase();
     holder.putUserData(key, value);
     return holder;
@@ -1214,7 +1215,7 @@ public class DiffUtil {
     return false;
   }
 
-  public static <T> T getUserData(@javax.annotation.Nullable UserDataHolder first, @javax.annotation.Nullable UserDataHolder second, @Nonnull Key<T> key) {
+  public static <T> T getUserData(@Nullable UserDataHolder first, @Nullable UserDataHolder second, @Nonnull Key<T> key) {
     if (first != null) {
       T data = first.getUserData(key);
       if (data != null) return data;
@@ -1248,7 +1249,7 @@ public class DiffUtil {
   // DataProvider
   //
 
-  @javax.annotation.Nullable
+  @Nullable
   public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull Side currentSide) {
     List<DiffContent> contents = request.getContents();
     DiffContent content1 = currentSide.select(contents);
@@ -1259,7 +1260,7 @@ public class DiffUtil {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull ThreeSide currentSide) {
     List<DiffContent> contents = request.getContents();
     DiffContent content1 = currentSide.select(contents);
@@ -1270,8 +1271,8 @@ public class DiffUtil {
     return null;
   }
 
-  @javax.annotation.Nullable
-  public static Object getData(@javax.annotation.Nullable DataProvider provider, @javax.annotation.Nullable DataProvider fallbackProvider, @NonNls Key<?> dataId) {
+  @Nullable
+  public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, @NonNls Key<?> dataId) {
     if (provider != null) {
       Object data = provider.getData(dataId);
       if (data != null) return data;
@@ -1283,7 +1284,7 @@ public class DiffUtil {
     return null;
   }
 
-  public static <T> void putDataKey(@Nonnull UserDataHolder holder, @Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public static <T> void putDataKey(@Nonnull UserDataHolder holder, @Nonnull Key<T> key, @Nullable T value) {
     DataProvider dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
     if (!(dataProvider instanceof GenericDataProvider)) {
       dataProvider = new GenericDataProvider(dataProvider);

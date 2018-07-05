@@ -17,9 +17,10 @@ package com.intellij.openapi.diff.impl.util;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class GutterActionRenderer extends GutterIconRenderer {
   private final AnAction myAction;
@@ -28,11 +29,26 @@ public class GutterActionRenderer extends GutterIconRenderer {
     myAction = action;
   }
 
+  @Override
   @Nonnull
-  public Icon getIcon() { return myAction.getTemplatePresentation().getIcon(); }
-  public AnAction getClickAction() { return myAction; }
-  public String getTooltipText() { return myAction.getTemplatePresentation().getText(); }
-  public boolean isNavigateAction() { return true; }
+  public Image getIcon() {
+    return TargetAWT.from(myAction.getTemplatePresentation().getIcon());
+  }
+
+  @Override
+  public AnAction getClickAction() {
+    return myAction;
+  }
+
+  @Override
+  public String getTooltipText() {
+    return myAction.getTemplatePresentation().getText();
+  }
+
+  @Override
+  public boolean isNavigateAction() {
+    return true;
+  }
 
   @Override
   public boolean equals(Object o) {

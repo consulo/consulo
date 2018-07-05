@@ -49,7 +49,10 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
@@ -63,6 +66,7 @@ import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ex.ApplicationEx2;
+import consulo.awt.TargetAWT;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntFunction;
 import gnu.trove.TIntObjectHashMap;
@@ -326,19 +330,12 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     int startX = myEditor.isInDistractionFreeMode() ? 0 : getWhitespaceSeparatorOffset() + (isFoldingOutlineShown() ? 1 : 0);
     IterationState state = new IterationState(myEditor, firstVisibleOffset, lastVisibleOffset, null, true, false, true, false);
     while (!state.atEnd()) {
-      drawEditorBackgroundForRange(g, state.getStartOffset(), state.getEndOffset(), state.getMergedAttributes(), defaultBackgroundColor, defaultForegroundColor,
-                                   startX);
+      drawEditorBackgroundForRange(g, state.getStartOffset(), state.getEndOffset(), state.getMergedAttributes(), defaultBackgroundColor, defaultForegroundColor, startX);
       state.advance();
     }
   }
 
-  private void drawEditorBackgroundForRange(Graphics g,
-                                            int startOffset,
-                                            int endOffset,
-                                            TextAttributes attributes,
-                                            Color defaultBackgroundColor,
-                                            Color defaultForegroundColor,
-                                            int startX) {
+  private void drawEditorBackgroundForRange(Graphics g, int startOffset, int endOffset, TextAttributes attributes, Color defaultBackgroundColor, Color defaultForegroundColor, int startX) {
     VisualPosition visualStart = myEditor.offsetToVisualPosition(startOffset, true, false);
     VisualPosition visualEnd = myEditor.offsetToVisualPosition(endOffset, false, false);
     for (int line = visualStart.getLine(); line <= visualEnd.getLine(); line++) {
@@ -353,13 +350,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  private void drawEditorLineBackgroundRect(Graphics g,
-                                            TextAttributes attributes,
-                                            int visualLine,
-                                            Color defaultBackgroundColor,
-                                            Color defaultForegroundColor,
-                                            int startX,
-                                            int startY) {
+  private void drawEditorLineBackgroundRect(Graphics g, TextAttributes attributes, int visualLine, Color defaultBackgroundColor, Color defaultForegroundColor, int startX, int startY) {
     Color color = myEditor.getBackgroundColor(attributes);
     if (!Comparing.equal(color, defaultBackgroundColor)) {
       Color fgColor = attributes.getForegroundColor();
@@ -731,8 +722,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
     int width = editorLocationX + editorComponent.getWidth();
     if (rightMarginX < width && editorLocationX < width - rightMarginX) {
-      int centeredSize = (width - rightMarginX - editorLocationX) / 2 -
-                         (getLineMarkerAreaWidth() + getLineNumberAreaWidth() + getFoldingAreaWidth() + 2 * GAP_BETWEEN_AREAS);
+      int centeredSize = (width - rightMarginX - editorLocationX) / 2 - (getLineMarkerAreaWidth() + getLineNumberAreaWidth() + getFoldingAreaWidth() + 2 * GAP_BETWEEN_AREAS);
       myTextAnnotationExtraSize = Math.max(0, centeredSize - myTextAnnotationGuttersSize);
     }
   }
@@ -795,7 +785,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       return;
     }
 
-    int minWidth = (int)(START_ICON_AREA_WIDTH * myEditor.getScale());
+    int minWidth = areIconsShown() ? scaleWidth(START_ICON_AREA_WIDTH) : 0;
     myIconsAreaWidth = canShrink ? minWidth : Math.max(myIconsAreaWidth, minWidth);
 
     processGutterRenderers((line, renderers) -> {
@@ -958,14 +948,23 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     void process(int x, int y, @Nonnull GutterMark renderer);
   }
 
-  private Icon scaleIcon(Icon icon) {
-    if (Registry.is("editor.scale.gutter.icons") && icon instanceof ScalableIcon) {
+  private float getEditorScaleFactor() {
+    if (Registry.is("editor.scale.gutter.icons")) {
       float scale = myEditor.getScale();
       if (Math.abs(1f - scale) > 0.10f) {
-        return ((ScalableIcon)icon).scale(scale);
+        return scale;
       }
     }
-    return icon;
+    return 1f;
+  }
+
+  private Icon scaleIcon(consulo.ui.image.Image icon) {
+    float scale = getEditorScaleFactor();
+    return scale == 1 ? TargetAWT.to(icon) : IconUtil.scale(TargetAWT.to(icon), this, scale);
+  }
+
+  private int scaleWidth(int width) {
+    return (int) (getEditorScaleFactor() * width);
   }
 
   private void processIconsRow(int line, @Nonnull List<GutterMark> row, @Nonnull LineGutterIconRendererProcessor processor) {
@@ -1050,8 +1049,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     final int anchorX = getFoldingAreaOffset();
     final int width = getFoldingAnchorWidth();
 
-    Collection<DisplayedFoldingAnchor> anchorsToDisplay =
-            myAnchorsDisplayStrategy.getAnchorsToDisplay(firstVisibleOffset, lastVisibleOffset, myActiveFoldRegion);
+    Collection<DisplayedFoldingAnchor> anchorsToDisplay = myAnchorsDisplayStrategy.getAnchorsToDisplay(firstVisibleOffset, lastVisibleOffset, myActiveFoldRegion);
     for (DisplayedFoldingAnchor anchor : anchorsToDisplay) {
       drawFoldingAnchor(width, clip, g, anchorX, anchor.visualLine, anchor.type, anchor.foldRegion == myActiveFoldRegion);
     }
@@ -1462,9 +1460,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
       RelativePoint showPoint = new RelativePoint(this, t.get());
 
-      controller.showTooltipByMouseMove(myEditor, showPoint,
-                                        ((EditorMarkupModel)myEditor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(toolTip),
-                                        false, GUTTER_TOOLTIP_GROUP, new HintHint(this, t.get()).setAwtTooltip(true).setPreferredPosition(ballPosition));
+      controller.showTooltipByMouseMove(myEditor, showPoint, ((EditorMarkupModel)myEditor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(toolTip), false,
+                                        GUTTER_TOOLTIP_GROUP, new HintHint(this, t.get()).setAwtTooltip(true).setPreferredPosition(ballPosition));
     }
     else {
       controller.cancelTooltip(GUTTER_TOOLTIP_GROUP, e, false);

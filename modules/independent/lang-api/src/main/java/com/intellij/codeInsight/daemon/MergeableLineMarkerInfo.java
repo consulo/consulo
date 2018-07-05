@@ -32,7 +32,6 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,27 +48,7 @@ import java.util.List;
 public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends LineMarkerInfo<T> {
   public MergeableLineMarkerInfo(@Nonnull T element,
                                  @Nonnull TextRange textRange,
-                                 @Nonnull SwingImageRef icon,
-                                 int updatePass,
-                                 @Nullable Function<? super T, String> tooltipProvider,
-                                 @Nullable GutterIconNavigationHandler<T> navHandler,
-                                 @Nonnull GutterIconRenderer.Alignment alignment) {
-    this(element, textRange, TargetAWT.to(icon), updatePass, tooltipProvider, navHandler, alignment);
-  }
-
-  public MergeableLineMarkerInfo(@Nonnull T element,
-                                 @Nonnull TextRange textRange,
                                  Image icon,
-                                 int updatePass,
-                                 @Nullable Function<? super T, String> tooltipProvider,
-                                 @Nullable GutterIconNavigationHandler<T> navHandler,
-                                 @Nonnull GutterIconRenderer.Alignment alignment) {
-    this(element, textRange, TargetAWT.to(icon), updatePass, tooltipProvider, navHandler, alignment);
-  }
-
-  public MergeableLineMarkerInfo(@Nonnull T element,
-                                 @Nonnull TextRange textRange,
-                                 Icon icon,
                                  int updatePass,
                                  @Nullable Function<? super T, String> tooltipProvider,
                                  @Nullable GutterIconNavigationHandler<T> navHandler,
@@ -167,7 +146,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
               @Override
               public JComponent fun(Object dom) {
                 if (dom instanceof LineMarkerInfo) {
-                  Icon icon = null;
+                  Image icon = null;
                   final GutterIconRenderer renderer = ((LineMarkerInfo)dom).createGutterRenderer();
                   if (renderer != null) {
                     icon = renderer.getIcon();
@@ -177,7 +156,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
                   final String elementPresentation = dom instanceof MergeableLineMarkerInfo ? ((MergeableLineMarkerInfo)dom).getElementPresentation(element) : element.getText();
                   String text = StringUtil.first(elementPresentation, 100, true).replace('\n', ' ');
 
-                  final JBLabel label = new JBLabel(text, icon, SwingConstants.LEFT);
+                  final JBLabel label = new JBLabel(text, TargetAWT.to(icon), SwingConstants.LEFT);
                   label.setBorder(JBUI.Borders.empty(2));
                   return label;
                 }

@@ -35,12 +35,11 @@ import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -136,21 +135,6 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
     if (marker != null) {
       saveHighlighter(marker);
     }
-  }
-
-  void setSeparatorMarker(int line, Consumer<Integer> consumer) {
-    EditorEx editor = getEditor();
-    MarkupModel markupModel = getMarkupModel();
-    if (editor == null || markupModel == null) {
-      return;
-    }
-    RangeHighlighter marker = markupModel.addLineHighlighter(line, LAYER, null);
-    marker.setLineSeparatorPlacement(SeparatorPlacement.TOP);
-    final FragmentBoundRenderer renderer = new FragmentBoundRenderer(editor.getLineHeight(), editor, consumer);
-    marker.setLineSeparatorColor(renderer.getColor());
-    marker.setLineSeparatorRenderer(renderer);
-    marker.setLineMarkerRenderer(renderer);
-    myExtraHighLighters.add(marker);
   }
 
   @Nullable

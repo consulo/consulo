@@ -41,10 +41,10 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ class ApplyPatchChange {
   @Nonnull
   private final HunkStatus myStatus;
 
-  @javax.annotation.Nullable
+  @Nullable
   private final List<DiffFragment> myPatchInnerDifferences;
   @Nonnull
   private final List<MyGutterOperation> myOperations = new ArrayList<>();
@@ -82,7 +82,7 @@ class ApplyPatchChange {
     myPatchInnerDifferences = calcPatchInnerDifferences(hunk, viewer);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static List<DiffFragment> calcPatchInnerDifferences(@Nonnull PatchChangeBuilder.Hunk hunk,
                                                               @Nonnull ApplyPatchViewer viewer) {
     LineRange deletionRange = hunk.getPatchDeletionRange();
@@ -277,7 +277,7 @@ class ApplyPatchChange {
     ContainerUtil.addIfNotNull(myOperations, createOperation(OperationType.IGNORE));
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private MyGutterOperation createOperation(@Nonnull OperationType type) {
     if (isResolved()) return null;
 
@@ -311,7 +311,7 @@ class ApplyPatchChange {
       myHighlighter.dispose();
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public GutterIconRenderer createRenderer() {
       switch (myType) {
         case APPLY:
@@ -333,7 +333,7 @@ class ApplyPatchChange {
     });
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private GutterIconRenderer createIgnoreRenderer() {
     return createIconRenderer(DiffBundle.message("merge.dialog.ignore.change.action.name"), AllIcons.Diff.Remove, () -> {
       myViewer.executeCommand("Ignore change", () -> {
@@ -342,9 +342,9 @@ class ApplyPatchChange {
     });
   }
 
-  @javax.annotation.Nullable
+  @Nonnull
   private static GutterIconRenderer createIconRenderer(@Nonnull final String text,
-                                                       @Nonnull final Icon icon,
+                                                       @Nonnull final Image icon,
                                                        @Nonnull final Runnable perform) {
     final String tooltipText = DiffUtil.createTooltipText(text, null);
     return new DiffGutterRenderer(icon, tooltipText) {

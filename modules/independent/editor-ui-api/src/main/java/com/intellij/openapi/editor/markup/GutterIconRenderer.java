@@ -20,6 +20,8 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -40,7 +42,6 @@ import javax.swing.*;
  */
 public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAware {
 
-
   /**
    * Returns the icon drawn in the gutter.
    *
@@ -48,7 +49,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
    */
   @Override
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   /**
    * Returns the action group actions from which are used to fill the context menu

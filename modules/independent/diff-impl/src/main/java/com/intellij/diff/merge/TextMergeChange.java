@@ -31,11 +31,12 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -306,7 +307,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
   @javax.annotation.Nullable
   private GutterIconRenderer createApplyRenderer(@Nonnull final Side side, final boolean modifier) {
     if (isResolved(side)) return null;
-    Icon icon = isOnesideAppliedConflict() ? DiffUtil.getArrowDownIcon(side) : DiffUtil.getArrowIcon(side);
+    Image icon = isOnesideAppliedConflict() ? DiffUtil.getArrowDownIcon(side) : DiffUtil.getArrowIcon(side);
     return createIconRenderer(DiffBundle.message("merge.dialog.apply.change.action.name"), icon, isConflict(), () -> {
       myViewer.executeMergeCommand("Accept change", Collections.singletonList(this), () -> {
         myViewer.replaceChange(this, side, modifier);
@@ -335,9 +336,9 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     });
   }
 
-  @javax.annotation.Nullable
+  @Nonnull
   private GutterIconRenderer createIconRenderer(@Nonnull final String text,
-                                                @Nonnull final Icon icon,
+                                                @Nonnull final Image icon,
                                                 boolean ctrlClickVisible,
                                                 @Nonnull final Runnable perform) {
     final String tooltipText = DiffUtil.createTooltipText(text, ctrlClickVisible ? CTRL_CLICK_TO_RESOLVE : null);

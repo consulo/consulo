@@ -36,6 +36,8 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.awt.RelativePoint;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -80,7 +82,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     myLabel.setText(description);
     myLabel.setToolTipText(tooltip);
     if (gutterMark != null) {
-      myLabel.setIcon(gutterMark.getIcon());
+      myLabel.setIcon(TargetAWT.to(gutterMark.getIcon()));
     }
 
     if (intentions != null && !intentions.isEmpty()) {

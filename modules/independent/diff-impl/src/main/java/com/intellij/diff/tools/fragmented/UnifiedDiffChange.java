@@ -27,10 +27,10 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,7 +182,7 @@ public class UnifiedDiffChange {
   @Nullable
   private GutterIconRenderer createIconRenderer(@Nonnull final Side sourceSide,
                                                 @Nonnull final String tooltipText,
-                                                @Nonnull final Icon icon) {
+                                                @Nonnull final Image icon) {
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override
       protected void performAction(AnActionEvent e) {

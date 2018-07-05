@@ -31,7 +31,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
   public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
     List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.EXTENSION.allForLanguage(element.getLanguage());
     DefaultActionGroup actionGroup = null;
-    Icon icon = null;
+    Image icon = null;
     final List<RunLineMarkerContributor.Info> infos = new ArrayList<>();
     for (RunLineMarkerContributor contributor : contributors) {
       RunLineMarkerContributor.Info info = contributor.getInfo(element);

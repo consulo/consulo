@@ -22,27 +22,28 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 public abstract class RunLineMarkerContributor {
   static final LanguageExtension<RunLineMarkerContributor> EXTENSION = new LanguageExtension<>("com.intellij.runLineMarkerContributor");
 
   public static class Info {
-    public final Icon icon;
+    public final Image icon;
     public final AnAction[] actions;
     public final Function<PsiElement, String> tooltipProvider;
 
-    public Info(Icon icon, @Nullable Function<PsiElement, String> tooltipProvider, @Nonnull AnAction... actions) {
+    public Info(Image icon, @Nullable Function<PsiElement, String> tooltipProvider, @Nonnull AnAction... actions) {
       this.icon = icon;
       this.actions = actions;
       this.tooltipProvider = tooltipProvider;
     }
 
     public Info(@Nonnull final AnAction action) {
-      this(action.getTemplatePresentation().getIcon(), element -> getText(action, element), action);
+      this(TargetAWT.from(action.getTemplatePresentation().getIcon()), element -> getText(action, element), action);
     }
   }
 

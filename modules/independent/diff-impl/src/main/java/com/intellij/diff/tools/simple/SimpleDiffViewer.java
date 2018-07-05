@@ -47,11 +47,14 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import consulo.ui.image.*;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.*;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.*;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -270,7 +273,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   @Nonnull
-  private Runnable applyNotification(@javax.annotation.Nullable final JComponent notification) {
+  private Runnable applyNotification(@Nullable final JComponent notification) {
     return () -> {
       clearDiffPresentation();
       myFoldingModel.destroy();
@@ -444,7 +447,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     return affectedChanges;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredDispatchThread
   private SimpleDiffChange getSelectedChange(@Nonnull Side side) {
     int caretLine = getEditor(side).getCaretModel().getLogicalPosition().line;
@@ -586,8 +589,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     @Nonnull
     protected abstract String getText(@Nonnull Side side);
 
-    @javax.annotation.Nullable
-    protected abstract Icon getIcon(@Nonnull Side side);
+    @Nullable
+    protected abstract consulo.ui.image.Image getIcon(@Nonnull Side side);
 
     @RequiredWriteAction
     protected abstract void apply(@Nonnull List<SimpleDiffChange> changes);
@@ -610,9 +613,9 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
       return "Accept";
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
-    protected Icon getIcon(@Nonnull Side side) {
+    protected Image getIcon(@Nonnull Side side) {
       return DiffUtil.getArrowIcon(myModifiedSide.other());
     }
 
@@ -641,9 +644,9 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
       return isBothEditable() ? myModifiedSide.select("Append to the Left", "Append to the Right") : "Append";
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
-    protected Icon getIcon(@Nonnull Side side) {
+    protected Image getIcon(@Nonnull Side side) {
       return DiffUtil.getArrowDownIcon(myModifiedSide.other());
     }
 
@@ -753,7 +756,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   // Helpers
   //
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
@@ -823,7 +826,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   private class MyStatusPanel extends StatusPanel {
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     protected String getMessage() {
       if (getHighlightPolicy() == HighlightPolicy.DO_NOT_HIGHLIGHT) return DiffBundle.message("diff.highlighting.disabled.text");
@@ -836,16 +839,16 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   private static class CompareData {
-    @javax.annotation.Nullable
+    @Nullable
     private final List<LineFragment> myFragments;
     private final boolean myIsContentsEqual;
 
-    public CompareData(@javax.annotation.Nullable List<LineFragment> fragments, boolean isContentsEqual) {
+    public CompareData(@Nullable List<LineFragment> fragments, boolean isContentsEqual) {
       myFragments = fragments;
       myIsContentsEqual = isContentsEqual;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public List<LineFragment> getFragments() {
       return myFragments;
     }
@@ -875,7 +878,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
       super(editors.toArray(new EditorEx[2]), disposable);
     }
 
-    public void install(@javax.annotation.Nullable final List<LineFragment> fragments,
+    public void install(@Nullable final List<LineFragment> fragments,
                         @Nonnull UserDataHolder context,
                         @Nonnull FoldingModelSupport.Settings settings) {
       Iterator<int[]> it = map(fragments, fragment -> new int[]{

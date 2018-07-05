@@ -20,6 +20,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -33,7 +35,7 @@ public class NavigateAction<T extends PsiElement> extends AnAction {
 
   public NavigateAction(@Nonnull String text,
                         @Nonnull LineMarkerInfo<T> info,
-                        @javax.annotation.Nullable String originalActionId) {
+                        @Nullable String originalActionId) {
     super(text);
     myInfo = info;
     if (originalActionId != null) {
@@ -46,6 +48,7 @@ public class NavigateAction<T extends PsiElement> extends AnAction {
     myInfo = info;
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
     if (myInfo.getNavigationHandler() != null) {

@@ -28,10 +28,10 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -301,7 +301,7 @@ public class SimpleDiffChange {
   @Nullable
   private GutterIconRenderer createIconRenderer(@Nonnull final Side sourceSide,
                                                 @Nonnull final String tooltipText,
-                                                @Nonnull final Icon icon,
+                                                @Nonnull final Image icon,
                                                 @Nonnull final Runnable perform) {
     if (!DiffUtil.isEditable(myViewer.getEditor(sourceSide.other()))) return null;
     return new DiffGutterRenderer(icon, tooltipText) {

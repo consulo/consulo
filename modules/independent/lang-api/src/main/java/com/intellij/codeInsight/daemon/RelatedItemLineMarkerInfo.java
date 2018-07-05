@@ -21,10 +21,10 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -33,18 +33,18 @@ import java.util.Collection;
 public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerInfo<T> {
   private final NotNullLazyValue<Collection<? extends GotoRelatedItem>> myTargets;
 
-  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Icon icon, int updatePass,
+  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Image icon, int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
-                                   @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
+                                   @Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
                                    @Nonnull NotNullLazyValue<Collection<? extends GotoRelatedItem>> targets) {
     super(element, range, icon, updatePass, tooltipProvider, navHandler, alignment);
     myTargets = targets;
   }
 
-  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Icon icon, int updatePass,
+  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Image icon, int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
-                                   @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
+                                   @Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
                                    @Nonnull final Collection<? extends GotoRelatedItem> targets) {
     this(element, range, icon, updatePass, tooltipProvider, navHandler, alignment, new NotNullLazyValue<Collection<? extends GotoRelatedItem>>() {

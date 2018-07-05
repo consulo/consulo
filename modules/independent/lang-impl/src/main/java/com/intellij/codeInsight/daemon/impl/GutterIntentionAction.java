@@ -32,6 +32,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -138,7 +140,7 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
       }
     }
     Icon icon = action.getTemplatePresentation().getIcon();
-    if (icon == null) icon = renderer.getIcon();
+    if (icon == null) icon = TargetAWT.to(renderer.getIcon());
     if (icon.getIconWidth() < 16) icon = IconUtil.toSize(icon, 16, 16);
     final GutterIntentionAction gutterAction = new GutterIntentionAction(action, order, icon);
     if (!gutterAction.isAvailable(event)) return;

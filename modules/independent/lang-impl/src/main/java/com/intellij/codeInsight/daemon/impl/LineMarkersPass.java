@@ -52,11 +52,12 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class LineMarkersPass extends TextEditorHighlightingPass implements DumbAware {
@@ -71,11 +72,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
   @Nonnull
   private final TextRange myRestrictRange;
 
-  LineMarkersPass(@Nonnull Project project,
-                  @Nonnull PsiFile file,
-                  @Nonnull Document document,
-                  @Nonnull TextRange priorityBounds,
-                  @Nonnull TextRange restrictRange) {
+  LineMarkersPass(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Document document, @Nonnull TextRange priorityBounds, @Nonnull TextRange restrictRange) {
     super(project, document, false);
     myFile = file;
     myPriorityBounds = priorityBounds;
@@ -98,6 +95,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
     }
   }
 
+  @RequiredReadAction
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     final List<LineMarkerInfo> lineMarkers = new ArrayList<>();
@@ -106,24 +104,22 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
       final PsiFile root = viewProvider.getPsi(language);
       HighlightingLevelManager highlightingLevelManager = HighlightingLevelManager.getInstance(myProject);
       if (!highlightingLevelManager.shouldHighlight(root)) continue;
-      Divider.divideInsideAndOutsideInOneRoot(root, myRestrictRange, myPriorityBounds,
-                                              elements -> {
-                                                Collection<LineMarkerProvider> providers = getMarkerProviders(language, myProject);
-                                                List<LineMarkerProvider> providersList = new ArrayList<>(providers);
+      Divider.divideInsideAndOutsideInOneRoot(root, myRestrictRange, myPriorityBounds, elements -> {
+        Collection<LineMarkerProvider> providers = getMarkerProviders(language, myProject);
+        List<LineMarkerProvider> providersList = new ArrayList<>(providers);
 
-                                                queryProviders(elements.inside, root, providersList, (element, info) -> {
-                                                  lineMarkers.add(info);
-                                                  ApplicationManager.getApplication()
-                                                          .invokeLater(() -> LineMarkersUtil.addLineMarkerToEditorIncrementally(myProject, getDocument(), info), myProject.getDisposed());
-                                                });
-                                                queryProviders(elements.outside, root, providersList, (element, info) -> lineMarkers.add(info));
-                                                return true;
-                                              });
+        queryProviders(elements.inside, root, providersList, (element, info) -> {
+          lineMarkers.add(info);
+          ApplicationManager.getApplication().invokeLater(() -> LineMarkersUtil.addLineMarkerToEditorIncrementally(myProject, getDocument(), info), myProject.getDisposed());
+        });
+        queryProviders(elements.outside, root, providersList, (element, info) -> lineMarkers.add(info));
+        return true;
+      });
     }
 
     myMarkers = mergeLineMarkers(lineMarkers, getDocument());
     if (LOG.isDebugEnabled()) {
-      LOG.debug("LineMarkersPass.doCollectInformation. lineMarkers: " + lineMarkers+"; merged: "+myMarkers);
+      LOG.debug("LineMarkersPass.doCollectInformation. lineMarkers: " + lineMarkers + "; merged: " + myMarkers);
     }
   }
 
@@ -166,8 +162,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
     List<LineMarkerProvider> forLanguage = LineMarkerProviders.INSTANCE.allForLanguageOrAny(language);
     List<LineMarkerProvider> providers = DumbService.getInstance(project).filterByDumbAwareness(forLanguage);
     final LineMarkerSettings settings = LineMarkerSettings.getInstance();
-    return ContainerUtil.filter(providers, provider -> !(provider instanceof LineMarkerProviderDescriptor)
-                                                       || settings.isEnabled((LineMarkerProviderDescriptor)provider));
+    return ContainerUtil.filter(providers, provider -> !(provider instanceof LineMarkerProviderDescriptor) || settings.isEnabled((LineMarkerProviderDescriptor)provider));
   }
 
   private static void queryProviders(@Nonnull List<PsiElement> elements,
@@ -252,12 +247,10 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
         List<TextRange> editables = manager.intersectWithAllEditableFragments(injectedPsi, injectedRange);
         for (TextRange editable : editables) {
           TextRange hostRange = manager.injectedToHost(injectedPsi, editable);
-          Icon icon = gutterRenderer == null ? null : gutterRenderer.getIcon();
+          Image icon = gutterRenderer == null ? null : gutterRenderer.getIcon();
           GutterIconNavigationHandler<PsiElement> navigationHandler = injectedMarker.getNavigationHandler();
           LineMarkerInfo<PsiElement> converted =
-                  new LineMarkerInfo<>(injectedElement, hostRange, icon, injectedMarker.updatePass,
-                                       e -> injectedMarker.getLineMarkerTooltip(), navigationHandler,
-                                       GutterIconRenderer.Alignment.RIGHT);
+                  new LineMarkerInfo<>(injectedElement, hostRange, icon, injectedMarker.updatePass, e -> injectedMarker.getLineMarkerTooltip(), navigationHandler, GutterIconRenderer.Alignment.RIGHT);
           consumer.consume(injectedElement, converted);
         }
       });
@@ -277,15 +270,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
 
   @Nonnull
   public static LineMarkerInfo createMethodSeparatorLineMarker(@Nonnull PsiElement startFrom, @Nonnull EditorColorsManager colorsManager) {
-    LineMarkerInfo info = new LineMarkerInfo<>(
-            startFrom,
-            startFrom.getTextRange(),
-            null,
-            Pass.LINE_MARKERS,
-            FunctionUtil.<Object, String>nullConstant(),
-            null,
-            GutterIconRenderer.Alignment.RIGHT
-    );
+    LineMarkerInfo info = new LineMarkerInfo<>(startFrom, startFrom.getTextRange(), null, Pass.LINE_MARKERS, FunctionUtil.<Object, String>nullConstant(), null, GutterIconRenderer.Alignment.RIGHT);
     EditorColorsScheme scheme = colorsManager.getGlobalScheme();
     info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
     info.separatorPlacement = SeparatorPlacement.TOP;

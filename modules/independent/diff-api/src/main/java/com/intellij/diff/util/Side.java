@@ -77,9 +77,9 @@ public enum Side {
     return isLeft() ? left : right;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Contract("!null, !null -> !null; null, null -> null")
-  public <T> T select(@javax.annotation.Nullable T left, @Nullable T right) {
+  public <T> T select(@Nullable T left, @Nullable T right) {
     return isLeft() ? left : right;
   }
 

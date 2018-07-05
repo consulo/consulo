@@ -60,7 +60,6 @@ import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 
 public class Bookmark implements Navigatable {
@@ -331,8 +330,8 @@ public class Bookmark implements Navigatable {
 
     @Override
     @Nonnull
-    public Icon getIcon() {
-      return TargetAWT.to(myBookmark.getIcon());
+    public Image getIcon() {
+      return myBookmark.getIcon();
     }
 
     @Override

@@ -15,8 +15,11 @@
  */
 package com.intellij.codeInsight.daemon;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -35,13 +38,13 @@ public interface GutterMark {
    * @return the gutter icon.
    */
   @Nonnull
-  Icon getIcon();
+  Image getIcon();
 
   /**
    * Returns the text of the tooltip displayed when the mouse is over the icon.
    *
    * @return the tooltip text, or null if no tooltip is required.
    */
-  @javax.annotation.Nullable
+  @Nullable
   String getTooltipText();
 }
