@@ -15,7 +15,10 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -24,6 +27,7 @@ import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -47,7 +51,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
     super(text);
   }
 
-  protected ResizeToolWindowAction(String text, String description, Icon icon) {
+  protected ResizeToolWindowAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 
@@ -200,7 +204,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
       super(text);
     }
 
-    public Left(String text, String description, Icon icon) {
+    public Left(String text, String description, Image icon) {
       super(text, description, icon);
     }
 
@@ -228,7 +232,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
       super(text);
     }
 
-    public Right(String text, String description, Icon icon) {
+    public Right(String text, String description, Image icon) {
       super(text, description, icon);
     }
 
@@ -256,7 +260,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
       super(text);
     }
 
-    public Up(String text, String description, Icon icon) {
+    public Up(String text, String description, Image icon) {
       super(text, description, icon);
     }
 
@@ -284,7 +288,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
       super(text);
     }
 
-    public Down(String text, String description, Icon icon) {
+    public Down(String text, String description, Image icon) {
       super(text, description, icon);
     }
 

@@ -23,18 +23,14 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.awt.*;
 
 public abstract class TextAttributesDescription extends ColorAndFontDescription {
   private final TextAttributes myAttributes;
 
-  public TextAttributesDescription(String name,
-                                   String group,
-                                   TextAttributes attributes,
-                                   TextAttributesKey type,
-                                   EditorColorsScheme scheme, Icon icon, final String toolTip) {
+  public TextAttributesDescription(String name, String group, TextAttributes attributes, TextAttributesKey type, EditorColorsScheme scheme, Image icon, final String toolTip) {
     super(name, group, type == null ? null : type.getExternalName(), scheme, icon, toolTip);
     myAttributes = attributes;
     initCheckedStatus();

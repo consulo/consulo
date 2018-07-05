@@ -21,7 +21,6 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.awt.TargetAWT;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
@@ -41,7 +40,7 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
 
     final Presentation templatePresentation = getTemplatePresentation();
     templatePresentation.setText(contentFolderType.getName());
-    templatePresentation.setIcon(TargetAWT.to(contentFolderType.getIcon()));
+    templatePresentation.setIcon(contentFolderType.getIcon());
   }
 
   @Override

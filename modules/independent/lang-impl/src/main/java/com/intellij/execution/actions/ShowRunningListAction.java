@@ -37,13 +37,13 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -59,7 +59,7 @@ import java.util.Set;
 public class ShowRunningListAction extends AnAction {
   public ShowRunningListAction() {
     super(ExecutionBundle.message("show.running.list.action.name"), ExecutionBundle.message("show.running.list.action.description"),
-          LayeredIcon.create(AllIcons.RunConfigurations.Variables, AllIcons.Nodes.RunnableMark));
+          ImageEffects.layered(AllIcons.RunConfigurations.Variables, AllIcons.Nodes.RunnableMark));
   }
 
   @RequiredDispatchThread
@@ -90,8 +90,7 @@ public class ShowRunningListAction extends AnAction {
         stateRef.set(state);
 
         BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(state.getFirst());
-        builder.setShowCallout(false).setTitle(ExecutionBundle.message("show.running.list.balloon.title")).setBlockClicksThroughBalloon(true)
-                .setDialogMode(true).setHideOnKeyOutside(false);
+        builder.setShowCallout(false).setTitle(ExecutionBundle.message("show.running.list.balloon.title")).setBlockClicksThroughBalloon(true).setDialogMode(true).setHideOnKeyOutside(false);
         IdeFrame frame = e.getDataContext().getData(IdeFrame.KEY);
         if (frame == null) {
           frame = WindowManagerEx.getInstance().getIdeFrame(project);

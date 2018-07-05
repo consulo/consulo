@@ -19,8 +19,10 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.IdeBorderFactory;
-import javax.annotation.Nullable;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -32,9 +34,9 @@ import java.awt.event.MouseEvent;
 public abstract class TextFieldAction extends AnAction implements CustomComponentAction {
   protected JTextField myField;
   private final String myDescription;
-  private final Icon myIcon;
+  private final Image myIcon;
 
-  protected TextFieldAction(String text, String description, Icon icon, final int initSize) {
+  protected TextFieldAction(String text, String description, Image icon, final int initSize) {
     super(text, description, icon);
     myDescription = description;
     myIcon = icon;
@@ -57,7 +59,7 @@ public abstract class TextFieldAction extends AnAction implements CustomComponen
     // honestly borrowed from SearchTextField
     
     final JPanel panel = new JPanel(new BorderLayout());
-    final JLabel label = new JLabel(myIcon);
+    final JLabel label = new JLabel(TargetAWT.to(myIcon));
     label.setOpaque(true);
     label.setBackground(myField.getBackground());
     myField.setOpaque(true);

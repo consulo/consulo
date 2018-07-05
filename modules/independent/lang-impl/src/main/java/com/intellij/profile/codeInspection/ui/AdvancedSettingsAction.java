@@ -25,12 +25,13 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,19 +52,20 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     myCheckBoxIndent = calculateCheckBoxIndent();
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(AnActionEvent e) {
     super.update(e);
     final InspectionProfileImpl inspectionProfile = getInspectionProfile();
-    final Icon icon = AllIcons.General.Gear;
-    e.getPresentation().setIcon(
-            (inspectionProfile != null && inspectionProfile.isProfileLocked()) ? LayeredIcon.create(icon, AllIcons.Nodes.Locked) : icon);
+    final consulo.ui.image.Image icon = AllIcons.General.Gear;
+    e.getPresentation().setIcon((inspectionProfile != null && inspectionProfile.isProfileLocked()) ? ImageEffects.layered(icon, AllIcons.Nodes.Locked) : icon);
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final ListPopupImpl actionGroupPopup = (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(
-            new BaseListPopupStep<MyAction>(null, ContainerUtil.list(new MyDisableNewInspectionsAction(), new MyResetAction())) {
+    final ListPopupImpl actionGroupPopup =
+            (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<MyAction>(null, ContainerUtil.list(new MyDisableNewInspectionsAction(), new MyResetAction())) {
               @Override
               public PopupStep onChosen(MyAction selectedValue, boolean finalChoice) {
                 if (selectedValue.enabled()) {
@@ -199,12 +201,9 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
       r1.width = r.width - (i.right + r1.x);
       r1.height = r.height - (i.bottom + r1.y);
       final Rectangle iconRect = new Rectangle();
-      SwingUtilities.layoutCompoundLabel(
-              checkBox, checkBox.getFontMetrics(checkBox.getFont()), checkBox.getText(), icon,
-              checkBox.getVerticalAlignment(), checkBox.getHorizontalAlignment(),
-              checkBox.getVerticalTextPosition(), checkBox.getHorizontalTextPosition(),
-              r1, new Rectangle(), iconRect,
-              checkBox.getText() == null ? 0 : checkBox.getIconTextGap());
+      SwingUtilities.layoutCompoundLabel(checkBox, checkBox.getFontMetrics(checkBox.getFont()), checkBox.getText(), icon, checkBox.getVerticalAlignment(), checkBox.getHorizontalAlignment(),
+                                         checkBox.getVerticalTextPosition(), checkBox.getHorizontalTextPosition(), r1, new Rectangle(), iconRect,
+                                         checkBox.getText() == null ? 0 : checkBox.getIconTextGap());
       indent = iconRect.x;
     }
     return indent + checkBox.getIconTextGap();

@@ -22,8 +22,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author traff
@@ -32,7 +31,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
   protected static final Logger LOG = Logger.getInstance("#" + ToolBeforeRunTaskProvider.class.getName());
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.General.ExternalToolsSmall;
   }
 

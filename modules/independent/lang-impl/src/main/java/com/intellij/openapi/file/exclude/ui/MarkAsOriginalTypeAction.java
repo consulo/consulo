@@ -21,7 +21,6 @@ import com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.awt.TargetAWT;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,7 +73,7 @@ public class MarkAsOriginalTypeAction extends AnAction {
     if (originalType == null) return;
     presentation.setVisible(true);
     presentation.setText(ActionsBundle.actionText("MarkAsOriginalTypeAction") + " " + originalType.getName());
-    presentation.setIcon(TargetAWT.to(originalType.getIcon()));
+    presentation.setIcon(originalType.getIcon());
   }
     
 }

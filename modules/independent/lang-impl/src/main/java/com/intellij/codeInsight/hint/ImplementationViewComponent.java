@@ -50,6 +50,7 @@ import com.intellij.util.PairFunction;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -567,7 +568,7 @@ public class ImplementationViewComponent extends JPanel {
   private class EditSourceActionBase extends AnAction {
     private final boolean myFocusEditor;
 
-    public EditSourceActionBase(boolean focusEditor, Icon icon, String text) {
+    public EditSourceActionBase(boolean focusEditor, Image icon, String text) {
       super(text, null, icon);
       myFocusEditor = focusEditor;
     }

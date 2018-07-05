@@ -48,12 +48,13 @@ import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ContentFoldersSupportUtil;
+import consulo.ui.image.Image;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
@@ -226,7 +227,7 @@ public class ContentEntryTreeEditor {
   }
 
   private static class MarkSourceToggleActionsGroup extends DefaultActionGroup {
-    public MarkSourceToggleActionsGroup(String groupName, final Icon rootIcon) {
+    public MarkSourceToggleActionsGroup(String groupName, final Image rootIcon) {
       super(groupName, true);
       getTemplatePresentation().setIcon(rootIcon);
     }
@@ -251,8 +252,7 @@ public class ContentEntryTreeEditor {
 
   private static class MyNewFolderAction extends NewFolderAction implements CustomComponentAction {
     private MyNewFolderAction() {
-      super(ActionsBundle.message("action.FileChooser.NewFolder.text"), ActionsBundle.message("action.FileChooser.NewFolder.description"),
-            AllIcons.Actions.NewFolder);
+      super(ActionsBundle.message("action.FileChooser.NewFolder.text"), ActionsBundle.message("action.FileChooser.NewFolder.description"), AllIcons.Actions.NewFolder);
     }
 
     @Override

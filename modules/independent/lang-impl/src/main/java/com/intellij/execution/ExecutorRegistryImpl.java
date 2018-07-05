@@ -204,7 +204,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     private final Executor myExecutor;
 
     private ExecutorAction(@Nonnull final Executor executor) {
-      super(executor.getStartActionText(), executor.getDescription(), TargetAWT.to(executor.getIcon()));
+      super(executor.getStartActionText(), executor.getDescription(), executor.getIcon());
       getTemplatePresentation().setVisible(false);
       myExecutor = executor;
     }

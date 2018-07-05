@@ -24,7 +24,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -36,8 +35,8 @@ import java.util.Date;
 public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
   private String myFileName;
 
-  public ImportTestsFromHistoryAction(@javax.annotation.Nullable SMTRunnerConsoleProperties properties, Project project, String name) {
-    super(properties, getPresentableText(project, name), getPresentableText(project, name), TargetAWT.to(getIcon(project, name)));
+  public ImportTestsFromHistoryAction(@Nullable SMTRunnerConsoleProperties properties, Project project, String name) {
+    super(properties, getPresentableText(project, name), getPresentableText(project, name), getIcon(project, name));
     myFileName = name;
   }
 
@@ -62,7 +61,7 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
     return nameWithoutExtension;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public VirtualFile getFile(@Nonnull Project project) {
     return LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName);

@@ -22,14 +22,13 @@ import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class NewFolderAction extends FileChooserAction {
   public NewFolderAction() {
   }
 
-  public NewFolderAction(final String text, final String description, final Icon icon) {
+  public NewFolderAction(final String text, final String description, final Image icon) {
     super(text, description, icon);
   }
 

@@ -19,15 +19,14 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.project.DumbAware;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public abstract class FileChooserAction extends AnAction implements DumbAware {
   protected FileChooserAction() {
     setEnabledInModalContext(true);
   }
 
-  protected FileChooserAction(final String text, final String description, final Icon icon) {
+  protected FileChooserAction(final String text, final String description, final Image icon) {
     super(text, description, icon);
     setEnabledInModalContext(true);
   }

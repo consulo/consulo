@@ -25,6 +25,8 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -43,7 +45,7 @@ public class CommonActionsPanel extends JPanel {
 
     public static Buttons[] ALL = {ADD, REMOVE, EDIT,  UP, DOWN};
 
-    public Icon getIcon() {
+    public SwingImageRef getIcon() {
       switch (this) {
         case ADD:    return IconUtil.getAddIcon();
         case EDIT:    return IconUtil.getEditIcon();

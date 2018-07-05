@@ -34,14 +34,13 @@ import com.intellij.packageDependencies.DependencyUISettings;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
-import consulo.psi.PsiPackageSupportProviders;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredDispatchThread;
+import consulo.psi.PsiPackageSupportProviders;
+import consulo.ui.image.Image;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Set;
 
 public class ProjectPatternProvider extends PatternDialectProvider {
@@ -122,7 +121,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.General.ProjectTab;
   }
 

@@ -1,19 +1,18 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
-import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import javax.annotation.Nonnull;
+import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: michael.golubev
  */
 public abstract class ServersTreeActionBase extends AnAction {
-
-  protected ServersTreeActionBase(String text, String description, Icon icon) {
+  protected ServersTreeActionBase(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

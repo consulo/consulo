@@ -56,6 +56,8 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.containers.HashSet;
+import consulo.ui.image.*;
+import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,7 +165,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
     final List<AttachRootButtonDescriptor> popupItems = new ArrayList<AttachRootButtonDescriptor>();
     for (AttachRootButtonDescriptor descriptor : myDescriptor.createAttachButtons()) {
-      Icon icon = descriptor.getToolbarIcon();
+      Image icon = descriptor.getToolbarIcon();
       if (icon != null) {
         AttachItemAction action = new AttachItemAction(descriptor, descriptor.getButtonText(), icon);
         toolbarDecorator.addExtraAction(AnActionButton.fromAction(action));
@@ -434,7 +436,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
   private class AttachItemAction extends AttachItemActionBase {
     private final AttachRootButtonDescriptor myDescriptor;
 
-    protected AttachItemAction(AttachRootButtonDescriptor descriptor, String title, final Icon icon) {
+    protected AttachItemAction(AttachRootButtonDescriptor descriptor, String title, final Image icon) {
       super(title);
       getTemplatePresentation().setIcon(icon);
       myDescriptor = descriptor;

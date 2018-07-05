@@ -34,6 +34,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.extensions.CompositeExtensionPointName;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import org.apache.velocity.runtime.parser.ParseException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +56,14 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
   }
 
   public CreateFileFromTemplateAction(String text, String description, Icon icon) {
+    super(text, description, icon);
+  }
+
+  protected CreateFileFromTemplateAction(String text, String description, Image icon) {
+    super(text, description, icon);
+  }
+
+  protected CreateFileFromTemplateAction(String text, String description, SwingImageRef icon) {
     super(text, description, icon);
   }
 

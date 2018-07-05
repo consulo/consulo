@@ -48,6 +48,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.evaluate.CodeFragmentInputComponent;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -114,7 +115,8 @@ public abstract class XDebuggerEditorBase {
     DefaultActionGroup actions = new DefaultActionGroup();
     for (Language language : getSupportedLanguages()) {
       //noinspection ConstantConditions
-      actions.add(new AnAction(language.getDisplayName(), null, TargetAWT.to(language.getAssociatedFileType().getIcon())) {
+      actions.add(new AnAction(language.getDisplayName(), null, language.getAssociatedFileType().getIcon()) {
+        @RequiredDispatchThread
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           XExpression currentExpression = getExpression();

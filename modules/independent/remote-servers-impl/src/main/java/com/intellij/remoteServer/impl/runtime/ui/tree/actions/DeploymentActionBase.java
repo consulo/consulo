@@ -1,18 +1,18 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
-import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.remoteServer.impl.runtime.ui.tree.DeploymentNode;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
  * @author nik
  */
 public abstract class DeploymentActionBase extends ServersTreeActionBase {
-  public DeploymentActionBase(String text, String description, Icon icon) {
+  public DeploymentActionBase(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

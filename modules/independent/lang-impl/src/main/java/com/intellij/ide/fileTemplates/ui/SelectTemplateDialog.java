@@ -24,23 +24,25 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
+
 /*
  * @author: MYakovlev
  * Date: Aug 22, 2002
  * Time: 1:31:43 PM
  */
-public class SelectTemplateDialog extends DialogWrapper{
+public class SelectTemplateDialog extends DialogWrapper {
   private JComboBox myCbxTemplates;
   private FileTemplate mySelectedTemplate;
   private final Project myProject;
   private final PsiDirectory myDirectory;
 
-  public SelectTemplateDialog(Project project, PsiDirectory directory){
+  public SelectTemplateDialog(Project project, PsiDirectory directory) {
     super(project, true);
     myDirectory = directory;
     myProject = project;
@@ -49,7 +51,7 @@ public class SelectTemplateDialog extends DialogWrapper{
   }
 
   @Override
-  protected JComponent createCenterPanel(){
+  protected JComponent createCenterPanel() {
     loadCombo();
 
     JButton editTemplatesButton = new FixedSizeButton(myCbxTemplates);
@@ -57,9 +59,9 @@ public class SelectTemplateDialog extends DialogWrapper{
     JPanel centerPanel = new JPanel(new GridBagLayout());
     JLabel selectTemplateLabel = new JLabel(IdeBundle.message("label.name"));
 
-    centerPanel.add(selectTemplateLabel,       new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-    centerPanel.add(myCbxTemplates,       new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 50, 0));
-    centerPanel.add(editTemplatesButton,       new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+    centerPanel.add(selectTemplateLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+    centerPanel.add(myCbxTemplates, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 50, 0));
+    centerPanel.add(editTemplatesButton, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
 
     editTemplatesButton.addActionListener(e -> onEditTemplates());
 
@@ -67,7 +69,7 @@ public class SelectTemplateDialog extends DialogWrapper{
   }
 
   @RequiredDispatchThread
-  private void loadCombo(){
+  private void loadCombo() {
     DefaultComboBoxModel model = new DefaultComboBoxModel();
     FileTemplate[] allTemplates = FileTemplateManager.getInstance(myProject).getAllTemplates();
     PsiDirectory[] dirs = {myDirectory};
@@ -76,49 +78,49 @@ public class SelectTemplateDialog extends DialogWrapper{
         model.addElement(template);
       }
     }
-    if(myCbxTemplates == null){
+    if (myCbxTemplates == null) {
       myCbxTemplates = new JComboBox(model);
-      myCbxTemplates.setRenderer(new ListCellRendererWrapper<FileTemplate>() {
+      myCbxTemplates.setRenderer(new ColoredListCellRenderer<FileTemplate>() {
         @Override
-        public void customize(JList list, FileTemplate fileTemplate, int index, boolean selected, boolean hasFocus) {
-          if (fileTemplate != null) {
-            setIcon(FileTemplateUtil.getIcon(fileTemplate));
-            setText(fileTemplate.getName());
+        protected void customizeCellRenderer(@Nonnull JList list, FileTemplate value, int index, boolean selected, boolean hasFocus) {
+          if (value != null) {
+            setIcon(FileTemplateUtil.getIcon(value));
+            append(value.getName());
           }
         }
       });
     }
-    else{
+    else {
       Object selected = myCbxTemplates.getSelectedItem();
       myCbxTemplates.setModel(model);
-      if(selected != null){
+      if (selected != null) {
         myCbxTemplates.setSelectedItem(selected);
       }
     }
   }
 
-  public FileTemplate getSelectedTemplate(){
+  public FileTemplate getSelectedTemplate() {
     return mySelectedTemplate;
   }
 
   @Override
-  protected void doOKAction(){
+  protected void doOKAction() {
     mySelectedTemplate = (FileTemplate)myCbxTemplates.getSelectedItem();
     super.doOKAction();
   }
 
   @Override
-  public void doCancelAction(){
+  public void doCancelAction() {
     mySelectedTemplate = null;
     super.doCancelAction();
   }
 
   @Override
-  public JComponent getPreferredFocusedComponent(){
+  public JComponent getPreferredFocusedComponent() {
     return myCbxTemplates;
   }
 
-  private void onEditTemplates(){
+  private void onEditTemplates() {
     new ConfigureTemplatesDialog(myProject).show();
     loadCombo();
   }

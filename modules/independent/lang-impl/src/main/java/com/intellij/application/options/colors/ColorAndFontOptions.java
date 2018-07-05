@@ -62,13 +62,14 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -671,7 +672,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
                                             String group,
                                             @Nonnull TextAttributesKey key,
                                             @Nonnull MyColorScheme scheme,
-                                            Icon icon,
+                                            Image icon,
                                             String toolTip) {
     list.add(new SchemeTextAttributesDescription(name, group, key, scheme, icon, toolTip));
   }
@@ -807,7 +808,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     private Pair<ColorSettingsPage, AttributesDescriptor> myBaseAttributeDescriptor;
     private boolean myIsInheritedInitial = false;
 
-    private SchemeTextAttributesDescription(String name, String group, @Nonnull TextAttributesKey key, @Nonnull MyColorScheme scheme, Icon icon, String toolTip) {
+    private SchemeTextAttributesDescription(String name, String group, @Nonnull TextAttributesKey key, @Nonnull MyColorScheme scheme, Image icon, String toolTip) {
       super(name, group, getInitialAttributes(scheme, key).clone(), key, scheme, icon, toolTip);
       this.key = key;
       myAttributesToApply = getInitialAttributes(scheme, key);

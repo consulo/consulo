@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.diff.impl.dir.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.PlatformIcons;
 
 /**
  * @author Konstantin Bulenkov
@@ -31,7 +31,7 @@ public class RefreshDirDiffAction extends DirDiffAction {
   public RefreshDirDiffAction(DirDiffTableModel model) {
     super(model);
     getTemplatePresentation().setText("Refresh");
-    getTemplatePresentation().setIcon(PlatformIcons.SYNCHRONIZE_ICON);
+    getTemplatePresentation().setIcon(AllIcons.Actions.Refresh);
   }
 
   @Override

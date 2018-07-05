@@ -19,6 +19,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -227,9 +228,11 @@ public final class Presentation implements Cloneable {
   }
 
   public void setIcon(@Nullable SwingImageRef image) {
-    setIcon((Icon) image);
+    setIcon((Icon)image);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use setIcon with ui image")
   public void setIcon(@Nullable Icon icon) {
     Icon oldIcon = myIcon;
     if (oldIcon == icon) return;
@@ -252,6 +255,16 @@ public final class Presentation implements Cloneable {
     return myHoveredIcon;
   }
 
+  public void setHoveredIcon(@Nullable final SwingImageRef hoveredIcon) {
+    setHoveredIcon((Icon)hoveredIcon);
+  }
+
+  public void setHoveredIcon(@Nullable final Image hoveredIcon) {
+    setHoveredIcon(TargetAWT.to(hoveredIcon));
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use setHoveredIcon with ui image")
   public void setHoveredIcon(@Nullable final Icon hoveredIcon) {
     Icon old = myHoveredIcon;
     myHoveredIcon = hoveredIcon;
@@ -262,6 +275,16 @@ public final class Presentation implements Cloneable {
     return mySelectedIcon;
   }
 
+  public void setSelectedIcon(@Nullable final SwingImageRef hoveredIcon) {
+    setSelectedIcon((Icon)hoveredIcon);
+  }
+
+  public void setSelectedIcon(@Nullable final Image hoveredIcon) {
+    setSelectedIcon(TargetAWT.to(hoveredIcon));
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use setSelectedIcon with ui image")
   public void setSelectedIcon(Icon selectedIcon) {
     Icon old = mySelectedIcon;
     mySelectedIcon = selectedIcon;

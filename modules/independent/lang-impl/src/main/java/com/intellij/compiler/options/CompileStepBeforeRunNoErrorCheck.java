@@ -25,9 +25,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * User: Vassiliy.Kudryashov
@@ -52,12 +52,12 @@ public class CompileStepBeforeRunNoErrorCheck
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Actions.Compile;
   }
 
   @Override
-  public Icon getTaskIcon(MakeBeforeRunTaskNoErrorCheck task) {
+  public Image getTaskIcon(MakeBeforeRunTaskNoErrorCheck task) {
     return AllIcons.Actions.Compile;
   }
 

@@ -37,6 +37,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -51,7 +54,16 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     super(IdeBundle.message("action.create.new.file"), IdeBundle.message("action.create.new.file.description"), AllIcons.FileTypes.Text);
   }
 
+  @Deprecated
   public CreateFileAction(final String text, final String description, final Icon icon) {
+    super(text, description, icon);
+  }
+
+  public CreateFileAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
+    super(text, description, icon);
+  }
+
+  public CreateFileAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

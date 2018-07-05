@@ -27,11 +27,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Set;
 
 public abstract class PatternDialectProvider {
@@ -72,5 +72,5 @@ public abstract class PatternDialectProvider {
     return getModuleParent((PackageDependenciesNode)node.getParent());
   }
 
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 }

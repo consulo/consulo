@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
 import com.intellij.util.ui.JBUI;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 
@@ -35,7 +36,7 @@ public abstract class IconWithTextAction extends AnAction implements CustomCompo
     super(text);
   }
 
-  protected IconWithTextAction(String text, String description, Icon icon) {
+  protected IconWithTextAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

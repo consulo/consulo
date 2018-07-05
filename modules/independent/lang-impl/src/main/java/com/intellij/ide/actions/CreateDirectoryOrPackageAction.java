@@ -32,7 +32,6 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ContentFolderTypeProvider;
@@ -150,7 +149,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       else {
         childIcon = first.getChildPackageIcon() == null ? first.getChildDirectoryIcon() : first.getChildPackageIcon();
       }
-      presentation.setIcon(TargetAWT.to(childIcon));
+      presentation.setIcon(childIcon);
     }
   }
 

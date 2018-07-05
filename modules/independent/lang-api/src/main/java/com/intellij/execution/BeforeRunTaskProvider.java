@@ -29,9 +29,9 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   public static final ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>> EXTENSION_POINT_NAME = new ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>>("com.intellij.stepsBeforeRunProvider");
@@ -43,7 +43,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   public abstract String getName();
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 
@@ -51,7 +51,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
 
 
   @Nullable
-  public Icon getTaskIcon(T task) {
+  public Image getTaskIcon(T task) {
     return null;
   }
 

@@ -17,6 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 
@@ -33,7 +34,7 @@ public class RefreshAction extends AnAction implements DumbAware {
     super(text);
   }
 
-  public RefreshAction(String text, String description, Icon icon) {
+  public RefreshAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

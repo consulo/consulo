@@ -25,9 +25,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -40,7 +43,16 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
   protected CreateElementActionBase() {
   }
 
+  @Deprecated
   protected CreateElementActionBase(String text, String description, Icon icon) {
+    super(text, description, icon);
+  }
+
+  protected CreateElementActionBase(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
+    super(text, description, icon);
+  }
+
+  protected CreateElementActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

@@ -25,9 +25,8 @@ import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 
 public class NewFileAction extends FileChooserAction {
   protected void update(FileSystemTree fileSystemTree, AnActionEvent e) {
@@ -37,7 +36,7 @@ public class NewFileAction extends FileChooserAction {
       presentation.setVisible(true);
       VirtualFile selectedFile = fileSystemTree.getNewFileParent();
       presentation.setEnabled(selectedFile != null && selectedFile.isDirectory());
-      presentation.setIcon(LayeredIcon.create(TargetAWT.to(fileType.getIcon()), AllIcons.Actions.New));
+      presentation.setIcon(ImageEffects.layered(fileType.getIcon(), AllIcons.Actions.New));
     }
     else {
       presentation.setVisible(false);

@@ -23,10 +23,8 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.impl.RunDialog;
 import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.openapi.actionSystem.Presentation;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 public class CreateAction extends BaseRunConfigurationAction {
@@ -75,7 +73,7 @@ public class CreateAction extends BaseRunConfigurationAction {
     protected void updateIcon(final Presentation presentation, final ConfigurationContext context) {
       final List<ConfigurationFromContext> fromContext = context.getConfigurationsFromContext();
       if (fromContext != null && fromContext.size() == 1) { //hide fuzzy icon when multiple run configurations are possible
-        presentation.setIcon(TargetAWT.to(fromContext.iterator().next().getConfiguration().getFactory().getIcon()));
+        presentation.setIcon(fromContext.iterator().next().getConfiguration().getFactory().getIcon());
       }
     }
 
@@ -110,7 +108,7 @@ public class CreateAction extends BaseRunConfigurationAction {
     protected void updateIcon(final Presentation presentation, final ConfigurationContext context) {
       final RunnerAndConfigurationSettings configuration = context.findExisting();
       if (configuration != null) {
-        presentation.setIcon(TargetAWT.to(configuration.getType().getIcon()));
+        presentation.setIcon(configuration.getType().getIcon());
       } else {
         super.updateIcon(presentation, context);
       }
@@ -171,7 +169,7 @@ public class CreateAction extends BaseRunConfigurationAction {
     protected void updateIcon(final Presentation presentation, final ConfigurationContext context) {
       final RunnerAndConfigurationSettings configuration = context.findExisting();
       if (configuration != null) {
-        presentation.setIcon(TargetAWT.to(configuration.getType().getIcon()));
+        presentation.setIcon(configuration.getType().getIcon());
       } else {
         super.updateIcon(presentation, context);
       }

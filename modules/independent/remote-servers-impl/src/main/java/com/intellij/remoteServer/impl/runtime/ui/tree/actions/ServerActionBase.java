@@ -3,6 +3,8 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -14,7 +16,7 @@ import java.util.Set;
  */
 public abstract class ServerActionBase extends ServersTreeActionBase {
 
-  protected ServerActionBase(String text, String description, Icon icon) {
+  protected ServerActionBase(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

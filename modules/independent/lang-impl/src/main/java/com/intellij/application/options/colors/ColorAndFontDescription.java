@@ -22,16 +22,16 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Pair;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class ColorAndFontDescription extends TextAttributes implements EditorSchemeAttributeDescriptor {
   private final String myName;
   private final String myGroup;
   private final String myType;
-  private final Icon myIcon;
+  private final Image myIcon;
   private final String myToolTip;
   private final EditorColorsScheme myScheme;
   private boolean isForegroundChecked;
@@ -40,7 +40,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
   private boolean isErrorStripeChecked;
   private boolean isInherited;
 
-  public ColorAndFontDescription(String name, String group, String type, EditorColorsScheme scheme, final Icon icon, final String toolTip) {
+  public ColorAndFontDescription(String name, String group, String type, EditorColorsScheme scheme, final Image icon, final String toolTip) {
     myName = name;
     myGroup = group;
     myType = type;
@@ -68,7 +68,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     return myScheme;
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

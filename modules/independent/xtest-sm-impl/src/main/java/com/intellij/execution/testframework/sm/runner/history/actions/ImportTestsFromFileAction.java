@@ -22,13 +22,14 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImportTestsFromFileAction extends AbstractImportTestsAction {
   public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
     super(properties, (properties == null ? "" : "Import ") + "From File ...", "Import tests from file", null);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public VirtualFile getFile(@Nonnull Project project) {
     final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));

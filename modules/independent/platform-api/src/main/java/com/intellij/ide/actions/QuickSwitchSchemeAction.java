@@ -22,17 +22,18 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.util.ui.EmptyIcon;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.migration.SwingImageRef;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
-  protected static final Icon ourCurrentAction = AllIcons.Diff.CurrentLine;
-  protected static final Icon ourNotCurrentAction = new EmptyIcon(ourCurrentAction.getIconWidth(), ourCurrentAction.getIconHeight());
+  protected static final SwingImageRef ourCurrentAction = AllIcons.Diff.CurrentLine;
+  protected static final Image ourNotCurrentAction = ImageEffects.empty(ourCurrentAction.getIconWidth(), ourCurrentAction.getIconHeight());
   @Nonnull
   protected String myActionPlace = ActionPlaces.UNKNOWN;
 

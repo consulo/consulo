@@ -38,7 +38,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.apache.velocity.VelocityContext;
@@ -47,10 +47,9 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.Token;
 import org.apache.velocity.runtime.parser.node.*;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -377,9 +376,9 @@ public class FileTemplateUtil {
   }
 
   @Nullable
-  public static Icon getIcon(@Nonnull FileTemplate fileTemplate) {
+  public static Image getIcon(@Nonnull FileTemplate fileTemplate) {
     String extension = fileTemplate.getExtension();
-    return TargetAWT.to(FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon());
+    return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
   }
 
   @Deprecated

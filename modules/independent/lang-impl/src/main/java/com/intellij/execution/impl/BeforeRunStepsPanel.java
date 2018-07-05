@@ -35,6 +35,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.hash.HashSet;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -337,19 +339,14 @@ class BeforeRunStepsPanel extends JPanel {
     void titleChanged(String title);
   }
 
-  private class MyListCellRenderer extends JBList.StripedListCellRenderer {
+  private class MyListCellRenderer extends ColoredListCellRenderer<BeforeRunTask> {
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      if (value instanceof BeforeRunTask) {
-        BeforeRunTask task = (BeforeRunTask)value;
-        BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), task.getProviderId());
-        if (provider != null) {
-          setIcon(provider.getTaskIcon(task));
-          setText(provider.getDescription(task));
-        }
+    protected void customizeCellRenderer(@Nonnull JList<? extends BeforeRunTask> list, BeforeRunTask value, int index, boolean selected, boolean hasFocus) {
+      BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), value.getProviderId());
+      if (provider != null) {
+        setIcon(provider.getTaskIcon(value));
+        append(provider.getDescription(value));
       }
-      return this;
     }
   }
 }

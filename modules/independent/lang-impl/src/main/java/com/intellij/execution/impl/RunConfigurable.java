@@ -77,8 +77,8 @@ import static com.intellij.ui.RowsDnDSupport.RefinedDropSupport.Position.*;
 
 class RunConfigurable extends BaseConfigurable {
 
-  private static final Icon ADD_ICON = IconUtil.getAddIcon();
-  private static final Icon REMOVE_ICON = IconUtil.getRemoveIcon();
+  private static final Image ADD_ICON = IconUtil.getAddIcon();
+  private static final Image REMOVE_ICON = IconUtil.getRemoveIcon();
 
   @NonNls public static final String DIVIDER_PROPORTION = "dividerProportion";
   @NonNls private static final Object DEFAULTS = new Object() {
@@ -510,7 +510,7 @@ class RunConfigurable extends BaseConfigurable {
     panel.setBorder(new EmptyBorder(7, 10, 0, 0));
     panel.add(new JLabel("Press the"));
 
-    ActionLink addIcon = new ActionLink("", ADD_ICON, myAddAction);
+    ActionLink addIcon = new ActionLink("", TargetAWT.to(ADD_ICON), myAddAction);
     addIcon.setBorder(new EmptyBorder(0, 5, 0, 5));
     panel.add(addIcon);
 

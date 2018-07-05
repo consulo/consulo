@@ -43,6 +43,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 
@@ -63,7 +64,7 @@ public class QuickFixAction extends AnAction {
     this(text, AllIcons.Actions.CreateFromUsage, null, toolWrapper);
   }
 
-  protected QuickFixAction(String text, Icon icon, KeyStroke keyStroke, @Nonnull InspectionToolWrapper toolWrapper) {
+  protected QuickFixAction(String text, Image icon, KeyStroke keyStroke, @Nonnull InspectionToolWrapper toolWrapper) {
     super(text, null, icon);
     myToolWrapper = toolWrapper;
     if (keyStroke != null) {

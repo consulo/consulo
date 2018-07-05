@@ -20,12 +20,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,9 +33,12 @@ import java.util.List;
 
 public abstract class NamedScopesHolder implements PersistentStateComponent<Element> {
   private List<NamedScope> myScopes = new ArrayList<NamedScope>();
-  @NonNls private static final String SCOPE_TAG = "scope";
-  @NonNls private static final String NAME_ATT = "name";
-  @NonNls private static final String PATTERN_ATT = "pattern";
+  @NonNls
+  private static final String SCOPE_TAG = "scope";
+  @NonNls
+  private static final String NAME_ATT = "name";
+  @NonNls
+  private static final String PATTERN_ATT = "pattern";
 
   protected final Project myProject;
   private VirtualFile myProjectBaseDir;
@@ -46,7 +49,8 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
 
   public abstract String getDisplayName();
 
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
+
   public interface ScopeListener {
 
     void scopesChanged();
@@ -60,9 +64,11 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   }
 
   private final List<ScopeListener> myScopeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+
   public void addScopeListener(@Nonnull ScopeListener scopeListener) {
     myScopeListeners.add(scopeListener);
   }
+
   public void removeScopeListener(@Nonnull ScopeListener scopeListener) {
     myScopeListeners.remove(scopeListener);
   }
@@ -82,7 +88,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     return scopes.toArray(new NamedScope[scopes.size()]);
   }
 
-  public NamedScope[] getEditableScopes(){
+  public NamedScope[] getEditableScopes() {
     return myScopes.toArray(new NamedScope[myScopes.size()]);
   }
 
@@ -116,8 +122,8 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   @Nonnull
   public static NamedScopesHolder[] getAllNamedScopeHolders(@Nonnull Project project) {
     NamedScopesHolder[] holders = new NamedScopesHolder[2];
-    holders [0] = NamedScopeManager.getInstance(project);
-    holders [1] = DependencyValidationManager.getInstance(project);
+    holders[0] = NamedScopeManager.getInstance(project);
+    holders[1] = DependencyValidationManager.getInstance(project);
     return holders;
   }
 
@@ -141,7 +147,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     return setElement;
   }
 
-  private static NamedScope readScope(Element setElement){
+  private static NamedScope readScope(Element setElement) {
     String name = setElement.getAttributeValue(NAME_ATT);
     PackageSet set;
     final String attributeValue = setElement.getAttributeValue(PATTERN_ATT);
@@ -183,7 +189,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   }
 
   @Nonnull
-  public List<NamedScope> getPredefinedScopes(){
+  public List<NamedScope> getPredefinedScopes() {
     return Collections.emptyList();
   }
 

@@ -30,7 +30,6 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +43,7 @@ class FakeRerunAction extends AnAction implements DumbAware {
     ExecutionEnvironment environment = getEnvironment(event);
     if (environment != null) {
       presentation.setText(ExecutionBundle.message("rerun.configuration.action.name", environment.getRunProfile().getName()));
-      presentation.setIcon(ExecutionManagerImpl.isProcessRunning(getDescriptor(event)) ? AllIcons.Actions.Restart : TargetAWT.to(environment.getExecutor().getIcon()));
+      presentation.setIcon(ExecutionManagerImpl.isProcessRunning(getDescriptor(event)) ? AllIcons.Actions.Restart : environment.getExecutor().getIcon());
       presentation.setEnabled(isEnabled(event));
       return;
     }

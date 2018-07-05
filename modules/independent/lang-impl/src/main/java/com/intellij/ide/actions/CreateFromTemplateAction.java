@@ -31,6 +31,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.module.extension.ModuleExtension;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -44,6 +47,14 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   protected static final Logger LOG = Logger.getInstance(CreateFromTemplateAction.class);
 
   public CreateFromTemplateAction(String text, String description, Icon icon) {
+    super(text, description, icon);
+  }
+
+  public CreateFromTemplateAction(String text, String description, Image icon) {
+    super(text, description, icon);
+  }
+
+  public CreateFromTemplateAction(String text, String description, SwingImageRef icon) {
     super(text, description, icon);
   }
 

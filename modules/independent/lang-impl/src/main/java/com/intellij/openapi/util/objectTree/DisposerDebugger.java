@@ -40,13 +40,12 @@ import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -198,7 +197,7 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
 
     private class CopyAllocationAction extends AnAction {
       public CopyAllocationAction() {
-        super("Copy", "Copy allocation to clipboard", PlatformIcons.COPY_ICON);
+        super("Copy", "Copy allocation to clipboard", AllIcons.Actions.Copy);
       }
 
       @Override

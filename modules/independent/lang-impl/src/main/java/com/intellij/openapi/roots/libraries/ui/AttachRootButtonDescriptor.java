@@ -16,6 +16,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -30,11 +32,11 @@ import javax.swing.*;
 public abstract class AttachRootButtonDescriptor {
   private final OrderRootType myOrderRootType;
   protected final String myButtonText;
-  private final Icon myToolbarIcon;
+  private final Image myToolbarIcon;
 
   /**
    * Creates a descriptor for 'attach' button shown in popup when user click on '+' button.
-   * Consider using {@link #AttachRootButtonDescriptor(com.intellij.openapi.roots.OrderRootType, javax.swing.Icon, String)} instead.
+   * Consider using {@link #AttachRootButtonDescriptor(com.intellij.openapi.roots.OrderRootType, Image, String)} instead.
    */
   protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull String buttonText) {
     myOrderRootType = orderRootType;
@@ -45,7 +47,7 @@ public abstract class AttachRootButtonDescriptor {
   /**
    * Creates a descriptor for 'attach' button shown in toolbar of a library editor
    */
-  protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull Icon toolbarIcon, @Nonnull String description) {
+  protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull Image toolbarIcon, @Nonnull String description) {
     myOrderRootType = orderRootType;
     myButtonText = description;
     myToolbarIcon = toolbarIcon;
@@ -72,7 +74,7 @@ public abstract class AttachRootButtonDescriptor {
   }
 
   @Nullable
-  public Icon getToolbarIcon() {
+  public Image getToolbarIcon() {
     return myToolbarIcon;
   }
 }

@@ -31,10 +31,11 @@ import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.table.JBTable;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -320,7 +321,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
   }
 
   @Nullable
-  protected Icon getIcon(T currentValue, T selectableValue) {
+  protected Image getIcon(T currentValue, T selectableValue) {
     return null;
   }
 

@@ -24,13 +24,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Key;
-import com.intellij.packaging.artifacts.*;
-import consulo.awt.TargetAWT;
+import com.intellij.packaging.artifacts.Artifact;
+import com.intellij.packaging.artifacts.ArtifactAdapter;
+import com.intellij.packaging.artifacts.ArtifactManager;
+import com.intellij.packaging.artifacts.ArtifactPointer;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,19 +75,19 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public Icon getTaskIcon(AbstractArtifactsBeforeRunTask task) {
+  public Image getTaskIcon(AbstractArtifactsBeforeRunTask task) {
     List<ArtifactPointer> pointers = task.getArtifactPointers();
     if (pointers == null || pointers.isEmpty())
       return getIcon();
     Artifact artifact = pointers.get(0).get();
     if (artifact == null)
       return getIcon();
-    return TargetAWT.to(artifact.getArtifactType().getIcon());
+    return artifact.getArtifactType().getIcon();
   }
 
   @Override

@@ -18,11 +18,13 @@ package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Function;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -58,32 +60,27 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
     });
   }
 
-  private class MyListCellRenderer extends DefaultListCellRenderer {
+  private class MyListCellRenderer extends ColoredListCellRenderer<FileTemplate> {
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      Icon icon = null;
-      if (value instanceof FileTemplate) {
-        FileTemplate template = (FileTemplate) value;
-        icon = FileTemplateUtil.getIcon(template);
-        final boolean internalTemplate = AllFileTemplatesConfigurable.isInternalTemplate(template.getName(), getTitle());
-        if (internalTemplate) {
-          setFont(getFont().deriveFont(Font.BOLD));
-          setText(template.getName());
-        }
-        else {
-          setFont(getFont().deriveFont(Font.PLAIN));
-          setText(template.getName());
-        }
+    protected void customizeCellRenderer(@Nonnull JList<? extends FileTemplate> list, FileTemplate value, int index, boolean selected, boolean hasFocus) {
+      Image icon;
+      icon = FileTemplateUtil.getIcon(value);
+      final boolean internalTemplate = AllFileTemplatesConfigurable.isInternalTemplate(value.getName(), getTitle());
+      if (internalTemplate) {
+        setFont(getFont().deriveFont(Font.BOLD));
+        append(value.getName());
+      }
+      else {
+        setFont(getFont().deriveFont(Font.PLAIN));
+        append(value.getName());
+      }
 
-        if (!template.isDefault()) {
-          if (!isSelected) {
-            setForeground(MODIFIED_FOREGROUND);
-          }
+      if (!value.isDefault()) {
+        if (!selected) {
+          setForeground(MODIFIED_FOREGROUND);
         }
       }
       setIcon(icon);
-      return this;
     }
   }
 

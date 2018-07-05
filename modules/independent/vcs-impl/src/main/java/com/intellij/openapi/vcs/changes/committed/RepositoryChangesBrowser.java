@@ -34,7 +34,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -60,6 +59,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     super(project, changeLists, changes, initialListSelection, false, false, null, MyUseCase.COMMITTED_CHANGES, toSelect);
   }
 
+  @Override
   protected void buildToolBar(final DefaultActionGroup toolBarGroup) {
     super.buildToolBar(toolBarGroup);
 
@@ -83,6 +83,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     myUseCase = useCase;
   }
 
+  @Override
   public Object getData(@Nonnull Key<?> dataId) {
     if (CommittedChangesBrowserUseCase.DATA_KEY == dataId) {
       return myUseCase;
@@ -107,15 +108,10 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
   }
 
   private class MyEditSourceAction extends EditSourceAction {
-    private final Icon myEditSourceIcon;
-
-    public MyEditSourceAction() {
-      myEditSourceIcon = AllIcons.Actions.EditSource;
-    }
-
+    @Override
     public void update(final AnActionEvent event) {
       super.update(event);
-      event.getPresentation().setIcon(myEditSourceIcon);
+      event.getPresentation().setIcon(AllIcons.Actions.EditSource);
       event.getPresentation().setText("Edit Source");
       if ((!ModalityState.NON_MODAL.equals(ModalityState.current())) || CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))) {
         event.getPresentation().setEnabled(false);
@@ -125,6 +121,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
       }
     }
 
+    @Override
     protected Navigatable[] getNavigatables(final DataContext dataContext) {
       Change[] changes = dataContext.getData(VcsDataKeys.SELECTED_CHANGES);
       if (changes != null) {

@@ -20,9 +20,9 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @author konstantin.aleev
  */
 public abstract class DashboardTreeAction<T, C extends TreeContent> extends AnAction {
-  protected DashboardTreeAction(String text, String description, Icon icon) {
+  protected DashboardTreeAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

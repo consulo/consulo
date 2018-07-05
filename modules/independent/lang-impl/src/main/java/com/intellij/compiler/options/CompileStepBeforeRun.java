@@ -37,11 +37,11 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author spleaner
@@ -86,12 +86,12 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Actions.Compile;
   }
 
   @Override
-  public Icon getTaskIcon(MakeBeforeRunTask task) {
+  public Image getTaskIcon(MakeBeforeRunTask task) {
     return AllIcons.Actions.Compile;
   }
 

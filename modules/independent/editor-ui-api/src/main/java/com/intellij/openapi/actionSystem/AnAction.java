@@ -25,7 +25,11 @@ import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -35,14 +39,14 @@ import java.util.List;
 
 /**
  * Represents an entity that has a state, a presentation and can be performed.
- * <p/>
+ * <p>
  * For an action to be useful, you need to implement {@link AnAction#actionPerformed}
  * and optionally to override {@link com.intellij.openapi.actionSystem.AnAction#update}. By overriding the
  * {@link com.intellij.openapi.actionSystem.AnAction#update} method you can dynamically change action's presentation
  * depending on the place (for more information on places see {@link ActionPlaces}.
- * <p/>
+ * <p>
  * The same action can have various presentations.
- * <p/>
+ * <p>
  * <pre>
  *  public class MyAction extends AnAction {
  *    public MyAction() {
@@ -89,11 +93,21 @@ public abstract class AnAction implements PossiblyDumbAware {
     this(null, null, null);
   }
 
+  public AnAction(SwingImageRef icon) {
+    this(null, null, icon);
+  }
+
+  public AnAction(Image icon) {
+    this(null, null, TargetAWT.to(icon));
+  }
+
   /**
    * Creates a new action with <code>icon</code> provided. Its text, description set to <code>null</code>.
    *
    * @param icon Default icon to appear in toolbars and menus (Note some platform don't have icons in menu).
    */
+  @Deprecated
+  @DeprecationInfo("Use constructor with Image")
   public AnAction(Icon icon) {
     this(null, null, icon);
   }
@@ -109,6 +123,14 @@ public abstract class AnAction implements PossiblyDumbAware {
     this(text, null, null);
   }
 
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
+    this(text, description, (Icon)icon);
+  }
+
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+    this(text, description, TargetAWT.to(icon));
+  }
+
   /**
    * Constructs a new action with the specified text, description and icon.
    *
@@ -118,6 +140,8 @@ public abstract class AnAction implements PossiblyDumbAware {
    *                    the status bar when presentation has focus
    * @param icon        Action's icon
    */
+  @Deprecated
+  @DeprecationInfo("Use contructor with ui image")
   public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
     myShortcutSet = CustomShortcutSet.EMPTY;
     myEnabledInModalContext = false;

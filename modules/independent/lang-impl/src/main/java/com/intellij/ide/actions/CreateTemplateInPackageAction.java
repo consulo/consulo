@@ -31,6 +31,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.psi.PsiPackageSupportProvider;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -43,6 +46,16 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
   private final boolean myInSourceOnly;
 
   protected CreateTemplateInPackageAction(String text, String description, Icon icon, boolean inSourceOnly) {
+    super(text, description, icon);
+    myInSourceOnly = inSourceOnly;
+  }
+
+  protected CreateTemplateInPackageAction(String text, String description, Image icon, boolean inSourceOnly) {
+    super(text, description, icon);
+    myInSourceOnly = inSourceOnly;
+  }
+
+  protected CreateTemplateInPackageAction(String text, String description, SwingImageRef icon, boolean inSourceOnly) {
     super(text, description, icon);
     myInSourceOnly = inSourceOnly;
   }

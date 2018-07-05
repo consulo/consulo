@@ -21,20 +21,20 @@ import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AnnotateRevisionActionBase extends AnAction {
-  public AnnotateRevisionActionBase(@javax.annotation.Nullable String text, @javax.annotation.Nullable String description, @javax.annotation.Nullable Icon icon) {
+  public AnnotateRevisionActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected abstract AbstractVcs getVcs(@Nonnull AnActionEvent e);
 
   @Nullable
@@ -43,7 +43,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
   @Nullable
   protected abstract VcsFileRevision getFileRevision(@Nonnull AnActionEvent e);
 
-  @javax.annotation.Nullable
+  @Nullable
   protected Editor getEditor(@Nonnull AnActionEvent e) {
     return null;
   }
@@ -153,7 +153,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
     }
   }
 
-  private static int translateLine(@javax.annotation.Nullable CharSequence oldContent, @javax.annotation.Nullable CharSequence newContent, int line) {
+  private static int translateLine(@Nullable CharSequence oldContent, @Nullable CharSequence newContent, int line) {
     if (oldContent == null || newContent == null) return line;
     try {
       return Diff.translateLine(oldContent, newContent, line, true);

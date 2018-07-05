@@ -120,55 +120,55 @@ public class IconUtil {
     return getToolbarDecoratorIcon("add.png");
   }
 
-  public static Icon getRemoveIcon() {
+  public static SwingImageRef getRemoveIcon() {
     return getToolbarDecoratorIcon("remove.png");
   }
 
-  public static Icon getMoveUpIcon() {
+  public static SwingImageRef getMoveUpIcon() {
     return getToolbarDecoratorIcon("moveUp.png");
   }
 
-  public static Icon getMoveDownIcon() {
+  public static SwingImageRef getMoveDownIcon() {
     return getToolbarDecoratorIcon("moveDown.png");
   }
 
-  public static Icon getEditIcon() {
+  public static SwingImageRef getEditIcon() {
     return getToolbarDecoratorIcon("edit.png");
   }
 
-  public static Icon getAddClassIcon() {
+  public static SwingImageRef getAddClassIcon() {
     return getToolbarDecoratorIcon("addClass.png");
   }
 
-  public static Icon getAddPatternIcon() {
+  public static SwingImageRef getAddPatternIcon() {
     return getToolbarDecoratorIcon("addPattern.png");
   }
 
-  public static Icon getAddJiraPatternIcon() {
+  public static SwingImageRef getAddJiraPatternIcon() {
     return getToolbarDecoratorIcon("addJira.png");
   }
 
-  public static Icon getAddYouTrackPatternIcon() {
+  public static SwingImageRef getAddYouTrackPatternIcon() {
     return getToolbarDecoratorIcon("addYouTrack.png");
   }
 
-  public static Icon getAddBlankLineIcon() {
+  public static SwingImageRef getAddBlankLineIcon() {
     return getToolbarDecoratorIcon("addBlankLine.png");
   }
 
-  public static Icon getAddPackageIcon() {
+  public static SwingImageRef getAddPackageIcon() {
     return getToolbarDecoratorIcon("addPackage.png");
   }
 
-  public static Icon getAddLinkIcon() {
+  public static SwingImageRef getAddLinkIcon() {
     return getToolbarDecoratorIcon("addLink.png");
   }
 
-  public static Icon getAddFolderIcon() {
+  public static SwingImageRef getAddFolderIcon() {
     return getToolbarDecoratorIcon("addFolder.png");
   }
 
-  public static Icon getAnalyzeIcon() {
+  public static SwingImageRef getAnalyzeIcon() {
     return getToolbarDecoratorIcon("analyze.png");
   }
 

@@ -261,6 +261,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     getEmptyText().setText("");
   }
 
+  @Deprecated
   public static class StripedListCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

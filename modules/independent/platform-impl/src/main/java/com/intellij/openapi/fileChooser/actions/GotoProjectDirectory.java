@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nullable;
 
@@ -42,7 +41,7 @@ public final class GotoProjectDirectory extends FileChooserAction {
   @Override
   protected void update(final FileSystemTree fileSystemTree, final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    presentation.setIcon(TargetAWT.to(Application.get().getIcon()));
+    presentation.setIcon(Application.get().getIcon());
     final VirtualFile projectPath = getProjectDir(e);
     presentation.setEnabled(projectPath != null && fileSystemTree.isUnderRoots(projectPath));
   }

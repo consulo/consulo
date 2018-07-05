@@ -40,10 +40,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.image.Image;
 import org.jdom.Document;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
@@ -61,11 +60,11 @@ public abstract class AbstractImportTestsAction extends AnAction {
   public static final String TEST_HISTORY_SIZE = "test_history_size";
   private SMTRunnerConsoleProperties myProperties;
 
-  public AbstractImportTestsAction(@javax.annotation.Nullable String text, @javax.annotation.Nullable String description, @javax.annotation.Nullable Icon icon) {
+  public AbstractImportTestsAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 
-  public AbstractImportTestsAction(SMTRunnerConsoleProperties properties, @javax.annotation.Nullable String text, @javax.annotation.Nullable String description, @javax.annotation.Nullable Icon icon) {
+  public AbstractImportTestsAction(SMTRunnerConsoleProperties properties, @Nullable String text, @Nullable String description, @Nullable Image icon) {
     this(text, description, icon);
     myProperties = properties;
   }
@@ -86,7 +85,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
     e.getPresentation().setEnabledAndVisible(e.getProject() != null);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VirtualFile getFile(@Nonnull Project project);
 
   @Override

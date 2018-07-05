@@ -18,9 +18,9 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -28,7 +28,7 @@ import java.util.Set;
  * User: michael.golubev
  */
 public abstract class SingleServerActionBase extends ServersTreeActionBase {
-  protected SingleServerActionBase(String text, String description, Icon icon) {
+  protected SingleServerActionBase(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

@@ -25,6 +25,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -97,7 +98,7 @@ public class DeleteAction extends AnAction implements DumbAware {
     }
   }
 
-  public DeleteAction(String text, String description, Icon icon) {
+  public DeleteAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

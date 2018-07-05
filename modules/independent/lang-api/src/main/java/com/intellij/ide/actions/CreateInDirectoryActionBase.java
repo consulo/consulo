@@ -21,7 +21,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -33,14 +36,23 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
   protected CreateInDirectoryActionBase() {
   }
 
+  @Deprecated
   protected CreateInDirectoryActionBase(String text, String description, Icon icon) {
+    super(text, description, icon);
+  }
+
+  protected CreateInDirectoryActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+    super(text, description, icon);
+  }
+
+  protected CreateInDirectoryActionBase(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
     super(text, description, icon);
   }
 
   @RequiredDispatchThread
   @Override
   public void update(final AnActionEvent e) {
-    if(!e.getPresentation().isVisible()) {
+    if (!e.getPresentation().isVisible()) {
       return;
     }
 

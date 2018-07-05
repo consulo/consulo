@@ -39,10 +39,11 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -73,15 +74,15 @@ public class RunConfigurationBeforeRunProvider
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Actions.Execute;
   }
 
   @Override
-  public Icon getTaskIcon(RunConfigurableBeforeRunTask task) {
+  public Image getTaskIcon(RunConfigurableBeforeRunTask task) {
     if (task.getSettings() == null)
       return null;
-    return TargetAWT.to(ProgramRunnerUtil.getConfigurationIcon(task.getSettings(), false));
+    return ProgramRunnerUtil.getConfigurationIcon(task.getSettings(), false);
   }
 
   @Override

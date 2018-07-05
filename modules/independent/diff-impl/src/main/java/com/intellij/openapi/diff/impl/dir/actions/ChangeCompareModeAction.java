@@ -15,23 +15,22 @@
  */
 package com.intellij.openapi.diff.impl.dir.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.diff.DirDiffSettings;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
-import com.intellij.util.PlatformIcons;
-import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredDispatchThread;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 /**
  * @author Konstantin Bulenkov
  */
 class ChangeCompareModeAction extends AnAction {
-  private final static Icon ON = PlatformIcons.CHECK_ICON;
-  private final static Icon ON_SELECTED = PlatformIcons.CHECK_ICON_SELECTED;
-  private final static Icon OFF = EmptyIcon.create(ON.getIconHeight());
+  private final static Image ON = AllIcons.Actions.Checked;
+  private final static Image ON_SELECTED = AllIcons.Actions.Checked_selected;
+  private final static Image OFF = ImageEffects.empty(ON.getHeight());
 
   private final DirDiffTableModel myModel;
   private final DirDiffSettings.CompareMode myMode;

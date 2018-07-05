@@ -15,10 +15,10 @@ import com.intellij.openapi.vcs.vfs.VcsFileSystem;
 import com.intellij.openapi.vcs.vfs.VcsVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 
 abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase implements DumbAware, UpToDateLineNumberListener {
@@ -29,8 +29,7 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
 
   private int currentLine;
 
-  public AnnotateRevisionAction(@Nullable String text, @javax.annotation.Nullable String description, @Nullable Icon icon,
-                                @Nonnull FileAnnotation annotation, @Nonnull AbstractVcs vcs) {
+  public AnnotateRevisionAction(@Nullable String text, @Nullable String description, @Nullable Image icon, @Nonnull FileAnnotation annotation, @Nonnull AbstractVcs vcs) {
     super(text, description, icon);
     myAnnotation = annotation;
     myVcs = vcs;
@@ -60,20 +59,19 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
   @Nullable
   protected abstract List<VcsFileRevision> getRevisions();
 
-  @javax.annotation.Nullable
+  @Nullable
   protected AbstractVcs getVcs(@Nonnull AnActionEvent e) {
     return myVcs;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   protected VirtualFile getFile(@Nonnull AnActionEvent e) {
     VcsFileRevision revision = getFileRevision(e);
     if (revision == null) return null;
 
     final FileType currentFileType = myAnnotation.getFile().getFileType();
-    FilePath filePath =
-            (revision instanceof VcsFileRevisionEx ? ((VcsFileRevisionEx)revision).getPath() : VcsUtil.getFilePath(myAnnotation.getFile()));
+    FilePath filePath = (revision instanceof VcsFileRevisionEx ? ((VcsFileRevisionEx)revision).getPath() : VcsUtil.getFilePath(myAnnotation.getFile()));
     return new VcsVirtualFile(filePath.getPath(), revision, VcsFileSystem.getInstance()) {
       @Nonnull
       @Override
