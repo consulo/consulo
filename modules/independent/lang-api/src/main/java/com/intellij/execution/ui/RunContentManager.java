@@ -29,7 +29,7 @@ import java.util.List;
 public interface RunContentManager {
   Topic<RunContentWithExecutorListener> TOPIC = Topic.create("Run Content", RunContentWithExecutorListener.class);
 
-  @javax.annotation.Nullable
+  @Nullable
   RunContentDescriptor getSelectedContent();
 
   @Nullable
@@ -68,7 +68,7 @@ public interface RunContentManager {
   /**
    * @return Tool window id where content should be shown. Null if content tool window is determined by executor.
    */
-  @javax.annotation.Nullable
+  @Nullable
   String getContentDescriptorToolWindowId(@Nullable RunnerAndConfigurationSettings settings);
 
   @Nonnull

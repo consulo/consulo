@@ -22,6 +22,8 @@ public interface Canvas2D {
     bottom
   }
 
+  void setGlobalAlpha(float value);
+
   void setFont(@Nonnull Canvas2DFont style);
 
   void setFillStyle(@Nullable ColorValue value);
@@ -216,12 +218,6 @@ public interface Canvas2D {
   void setLineJoin(String value);
 
   void setMiterLimit(double value);
-
-  /**
-   * Default value 1. This method may add rendering overhead and should be
-   * used with care.
-   */
-  void setAlpha(double value);
 
   /**
    * Prepares the canvas to draw a gradient.

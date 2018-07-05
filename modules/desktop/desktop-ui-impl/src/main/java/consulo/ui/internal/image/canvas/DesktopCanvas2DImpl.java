@@ -38,7 +38,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     /**
      *
      */
-    protected double alpha = 1;
+    protected float myGlobalAlpha = 1;
 
     /**
      *
@@ -448,11 +448,22 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    *
    */
   @Override
-  public void setAlpha(double value) {
-    if (state.alpha != value) {
-      state.g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)(value)));
-      state.alpha = value;
+  public void setGlobalAlpha(float value) {
+    if (state.myGlobalAlpha != value) {
+      state.myGlobalAlpha = value;
     }
+  }
+
+  @Nonnull
+  private AutoCloseable withAlpha(Graphics2D graphics) {
+    if (state.myGlobalAlpha == 1) {
+      return () -> {
+      };
+    }
+
+    Composite old = graphics.getComposite();
+    graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, state.myGlobalAlpha));
+    return () -> graphics.setComposite(old);
   }
 
   /**
@@ -550,14 +561,18 @@ public class DesktopCanvas2DImpl implements Canvas2D {
 
       Graphics2D graphics = createImageGraphics(bounds.x, bounds.y, bounds.width, bounds.height, flipH, flipV);
 
-      if (icon.getIconHeight() == bounds.height && icon.getIconWidth() == bounds.width) {
-        icon.paintIcon(mxLightweightLabel.getSharedInstance(), graphics, bounds.x, bounds.y);
+      try(AutoCloseable ignored = withAlpha(graphics)) {
+        if (icon.getIconHeight() == bounds.height && icon.getIconWidth() == bounds.width) {
+          icon.paintIcon(mxLightweightLabel.getSharedInstance(), graphics, bounds.x, bounds.y);
+        }
+        else {
+          BufferedImage resizedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+          icon.paintIcon(mxLightweightLabel.getSharedInstance(), resizedImage.getGraphics(), 0, 0);
+          resizedImage = Scalr.resize(resizedImage, Scalr.Method.ULTRA_QUALITY, bounds.width, bounds.height);
+          graphics.drawImage(resizedImage, null, bounds.x, bounds.y);
+        }
       }
-      else {
-        BufferedImage resizedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-        icon.paintIcon(mxLightweightLabel.getSharedInstance(), resizedImage.getGraphics(), 0, 0);
-        resizedImage = Scalr.resize(resizedImage, Scalr.Method.ULTRA_QUALITY, bounds.width, bounds.height);
-        graphics.drawImage(resizedImage, null, bounds.x, bounds.y);
+      catch (Exception ignored) {
       }
     }
   }
@@ -905,7 +920,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
       state.g.setColor(state.shadowColor);
       state.g.translate(tx, ty);
 
-      double alpha = state.alpha * state.shadowAlpha;
+      double alpha = state.myGlobalAlpha * state.shadowAlpha;
 
       Composite comp = state.g.getComposite();
       state.g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)(alpha)));

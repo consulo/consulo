@@ -56,7 +56,7 @@ public class DesktopTransparentImageImpl implements RetrievableIcon, Image {
   public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
     final Graphics2D g2 = (Graphics2D)g;
     final Composite saveComposite = g2.getComposite();
-    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, myAlpha));
+    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, myAlpha));
     Icon icon = retrieveIcon();
     if (icon != null) {
       icon.paintIcon(c, g2, x, y);

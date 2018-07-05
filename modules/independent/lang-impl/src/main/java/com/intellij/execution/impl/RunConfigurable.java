@@ -35,7 +35,10 @@ import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.labels.ActionLink;
@@ -50,12 +53,14 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.util.ui.tree.TreeDecorationUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
@@ -74,8 +79,7 @@ class RunConfigurable extends BaseConfigurable {
 
   private static final Icon ADD_ICON = IconUtil.getAddIcon();
   private static final Icon REMOVE_ICON = IconUtil.getRemoveIcon();
-  private static final Icon SHARED_ICON = IconLoader.getTransparentIcon(AllIcons.Nodes.Symlink, .6f);
-  private static final Icon NON_SHARED_ICON = EmptyIcon.ICON_16;
+
   @NonNls public static final String DIVIDER_PROPORTION = "dividerProportion";
   @NonNls private static final Object DEFAULTS = new Object() {
     @Override
@@ -160,10 +164,10 @@ class RunConfigurable extends BaseConfigurable {
           if (userObject instanceof ConfigurationType) {
             final ConfigurationType configurationType = (ConfigurationType)userObject;
             append(configurationType.getDisplayName(), parent.isRoot() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
-            setIcon(TargetAWT.to(configurationType.getIcon()));
+            setIcon(configurationType.getIcon());
           }
           else if (userObject == DEFAULTS) {
-            append("Defaults", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+            append("Templates", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
             setIcon(AllIcons.General.Settings);
           }
           else if (userObject instanceof String) {//Folders
@@ -172,7 +176,7 @@ class RunConfigurable extends BaseConfigurable {
           }
           else if (userObject instanceof ConfigurationFactory) {
             append(((ConfigurationFactory)userObject).getName());
-            setIcon(TargetAWT.to(((ConfigurationFactory)userObject).getIcon()));
+            setIcon(((ConfigurationFactory)userObject).getIcon());
           }
           else {
             final RunManagerImpl runManager = getRunManager();
@@ -185,12 +189,12 @@ class RunConfigurable extends BaseConfigurable {
               configuration = configurationSettings;
               name = settings.getNameText();
               shared = settings.isStoreProjectConfiguration();
-              setIcon(TargetAWT.to(ProgramRunnerUtil.getConfigurationIcon(configurationSettings, !settings.isValid())));
+              setIcon(ProgramRunnerUtil.getConfigurationIcon(configurationSettings, !settings.isValid()));
             }
             else if (userObject instanceof RunnerAndConfigurationSettingsImpl) {
               RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings)userObject;
               shared = runManager.isConfigurationShared(settings);
-              setIcon(TargetAWT.to(RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(settings)));
+              setIcon(RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(settings));
               configuration = settings;
               name = configuration.getName();
             }
@@ -201,11 +205,20 @@ class RunConfigurable extends BaseConfigurable {
             }
           }
           if (shared != null) {
-            Icon icon = getIcon();
-            LayeredIcon layeredIcon = new LayeredIcon(2);
-            layeredIcon.setIcon(icon, 0, 0, 0);
-            layeredIcon.setIcon(shared ? SHARED_ICON : NON_SHARED_ICON, 1, 8, 0);
-            setIcon(layeredIcon);
+            consulo.ui.image.Image icon = TargetAWT.from(getIcon());
+            Image templateIcon = AllIcons.Nodes.TreeClosed;
+            Image rightIcon = AllIcons.Nodes.Symlink;
+            int markRightWidthAppend = rightIcon.getWidth() / 2;
+
+            final Boolean finalShared = shared;
+            setIcon(ImageEffects.canvas(templateIcon.getWidth() + markRightWidthAppend, templateIcon.getHeight(), ctx -> {
+              ctx.drawImage(icon, 0, 0);
+
+              if(finalShared) {
+                ctx.setGlobalAlpha(.6f);
+                ctx.drawImage(rightIcon, 8, 0);
+              }
+            }));
             setIconTextGap(0);
           } else {
             setIconTextGap(2);
@@ -588,6 +601,7 @@ class RunConfigurable extends BaseConfigurable {
     return configurationTypeNode != null ? (ConfigurationType)configurationTypeNode.getUserObject() : null;
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     for (RunConfigurationsSettings each : Extensions.getExtensions(RunConfigurationsSettings.EXTENSION_POINT)) {
@@ -629,6 +643,7 @@ class RunConfigurable extends BaseConfigurable {
     return mySplitter;
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     final RunManagerEx manager = getRunManager();
@@ -647,6 +662,7 @@ class RunConfigurable extends BaseConfigurable {
     return mySelectedConfigurable;
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     updateActiveConfigurationFromSelected();
@@ -880,6 +896,7 @@ class RunConfigurable extends BaseConfigurable {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     isDisposed = true;
