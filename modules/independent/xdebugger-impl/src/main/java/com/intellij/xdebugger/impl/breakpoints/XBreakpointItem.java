@@ -28,9 +28,9 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 class XBreakpointItem extends BreakpointItem {
   private final XBreakpoint<?> myBreakpoint;
@@ -74,7 +74,7 @@ class XBreakpointItem extends BreakpointItem {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return ((XBreakpointBase)myBreakpoint).getIcon();
   }
 

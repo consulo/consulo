@@ -1,17 +1,19 @@
 package consulo.ui.internal.image.canvas;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.ui.SizedIcon;
 import com.intellij.util.BitUtil;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.image.canvas.Canvas2DFont;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.style.StandardColors;
+import org.imgscalr.Scalr;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -20,6 +22,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.Stack;
 
 /**
@@ -535,16 +538,27 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   }
 
   @Override
-  public void image(double x, double y, double w, double h, @Nonnull consulo.ui.image.Image src, boolean aspect, boolean flipH, boolean flipV) {
+  public void drawImage(@Nonnull Image image, double x, double y, double w, double h) {
+    drawImageImpl(image, x, y, w, h, false, false, false);
+  }
+
+  public void drawImageImpl(@Nonnull Image src, double x, double y, double w, double h, boolean aspect, boolean flipH, boolean flipV) {
     if (w > 0 && h > 0) {
       Icon icon = TargetAWT.to(src);
 
       Rectangle bounds = getImageBounds(icon, x, y, w, h, aspect);
-      icon = scaleImage(icon, bounds.width, bounds.height);
 
       Graphics2D graphics = createImageGraphics(bounds.x, bounds.y, bounds.width, bounds.height, flipH, flipV);
 
-      icon.paintIcon(mxLightweightLabel.getSharedInstance(), graphics, bounds.x, bounds.y);
+      if (icon.getIconHeight() == bounds.height && icon.getIconWidth() == bounds.width) {
+        icon.paintIcon(mxLightweightLabel.getSharedInstance(), graphics, bounds.x, bounds.y);
+      }
+      else {
+        BufferedImage resizedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+        icon.paintIcon(mxLightweightLabel.getSharedInstance(), resizedImage.getGraphics(), 0, 0);
+        resizedImage = Scalr.resize(resizedImage, Scalr.Method.ULTRA_QUALITY, bounds.width, bounds.height);
+        graphics.drawImage(resizedImage, null, bounds.x, bounds.y);
+      }
     }
   }
 
@@ -582,17 +596,6 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     return new Dimension(image.getIconWidth(), image.getIconHeight());
   }
 
-  protected Icon scaleImage(Icon img, int w, int h) {
-    Dimension size = getImageSize(img);
-
-    if (w == size.width && h == size.height) {
-      return img;
-    }
-    else {
-      return new SizedIcon(img, w, h);
-    }
-  }
-
   /**
    * Creates a graphic instance for rendering an image.
    */
@@ -601,6 +604,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
 
     if (flipH || flipV) {
       g2 = (Graphics2D)g2.create();
+      GraphicsUtil.setupAAPainting(g2);
 
       if (flipV && flipH) {
         g2.rotate(Math.toRadians(180), x + w / 2, y + h / 2);

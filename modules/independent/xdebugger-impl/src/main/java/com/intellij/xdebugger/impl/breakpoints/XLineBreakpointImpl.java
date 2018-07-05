@@ -43,7 +43,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 
 import javax.annotation.Nonnull;
@@ -313,11 +313,11 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   @Override
   protected void updateIcon() {
-    consulo.ui.image.Image icon = calculateSpecialIcon();
+    Image icon = calculateSpecialIcon();
     if (icon == null) {
       icon = isTemporary() ? myType.getTemporaryIcon() : myType.getEnabledIcon();
     }
-    setIcon(TargetAWT.to(icon));
+    setIcon(icon);
   }
 
   @Override

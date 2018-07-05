@@ -81,7 +81,14 @@ public interface Canvas2D {
   /**
    * Draws the given image.
    */
-  void image(double x, double y, double w, double h, @Nonnull Image src, boolean aspect, boolean flipH, boolean flipV);
+  default void drawImage(@Nonnull Image image, double x, double y) {
+    drawImage(image, x, y, image.getWidth(), image.getHeight());
+  }
+
+  /**
+   * Draws the given image.
+   */
+  void drawImage(@Nonnull Image image, double x, double y, double w, double h);
 
   /**
    * Draws the given string.

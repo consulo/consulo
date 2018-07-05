@@ -20,8 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.popup.util.DetailView;
 import com.intellij.xdebugger.XDebuggerBundle;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class BreakpointNoneItem extends BreakpointItem {
   @Override
@@ -55,7 +54,7 @@ public class BreakpointNoneItem extends BreakpointItem {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

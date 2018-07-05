@@ -32,6 +32,7 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.popup.util.DetailView;
 import com.intellij.ui.popup.util.ItemWrapper;
 import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,7 +104,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
 
   public abstract void setupGenericRenderer(SimpleColoredComponent renderer, boolean plainView);
 
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   public abstract String getDisplayText();
 

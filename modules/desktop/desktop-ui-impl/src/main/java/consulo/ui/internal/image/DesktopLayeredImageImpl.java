@@ -28,13 +28,14 @@ import java.util.Arrays;
  * @author VISTALL
  * @since 11-Sep-17
  */
+@SuppressWarnings("deprecation")
 public class DesktopLayeredImageImpl extends LayeredIcon implements SwingIconWrapper, Image {
   @Nonnull
-  public static Icon[] remap(consulo.ui.image.Image[] icons) {
+  public static Icon[] remap(Image[] icons) {
     return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
   }
 
-  public DesktopLayeredImageImpl(@Nonnull consulo.ui.image.Image... images) {
+  public DesktopLayeredImageImpl(@Nonnull Image... images) {
     super(remap(images));
   }
 

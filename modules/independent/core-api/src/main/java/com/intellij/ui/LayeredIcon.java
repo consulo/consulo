@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.annotations.DeprecationInfo;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 
@@ -26,6 +27,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
+@Deprecated
+@DeprecationInfo("Desktop only")
 public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.LayeredIcon");
   private final Icon[] myIcons;
