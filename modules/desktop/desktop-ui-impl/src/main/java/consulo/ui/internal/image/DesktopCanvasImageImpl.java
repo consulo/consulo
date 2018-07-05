@@ -37,6 +37,7 @@ public class DesktopCanvasImageImpl extends JBUI.CachingScalableJBIcon<DesktopCa
   private final Consumer<Canvas2D> myCanvas2DConsumer;
 
   private java.awt.Image myImage;
+  private float myScaleFactor;
 
   public DesktopCanvasImageImpl(int width, int height, Consumer<Canvas2D> canvas2DConsumer) {
     myWidth = width;
@@ -56,6 +57,13 @@ public class DesktopCanvasImageImpl extends JBUI.CachingScalableJBIcon<DesktopCa
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
+    float current = JBUI.sysScale((Graphics2D)g);
+    float old = myScaleFactor;
+    if(current != old) {
+      myScaleFactor = current;
+      myImage = null;
+    }
+
     if (myImage == null) {
       BufferedImage image = UIUtil.createImage(g, myWidth, myHeight, BufferedImage.TYPE_INT_ARGB);
       Graphics graphics = image.createGraphics();
