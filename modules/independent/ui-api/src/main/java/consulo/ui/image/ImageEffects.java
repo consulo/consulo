@@ -61,7 +61,7 @@ public final class ImageEffects {
 
   @Nonnull
   public static Image empty(int widthAndHeight) {
-    return empty(widthAndHeight);
+    return empty(widthAndHeight, widthAndHeight);
   }
 
   @Nonnull
