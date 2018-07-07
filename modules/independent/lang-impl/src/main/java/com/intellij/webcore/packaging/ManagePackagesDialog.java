@@ -33,13 +33,12 @@ import com.intellij.util.CatchingConsumer;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.SwingHelper;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -538,7 +537,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         myRepositoryLabel.setText(repoPackage.getRepoUrl());
         Component orig = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         final Color fg = orig.getForeground();
-        myNameLabel.setForeground(myInstalledPackages.contains(name) ? PlatformColors.BLUE : fg);
+        myNameLabel.setForeground(myInstalledPackages.contains(name) ? JBColor.BLUE : fg);
       }
       myRepositoryLabel.setForeground(JBColor.GRAY);
 

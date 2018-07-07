@@ -374,7 +374,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
           else if (component.getPreferredSize() != null &&
                    (component.getSize().width < component.getPreferredSize().width
                     || component.getSize().height < component.getPreferredSize().height)) {
-            foreground = PlatformColors.BLUE;
+            foreground = JBColor.BLUE;
           }
 
           if (myInitialSelection == componentNode.getComponent()) {

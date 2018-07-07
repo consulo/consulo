@@ -18,13 +18,13 @@ package com.intellij.internal.psiView.formattingblocks;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.templateLanguages.DataLanguageBlockWrapper;
 import com.intellij.ide.projectView.PresentationData;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.PlatformColors;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 public class BlockTreeNode extends SimpleNode {
   private final Block myBlock;
@@ -68,7 +68,7 @@ public class BlockTreeNode extends SimpleNode {
     }
     if (myBlock.getWrap() != null) {
       presentation
-        .addText(" " + String.valueOf(myBlock.getWrap()), new SimpleTextAttributes(SimpleTextAttributes.STYLE_ITALIC, PlatformColors.BLUE));
+        .addText(" " + String.valueOf(myBlock.getWrap()), new SimpleTextAttributes(SimpleTextAttributes.STYLE_ITALIC, JBColor.BLUE));
     }
   }
 

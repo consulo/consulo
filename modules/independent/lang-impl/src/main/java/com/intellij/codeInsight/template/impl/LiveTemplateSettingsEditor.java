@@ -45,7 +45,6 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
@@ -301,7 +300,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
     final JLabel ctxLabel = new JLabel();
     final JLabel change = new JLabel();
-    change.setForeground(PlatformColors.BLUE);
+    change.setForeground(JBColor.BLUE);
     change.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     panel.add(ctxLabel, BorderLayout.CENTER);
     panel.add(change, BorderLayout.EAST);

@@ -21,10 +21,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -58,9 +57,9 @@ public class HyperlinkLabel extends HighlightableComponent {
 
   public HyperlinkLabel(String text) {
     this(text,
-         PlatformColors.BLUE,
+         JBColor.BLUE,
          UIUtil.getLabelBackground(),
-         PlatformColors.BLUE);
+         JBColor.BLUE);
   }
 
   public HyperlinkLabel(String text, final Color textForegroundColor, final Color textBackgroundColor, final Color textEffectColor) {

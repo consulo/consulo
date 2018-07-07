@@ -27,9 +27,9 @@ import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.profile.codeInspection.ui.ToolDescriptors;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -58,7 +58,7 @@ public abstract class InspectionsConfigTreeRenderer implements TreeCellRenderer 
     final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
     UIUtil.changeBackGround(component, background);
     Color foreground =
-            selected ? UIUtil.getTreeSelectionForeground() : node.isProperSetting() ? PlatformColors.BLUE : UIUtil.getTreeTextForeground();
+            selected ? UIUtil.getTreeSelectionForeground() : node.isProperSetting() ? JBColor.BLUE : UIUtil.getTreeTextForeground();
 
     @NonNls String text;
     int style = SimpleTextAttributes.STYLE_PLAIN;

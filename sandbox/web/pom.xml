@@ -89,6 +89,11 @@
       <artifactId>consulo-web-lang-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-trash-can</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!--copied from consulo-bundle module-->
 

@@ -69,11 +69,10 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.CacheOneStepIterator;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import com.intellij.util.ui.PlatformColors;
 import gnu.trove.TIntFunction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
@@ -630,7 +629,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
       LineSeparator separator = left ? sep1 : sep2;
       JPanel bottomPanel = new JPanel(new BorderLayout());
       JLabel sepLabel = new JLabel(separator.name());
-      sepLabel.setForeground(separator.equals(LineSeparator.CRLF) ? JBColor.RED : PlatformColors.BLUE);
+      sepLabel.setForeground(separator.equals(LineSeparator.CRLF) ? JBColor.RED : JBColor.BLUE);
       bottomPanel.add(sepLabel, left ? BorderLayout.EAST : BorderLayout.WEST);
 
       JPanel panel = new JPanel(new BorderLayout());

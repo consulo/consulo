@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
 
@@ -27,7 +28,8 @@ public interface PopupBorder extends Border {
   void setActive(boolean active);
 
   class Factory {
-    private Factory() { }
+    private Factory() {
+    }
 
     @Nonnull
     public static PopupBorder createEmpty() {
@@ -36,9 +38,14 @@ public interface PopupBorder extends Border {
 
     @Nonnull
     public static PopupBorder create(boolean active, boolean windowWithShadow) {
-      PopupBorder border = SystemInfo.isMac && windowWithShadow ?
-                           createEmpty() : new BaseBorder(true, CaptionPanel.getBorderColor(true), CaptionPanel.getBorderColor(false));
+      PopupBorder border = SystemInfo.isMac && windowWithShadow ? createEmpty() : new BaseBorder(true, CaptionPanel.getBorderColor(true), CaptionPanel.getBorderColor(false));
       border.setActive(active);
+      return border;
+    }
+
+    public static PopupBorder createColored(Color color) {
+      PopupBorder border = new BaseBorder(true, color, color);
+      border.setActive(true);
       return border;
     }
   }
@@ -70,12 +77,12 @@ public interface PopupBorder extends Border {
 
       Color color = myActive ? myActiveColor : myPassiveColor;
       g.setColor(color);
-      g.drawRect(x, y, width - JBUI.scale(1), height - JBUI.scale(1));
+      RectanglePainter.DRAW.paint((Graphics2D)g, x, y, width, height, null);
     }
 
     @Override
     public Insets getBorderInsets(final Component c) {
-      return myVisible ? JBUI.insets(1, 1, 1, 1) : JBUI.insets(0, 0, 0, 0);
+      return myVisible ? JBUI.insets(1) : JBUI.emptyInsets();
     }
 
     @Override

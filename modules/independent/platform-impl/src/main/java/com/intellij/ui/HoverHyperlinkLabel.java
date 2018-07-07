@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.PlatformColors;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -37,7 +36,7 @@ public class HoverHyperlinkLabel extends JLabel {
   private final List<HyperlinkListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   public HoverHyperlinkLabel(String text) {
-    this(text, PlatformColors.BLUE);
+    this(text, JBColor.BLUE);
   }
 
   public HoverHyperlinkLabel(String text, Color color) {

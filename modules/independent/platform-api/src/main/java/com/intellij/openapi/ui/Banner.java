@@ -18,13 +18,13 @@ package com.intellij.openapi.ui;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.PlatformColors;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -64,7 +64,7 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener{
     }) {
       @Override
       protected Color getTextColor() {
-        return PlatformColors.BLUE;
+        return JBColor.BLUE;
       }
     };
     label.setFont(label.getFont().deriveFont(Font.BOLD));
