@@ -25,18 +25,17 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.updateSettings.impl.PlatformOrPluginDialog;
+import consulo.ide.updateSettings.impl.PlatformOrPluginNode;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
-import consulo.ide.updateSettings.impl.PluginListDialog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -179,9 +178,8 @@ public class InstallPluginAction extends AnAction implements DumbAware {
                                                   @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
-    PlatformOrPluginUpdateResult result =
-            new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL, pluginsForInstallWithDependencies.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()),
-                                             Collections.emptyList());
+    List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream().map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x)).collect(Collectors.toList());
+    PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL, remap);
     Predicate<PluginId> greenNodeStrategy = pluginId -> {
       // do not mark target node as green, only depend
       for (IdeaPluginDescriptor node : toInstall) {
@@ -191,7 +189,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       }
       return true;
     };
-    PluginListDialog dialog = new PluginListDialog(project, result, greenNodeStrategy, null, afterCallback);
+    PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback);
     if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
       dialog.doOKAction();
       return true;

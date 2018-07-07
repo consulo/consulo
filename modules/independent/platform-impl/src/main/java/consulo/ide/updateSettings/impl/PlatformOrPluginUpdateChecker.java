@@ -30,7 +30,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
@@ -136,14 +135,14 @@ public class PlatformOrPluginUpdateChecker {
       case PLUGIN_UPDATE:
       case PLATFORM_UPDATE:
         if (showResults) {
-          new PluginListDialog(project, targetsForUpdate, null, pluginId -> targetsForUpdate.getBrokenPluginIds().contains(pluginId), null).show();
+          new PlatformOrPluginDialog(project, targetsForUpdate, null, null).show();
         }
         else {
           Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION, null);
           notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-              new PluginListDialog(project, targetsForUpdate, null, pluginId -> targetsForUpdate.getBrokenPluginIds().contains(pluginId), null).show();
+              new PlatformOrPluginDialog(project, targetsForUpdate, null, null).show();
             }
           });
           notification.notify(project);
@@ -210,13 +209,13 @@ public class PlatformOrPluginUpdateChecker {
       }
     }
 
-    final List<Couple<IdeaPluginDescriptor>> targets = new ArrayList<>();
+    final List<PlatformOrPluginNode> targets = new ArrayList<>();
     if (newPlatformPlugin != null) {
       PluginNode thisPlatform = new PluginNode(platformPluginId);
       thisPlatform.setVersion(appInfo.getBuild().asString());
       thisPlatform.setName(newPlatformPlugin.getName());
 
-      targets.add(Couple.of(thisPlatform, newPlatformPlugin));
+      targets.add(new PlatformOrPluginNode(platformPluginId, thisPlatform, newPlatformPlugin));
 
       // load new plugins with new app build
       try {
@@ -239,8 +238,6 @@ public class PlatformOrPluginUpdateChecker {
       }
     }
 
-    List<PluginId> brokedPluginsAfterPlatformUpdate = new ArrayList<>();
-
     state.getOutdatedPlugins().clear();
     if (!ourPlugins.isEmpty()) {
       try {
@@ -252,9 +249,7 @@ public class PlatformOrPluginUpdateChecker {
           if (filtered == null) {
             // if platform updated - but we not found new plugin in new remote list, notify user about it
             if(newPlatformPlugin != null) {
-              brokedPluginsAfterPlatformUpdate.add(entry.getKey());
-
-              targets.add(Couple.of(entry.getValue(), entry.getValue()));
+              targets.add(new PlatformOrPluginNode(pluginId, entry.getValue(), null));
             }
             continue;
           }
@@ -269,7 +264,7 @@ public class PlatformOrPluginUpdateChecker {
 
             processDependencies(filtered, targets, remotePlugins);
 
-            targets.add(Couple.of(entry.getValue(), filtered));
+            targets.add(new PlatformOrPluginNode(pluginId, entry.getValue(), filtered));
           }
         }
       }
@@ -282,16 +277,16 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     if (newPlatformPlugin != null) {
-      return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets, brokedPluginsAfterPlatformUpdate);
+      return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets);
     }
 
     if (alreadyVisited && targets.isEmpty()) {
       return PlatformOrPluginUpdateResult.UPDATE_RESTART;
     }
-    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets, Collections.emptyList());
+    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
   }
 
-  private static void processDependencies(@Nonnull IdeaPluginDescriptor target, List<Couple<IdeaPluginDescriptor>> targets, List<IdeaPluginDescriptor> remotePlugins) {
+  private static void processDependencies(@Nonnull IdeaPluginDescriptor target, List<PlatformOrPluginNode> targets, List<IdeaPluginDescriptor> remotePlugins) {
     PluginId[] dependentPluginIds = target.getDependentPluginIds();
     for (PluginId pluginId : dependentPluginIds) {
       IdeaPluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);
@@ -300,7 +295,7 @@ public class PlatformOrPluginUpdateChecker {
         IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
         if (filtered != null) {
-          targets.add(Couple.of(null, filtered));
+          targets.add(new PlatformOrPluginNode(filtered.getPluginId(), null, filtered));
         }
       }
     }

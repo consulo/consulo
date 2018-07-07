@@ -26,12 +26,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -49,14 +49,13 @@ import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * @author VISTALL
  * @since 07-Nov-16
  */
-public class PluginListDialog extends DialogWrapper {
-  private static final Logger LOGGER = Logger.getInstance(PluginListDialog.class);
+public class PlatformOrPluginDialog extends DialogWrapper {
+  private static final Logger LOGGER = Logger.getInstance(PlatformOrPluginDialog.class);
 
   private class OurPluginColumnInfo extends PluginManagerColumnInfo {
     public OurPluginColumnInfo(PluginTableModel model) {
@@ -68,11 +67,12 @@ public class PluginListDialog extends DialogWrapper {
       return new PluginsTableRenderer(pluginDescriptor, true) {
         @Override
         protected void updatePresentation(boolean isSelected, @Nonnull IdeaPluginDescriptor pluginNode, TableModel model) {
-          Couple<IdeaPluginDescriptor> couple = ContainerUtil.find(myNodes, it -> it.getSecond() == pluginDescriptor);
-          assert couple != null;
-          IdeaPluginDescriptor oldPlugin = couple.getFirst();
-          if (oldPlugin != null) {
-            myCategory.setText(oldPlugin.getVersion() + " " + UIUtil.rightArrow() + " " + (myRedStrategy.test(pluginDescriptor.getPluginId()) ? "??" : pluginNode.getVersion()));
+          PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginDescriptor.getPluginId()));
+          assert node != null;
+
+          IdeaPluginDescriptor currentDescriptor = node.getCurrentDescriptor();
+          if (currentDescriptor != null) {
+            myCategory.setText(currentDescriptor.getVersion() + " " + UIUtil.rightArrow() + " " + (node.getFutureDescriptor() == null ? "??" : pluginNode.getVersion()));
           }
           else {
             myCategory.setText(pluginNode.getVersion());
@@ -82,7 +82,7 @@ public class PluginListDialog extends DialogWrapper {
           if (myGreenStrategy.test(pluginNode.getPluginId())) {
             status = FileStatus.ADDED;
           }
-          if (myRedStrategy.test(pluginNode.getPluginId())) {
+          if (node.getFutureDescriptor() == null) {
             status = FileStatus.UNKNOWN;
           }
 
@@ -129,7 +129,7 @@ public class PluginListDialog extends DialogWrapper {
   @Nonnull
   private JComponent myRoot;
   @Nonnull
-  private List<Couple<IdeaPluginDescriptor>> myNodes;
+  private List<PlatformOrPluginNode> myNodes;
   @Nullable
   private Project myProject;
   @Nullable
@@ -139,15 +139,12 @@ public class PluginListDialog extends DialogWrapper {
   @Nonnull
   private Predicate<PluginId> myGreenStrategy;
   @Nonnull
-  private Predicate<PluginId> myRedStrategy;
-  @Nonnull
   private PlatformOrPluginUpdateResult.Type myType;
 
-  public PluginListDialog(@Nullable Project project,
-                          @Nonnull PlatformOrPluginUpdateResult updateResult,
-                          @Nullable Predicate<PluginId> greenStrategy,
-                          @Nullable Predicate<PluginId> redStrategy,
-                          @Nullable Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
+  public PlatformOrPluginDialog(@Nullable Project project,
+                                @Nonnull PlatformOrPluginUpdateResult updateResult,
+                                @Nullable Predicate<PluginId> greenStrategy,
+                                @Nullable Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     super(project);
     myProject = project;
     myAfterCallback = afterCallback;
@@ -155,13 +152,6 @@ public class PluginListDialog extends DialogWrapper {
     setTitle(updateResult.getType() == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL ? IdeBundle.message("plugin.install.dialog.title") : IdeBundle.message("update.available.group"));
 
     myNodes = updateResult.getPlugins();
-
-    if (redStrategy != null) {
-      myRedStrategy = redStrategy;
-    }
-    else {
-      myRedStrategy = pluginId -> false;
-    }
 
     if (greenStrategy != null) {
       myGreenStrategy = greenStrategy;
@@ -174,27 +164,42 @@ public class PluginListDialog extends DialogWrapper {
       };
     }
 
-    List<IdeaPluginDescriptor> list = updateResult.getPlugins().stream().map(x -> x.getSecond()).collect(Collectors.toList());
+    Set<PluginId> brokenPlugins = new HashSet<>();
+    List<IdeaPluginDescriptor> toShowPluginList = new ArrayList<>();
+    for (PlatformOrPluginNode node : myNodes) {
+      IdeaPluginDescriptor futureDescriptor = node.getFutureDescriptor();
+      if (futureDescriptor != null) {
+        toShowPluginList.add(futureDescriptor);
+      }
+      else {
+        brokenPlugins.add(node.getPluginId());
 
-    ContainerUtil.sort(list, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-
-    ContainerUtil.weightSort(list, pluginDescriptor -> {
-      if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
-        return 200;
+        toShowPluginList.add(node.getCurrentDescriptor());
       }
 
-      if (myRedStrategy.test(pluginDescriptor.getPluginId())) {
+      if(PlatformOrPluginUpdateChecker.isPlatform(node.getPluginId())) {
+        assert futureDescriptor != null;
+
+        myPlatformVersion = futureDescriptor.getVersion();
+      }
+    }
+
+    ContainerUtil.sort(toShowPluginList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+
+    ContainerUtil.weightSort(toShowPluginList, pluginDescriptor -> {
+      if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
         return 100;
+      }
+
+      if (brokenPlugins.contains(pluginDescriptor.getPluginId())) {
+        return 200;
       }
 
       return 0;
     });
 
-    Optional<IdeaPluginDescriptor> platform = list.stream().filter(x -> PlatformOrPluginUpdateChecker.isPlatform(x.getPluginId())).findAny();
-    platform.ifPresent(plugin -> myPlatformVersion = plugin.getVersion());
-
     OurPluginModel model = new OurPluginModel();
-    model.updatePluginsList(list);
+    model.updatePluginsList(toShowPluginList);
 
     PluginTable pluginList = new PluginTable(model);
 
@@ -207,9 +212,8 @@ public class PluginListDialog extends DialogWrapper {
   public void doOKAction() {
     super.doOKAction();
 
-    List<Couple<IdeaPluginDescriptor>> brokenPlugins = myNodes.stream().filter(c -> myRedStrategy.test(c.getFirst().getPluginId())).collect(Collectors.toList());
-    if (!brokenPlugins.isEmpty()) {
-
+    PlatformOrPluginNode brokenPlugin = myNodes.stream().filter(c -> c.getFutureDescriptor() == null).findFirst().orElse(null);
+    if (brokenPlugin != null) {
       if (Messages.showOkCancelDialog(myProject, "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?", "Consulo", Messages.getErrorIcon()) != Messages.OK) {
         return;
       }
@@ -218,10 +222,11 @@ public class PluginListDialog extends DialogWrapper {
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<IdeaPluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
-      for (Couple<IdeaPluginDescriptor> couple : myNodes) {
-        IdeaPluginDescriptor pluginDescriptor = couple.getSecond();
-        if (myRedStrategy.test(pluginDescriptor.getPluginId())) {
-          // update list contains broken plugins
+      for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
+        IdeaPluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
+        // update list contains broken plugins
+        if (pluginDescriptor == null) {
+
           continue;
         }
 
