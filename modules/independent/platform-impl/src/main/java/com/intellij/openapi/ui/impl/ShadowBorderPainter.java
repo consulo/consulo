@@ -83,7 +83,6 @@ public class ShadowBorderPainter {
     return new Shadow(shadow, x - shadowSize - 5, y - shadowSize + 2);
   }
 
-
   public static class Shadow {
     int x;
     int y;

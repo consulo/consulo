@@ -75,7 +75,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       myPanel.remove(myRightPanel);
     }
 
-    myPanel.setBorder(UIUtil.isRetina() ? JBUI.Borders.empty(4, 3, 4, 3) : JBUI.Borders.empty(2, 3, 2, 3));
+    myPanel.setBorder(UIUtil.isJreHiDPI(myPanel) ? JBUI.Borders.empty(4, 3) : JBUI.Borders.empty(2, 3));
   }
 
   @Override

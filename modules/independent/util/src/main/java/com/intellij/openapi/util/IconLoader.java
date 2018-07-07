@@ -19,15 +19,17 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
+import com.intellij.util.ui.JBUI;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.List;
@@ -215,5 +217,15 @@ public final class IconLoader {
   @Nonnull
   public static Icon getIconSnapshot(@Nonnull Icon icon) {
     return ourIconLoaderFacade.getIconSnapshot(icon);
+  }
+
+  @Nullable
+  public static Image toImage(@Nonnull Icon icon) {
+    return toImage(icon, null);
+  }
+
+  @Nullable
+  public static Image toImage(@Nonnull Icon icon, @Nullable JBUI.ScaleContext ctx) {
+    return ourIconLoaderFacade.toImage(icon, ctx);
   }
 }

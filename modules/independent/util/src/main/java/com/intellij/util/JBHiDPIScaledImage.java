@@ -33,7 +33,8 @@ import static java.lang.Math.round;
  * @author tav
  */
 public class JBHiDPIScaledImage extends BufferedImage {
-  private final @Nullable Image myImage;
+  @Nullable
+  private final Image myImage;
   private final double myUserWidth;
   private final double myUserHeight;
   private final double myScale;
@@ -57,10 +58,10 @@ public class JBHiDPIScaledImage extends BufferedImage {
   }
 
   /**
-   * @see #JBHiDPIScaledImage(Graphics2D, double, double, int)
+   * @see #JBHiDPIScaledImage(Graphics2D, double, double, int, RoundingMode rm)
    */
   public JBHiDPIScaledImage(@Nullable Graphics2D g, int width, int height, int type) {
-    this(g, (double)width, (double)height, type);
+    this(g, (double)width, (double)height, type, RoundingMode.FLOOR);
   }
 
   /**
@@ -70,13 +71,10 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * @param width the width in user coordinate space
    * @param height the height in user coordinate space
    * @param type the type
+   * @param rm the rounding mode
    */
-  public JBHiDPIScaledImage(@Nullable Graphics2D g, double width, double height, int type) {
-    super((int)(width * JBUI.sysScale(g)), (int)(height * JBUI.sysScale(g)), type);
-    myImage = null;
-    myUserWidth = width;
-    myUserHeight = height;
-    myScale = JBUI.sysScale(g);
+  public JBHiDPIScaledImage(@Nullable Graphics2D g, double width, double height, int type, @Nonnull RoundingMode rm) {
+    this(JBUI.sysScale(g), width, height, type, rm);
   }
 
   /**
@@ -84,6 +82,13 @@ public class JBHiDPIScaledImage extends BufferedImage {
    */
   public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, int width, int height, int type) {
     this(gc, (double)width, (double)height, type);
+  }
+
+  /**
+   * @see #JBHiDPIScaledImage(GraphicsConfiguration, double, double, int)
+   */
+  public JBHiDPIScaledImage(@Nullable JBUI.ScaleContext ctx, double width, double height, int type, @Nonnull RoundingMode rm) {
+    this(JBUI.sysScale(ctx), width, height, type, rm);
   }
 
   /**
@@ -95,11 +100,7 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * @param type the type
    */
   public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type) {
-    super((int)(width * JBUI.sysScale(gc)), (int)(height * JBUI.sysScale(gc)), type);
-    myImage = null;
-    myUserWidth = width;
-    myUserHeight = height;
-    myScale = JBUI.sysScale(gc);
+    this(gc, width, height, type, RoundingMode.FLOOR);
   }
 
   /**
@@ -110,13 +111,18 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * @param height the height in user coordinate space
    * @param rm the rounding mode to apply when converting width/height to the device space
    * @param type the type
+   * @param rm the rounding mode
    */
   public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type, @Nonnull RoundingMode rm) {
-    super(rm.round(width * JBUI.sysScale(gc)), rm.round(height * JBUI.sysScale(gc)), type);
+    this(JBUI.sysScale(gc), width, height, type, rm);
+  }
+
+  private JBHiDPIScaledImage(double scale, double width, double height, int type, @Nonnull RoundingMode rm) {
+    super(rm.round(width * scale), rm.round(height * scale), type);
     myImage = null;
     myUserWidth = width;
     myUserHeight = height;
-    myScale = JBUI.sysScale(gc);
+    myScale = scale;
   }
 
   /**
@@ -162,8 +168,8 @@ public class JBHiDPIScaledImage extends BufferedImage {
 
     Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.QUALITY, w, h);
 
-    double newUserWidth = w / this.myScale;
-    double newUserHeight = h / this.myScale;
+    double newUserWidth = w / myScale;
+    double newUserHeight = h / myScale;
 
     if (myImage != null) {
       return new JBHiDPIScaledImage(scaled, newUserWidth, newUserHeight, getType());

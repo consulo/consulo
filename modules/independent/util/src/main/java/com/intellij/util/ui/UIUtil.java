@@ -25,6 +25,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.ui.*;
+import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
@@ -37,10 +38,10 @@ import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import sun.java2d.SunGraphicsEnvironment;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -1885,6 +1886,19 @@ public class UIUtil {
       return new BufferedImage(width, height, type);
     }
     return createImage(width, height, type);
+  }
+
+
+  /**
+   * @see #createImage(GraphicsConfiguration, double, double, int, RoundingMode)
+   */
+  @Nonnull
+  public static BufferedImage createImage(JBUI.ScaleContext ctx, double width, double height, int type, PaintUtil.RoundingMode rm) {
+    if (isJreHiDPI(ctx)) {
+      return RetinaImage.create(ctx, width, height, type, rm);
+    }
+    //noinspection UndesirableClassUsage
+    return new BufferedImage(rm.round(width), rm.round(height), type);
   }
 
   /**

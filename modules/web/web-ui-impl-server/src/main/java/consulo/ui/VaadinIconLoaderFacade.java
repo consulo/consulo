@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.util.Computable;
+import com.intellij.util.ui.JBUI;
 import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
@@ -23,6 +24,7 @@ import consulo.ui.migration.SwingImageRef;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 
 /**
@@ -68,5 +70,10 @@ public class VaadinIconLoaderFacade implements IconLoaderFacade {
   @Override
   public void set(Icon icon, String originalPath, ClassLoader classLoader) {
 
+  }
+
+  @Override
+  public Image toImage(Icon icon, @Nullable JBUI.ScaleContext ctx) {
+    throw new UnsupportedOperationException();
   }
 }

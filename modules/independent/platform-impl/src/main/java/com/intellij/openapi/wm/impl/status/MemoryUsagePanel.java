@@ -194,14 +194,6 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
     }
 
     UIUtil.drawImage(g, myBufferedImage, 0, 0, null);
-    if (UIUtil.isRetina() && !UIUtil.isUnderDarcula()) {
-      Graphics2D g2 = (Graphics2D)g.create(0, 0, getWidth(), getHeight());
-      g2.scale(0.5, 0.5);
-      g2.setColor(Gray.x91);
-      g2.drawLine(0,0,2 * getWidth(), 0);
-      g2.scale(1, 1);
-      g2.dispose();
-    }
   }
 
   @Override

@@ -9,8 +9,8 @@ import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.JBUI.ScaleContextAware;
 import com.intellij.util.ui.JBUI.ScaleContextSupport;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
