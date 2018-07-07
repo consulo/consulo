@@ -18,7 +18,7 @@ package com.intellij.util.ui;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map;D
 
 /**
  * Draws a 'apple-like' bold dotted line. Instances are cached for performance reasons.

@@ -16,9 +16,10 @@
 package consulo.ui.internal;
 
 import com.intellij.ui.roots.ScalableIconComponent;
-import consulo.awt.internal.SwingIconWrapper;
+import consulo.awt.TargetAWT;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,9 +29,9 @@ import javax.annotation.Nonnull;
 public class DesktopImageBoxImpl extends ScalableIconComponent implements ImageBox, SwingWrapper{
   private Image myIcon;
 
-  public DesktopImageBoxImpl(Image icon) {
-    super(((SwingIconWrapper)icon).toSwingIcon());
-    myIcon = icon;
+  public DesktopImageBoxImpl(@Nonnull Image image) {
+    super(TargetAWT.to(image));
+    myIcon = image;
   }
 
   @Nonnull
