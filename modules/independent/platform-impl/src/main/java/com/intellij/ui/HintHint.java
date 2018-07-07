@@ -20,8 +20,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -41,6 +43,7 @@ public class HintHint {
   private Color myTextFg;
   private Color myTextBg;
   private Color myBorderColor;
+  private Border myComponentBorder = null;
   private Insets myBorderInsets;
   private Font myFont;
   private int myCalloutShift;
@@ -51,6 +54,7 @@ public class HintHint {
   private boolean myShowImmediately = false;
   private boolean myAnimationEnabled;
   private boolean myRequestFocus;
+
 
   public HintHint() {
   }
@@ -101,6 +105,14 @@ public class HintHint {
 
   public RelativePoint getTargetPoint() {
     return new RelativePoint(getOriginalComponent(), getOriginalPoint());
+  }
+
+  public Border getComponentBorder() {
+    return myComponentBorder;
+  }
+
+  public void setComponentBorder(@Nullable Border border) {
+    myComponentBorder = border;
   }
 
   public Balloon.Position getPreferredPosition() {
@@ -257,7 +269,7 @@ public class HintHint {
   }
 
   /**
-   * Make sense if and only if isAwtTooltip set to <code>true</code>
+   * Make sense if and only if isAwtTooltip set to {@code true}
    *
    * @param showImmediately true or false
    * @return current instance of HintHint
@@ -273,7 +285,7 @@ public class HintHint {
 
   /**
    *
-   * @param enabled is <code>true</code> by default and balloon appears with transparency animation. <code>false</code> means instant opaque showing.
+   * @param enabled is {@code true} by default and balloon appears with transparency animation. {@code false} means instant opaque showing.
    * @return current instance of HintHint
    */
   public HintHint setAnimationEnabled(boolean enabled){

@@ -38,10 +38,10 @@ import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import sun.java2d.SunGraphicsEnvironment;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -1888,6 +1888,22 @@ public class UIUtil {
     return createImage(width, height, type);
   }
 
+
+  /**
+   * @see #createImage(GraphicsConfiguration, double, double, int, RoundingMode)
+   */
+  @Nonnull
+  public static BufferedImage createImage(Graphics g, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
+    if (g instanceof Graphics2D) {
+      Graphics2D g2d = (Graphics2D)g;
+      if (isJreHiDPI(g2d)) {
+        return RetinaImage.create(g2d, width, height, type, rm);
+      }
+      //noinspection UndesirableClassUsage
+      return new BufferedImage(rm.round(width), rm.round(height), type);
+    }
+    return createImage(rm.round(width), rm.round(height), type);
+  }
 
   /**
    * @see #createImage(GraphicsConfiguration, double, double, int, RoundingMode)

@@ -30,8 +30,9 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+import sun.awt.AWTAccessor;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -197,5 +198,32 @@ public class AppUIUtil {
     }
 
     return iconPath;
+  }
+
+  /**
+   * Targets the component to a (screen) device before showing.
+   * In case the component is already a part of UI hierarchy (and is thus bound to a device)
+   * the method does nothing.
+   * <p>
+   * The prior targeting to a device is required when there's a need to calculate preferred
+   * size of a compound component (such as JEditorPane, for instance) which is not yet added
+   * to a hierarchy. The calculation in that case may involve device-dependent metrics
+   * (such as font metrics) and thus should refer to a particular device in multi-monitor env.
+   * <p>
+   * Note that if after calling this method the component is added to another hierarchy,
+   * bound to a different device, AWT will throw IllegalArgumentException. To avoid that,
+   * the device should be reset by calling {@code targetToDevice(comp, null)}.
+   *
+   * @param target the component representing the UI hierarchy and the target device
+   * @param comp the component to target
+   */
+  public static void targetToDevice(@Nonnull Component comp, @Nullable Component target) {
+    if (comp.isShowing()) return;
+    GraphicsConfiguration gc = target != null ? target.getGraphicsConfiguration() : null;
+    setGraphicsConfiguration(comp, gc);
+  }
+
+  public static void setGraphicsConfiguration(@Nonnull Component comp, @Nullable GraphicsConfiguration gc) {
+    AWTAccessor.getComponentAccessor().setGraphicsConfiguration(comp, gc);
   }
 }

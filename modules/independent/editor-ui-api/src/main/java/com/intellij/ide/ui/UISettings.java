@@ -28,6 +28,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ComponentTreeEventDispatcher;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.Accessor;
 import com.intellij.util.xmlb.SerializationFilter;
@@ -72,7 +73,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   /**
-   *
    * @return null if application is not initialized
    */
   @Nullable
@@ -87,6 +87,28 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     UISettings settings = ServiceManager.getService(UISettings.class);
     ourInstance = settings;
     return settings;
+  }
+
+  /**
+   * Returns the default font size scaled by #defFontScale
+   *
+   * @return the default scaled font size
+   */
+  public static float getDefFontSize() {
+    return Math.round(UIUtil.DEF_SYSTEM_FONT_SIZE * getDefFontScale());
+  }
+
+  /**
+   * Returns the default font scale, which depends on the HiDPI mode (see JBUI#ScaleType).
+   * <p>
+   * The font is represented:
+   * - in relative (dpi-independent) points in the JRE-managed HiDPI mode, so the method returns 1.0f
+   * - in absolute (dpi-dependent) points in the IDE-managed HiDPI mode, so the method returns the default screen scale
+   *
+   * @return the system font scale
+   */
+  public static double getDefFontScale() {
+    return UIUtil.isJreHiDPIEnabled() ? 1f : JBUI.sysScale();
   }
 
   /**
