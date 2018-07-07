@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -27,6 +28,8 @@ import java.util.Map;
  * @author max
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
+@Deprecated
+@DeprecationInfo("Get grid of it")
 public class UI {
   private static final Map<String, Color> ourColors = new HashMap<String, Color>();
 
