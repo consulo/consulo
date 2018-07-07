@@ -22,6 +22,7 @@ import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.RetrievableIcon;
+import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
@@ -345,6 +346,37 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
         g2.setComposite(saveComposite);
       }
     };
+  }
+
+  @Override
+  public Image toImage(Icon icon, @Nullable JBUI.ScaleContext ctx) {
+    if (icon instanceof RetrievableIcon) {
+      icon = ((RetrievableIcon)icon).retrieveIcon();
+    }
+    if (icon instanceof CachedImageIcon) {
+      icon = ((CachedImageIcon)icon).getRealIcon(ctx);
+    }
+    if (icon instanceof ImageIcon) {
+      return ((ImageIcon)icon).getImage();
+    }
+    else {
+      BufferedImage image;
+      if (GraphicsEnvironment.isHeadless()) { // for testing purpose
+        image = UIUtil.createImage(ctx, icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.FLOOR);
+      } else {
+        // [tav] todo: match the screen with the provided ctx
+        image = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDefaultConfiguration()
+                .createCompatibleImage(icon.getIconWidth(), icon.getIconHeight(), Transparency.TRANSLUCENT);
+      }
+      Graphics2D g = image.createGraphics();
+      try {
+        icon.paintIcon(null, g, 0, 0);
+      } finally {
+        g.dispose();
+      }
+      return image;
+    }
   }
 
   @Override

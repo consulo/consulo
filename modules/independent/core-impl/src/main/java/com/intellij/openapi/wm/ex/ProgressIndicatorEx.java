@@ -22,8 +22,6 @@ import javax.annotation.Nonnull;
 public interface ProgressIndicatorEx extends ProgressIndicatorStacked {
   void addStateDelegate(@Nonnull ProgressIndicatorEx delegate);
 
-  boolean isModalityEntered();
-
   void finish(@Nonnull TaskInfo task);
 
   boolean isFinished(@Nonnull TaskInfo task);

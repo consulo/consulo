@@ -15,19 +15,13 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import com.intellij.ui.GuiUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakList;
-import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBase implements ProgressIndicatorEx {
@@ -81,7 +75,6 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
     }
   };
   protected final boolean myReusable;
-  private volatile boolean myModalityEntered;
   private volatile List<ProgressIndicatorEx> myStateDelegates;
   private volatile WeakList<TaskInfo> myFinished;
   private volatile boolean myWasStarted;
@@ -102,48 +95,12 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
       delegateRunningChange(START_ACTION);
     }
     myWasStarted = true;
-
-    enterModality();
-  }
-
-  protected final void enterModality() {
-    if (myModalityProgress == this) {
-      ModalityState modalityState = ModalityState.defaultModalityState();
-      if (!myModalityEntered &&
-          !ApplicationManager.getApplication().isDispatchThread() &&
-          !((TransactionGuardEx)TransactionGuard.getInstance()).isWriteSafeModality(modalityState)) {
-        // exceptions here should be assigned to Peter
-        LOG.error("Non-modal progress should be started in a write-safe context: an action or modality-aware invokeLater. See also TransactionGuard documentation.");
-      }
-      GuiUtils.invokeLaterIfNeeded(this::doEnterModality, modalityState);
-    }
-  }
-
-  private void doEnterModality() {
-    if (!myModalityEntered) {
-      LaterInvocator.enterModal(this);
-      myModalityEntered = true;
-    }
   }
 
   @Override
   public void stop() {
     super.stop();
     delegateRunningChange(STOP_ACTION);
-    exitModality();
-  }
-
-  protected final void exitModality() {
-    if (myModalityProgress == this) {
-      GuiUtils.invokeLaterIfNeeded(this::doExitModality, ModalityState.defaultModalityState());
-    }
-  }
-
-  private void doExitModality() {
-    if (myModalityEntered) {
-      myModalityEntered = false;
-      LaterInvocator.leaveModal(this);
-    }
   }
 
   @Override
@@ -324,19 +281,6 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
 
   protected void onRunningChange() {
 
-  }
-
-  @Override
-  public boolean isModalityEntered() {
-    return myModalityEntered;
-  }
-
-  @Override
-  public synchronized void initStateFrom(@Nonnull final ProgressIndicator indicator) {
-    super.initStateFrom(indicator);
-    if (indicator instanceof ProgressIndicatorEx) {
-      myModalityEntered = ((ProgressIndicatorEx)indicator).isModalityEntered();
-    }
   }
 
   @Override

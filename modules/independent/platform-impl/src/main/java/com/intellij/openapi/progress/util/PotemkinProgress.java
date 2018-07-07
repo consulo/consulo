@@ -21,10 +21,10 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.Semaphore;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import sun.awt.SunToolkit;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -65,6 +65,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     return Objects.requireNonNull(super.getDialog());
   }
 
+  @Override
   public void interact() {
     if (ApplicationManager.getApplication().isDispatchThread()) {
       long now = System.currentTimeMillis();
@@ -90,7 +91,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     }
   }
 
-  private long myLastShouldDispatchCheck = 0;
+  private long myLastShouldDispatchCheck;
   private boolean shouldDispatchAwtEvents(long now) {
     if (now == myLastShouldDispatchCheck) return false;
 
@@ -98,7 +99,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     return getDialog().getPanel().isShowing();
   }
 
-  private void dispatchInputEvent(InputEvent e) {
+  private void dispatchInputEvent(@Nonnull InputEvent e) {
     if (isCancellationEvent(e)) {
       cancel();
       return;
@@ -127,17 +128,13 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   }
 
   @Nullable
-  protected JRootPane considerShowingDialog(long now) {
-    if (isReadyShowing(now)) {
+  private JRootPane considerShowingDialog(long now) {
+    if (now - myLastUiUpdate > myDelayInMillis) {
       getDialog().myRepaintRunnable.run();
       showDialog();
       return getDialog().getPanel().getRootPane();
     }
     return null;
-  }
-
-  protected boolean isReadyShowing(long now) {
-    return now - myLastUiUpdate > myDelayInMillis;
   }
 
   private boolean timeToPaint(long now) {

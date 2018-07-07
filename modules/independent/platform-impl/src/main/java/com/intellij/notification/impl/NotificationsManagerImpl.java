@@ -59,8 +59,8 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
@@ -397,10 +397,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     String fontStyle = NotificationsUtil.getFontStyle();
     int prefSize = new JLabel(NotificationsUtil.buildHtml(notification, null, true, null, fontStyle)).getPreferredSize().width;
-    String style = prefSize > BalloonLayoutConfiguration.MaxWidth ? BalloonLayoutConfiguration.MaxWidthStyle : null;
+    String style = prefSize > BalloonLayoutConfiguration.MaxWidth() ? BalloonLayoutConfiguration.MaxWidthStyle() : null;
 
     if (layoutData.showFullContent) {
-      style = prefSize > BalloonLayoutConfiguration.MaxFullContentWidth ? BalloonLayoutConfiguration.MaxFullContentWidthStyle : null;
+      style = prefSize > BalloonLayoutConfiguration.MaxFullContentWidth() ? BalloonLayoutConfiguration.MaxFullContentWidthStyle() : null;
     }
 
     String textR = NotificationsUtil.buildHtml(notification, style, true, foregroundR, fontStyle);
@@ -410,10 +410,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     text.setEditable(false);
     text.setOpaque(false);
-
-    if (UIUtil.isUnderNimbusLookAndFeel()) {
-      text.setBackground(UIUtil.TRANSPARENT_COLOR);
-    }
 
     text.setBorder(null);
 
@@ -1085,7 +1081,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     private final JEditorPane myText;
     private final BalloonLayoutData myLayoutData;
     private Component myTitleComponent;
-    private JComponent myCenteredComponent;
+    private Component myCenteredComponent;
     private JPanel myActionPanel;
     private Component myExpandAction;
 
@@ -1114,7 +1110,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         myTitleComponent = comp;
       }
       else if (BorderLayout.CENTER.equals(constraints)) {
-        myCenteredComponent = (JComponent)comp;
+        myCenteredComponent = comp;
       }
       else if (BorderLayout.SOUTH.equals(constraints)) {
         myActionPanel = (JPanel)comp;
@@ -1146,9 +1142,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
       Dimension expandSize = myExpandAction == null || myLayoutData.showMinSize ? new Dimension() : size.fun(myExpandAction);
 
       int height = myLayoutData.configuration.topSpaceHeight +
-                   titleSize.height +
-                   centeredSize.height +
-                   Math.max(actionSize.height, expandSize.height) +
+                   titleSize.height + centeredSize.height + Math.max(actionSize.height, expandSize.height) +
                    myLayoutData.configuration.bottomSpaceHeight;
 
       if (titleSize.height > 0 && centeredSize.height > 0) {
@@ -1167,9 +1161,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
       int width = Math.max(centerWidth, Math.max(titleWidth, actionWidth));
       if (!myLayoutData.showFullContent) {
-        width = Math.min(width, BalloonLayoutConfiguration.MaxWidth);
+        width = Math.min(width, BalloonLayoutConfiguration.MaxWidth());
       }
-      width = Math.max(width, BalloonLayoutConfiguration.MinWidth);
+      width = Math.max(width, BalloonLayoutConfiguration.MinWidth());
 
       return new Dimension(width, height);
     }
@@ -1225,7 +1219,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
         width -= myLayoutData.configuration.actionGap + expandWidth;
 
         int components = myActionPanel.getComponentCount();
-        if (myActionPanel.getComponent(components - 1) instanceof DropDownAction) {
+        Component lastComponent = myActionPanel.getComponent(components - 1);
+        if (lastComponent instanceof DropDownAction/* || lastComponent instanceof ContextHelpLabel*/) {
           components--;
         }
         if (components > 2) {

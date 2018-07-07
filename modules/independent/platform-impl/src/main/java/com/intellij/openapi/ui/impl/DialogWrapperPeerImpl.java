@@ -70,7 +70,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTrackbackProvider {
+public class DialogWrapperPeerImpl extends DialogWrapperPeer {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.DialogWrapper");
 
   private final DialogWrapper myWrapper;
@@ -479,11 +479,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
     StackingPopupDispatcher.getInstance().hidePersistentPopups();
     myDisposeActions.add(() -> StackingPopupDispatcher.getInstance().restorePersistentPopups());
-  }
-
-  @Override
-  public FocusTrackback getFocusTrackback() {
-    return myDialog.getFocusTrackback();
   }
 
   private class AnCancelAction extends AnAction implements DumbAware {

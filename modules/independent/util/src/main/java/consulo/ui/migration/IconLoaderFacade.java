@@ -16,10 +16,12 @@
 package consulo.ui.migration;
 
 import com.intellij.openapi.util.Computable;
+import com.intellij.util.ui.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 
 /**
@@ -43,4 +45,6 @@ public interface IconLoaderFacade {
   SwingImageRef findIcon(URL url, boolean useCache);
 
   void set(Icon icon, String originalPath, ClassLoader classLoader);
+
+  Image toImage(Icon icon, @Nullable JBUI.ScaleContext ctx);
 }

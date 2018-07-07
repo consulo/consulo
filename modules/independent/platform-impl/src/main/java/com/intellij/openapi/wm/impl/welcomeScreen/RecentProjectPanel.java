@@ -82,7 +82,7 @@ public class RecentProjectPanel extends JPanel {
 
   private boolean rectInListCoordinatesContains(Rectangle listCellBounds, Point p) {
 
-    int realCloseButtonInset = (UIUtil.isRetina((Graphics2D)myList.getGraphics())) ? closeButtonInset * 2 : closeButtonInset;
+    int realCloseButtonInset = UIUtil.isJreHiDPI(this) ? (int)(closeButtonInset * JBUI.sysScale(this)) : closeButtonInset;
 
     Rectangle closeButtonRect = new Rectangle(myCloseButtonForEditor.getX() - realCloseButtonInset, myCloseButtonForEditor.getY() - realCloseButtonInset,
                                               myCloseButtonForEditor.getWidth() + realCloseButtonInset * 2,

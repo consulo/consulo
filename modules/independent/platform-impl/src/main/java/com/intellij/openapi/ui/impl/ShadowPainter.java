@@ -9,8 +9,8 @@ import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.JBUI.ScaleContextAware;
 import com.intellij.util.ui.JBUI.ScaleContextSupport;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
@@ -123,7 +123,8 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
       myBottomRight.paintIcon(c, g, x + width - myBottomRight.getIconWidth(), y + height - myBottomRight.getIconHeight());
 
       g.setClip(clip);
-    } else {
+    }
+    else {
       myTopLeft.paintIcon(c, g, x, y);
       myTopRight.paintIcon(c, g, x + width - myTopRight.getIconWidth(), y);
       myBottomLeft.paintIcon(c, g, x, y + height - myBottomLeft.getIconHeight());
@@ -159,7 +160,8 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
             g2d.drawImage(img, 0, at, null);
           }
         }
-      } finally {
+      }
+      finally {
         g2d.dispose();
       }
     }

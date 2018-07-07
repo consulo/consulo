@@ -19,13 +19,14 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.RetinaImage;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
+import java.awt.image.ImageObserver;
 
 import static com.intellij.util.ui.JBUI.ScaleType.SYS_SCALE;
 
@@ -34,9 +35,18 @@ import static com.intellij.util.ui.JBUI.ScaleType.SYS_SCALE;
  */
 public class ImageUtil {
   public static BufferedImage toBufferedImage(@Nonnull Image image) {
+    return toBufferedImage(image, false);
+  }
+
+  public static BufferedImage toBufferedImage(@Nonnull Image image, boolean inUserSize) {
     if (image instanceof JBHiDPIScaledImage) {
-      Image img = ((JBHiDPIScaledImage)image).getDelegate();
+      JBHiDPIScaledImage jbImage = (JBHiDPIScaledImage)image;
+      Image img = jbImage.getDelegate();
       if (img != null) {
+        if (inUserSize) {
+          double scale = jbImage.getScale();
+          img = scaleImage(img, 1 / scale);
+        }
         image = img;
       }
     }
@@ -44,8 +54,34 @@ public class ImageUtil {
       return (BufferedImage)image;
     }
 
-    @SuppressWarnings("UndesirableClassUsage")
-    BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+    final int width = image.getWidth(null);
+    final int height = image.getHeight(null);
+    if (width <= 0 || height <= 0) {
+      // avoiding NPE
+      return new BufferedImage(Math.max(width, 1), Math.max(height, 1), BufferedImage.TYPE_INT_ARGB) {
+        @Override
+        public int getWidth() {
+          return Math.max(width, 0);
+        }
+
+        @Override
+        public int getHeight() {
+          return Math.max(height, 0);
+        }
+
+        @Override
+        public int getWidth(ImageObserver observer) {
+          return Math.max(width, 0);
+        }
+
+        @Override
+        public int getHeight(ImageObserver observer) {
+          return Math.max(height, 0);
+        }
+      };
+    }
+
+    @SuppressWarnings("UndesirableClassUsage") BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = bufferedImage.createGraphics();
     g.drawImage(image, 0, 0, null);
     g.dispose();
@@ -84,14 +120,13 @@ public class ImageUtil {
 
   public static Image filter(Image image, ImageFilter filter) {
     if (image == null || filter == null) return image;
-    return Toolkit.getDefaultToolkit().createImage(
-            new FilteredImageSource(toBufferedImage(image).getSource(), filter));
+    return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(toBufferedImage(image).getSource(), filter));
   }
 
   /**
    * Scales the image taking into account its HiDPI awareness.
    */
-  public static Image scaleImage(Image image, float scale) {
+  public static Image scaleImage(Image image, double scale) {
     return ImageLoader.scaleImage(image, scale);
   }
 

@@ -23,8 +23,8 @@ import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import consulo.ui.migration.SwingImageRef;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -45,25 +45,35 @@ public class IconUtil {
       return icon;
     }
 
-    final int w = Math.min(icon.getIconWidth(), maxWidth);
-    final int h = Math.min(icon.getIconHeight(), maxHeight);
+    Image image = toImage(icon);
+    if (image == null) return icon;
 
-    final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
-            .createCompatibleImage(icon.getIconWidth(), icon.getIconHeight(), Transparency.TRANSLUCENT);
-    final Graphics2D g = image.createGraphics();
-    icon.paintIcon(new JPanel(), g, 0, 0);
-    g.dispose();
+    double scale = 1f;
+    if (image instanceof JBHiDPIScaledImage) {
+      scale = ((JBHiDPIScaledImage)image).getScale();
+      image = ((JBHiDPIScaledImage)image).getDelegate();
+    }
+    BufferedImage bi = ImageUtil.toBufferedImage(image);
+    final Graphics2D g = bi.createGraphics();
 
-    final BufferedImage img = UIUtil.createImage(w, h, Transparency.TRANSLUCENT);
-    final int offX = icon.getIconWidth() > maxWidth ? (icon.getIconWidth() - maxWidth) / 2 : 0;
-    final int offY = icon.getIconHeight() > maxHeight ? (icon.getIconHeight() - maxHeight) / 2 : 0;
+    int imageWidth = ImageUtil.getRealWidth(image);
+    int imageHeight = ImageUtil.getRealHeight(image);
+
+    maxWidth = maxWidth == Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)Math.round(maxWidth * scale);
+    maxHeight = maxHeight == Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)Math.round(maxHeight * scale);
+    final int w = Math.min(imageWidth, maxWidth);
+    final int h = Math.min(imageHeight, maxHeight);
+
+    final BufferedImage img = UIUtil.createImage(g, w, h, Transparency.TRANSLUCENT);
+    final int offX = imageWidth > maxWidth ? (imageWidth - maxWidth) / 2 : 0;
+    final int offY = imageHeight > maxHeight ? (imageHeight - maxHeight) / 2 : 0;
     for (int col = 0; col < w; col++) {
       for (int row = 0; row < h; row++) {
-        img.setRGB(col, row, image.getRGB(col + offX, row + offY));
+        img.setRGB(col, row, bi.getRGB(col + offX, row + offY));
       }
     }
-
-    return new ImageIcon(img);
+    g.dispose();
+    return new JBImageIcon(RetinaImage.createFrom(img, scale, null));
   }
 
   @Nonnull
@@ -102,18 +112,11 @@ public class IconUtil {
   }
 
   public static Image toImage(@Nonnull Icon icon) {
-    if (icon instanceof ImageIcon) {
-      return ((ImageIcon)icon).getImage();
-    }
-    else {
-      final int w = icon.getIconWidth();
-      final int h = icon.getIconHeight();
-      final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
-      final Graphics2D g = image.createGraphics();
-      icon.paintIcon(null, g, 0, 0);
-      g.dispose();
-      return image;
-    }
+    return toImage(icon, null);
+  }
+
+  public static Image toImage(@Nonnull Icon icon, @Nullable JBUI.ScaleContext ctx) {
+    return IconLoader.toImage(icon, ctx);
   }
 
   public static SwingImageRef getAddIcon() {
@@ -241,6 +244,7 @@ public class IconUtil {
       return myHeight;
     }
   }
+
   /**
    * @deprecated use {@link #scale(Icon, Component, float)}
    */
@@ -319,9 +323,9 @@ public class IconUtil {
    * So, prior to scale the icon recursively, the returned icon should be inspected for its type to understand the result.
    * But recursive scale should better be avoided.
    *
-   * @param icon the icon to scale
+   * @param icon     the icon to scale
    * @param ancestor the component (or its ancestor) painting the icon, or null when not available
-   * @param scale the scale factor
+   * @param scale    the scale factor
    * @return the scaled icon
    */
   @Nonnull

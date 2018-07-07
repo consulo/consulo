@@ -27,7 +27,6 @@ import com.intellij.openapi.wm.impl.IdeRootPane;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
-import consulo.ui.BalloonLayoutEx;
 import consulo.ui.impl.ToolWindowPanelImplEx;
 import consulo.ui.migration.AWTComponentProviderUtil;
 
@@ -40,7 +39,7 @@ import java.awt.event.ComponentEvent;
 import java.util.*;
 import java.util.List;
 
-public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
+public class DesktopBalloonLayoutImpl implements BalloonLayout {
   private final ComponentAdapter myResizeListener = new ComponentAdapter() {
     @Override
     public void componentResized(@Nonnull ComponentEvent e) {
@@ -53,10 +52,13 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
   protected final List<Balloon> myBalloons = new ArrayList<>();
   private final Map<Balloon, BalloonLayoutData> myLayoutData = new HashMap<>();
-  private Integer myWidth;
+  private GetInt myWidth;
 
   private final Alarm myRelayoutAlarm = new Alarm();
   private final Runnable myRelayoutRunnable = () -> {
+    if (myLayeredPane == null) {
+      return;
+    }
     relayout();
     fireRelayout();
   };
@@ -131,22 +133,8 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Balloon merge = merge(layoutData);
     if (merge == null) {
-      if (getVisibleCount() > 0 && layoutData instanceof BalloonLayoutData && ((BalloonLayoutData)layoutData).groupId != null) {
-        int index = -1;
-        int count = 0;
-        for (int i = 0, size = myBalloons.size(); i < size; i++) {
-          BalloonLayoutData ld = myLayoutData.get(myBalloons.get(i));
-          if (ld != null && ld.groupId != null) {
-            if (index == -1) {
-              index = i;
-            }
-            count++;
-          }
-        }
-
-        if (count > 0 && count == getVisibleCount()) {
-          remove(myBalloons.get(index));
-        }
+      if (!myBalloons.isEmpty() && myBalloons.size() == getVisibleCount()) {
+        remove(myBalloons.get(0));
       }
       myBalloons.add(balloon);
     }
@@ -185,8 +173,9 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
     calculateSize();
     relayout();
-    ((BalloonImpl)balloon).traceDispose(false);
-    balloon.show(myLayeredPane);
+    if (!balloon.isDisposed()) {
+      balloon.show(myLayeredPane);
+    }
     fireRelayout();
   }
 
@@ -236,7 +225,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
   private void clearNMore(@Nonnull Balloon balloon) {
     BalloonLayoutData layoutData = myLayoutData.get(balloon);
-    if (layoutData != null && layoutData.mergeData != null) {
+    if (layoutData != null && layoutData.project != null && layoutData.mergeData != null) {
       EventLog.clearNMore(layoutData.project, Collections.singleton(layoutData.groupId));
     }
   }
@@ -253,6 +242,20 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     }
   }
 
+  public void closeAll() {
+    myCloseAll.run();
+  }
+
+  public void closeFirst() {
+    if (!myBalloons.isEmpty()) {
+      remove(myBalloons.get(0), true);
+    }
+  }
+
+  public int getBalloonCount() {
+    return myBalloons.size();
+  }
+
   private static int getVisibleCount() {
     return 2;
   }
@@ -262,9 +265,9 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     BalloonLayoutData layoutData = myLayoutData.get(balloon);
     if (layoutData == null) {
       Dimension size = balloon.getPreferredSize();
-      return myWidth == null ? size : new Dimension(myWidth, size.height);
+      return myWidth == null ? size : new Dimension(myWidth.i(), size.height);
     }
-    return new Dimension(myWidth, layoutData.height);
+    return new Dimension(myWidth.i(), layoutData.height);
   }
 
   public boolean isEmpty() {
@@ -286,7 +289,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
       }
     }
 
-    myWidth = BalloonLayoutConfiguration.FixedWidth;
+    myWidth = BalloonLayoutConfiguration::FixedWidth;
   }
 
   private void relayout() {
@@ -306,10 +309,10 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     JComponent layeredPane = pane != null ? pane.getMyLayeredPane() : null;
     int eachColumnX = (layeredPane == null ? myLayeredPane.getWidth() : layeredPane.getX() + layeredPane.getWidth()) - 4;
 
-    newLayout(columns.get(0), eachColumnX + 4, (int)myLayeredPane.getBounds().getMaxY());
+    doLayout(columns.get(0), eachColumnX + 4, (int)myLayeredPane.getBounds().getMaxY());
   }
 
-  private void newLayout(List<Balloon> balloons, int startX, int bottomY) {
+  private void doLayout(List<Balloon> balloons, int startX, int bottomY) {
     int y = bottomY;
     ToolWindowPanelImplEx pane = AWTComponentProviderUtil.findChild(myParent, ToolWindowPanelImplEx.class);
     if (pane != null) {
@@ -325,18 +328,6 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
       bounds.setLocation(startX - bounds.width, y);
       balloon.setBounds(bounds);
     }
-  }
-
-  private List<Integer> computeWidths(List<ArrayList<Balloon>> columns) {
-    List<Integer> columnWidths = new ArrayList<>();
-    for (ArrayList<Balloon> eachColumn : columns) {
-      int maxWidth = 0;
-      for (Balloon each : eachColumn) {
-        maxWidth = Math.max(getSize(each).width, maxWidth);
-      }
-      columnWidths.add(maxWidth);
-    }
-    return columnWidths;
   }
 
   private List<ArrayList<Balloon>> createColumns(Rectangle layoutRec) {
@@ -357,5 +348,9 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
       eachColumnHeight += eachSize.height;
     }
     return columns;
+  }
+
+  private interface GetInt {
+    int i();
   }
 }

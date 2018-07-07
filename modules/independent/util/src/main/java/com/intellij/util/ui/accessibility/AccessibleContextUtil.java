@@ -16,10 +16,10 @@
 package com.intellij.util.ui.accessibility;
 
 import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.Accessible;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -88,12 +88,20 @@ public class AccessibleContextUtil {
                     j3.getAccessibleContext().getAccessibleDescription()));
   }
 
-  public static void setParent(@Nonnull JComponent component, @Nullable Component newParent) {
+  public static void setParent(@Nonnull Component component, @Nullable Component newParent) {
     if (newParent instanceof Accessible) {
       component.getAccessibleContext().setAccessibleParent((Accessible)newParent);
       return;
     }
     component.getAccessibleContext().setAccessibleParent(null);
+  }
+
+  /**
+   * @deprecated use {@link #setParent(Component, Component)} instead
+   */
+  @Deprecated
+  public static void setParent(@Nonnull JComponent component, @Nullable Component newParent) {
+    setParent((Component)component, newParent);
   }
 
   public static @Nullable

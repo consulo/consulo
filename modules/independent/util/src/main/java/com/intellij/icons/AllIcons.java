@@ -652,10 +652,10 @@ public class AllIcons {
     public static final SwingImageRef Readwrite = IconLoader.getIcon("/ide/readwrite.png"); // 16x16
     
     public static class Shadow {
-      public static final SwingImageRef Bottom_left = IconLoader.getIcon("/ide/shadow/bottom-left.png"); // 70x70
-      public static final SwingImageRef Bottom_right = IconLoader.getIcon("/ide/shadow/bottom-right.png"); // 70x70
-      public static final SwingImageRef Bottom = IconLoader.getIcon("/ide/shadow/bottom.png"); // 1x49
-      public static final SwingImageRef Left = IconLoader.getIcon("/ide/shadow/left.png"); // 35x1
+      public static final SwingImageRef Bottom_left = IconLoader.getIcon("/ide/shadow/bottom-left.png"); // 18x22
+      public static final SwingImageRef Bottom_right = IconLoader.getIcon("/ide/shadow/bottom-right.png"); // 18x22
+      public static final SwingImageRef Bottom = IconLoader.getIcon("/ide/shadow/bottom.png"); // 4x14
+      public static final SwingImageRef Left = IconLoader.getIcon("/ide/shadow/left.png"); // 10x4
       
       public static class Popup {
         public static final SwingImageRef Bottom_left = IconLoader.getIcon("/ide/shadow/popup/bottom-left.png"); // 20x20
@@ -668,10 +668,10 @@ public class AllIcons {
         public static final SwingImageRef Top = IconLoader.getIcon("/ide/shadow/popup/top.png"); // 1x4
 
       }
-      public static final SwingImageRef Right = IconLoader.getIcon("/ide/shadow/right.png"); // 35x1
-      public static final SwingImageRef Top_left = IconLoader.getIcon("/ide/shadow/top-left.png"); // 70x70
-      public static final SwingImageRef Top_right = IconLoader.getIcon("/ide/shadow/top-right.png"); // 70x70
-      public static final SwingImageRef Top = IconLoader.getIcon("/ide/shadow/top.png"); // 1x20
+      public static final SwingImageRef Right = IconLoader.getIcon("/ide/shadow/right.png"); // 10x4
+      public static final SwingImageRef Top_left = IconLoader.getIcon("/ide/shadow/top-left.png"); // 18x14
+      public static final SwingImageRef Top_right = IconLoader.getIcon("/ide/shadow/top-right.png"); // 18x14
+      public static final SwingImageRef Top = IconLoader.getIcon("/ide/shadow/top.png"); // 4x6
 
     }
     public static final SwingImageRef SharedScope = IconLoader.getIcon("/ide/sharedScope.png"); // 16x16
