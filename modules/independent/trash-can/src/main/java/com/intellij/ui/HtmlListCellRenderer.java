@@ -18,7 +18,6 @@ package com.intellij.ui;
 import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 import static com.intellij.ui.SimpleColoredComponent.formatLink;
