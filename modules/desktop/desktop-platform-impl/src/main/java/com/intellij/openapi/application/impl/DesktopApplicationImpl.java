@@ -26,6 +26,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.*;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
@@ -320,15 +321,19 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   @Nonnull
   public ModalityState getCurrentModalityState() {
-    Object[] entities = LaterInvocator.getCurrentModalEntities();
-    return entities.length > 0 ? new ModalityStateEx(entities) : getNoneModalityState();
+    if (Thread.currentThread() == myWriteActionThread) {
+      return getDefaultModalityState();
+    }
+
+    return LaterInvocator.getCurrentModalityState();
   }
 
   @Override
   @Nonnull
   public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+    if (!isDispatchThread()) LOG.debug("please, use application dispatch thread to get a modality state");
     Window window = UIUtil.getWindow(c);
-    if (window == null) return getNoneModalityState(); //?
+    if (window == null) return getNoneModalityState();
     return LaterInvocator.modalityStateForWindow(window);
   }
 
@@ -341,11 +346,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   @Nonnull
   public ModalityState getDefaultModalityState() {
-    if (isDispatchThread()) {
-      return getCurrentModalityState();
-    }
-    ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
-    return progress == null ? getNoneModalityState() : progress.getModalityState();
+    return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
   }
 
   @Override
