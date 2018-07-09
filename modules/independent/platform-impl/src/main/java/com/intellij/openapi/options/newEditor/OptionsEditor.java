@@ -45,7 +45,6 @@ import com.intellij.ui.LightColors;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SearchTextField;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.ui.speedSearch.ElementFilter;
@@ -62,9 +61,9 @@ import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.util.ui.tree.TreeDecorationUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -550,7 +549,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   private final LoadingDecorator myLoadingDecorator;
   private final Filter myFilter;
 
-  private final Wrapper mySearchWrapper = new Wrapper();
+  private final JPanel mySearchWrapper = new JPanel(new BorderLayout());
   private final JPanel myLeftSide;
 
   private boolean myFilterDocumentWasChanged;
@@ -586,7 +585,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
     });
 
-    myTree = new OptionsTree(myProject, configurables, getContext()) {
+    myTree = new OptionsTree(configurables, getContext()) {
       @Override
       protected void onTreeKeyEvent(final KeyEvent e) {
         myFilterDocumentWasChanged = false;
@@ -610,17 +609,12 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
     });
 
-    myLeftSide = new JPanel(new BorderLayout()) {
-      @Override
-      public Dimension getMinimumSize() {
-        Dimension dimension = super.getMinimumSize();
-        dimension.width = Math.max(myTree.getMinimumSize().width, mySearchWrapper.getPreferredSize().width);
-        return dimension;
-      }
-    };
+    JComponent component = myTree.getComponent();
+
+    myLeftSide = new JPanel(new BorderLayout());
 
     myLeftSide.add(mySearchWrapper, BorderLayout.NORTH);
-    myLeftSide.add(myTree, BorderLayout.CENTER);
+    myLeftSide.add(component, BorderLayout.CENTER);
 
     myLoadingDecorator = new LoadingDecorator(myOwnDetails.getComponent(), this, 150);
 
@@ -962,7 +956,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       return;
     }
 
-    mySearchWrapper.setContent(visible ? mySearch : null);
+    mySearchWrapper.removeAll();
+    mySearchWrapper.add(visible ? mySearch : null, BorderLayout.CENTER);
 
     myLeftSide.revalidate();
     myLeftSide.repaint();

@@ -21,7 +21,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Weighted;
@@ -35,38 +34,35 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.util.ui.tree.TreeDecorationUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
-import java.util.List;
 
-class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
-  Project myProject;
-  final SimpleTree myTree;
-  Configurable[] myConfigurables;
+class OptionsTree implements Disposable, OptionsEditorColleague {
+  private final Configurable[] myConfigurables;
   FilteringTreeBuilder myBuilder;
-  Root myRoot;
-  OptionsEditorContext myContext;
+  private Root myRoot;
+  private final OptionsEditorContext myContext;
 
   private Map<Configurable, ConfigurableNode> myConfigurable2Node = new HashMap<>();
 
-  MergingUpdateQueue mySelection;
+  private MergingUpdateQueue mySelection;
 
-  public OptionsTree(Project project, Configurable[] configurables, OptionsEditorContext context) {
-    super(new BorderLayout());
-    myProject = project;
+  private final JComponent myPanel;
+  private final SimpleTree myTree;
+
+  public OptionsTree(Configurable[] configurables, OptionsEditorContext context) {
     myConfigurables = configurables;
     myContext = context;
 
@@ -78,7 +74,15 @@ class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
       }
     };
 
-    myTree = new SimpleTree();
+    myTree = new SimpleTree() {
+      @Override
+      public void updateUI() {
+        super.updateUI();
+
+        TreeDecorationUtil.decorateTree(this);
+      }
+    };
+
     TreeUtil.installActions(myTree);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.setRootVisible(false);
@@ -104,12 +108,9 @@ class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
       }
     });
 
-    final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
-    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    myPanel = ScrollPaneFactory.createScrollPane(myTree, true);
 
-    add(scrollPane, BorderLayout.CENTER);
-
-    mySelection = new MergingUpdateQueue("OptionsTree", 150, false, this, this, this).setRestartTimerOnAdd(true);
+    mySelection = new MergingUpdateQueue("OptionsTree", 150, false, myPanel, this, myPanel).setRestartTimerOnAdd(true);
     myTree.getSelectionModel().addTreeSelectionListener(e -> {
       final TreePath path = e.getNewLeadSelectionPath();
       if (path == null) {
@@ -136,17 +137,11 @@ class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
         _onTreeKeyEvent(e);
       }
     });
-
-    updateUI();
   }
 
-  @Override
-  public void updateUI() {
-    super.updateUI();
-
-    if(myTree != null) {
-      TreeDecorationUtil.decorateTree(myTree);
-    }
+  @Nonnull
+  public JComponent getComponent() {
+    return myPanel;
   }
 
   protected void _onTreeKeyEvent(KeyEvent e) {
@@ -254,7 +249,7 @@ class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
   public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
     for (Configurable configurable : myConfigurable2Node.keySet()) {
       T cast = ConfigurableWrapper.cast(configurable, configurableClass);
-      if(cast != null) {
+      if (cast != null) {
         return cast;
       }
     }

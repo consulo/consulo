@@ -40,7 +40,7 @@ public class TreeDecorationUtil {
     }
 
     Font treeFont = UIUtil.getTreeFont();
-    tree.setFont(treeFont.deriveFont(treeFont.getSize() + JBUI.scale(1f)));
+    tree.setFont(JBUI.Fonts.biggerFont());
     tree.setBackground(getTreeBackground());
   }
 
