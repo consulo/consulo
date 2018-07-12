@@ -73,6 +73,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
     }
   }
 
+  @Override
   protected Dimension getPreferredScrollableViewportSize() {
     return null;
   }
