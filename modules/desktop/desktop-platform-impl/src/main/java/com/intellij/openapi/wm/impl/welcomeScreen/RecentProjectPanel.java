@@ -201,12 +201,6 @@ public class RecentProjectPanel extends JPanel {
     });
     add(list, BorderLayout.CENTER);
 
-    JPanel title = createTitle();
-
-    if (title != null) {
-      add(title, BorderLayout.NORTH);
-    }
-
     setBorder(new LineBorder(WelcomeScreenConstants.BORDER_COLOR));
   }
 
@@ -293,24 +287,6 @@ public class RecentProjectPanel extends JPanel {
 
   protected ListCellRenderer createRenderer(UniqueNameBuilder<ReopenProjectAction> pathShortener) {
     return new RecentProjectItemRenderer(pathShortener);
-  }
-
-  @Nullable
-  protected JPanel createTitle() {
-    JPanel title = new JPanel() {
-      @Override
-      public Dimension getPreferredSize() {
-        return new Dimension(super.getPreferredSize().width, JBUI.scale(28));
-      }
-    };
-    title.setBorder(new BottomLineBorder());
-
-    JLabel titleLabel = new JLabel(RECENT_PROJECTS_LABEL);
-    title.add(titleLabel);
-    titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    titleLabel.setForeground(WelcomeScreenConstants.CAPTION_FOREGROUND);
-    title.setBackground(WelcomeScreenConstants.CAPTION_BACKGROUND);
-    return title;
   }
 
   private static class MyList extends JBList {
