@@ -29,7 +29,6 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBDimension;
@@ -37,13 +36,11 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;
-import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -58,18 +55,12 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
   public NewRecentProjectPanel(Disposable parentDisposable) {
     super(parentDisposable);
     setBorder(null);
-    setBackground(WelcomeScreenConstants.getProjectsBackground());
     JScrollPane scrollPane = UIUtil.findComponentOfType(this, JScrollPane.class);
     if (scrollPane != null) {
-      scrollPane.setBackground(WelcomeScreenConstants.getProjectsBackground());
       JBDimension size = JBUI.size(300, 460);
       scrollPane.setSize(size);
       scrollPane.setMinimumSize(size);
       scrollPane.setPreferredSize(size);
-    }
-    ListWithFilter panel = UIUtil.findComponentOfType(this, ListWithFilter.class);
-    if (panel != null) {
-      panel.setBackground(WelcomeScreenConstants.getProjectsBackground());
     }
   }
 
@@ -90,7 +81,6 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
   @Override
   protected JBList createList(AnAction[] recentProjectActions, Dimension size) {
     final JBList list = super.createList(recentProjectActions, size);
-    list.setBackground(WelcomeScreenConstants.getProjectsBackground());
     list.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {

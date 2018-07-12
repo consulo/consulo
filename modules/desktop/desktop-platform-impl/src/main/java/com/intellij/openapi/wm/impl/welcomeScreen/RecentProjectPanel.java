@@ -47,12 +47,10 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
-import consulo.ide.welcomeScreen.WelcomeScreenConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -200,8 +198,6 @@ public class RecentProjectPanel extends JPanel {
       }
     });
     add(list, BorderLayout.CENTER);
-
-    setBorder(new LineBorder(WelcomeScreenConstants.BORDER_COLOR));
   }
 
   protected static void removeRecentProjectElement(Object element) {

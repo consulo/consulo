@@ -42,6 +42,7 @@ import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
+import consulo.ui.laf.MorphColor;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -99,7 +100,18 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     JPanel logoPanel = new JPanel(new BorderLayout());
     logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));
     AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, false, true);
-    animatedLogoLabel.setForeground(ApplicationProperties.isInSandbox() ? JBColor.WHITE : JBColor.GRAY);
+    animatedLogoLabel.setForeground(MorphColor.ofWithoutCache(() -> {
+      if (ApplicationProperties.isInSandbox()) {
+        if (UIUtil.isUnderDarkTheme()) {
+          // FIXME [VISTALL] problem. darcula list background and panel background have same color
+          return JBColor.LIGHT_GRAY;
+        }
+        return JBColor.WHITE;
+      }
+      else {
+        return JBColor.GRAY;
+      }
+    }));
     logoPanel.add(animatedLogoLabel, BorderLayout.CENTER);
 
     panel.add(logoPanel, BorderLayout.NORTH);

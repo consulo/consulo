@@ -18,6 +18,7 @@ package consulo.ide.welcomeScreen;
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import javax.annotation.Nonnull;
 
@@ -40,8 +41,7 @@ public abstract class BaseWelcomeScreenPanel<E> extends JPanel {
     myLeftComponent = createLeftComponent(parentDisposable, param);
 
     JPanel leftPanel = new JPanel(new BorderLayout());
-    leftPanel.setBackground(WelcomeScreenConstants.getProjectsBackground());
-    leftPanel.setBorder(new CustomLineBorder(WelcomeScreenConstants.getSeparatorColor(), JBUI.insetsRight(1)));
+    leftPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), JBUI.insetsRight(1)));
     leftPanel.setPreferredSize(JBUI.size(300, 460));
     leftPanel.add(myLeftComponent, BorderLayout.CENTER);
 
