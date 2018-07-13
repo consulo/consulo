@@ -23,6 +23,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
@@ -67,10 +68,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         presentation.setEnabled(false);
       }
       else {
-        updatePresentation(ExecutionTargetManager.getActiveTarget(project),
-                           RunManagerEx.getInstanceEx(project).getSelectedConfiguration(),
-                           project,
-                           presentation);
+        updatePresentation(ExecutionTargetManager.getActiveTarget(project), RunManagerEx.getInstanceEx(project).getSelectedConfiguration(), project, presentation);
         presentation.setEnabled(true);
       }
     }
@@ -79,15 +77,13 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     }
   }
 
-  private static void updatePresentation(@Nullable ExecutionTarget target,
-                                         @Nullable RunnerAndConfigurationSettings settings,
-                                         @Nullable Project project,
-                                         @Nonnull Presentation presentation) {
+  private static void updatePresentation(@Nullable ExecutionTarget target, @Nullable RunnerAndConfigurationSettings settings, @Nullable Project project, @Nonnull Presentation presentation) {
     if (project != null && target != null && settings != null) {
       String name = settings.getName();
       if (target != DefaultExecutionTarget.INSTANCE) {
         name += " | " + target.getDisplayName();
-      } else {
+      }
+      else {
         if (!settings.canRunOn(target)) {
           name += " | Nothing to run on";
         }
@@ -96,14 +92,13 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       setConfigurationIcon(presentation, settings, project);
     }
     else {
-      presentation.setText(""); // IDEA-21657
+      presentation.setText("Add Configuration...");
+      presentation.setDescription(ActionsBundle.actionDescription(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS));
       presentation.setIcon(null);
     }
   }
 
-  private static void setConfigurationIcon(final Presentation presentation,
-                                           final RunnerAndConfigurationSettings settings,
-                                           final Project project) {
+  private static void setConfigurationIcon(final Presentation presentation, final RunnerAndConfigurationSettings settings, final Project project) {
     try {
       Icon icon = TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings));
       ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
@@ -165,7 +160,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       final ConfigurationType[] types = runManager.getConfigurationFactories();
       for (ConfigurationType type : types) {
         final DefaultActionGroup actionGroup = new DefaultActionGroup();
-        Map<String,List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);
+        Map<String, List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);
         for (Map.Entry<String, List<RunnerAndConfigurationSettings>> entry : structure.entrySet()) {
           DefaultActionGroup group = entry.getKey() != null ? new DefaultActionGroup(entry.getKey(), true) : actionGroup;
           group.getTemplatePresentation().setIcon(AllIcons.Nodes.Folder);
@@ -261,8 +256,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     @Override
     public void actionPerformed(AnActionEvent e) {
       ExecutionTargetManager.setActiveTarget(myProject, myTarget);
-      updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), RunManagerEx.getInstanceEx(myProject).getSelectedConfiguration(), myProject,
-                         e.getPresentation());
+      updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), RunManagerEx.getInstanceEx(myProject).getSelectedConfiguration(), myProject, e.getPresentation());
     }
   }
 

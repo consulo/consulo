@@ -62,11 +62,6 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   @Nonnull
   protected ComboBoxButton createComboBoxButton(Presentation presentation) {
     return new ComboBoxButtonImpl(this, presentation);
-    //return new ComboBoxButtonOld(this, presentation);
-  }
-
-  public boolean isSmallVariant() {
-    return true;
   }
 
   public void setPopupTitle(String popupTitle) {

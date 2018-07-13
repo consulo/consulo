@@ -20,9 +20,11 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.ReflectionUtil;
 
@@ -46,16 +48,16 @@ import java.lang.reflect.Field;
  * 1. UI painter hacked. We get laf ui instance - then, override popup field
  * 2. Adding items dont supported. There only one item, which used for rendering
  */
-public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxButton {
+public final class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxButton {
   private class HackComboBoxPopup implements ComboPopup {
     @Override
     public void show() {
-      setPopupVisible(ComboBoxButtonImpl.this, true);
+      showPopup0();
     }
 
     @Override
     public void hide() {
-      setPopupVisible(ComboBoxButtonImpl.this, false);
+      hidePopup0();
     }
 
     @Override
@@ -73,7 +75,7 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
       return new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-          togglePopupVisible();
+          show();
         }
       };
     }
@@ -151,7 +153,7 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
         myMouseListener = new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            togglePopupVisible();
+            showPopup0();
           }
         };
 
@@ -197,7 +199,12 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
 
     @Override
     public void setPopupVisible(JComboBox c, boolean v) {
-      ComboBoxButtonImpl.this.setPopupVisible(c, v);
+      if (v) {
+        showPopup0();
+      }
+      else {
+        hidePopup0();
+      }
     }
 
     @Override
@@ -224,7 +231,7 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
     setRenderer(new ColoredListCellRenderer<Object>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
-        append(myPresentation.getText());
+        append(StringUtil.notNullize(myPresentation.getText()));
         setIcon(myPresentation.getIcon());
       }
     });
@@ -232,6 +239,7 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
     // add and select one value
     revalidateValue();
     updateSize();
+    updateTooltipText(presentation.getDescription());
   }
 
   private void revalidateValue() {
@@ -241,33 +249,21 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
     addItem(value);
     setSelectedItem(value);
 
-    if(oldValue != null) {
+    if (oldValue != null) {
       removeItem(oldValue);
     }
   }
 
-  private void togglePopupVisible() {
-    setPopupVisible(this, myCurrentPopup == null);
-  }
-
-  public void setPopupVisible(JComboBox c, boolean v) {
-    if (v) {
-      if (myCurrentPopup != null) {
-        myCurrentPopup.cancel();
-      }
-
-      showPopupImpl();
-    }
-    else {
-      if (myCurrentPopup != null) {
-        myCurrentPopup.cancel();
-      }
-
+  private void hidePopup0() {
+    if (myCurrentPopup != null) {
+      myCurrentPopup.cancel();
       myCurrentPopup = null;
     }
   }
 
-  public void showPopupImpl() {
+  private void showPopup0() {
+    hidePopup0();
+
     myCurrentPopup = createPopup(() -> {
       myCurrentPopup = null;
 
@@ -325,6 +321,7 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
         updateSize();
       }
       else if (Presentation.PROP_DESCRIPTION.equals(propertyName)) {
+        updateTooltipText((String)evt.getNewValue());
       }
       else if (Presentation.PROP_ICON.equals(propertyName)) {
         updateSize();
@@ -333,6 +330,11 @@ public class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxBut
         setEnabled(((Boolean)evt.getNewValue()).booleanValue());
       }
     }
+  }
+
+  private void updateTooltipText(String description) {
+    String tooltip = KeymapUtil.createTooltipText(description, myComboBoxAction);
+    setToolTipText(!tooltip.isEmpty() ? tooltip : null);
   }
 
   @Override
