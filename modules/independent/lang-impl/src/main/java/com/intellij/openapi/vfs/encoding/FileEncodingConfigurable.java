@@ -74,7 +74,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
 
     @Nonnull
     @Override
-    protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(JComponent button) {
       return createCharsetsActionGroup("<System Default>", mySelected.get(), new Function<Charset, String>() {
         @Override
         public String fun(Charset charset) {

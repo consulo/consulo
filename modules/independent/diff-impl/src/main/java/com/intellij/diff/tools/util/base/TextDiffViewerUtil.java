@@ -187,7 +187,7 @@ public class TextDiffViewerUtil {
 
     @Nonnull
     @Override
-    protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(JComponent button) {
       initChildren();
       return myChildren;
     }

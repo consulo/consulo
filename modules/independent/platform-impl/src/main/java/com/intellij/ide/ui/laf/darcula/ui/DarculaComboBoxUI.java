@@ -18,6 +18,7 @@ package com.intellij.ide.ui.laf.darcula.ui;
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
+import com.intellij.util.FieldAccessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.DPIAwareArrowButton;
@@ -37,9 +38,9 @@ import java.awt.geom.Path2D;
  */
 @SuppressWarnings("GtkPreferredJComboBoxRenderer")
 public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
+  private static final FieldAccessor<BasicComboBoxUI, Boolean> isDisplaySizeDirty = new FieldAccessor<>(BasicComboBoxUI.class, "isDisplaySizeDirty");
+
   private final JComboBox myComboBox;
-  // Flag for calculating the display size
-  private boolean myDisplaySizeDirty = true;
 
   // Cached the size that the display needs to render the largest item
   private Dimension myDisplaySizeCache = new Dimension(0, 0);
@@ -96,7 +97,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
 
         final int w = getWidth();
         final int h = getHeight();
-        g.setColor(UIUtil.getControlColor());
+        g.setColor(UIManager.getColor("ComboBox.background"));
         g.fillRect(0, 0, w, h);
         g.setColor(myComboBox.isEnabled() ? getForeground() : getForeground().darker());
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -105,14 +106,14 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
         final int xU = w / 4;
         final int yU = h / 4;
         final Path2D.Double path = new Path2D.Double();
-        g.translate(JBUI.scale(2), 0);
+        g.translate(0, 0);
         path.moveTo(xU + JBUI.scale(1), yU + JBUI.scale(2));
         path.lineTo(3 * xU + JBUI.scale(1), yU + JBUI.scale(2));
         path.lineTo(2 * xU + JBUI.scale(1), 3 * yU);
         path.lineTo(xU + JBUI.scale(1), yU + JBUI.scale(2));
         path.closePath();
         g.fill(path);
-        g.translate(-JBUI.scale(2), 0);
+        g.translate(0, 0);
         g.setColor(getBorderColor());
         g.drawLine(0, -JBUI.scale(1), 0, h);
         config.restore();
@@ -132,12 +133,12 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
 
   @Override
   protected Insets getInsets() {
-    return JBUI.insets(4, 7, 4, 5).asUIResource();
+    return JBUI.insets(3).asUIResource();
   }
 
   @Override
   protected Dimension getDisplaySize() {
-    if (!myDisplaySizeDirty) {
+    if (!isDisplaySizeDirty.get(this)) {
       return new Dimension(myDisplaySizeCache);
     }
 
@@ -195,7 +196,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
     }
 
     myDisplaySizeCache.setSize(display.width, display.height);
-    myDisplaySizeDirty = false;
+    isDisplaySizeDirty.set(this, true);
 
     return display;
   }
@@ -270,11 +271,6 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
   }
 
   @Override
-  protected void installKeyboardActions() {
-    super.installKeyboardActions();
-  }
-
-  @Override
   public void paintBorder(Component c, Graphics g2, int x, int y, int width, int height) {
     if (comboBox == null || arrowButton == null) {
       return; //NPE on LaF change
@@ -343,7 +339,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
 
   @Override
   public Insets getBorderInsets(Component c) {
-    return JBUI.insets(4, 7, 4, 5).asUIResource();
+    return getInsets();
   }
 
   @Override

@@ -1031,7 +1031,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   private final class ChooseScopeTypeAction extends ComboBoxAction {
     @Override
     @Nonnull
-    protected DefaultActionGroup createPopupActionGroup(final JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(final JComponent button) {
       final DefaultActionGroup group = new DefaultActionGroup();
       for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
         group.add(new AnAction(provider.getDisplayName()) {

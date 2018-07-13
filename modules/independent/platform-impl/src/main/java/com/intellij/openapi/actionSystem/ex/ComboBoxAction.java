@@ -19,14 +19,15 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.ComboBoxButton;
+import consulo.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class ComboBoxAction extends AnAction implements CustomComponentAction {
-  private boolean mySmallVariant = true;
   private String myPopupTitle;
 
   protected ComboBoxAction() {
@@ -45,7 +46,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
       }
       if (button == null) return;
     }
-    if (!button.isShowing()) return;
+
     button.showPopup();
   }
 
@@ -54,20 +55,18 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   public JComponent createCustomComponent(Presentation presentation) {
     JPanel panel = new JPanel(new GridBagLayout());
     ComboBoxButton button = createComboBoxButton(presentation);
-    panel.add(button, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insets(0, 3, 0, 3), 0, 0));
+    panel.add(button.getComponent(), new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insets(0, 3, 0, 3), 0, 0));
     return panel;
   }
 
+  @Nonnull
   protected ComboBoxButton createComboBoxButton(Presentation presentation) {
-    return new ComboBoxButton(this, presentation);
+    return new ComboBoxButtonImpl(this, presentation);
+    //return new ComboBoxButtonOld(this, presentation);
   }
 
   public boolean isSmallVariant() {
-    return mySmallVariant;
-  }
-
-  public void setSmallVariant(boolean smallVariant) {
-    mySmallVariant = smallVariant;
+    return true;
   }
 
   public void setPopupTitle(String popupTitle) {
@@ -83,26 +82,26 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   public void update(@Nonnull AnActionEvent e) {
   }
 
-  protected boolean shouldShowDisabledActions() {
+  public boolean shouldShowDisabledActions() {
     return false;
   }
 
   @Nonnull
-  protected abstract DefaultActionGroup createPopupActionGroup(JComponent button);
+  public abstract DefaultActionGroup createPopupActionGroup(JComponent button);
 
-  protected int getMaxRows() {
+  public int getMaxRows() {
     return 30;
   }
 
-  protected int getMinHeight() {
+  public int getMinHeight() {
     return 1;
   }
 
-  protected int getMinWidth() {
+  public int getMinWidth() {
     return 1;
   }
 
-  protected Condition<AnAction> getPreselectCondition() {
+  public Condition<AnAction> getPreselectCondition() {
     return null;
   }
 }

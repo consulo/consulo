@@ -258,7 +258,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
 
     @Override
     @Nonnull
-    protected DefaultActionGroup createPopupActionGroup(final JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(final JComponent button) {
       return createGroup(true);
     }
 

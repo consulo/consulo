@@ -25,7 +25,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.actionSystem.ex.ComboBoxButton;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -36,6 +35,7 @@ import com.intellij.ui.SizedIcon;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 
@@ -127,23 +127,23 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   }
 
   @Override
-  protected boolean shouldShowDisabledActions() {
+  public boolean shouldShowDisabledActions() {
     return true;
   }
 
+  @Nonnull
   @Override
   public JComponent createCustomComponent(final Presentation presentation) {
     ComboBoxButton button = createComboBoxButton(presentation);
     NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
     panel.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 0, 2));
-    panel.add(button);
+    panel.add(button.getComponent());
     return panel;
   }
 
-
   @Override
   @Nonnull
-  protected DefaultActionGroup createPopupActionGroup(final JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(final JComponent button) {
     final DefaultActionGroup allActionsGroup = new DefaultActionGroup();
     final Project project = DataManager.getInstance().getDataContext(button).getData(CommonDataKeys.PROJECT);
     if (project != null) {

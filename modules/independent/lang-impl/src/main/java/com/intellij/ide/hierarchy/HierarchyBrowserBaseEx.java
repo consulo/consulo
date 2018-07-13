@@ -679,7 +679,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @Override
     @Nonnull
-    protected final DefaultActionGroup createPopupActionGroup(final JComponent button) {
+    public final DefaultActionGroup createPopupActionGroup(final JComponent button) {
       final DefaultActionGroup group = new DefaultActionGroup();
 
       for (String name : getValidScopeNames()) {

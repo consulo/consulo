@@ -21,9 +21,8 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.SystemInfo;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -36,9 +35,6 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
   public ManageButton(final ManageButtonBuilder builder) {
     myBuilder = builder;
     getTemplatePresentation().setText("Manage");
-    if (SystemInfo.isMac) {
-      setSmallVariant(false);
-    }
   }
 
   public JComponent build() {
@@ -47,7 +43,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   @Nonnull
   @Override
-  protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(JComponent button) {
     DefaultActionGroup group = new DefaultActionGroup();
 
     group.add(new ShareToTeamCheckBoxAction());

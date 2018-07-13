@@ -30,15 +30,16 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.UserActivityProviderComponent;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.ComboBoxButton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class ComboBoxButton extends JButton implements UserActivityProviderComponent {
+public class ComboBoxButtonOld extends JButton implements UserActivityProviderComponent, ComboBoxButton {
   private static final String uiClassID = "ComboBoxButtonUI";
 
   private ComboBoxAction myComboBoxAction;
@@ -46,9 +47,8 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
   private boolean myForcePressed = false;
   private PropertyChangeListener myButtonSynchronizer;
   private JBPopup myPopup;
-  private boolean myForceTransparent = false;
 
-  public ComboBoxButton(ComboBoxAction comboBoxAction, Presentation presentation) {
+  public ComboBoxButtonOld(ComboBoxAction comboBoxAction, Presentation presentation) {
     myComboBoxAction = comboBoxAction;
     myPresentation = presentation;
     setEnabled(myPresentation.isEnabled());
@@ -58,7 +58,7 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
 
     addActionListener(e -> {
       if (!myForcePressed) {
-        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(this::showPopup);
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(this::showPopupImpl);
       }
     });
 
@@ -66,16 +66,21 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
   }
 
   @Override
+  public void showPopup() {
+    if (!isShowing()) {
+      return;
+    }
+
+    showPopupImpl();
+  }
+
+  @Override
   public String getUIClassID() {
     return uiClassID;
   }
 
-  public void setForceTransparent(boolean transparent) {
-    myForceTransparent = transparent;
-  }
-
   public boolean isForceTransparent() {
-    return myForceTransparent;
+    return false;
   }
 
   @Nonnull
@@ -104,7 +109,7 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
     return myForcePressed ? null : super.getToolTipText();
   }
 
-  public void showPopup() {
+  public void showPopupImpl() {
     createPopup(setForcePressed()).showUnderneathOf(this);
   }
 
@@ -113,8 +118,8 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
 
     DataContext context = getDataContext();
     ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(myComboBoxAction.getPopupTitle(), group, context, false, myComboBoxAction.shouldShowDisabledActions(), false, onDispose,
-                                    myComboBoxAction.getMaxRows(), myComboBoxAction.getPreselectCondition());
+            .createActionGroupPopup(myComboBoxAction.getPopupTitle(), group, context, false, myComboBoxAction.shouldShowDisabledActions(), false, onDispose, myComboBoxAction.getMaxRows(),
+                                    myComboBoxAction.getPreselectCondition());
     popup.setMinimumSize(new Dimension(myComboBoxAction.getMinWidth(), myComboBoxAction.getMinHeight()));
     return popup;
   }

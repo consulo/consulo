@@ -16,6 +16,7 @@
 package consulo.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
+import com.intellij.util.FieldAccessor;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -41,9 +42,9 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
     return new ModernComboBoxUI(((JComboBox)c));
   }
 
+  private static final FieldAccessor<BasicComboBoxUI, Boolean> isDisplaySizeDirty = new FieldAccessor<>(BasicComboBoxUI.class, "isDisplaySizeDirty");
+
   private final JComboBox myComboBox;
-  // Flag for calculating the display size
-  private boolean myDisplaySizeDirty = true;
 
   // Cached the size that the display needs to render the largest item
   private Dimension myDisplaySizeCache = new Dimension(0, 0);
@@ -61,13 +62,16 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
   public void installUI(JComponent c) {
     super.installUI(c);
     myMouseEnterHandler.replace(null, c);
+    myMouseEnterHandler.replace(null, arrowButton);
   }
 
   @Override
   public void uninstallUI(JComponent c) {
+    JButton arrowButton = this.arrowButton;
     super.uninstallUI(c);
 
     myMouseEnterHandler.replace(c, null);
+    myMouseEnterHandler.replace(arrowButton, null);
   }
 
   @Override
@@ -112,7 +116,7 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
         final int w = getWidth();
         final int h = getHeight();
         g.setColor(UIUtil.getControlColor());
-        g.fillRect(0, 0, w, h);
+        g.fillRect(0, 0, w, h - JBUI.scale(2));
         g.setColor(myComboBox.isEnabled() ? getForeground() : borderColor);
         GraphicsUtil.setupAAPainting(g);
         g.drawLine(JBUI.scale(3), JBUI.scale(7), JBUI.scale(7), JBUI.scale(11));
@@ -139,7 +143,7 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
 
   @Override
   protected Dimension getDisplaySize() {
-    if (!myDisplaySizeDirty) {
+    if (!isDisplaySizeDirty.get(this)) {
       return new Dimension(myDisplaySizeCache);
     }
 
@@ -197,7 +201,7 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
     }
 
     myDisplaySizeCache.setSize(display.width, display.height);
-    myDisplaySizeDirty = false;
+    isDisplaySizeDirty.set(this, true);
 
     return display;
   }

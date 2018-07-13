@@ -58,7 +58,7 @@ public class IgnoreWhiteSpacesAction extends ComboBoxAction implements DumbAware
   }
 
   @Nonnull
-  protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(JComponent button) {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     for (ComparisonPolicy comparisonPolicy : ourActionOrder) {
       actionGroup.add(myActions.get(comparisonPolicy));

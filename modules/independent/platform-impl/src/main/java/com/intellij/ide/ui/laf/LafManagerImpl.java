@@ -50,7 +50,6 @@ import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.actionSystem.ex.ComboBoxButtonUI;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
@@ -67,9 +66,9 @@ import consulo.ui.laf.UIModificationTracker;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.FontUIResource;
@@ -432,7 +431,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Panel.opaque", Boolean.TRUE);
       uiDefaults.put("ScrollBarUI", MacButtonlessScrollbarUI.class.getName());
-      uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
       uiDefaults.put("JBEditorTabsUI", MacEditorTabsUI.class.getName());
     }
@@ -454,9 +452,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     fixSeparatorColor(uiDefaults);
 
-    if (uiDefaults.get("ComboBoxButtonUI") == null) {
-      uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
-    }
     if (uiDefaults.get("ActionButtonUI") == null) {
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
     }

@@ -127,7 +127,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
       @Nonnull
       @Override
-      protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+      public DefaultActionGroup createPopupActionGroup(JComponent button) {
         return createCharsetsActionGroup(clearItemText, null, new Function<Charset, String>() {
           @Override
           public String fun(Charset charset) {

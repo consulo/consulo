@@ -53,7 +53,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     myButton.doClick();
   }
 
@@ -79,7 +79,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
 
   @Nonnull
   @Override
-  protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(JComponent button) {
     return myGroup;
   }
 
