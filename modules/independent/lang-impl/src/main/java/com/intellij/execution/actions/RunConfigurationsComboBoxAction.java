@@ -89,10 +89,14 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         }
       }
       presentation.setText(name, false);
+      presentation.putClientProperty(ComboBoxButton.LIKE_BUTTON, null);
       setConfigurationIcon(presentation, settings, project);
     }
     else {
       presentation.setText("Add Configuration...");
+      presentation.putClientProperty(ComboBoxButton.LIKE_BUTTON, (Runnable)() -> {
+        ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS).actionPerformed(AnActionEvent.createFromDataContext("", null, DataManager.getInstance().getDataContext()));
+      });
       presentation.setDescription(ActionsBundle.actionDescription(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS));
       presentation.setIcon(null);
     }

@@ -18,6 +18,7 @@ package consulo.actionSystem.ex;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -25,6 +26,8 @@ import javax.swing.*;
  * @since 2018-07-12
  */
 public interface ComboBoxButton {
+  String LIKE_BUTTON = "ComboBoxButton.likeButton";
+
   @Nonnull
   default JComponent getComponent() {
     return (JComponent)this;
@@ -34,4 +37,6 @@ public interface ComboBoxButton {
 
   @Nonnull
   ComboBoxAction getComboBoxAction();
+
+  void setLikeButton(boolean value, @Nullable Runnable onClick);
 }

@@ -26,9 +26,11 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.util.FieldAccessor;
 import com.intellij.util.ReflectionUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -62,7 +64,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
     @Override
     public boolean isVisible() {
-      return myCurrentPopup != null;
+      return myCurrentPopupCanceler != null;
     }
 
     @Override
@@ -100,6 +102,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   private static Field popupMouseListener = ReflectionUtil.getDeclaredField(BasicComboBoxUI.class, "popupMouseListener");
   private static Field popupMouseMotionListener = ReflectionUtil.getDeclaredField(BasicComboBoxUI.class, "popupMouseMotionListener");
   private static Field popupKeyListener = ReflectionUtil.getDeclaredField(BasicComboBoxUI.class, "popupKeyListener");
+  private static FieldAccessor<BasicComboBoxUI, JButton> arrowButton = new FieldAccessor<>(BasicComboBoxUI.class, "arrowButton");
 
   private class HackyComboBoxUI extends ComboBoxUI {
 
@@ -209,7 +212,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
     @Override
     public boolean isPopupVisible(JComboBox c) {
-      return myCurrentPopup != null;
+      return myCurrentPopupCanceler != null;
     }
 
     @Override
@@ -221,8 +224,11 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   private final ComboBoxAction myComboBoxAction;
   private final Presentation myPresentation;
 
-  private JBPopup myCurrentPopup;
+  private Runnable myCurrentPopupCanceler;
   private PropertyChangeListener myButtonSynchronizer;
+
+  private boolean myLikeButton;
+  private Runnable myOnClickListener;
 
   public ComboBoxButtonImpl(ComboBoxAction comboBoxAction, Presentation presentation) {
     myComboBoxAction = comboBoxAction;
@@ -255,21 +261,30 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   }
 
   private void hidePopup0() {
-    if (myCurrentPopup != null) {
-      myCurrentPopup.cancel();
-      myCurrentPopup = null;
+    if (myCurrentPopupCanceler != null) {
+      myCurrentPopupCanceler.run();
+      myCurrentPopupCanceler = null;
     }
   }
 
   private void showPopup0() {
     hidePopup0();
 
-    myCurrentPopup = createPopup(() -> {
-      myCurrentPopup = null;
+    if(myLikeButton && myOnClickListener != null) {
+      myOnClickListener.run();
+
+      myCurrentPopupCanceler = () -> {};
+      return;
+    }
+
+    JBPopup popup = createPopup(() -> {
+      myCurrentPopupCanceler = null;
 
       updateSize();
     });
-    myCurrentPopup.showUnderneathOf(this);
+    popup.showUnderneathOf(this);
+
+    myCurrentPopupCanceler = popup::cancel;
   }
 
   protected JBPopup createPopup(Runnable onDispose) {
@@ -329,6 +344,9 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
       else if (Presentation.PROP_ENABLED.equals(propertyName)) {
         setEnabled(((Boolean)evt.getNewValue()).booleanValue());
       }
+      else if (ComboBoxButton.LIKE_BUTTON.equals(propertyName)) {
+        setLikeButton(true, (Runnable)evt.getNewValue());
+      }
     }
   }
 
@@ -342,11 +360,20 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     ComboBoxUI comboBoxUI = (ComboBoxUI)UIManager.getUI(this);
 
     setUI(new HackyComboBoxUI(comboBoxUI));
+
+    // refresh state
+    setLikeButton(myLikeButton, myOnClickListener);
   }
 
   @Nonnull
   @Override
   public ComboBoxAction getComboBoxAction() {
     return myComboBoxAction;
+  }
+
+  @Override
+  public void setLikeButton(boolean value, @Nullable Runnable onClick) {
+    myLikeButton = value;
+    myOnClickListener = onClick;
   }
 }
