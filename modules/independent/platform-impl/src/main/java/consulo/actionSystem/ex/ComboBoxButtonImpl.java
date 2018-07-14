@@ -273,7 +273,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     if(myLikeButton && myOnClickListener != null) {
       myOnClickListener.run();
 
-      myCurrentPopupCanceler = () -> {};
+      myCurrentPopupCanceler = null;
       return;
     }
 
