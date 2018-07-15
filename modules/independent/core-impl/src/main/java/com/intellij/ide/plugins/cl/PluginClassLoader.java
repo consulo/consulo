@@ -19,12 +19,11 @@ import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.lang.UrlClassLoader;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,18 +39,15 @@ public class PluginClassLoader extends UrlClassLoader {
   private final ClassLoader[] myParents;
   private final PluginId myPluginId;
   private final String myPluginVersion;
-  private final List<String> myLibDirectories;
+  private final File myLibDirectory;
 
   public PluginClassLoader(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
     super(build().urls(urls).allowLock().useCache());
     myParents = parents;
     myPluginId = pluginId;
     myPluginVersion = version;
-    myLibDirectories = ContainerUtil.newSmartList();
-    File libDir = new File(pluginRoot, "lib");
-    if (libDir.exists()) {
-      myLibDirectories.add(libDir.getAbsolutePath());
-    }
+
+    myLibDirectory = new File(pluginRoot, "lib");
   }
 
   @Override
@@ -167,22 +163,12 @@ public class PluginClassLoader extends UrlClassLoader {
     return new DeepEnumeration(resources);
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  public void addLibDirectories(@Nonnull Collection<String> libDirectories) {
-    myLibDirectories.addAll(libDirectories);
-  }
-
   @Override
   protected String findLibrary(String libName) {
-    if (!myLibDirectories.isEmpty()) {
-      String libFileName = System.mapLibraryName(libName);
-      ListIterator<String> i = myLibDirectories.listIterator(myLibDirectories.size());
-      while (i.hasPrevious()) {
-        File libFile = new File(i.previous(), libFileName);
-        if (libFile.exists()) {
-          return libFile.getAbsolutePath();
-        }
-      }
+    String libFileName = System.mapLibraryName(libName);
+    File libFile = new File(myLibDirectory, libFileName);
+    if (libFile.exists()) {
+      return libFile.getAbsolutePath();
     }
 
     return null;
