@@ -138,11 +138,6 @@ public class UrlClassLoader extends ClassLoader {
     public Builder noPreload() { myPreload = false; return this; }
     public Builder allowBootstrapResources() { myAllowBootstrapResources = true; return this; }
 
-    /** @deprecated use {@link #allowUnescaped()} (to be removed in IDEA 2018) */
-    public Builder allowUnescaped(boolean acceptUnescaped) { myAcceptUnescaped = acceptUnescaped; return this; }
-    /** @deprecated use {@link #noPreload()} (to be removed in IDEA 2018) */
-    public Builder preload(boolean preload) { myPreload = preload; return this; }
-
     public UrlClassLoader get() { return new UrlClassLoader(this); }
   }
 
@@ -192,13 +187,6 @@ public class UrlClassLoader extends ClassLoader {
       Logger.getInstance(UrlClassLoader.class).error(e);
       return null;
     }
-  }
-
-  /** @deprecated to be removed in IDEA 15 */
-  @SuppressWarnings({"unused", "deprecation"})
-  public void addURL(URL url) {
-    getClassPath().addURL(url);
-    myURLs.add(url);
   }
 
   public List<URL> getUrls() {
