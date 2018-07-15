@@ -25,6 +25,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.ui.*;
+import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
@@ -785,8 +786,11 @@ public class UIUtil {
     }
   }
 
+  /**
+   * @deprecated Use {@link LinePainter2D#paint(Graphics2D, double, double, double, double)} instead.
+   */
   public static void drawLine(Graphics g, int x1, int y1, int x2, int y2) {
-    g.drawLine(x1, y1, x2, y2);
+    LinePainter2D.paint((Graphics2D)g, x1, y1, x2, y2);
   }
 
   public static void drawLine(Graphics2D g, int x1, int y1, int x2, int y2, @Nullable Color bgColor, @Nullable Color fgColor) {
