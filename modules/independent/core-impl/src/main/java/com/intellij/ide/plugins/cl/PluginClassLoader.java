@@ -46,7 +46,6 @@ public class PluginClassLoader extends UrlClassLoader {
     myParents = parents;
     myPluginId = pluginId;
     myPluginVersion = version;
-
     myLibDirectory = new File(pluginRoot, "lib");
   }
 
