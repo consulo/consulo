@@ -721,7 +721,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      */
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
       if (myItems == null) {
         myItems = new DefaultActionGroup(null, true);
         for (final ClasspathType classpathType : ClasspathType.values()) {

@@ -16,10 +16,7 @@
 package com.intellij.openapi.diff.actions;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.ex.DiffPanelEx;
@@ -27,9 +24,9 @@ import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.DiffPanelImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.containers.HashMap;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -47,6 +44,7 @@ public class IgnoreWhiteSpacesAction extends ComboBoxAction implements DumbAware
     myActions.put(ComparisonPolicy.IGNORE_SPACE, new IgnoringPolicyAction(DiffBundle.message("diff.acton.ignore.whitespace.policy.all"), ComparisonPolicy.IGNORE_SPACE));
   }
 
+  @Nonnull
   @Override
   public JComponent createCustomComponent(final Presentation presentation) {
     JPanel panel = new JPanel(new BorderLayout());
@@ -58,7 +56,7 @@ public class IgnoreWhiteSpacesAction extends ComboBoxAction implements DumbAware
   }
 
   @Nonnull
-  public DefaultActionGroup createPopupActionGroup(JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(DataContext context) {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     for (ComparisonPolicy comparisonPolicy : ourActionOrder) {
       actionGroup.add(myActions.get(comparisonPolicy));

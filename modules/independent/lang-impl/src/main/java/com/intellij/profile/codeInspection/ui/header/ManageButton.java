@@ -17,6 +17,7 @@ package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
@@ -43,7 +44,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(DataContext context) {
     DefaultActionGroup group = new DefaultActionGroup();
 
     group.add(new ShareToTeamCheckBoxAction());

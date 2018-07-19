@@ -59,17 +59,20 @@ import com.intellij.ui.*;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.usageView.UsageViewBundle;
-import com.intellij.util.*;
+import com.intellij.util.EditSourceOnDoubleClickHandler;
+import com.intellij.util.Function;
+import com.intellij.util.Processor;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -1031,7 +1034,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   private final class ChooseScopeTypeAction extends ComboBoxAction {
     @Override
     @Nonnull
-    public DefaultActionGroup createPopupActionGroup(final JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
       final DefaultActionGroup group = new DefaultActionGroup();
       for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
         group.add(new AnAction(provider.getDisplayName()) {

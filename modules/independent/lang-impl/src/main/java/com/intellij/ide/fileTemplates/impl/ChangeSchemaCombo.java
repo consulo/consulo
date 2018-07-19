@@ -18,14 +18,14 @@ package com.intellij.ide.fileTemplates.impl;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Condition;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -47,7 +47,7 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(DataContext context) {
     DefaultActionGroup group = new DefaultActionGroup(new ChangeSchemaAction(FileTemplatesScheme.DEFAULT));
     FileTemplatesScheme scheme = myConfigurable.getManager().getProjectScheme();
     if (scheme != null) {

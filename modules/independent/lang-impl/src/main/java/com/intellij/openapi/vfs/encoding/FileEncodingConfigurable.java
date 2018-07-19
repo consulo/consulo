@@ -18,6 +18,7 @@ package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.ApplicationNamesInfo;
@@ -31,13 +32,11 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.Function;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
-
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -74,13 +73,8 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(JComponent button) {
-      return createCharsetsActionGroup("<System Default>", mySelected.get(), new Function<Charset, String>() {
-        @Override
-        public String fun(Charset charset) {
-          return "Choose encoding '" + charset + "'";
-        }
-      });
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+      return createCharsetsActionGroup("<System Default>", mySelected.get(), charset -> "Choose encoding '" + charset + "'");
     }
   }
 

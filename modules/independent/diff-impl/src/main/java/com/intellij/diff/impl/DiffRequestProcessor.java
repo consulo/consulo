@@ -580,7 +580,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
       DefaultActionGroup group = new DefaultActionGroup();
       for (DiffTool tool : getAvailableFittedTools()) {
         group.add(new DiffToolToggleAction(tool));

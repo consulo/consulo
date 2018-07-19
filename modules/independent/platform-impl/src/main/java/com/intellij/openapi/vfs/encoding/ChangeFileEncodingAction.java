@@ -34,12 +34,10 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -127,7 +125,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
       @Nonnull
       @Override
-      public DefaultActionGroup createPopupActionGroup(JComponent button) {
+      public DefaultActionGroup createPopupActionGroup(DataContext context) {
         return createCharsetsActionGroup(clearItemText, null, new Function<Charset, String>() {
           @Override
           public String fun(Charset charset) {

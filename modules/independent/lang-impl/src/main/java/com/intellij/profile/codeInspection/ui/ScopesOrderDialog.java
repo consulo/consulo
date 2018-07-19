@@ -22,12 +22,14 @@ import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import com.intellij.ui.*;
+import com.intellij.ui.AnActionButton;
+import com.intellij.ui.AnActionButtonRunnable;
+import com.intellij.ui.ListUtil;
+import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,10 +48,9 @@ public class ScopesOrderDialog extends DialogWrapper {
   private final Project myProject;
   private final JPanel myPanel;
 
-  public ScopesOrderDialog(final @Nonnull Component parent,
-                           final InspectionProfileImpl inspectionProfile,
+  public ScopesOrderDialog(final InspectionProfileImpl inspectionProfile,
                            final Project project) {
-    super(parent, true);
+    super(project, true);
     myInspectionProfile = inspectionProfile;
     myProject = project;
 

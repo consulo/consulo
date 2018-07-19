@@ -338,7 +338,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
       final DefaultActionGroup gr = new DefaultActionGroup();
       for (final String enabledValue : InstalledPluginsTableModel.ENABLED_VALUES) {
         gr.add(new AnAction(enabledValue) {

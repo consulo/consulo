@@ -17,11 +17,11 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -377,7 +377,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
   private class SwitchEngineAction extends ComboBoxAction {
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
       final DefaultActionGroup engChooser = new DefaultActionGroup();
       for (final CoverageEngine engine : collectEngines()) {
         engChooser.add(new AnAction(engine.getPresentableText()) {

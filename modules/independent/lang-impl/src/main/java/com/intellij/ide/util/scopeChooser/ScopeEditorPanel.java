@@ -693,7 +693,7 @@ public class ScopeEditorPanel {
 
     @Override
     @Nonnull
-    public DefaultActionGroup createPopupActionGroup(final JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
       final DefaultActionGroup group = new DefaultActionGroup();
       for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
         group.add(new AnAction(provider.getDisplayName()) {

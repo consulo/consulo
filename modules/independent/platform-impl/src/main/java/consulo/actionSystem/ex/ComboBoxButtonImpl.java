@@ -17,13 +17,10 @@ package consulo.actionSystem.ex;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.FieldAccessor;
@@ -287,15 +284,8 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     myCurrentPopupCanceler = popup::cancel;
   }
 
-  protected JBPopup createPopup(Runnable onDispose) {
-    DefaultActionGroup group = myComboBoxAction.createPopupActionGroup(this);
-
-    DataContext context = getDataContext();
-    ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(myComboBoxAction.getPopupTitle(), group, context, false, myComboBoxAction.shouldShowDisabledActions(), false, onDispose, myComboBoxAction.getMaxRows(),
-                                    myComboBoxAction.getPreselectCondition());
-    popup.setMinimumSize(new Dimension(myComboBoxAction.getMinWidth(), myComboBoxAction.getMinHeight()));
-    return popup;
+  private JBPopup createPopup(Runnable onDispose) {
+    return myComboBoxAction.createPopup(getDataContext(), onDispose);
   }
 
   protected void updateSize() {

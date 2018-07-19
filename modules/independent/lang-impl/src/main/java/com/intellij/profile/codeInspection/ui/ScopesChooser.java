@@ -18,6 +18,7 @@ package com.intellij.profile.codeInspection.ui;
 import com.intellij.codeInspection.ex.Descriptor;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
@@ -28,9 +29,9 @@ import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.annotations.RequiredDispatchThread;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +62,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(final JComponent component) {
+  public DefaultActionGroup createPopupActionGroup(DataContext context) {
     final DefaultActionGroup group = new DefaultActionGroup();
 
     final List<NamedScope> predefinedScopes = new ArrayList<NamedScope>();
@@ -84,9 +85,10 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
 
     group.addSeparator();
     group.add(new DumbAwareAction("Edit Scopes Order...") {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(final AnActionEvent e) {
-        final ScopesOrderDialog dlg = new ScopesOrderDialog(component, myInspectionProfile, myProject);
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        final ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);
         if (dlg.showAndGet()) {
           onScopesOrderChanged();
         }

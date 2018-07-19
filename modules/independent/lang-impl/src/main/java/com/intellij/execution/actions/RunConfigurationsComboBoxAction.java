@@ -142,9 +142,9 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
   @Override
   @Nonnull
-  public DefaultActionGroup createPopupActionGroup(final JComponent button) {
+  public DefaultActionGroup createPopupActionGroup(final DataContext dataContext) {
     final DefaultActionGroup allActionsGroup = new DefaultActionGroup();
-    final Project project = DataManager.getInstance().getDataContext(button).getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       final RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
 

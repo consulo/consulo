@@ -38,6 +38,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
@@ -77,8 +78,8 @@ public class SeverityEditorDialog extends DialogWrapper {
   @NonNls private static final String DEFAULT = "DEFAULT";
   @NonNls private static final String EDITABLE = "EDITABLE";
 
-  public SeverityEditorDialog(final JComponent parent, final HighlightSeverity severity, final SeverityRegistrar severityRegistrar) {
-    super(parent, true);
+  public SeverityEditorDialog(Project project, final HighlightSeverity severity, final SeverityRegistrar severityRegistrar) {
+    super(project, true);
     mySeverityRegistrar = severityRegistrar;
     myOptionsList.setCellRenderer(new DefaultListCellRenderer() {
       @Override

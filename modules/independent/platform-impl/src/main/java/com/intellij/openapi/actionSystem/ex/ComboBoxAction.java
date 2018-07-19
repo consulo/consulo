@@ -16,6 +16,9 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -60,6 +63,15 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   }
 
   @Nonnull
+  public JBPopup createPopup(@Nonnull DataContext context, @Nonnull Runnable onDispose) {
+    DefaultActionGroup group = createPopupActionGroup(context);
+
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(getPopupTitle(), group, context, false, shouldShowDisabledActions(), false, onDispose, getMaxRows(), getPreselectCondition());
+    popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
+    return popup;
+  }
+
+  @Nonnull
   protected ComboBoxButton createComboBoxButton(Presentation presentation) {
     return new ComboBoxButtonImpl(this, presentation);
   }
@@ -82,7 +94,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   }
 
   @Nonnull
-  public abstract DefaultActionGroup createPopupActionGroup(JComponent button);
+  public abstract DefaultActionGroup createPopupActionGroup(DataContext context);
 
   public int getMaxRows() {
     return 30;

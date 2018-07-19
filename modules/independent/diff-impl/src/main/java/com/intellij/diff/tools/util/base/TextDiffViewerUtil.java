@@ -40,10 +40,9 @@ import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -187,7 +186,7 @@ public class TextDiffViewerUtil {
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(JComponent button) {
+    public DefaultActionGroup createPopupActionGroup(DataContext context) {
       initChildren();
       return myChildren;
     }
