@@ -552,7 +552,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>notnull-maven-plugin</artifactId>
         <version>2.0-SNAPSHOT</version>
@@ -572,7 +572,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
