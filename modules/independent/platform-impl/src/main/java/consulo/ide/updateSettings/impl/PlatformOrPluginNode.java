@@ -23,8 +23,8 @@ public class PlatformOrPluginNode {
     myCurrentDescriptor = currentDescriptor;
     myFutureDescriptor = futureDescriptor;
 
-    if(myCurrentDescriptor == null || myFutureDescriptor == null) {
-      throw new IllegalArgumentException();
+    if(myCurrentDescriptor == null && myFutureDescriptor == null) {
+      throw new IllegalArgumentException("Current or future descriptor must be set");
     }
   }
 
