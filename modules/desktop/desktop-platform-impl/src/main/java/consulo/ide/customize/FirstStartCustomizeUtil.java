@@ -18,7 +18,7 @@ package consulo.ide.customize;
 import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.RepositoryHelper;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -77,7 +77,7 @@ public class FirstStartCustomizeUtil {
       }
     };
 
-    ApplicationManager.getApplication().executeOnPooledThread(() -> {
+    Application.get().executeOnPooledThread(() -> {
       MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<>();
       MultiMap<String, String> predefinedTemplateSets = new MultiMap<>();
       try {

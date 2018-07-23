@@ -21,6 +21,10 @@
     <group id="FileChooser">
       <action id="FileChooser.TogglePathShowing" class="com.intellij.openapi.fileChooser.actions.TogglePathShowingAction"/>
     </group>
+
+    <action internal="true" id="ShowStartupManagerAction" class="consulo.internal.actions.ShowStartupManagerAction" text="Show Startup Manager">
+      <add-to-group group-id="Internal" anchor="after" relative-to-action="RestartInfo"/>
+    </action>
   </actions>
 
   <application-components>
