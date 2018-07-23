@@ -253,7 +253,11 @@ public class UIUtil {
   private static final GrayFilter DARCULA_GRAY_FILTER = new GrayFilter(true, 30);
 
   public static GrayFilter getGrayFilter() {
-    return isUnderDarkBuildInLaf() ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
+    return getGrayFilter(isUnderDarkTheme());
+  }
+
+  public static GrayFilter getGrayFilter(boolean dark) {
+    return dark ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
   }
 
   public static boolean isAppleRetina() {

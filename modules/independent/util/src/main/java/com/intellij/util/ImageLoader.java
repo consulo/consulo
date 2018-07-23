@@ -29,8 +29,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +45,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 import static com.intellij.util.ImageLoader.ImageDesc.Type.IMG;
 import static com.intellij.util.ImageLoader.ImageDesc.Type.SVG;
@@ -268,19 +269,19 @@ public class ImageLoader implements Serializable {
       return new ImageConverterChain();
     }
 
-    public ImageConverterChain withFilter(final ImageFilter[] filters) {
+    public ImageConverterChain withFilter(final Supplier<ImageFilter>[] filters) {
       ImageConverterChain chain = this;
-      for (ImageFilter filter : filters) {
+      for (Supplier<ImageFilter> filter : filters) {
         chain = chain.withFilter(filter);
       }
       return chain;
     }
 
-    public ImageConverterChain withFilter(final ImageFilter filter) {
+    public ImageConverterChain withFilter(final Supplier<ImageFilter> filter) {
       return with(new ImageConverter() {
         @Override
         public Image convert(Image source, ImageDesc desc) {
-          return ImageUtil.filter(source, filter);
+          return ImageUtil.filter(source, filter.get());
         }
       });
     }
@@ -348,8 +349,13 @@ public class ImageLoader implements Serializable {
   }
 
   @Nullable
-  public static Image loadFromUrl(@Nonnull URL url, boolean allowFloatScaling, ImageFilter filter) {
-    return loadFromUrl(url, allowFloatScaling, true, new ImageFilter[]{filter}, JBUI.ScaleContext.create());
+  public static Image loadFromUrl(@Nonnull URL url, boolean allowFloatScaling, final ImageFilter filter) {
+    return loadFromUrl(url, allowFloatScaling, true, new Supplier[]{new Supplier() {
+      @Override
+      public Object get() {
+        return filter;
+      }
+    }}, JBUI.ScaleContext.create());
   }
 
   /**
@@ -357,7 +363,7 @@ public class ImageLoader implements Serializable {
    * Then wraps the image with {@link JBHiDPIScaledImage} if necessary.
    */
   @Nullable
-  public static Image loadFromUrl(@Nonnull URL url, final boolean allowFloatScaling, boolean useCache, ImageFilter[] filters, final JBUI.ScaleContext ctx) {
+  public static Image loadFromUrl(@Nonnull URL url, final boolean allowFloatScaling, boolean useCache, Supplier<ImageFilter>[] filters, final JBUI.ScaleContext ctx) {
     // We can't check all 3rd party plugins and convince the authors to add @2x icons.
     // In IDE-managed HiDPI mode with scale > 1.0 we scale images manually.
 
@@ -422,10 +428,15 @@ public class ImageLoader implements Serializable {
     return loadFromStream(inputStream, scale, null);
   }
 
-  public static Image loadFromStream(@Nonnull final InputStream inputStream, final int scale, ImageFilter filter) {
+  public static Image loadFromStream(@Nonnull final InputStream inputStream, final int scale, final ImageFilter filter) {
     Image image = load(inputStream, scale);
     ImageDesc desc = new ImageDesc("", null, scale, IMG);
-    return ImageConverterChain.create().withFilter(filter).withRetina().convert(image, desc);
+    return ImageConverterChain.create().withFilter(new Supplier<ImageFilter>() {
+      @Override
+      public ImageFilter get() {
+        return filter;
+      }
+    }).withRetina().convert(image, desc);
   }
 
   private static Image load(@Nonnull final InputStream inputStream, double scale) {

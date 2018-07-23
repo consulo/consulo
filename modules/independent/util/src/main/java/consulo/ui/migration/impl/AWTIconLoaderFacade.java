@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 import static com.intellij.util.ui.JBUI.ScaleType.*;
 
@@ -271,7 +272,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
     Icon disabledIcon = myIcon2DisabledIcon.get(icon);
     if (disabledIcon == null) {
-      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(), null);
+      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(USE_DARK_ICONS), null);
       myIcon2DisabledIcon.put(icon, disabledIcon);
     }
     return disabledIcon;
@@ -399,7 +400,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   }
 
   public static final class CachedImageIcon extends JBUI.RasterJBIcon implements ScalableIcon, SwingImageRef, consulo.ui.image.Image {
-    private static final ImageFilter[] EMPTY_FILTER_ARRAY = new ImageFilter[0];
+    private static final Supplier<ImageFilter>[] EMPTY_FILTER_ARRAY = new Supplier[0];
 
     private volatile Object myRealIcon;
     private String myOriginalPath;
@@ -410,7 +411,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     private final boolean svg;
     private final boolean useCacheOnLoad;
 
-    private ImageFilter[] myFilters = EMPTY_FILTER_ARRAY;
+    private Supplier<ImageFilter>[] myFilters = EMPTY_FILTER_ARRAY;
     private final MyScaledIconsCache myScaledIconsCache = new MyScaledIconsCache();
 
     {
@@ -529,7 +530,12 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
     private Icon asDisabledIcon() {
       CachedImageIcon icon = new CachedImageIcon(this);
-      icon.myFilters = new ImageFilter[]{UIUtil.getGrayFilter()};
+      icon.myFilters = new Supplier[]{new Supplier() {
+        @Override
+        public Object get() {
+          return UIUtil.getGrayFilter(USE_DARK_ICONS);
+        }
+      }};
       return icon;
     }
 
