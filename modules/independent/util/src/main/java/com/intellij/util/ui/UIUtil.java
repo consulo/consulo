@@ -25,6 +25,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.ui.*;
+import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.*;
@@ -1437,6 +1438,20 @@ public class UIUtil {
 
   public static boolean isUnderAquaBasedLookAndFeel() {
     return SystemInfo.isMac && (isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf());
+  }
+
+  @Deprecated
+  @DeprecationInfo("macOS specific option")
+  public static boolean isGraphite() {
+    if (!SystemInfo.isMac) return false;
+    try {
+      // https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSCell_Class/index.html#//apple_ref/doc/c_ref/NSGraphiteControlTint
+      // NSGraphiteControlTint = 6
+      return Foundation.invoke("NSColor", "currentControlTint").intValue() == 6;
+    }
+    catch (Exception e) {
+      return false;
+    }
   }
 
   @Deprecated

@@ -15,7 +15,6 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
@@ -25,8 +24,8 @@ import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -135,7 +134,7 @@ public abstract class ProgressStripeIcon implements Icon {
     public void paint(@Nonnull Graphics2D g2, int x, int y, int shift) {
       Color dark;
       Color light;
-      if (IntelliJLaf.isGraphite()) {
+      if (UIUtil.isGraphite()) {
         dark = DARK_GRAY;
         light = LIGHT_GRAY;
       }
