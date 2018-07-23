@@ -140,16 +140,20 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
       int width = AllIcons.Ide.Notification.NoEvents.getWidth();
       int height = AllIcons.Ide.Notification.NoEvents.getHeight();
 
-      mainIcon = ImageEffects.layered(mainIcon, ImageEffects.canvas(width, height, canvas2D -> {
-        canvas2D.setFont(new Canvas2DFont(NotificationsUtil.getFontName(), 9, TextAttribute.STYLE_BOLD));
+      mainIcon = ImageEffects.layered(mainIcon, ImageEffects.canvas(width, height, ctx -> {
+        ctx.setFont(new Canvas2DFont(NotificationsUtil.getFontName(), 9, TextAttribute.STYLE_BOLD));
 
         // [FIXME] VISTALL remove awt dep
-        canvas2D.setFillStyle(TargetAWT.from(type == NotificationType.ERROR ? new JBColor(Color.white, new Color(0xF2F2F2)) : new Color(0x333333)));
+        ctx.setFillStyle(TargetAWT.from(type == NotificationType.ERROR ? new JBColor(Color.white, new Color(0xF2F2F2)) : new Color(0x333333)));
 
-        canvas2D.setTextAlign(Canvas2D.TextAlign.center);
-        canvas2D.setTextBaseline(Canvas2D.TextBaseline.middle);
+        ctx.setTextAlign(Canvas2D.TextAlign.center);
+        ctx.setTextBaseline(Canvas2D.TextBaseline.middle);
 
-        canvas2D.fillText(size < 10 ? String.valueOf(size) : "9+", width / 2 - 1, height / 2 - 2);
+        int diff = size >= 10 ? 1 : 0;
+        ctx.fillText(size < 10 ? String.valueOf(size) : "9", width / 2 - diff, height / 2 - 1);
+        if(diff != 0) {
+          ctx.fillText("+", width / 2 + 3, height / 2 - 1);
+        }
       }));
     }
 

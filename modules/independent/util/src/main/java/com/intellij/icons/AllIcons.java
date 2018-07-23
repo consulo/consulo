@@ -620,7 +620,7 @@ public class AllIcons {
       public static final SwingImageRef ExpandHover = IconLoader.getIcon("/ide/notification/expandHover.png"); // 16x16
       public static final SwingImageRef Gear = IconLoader.getIcon("/ide/notification/gear.png"); // 16x16
       public static final SwingImageRef GearHover = IconLoader.getIcon("/ide/notification/gearHover.png"); // 16x16
-      public static final SwingImageRef InfoEvents = IconLoader.getIcon("/ide/notification/infoEvents.png"); // 16x16
+      public static final SwingImageRef InfoEvents = IconLoader.getIcon("/ide/notification/infoEvents.png"); // 13x13
       public static final SwingImageRef NoEvents = IconLoader.getIcon("/ide/notification/noEvents.png"); // 16x16
 
       public static class Shadow {
