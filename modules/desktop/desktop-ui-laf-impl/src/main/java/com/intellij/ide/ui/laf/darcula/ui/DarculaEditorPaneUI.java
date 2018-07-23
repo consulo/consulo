@@ -23,10 +23,7 @@ import javax.swing.plaf.basic.BasicEditorPaneUI;
  * @author Konstantin Bulenkov
  */
 public class DarculaEditorPaneUI extends BasicEditorPaneUI {
-  private final JEditorPane myEditorPane;
-
   public DarculaEditorPaneUI(JComponent comp) {
-    myEditorPane = ((JEditorPane)comp);
   }
 
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
@@ -38,5 +35,4 @@ public class DarculaEditorPaneUI extends BasicEditorPaneUI {
   protected void installDefaults() {
     super.installDefaults();
   }
-
 }

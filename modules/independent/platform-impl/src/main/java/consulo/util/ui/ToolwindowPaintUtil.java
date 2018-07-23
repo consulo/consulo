@@ -17,7 +17,7 @@ package consulo.util.ui;
 
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.util.ui.tree.TreeDecorationUtil;
+import consulo.ui.SwingUIDecorator;
 
 import java.awt.*;
 
@@ -35,7 +35,7 @@ public class ToolwindowPaintUtil {
     g.fillRect(x, 0, width, height);
 
     if (active) {
-      g.setColor(TreeDecorationUtil.getTreeBackground());
+      g.setColor(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
       g.fillRect(x, 0, width, height);
     }
 

@@ -16,7 +16,7 @@
 package com.intellij.ide.ui.laf.ideaOld;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.laf.LafManagerImpl;
+import com.intellij.ide.ui.laf.LafManagerImplUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.plaf.beg.*;
@@ -39,16 +39,16 @@ public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
   @Override
   public void initComponentDefaults(UIDefaults defaults) {
     super.initComponentDefaults(defaults);
-    LafManagerImpl.initInputMapDefaults(defaults);
+    LafManagerImplUtil.initInputMapDefaults(defaults);
     initIdeaDefaults(defaults);
 
 
     Pair<String, Integer> systemFont = UIUtil.getSystemFontData();
     if (systemFont != null) {
-      LafManagerImpl.initFontDefaults(defaults, systemFont.second, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));
+      LafManagerImplUtil.initFontDefaults(defaults, systemFont.second, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));
     }
     else {
-      LafManagerImpl.initFontDefaults(defaults, 11, new FontUIResource("Tahoma", Font.PLAIN, 11));
+      LafManagerImplUtil.initFontDefaults(defaults, 11, new FontUIResource("Tahoma", Font.PLAIN, 11));
     }
   }
 

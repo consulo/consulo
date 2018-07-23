@@ -58,7 +58,7 @@ import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ApplicationProperties;
 import consulo.options.ConfigurableUIMigrationUtil;
-import consulo.util.ui.tree.TreeDecorationUtil;
+import consulo.ui.SwingUIDecorator;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -663,9 +663,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   public void uiSettingsChanged(UISettings source) {
     mySearchWrapper.setBorder(JBUI.Borders.empty(10, 5));
 
-    mySearch.setBackground(TreeDecorationUtil.getTreeBackground());
-    mySearchWrapper.setBackground(TreeDecorationUtil.getTreeBackground());
-    myLeftSide.setBackground(TreeDecorationUtil.getTreeBackground());
+    mySearch.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+    mySearchWrapper.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+    myLeftSide.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
   }
 
   public JPanel getLeftSide() {

@@ -79,10 +79,7 @@ import javax.swing.plaf.synth.Region;
 import javax.swing.plaf.synth.SynthLookAndFeel;
 import javax.swing.plaf.synth.SynthStyle;
 import javax.swing.plaf.synth.SynthStyleFactory;
-import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
@@ -107,14 +104,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   private static final String ATTRIBUTE_CLASS_NAME = "class-name";
   @NonNls
   private static final String GNOME_THEME_PROPERTY_NAME = "gnome.Net/ThemeName";
-
-  @NonNls
-  private static final String[] ourPatchableFontResources =
-          {"Button.font", "ToggleButton.font", "RadioButton.font", "CheckBox.font", "ColorChooser.font", "ComboBox.font", "Label.font", "List.font",
-                  "MenuBar.font", "MenuItem.font", "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font",
-                  "PopupMenu.font", "OptionPane.font", "Panel.font", "ProgressBar.font", "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font",
-                  "TableHeader.font", "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font", "TitledBorder.font",
-                  "ToolBar.font", "ToolTip.font", "Tree.font", "FormattedTextField.font", "Spinner.font"};
 
   @NonNls
   private static final String[] ourFileChooserTextKeys =
@@ -666,7 +655,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     UIManager.LookAndFeelInfo lf = getCurrentLookAndFeel();
     HashMap<String, Object> lfDefaults = myStoredDefaults.get(lf);
     if (lfDefaults != null) {
-      for (String resource : ourPatchableFontResources) {
+      for (String resource : LafManagerImplUtil.ourPatchableFontResources) {
         defaults.put(resource, lfDefaults.get(resource));
       }
     }
@@ -677,7 +666,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     HashMap<String, Object> lfDefaults = myStoredDefaults.get(lf);
     if (lfDefaults == null) {
       lfDefaults = new HashMap<>();
-      for (String resource : ourPatchableFontResources) {
+      for (String resource : LafManagerImplUtil.ourPatchableFontResources) {
         lfDefaults.put(resource, defaults.get(resource));
       }
       myStoredDefaults.put(lf, lfDefaults);
@@ -717,67 +706,15 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
   }
 
-  private static void installCutCopyPasteShortcuts(InputMap inputMap, boolean useSimpleActionKeys) {
-    String copyActionKey = useSimpleActionKeys ? "copy" : DefaultEditorKit.copyAction;
-    String pasteActionKey = useSimpleActionKeys ? "paste" : DefaultEditorKit.pasteAction;
-    String cutActionKey = useSimpleActionKeys ? "cut" : DefaultEditorKit.cutAction;
-    // Ctrl+Ins, Shift+Ins, Shift+Del
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), copyActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.SHIFT_MASK | InputEvent.SHIFT_DOWN_MASK), pasteActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK | InputEvent.SHIFT_DOWN_MASK), cutActionKey);
-    // Ctrl+C, Ctrl+V, Ctrl+X
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), copyActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), pasteActionKey);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK | InputEvent.CTRL_DOWN_MASK), DefaultEditorKit.cutAction);
-  }
-
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static void initInputMapDefaults(UIDefaults defaults) {
-    // Make ENTER work in JTrees
-    InputMap treeInputMap = (InputMap)defaults.get("Tree.focusInputMap");
-    if (treeInputMap != null) { // it's really possible. For example,  GTK+ doesn't have such map
-      treeInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "toggle");
-    }
-    // Cut/Copy/Paste in JTextAreas
-    InputMap textAreaInputMap = (InputMap)defaults.get("TextArea.focusInputMap");
-    if (textAreaInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(textAreaInputMap, false);
-    }
-    // Cut/Copy/Paste in JTextFields
-    InputMap textFieldInputMap = (InputMap)defaults.get("TextField.focusInputMap");
-    if (textFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(textFieldInputMap, false);
-    }
-    // Cut/Copy/Paste in JPasswordField
-    InputMap passwordFieldInputMap = (InputMap)defaults.get("PasswordField.focusInputMap");
-    if (passwordFieldInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(passwordFieldInputMap, false);
-    }
-    // Cut/Copy/Paste in JTables
-    InputMap tableInputMap = (InputMap)defaults.get("Table.ancestorInputMap");
-    if (tableInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
-      installCutCopyPasteShortcuts(tableInputMap, true);
-    }
+    LafManagerImplUtil.initInputMapDefaults(defaults);
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static void initFontDefaults(UIDefaults defaults, int fontSize, FontUIResource uiFont) {
-    defaults.put("Tree.ancestorInputMap", null);
-    FontUIResource textFont = new FontUIResource("Serif", Font.PLAIN, fontSize);
-    FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, fontSize);
-
-    for (String fontResource : ourPatchableFontResources) {
-      defaults.put(fontResource, uiFont);
-    }
-
-    if (!SystemInfo.isMac) {
-      defaults.put("PasswordField.font", monoFont);
-    }
-    defaults.put("TextArea.font", monoFont);
-    defaults.put("TextPane.font", textFont);
-    defaults.put("EditorPane.font", textFont);
+    LafManagerImplUtil.initFontDefaults(defaults, fontSize, uiFont);
   }
-
 
   private static class OurPopupFactory extends PopupFactory {
     public static final int WEIGHT_LIGHT = 0;

@@ -44,8 +44,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemNode;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.WholeWestDialogWrapper;
-import consulo.util.ui.tree.TreeDecorationUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -286,7 +286,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
               return enabled;
             }).
             setToolbarPosition(ActionToolbarPosition.TOP).
-            setToolbarBackgroundColor(TreeDecorationUtil.getTreeBackground()).
+            setToolbarBackgroundColor(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor)).
             setToolbarBorder(IdeBorderFactory.createEmptyBorder());
 
     tree.setBorder(JBUI.Borders.empty());

@@ -18,7 +18,6 @@ package consulo.ide.customize;
 import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.RepositoryHelper;
-import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -166,7 +165,7 @@ public class FirstStartCustomizeUtil {
       className = "com.apple.laf.AquaLookAndFeel";
     }
     else {
-      className = IntelliJLaf.class.getName();
+      className = "com.intellij.ide.ui.laf.intellij.IntelliJLaf";
     }
     try {
       UIManager.setLookAndFeel(className);

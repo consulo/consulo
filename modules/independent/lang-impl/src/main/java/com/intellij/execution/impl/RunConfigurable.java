@@ -53,9 +53,9 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.util.ui.tree.TreeDecorationUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
@@ -126,7 +126,7 @@ class RunConfigurable extends BaseConfigurable {
   private void initTree() {
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
-    TreeDecorationUtil.decorateTree(myTree);
+    SwingUIDecorator.apply(SwingUIDecorator::decorateSidebarTree, myTree);
     UIUtil.setLineStyleAngled(myTree);
     TreeUtil.installActions(myTree);
     new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
@@ -553,7 +553,7 @@ class RunConfigurable extends BaseConfigurable {
             .setRemoveActionName(ExecutionBundle.message("remove.run.configuration.action.name"))
             .setPanelBorder(JBUI.Borders.empty())
             .setToolbarBorder(JBUI.Borders.empty())
-            .setToolbarBackgroundColor(TreeDecorationUtil.getTreeBackground())
+            .setToolbarBackgroundColor(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor))
             .setMoveUpAction(moveUpAction).setMoveUpActionName(ExecutionBundle.message("move.up.action.name")).setMoveUpActionUpdater(moveUpAction)
             .setMoveDownAction(moveDownAction).setMoveDownActionName(ExecutionBundle.message("move.down.action.name")).setMoveDownActionUpdater(moveDownAction)
             .addExtraAction(AnActionButton.fromAction(new MyCopyAction()))

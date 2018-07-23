@@ -15,15 +15,15 @@
  */
 package com.intellij.ide.ui.laf.intellij;
 
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
+import com.intellij.ide.ui.laf.darcula.DarculaUIUtilPart;
 import com.intellij.ide.ui.laf.darcula.ui.TextFieldWithPopupHandlerUI;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
@@ -187,7 +187,7 @@ public class MacIntelliJTextFieldUI extends TextFieldWithPopupHandlerUI {
       g2.fill(path);
 
       if (c.hasFocus() && c.getClientProperty("JTextField.Search.noBorderRing") != Boolean.TRUE) {
-        DarculaUIUtil.paintFocusBorder(g2, r.width, r.height, arc, true);
+        DarculaUIUtilPart.paintFocusBorder(g2, r.width, r.height, arc, true);
       }
 
       g2.translate(-r.x, -r.y);
@@ -280,7 +280,7 @@ public class MacIntelliJTextFieldUI extends TextFieldWithPopupHandlerUI {
       g2.fill(path);
 
       if (c.hasFocus()) {
-        DarculaUIUtil.paintFocusBorder(g2, r.width, r.height, arc, true);
+        DarculaUIUtilPart.paintFocusBorder(g2, r.width, r.height, arc, true);
       }
     }
     finally {

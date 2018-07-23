@@ -16,7 +16,7 @@
 package com.intellij.ide.ui.laf.darcula;
 
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
-import com.intellij.ide.ui.laf.LafManagerImpl;
+import com.intellij.ide.ui.laf.LafManagerImplUtil;
 import com.intellij.ide.ui.laf.ideaOld.IntelliJMetalLookAndFeel;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
@@ -103,7 +103,7 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
         }
       }
 
-      LafManagerImpl.initInputMapDefaults(defaults);
+      LafManagerImplUtil.initInputMapDefaults(defaults);
       initIdeaDefaults(defaults);
       patchStyledEditorKit(defaults);
       patchComboBox(metalDefaults, defaults);

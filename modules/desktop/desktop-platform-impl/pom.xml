@@ -56,6 +56,11 @@
       <artifactId>consulo-desktop-ui-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-ui-laf-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!-- external dependencies -->
     <dependency>
       <groupId>javax.help</groupId>

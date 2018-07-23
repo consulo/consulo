@@ -15,11 +15,10 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
@@ -32,7 +31,6 @@ public class JBDefaultTreeCellRenderer extends DefaultTreeCellRenderer {
   private boolean myMacTreeUI;
 
   public JBDefaultTreeCellRenderer(@Nonnull final JTree tree) {
-    MacUIUtil.doNotFillBackground(tree, this);
     myMacTreeUI = tree.getUI() instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)tree.getUI()).isWideSelection();
   }
 

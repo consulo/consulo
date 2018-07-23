@@ -44,6 +44,12 @@
       <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
       <implementation-class>com.intellij.ide.DesktopSaveAndSyncHandlerImpl</implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.ide.ui.LafManager</interface-class>
+      <implementation-class>com.intellij.ide.ui.laf.LafManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.ide.ui.laf.HeadlessLafManagerImpl</headless-implementation-class>
+    </component>
   </application-components>
 
   <project-components>
@@ -71,6 +77,8 @@
   </project-components>
 
   <extensions defaultExtensionNs="com.intellij">
+    <eapDescriptor implementation="consulo.ide.ui.laf.GTKPlusEAPDescriptor"/>
+
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.PlaybackDebugger"/>
 
     <applicationService serviceInterface="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"
@@ -106,5 +114,9 @@
 
     <fileSaveDialogProvider implementation="consulo.fileChooser.impl.system.MacFileSaveDialogProvider"/>
     <fileSaveDialogProvider implementation="consulo.fileChooser.impl.DesktopFileSaveDialogProvider" order="last"/>
+
+    <uiDecorator implementation="consulo.ide.ui.impl.mac.MacAquaUIDecorator" id="macAqua"/>
+
+    <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
   </extensions>
 </idea-plugin>

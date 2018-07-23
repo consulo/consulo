@@ -19,15 +19,10 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.editorHeaderActions.Utils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI;
-import com.intellij.ide.ui.laf.intellij.MacIntelliJIconCache;
-import com.intellij.ide.ui.laf.intellij.MacIntelliJTextFieldUI;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -38,18 +33,17 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import net.miginfocom.swing.MigLayout;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.AttributeSet;
@@ -60,13 +54,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Constructor;
 
 import static java.awt.event.InputEvent.*;
 import static javax.swing.ScrollPaneConstants.*;
 
 public class SearchTextArea extends NonOpaquePanel implements PropertyChangeListener, FocusListener {
-  public static final KeyStroke NEW_LINE_KEYSTROKE
-          = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, (SystemInfo.isMac ? META_DOWN_MASK : CTRL_DOWN_MASK) | SHIFT_DOWN_MASK);
+  public static final KeyStroke NEW_LINE_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, (SystemInfo.isMac ? META_DOWN_MASK : CTRL_DOWN_MASK) | SHIFT_DOWN_MASK);
   private final JTextArea myTextArea;
   private final boolean mySearchMode;
   private final boolean myInfoMode;
@@ -76,7 +70,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
   private ActionButton myClearButton;
   private JBScrollPane myScrollPane;
   private final ActionButton myHistoryPopupButton;
-  private final LafHelper myHelper;
+  private final SearchTextAreaLafHelper myHelper;
   private boolean myMultilineEnabled = true;
 
   public SearchTextArea(boolean searchMode) {
@@ -113,7 +107,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     myTextArea.setDocument(new PlainDocument() {
       @Override
       public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-        if (getProperty("filterNewlines") == Boolean.TRUE && str.indexOf('\n')>=0) {
+        if (getProperty("filterNewlines") == Boolean.TRUE && str.indexOf('\n') >= 0) {
           str = StringUtil.replace(str, "\n", "");
         }
         if (!StringUtil.isEmpty(str)) super.insertString(offs, str, a);
@@ -139,13 +133,15 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     };
     myTextArea.setBorder(new Border() {
       @Override
-      public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {}
+      public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+      }
 
       @Override
       public Insets getBorderInsets(Component c) {
         if (SystemInfo.isMac && !UIUtil.isUnderDarcula()) {
           return new JBInsets(3, 0, 3, 0);
-        } else {
+        }
+        else {
           int bottom = (StringUtil.getLineBreakCount(myTextArea.getText()) > 0) ? 2 : UIUtil.isUnderDarcula() ? 2 : 1;
           int top = myTextArea.getFontMetrics(myTextArea.getFont()).getHeight() <= 16 ? 2 : 1;
           if (JBUI.isUsrHiDPI()) {
@@ -206,8 +202,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
 
     boolean showClearIcon = !StringUtil.isEmpty(myTextArea.getText());
     boolean showNewLine = isNewLineAvailable();
-    boolean wrongVisibility =
-            ((myClearButton.getParent() != null) != showClearIcon) || ((myNewLineButton.getParent() != null) != showNewLine);
+    boolean wrongVisibility = ((myClearButton.getParent() != null) != showClearIcon) || ((myNewLineButton.getParent() != null) != showNewLine);
 
     LayoutManager layout = myIconsPanel.getLayout();
     boolean wrongLayout = !(layout instanceof GridLayout);
@@ -251,10 +246,21 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     myTextArea.getDocument().putProperty("filterNewlines", myMultilineEnabled ? null : Boolean.TRUE);
     if (!myMultilineEnabled) {
       myTextArea.addKeyListener(myEnterRedispatcher);
-    } else {
+    }
+    else {
       myTextArea.removeKeyListener(myEnterRedispatcher);
     }
     updateIconsLayout();
+  }
+
+  @Nonnull
+  public JPanel getIconsPanel() {
+    return myIconsPanel;
+  }
+
+  @Nonnull
+  public JBScrollPane getScrollPane() {
+    return myScrollPane;
   }
 
   @Nonnull
@@ -324,20 +330,18 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
   private class ShowHistoryAction extends DumbAwareAction {
 
     public ShowHistoryAction() {
-      super((mySearchMode ? "Search" : "Replace") + " History",
-            (mySearchMode ? "Search" : "Replace") + " history",
-            myHelper.getShowHistoryIcon());
+      super((mySearchMode ? "Search" : "Replace") + " History", (mySearchMode ? "Search" : "Replace") + " history", myHelper.getShowHistoryIcon());
 
       KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
       registerCustomShortcutSet(new CustomShortcutSet(new KeyboardShortcut(stroke, null)), myTextArea);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed("find.recent.search");
       FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getProject());
-      String[] recent = mySearchMode ? findInProjectSettings.getRecentFindStrings()
-                                     : findInProjectSettings.getRecentReplaceStrings();
+      String[] recent = mySearchMode ? findInProjectSettings.getRecentFindStrings() : findInProjectSettings.getRecentReplaceStrings();
       String title = "Recent " + (mySearchMode ? "Searches" : "Replaces");
       JBList historyList = new JBList((Object[])ArrayUtil.reverseArray(recent));
       Utils.showCompletionPopup(SearchTextArea.this, historyList, title, myTextArea, null);
@@ -364,6 +368,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
       super(null, null, myHelper.getClearIcon());
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       myTextArea.setText("");
@@ -372,9 +377,10 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
 
   private class NewLineAction extends DumbAwareAction {
     public NewLineAction() {
-      super(null, "New line (" + KeymapUtil.getKeystrokeText(NEW_LINE_KEYSTROKE) + ")",  AllIcons.Actions.SearchNewLine);
+      super(null, "New line (" + KeymapUtil.getKeystrokeText(NEW_LINE_KEYSTROKE) + ")", AllIcons.Actions.SearchNewLine);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       new DefaultEditorKit.InsertBreakAction().actionPerformed(new ActionEvent(myTextArea, 0, "action"));
@@ -382,154 +388,23 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
   }
 
   @Nonnull
-  private LafHelper createHelper() {
-    return SystemInfo.isMac && !UIUtil.isUnderDarcula() ? new MacLafHelper() : new DefaultLafHelper();
-  }
-
-  private static abstract class LafHelper {
-    abstract Border getBorder();
-
-    abstract String getLayoutConstraints();
-
-    abstract String getHistoryButtonConstraints();
-
-    abstract String getIconsPanelConstraints();
-
-    abstract Border getIconsPanelBorder(int rows);
-
-    abstract Icon getShowHistoryIcon();
-
-    abstract Icon getClearIcon();
-
-    abstract void paint(Graphics2D g);
-  }
-
-  private class MacLafHelper extends LafHelper {
-    @Override
-    Border getBorder() {
-      return new EmptyBorder(3 + Math.max(0, JBUI.scale(16) - UIUtil.getLineHeight(myTextArea)) / 2, 6, 4, 4);
+  private SearchTextAreaLafHelper createHelper() {
+    String ui = null;
+    if (UIUtil.isUnderAquaLookAndFeel()) {
+      ui = "com.intellij.find.MacSearchTextAreaLafHelper";
     }
 
-    @Override
-    String getLayoutConstraints() {
-      return "flowx, ins 0, gapx " + JBUI.scale(4);
+    if (ui == null) {
+      ui = "com.intellij.find.DefaultSearchTextAreaLafHelper";
     }
-
-    @Override
-    String getHistoryButtonConstraints() {
-      int extraGap = getExtraGap();
-      return "ay top, gaptop " + extraGap + ", gapleft" + (JBUI.isUsrHiDPI() ? 4 : 0);
+    try {
+      Class<?> aClass = Class.forName(ui);
+      Constructor<?> constructor = aClass.getDeclaredConstructor(SearchTextArea.class);
+      constructor.setAccessible(true);
+      return (SearchTextAreaLafHelper)constructor.newInstance(this);
     }
-
-    private int getExtraGap() {
-      int height = UIUtil.getLineHeight(myTextArea);
-      Insets insets = myTextArea.getInsets();
-      return Math.max(JBUI.isUsrHiDPI() ? 0 : 1, (height + insets.top + insets.bottom - JBUI.scale(16)) / 2);
-    }
-
-
-    @Override
-    String getIconsPanelConstraints() {
-      int extraGap = getExtraGap();
-      return "gaptop " + extraGap + ",ay top, gapright " + extraGap / 2;
-    }
-
-    @Override
-    Border getIconsPanelBorder(int rows) {
-      return JBUI.Borders.emptyBottom(rows == 2 ? 3 : 0);
-    }
-
-    @Override
-    Icon getShowHistoryIcon() {
-      return MacIntelliJIconCache.getIcon("searchFieldWithHistory");
-    }
-
-    @Override
-    Icon getClearIcon() {
-      return AllIcons.Actions.Clear;
-    }
-
-    @Override
-    void paint(Graphics2D g) {
-      Rectangle r = new Rectangle(getSize());
-      int h = myIconsPanel.getParent() != null ? Math.max(myIconsPanel.getHeight(), myScrollPane.getHeight()) : myScrollPane.getHeight();
-
-      Insets i = getInsets();
-      Insets ei = myTextArea.getInsets();
-
-      int deltaY = i.top - ei.top;
-      r.y += deltaY;
-      r.height = Math.max(r.height, h + i.top + i.bottom) - (i.bottom - ei.bottom) - deltaY;
-      MacIntelliJTextFieldUI.paintAquaSearchFocusRing(g, r, myTextArea);
-    }
-  }
-
-  private class DefaultLafHelper extends LafHelper {
-    @Override
-    Border getBorder() {
-      return JBUI.Borders.empty(2);
-    }
-
-    @Override
-    String getLayoutConstraints() {
-      return "flowx, ins 2 " + JBUI.scale(4) + " 2 " + (3 + JBUI.scale(1)) + ", gapx " + JBUI.scale(4);
-    }
-
-    @Override
-    String getHistoryButtonConstraints() {
-      return "ay top, gaptop " + JBUI.scale(getIconTopGap());//Double scaling inside but it looks not bad
-    }
-
-    private int getIconTopGap() {
-      return Math.max(2, (UIUtil.getLineHeight(myTextArea) + myTextArea.getInsets().top + myTextArea.getInsets().bottom - JBUI.scale(16)) / 2);
-    }
-
-    @Override
-    String getIconsPanelConstraints() {
-      return "gaptop " + getIconTopGap() + ",ay top";
-    }
-
-    @Override
-    Border getIconsPanelBorder(int rows) {
-      return JBUI.Borders.empty();
-    }
-
-    @Override
-    Icon getShowHistoryIcon() {
-      Icon searchIcon = UIManager.getIcon("TextField.darcula.searchWithHistory.icon");
-      if (searchIcon == null) {
-        searchIcon = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png", DarculaTextFieldUI.class, true);
-      }
-      return searchIcon;
-    }
-
-    @Override
-    Icon getClearIcon() {
-      Icon clearIcon = UIManager.getIcon("TextField.darcula.clear.icon");
-      if (clearIcon == null) {
-        clearIcon = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/clear.png", DarculaTextFieldUI.class, true);
-      }
-      return clearIcon;
-    }
-
-    @Override
-    void paint(Graphics2D g) {
-      Rectangle r = new Rectangle(getSize());
-      JBInsets.removeFrom(r, getInsets());
-      if (r.height % 2 == 1) r.height++;
-      int arcSize = JBUI.scale(26);
-
-      JBInsets.removeFrom(r, new JBInsets(1, 1, 1, 1));
-      if (myTextArea.hasFocus()) {
-        g.setColor(myTextArea.getBackground());
-        RectanglePainter.FILL.paint(g, r.x, r.y, r.width, r.height, arcSize);
-        DarculaUIUtil.paintSearchFocusRing(g, r, myTextArea, arcSize);
-      }
-      else {
-        arcSize -= JBUI.scale(5);
-        RectanglePainter
-                .paint(g, r.x, r.y, r.width, r.height, arcSize, myTextArea.getBackground(), myTextArea.isEnabled() ? Gray._100 : Gray._83);
-      }
+    catch (Exception e) {
+      throw new Error(e);
     }
   }
 }

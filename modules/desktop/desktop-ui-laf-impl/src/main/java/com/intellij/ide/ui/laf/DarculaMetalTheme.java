@@ -37,8 +37,6 @@ public class DarculaMetalTheme extends DefaultMetalTheme {
   private static final ColorUIResource primary2 = new ColorUIResource(91, 135, 206);
   private static final ColorUIResource primary3 = new ColorUIResource(166, 202, 240);
 
-
-
   public String getName() {
     return "Darcula theme";
   }

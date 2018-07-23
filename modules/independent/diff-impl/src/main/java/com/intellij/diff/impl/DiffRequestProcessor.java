@@ -52,7 +52,6 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.HintHint;
-import com.intellij.ui.JBProgressBar;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
@@ -60,9 +59,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -925,7 +924,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
   }
 
-  private static class MyProgressBar extends JBProgressBar {
+  private static class MyProgressBar extends JProgressBar {
     private int myProgressCount = 0;
 
     public MyProgressBar() {

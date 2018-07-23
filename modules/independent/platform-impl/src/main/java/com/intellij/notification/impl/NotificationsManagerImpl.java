@@ -17,8 +17,6 @@ package com.intellij.notification.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.FrameStateManager;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonPainter;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI;
 import com.intellij.notification.*;
 import com.intellij.notification.impl.ui.NotificationsUtil;
 import com.intellij.openapi.Disposable;
@@ -58,15 +56,13 @@ import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
 import javax.swing.text.html.ParagraphView;
@@ -670,36 +666,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
       NotificationActionProvider provider = (NotificationActionProvider)notification;
       for (NotificationActionProvider.Action action : provider.getActions(listener)) {
-        JButton button = new JButton(action) {
-          @Override
-          public void setUI(ButtonUI ui) {
-            boolean isDarcula = ui instanceof DarculaButtonUI && UIUtil.isUnderDarcula();
-            if (isDarcula) {
-              ui = new DarculaButtonUI() {
-                @Nonnull
-                @Override
-                protected Color getButtonColor1() {
-                  return new ColorUIResource(0x464b4c);
-                }
-
-                @Nonnull
-                @Override
-                protected Color getButtonColor2() {
-                  return new ColorUIResource(0x383c3d);
-                }
-              };
-            }
-            super.setUI(ui);
-            if (isDarcula) {
-              setBorder(new DarculaButtonPainter() {
-                @Override
-                protected Color getBorderColor() {
-                  return new ColorUIResource(0x616263);
-                }
-              });
-            }
-          }
-        };
+        JButton button = new JButton(action);
 
         button.setOpaque(false);
         if (action.isDefaultAction()) {

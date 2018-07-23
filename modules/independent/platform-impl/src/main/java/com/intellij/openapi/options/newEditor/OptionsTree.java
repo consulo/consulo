@@ -33,7 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import consulo.util.ui.tree.TreeDecorationUtil;
+import consulo.ui.SwingUIDecorator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +79,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
       public void updateUI() {
         super.updateUI();
 
-        TreeDecorationUtil.decorateTree(this);
+        SwingUIDecorator.apply(SwingUIDecorator::decorateSidebarTree, this);
       }
     };
 

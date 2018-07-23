@@ -20,16 +20,12 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.mac.foundation.Foundation;
-import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.TreeUI;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
-import java.lang.reflect.Field;
 
 /**
  * User: spLeaner
@@ -264,23 +260,6 @@ public class MacUIUtil {
         final Container ancestor = SwingUtilities.getAncestorOfClass(JComboBox.class, focusOwner);
         if (ancestor == combobox) {
           paintComboboxFocusRing((Graphics2D)g, combobox.getBounds());
-        }
-      }
-    }
-  }
-
-  public static void doNotFillBackground(@Nonnull final JTree tree, @Nonnull final DefaultTreeCellRenderer renderer) {
-    TreeUI ui = tree.getUI();
-    if (ui instanceof WideSelectionTreeUI) {
-      if (((WideSelectionTreeUI)ui).isWideSelection()) {
-        renderer.setOpaque(false);
-        try {
-          final Field fillBackground = DefaultTreeCellRenderer.class.getDeclaredField("fillBackground");
-          fillBackground.setAccessible(true);
-          fillBackground.set(renderer, false);
-        }
-        catch (Exception e) {
-          // nothing
         }
       }
     }

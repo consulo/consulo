@@ -33,9 +33,9 @@ import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.laf.MorphColor;
-import consulo.util.ui.tree.TreeDecorationUtil;
 import consulo.wm.impl.ToolWindowManagerBase;
 
 import javax.annotation.Nonnull;
@@ -185,7 +185,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
       }
     });
 
-    setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? TreeDecorationUtil.getTreeBackground() : UIUtil.getPanelBackground()));
+    setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil.getPanelBackground()));
 
     setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), TabsUtil.TABS_BORDER, 0, TabsUtil.TABS_BORDER, 0));
 

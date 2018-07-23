@@ -21,7 +21,6 @@
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
     <eapDescriptor implementation="consulo.auth.ServiceAuthEarlyAccessProgramDescriptor" />
-    <eapDescriptor implementation="consulo.ide.ui.laf.GTKPlusEAPDescriptor" />
     <eapDescriptor implementation="consulo.ui.impl.ModalityPerProjectEAPDescriptor" />
 
     <applicationConfigurable parentId="preferences.pluginManager"
