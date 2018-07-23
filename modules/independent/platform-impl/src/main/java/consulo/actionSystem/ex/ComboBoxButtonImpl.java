@@ -25,6 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.ReflectionUtil;
+import consulo.ui.SwingUIDecorator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -353,6 +354,8 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
     // refresh state
     setLikeButton(myLikeButton, myOnClickListener);
+
+    SwingUIDecorator.apply(SwingUIDecorator::decorateToolbarComboBox, this);
   }
 
   @Nonnull

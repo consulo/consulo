@@ -43,6 +43,10 @@ public interface SwingUIDecorator extends UIDecorator {
     return null;
   }
 
+  default boolean decorateToolbarComboBox(@Nonnull JComboBox<?> comboBox) {
+    return false;
+  }
+
   default boolean decorateSidebarTree(@Nonnull JTree tree) {
     return false;
   }
