@@ -20,14 +20,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.util.*;
@@ -194,7 +193,7 @@ public class ComplementaryFontsRegistry {
                                                FontRenderContext context) {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
-    boolean useLigatures = SystemInfo.isJetBrainsJvm && preferences.useLigatures();
+    boolean useLigatures = Patches.ALLOW_LIGATURES && preferences.useLigatures();
     FontInfo result;
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0, len = fontFamilies.size(); i < len; ++i) { // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often
@@ -230,7 +229,7 @@ public class ComplementaryFontsRegistry {
   public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, @Nonnull FontPreferences preferences, FontRenderContext context) {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
-    boolean useLigatures = SystemInfo.isJetBrainsJvm && preferences.useLigatures();
+    boolean useLigatures = Patches.ALLOW_LIGATURES && preferences.useLigatures();
     FontInfo result;
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0, len = fontFamilies.size(); i < len; ++i) { // avoid foreach, it instantiates ArrayList$Itr, this traversal happens very often

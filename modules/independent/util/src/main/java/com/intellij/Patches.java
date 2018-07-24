@@ -136,4 +136,13 @@ public class Patches {
    * Some HTTP connections lock the context class loader: https://bugs.openjdk.java.net/browse/JDK-8032832
    */
   public static boolean JDK_BUG_ID_8032832 = true;
+
+  /**
+   * At JDK 9 - ligatures laggy
+   * JetBrains fixed it in their jdk
+   * fixed in JDK 10
+   * https://bugs.openjdk.java.net/browse/JDK-8196666
+   * https://bugs.openjdk.java.net/browse/JDK-8186317
+   */
+  public static boolean ALLOW_LIGATURES = SystemInfo.isJetBrainsJvm || SystemInfo.isJavaVersionAtLeast(10, 0, 0);
 }

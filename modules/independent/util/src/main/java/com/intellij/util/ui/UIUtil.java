@@ -559,9 +559,19 @@ public class UIUtil {
     try {
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       if (ge instanceof SunGraphicsEnvironment) {
+        // jetbrains method
         Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleOn");
-        jreHiDPI = (Boolean)m.invoke(ge);
-        jreHiDPI_earlierVersion = false;
+        if(m != null) {
+          jreHiDPI = (Boolean)m.invoke(ge);
+          jreHiDPI_earlierVersion = false;
+        }
+
+        // openjdk method
+        m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleEnabled");
+        if(m != null) {
+          jreHiDPI = (Boolean)m.invoke(ge);
+          jreHiDPI_earlierVersion = false;
+        }
       }
     }
     catch (Throwable ignore) {
