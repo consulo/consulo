@@ -26,6 +26,8 @@ import gnu.trove.THashSet;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,6 +41,7 @@ import java.util.Map;
         name = "NotificationConfiguration",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/notifications.xml")
 )
+@Singleton
 public class NotificationsConfigurationImpl
         extends NotificationsConfiguration
         implements ApplicationComponent, PersistentStateComponent<Element> {
@@ -61,6 +64,7 @@ public class NotificationsConfigurationImpl
   public boolean SHOW_BALLOONS = true;
   public boolean SYSTEM_NOTIFICATIONS = true;
 
+  @Inject
   public NotificationsConfigurationImpl(@Nonnull MessageBus bus) {
     myMessageBus = bus;
   }

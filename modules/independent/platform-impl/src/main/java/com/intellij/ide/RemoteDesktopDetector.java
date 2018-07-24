@@ -25,6 +25,10 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.sun.jna.platform.win32.User32;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class RemoteDesktopDetector extends RemoteDesktopService {
   private static final Logger LOG = Logger.getInstance(RemoteDesktopDetector.class);
   private static final NotificationGroup NOTIFICATION_GROUP =
@@ -33,6 +37,7 @@ public class RemoteDesktopDetector extends RemoteDesktopService {
   private volatile boolean myFailureDetected;
   private volatile boolean myRemoteDesktopConnected;
 
+  @Inject
   private RemoteDesktopDetector() {
     if (SystemInfo.isWindows) {
       DisplayChangeDetector.getInstance().addListener(new DisplayChangeDetector.Listener() {

@@ -40,7 +40,7 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
   ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.orderEntryTypeEditor");
 
   KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY =
-          new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get().getPicoContainer()) {
+          new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get()) {
             @Override
             public OrderEntryTypeEditor getByKey(@Nonnull OrderEntryType key) {
               // special hack for unknown order entry type

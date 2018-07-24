@@ -29,9 +29,12 @@ import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Singleton
 public class DesktopIconDeferrerImpl extends IconDeferrer {
   private static final ThreadLocal<Boolean> ourEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
@@ -46,6 +49,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer {
 
   private long myLastClearTimestamp;
 
+  @Inject
   public DesktopIconDeferrerImpl(MessageBus bus) {
     final MessageBusConnection connection = bus.connect();
     connection.subscribe(PsiModificationTracker.TOPIC, this::clear);

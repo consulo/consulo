@@ -19,9 +19,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.extensions.ExtensionPointListener;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.fileEditor.FileEditorPolicy;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.WeighedFileEditorProvider;
@@ -41,6 +38,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
@@ -48,30 +47,16 @@ import java.util.*;
  * @author Vladimir Kondratyev
  */
 @State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager.xml", roamingType = RoamingType.DISABLED))
+@Singleton
 public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerImpl> {
 
   private final List<FileEditorProvider> myProviders = ContainerUtil.createConcurrentList();
 
-  public FileEditorProviderManagerImpl(@Nonnull FileEditorProvider[] providers) {
-    Extensions.getRootArea().getExtensionPoint(FileEditorProvider.EP_FILE_EDITOR_PROVIDER)
-            .addExtensionPointListener(new ExtensionPointListener<FileEditorProvider>() {
-              @Override
-              public void extensionAdded(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
-                registerProvider(extension);
-              }
-
-              @Override
-              public void extensionRemoved(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
-                unregisterProvider(extension);
-              }
-            });
-
-    for (FileEditorProvider provider : providers) {
+  @Inject
+  public FileEditorProviderManagerImpl() {
+    for (FileEditorProvider provider : FileEditorProvider.EP_FILE_EDITOR_PROVIDER.getExtensions()) {
       registerProvider(provider);
     }
-  }
-
-  public FileEditorProviderManagerImpl() {
   }
 
   @Override

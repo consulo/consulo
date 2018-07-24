@@ -64,6 +64,8 @@ import consulo.roots.impl.TestContentFolderTypeProvider;
 import gnu.trove.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.*;
 import java.util.*;
@@ -82,6 +84,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 1. corresponding source file has been scheduled for recompilation (see above)
  * 2. corresponding source file has been deleted
  */
+@Singleton
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
@@ -189,13 +192,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private boolean myForceCompiling;
 
+  @Inject
   public TranslatingCompilerFilesMonitorImpl(VirtualFileManager vfsManager, ProjectManager projectManager, Application application) {
     myProjectManager = projectManager;
 
     projectManager.addProjectManagerListener(new MyProjectManagerListener());
     vfsManager.addVirtualFileListener(new MyVfsListener(), application);
   }
-
 
   @Override
   public void suspendProject(Project project) {

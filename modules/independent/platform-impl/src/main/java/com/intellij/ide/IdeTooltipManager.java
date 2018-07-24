@@ -32,6 +32,8 @@ import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.*;
@@ -43,6 +45,7 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 
+@Singleton
 public class IdeTooltipManager implements Disposable, AWTEventListener, ApplicationComponent {
   public static final String IDE_TOOLTIP_PLACE = "IdeTooltip";
   public static final ColorKey TOOLTIP_COLOR_KEY = ColorKey.createColorKey("TOOLTIP", (Color)null);
@@ -77,6 +80,7 @@ public class IdeTooltipManager implements Disposable, AWTEventListener, Applicat
   private Runnable myShowRequest;
   private IdeTooltip myQueuedTooltip;
 
+  @Inject
   public IdeTooltipManager(JBPopupFactory popupFactory) {
     myPopupFactory = popupFactory;
   }

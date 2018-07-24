@@ -26,7 +26,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 class CommandProcessorImpl extends CoreCommandProcessor {
   @RequiredDispatchThread
   @Override

@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 public interface ExtensionPoint<T> {
   @Nonnull
   String getName();
+
+  @Nonnull
   AreaInstance getArea();
 
   /**
@@ -34,24 +36,58 @@ public interface ExtensionPoint<T> {
   @Nonnull
   String getBeanClassName();
 
-  void registerExtension(@Nonnull T extension);
-  void registerExtension(@Nonnull T extension, @Nonnull LoadingOrder order);
+  @Deprecated
+  default void registerExtension(@Nonnull T extension) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Deprecated
+  default void registerExtension(@Nonnull T extension, @Nonnull LoadingOrder order) {
+    throw new UnsupportedOperationException();
+  }
 
   @Nonnull
   T[] getExtensions();
-  boolean hasAnyExtensions();
+
+  default boolean hasAnyExtensions() {
+    return getExtensions().length > 0;
+  }
 
   @Nullable
-  T getExtension();
-  boolean hasExtension(@Nonnull T extension);
+  default T getExtension() {
+    T[] extensions = getExtensions();
+    return extensions.length == 0 ? null : extensions[0];
+  }
 
-  void unregisterExtension(@Nonnull T extension);
+  default boolean hasExtension(@Nonnull T extension) {
+    for (T t : getExtensions()) {
+      if (t == extension) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-  void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener, @Nonnull Disposable parentDisposable);
-  void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener);
-  void removeExtensionPointListener(@Nonnull ExtensionPointListener<T> extensionPointListener);
+  default void unregisterExtension(@Nonnull T extension) {
+    throw new UnsupportedOperationException();
+  }
 
-  void reset();
+  @Deprecated
+  default void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener, @Nonnull Disposable parentDisposable) {
+  }
+
+  @Deprecated
+  default void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener) {
+  }
+
+  @Deprecated
+  default void removeExtensionPointListener(@Nonnull ExtensionPointListener<T> extensionPointListener) {
+  }
+
+  @Deprecated
+  default void reset() {
+    throw new UnsupportedOperationException();
+  }
 
   @Nonnull
   Class<T> getExtensionClass();
@@ -62,5 +98,8 @@ public interface ExtensionPoint<T> {
   @Nonnull
   String getClassName();
 
-  enum Kind {INTERFACE, BEAN_CLASS}
+  enum Kind {
+    INTERFACE,
+    BEAN_CLASS
+  }
 }

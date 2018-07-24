@@ -46,6 +46,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -53,6 +55,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
+@Singleton
 public class HintManagerImpl extends HintManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.hint.HintManager");
 
@@ -99,7 +102,8 @@ public class HintManagerImpl extends HintManager implements Disposable {
     return (HintManagerImpl)ServiceManager.getService(HintManager.class);
   }
 
-  public HintManagerImpl(ActionManagerEx actionManagerEx, ProjectManager projectManager) {
+  @Inject
+  public HintManagerImpl(ActionManager actionManagerEx, ProjectManager projectManager) {
     myEditorManagerListener = new MyEditorManagerListener();
 
     myAnActionListener = new MyAnActionListener();

@@ -18,15 +18,24 @@ package com.intellij.openapi.components.ex;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.PluginDescriptor;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
+@Deprecated
 public interface ComponentManagerEx extends ComponentManager {
 
-  void registerComponent(@Nonnull ComponentConfig config);
-  void registerComponent(@Nonnull ComponentConfig config, PluginDescriptor pluginDescriptor);
+  default void registerComponent(@Nonnull ComponentConfig config) {
+    throw new UnsupportedOperationException();
+  }
 
-  void initializeComponent(@Nonnull Object component, boolean service);
+  default void registerComponent(@Nonnull ComponentConfig config, PluginDescriptor pluginDescriptor) {
+    throw new UnsupportedOperationException();
+  }
+
+  default void initializeFromStateStore(@Nonnull Object component, boolean service) {
+    throw new UnsupportedOperationException();
+  }
 }

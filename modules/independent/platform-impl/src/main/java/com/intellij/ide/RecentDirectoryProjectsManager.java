@@ -25,6 +25,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @State(
   name = "RecentProjectsManager",
@@ -33,7 +35,9 @@ import javax.annotation.Nullable;
     @Storage(file = StoragePathMacros.APP_CONFIG + "/recentProjects.xml", roamingType = RoamingType.DISABLED)
   }
 )
+@Singleton
 public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
+  @Inject
   public RecentDirectoryProjectsManager(MessageBus messageBus) {
     super(messageBus);
   }

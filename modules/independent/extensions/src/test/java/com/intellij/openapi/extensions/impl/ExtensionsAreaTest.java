@@ -19,7 +19,6 @@ package com.intellij.openapi.extensions.impl;
 import com.intellij.openapi.extensions.Extensions;
 import junit.framework.TestCase;
 import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class ExtensionsAreaTest extends TestCase {
 
   public void testGetComponentAdapterDoesntDuplicateAdapters() throws Exception {
     MutablePicoContainer picoContainer =
-            new ExtensionsAreaImpl("foo", null, new DefaultPicoContainer(), new Extensions.SimpleLogProvider()).getPicoContainer();
+            new ExtensionsAreaImpl("foo", null, new Extensions.SimpleLogProvider()).getPicoContainer();
     picoContainer.registerComponentImplementation("runnable", ExtensionsAreaTest.class);
 
     final List adapters = picoContainer.getComponentAdaptersOfType(ExtensionsAreaTest.class);

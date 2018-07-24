@@ -18,6 +18,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Denis Zhdanov
  * @since 8/8/11 1:08 PM
  */
+@Singleton
 public class ExternalSystemFacadeManager {
 
   private static final int REMOTE_FAIL_RECOVERY_ATTEMPTS_NUMBER = 3;
@@ -58,6 +61,7 @@ public class ExternalSystemFacadeManager {
   @Nonnull
   private final InProcessExternalSystemCommunicationManager     myInProcessCommunicationManager;
 
+  @Inject
   public ExternalSystemFacadeManager(@Nonnull ExternalSystemProgressNotificationManager notificationManager,
                                      @Nonnull RemoteExternalSystemCommunicationManager remoteCommunicationManager,
                                      @Nonnull InProcessExternalSystemCommunicationManager inProcessCommunicationManager)

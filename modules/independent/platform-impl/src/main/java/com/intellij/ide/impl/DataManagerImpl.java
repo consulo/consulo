@@ -45,6 +45,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.Reference;
@@ -54,6 +56,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+@Singleton
 public class DataManagerImpl extends DataManager {
   private static final Logger LOG = Logger.getInstance(DataManagerImpl.class);
 
@@ -61,6 +64,7 @@ public class DataManagerImpl extends DataManager {
 
   private WindowManagerEx myWindowManager;
 
+  @Inject
   public DataManagerImpl() {
     registerRules();
   }

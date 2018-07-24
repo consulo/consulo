@@ -32,6 +32,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -44,6 +46,7 @@ import java.util.Map;
         name = "DimensionService",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/dimensions.xml", roamingType = RoamingType.DISABLED),
                 @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true)})
+@Singleton
 public class DimensionService implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DimensionService.class);
 
@@ -67,6 +70,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
   /**
    * Invoked by reflection
    */
+  @Inject
   private DimensionService() {
     myKey2Location = new LinkedHashMap<String, Point>();
     myKey2Size = new LinkedHashMap<String, Dimension>();

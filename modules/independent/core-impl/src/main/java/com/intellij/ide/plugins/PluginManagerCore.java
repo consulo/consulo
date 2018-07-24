@@ -23,9 +23,9 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
+import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -44,15 +44,16 @@ import gnu.trove.THashSet;
 import gnu.trove.TIntProcedure;
 import org.jdom.Document;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -92,7 +93,7 @@ public class PluginManagerCore {
    */
   public static synchronized IdeaPluginDescriptor[] getPlugins() {
     if (ourPlugins == null) {
-      initPlugins(null);
+      throw new IllegalArgumentException("Plugins not initialized");
     }
     return ourPlugins;
   }
@@ -276,12 +277,6 @@ public class PluginManagerCore {
     //noinspection HardCodedStringLiteral
     final String loadPlugins = System.getProperty("idea.load.plugins");
     return loadPlugins == null || Boolean.TRUE.toString().equals(loadPlugins);
-  }
-
-  static void configureExtensions() {
-    Extensions.setLogProvider(new IdeaLogProvider());
-    Extensions.registerAreaClass(ExtensionAreas.PROJECT, null);
-    Extensions.registerAreaClass(ExtensionAreas.MODULE, ExtensionAreas.PROJECT);
   }
 
   @Nullable
@@ -860,8 +855,6 @@ public class PluginManagerCore {
   }
 
   static void initializePlugins(@Nullable StartupProgress progress) {
-    configureExtensions();
-
     final IdeaPluginDescriptorImpl[] pluginDescriptors = loadDescriptors(progress);
 
     final Class callerClass = ReflectionUtil.findCallerClass(1);
@@ -963,25 +956,20 @@ public class PluginManagerCore {
       }
     }
 
-    registerExtensionPointsAndExtensions(Extensions.getRootArea(), result);
-    Extensions.getRootArea().getExtensionPoint(Extensions.AREA_LISTENER_EXTENSION_POINT).registerExtension(new AreaListener() {
-      @Override
-      public void areaCreated(@Nonnull String areaClass, @Nonnull AreaInstance areaInstance) {
-        registerExtensionPointsAndExtensions(Extensions.getArea(areaInstance), result);
-      }
-
-      @Override
-      public void areaDisposing(@Nonnull String areaClass, @Nonnull AreaInstance areaInstance) {
-      }
-    });
-
-
     ourPlugins = pluginDescriptors;
   }
 
-  private static void registerExtensionPointsAndExtensions(ExtensionsArea area, List<IdeaPluginDescriptorImpl> loadedPlugins) {
-    for (IdeaPluginDescriptorImpl descriptor : loadedPlugins) {
-      descriptor.registerExtensionPoints(area);
+  public static void registerExtensionPointsAndExtensions(@Nonnull AreaInstance areaInstance) {
+    IdeaPluginDescriptor[] plugins = getPlugins();
+
+    List<IdeaPluginDescriptor> list = Arrays.asList(plugins).stream().filter((it) -> !PluginManagerCore.shouldSkipPlugin(it)).collect(Collectors.toList());
+
+    registerExtensionPointsAndExtensions((ExtensionsAreaImpl)areaInstance.getExtensionsArea(), list);
+  }
+
+  private static void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area, List<IdeaPluginDescriptor> loadedPlugins) {
+    for (IdeaPluginDescriptor descriptor : loadedPlugins) {
+      ((IdeaPluginDescriptorImpl)descriptor).registerExtensionPoints(area);
     }
 
     ExtensionPoint[] extensionPoints = area.getExtensionPoints();
@@ -990,9 +978,9 @@ public class PluginManagerCore {
       epNames.add(point.getName());
     }
 
-    for (IdeaPluginDescriptorImpl descriptor : loadedPlugins) {
+    for (IdeaPluginDescriptor descriptor : loadedPlugins) {
       for (String epName : epNames) {
-        descriptor.registerExtensions(area, epName);
+        ((IdeaPluginDescriptorImpl)descriptor).registerExtensions(area, epName);
       }
     }
   }
@@ -1019,7 +1007,7 @@ public class PluginManagerCore {
     private static final Logger ourLogger = Logger.getInstance("#com.intellij.ide.plugins.PluginManager");
   }
 
-  private static class IdeaLogProvider implements LogProvider {
+  public static class IdeaLogProvider implements LogProvider {
     @Override
     public void error(String message) {
       getLogger().error(message);

@@ -30,6 +30,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -39,6 +41,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.ref.WeakReference;
 
+@Singleton
 public class DnDManagerImpl extends DnDManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("com.intellij.ide.dnd.DnDManager");
 
@@ -66,6 +69,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   private static final Image EMPTY_IMAGE = UIUtil.createImage(1, 1, Transparency.TRANSLUCENT);
 
   private final Timer myTooltipTimer = UIUtil.createNamedTimer("DndManagerImpl tooltip timer",ToolTipManager.sharedInstance().getInitialDelay(), new ActionListener() {
+    @Override
     public void actionPerformed(ActionEvent e) {
       onTimer();
     }
@@ -78,6 +82,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
   private WeakReference<Component> myLastDropHandler;
 
+  @Inject
   public DnDManagerImpl(final Application app) {
     myApp = app;
   }
@@ -86,6 +91,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   public void dispose() {
   }
 
+  @Override
   public void registerSource(@Nonnull final AdvancedDnDSource source) {
     if (!getApplication().isHeadlessEnvironment()) {
       final JComponent c = source.getComponent();
@@ -93,6 +99,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     }
   }
 
+  @Override
   public void registerSource(DnDSource source, JComponent component) {
     if (!getApplication().isHeadlessEnvironment()) {
       component.putClientProperty(SOURCE_KEY, source);
@@ -101,11 +108,13 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     }
   }
 
+  @Override
   public void unregisterSource(AdvancedDnDSource source) {
     final JComponent c = source.getComponent();
     unregisterSource(source, c);
   }
 
+  @Override
   public void unregisterSource(DnDSource source, JComponent component) {
     component.putClientProperty(SOURCE_KEY, null);
 
@@ -151,6 +160,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
   }
 
+  @Override
   public void registerTarget(DnDTarget target, JComponent component) {
     if (!getApplication().isHeadlessEnvironment()) {
       component.putClientProperty(TARGET_KEY, target);
@@ -158,6 +168,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     }
   }
 
+  @Override
   public void unregisterTarget(DnDTarget target, JComponent component) {
     component.putClientProperty(TARGET_KEY, null);
 
@@ -489,17 +500,21 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   private static class NullTarget implements DnDTarget {
+    @Override
     public boolean update(DnDEvent aEvent) {
       aEvent.setDropPossible(false, "You cannot drop anything here");
       return false;
     }
 
+    @Override
     public void drop(DnDEvent aEvent) {
     }
 
+    @Override
     public void cleanUpOnLeave() {
     }
 
+    @Override
     public void updateDraggedImage(Image image, Point dropPoint, Point imageOffset) {
     }
   }
@@ -532,6 +547,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   private class MyDragGestureListener implements DragGestureListener {
+    @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
       try {
         final DnDSource source = getSource(dge.getComponent());
@@ -607,20 +623,24 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       mySource = source;
     }
 
+    @Override
     public void dragEnter(DragSourceDragEvent dsde) {
       LOG.debug("dragEnter:" + dsde.getDragSourceContext().getComponent());
       myCurrentDragContext = dsde.getDragSourceContext();
     }
 
+    @Override
     public void dragOver(DragSourceDragEvent dsde) {
       LOG.debug("dragOver:" + dsde.getDragSourceContext().getComponent());
       myCurrentDragContext = dsde.getDragSourceContext();
     }
 
+    @Override
     public void dropActionChanged(DragSourceDragEvent dsde) {
       mySource.dropActionChanged(dsde.getGestureModifiers());
     }
 
+    @Override
     public void dragDropEnd(DragSourceDropEvent dsde) {
       mySource.dragDropEnd();
       final DnDTarget target = getLastProcessedTarget();
@@ -631,6 +651,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       Highlighters.hide(DnDEvent.DropTargetHighlightingType.TEXT | DnDEvent.DropTargetHighlightingType.ERROR_TEXT);
     }
 
+    @Override
     public void dragExit(DragSourceEvent dse) {
       LOG.debug("Stop dragging1");
       onDragExit();
@@ -638,6 +659,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   private class MyDropTargetListener extends DropTargetAdapter {
+    @Override
     public void drop(final DropTargetDropEvent dtde) {
       try {
         final Component component = dtde.getDropTargetContext().getComponent();
@@ -683,6 +705,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       myCurrentDragContext = null;
     }
 
+    @Override
     public void dragOver(DropTargetDragEvent dtde) {
       final DnDEventImpl event = updateCurrentEvent(dtde.getDropTargetContext().getComponent(), dtde.getLocation(), dtde.getDropAction(),
                                                     dtde.getCurrentDataFlavors(), dtde.getTransferable());
@@ -696,6 +719,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       }
     }
 
+    @Override
     public void dragExit(DropTargetEvent dte) {
       onDragExit();
 
@@ -709,6 +733,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       }
     }
 
+    @Override
     public void dropActionChanged(DropTargetDragEvent dtde) {
       updateCurrentEvent(dtde.getDropTargetContext().getComponent(), dtde.getLocation(), dtde.getDropAction(), dtde.getCurrentDataFlavors(), dtde.getTransferable());
     }
@@ -738,6 +763,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     }
   }
 
+  @Override
   @Nullable
   public Component getLastDropHandler() {
     return SoftReference.dereference(myLastDropHandler);

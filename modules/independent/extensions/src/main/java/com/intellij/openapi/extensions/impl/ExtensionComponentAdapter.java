@@ -15,108 +15,86 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.google.inject.Injector;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.util.pico.AssignableToComponentAdapter;
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
-import org.picocontainer.*;
+import javax.annotation.Nullable;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * @author Alexander Kireyev
- * todo: optimize memory print
+ * @author VISTALL
  */
-public class ExtensionComponentAdapter implements LoadingOrder.Orderable, AssignableToComponentAdapter {
+public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Function<Injector, Object> {
   public static final ExtensionComponentAdapter[] EMPTY_ARRAY = new ExtensionComponentAdapter[0];
 
-  private Object myComponentInstance;
   private final String myImplementationClassName;
   private final Element myExtensionElement;
-  private final PicoContainer myContainer;
   private final PluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
-  private ComponentAdapter myDelegate;
   private Class myImplementationClass;
-  private boolean myNotificationSent = false;
 
-  public ExtensionComponentAdapter(@Nonnull String implementationClass,
-                                   Element extensionElement,
-                                   PicoContainer container,
-                                   PluginDescriptor pluginDescriptor,
-                                   boolean deserializeInstance) {
+  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
     myImplementationClassName = implementationClass;
     myExtensionElement = extensionElement;
-    myContainer = container;
     myPluginDescriptor = pluginDescriptor;
     myDeserializeInstance = deserializeInstance;
   }
 
   @Override
-  public Object getComponentKey() {
-    return this;
+  public Object apply(Injector injector) {
+    return apply(injector, Injector::getInstance);
   }
 
-  @Override
-  public Class getComponentImplementation() {
-    return loadImplementationClass();
-  }
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public <T> T apply(@Nullable Injector injector, @Nonnull BiFunction<Injector, Class<T>, T> function) {
+    T componentinstance;
+    try {
+      if (Element.class.equals(getComponentImplementation())) {
+        componentinstance = (T)myExtensionElement;
+      }
+      else {
+        T componentInstance = (T) function.apply(injector, myImplementationClass);
 
-  @Override
-  public Object getComponentInstance(final PicoContainer container) throws PicoException, ProcessCanceledException {
-    if (myComponentInstance == null) {
-      try {
-        if (Element.class.equals(getComponentImplementation())) {
-          myComponentInstance = myExtensionElement;
-        }
-        else {
-          Object componentInstance = getDelegate().getComponentInstance(container);
-
-          if (myDeserializeInstance) {
-            try {
-              XmlSerializer.deserializeInto(componentInstance, myExtensionElement);
-            }
-            catch (Exception e) {
-              throw new PicoInitializationException(e);
-            }
+        if (myDeserializeInstance) {
+          try {
+            XmlSerializer.deserializeInto(componentInstance, myExtensionElement);
           }
-
-          myComponentInstance = componentInstance;
+          catch (Exception e) {
+            throw new ExceptionInInitializerError(e);
+          }
         }
-      }
-      catch (ProcessCanceledException e) {
-        throw e;
-      }
-      catch (Throwable t) {
-        PluginId pluginId = myPluginDescriptor != null ? myPluginDescriptor.getPluginId() : null;
-        throw new PicoPluginExtensionInitializationException(t.getMessage(), t, pluginId);
-      }
 
-      if (myComponentInstance instanceof PluginAware) {
-        PluginAware pluginAware = (PluginAware)myComponentInstance;
-        pluginAware.setPluginDescriptor(myPluginDescriptor);
+        componentinstance = componentInstance;
       }
     }
+    catch (ProcessCanceledException e) {
+      throw e;
+    }
+    catch (Throwable t) {
+      PluginId pluginId = myPluginDescriptor != null ? myPluginDescriptor.getPluginId() : null;
+      throw new PicoPluginExtensionInitializationException(t.getMessage(), t, pluginId);
+    }
 
-    return myComponentInstance;
+    if (componentinstance instanceof PluginAware) {
+      PluginAware pluginAware = (PluginAware)componentinstance;
+      pluginAware.setPluginDescriptor(myPluginDescriptor);
+    }
+    return componentinstance;
   }
 
-  @Override
-  public void verify(PicoContainer container) throws PicoIntrospectionException {
-    throw new UnsupportedOperationException("Method verify is not supported in " + getClass());
-  }
-
-  @Override
-  public void accept(PicoVisitor visitor) {
-    throw new UnsupportedOperationException("Method accept is not supported in " + getClass());
-  }
-
-  public Object getExtension() {
-    return getComponentInstance(myContainer);
+  @Nonnull
+  public Class getComponentImplementation() {
+    return loadImplementationClass();
   }
 
   @Override
@@ -160,28 +138,6 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Assign
       }
     }
     return myImplementationClass;
-  }
-
-  private synchronized ComponentAdapter getDelegate() {
-    if (myDelegate == null) {
-      Class impl = loadImplementationClass();
-      myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), impl, null, true);
-    }
-
-    return myDelegate;
-  }
-
-  @Override
-  public String getAssignableToClassName() {
-    return myImplementationClassName;
-  }
-
-  public boolean isNotificationSent() {
-    return myNotificationSent;
-  }
-
-  public void setNotificationSent(boolean notificationSent) {
-    myNotificationSent = notificationSent;
   }
 
   @Override

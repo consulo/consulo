@@ -82,6 +82,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -99,6 +100,7 @@ import java.util.List;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
+@Singleton
 @State(name = ToolWindowManagerBase.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 

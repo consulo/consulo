@@ -25,10 +25,13 @@ import com.intellij.ide.passwordSafe.impl.providers.nil.NilProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * The implementation of password safe service
  */
+@Singleton
 public class PasswordSafeImpl extends PasswordSafe {
   /**
    * The logger instance
@@ -57,6 +60,7 @@ public class PasswordSafeImpl extends PasswordSafe {
    * @param settings the settings for the password safe
    * @param database the password database
    */
+  @Inject
   public PasswordSafeImpl(PasswordSafeSettings settings, PasswordDatabase database) {
     mySettings = settings;
     myMasterKeyProvider = new MasterKeyPasswordSafe(database);

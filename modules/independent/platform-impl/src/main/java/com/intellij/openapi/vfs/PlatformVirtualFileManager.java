@@ -23,13 +23,17 @@ import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.messages.MessageBus;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   @Nonnull
   private final ManagingFS myManagingFS;
 
-  public PlatformVirtualFileManager(@Nonnull VirtualFileSystem[] fileSystems, @Nonnull MessageBus bus, @Nonnull ManagingFS managingFS) {
-    super(fileSystems, bus);
+  @Inject
+  public PlatformVirtualFileManager( @Nonnull MessageBus bus, @Nonnull ManagingFS managingFS) {
+    super(bus);
     myManagingFS = managingFS;
   }
 

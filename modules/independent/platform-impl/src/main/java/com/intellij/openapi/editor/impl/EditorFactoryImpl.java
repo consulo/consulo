@@ -52,16 +52,20 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class EditorFactoryImpl extends EditorFactory implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.EditorFactoryImpl");
   private final EditorEventMulticasterImpl myEditorEventMulticaster = new EditorEventMulticasterImpl();
   private final EventDispatcher<EditorFactoryListener> myEditorFactoryEventDispatcher = EventDispatcher.create(EditorFactoryListener.class);
   private final List<Editor> myEditors = ContainerUtil.createLockFreeCopyOnWriteList();
 
+  @Inject
   public EditorFactoryImpl(EditorActionManager editorActionManager) {
     Application application = ApplicationManager.getApplication();
     MessageBus bus = application.getMessageBus();

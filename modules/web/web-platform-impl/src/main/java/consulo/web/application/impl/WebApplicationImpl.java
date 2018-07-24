@@ -50,7 +50,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
     getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), new WebTransactionGuardImpl());
 
-    loadApplicationComponents();
+    initPlugins();
   }
 
   @Nullable

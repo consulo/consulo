@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.options;
 
+import com.google.inject.Injector;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.project.Project;
@@ -30,8 +31,6 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.PicoContainer;
 
 import java.util.ResourceBundle;
 
@@ -81,7 +80,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
 
   public ConfigurableEP[] getChildren() {
     for (ConfigurableEP child : children) {
-      child.myPicoContainer = myPicoContainer;
+      child.myInjector = myInjector;
       child.myPluginDescriptor = myPluginDescriptor;
       child.myProject = myProject;
     }
@@ -111,22 +110,20 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   public String providerClass;
 
   private final AtomicNotNullLazyValue<NullableFactory<T>> myFactory;
-  private PicoContainer myPicoContainer;
+  private Injector myInjector;
   private Project myProject;
 
-  @SuppressWarnings("UnusedDeclaration")
   public ConfigurableEP() {
-    this(ApplicationManager.getApplication().getPicoContainer(), null);
+    this(Application.get().getInjector(), null);
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public ConfigurableEP(Project project) {
-    this(project.getPicoContainer(), project);
+    this(project.getInjector(), project);
   }
 
-  protected ConfigurableEP(PicoContainer picoContainer, @Nullable Project project) {
+  protected ConfigurableEP(Injector injector, @Nullable Project project) {
     myProject = project;
-    myPicoContainer = picoContainer;
+    myInjector = injector;
     myFactory = new AtomicNotNullLazyValue<NullableFactory<T>>() {
       @Nonnull
       @Override
@@ -172,6 +169,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   }
 
   private class InstanceFromProviderFactory extends AtomicNotNullLazyValue<ConfigurableProvider> implements NullableFactory<T> {
+    @Override
     public T create() {
       return (T)getValue().createConfigurable();
     }
@@ -180,7 +178,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     @Override
     protected ConfigurableProvider compute() {
       try {
-        return instantiate(providerClass, myPicoContainer);
+        return instantiate(providerClass, myInjector);
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);
@@ -189,8 +187,9 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   }
 
   private class NewInstanceFactory extends NotNullLazyValue<Class<? extends T>> implements NullableFactory<T> {
+    @Override
     public T create() {
-      return instantiate(getValue(), myPicoContainer, true);
+      return instantiate(getValue(), myInjector);
     }
 
     @Nonnull
@@ -216,7 +215,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     protected T compute() {
       try {
         final Class<T> aClass = findClass(implementationClass);
-        return instantiate(aClass, myPicoContainer, true);
+        return instantiate(aClass, myInjector, true);
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

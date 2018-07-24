@@ -44,6 +44,7 @@ import gnu.trove.TIntIntProcedure;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -136,7 +137,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
 
   private IdeFrame myLastFocusedFrame;
 
-  @SuppressWarnings("UnusedParameters")  // the dependencies are needed to ensure correct loading order
+  @Inject
   public FocusManagerImpl(ServiceManagerImpl serviceManager, WindowManager wm, UiActivityMonitor monitor) {
     myApp = ApplicationManager.getApplication();
     myQueue = IdeEventQueue.getInstance();

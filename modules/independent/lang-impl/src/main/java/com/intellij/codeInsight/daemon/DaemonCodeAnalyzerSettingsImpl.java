@@ -31,6 +31,9 @@ import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @State(
   name="DaemonCodeAnalyzerSettings",
   storages= {
@@ -38,12 +41,14 @@ import org.jetbrains.annotations.NonNls;
       file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml"
     )}
 )
+@Singleton
 public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings");
   @NonNls private static final String ROOT_TAG = "root";
   @NonNls private static final String PROFILE_ATT = "profile";
   private final InspectionProfileManagerImpl myManager;
 
+  @Inject
   public DaemonCodeAnalyzerSettingsImpl(InspectionProfileManager manager) {
     myManager = (InspectionProfileManagerImpl)manager;
   }

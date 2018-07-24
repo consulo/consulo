@@ -15,19 +15,18 @@
  */
 package com.intellij.openapi.project.impl;
 
+import com.google.inject.Binder;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.ExtensionAreas;
-import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
+import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.components.impl.stores.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -52,9 +51,6 @@ import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.*;
-import org.picocontainer.defaults.CachingComponentAdapter;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -92,10 +88,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
     }
 
-    getPicoContainer().registerComponentInstance(Project.class, this);
-
     if (!isDefault()) {
-      if(noUIThread) {
+      if (noUIThread) {
         getStateStore().setProjectFilePathNoUI(dirPath);
       }
       else {
@@ -108,6 +102,32 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager = manager;
 
     myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
+
+    buildInjector();
+  }
+
+  @Nonnull
+  @Override
+  protected ComponentConfig[] selectComponentConfigs(IdeaPluginDescriptor descriptor) {
+    return descriptor.getProjectComponents();
+  }
+
+  @Override
+  public String getAreaId() {
+    return ExtensionAreas.PROJECT;
+  }
+
+  @Nonnull
+  @Override
+  protected ExtensionPointName<ServiceDescriptor> getServiceEpName() {
+    return ServiceManagerImpl.PROJECT_SERVICES;
+  }
+
+  @Override
+  protected void bootstrapBinder(String name, Binder binder) {
+    super.bootstrapBinder(name, binder);
+    binder.bind(ProjectPathMacroManager.class);
+    binder.bind(IComponentStore.class).to(isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class);
   }
 
   @Override
@@ -129,63 +149,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
-  @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    Extensions.instantiateArea(ExtensionAreas.PROJECT, this, null);
-    super.bootstrapPicoContainer(name);
-    final MutablePicoContainer picoContainer = getPicoContainer();
-
-    picoContainer.registerComponentImplementation(ProjectPathMacroManager.class);
-    picoContainer.registerComponent(new ComponentAdapter() {
-      ComponentAdapter myDelegate;
-
-      public ComponentAdapter getDelegate() {
-        if (myDelegate == null) {
-
-          final Class storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
-          myDelegate = new CachingComponentAdapter(new ConstructorInjectionComponentAdapter(storeClass, storeClass, null, true));
-        }
-
-        return myDelegate;
-      }
-
-      @Override
-      public Object getComponentKey() {
-        return IComponentStore.class;
-      }
-
-      @Override
-      public Class getComponentImplementation() {
-        return getDelegate().getComponentImplementation();
-      }
-
-      @Override
-      public Object getComponentInstance(final PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
-        return getDelegate().getComponentInstance(container);
-      }
-
-      @Override
-      public void verify(final PicoContainer container) throws PicoIntrospectionException {
-        getDelegate().verify(container);
-      }
-
-      @Override
-      public void accept(final PicoVisitor visitor) {
-        visitor.visitComponentAdapter(this);
-        getDelegate().accept(visitor);
-      }
-    });
-
-  }
-
   @Nonnull
   @Override
   public IProjectStore getStateStore() {
-    return (IProjectStore)getPicoContainer().getComponentInstance(IComponentStore.class);
+    return (IProjectStore)getInjector().getInstance(IComponentStore.class);
   }
 
   @Override
-  public void initializeComponent(Object component, boolean service) {
+  public void initializeFromStateStore(Object component, boolean service) {
     if (!service) {
       ProgressIndicator indicator = getProgressIndicator();
       if (indicator != null) {
@@ -206,14 +177,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   public boolean isInitialized() {
     return isOpen() && !isDisposed() && StartupManagerEx.getInstanceEx(this).startupActivityPassed();
-  }
-
-  public void loadProjectComponents() {
-    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
-      loadComponentsConfiguration(plugin.getProjectComponents(), plugin, isDefault());
-    }
   }
 
   @Override
@@ -284,7 +247,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     super.init();
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
-    LOG.info(getComponentConfigurations().length + " project components initialized in " + time + " ms");
+    LOG.info(getComponentsSize() + " project components initialized in " + time + " ms");
     getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).projectComponentsInitialized(this);
 
     myProjectManagerListener = new MyProjectManagerListener();
@@ -305,7 +268,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
 
     try {
-      if(!isDefault()) {
+      if (!isDefault()) {
         String projectBasePath = getStateStore().getProjectBasePath();
         if (projectBasePath != null) {
           File projectDir = new File(projectBasePath);
@@ -344,7 +307,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     try {
-      if(!isDefault()) {
+      if (!isDefault()) {
         String projectBasePath = getStateStore().getProjectBasePath();
         if (projectBasePath != null) {
           File projectDir = new File(projectBasePath);
@@ -385,7 +348,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     disposeComponents();
-    Extensions.disposeArea(this);
     myManager = null;
     myProjectManagerListener = null;
 
@@ -439,11 +401,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       LOG.assertTrue(project == ProjectImpl.this);
       ProjectImpl.this.projectClosed();
     }
-  }
-
-  @Override
-  protected MutablePicoContainer createPicoContainer() {
-    return Extensions.getArea(this).getPicoContainer();
   }
 
   @Override

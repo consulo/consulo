@@ -17,10 +17,10 @@ package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.extensions.*;
 import junit.framework.TestCase;
-import javax.annotation.Nonnull;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ExtensionsImplTest extends TestCase {
   public static final String AREA_1 = "the.area.one";
 
   public void testCreateAndAccess() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
     int numEP = extensionsArea.getExtensionPoints().length;
     extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
     assertEquals("Additional EP available", numEP + 1, extensionsArea.getExtensionPoints().length);
@@ -40,7 +40,7 @@ public class ExtensionsImplTest extends TestCase {
   }
 
   public void testInvalidActions() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
     extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
     try {
       extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Boolean.class.getName());
@@ -50,7 +50,7 @@ public class ExtensionsImplTest extends TestCase {
   }
 
   public void testUnregisterEP() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
     int numEP = extensionsArea.getExtensionPoints().length;
     extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
     final boolean removed[] = new boolean[1];
@@ -71,112 +71,9 @@ public class ExtensionsImplTest extends TestCase {
     assertTrue("Extension point disposed", removed[0]);
   }
 
-  public void testAvailabilityListener() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
-    MyListener.reset();
-    extensionsArea.getExtensionPoint(EPAvailabilityListenerExtension.EXTENSION_POINT_NAME).registerExtension(
-        new EPAvailabilityListenerExtension(EXTENSION_POINT_NAME_1, MyListener.class.getName()));
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
-    assertEquals(1, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    MyListener.reset();
-    extensionsArea.unregisterExtensionPoint(EXTENSION_POINT_NAME_1);
-    assertEquals(1, MyListener.remcount);
-    assertEquals(0, MyListener.regcount);
-  }
-
-  public void testAvailability2Listeners() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
-    MyListener.reset();
-    extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
-    extensionsArea.getExtensionPoint(EPAvailabilityListenerExtension.EXTENSION_POINT_NAME).registerExtension(
-        new EPAvailabilityListenerExtension(EXTENSION_POINT_NAME_1, MyListener.class.getName()));
-    extensionsArea.getExtensionPoint(EPAvailabilityListenerExtension.EXTENSION_POINT_NAME).registerExtension(
-        new EPAvailabilityListenerExtension(EXTENSION_POINT_NAME_1, MyListener.class.getName()));
-    assertEquals(2, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    MyListener.reset();
-    extensionsArea.unregisterExtensionPoint(EXTENSION_POINT_NAME_1);
-    assertEquals(2, MyListener.remcount);
-    assertEquals(0, MyListener.regcount);
-  }
-
-  public void testAvailabilityListenerAfter() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
-    extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
-    MyListener.reset();
-    extensionsArea.getExtensionPoint(EPAvailabilityListenerExtension.EXTENSION_POINT_NAME).registerExtension(
-        new EPAvailabilityListenerExtension(EXTENSION_POINT_NAME_1, MyListener.class.getName()));
-    assertEquals(1, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-  }
-
-  public void testAvailabilityListenerDelay() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
-    MyListener.reset();
-    extensionsArea.suspendInteractions();
-    extensionsArea.getExtensionPoint(EPAvailabilityListenerExtension.EXTENSION_POINT_NAME).registerExtension(
-        new EPAvailabilityListenerExtension(EXTENSION_POINT_NAME_1, MyListener.class.getName()));
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.resumeInteractions();
-    assertEquals(1, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    MyListener.reset();
-    extensionsArea.suspendInteractions();
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.unregisterExtensionPoint(EXTENSION_POINT_NAME_1);
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.resumeInteractions();
-    assertEquals(1, MyListener.remcount);
-    assertEquals(0, MyListener.regcount);
-  }
-
-  public void testKillAvailabilityNotifications() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
-    MyListener.reset();
-    extensionsArea.suspendInteractions();
-    extensionsArea.getExtensionPoint(EPAvailabilityListenerExtension.EXTENSION_POINT_NAME).registerExtension(
-        new EPAvailabilityListenerExtension(EXTENSION_POINT_NAME_1, MyListener.class.getName()));
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.killPendingInteractions();
-    extensionsArea.resumeInteractions();
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-  }
-
-  public void testListenerAfterResume() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(null, new Extensions.SimpleLogProvider());
-    extensionsArea.suspendInteractions();
-    extensionsArea.resumeInteractions();
-    MyListener.reset();
-    extensionsArea.getExtensionPoint(EPAvailabilityListenerExtension.EXTENSION_POINT_NAME).registerExtension(
-        new EPAvailabilityListenerExtension(EXTENSION_POINT_NAME_1, MyListener.class.getName()));
-    assertEquals(0, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    extensionsArea.registerExtensionPoint(EXTENSION_POINT_NAME_1, Integer.class.getName());
-    assertEquals(1, MyListener.regcount);
-    assertEquals(0, MyListener.remcount);
-    MyListener.reset();
-    extensionsArea.unregisterExtensionPoint(EXTENSION_POINT_NAME_1);
-    assertEquals(1, MyListener.remcount);
-    assertEquals(0, MyListener.regcount);
-  }
-
   public void _testPicoContainerDirectRegistration() throws Exception {
-    ExtensionsAreaImpl parentArea = new ExtensionsAreaImpl(new DefaultPicoContainer(), new Extensions.SimpleLogProvider());
-    ExtensionsAreaImpl childArea = new ExtensionsAreaImpl(parentArea.getPicoContainer(), new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl parentArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl childArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
 
 
     Runnable runnable = new Runnable() {
@@ -262,7 +159,7 @@ public class ExtensionsImplTest extends TestCase {
   }
 
   public void testExtensionsNamespaces() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new DefaultPicoContainer(), new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
     extensionsArea.registerExtensionPoint("plugin.ep1", TestExtensionClassOne.class.getName(), ExtensionPoint.Kind.BEAN_CLASS);
     extensionsArea.registerExtension("plugin", ExtensionComponentAdapterTest.readElement(
         "<plugin:ep1 xmlns:plugin=\"plugin\" order=\"LAST\"><text>3</text></plugin:ep1>"));
@@ -279,7 +176,7 @@ public class ExtensionsImplTest extends TestCase {
   }
 
   public void testExtensionsWithOrdering() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new DefaultPicoContainer(), new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
     extensionsArea.registerExtensionPoint("ep1", TestExtensionClassOne.class.getName(), ExtensionPoint.Kind.BEAN_CLASS);
     extensionsArea.registerExtension("", ExtensionComponentAdapterTest.readElement(
         "<extension point=\"ep1\" order=\"LAST\"><text>3</text></extension>"));
@@ -296,7 +193,7 @@ public class ExtensionsImplTest extends TestCase {
   }
 
   public void testExtensionsWithOrderingUpdate() {
-    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new DefaultPicoContainer(), new Extensions.SimpleLogProvider());
+    ExtensionsAreaImpl extensionsArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
     extensionsArea.registerExtensionPoint("ep1", TestExtensionClassOne.class.getName(), ExtensionPoint.Kind.BEAN_CLASS);
     extensionsArea.registerExtension("", ExtensionComponentAdapterTest.readElement(
         "<extension point=\"ep1\" id=\"_7\" order=\"LAST\"><text>7</text></extension>"));
@@ -380,23 +277,4 @@ public class ExtensionsImplTest extends TestCase {
     }
   }
 
-  public static class MyListener implements ExtensionPointAvailabilityListener {
-    public static int regcount = 0;
-    public static int remcount = 0;
-
-    @Override
-    public void extensionPointRegistered(ExtensionPoint extensionPoint) {
-      regcount++;
-    }
-
-    @Override
-    public void extensionPointRemoved(ExtensionPoint extensionPoint) {
-      remcount++;
-    }
-
-    public static void reset() {
-      regcount = 0;
-      remcount = 0;
-    }
-  }
 }

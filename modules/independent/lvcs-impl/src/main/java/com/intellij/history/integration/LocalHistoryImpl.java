@@ -36,18 +36,20 @@ import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.intellij.history.integration.LocalHistoryUtil.findRevisionIndexToRevert;
 
+@Singleton
 public class LocalHistoryImpl extends LocalHistory implements ApplicationComponent, Disposable {
   private final MessageBus myBus;
   private MessageBusConnection myConnection;
@@ -64,6 +66,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
     return (LocalHistoryImpl)getInstance();
   }
 
+  @Inject
   public LocalHistoryImpl(@Nonnull MessageBus bus) {
     myBus = bus;
   }

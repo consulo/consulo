@@ -16,6 +16,8 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.util.NotNullLazyValue;
+
 import javax.annotation.Nullable;
 
 /**
@@ -26,14 +28,10 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public class TreeAnchorizer {
-  private static final TreeAnchorizer ourInstance;
-  static {
-    TreeAnchorizer implementation = ServiceManager.getService(TreeAnchorizer.class);
-    ourInstance = implementation == null ? new TreeAnchorizer() : implementation;
-  }
+  private static final NotNullLazyValue<TreeAnchorizer> getLazyValue = NotNullLazyValue.createValue(() -> ServiceManager.getService(TreeAnchorizer.class));
 
   public static TreeAnchorizer getService() {
-    return ourInstance;
+    return getLazyValue.getValue();
   }
 
   public Object createAnchor(Object element) {

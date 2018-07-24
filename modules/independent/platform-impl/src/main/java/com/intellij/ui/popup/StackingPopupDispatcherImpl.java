@@ -23,6 +23,7 @@ import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import com.intellij.util.containers.WeakList;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -39,7 +40,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
 
   private final List<JBPopup> myAllPopups = new WeakList<>();
 
-
+  @Inject
   private StackingPopupDispatcherImpl() {
   }
 

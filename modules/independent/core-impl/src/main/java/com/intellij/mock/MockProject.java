@@ -16,20 +16,18 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+import org.picocontainer.PicoContainer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.PicoContainer;
 
 /**
  * @author yole
@@ -40,13 +38,6 @@ public class MockProject extends MockComponentManager implements Project {
 
   public MockProject(PicoContainer parent, @Nonnull Disposable parentDisposable) {
     super(parent, parentDisposable);
-    Extensions.instantiateArea(ExtensionAreas.PROJECT, this, null);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        Extensions.disposeArea(MockProject.this);
-      }
-    });
   }
 
   @Override

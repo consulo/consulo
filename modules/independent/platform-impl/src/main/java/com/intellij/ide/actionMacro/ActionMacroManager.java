@@ -58,6 +58,8 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -72,6 +74,7 @@ import java.util.Set;
  * @author max
  */
 @State(name = "ActionMacroManager", storages = @Storage("macros.xml"))
+@Singleton
 public class ActionMacroManager implements ApplicationComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actionMacro.ActionMacroManager");
 
@@ -94,8 +97,9 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
 
   private String myLastTyping = "";
 
-  public ActionMacroManager(ActionManagerEx actionManagerEx) {
-    myActionManager = actionManagerEx;
+  @Inject
+  public ActionMacroManager(ActionManager actionManagerEx) {
+    myActionManager = (ActionManagerEx)actionManagerEx;
     myActionManager.addAnActionListener(new AnActionListener() {
       public void beforeActionPerformed(AnAction action, DataContext dataContext, final AnActionEvent event) {
         String id = myActionManager.getId(action);

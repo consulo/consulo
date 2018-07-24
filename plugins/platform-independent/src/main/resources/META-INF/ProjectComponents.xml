@@ -16,11 +16,6 @@
 <idea-plugin>
   <project-components>
     <component>
-      <implementation-class>com.intellij.openapi.components.impl.ServiceManagerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.notification.EventLog$ProjectTracker</implementation-class>
       <skipForDefaultProject/>
     </component>
@@ -32,7 +27,7 @@
 
     <component>
       <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
-      <implementation-class>com.intellij.openapi.command.impl.UndoManagerImpl</implementation-class>
+      <implementation-class>consulo.platform.impl.command.impl.ProjectUndoManagerImpl</implementation-class>
     </component>
 
     <component>

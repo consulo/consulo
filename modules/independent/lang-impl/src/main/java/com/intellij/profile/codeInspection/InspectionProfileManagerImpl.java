@@ -44,10 +44,12 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +64,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         },
         additionalExportFile = InspectionProfileManager.FILE_SPEC
 )
+@Singleton
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
   private final SchemesManager<Profile, InspectionProfileImpl> mySchemesManager;
@@ -74,6 +77,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     return (InspectionProfileManagerImpl)ServiceManager.getService(InspectionProfileManager.class);
   }
 
+  @Inject
   public InspectionProfileManagerImpl(@Nonnull InspectionToolRegistrar registrar, @Nonnull SchemesManagerFactory schemesManagerFactory, @Nonnull MessageBus messageBus) {
     myRegistrar = registrar;
     registerProvidedSeverities();

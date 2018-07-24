@@ -44,6 +44,8 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,7 @@ import java.util.List;
 /**
  * @author dsl
  */
+@Singleton
 public class IntentionManagerImpl extends IntentionManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionManagerImpl");
 
@@ -59,6 +62,7 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
   private final Alarm myInitActionsAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
 
+  @Inject
   public IntentionManagerImpl(IntentionManagerSettings intentionManagerSettings) {
     mySettings = intentionManagerSettings;
 

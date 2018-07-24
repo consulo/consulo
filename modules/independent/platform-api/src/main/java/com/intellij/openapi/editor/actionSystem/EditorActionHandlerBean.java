@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.editor.actionSystem;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.google.inject.AbstractModule;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.pico.DefaultPicoContainer;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 /**
@@ -41,15 +41,18 @@ public class EditorActionHandlerBean extends AbstractExtensionPointBean {
   public EditorActionHandler getHandler(EditorActionHandler originalHandler) {
     if (myHandler == null) {
       try {
-        DefaultPicoContainer container = new DefaultPicoContainer(ApplicationManager.getApplication().getPicoContainer());
-        container.registerComponentInstance(originalHandler);
-        myHandler = instantiate(implementationClass, container);
+        AbstractModule module = new AbstractModule() {
+          @Override
+          protected void configure() {
+            bind(EditorActionHandler.class).toInstance(originalHandler);
+          }
+        };
+        myHandler = instantiate(implementationClass, Application.get().getInjector().createChildInjector(module));
       }
-      catch(Exception e) {
+      catch (Exception e) {
         LOG.error(e);
         return null;
       }
-    }
-    return myHandler;
+    } return myHandler;
   }
 }

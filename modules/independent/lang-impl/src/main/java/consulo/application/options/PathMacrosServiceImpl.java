@@ -21,6 +21,7 @@ import com.intellij.openapi.application.PathMacros;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@Singleton
 public class PathMacrosServiceImpl extends PathMacrosService {
   @Override
   public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {

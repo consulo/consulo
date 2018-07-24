@@ -16,15 +16,15 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 
 /**
@@ -39,7 +39,7 @@ public abstract class ProjectManager {
    * @return <code>ProjectManager</code> instance
    */
   public static ProjectManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(ProjectManager.class);
+    return Application.get().getComponent(ProjectManager.class);
   }
 
   /**

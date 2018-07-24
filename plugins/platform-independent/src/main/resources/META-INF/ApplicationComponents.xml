@@ -16,9 +16,6 @@
 <idea-plugin>
   <application-components>
     <component>
-      <implementation-class>com.intellij.openapi.components.impl.ServiceManagerImpl</implementation-class>
-    </component>
-    <component>
       <implementation-class>com.intellij.ide.ScreenReaderSupportHandler</implementation-class>
     </component>
     <component>
@@ -50,20 +47,6 @@
       <interface-class>com.intellij.openapi.vfs.newvfs.ManagingFS</interface-class>
       <implementation-class>com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl</implementation-class>
       <compiler-server-implementation-class>consulo.compiler.server.fileSystem.CompilerServerManagingFSImpl</compiler-server-implementation-class>
-    </component>
-
-    <component>
-      <interface-class>com.intellij.openapi.vfs.LocalFileSystem</interface-class>
-      <implementation-class>com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl</implementation-class>
-      <compiler-server-implementation-class>consulo.compiler.server.fileSystem.CompilerServerLocalFileSystemImpl</compiler-server-implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>com.intellij.openapi.vfs.ex.temp.TempFileSystem</implementation-class>
     </component>
 
     <component>

@@ -34,12 +34,16 @@ import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+@Singleton
 public class CodeInsightUtilBase extends CodeInsightUtilCore {
+  @Inject
   private CodeInsightUtilBase() {
   }
 

@@ -18,6 +18,8 @@ package com.intellij.openapi.components.impl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
+import consulo.core.impl.components.impl.ComponentManagerImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

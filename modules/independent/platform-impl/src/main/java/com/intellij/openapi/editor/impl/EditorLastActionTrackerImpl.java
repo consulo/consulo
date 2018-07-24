@@ -22,12 +22,18 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorLastActionTracker;
-import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.event.EditorEventMulticaster;
+import com.intellij.openapi.editor.event.EditorMouseEvent;
+import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements ApplicationComponent,
                                                                                     AnActionListener,
                                                                                     EditorMouseListener {
@@ -40,6 +46,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   private Editor myCurrentEditor;
   private Editor myLastEditor;
 
+  @Inject
   EditorLastActionTrackerImpl(ActionManager actionManager, EditorFactory editorFactory) {
     myActionManager = actionManager;
     myEditorEventMulticaster = editorFactory.getEventMulticaster();

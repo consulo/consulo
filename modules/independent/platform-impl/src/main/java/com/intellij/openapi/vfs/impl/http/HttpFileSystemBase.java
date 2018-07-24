@@ -70,18 +70,12 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
   }
 
   @Override
-  public void disposeComponent() {
-  }
-
-  @Override
-  public void initComponent() { }
-
-  @Override
   @Nonnull
   public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
     throw new UnsupportedOperationException();
   }
 
+  @Nonnull
   @Override
   public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
     throw new UnsupportedOperationException();
@@ -97,6 +91,7 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
     throw new UnsupportedOperationException();
   }
 
+  @Nonnull
   @Override
   public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull final String copyName) throws IOException {
     throw new UnsupportedOperationException();

@@ -16,9 +16,9 @@
 package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.concurrency.JobScheduler;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,16 +35,16 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public final class LocalFileSystemImpl extends LocalFileSystemBase implements ApplicationComponent {
+public final class LocalFileSystemImpl extends LocalFileSystemBase implements Disposable {
   private static final String FS_ROOT = "/";
   private static final int STATUS_UPDATE_PERIOD = 1000;
 
@@ -87,6 +87,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     private final Map<String, TreeNode> nodes = new THashMap<>(1, FileUtil.PATH_HASHING_STRATEGY);
   }
 
+  @Inject
   public LocalFileSystemImpl(@Nonnull Application app, @Nonnull ManagingFS managingFS) {
     myManagingFS = managingFS;
     myWatcher = new FileWatcher(myManagingFS);
@@ -103,17 +104,8 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
   }
 
   @Override
-  public void initComponent() { }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     myWatcher.dispose();
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "LocalFileSystem";
   }
 
   private List<WatchRequestImpl> normalizeRootsForRefresh() {
@@ -394,6 +386,11 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     else {
       heavyRefresh.run();
     }
+  }
+
+  @Override
+  public boolean isPhysical() {
+    return true;
   }
 
   @Override

@@ -15,7 +15,6 @@
  */
 package consulo.vfs.impl.archive;
 
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.SystemInfo;
@@ -29,9 +28,9 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.fileTypes.ArchiveFileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -42,7 +41,7 @@ import java.util.Set;
  * <p>
  * Base class for archive file types
  */
-public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements consulo.vfs.ArchiveFileSystem, ApplicationComponent {
+public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements consulo.vfs.ArchiveFileSystem {
   private final Set<String> myNoCopyJarPaths;
   private final String myProtocol;
 
@@ -64,20 +63,6 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   @Override
   public final String getProtocol() {
     return myProtocol;
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return getClass().getSimpleName();
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   @Override
@@ -179,5 +164,10 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   @Nullable
   public VirtualFile getJarRootForLocalFile(@Nonnull VirtualFile file) {
     return getRootByLocal(file);
+  }
+
+  @Override
+  public boolean isPhysical() {
+    return true;
   }
 }

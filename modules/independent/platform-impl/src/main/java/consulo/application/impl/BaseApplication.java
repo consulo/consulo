@@ -15,6 +15,7 @@
  */
 package consulo.application.impl;
 
+import com.google.inject.Binder;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.icons.AllIcons;
@@ -29,10 +30,10 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.components.StateStorageException;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
+import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
 import com.intellij.openapi.components.impl.stores.IComponentStore;
@@ -64,7 +65,6 @@ import consulo.application.ex.ApplicationEx2;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.ide.PooledThreadExecutor;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -188,20 +188,34 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
 
-    ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
+    Extensions.setRootArea(this);
 
-    getPicoContainer().registerComponentInstance(Application.class, this);
+    Disposer.register(() -> {
+      Extensions.setRootArea(null);
+    }, this);
+    ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
   }
 
-  protected void loadApplicationComponents() {
+  protected void initPlugins() {
     PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
     PluginManagerCore.initPlugins(mySplashRef.get());
-    IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
-        loadComponentsConfiguration(plugin.getAppComponents(), plugin, false);
-      }
-    }
+  }
+
+  @Nonnull
+  @Override
+  protected ComponentConfig[] selectComponentConfigs(IdeaPluginDescriptor descriptor) {
+    return descriptor.getAppComponents();
+  }
+
+  @Override
+  public String getAreaId() {
+    return ExtensionAreas.APPLICATION;
+  }
+
+  @Nonnull
+  @Override
+  protected ExtensionPointName<ServiceDescriptor> getServiceEpName() {
+    return ServiceManagerImpl.APP_SERVICES;
   }
 
   protected void fireApplicationExiting() {
@@ -343,14 +357,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  protected <T> T getComponentFromContainer(@Nonnull final Class<T> interfaceClass) {
-    if (myIsFiringLoadingEvent) {
-      return null;
-    }
-    return super.getComponentFromContainer(interfaceClass);
-  }
-
-  @Override
   public boolean isLoaded() {
     return myLoaded;
   }
@@ -475,28 +481,26 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return component;
   }
 
-  @Nonnull
   @Override
-  protected MutablePicoContainer createPicoContainer() {
-    return Extensions.getRootArea().getPicoContainer();
-  }
+  protected void bootstrapBinder(String name, Binder binder) {
+    super.bootstrapBinder(name, binder);
 
-
-  @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    super.bootstrapPicoContainer(name);
-    getPicoContainer().registerComponentImplementation(IComponentStore.class, ApplicationStoreImpl.class);
-    getPicoContainer().registerComponentImplementation(ApplicationPathMacroManager.class);
+    binder.bind(Application.class).toInstance(this);
+    binder.bind(ApplicationEx.class).toInstance(this);
+    binder.bind(ApplicationEx2.class).toInstance(this);
+    binder.bind(IComponentStore.class).to(ApplicationStoreImpl.class);
+    binder.bind(PathMacroManager.class).to(ApplicationPathMacroManager.class);
+    binder.bind(TransactionGuard.class).to(TransactionGuardImpl.class);
   }
 
   @Override
   @Nonnull
   public IApplicationStore getStateStore() {
-    return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
+    return (IApplicationStore)getInjector().getInstance(IComponentStore.class);
   }
 
   @Override
-  public void initializeComponent(@Nonnull Object component, boolean service) {
+  public void initializeFromStateStore(@Nonnull Object component, boolean service) {
     getStateStore().initComponent(component);
   }
 

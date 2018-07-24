@@ -20,6 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
@@ -35,8 +36,9 @@ import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.messages.MessageBus;
 import consulo.lang.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -53,7 +55,8 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
 
   private final FileTypeRegistry myFileTypeManager;
 
-  public TodoIndex(MessageBus messageBus, FileTypeRegistry manager) {
+  @Inject
+  public TodoIndex(MessageBus messageBus, FileTypeManager manager) {
     myFileTypeManager = manager;
     messageBus.connect().subscribe(IndexPatternProvider.INDEX_PATTERNS_CHANGED, evt -> FileBasedIndex.getInstance().requestRebuild(NAME));
   }

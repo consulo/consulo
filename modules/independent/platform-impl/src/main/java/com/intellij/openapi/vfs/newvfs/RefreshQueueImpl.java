@@ -31,12 +31,14 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 
 /**
  * @author max
  */
+@Singleton
 public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private static final Logger LOG = Logger.getInstance(RefreshQueueImpl.class);
 

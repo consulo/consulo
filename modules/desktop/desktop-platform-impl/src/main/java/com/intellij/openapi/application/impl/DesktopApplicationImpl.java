@@ -64,6 +64,7 @@ import sun.awt.AWTAutoShutdown;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -71,6 +72,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
+@Singleton
 public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2 {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
@@ -108,8 +110,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(null, splashRef);
 
-    getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), myTransactionGuard);
-
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
     myIsInternal = ApplicationProperties.isInternal();
@@ -122,7 +122,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myDoNotSave = isHeadless;
     myGatherStatistics = LOG.isDebugEnabled() || isInternal();
 
-    loadApplicationComponents();
+    initPlugins();
 
     if (!isHeadless) {
       Disposer.register(this, Disposer.newDisposable(), "ui");
@@ -159,6 +159,8 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myLock = new ReadMostlyRWLock(edt);
 
     NoSwingUnderWriteAction.watchForEvents(this);
+
+    buildInjector();
   }
 
   @RequiredDispatchThread

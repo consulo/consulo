@@ -16,21 +16,11 @@
 
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.extensions.PluginAware;
+import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.xmlb.annotations.Attribute;
-import javax.annotation.Nonnull;
 
-public class ServiceDescriptor {
-  private static NotNullLazyValue<Boolean> ourCompilerServerMode = new NotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return ApplicationManager.getApplication().isCompilerServerMode();
-    }
-  };
-
+public class ServiceDescriptor implements PluginAware {
   @Attribute("serviceInterface")
   public String serviceInterface;
 
@@ -40,17 +30,10 @@ public class ServiceDescriptor {
   @Attribute("serviceImplementationForCompilerServer")
   public String serviceImplementationForCompilerServer;
 
-  public String getInterface() {
-    return serviceInterface != null ? serviceInterface : getImplementation();
-  }
+  public PluginDescriptor myPluginDescriptor;
 
-  public String getImplementation() {
-    if(ourCompilerServerMode.getValue()) {
-      if(!StringUtil.isEmpty(serviceImplementationForCompilerServer)) {
-        return serviceImplementationForCompilerServer;
-      }
-    }
-
-    return serviceImplementation;
+  @Override
+  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
+    myPluginDescriptor = pluginDescriptor;
   }
 }

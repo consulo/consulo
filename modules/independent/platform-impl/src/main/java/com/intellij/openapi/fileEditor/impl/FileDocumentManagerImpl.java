@@ -64,6 +64,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -75,6 +77,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.List;
 
+@Singleton
 public class FileDocumentManagerImpl extends FileDocumentManager implements VirtualFileListener, ProjectManagerListener, SafeWriteRequestor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl");
 
@@ -125,6 +128,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   };
 
+  @Inject
   public FileDocumentManagerImpl(@Nonnull VirtualFileManager virtualFileManager, @Nonnull ProjectManager projectManager) {
     virtualFileManager.addVirtualFileListener(this);
     projectManager.addProjectManagerListener(this);

@@ -50,6 +50,7 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -97,6 +98,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private final BoundedTaskExecutor changedDocumentExecutor =
           new BoundedTaskExecutor("EncodingManagerImpl document pool", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.getJobPoolParallelism(), this);
 
+  @Inject
   public EncodingManagerImpl(@Nonnull EditorFactory editorFactory) {
     editorFactory.getEventMulticaster().addDocumentListener(new DocumentAdapter() {
       @Override

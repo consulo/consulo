@@ -26,11 +26,16 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
+import consulo.core.impl.components.impl.ComponentManagerImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 
+@Singleton
 public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
   private static final Logger LOG = Logger.getInstance(ApplicationStoreImpl.class);
 
@@ -41,12 +46,11 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
 
   private String myConfigPath;
 
-  // created from PicoContainer
-  @SuppressWarnings({"UnusedDeclaration"})
+  @Inject
   public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
     myApplication = application;
     myStateStorageManager =
-            new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
+            new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application.getInjector()) {
               private boolean myConfigDirectoryRefreshed;
 
               @Nonnull
@@ -93,7 +97,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
     long t = System.currentTimeMillis();
     myApplication.init();
     t = System.currentTimeMillis() - t;
-    LOG.info(myApplication.getComponentConfigurations().length + " application components initialized in " + t + " ms");
+    LOG.info(((ComponentManagerImpl)myApplication).getComponentsSize() + " application components initialized in " + t + " ms");
   }
 
   @Override

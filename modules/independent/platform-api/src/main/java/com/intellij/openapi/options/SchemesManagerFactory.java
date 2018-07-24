@@ -22,12 +22,11 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import consulo.util.pointers.Named;
 
 public abstract class SchemesManagerFactory {
-  public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("com.intellij.schemeOwner");  
+  public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("com.intellij.schemeOwner");
 
-  public abstract <T extends Named, E extends ExternalizableScheme> SchemesManager<T,E> createSchemesManager(String fileSpec, SchemeProcessor<E> processor,
-                                                                            RoamingType roamingType);
+  public abstract <T extends Named, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(String fileSpec, SchemeProcessor<E> processor, RoamingType roamingType);
 
-  public static SchemesManagerFactory getInstance(){
+  public static SchemesManagerFactory getInstance() {
     return ServiceManager.getService(SchemesManagerFactory.class);
   }
 

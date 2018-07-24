@@ -370,4 +370,9 @@ public class TempFileSystem extends NewVirtualFileSystem {
     final long length = item instanceof FSFile ? ((FSFile)item).myContent.length : 0;
     return new FileAttributes(item.isDirectory(), false, false, false, length, item.myTimestamp, item.myWritable);
   }
+
+  @Override
+  public boolean isPhysical() {
+    return true;
+  }
 }

@@ -28,6 +28,8 @@ import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -38,6 +40,7 @@ import java.util.List;
 /**
  * @author Vladimir Kondratyev
  */
+@Singleton
 public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   private TodoPattern[] myTodoPatterns;
   private TodoFilter[] myTodoFilters;
@@ -51,9 +54,7 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   @NonNls private static final String ELEMENT_FILTER = "filter";
   private final MessageBus myMessageBus;
 
-  /**
-   * public for upsource
-   */
+  @Inject
   public TodoConfiguration(@Nonnull MessageBus messageBus) {
     myMessageBus = messageBus;
     resetToDefaultTodoPatterns();

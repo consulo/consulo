@@ -19,6 +19,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import consulo.application.ApplicationProperties;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.File;
 
@@ -26,9 +27,8 @@ import java.io.File;
  * @author VISTALL
  * @since 02-Sep-16
  */
-@State(
-        name = "UpdateSettings",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)})
+@State(name = "UpdateSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)})
+@Singleton
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
   @Nonnull
   public static UpdateSettings getInstance() {
@@ -45,7 +45,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   @Nonnull
   private static UpdateChannel findDefaultChannel() {
-    if(ApplicationProperties.isInSandbox()) {
+    if (ApplicationProperties.isInSandbox()) {
       return UpdateChannel.nightly;
     }
 

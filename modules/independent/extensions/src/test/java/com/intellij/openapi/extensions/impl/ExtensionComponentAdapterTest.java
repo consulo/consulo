@@ -15,15 +15,17 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 import com.intellij.openapi.extensions.DefaultPluginDescriptor;
 import com.intellij.openapi.extensions.LoadingOrder;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -48,12 +50,16 @@ public class ExtensionComponentAdapterTest {
     Element element = readElement("<bean implementation=\"123\"/>");
     DefaultPicoContainer container = new DefaultPicoContainer();
     DefaultPluginDescriptor descriptor = new DefaultPluginDescriptor("test");
-    new ExtensionComponentAdapter(name, element, container, descriptor, false).getComponentInstance(container);
+    new ExtensionComponentAdapter(name, element, descriptor, false).apply(Guice.createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+      }
+    }));
   }
 
   private static ExtensionComponentAdapter createAdapter(String text) {
     Element element = readElement(text);
-    return new ExtensionComponentAdapter(Object.class.getName(), element, new DefaultPicoContainer(), new DefaultPluginDescriptor(""), false);
+    return new ExtensionComponentAdapter(Object.class.getName(), element, new DefaultPluginDescriptor(""), false);
   }
 
   @Nonnull

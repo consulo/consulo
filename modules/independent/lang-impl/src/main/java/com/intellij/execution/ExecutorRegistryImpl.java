@@ -40,9 +40,12 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 
+@Singleton
 public class ExecutorRegistryImpl extends ExecutorRegistry {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
@@ -59,6 +62,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   // [Project, ExecutorId, RunnerId]
   private final Set<Trinity<Project, String, String>> myInProgress = Collections.synchronizedSet(new java.util.HashSet<Trinity<Project, String, String>>());
 
+  @Inject
   public ExecutorRegistryImpl(ActionManager actionManager) {
     myActionManager = actionManager;
   }

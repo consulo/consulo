@@ -20,14 +20,19 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class PowerSaveMode {
   private static final String POWER_SAVE_MODE = "power.save.mode";
   private boolean myEnabled = PropertiesComponent.getInstance().getBoolean(POWER_SAVE_MODE, false);
   private final MessageBus myBus;
 
+  @Inject
   public PowerSaveMode(MessageBus bus) {
     myBus = bus;
   }

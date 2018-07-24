@@ -65,6 +65,8 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.net.URL;
 import java.nio.channels.FileChannel;
@@ -78,6 +80,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @State(name = "FileTypeManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
                                                             "/filetypes.xml"), additionalExportFile = FileTypeManagerImpl.FILE_SPEC)
+@Singleton
 public class FileTypeManagerImpl extends FileTypeManagerEx implements PersistentStateComponent<Element>, ApplicationComponent, Disposable {
   private static final Logger LOG = Logger.getInstance(FileTypeManagerImpl.class);
 
@@ -169,6 +172,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   private final AtomicInteger counterAutoDetect = new AtomicInteger();
   private final AtomicLong elapsedAutoDetect = new AtomicLong();
 
+  @Inject
   public FileTypeManagerImpl(MessageBus bus, SchemesManagerFactory schemesManagerFactory, PropertiesComponent propertiesComponent) {
     int fileTypeChangedCounter = StringUtilRt.parseInt(propertiesComponent.getValue("fileTypeChangedCounter"), 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);

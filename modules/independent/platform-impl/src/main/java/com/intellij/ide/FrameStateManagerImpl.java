@@ -29,8 +29,11 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class FrameStateManagerImpl extends FrameStateManager implements ApplicationComponent {
   private final List<FrameStateListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
@@ -40,6 +43,7 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   private final BusyObject.Impl myActive;
   private final ApplicationEx2 myApp;
 
+  @Inject
   public FrameStateManagerImpl(final ApplicationEx2 app) {
     myApp = app;
     myActive = new BusyObject.Impl() {

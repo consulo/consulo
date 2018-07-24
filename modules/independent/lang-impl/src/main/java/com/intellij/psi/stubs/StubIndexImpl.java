@@ -59,6 +59,8 @@ import gnu.trove.TIntArrayList;
 import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.*;
 import java.util.*;
@@ -70,6 +72,7 @@ import java.util.concurrent.locks.Lock;
         name = "FileBasedIndex",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/stubIndex.xml", roamingType = RoamingType.DISABLED)}
 )
+@Singleton
 public class StubIndexImpl extends StubIndex implements ApplicationComponent, PersistentStateComponent<StubIndexState> {
   private static final AtomicReference<Boolean> ourForcedClean = new AtomicReference<>(null);
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.StubIndexImpl");
@@ -87,6 +90,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
 
   private StubIndexState myPreviouslyRegistered;
 
+  @Inject
   public StubIndexImpl(FileBasedIndex fileBasedIndex /* need this to ensure initialization order*/ ) throws IOException {
     myStubProcessingHelper = new StubProcessingHelper(fileBasedIndex);
   }

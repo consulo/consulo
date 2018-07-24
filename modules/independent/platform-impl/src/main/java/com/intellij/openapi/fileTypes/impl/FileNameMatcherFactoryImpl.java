@@ -17,10 +17,12 @@ package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.openapi.fileTypes.*;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author nik
  */
+@Singleton
 public class FileNameMatcherFactoryImpl extends FileNameMatcherFactory {
   @Nonnull
   @Override

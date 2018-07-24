@@ -15,20 +15,25 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.editor.ReadOnlyFragmentModificationException;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.injected.editor.DocumentWindow;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class EditorActionManagerImpl extends EditorActionManager {
   private final TypedAction myTypedAction = new TypedAction();
   private ReadonlyFragmentModificationHandler myReadonlyFragmentsHandler = new DefaultReadOnlyFragmentModificationHandler();
   private final ActionManager myActionManager;
 
+  @Inject
   public EditorActionManagerImpl(ActionManager actionManager) {
     myActionManager = actionManager;
   }

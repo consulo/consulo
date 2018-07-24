@@ -16,15 +16,15 @@
 package com.intellij.openapi.vfs.ex.http;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
-public abstract class HttpFileSystem extends DeprecatedVirtualFileSystem implements ApplicationComponent {
+public abstract class HttpFileSystem extends DeprecatedVirtualFileSystem {
   @NonNls public static final String PROTOCOL = StandardFileSystems.HTTP_PROTOCOL;
 
   public static HttpFileSystem getInstance() {

@@ -32,10 +32,13 @@ import com.intellij.util.ThrowableConvertor;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.Set;
 
+@Singleton
 public class QuickListsManager implements ApplicationComponent {
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/quicklists";
 
@@ -44,6 +47,7 @@ public class QuickListsManager implements ApplicationComponent {
   private final ActionManager myActionManager;
   private final SchemesManager<QuickList, QuickList> mySchemesManager;
 
+  @Inject
   public QuickListsManager(@Nonnull ActionManager actionManager, @Nonnull SchemesManagerFactory schemesManagerFactory) {
     myActionManager = actionManager;
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<QuickList>() {

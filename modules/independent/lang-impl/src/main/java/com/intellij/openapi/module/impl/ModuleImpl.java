@@ -16,16 +16,17 @@
 
 package com.intellij.openapi.module.impl;
 
+import com.google.inject.Binder;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
+import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import com.intellij.openapi.project.Project;
@@ -36,10 +37,9 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.MutablePicoContainer;
 
 /**
  * @author max
@@ -61,30 +61,36 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project) {
     super(project, "Module " + name);
 
-    getPicoContainer().registerComponentInstance(Module.class, this);
-
     myName = name;
     myProject = project;
     myModuleScopeProvider = new ModuleScopeProviderImpl(this);
     myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
+
+    buildInjector();
   }
 
   @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    Extensions.instantiateArea(ExtensionAreas.MODULE, this, (AreaInstance)getParentComponentManager());
-    super.bootstrapPicoContainer(name);
+  protected void bootstrapBinder(String name, Binder binder) {
+    super.bootstrapBinder(name, binder);
 
-    getPicoContainer().registerComponentImplementation(ModulePathMacroManager.class);
+    binder.bind(ModulePathMacroManager.class);
   }
 
+  @Nonnull
+  @Override
+  protected ComponentConfig[] selectComponentConfigs(IdeaPluginDescriptor descriptor) {
+    return descriptor.getAppComponents();
+  }
 
- @Override
-  public void loadModuleComponents() {
-    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
-      loadComponentsConfiguration(plugin.getModuleComponents(), plugin, false);
-    }
+  @Override
+  public String getAreaId() {
+    return ExtensionAreas.MODULE;
+  }
+
+  @Nonnull
+  @Override
+  protected ExtensionPointName<ServiceDescriptor> getServiceEpName() {
+    return ServiceManagerImpl.MODULE_SERVICES;
   }
 
   @Override
@@ -114,7 +120,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   public synchronized void dispose() {
     isModuleAdded = false;
     disposeComponents();
-    Extensions.disposeArea(this);
     super.dispose();
   }
 
@@ -242,11 +247,5 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Override
   public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
-  }
-
-  @Nonnull
-  @Override
-  protected MutablePicoContainer createPicoContainer() {
-    return Extensions.getArea(this).getPicoContainer();
   }
 }

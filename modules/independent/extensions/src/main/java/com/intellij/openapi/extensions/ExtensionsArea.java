@@ -17,19 +17,15 @@ package com.intellij.openapi.extensions;
 
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
-import org.picocontainer.PicoContainer;
 
 /**
  * @author AKireyev
  */
-public interface ExtensionsArea  {
-  void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass);
-  void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull ExtensionPoint.Kind kind);
-  void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor);
-  void unregisterExtensionPoint(@NonNls @Nonnull String extensionPointName);
-
+public interface ExtensionsArea {
   boolean hasExtensionPoint(@NonNls @Nonnull String extensionPointName);
+
   @Nonnull
   <T> ExtensionPoint<T> getExtensionPoint(@NonNls @Nonnull String extensionPointName);
 
@@ -38,23 +34,54 @@ public interface ExtensionsArea  {
 
   @Nonnull
   ExtensionPoint[] getExtensionPoints();
-  void suspendInteractions();
-  void resumeInteractions();
 
-  void killPendingInteractions();
 
-  void addAvailabilityListener(@Nonnull String extensionPointName, @Nonnull ExtensionPointAvailabilityListener listener);
+  String getId();
 
+  // region Deprecated stuff
   @Nonnull
-  AreaPicoContainer getPicoContainer();
-  void registerExtensionPoint(@Nonnull String pluginName, @Nonnull Element extensionPointElement);
-  void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement);
-  void registerExtension(@Nonnull String pluginName, @Nonnull Element extensionElement);
+  @Deprecated
+  default AreaPicoContainer getPicoContainer() {
+    throw new UnsupportedOperationException();
+  }
 
-  void registerExtension(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionElement);
+  @Deprecated
+  default void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass) {
+    // nothing
+  }
 
-  @Nonnull
-  PicoContainer getPluginContainer(@Nonnull String pluginName);
+  @Deprecated
+  default void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull ExtensionPoint.Kind kind) {
+    // nothing
+  }
 
-  String getAreaClass();
+  @Deprecated
+  default void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor) {
+    // nothing
+  }
+
+  @Deprecated
+  default void unregisterExtensionPoint(@NonNls @Nonnull String extensionPointName) {
+  }
+
+  @Deprecated
+  default void registerExtensionPoint(@Nonnull String pluginName, @Nonnull Element extensionPointElement) {
+    // nothing
+  }
+
+  @Deprecated
+  default void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement) {
+    // nothing
+  }
+
+  @Deprecated
+  default void registerExtension(@Nonnull String pluginName, @Nonnull Element extensionElement) {
+    // nothing
+  }
+
+  @Deprecated
+  default void registerExtension(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionElement) {
+    // nothing
+  }
+  // endregion
 }

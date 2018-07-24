@@ -33,6 +33,8 @@ import com.intellij.util.ui.GraphicsUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -40,6 +42,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Singleton
 public class ParameterHintsPresentationManager implements Disposable {
   private static final Key<MyFontMetrics> HINT_FONT_METRICS = Key.create("ParameterHintFontMetrics");
   private static final Key<AnimationStep> ANIMATION_STEP = Key.create("ParameterHintAnimationStep");
@@ -54,6 +57,7 @@ public class ParameterHintsPresentationManager implements Disposable {
     return ServiceManager.getService(ParameterHintsPresentationManager.class);
   }
 
+  @Inject
   private ParameterHintsPresentationManager() {
   }
 

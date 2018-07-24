@@ -21,11 +21,12 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.util.ui.UIUtil;
 
-public class UsageTreeColorsScheme {
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-  /**
-   * @noinspection UnusedParameters
-   */
+@Singleton
+public class UsageTreeColorsScheme {
+  @Inject
   public UsageTreeColorsScheme(EditorColorsManager editorColorsManager) {
   }
 

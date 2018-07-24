@@ -54,10 +54,13 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+@Singleton
 public class UndoManagerImpl extends UndoManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.command.impl.UndoManagerImpl");
 
@@ -100,11 +103,12 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     return Registry.intValue("undo.documentUndoLimit");
   }
 
+  @Inject
   public UndoManagerImpl(CommandProcessor commandProcessor) {
     this(null, commandProcessor);
   }
 
-  public UndoManagerImpl(@Nullable ProjectEx project, CommandProcessor commandProcessor) {
+  protected UndoManagerImpl(@Nullable ProjectEx project, CommandProcessor commandProcessor) {
     myProject = project;
     myCommandProcessor = commandProcessor;
 

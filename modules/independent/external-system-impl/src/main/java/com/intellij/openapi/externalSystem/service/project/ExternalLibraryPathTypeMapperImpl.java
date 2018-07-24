@@ -21,6 +21,8 @@ import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -29,20 +31,22 @@ import java.util.Map;
  * @author Denis Zhdanov
  * @since 1/17/13 3:55 PM
  */
+@Singleton
 public class ExternalLibraryPathTypeMapperImpl implements ExternalLibraryPathTypeMapper {
 
-  private static final Map<LibraryPathType, OrderRootType> MAPPINGS = new EnumMap<LibraryPathType, OrderRootType>(LibraryPathType.class);
+  private final Map<LibraryPathType, OrderRootType> myMapping = new EnumMap<LibraryPathType, OrderRootType>(LibraryPathType.class);
 
-  static {
-    MAPPINGS.put(LibraryPathType.BINARY, BinariesOrderRootType.getInstance());
-    MAPPINGS.put(LibraryPathType.SOURCE, SourcesOrderRootType.getInstance());
-    MAPPINGS.put(LibraryPathType.DOC, DocumentationOrderRootType.getInstance());
-    assert LibraryPathType.values().length == MAPPINGS.size();
+  @Inject
+  ExternalLibraryPathTypeMapperImpl() {
+    myMapping.put(LibraryPathType.BINARY, BinariesOrderRootType.getInstance());
+    myMapping.put(LibraryPathType.SOURCE, SourcesOrderRootType.getInstance());
+    myMapping.put(LibraryPathType.DOC, DocumentationOrderRootType.getInstance());
+    assert LibraryPathType.values().length == myMapping.size();
   }
 
   @Nonnull
   @Override
   public OrderRootType map(@Nonnull LibraryPathType type) {
-    return MAPPINGS.get(type);
+    return myMapping.get(type);
   }
 }

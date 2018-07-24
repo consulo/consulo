@@ -219,7 +219,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public void initializeComponent(@Nonnull Object component, boolean service) {
+  public void initializeFromStateStore(@Nonnull Object component, boolean service) {
   }
 
   protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
@@ -573,7 +573,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
                 myInitializing = true;
                 myComponentsRegistry.registerComponentInstance(componentInstance);
 
-                initializeComponent(componentInstance, false);
+                initializeFromStateStore(componentInstance, false);
                 if (componentInstance instanceof BaseComponent) {
                   ((BaseComponent)componentInstance).initComponent();
                 }

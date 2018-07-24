@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.extensions;
 
+import com.google.inject.Injector;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.picocontainer.PicoContainer;
 
 /**
  * @author yole
@@ -29,9 +29,9 @@ public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean 
   @Attribute("factoryArgument")
   public String factoryArgument;
 
-  protected Object instantiateExtension(final String implementationClass, final PicoContainer picoContainer) throws ClassNotFoundException {
+  protected Object instantiateExtension(final String implementationClass, final Injector injector) throws ClassNotFoundException {
     if (factoryClass != null) {
-      ExtensionFactory factory = instantiate(factoryClass, picoContainer);
+      ExtensionFactory factory = instantiate(factoryClass, injector);
       return factory.createInstance(factoryArgument, implementationClass);
     }
     else {
@@ -42,7 +42,7 @@ public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean 
                                    "Check if 'implementationClass' attribute is specified");
       }
       //noinspection unchecked
-      return instantiate(implementationClass, picoContainer);
+      return instantiate(implementationClass, injector);
     }
   }
 }

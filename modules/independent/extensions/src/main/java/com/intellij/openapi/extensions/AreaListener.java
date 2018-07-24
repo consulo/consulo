@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * @author akireyev
  */
+@Deprecated
 public interface AreaListener {
   void areaCreated(@Nonnull String areaClass, @Nonnull AreaInstance areaInstance);
   void areaDisposing(@Nonnull String areaClass, @Nonnull AreaInstance areaInstance);

@@ -18,6 +18,7 @@ package com.intellij.openapi.extensions;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Deprecated
 public interface ExtensionPointListener<T> {
   void extensionAdded(@Nonnull T extension, @Nullable final PluginDescriptor pluginDescriptor);
   void extensionRemoved(@Nonnull T extension, @Nullable final PluginDescriptor pluginDescriptor);

@@ -40,12 +40,14 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.util.ui.UIUtil.isValidFont;
 
 @State(name = "UISettings", storages = @Storage("ui.lnf.xml"))
+@Singleton
 public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings> {
   private volatile static UISettings ourInstance;
 

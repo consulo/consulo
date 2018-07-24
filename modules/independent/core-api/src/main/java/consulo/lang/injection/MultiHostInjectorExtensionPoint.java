@@ -66,7 +66,7 @@ public class MultiHostInjectorExtensionPoint extends AbstractExtensionPointBean 
   @Nonnull
   public MultiHostInjector getInstance(@Nonnull ComponentManager componentManager) {
     if(myInstance == null) {
-      myInstance = instantiate(myImplementationClassHandler.getValue(), componentManager.getPicoContainer());
+      myInstance = instantiate(myImplementationClassHandler.getValue(), componentManager.getInjector());
     }
     return myInstance;
   }

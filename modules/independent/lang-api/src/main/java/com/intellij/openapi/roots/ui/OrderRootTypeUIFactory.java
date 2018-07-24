@@ -35,7 +35,7 @@ public interface OrderRootTypeUIFactory {
   ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.orderRootTypeEditor");
 
   KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType> FACTORY =
-          new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, EP_NAME, ApplicationManager.getApplication().getPicoContainer()) {
+          new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, EP_NAME, ApplicationManager.getApplication()) {
             @Override
             public String getKey(@Nonnull final OrderRootType key) {
               return key.getName();

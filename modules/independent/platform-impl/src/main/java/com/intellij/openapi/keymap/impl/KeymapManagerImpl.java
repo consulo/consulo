@@ -29,9 +29,11 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 @State(
@@ -39,6 +41,7 @@ import java.util.*;
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/keymap.xml", roamingType = RoamingType.PER_PLATFORM),
         additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH
 )
+@Singleton
 public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element>, ApplicationComponent {
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
 
@@ -52,6 +55,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   public static boolean ourKeymapManagerInitialized = false;
 
+  @Inject
   KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemesManagerFactory factory) {
     mySchemesManager = factory.createSchemesManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<KeymapImpl>() {
       @Nonnull

@@ -86,10 +86,12 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -109,6 +111,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Eugene Zhuravlev
  * @since Dec 20, 2007
  */
+@Singleton
 public class FileBasedIndexImpl extends FileBasedIndex {
   static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.FileBasedIndexImpl");
   private static final String CORRUPTION_MARKER_NAME = "corruption.marker";
@@ -170,12 +173,13 @@ public class FileBasedIndexImpl extends FileBasedIndex {
     return state;
   }
 
+  @Inject
   public FileBasedIndexImpl(@SuppressWarnings("UnusedParameters") VirtualFileManager vfManager,
                             FileDocumentManager fdm,
-                            FileTypeManagerImpl fileTypeManager,
+                            FileTypeManager fileTypeManager,
                             @Nonnull MessageBus bus) {
     myFileDocumentManager = fdm;
-    myFileTypeManager = fileTypeManager;
+    myFileTypeManager = (FileTypeManagerImpl)fileTypeManager;
     myIsUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
     final MessageBusConnection connection = bus.connect();

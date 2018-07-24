@@ -60,6 +60,8 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -73,6 +75,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Singleton
 public class DocumentCommitThread implements Runnable, Disposable, DocumentCommitProcessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.DocumentCommitThread");
   private static final String SYNC_COMMIT_REASON = "Sync commit";
@@ -89,6 +92,8 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   public static DocumentCommitThread getInstance() {
     return (DocumentCommitThread)ServiceManager.getService(DocumentCommitProcessor.class);
   }
+
+  @Inject
   public DocumentCommitThread(final ApplicationEx application) {
     myApplication = application;
     // install listener in EDT to avoid missing events in case we are inside write action right now

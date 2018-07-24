@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.util;
 
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import org.picocontainer.PicoContainer;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,13 +33,12 @@ import java.lang.reflect.Proxy;
 public abstract class KeyedExtensionFactory<T, KeyT> {
   private final Class<T> myInterfaceClass;
   private final ExtensionPointName<KeyedFactoryEPBean> myEpName;
-  private final PicoContainer myPicoContainer;
+  private final ComponentManager myComponentManager;
 
-  public KeyedExtensionFactory(@Nonnull final Class<T> interfaceClass, @NonNls @Nonnull final ExtensionPointName<KeyedFactoryEPBean> epName,
-                               @Nonnull PicoContainer picoContainer) {
+  public KeyedExtensionFactory(@Nonnull final Class<T> interfaceClass, @NonNls @Nonnull final ExtensionPointName<KeyedFactoryEPBean> epName, @Nonnull ComponentManager componentManager) {
     myInterfaceClass = interfaceClass;
     myEpName = epName;
-    myPicoContainer = picoContainer;
+    myComponentManager = componentManager;
   }
 
   @Nonnull
@@ -49,7 +48,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
       @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         //noinspection unchecked
-        KeyT keyArg = (KeyT) args [0];
+        KeyT keyArg = (KeyT)args[0];
         String key = getKey(keyArg);
         Object result = getByKey(epBeans, key, method, args);
         if (result == null) {
@@ -59,7 +58,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
       }
     };
     //noinspection unchecked
-    return (T)Proxy.newProxyInstance(myInterfaceClass.getClassLoader(), new Class<?>[] { myInterfaceClass }, handler );
+    return (T)Proxy.newProxyInstance(myInterfaceClass.getClassLoader(), new Class<?>[]{myInterfaceClass}, handler);
   }
 
   public T getByKey(@Nonnull KeyT key) {
@@ -68,7 +67,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
       if (Comparing.strEqual(getKey(key), epBean.key)) {
         try {
           if (epBean.implementationClass != null) {
-            return (T)epBean.instantiate(epBean.implementationClass, myPicoContainer);
+            return (T)epBean.instantiate(epBean.implementationClass, myComponentManager.getInjector());
           }
         }
         catch (Exception e) {
@@ -81,14 +80,14 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
 
   private T getByKey(final KeyedFactoryEPBean[] epBeans, final String key, final Method method, final Object[] args) {
     Object result = null;
-    for(KeyedFactoryEPBean epBean: epBeans) {
+    for (KeyedFactoryEPBean epBean : epBeans) {
       if (Comparing.strEqual(epBean.key, key, true)) {
         try {
           if (epBean.implementationClass != null) {
-            result = epBean.instantiate(epBean.implementationClass, myPicoContainer);
+            result = epBean.instantiate(epBean.implementationClass, myComponentManager.getInjector());
           }
           else {
-            Object factory = epBean.instantiate(epBean.factoryClass, myPicoContainer);
+            Object factory = epBean.instantiate(epBean.factoryClass, myComponentManager.getInjector());
             result = method.invoke(factory, args);
           }
           if (result != null) {

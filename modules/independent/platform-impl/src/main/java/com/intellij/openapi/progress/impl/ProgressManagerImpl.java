@@ -35,6 +35,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
@@ -43,9 +45,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 
+@Singleton
 public class ProgressManagerImpl extends CoreProgressManager implements Disposable {
   private final Set<CheckCanceledHook> myHooks = ContainerUtil.newConcurrentSet();
 
+  @Inject
   public ProgressManagerImpl() {
     HeavyProcessLatch.INSTANCE.addUIActivityListener(new HeavyProcessLatch.HeavyProcessListener() {
       CheckCanceledHook sleepHook = indicator -> sleepIfNeededToGivePriorityToAnotherThread();

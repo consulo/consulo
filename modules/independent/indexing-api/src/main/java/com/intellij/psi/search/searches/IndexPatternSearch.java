@@ -17,6 +17,7 @@
 package com.intellij.psi.search.searches;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.IndexPattern;
@@ -30,12 +31,12 @@ import com.intellij.util.QueryFactory;
  * of Java source files.
  *
  * @author yole
- * @since 5.1
  * @see IndexPatternProvider
  * @see com.intellij.psi.search.PsiSearchHelper#findFilesWithTodoItems()
+ * @since 5.1
  */
 public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurrence, IndexPatternSearch.SearchParameters> {
-  public static IndexPatternSearch INDEX_PATTERN_SEARCH_INSTANCE = ServiceManager.getService(IndexPatternSearch.class);
+  public static NotNullLazyValue<IndexPatternSearch> INDEX_PATTERN_SEARCH_INSTANCE = NotNullLazyValue.createValue(() -> ServiceManager.getService(IndexPatternSearch.class));
 
   public static class SearchParameters {
     private final PsiFile myFile;
@@ -87,7 +88,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    */
   public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPattern pattern) {
     final SearchParameters parameters = new SearchParameters(file, pattern);
-    return INDEX_PATTERN_SEARCH_INSTANCE.createQuery(parameters);
+    return INDEX_PATTERN_SEARCH_INSTANCE.getValue().createQuery(parameters);
   }
 
   /**
@@ -100,11 +101,10 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * @param endOffset   the end offset of the range to search.
    * @return the query instance.
    */
-  public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPattern pattern,
-                                                     int startOffset, int endOffset) {
+  public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPattern pattern, int startOffset, int endOffset) {
     final SearchParameters parameters = new SearchParameters(file, pattern);
     parameters.setRange(new TextRange(startOffset, endOffset));
-    return INDEX_PATTERN_SEARCH_INSTANCE.createQuery(parameters);
+    return INDEX_PATTERN_SEARCH_INSTANCE.getValue().createQuery(parameters);
   }
 
   /**
@@ -118,7 +118,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    */
   public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPatternProvider patternProvider) {
     final SearchParameters parameters = new SearchParameters(file, patternProvider);
-    return INDEX_PATTERN_SEARCH_INSTANCE.createQuery(parameters);
+    return INDEX_PATTERN_SEARCH_INSTANCE.getValue().createQuery(parameters);
   }
 
   /**
@@ -132,11 +132,10 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * @param endOffset       the end offset of the range to search.
    * @return the query instance.
    */
-  public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPatternProvider patternProvider,
-                                                     int startOffset, int endOffset) {
+  public static Query<IndexPatternOccurrence> search(PsiFile file, IndexPatternProvider patternProvider, int startOffset, int endOffset) {
     final SearchParameters parameters = new SearchParameters(file, patternProvider);
     parameters.setRange(new TextRange(startOffset, endOffset));
-    return INDEX_PATTERN_SEARCH_INSTANCE.createQuery(parameters);
+    return INDEX_PATTERN_SEARCH_INSTANCE.getValue().createQuery(parameters);
   }
 
   /**
@@ -149,7 +148,7 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * @return the number of pattern occurrences.
    */
   public static int getOccurrencesCount(PsiFile file, IndexPatternProvider patternProvider) {
-    return INDEX_PATTERN_SEARCH_INSTANCE.getOccurrencesCountImpl(file, patternProvider);
+    return INDEX_PATTERN_SEARCH_INSTANCE.getValue().getOccurrencesCountImpl(file, patternProvider);
   }
 
   /**
@@ -157,14 +156,15 @@ public abstract class IndexPatternSearch extends QueryFactory<IndexPatternOccurr
    * in the specified file. The returned value is taken from the index, and the file
    * is not parsed.
    *
-   * @param file            the file in which occurrences should be searched.
-   * @param pattern     the pattern to search for.
+   * @param file    the file in which occurrences should be searched.
+   * @param pattern the pattern to search for.
    * @return the number of pattern occurrences.
    */
   public static int getOccurrencesCount(PsiFile file, IndexPattern pattern) {
-    return INDEX_PATTERN_SEARCH_INSTANCE.getOccurrencesCountImpl(file, pattern);
+    return INDEX_PATTERN_SEARCH_INSTANCE.getValue().getOccurrencesCountImpl(file, pattern);
   }
 
   protected abstract int getOccurrencesCountImpl(PsiFile file, IndexPatternProvider provider);
+
   protected abstract int getOccurrencesCountImpl(PsiFile file, IndexPattern pattern);
 }

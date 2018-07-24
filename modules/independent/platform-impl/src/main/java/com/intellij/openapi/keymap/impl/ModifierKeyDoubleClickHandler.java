@@ -33,8 +33,10 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.platform.Platform;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -51,6 +53,7 @@ import static com.intellij.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
  * functionality (invoked on double Shift), so if you need to change them, please make sure
  * SearchEverywhere behaviour remains intact.
  */
+@Singleton
 public class ModifierKeyDoubleClickHandler implements Disposable, ApplicationComponent {
   private static final Logger LOG = Logger.getInstance(ModifierKeyDoubleClickHandler.class);
   private static final TIntIntHashMap KEY_CODE_TO_MODIFIER_MAP = new TIntIntHashMap();
@@ -65,8 +68,9 @@ public class ModifierKeyDoubleClickHandler implements Disposable, ApplicationCom
   private final ConcurrentMap<String, MyDispatcher> myDispatchers = ContainerUtil.newConcurrentMap();
   private boolean myIsRunningAction;
 
-  private ModifierKeyDoubleClickHandler(ActionManagerEx actionManagerEx) {
-    myActionManagerEx = actionManagerEx;
+  @Inject
+  private ModifierKeyDoubleClickHandler(ActionManager actionManagerEx) {
+    myActionManagerEx = (ActionManagerEx)actionManagerEx;
   }
 
   @Override

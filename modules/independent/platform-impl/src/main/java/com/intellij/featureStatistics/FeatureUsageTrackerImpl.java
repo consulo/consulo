@@ -24,6 +24,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,7 @@ import java.util.Set;
     name = "FeatureUsageStatistics",
     storages = {@Storage(
         file = StoragePathMacros.APP_CONFIG + "/feature.usage.statistics.xml")})
+@Singleton
 public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements PersistentStateComponent<Element> {
   private static final int HOUR = 1000 * 60 * 60;
   private static final long DAY = HOUR * 24;
@@ -50,6 +53,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
   @NonNls private static final String FIXES_STATS_TAG = "fixesStatsTag";
   @NonNls private static final String ATT_HAVE_BEEN_SHOWN = "have-been-shown";
 
+  @Inject
   public FeatureUsageTrackerImpl(ProductivityFeaturesRegistry productivityFeaturesRegistry) {
     myRegistry = productivityFeaturesRegistry;
   }

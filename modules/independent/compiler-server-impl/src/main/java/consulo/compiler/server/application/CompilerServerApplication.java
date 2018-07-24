@@ -120,7 +120,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void initializeComponent(Object component, boolean service) {
+  public void initializeFromStateStore(Object component, boolean service) {
     getStateStore().initComponent(component);
   }
 

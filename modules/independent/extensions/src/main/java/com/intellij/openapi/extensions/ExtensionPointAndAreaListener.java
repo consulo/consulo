@@ -19,6 +19,7 @@
  */
 package com.intellij.openapi.extensions;
 
+@Deprecated
 public interface ExtensionPointAndAreaListener<T> extends ExtensionPointListener<T> {
   void areaReplaced(ExtensionsArea area);
 }

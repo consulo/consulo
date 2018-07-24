@@ -737,7 +737,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       myModulesCache = null;
       myModules.add(module);
 
-      module.loadModuleComponents();
       module.init();
     }
 

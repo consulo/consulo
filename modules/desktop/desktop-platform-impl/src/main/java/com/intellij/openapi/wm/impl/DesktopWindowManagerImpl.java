@@ -20,6 +20,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -52,6 +53,8 @@ import sun.awt.AWTAccessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -68,6 +71,7 @@ import java.util.Set;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
+@Singleton
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
 public final class DesktopWindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.WindowManagerImpl");
@@ -121,12 +125,10 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   private final DataManager myDataManager;
   private final ActionManagerEx myActionManager;
 
-  /**
-   * invoked by reflection
-   */
-  public DesktopWindowManagerImpl(DataManager dataManager, ActionManagerEx actionManager, MessageBus bus) {
+  @Inject
+  public DesktopWindowManagerImpl(DataManager dataManager, ActionManager actionManager, MessageBus bus) {
     myDataManager = dataManager;
-    myActionManager = actionManager;
+    myActionManager = (ActionManagerEx)actionManager;
     if (myDataManager instanceof DataManagerImpl) {
       ((DataManagerImpl)myDataManager).setWindowManager(this);
     }

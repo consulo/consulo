@@ -65,6 +65,8 @@ import consulo.ide.IconDescriptorUpdater;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.util.*;
@@ -73,6 +75,7 @@ import java.util.*;
 @State(
         name = "ScratchFileService",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/scratches.xml")})
+@Singleton
 public class ScratchFileServiceImpl extends ScratchFileService implements PersistentStateComponent<Element> {
 
   private static final RootType NULL_TYPE = new RootType("", null) {
@@ -81,6 +84,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   private final LightDirectoryIndex<RootType> myIndex;
   private final MyLanguages myScratchMapping = new MyLanguages();
 
+  @Inject
   protected ScratchFileServiceImpl(Application application) {
     myIndex = new LightDirectoryIndex<>(application, NULL_TYPE, index -> {
       LocalFileSystem fileSystem = LocalFileSystem.getInstance();

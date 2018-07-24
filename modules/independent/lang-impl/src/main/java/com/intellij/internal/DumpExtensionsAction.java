@@ -48,7 +48,7 @@ public class DumpExtensionsAction extends DumbAwareAction {
     }
     System.out.print(areas.size() + " extension areas: ");
     for (ExtensionsArea area : areas) {
-      System.out.print(area.getAreaClass() + " ");
+      System.out.print(area.getId() + " ");
     }
     System.out.println("\n");
 

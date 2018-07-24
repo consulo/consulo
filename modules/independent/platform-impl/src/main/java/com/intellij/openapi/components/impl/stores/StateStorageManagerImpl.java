@@ -15,14 +15,13 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
+import com.google.inject.Injector;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;
@@ -32,10 +31,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashMap;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.picocontainer.PicoContainer;
-
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -48,7 +46,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private static final boolean ourHeadlessEnvironment;
 
   static {
-    final Application app = ApplicationManager.getApplication();
+    final Application app = Application.get();
     ourHeadlessEnvironment = app.isHeadlessEnvironment() || app.isUnitTestMode();
   }
 
@@ -57,20 +55,14 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Map<String, StateStorage> myStorages = new THashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
   private final String myRootTagName;
-  private final PicoContainer myPicoContainer;
+  private final Injector myInjector;
 
   private StreamProvider myStreamProvider;
 
-  public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                 String rootTagName,
-                                 @Nullable Disposable parentDisposable,
-                                 PicoContainer picoContainer) {
-    myPicoContainer = picoContainer;
+  public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor, String rootTagName, @Nonnull Injector injector) {
+    myInjector = injector;
     myRootTagName = rootTagName;
     myPathMacroSubstitutor = pathMacroSubstitutor;
-    if (parentDisposable != null) {
-      Disposer.register(parentDisposable, this);
-    }
   }
 
   @Nonnull
@@ -230,8 +222,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
 
     beforeFileBasedStorageCreate();
-    return new FileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this,
-                                createStorageTopicListener(), myStreamProvider) {
+    return new FileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider) {
       @Override
       @Nonnull
       protected StorageData createStorageData() {
@@ -247,7 +238,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Nullable
   protected StateStorage.Listener createStorageTopicListener() {
-    MessageBus messageBus = (MessageBus)myPicoContainer.getComponentInstanceOfType(MessageBus.class);
+    MessageBus messageBus = myInjector.getInstance(MessageBus.class);
     return messageBus == null ? null : messageBus.syncPublisher(StateStorage.STORAGE_TOPIC);
   }
 

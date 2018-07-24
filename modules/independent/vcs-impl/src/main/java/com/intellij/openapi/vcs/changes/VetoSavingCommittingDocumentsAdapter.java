@@ -37,6 +37,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class VetoSavingCommittingDocumentsAdapter implements ApplicationComponen
 
   private final FileDocumentManager myFileDocumentManager;
 
+  @Inject
   public VetoSavingCommittingDocumentsAdapter(final FileDocumentManager fileDocumentManager) {
     myFileDocumentManager = fileDocumentManager;
   }

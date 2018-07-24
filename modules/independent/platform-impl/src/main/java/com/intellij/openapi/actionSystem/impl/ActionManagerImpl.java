@@ -60,10 +60,11 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -75,6 +76,7 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.List;
 
+@Singleton
 public final class ActionManagerImpl extends ActionManagerEx implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.actionSystem.impl.ActionManagerImpl");
   private static final int DEACTIVATED_TIMER_DELAY = 5000;
@@ -172,6 +174,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
 
   private boolean myTransparentOnlyUpdate;
 
+  @Inject
   ActionManagerImpl(KeymapManager keymapManager, DataManager dataManager) {
     myKeymapManager = keymapManager;
     myDataManager = dataManager;
@@ -581,7 +584,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
     try {
       Class aClass = Class.forName(className, true, loader);
-      Object obj = new ConstructorInjectionComponentAdapter(className, aClass).getComponentInstance(ApplicationManager.getApplication().getPicoContainer());
+
+      Object obj = Application.get().getInjector().getInstance(aClass);
 
       if (!(obj instanceof ActionGroup)) {
         reportActionError(pluginId, "class with name \"" + className + "\" should be instance of " + ActionGroup.class.getName());

@@ -21,6 +21,8 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.ConcurrentHashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,10 +33,12 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author mike
  */
+@Singleton
 public class VirtualFileTrackerImpl implements VirtualFileTracker {
   private final Map<String, Set<VirtualFileListener>> myNonRefreshTrackers = new ConcurrentHashMap<String, Set<VirtualFileListener>>();
   private final Map<String, Set<VirtualFileListener>> myAllTrackers = new ConcurrentHashMap<String, Set<VirtualFileListener>>();
 
+  @Inject
   public VirtualFileTrackerImpl(VirtualFileManager virtualFileManager) {
     virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override

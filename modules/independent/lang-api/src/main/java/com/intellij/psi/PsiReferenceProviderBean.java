@@ -64,7 +64,7 @@ public class PsiReferenceProviderBean extends AbstractExtensionPointBean impleme
 
   public PsiReferenceProvider instantiate() {
     try {
-      return (PsiReferenceProvider)instantiate(className, ApplicationManager.getApplication().getPicoContainer());
+      return (PsiReferenceProvider)instantiate(className, ApplicationManager.getApplication().getInjector());
     }
     catch (ClassNotFoundException e) {
       LOG.error(e);

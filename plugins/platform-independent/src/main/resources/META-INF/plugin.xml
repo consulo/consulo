@@ -136,10 +136,7 @@
     <extensionPoint name="fileTypeFactory"
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
 
-    <extensionPoint name="virtualFileSystem"
-                    beanClass="com.intellij.util.KeyedLazyInstanceEP">
-      <with attribute="implementationClass" implements="com.intellij.openapi.vfs.VirtualFileSystem"/>
-    </extensionPoint>
+    <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem" />
 
     <extensionPoint name="keymapExtension"
                     interface="com.intellij.openapi.keymap.KeymapExtension"/>
@@ -1452,9 +1449,9 @@
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.ideSettings.LaFUsagesCollector"/>
 
 
-    <virtualFileSystem key="dummy" implementationClass="com.intellij.openapi.vfs.ex.dummy.DummyFileSystem"/>
-    <virtualFileSystem key="http" implementationClass="com.intellij.openapi.vfs.impl.http.HttpFileSystemImpl"/>
-    <virtualFileSystem key="https" implementationClass="com.intellij.openapi.vfs.impl.http.HttpsFileSystem"/>
+    <virtualFileSystem id="dummy" implementation="com.intellij.openapi.vfs.ex.dummy.DummyFileSystem"/>
+    <virtualFileSystem id="http" implementation="com.intellij.openapi.vfs.impl.http.HttpFileSystemImpl"/>
+    <virtualFileSystem id="https" implementation="com.intellij.openapi.vfs.impl.http.HttpsFileSystem"/>
 
     <toolWindow id="Event Log" anchor="bottom" secondary="true"
                 icon="AllIcons.Ide.Notification.NoEvents"
@@ -1524,7 +1521,7 @@
 
     <keymapExtension implementation="com.intellij.openapi.vcs.impl.VcsKeymapExtension"/>
     <fileTypeFactory implementation="com.intellij.openapi.vcs.impl.VcsFileTypeFactory"/>
-    <virtualFileSystem key="vcs" implementationClass="com.intellij.openapi.vcs.vfs.VcsFileSystem"/>
+    <virtualFileSystem id="vcs" implementation="com.intellij.openapi.vcs.vfs.VcsFileSystem"/>
     <fileDocumentSynchronizationVetoer implementation="com.intellij.openapi.vcs.changes.SaveCommittingDocumentsVetoer"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.vcs.VcsApplicationSettings"/>
@@ -2590,5 +2587,9 @@
 
     <idIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.id.PlainTextIndexer"/>
     <todoIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
+
+    <virtualFileSystem id="local" implementation="com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl" />
+    <virtualFileSystem id="zip" implementation="consulo.vfs.impl.zip.ZipFileSystemImpl" />
+    <virtualFileSystem id="temp" implementation="com.intellij.openapi.vfs.ex.temp.TempFileSystem" />
   </extensions>
 </idea-plugin>

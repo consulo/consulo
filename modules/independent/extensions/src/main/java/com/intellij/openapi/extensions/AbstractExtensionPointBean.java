@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.extensions;
 
+import com.google.inject.Injector;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.picocontainer.PicoContainer;
 
 /**
  * @author peter
@@ -59,18 +60,19 @@ public abstract class AbstractExtensionPointBean implements PluginAware {
   }
 
   @Nonnull
-  public final <T> T instantiate(final String className, @Nonnull final PicoContainer container) throws ClassNotFoundException {
+  public final <T> T instantiate(final String className, @Nonnull final Injector container) throws ClassNotFoundException {
     return instantiate(this.<T>findClass(className), container);
   }
 
   @Nonnull
-  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final PicoContainer container) {
-    return instantiate(aClass, container, false);
+  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final Injector container) {
+    return container.getInstance(aClass);
   }
 
   @Nonnull
-  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final PicoContainer container, final boolean allowNonPublicClasses) {
-    return (T)new CachingConstructorInjectionComponentAdapter(aClass.getName(), aClass, null, allowNonPublicClasses).getComponentInstance(container);
+  @Deprecated
+  @DeprecationInfo("Use without 'allowNonPublicClasses'")
+  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final Injector container, final boolean allowNonPublicClasses) {
+    return container.getInstance(aClass);
   }
-
 }

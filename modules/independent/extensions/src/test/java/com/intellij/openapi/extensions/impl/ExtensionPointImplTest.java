@@ -18,7 +18,6 @@ package com.intellij.openapi.extensions.impl;
 import com.intellij.openapi.extensions.*;
 import junit.framework.TestCase;
 import javax.annotation.Nonnull;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 /**
  * @author AKireyev
@@ -35,7 +34,7 @@ public class ExtensionPointImplTest extends TestCase {
   }
 
   private ExtensionsAreaImpl buildExtensionArea() {
-    return new ExtensionsAreaImpl(new DefaultPicoContainer(), new Extensions.SimpleLogProvider());
+    return new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
   }
 
   public void testUnregisterObject() {

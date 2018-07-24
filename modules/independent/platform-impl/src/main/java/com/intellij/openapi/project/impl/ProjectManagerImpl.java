@@ -75,6 +75,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -82,6 +84,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @State(name = "ProjectManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/project.default.xml")})
+@Singleton
 public class ProjectManagerImpl extends ProjectManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(ProjectManagerImpl.class);
 
@@ -115,6 +118,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return array;
   }
 
+  @Inject
   public ProjectManagerImpl(@Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
     myProgressManager = progressManager;
     Application app = ApplicationManager.getApplication();
@@ -273,7 +277,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       else {
         project.getStateStore().load();
       }
-      project.loadProjectComponents();
       project.init();
       succeed = true;
     }
@@ -1096,7 +1099,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       else {
         project.getStateStore().load();
       }
-      project.loadProjectComponents();
       project.init();
       succeed = true;
     }

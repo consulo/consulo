@@ -40,6 +40,8 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +55,7 @@ import java.util.*;
         },
         additionalExportFile = TemplateSettings.TEMPLATES_DIR_PATH
 )
+@Singleton
 public class TemplateSettings implements PersistentStateComponent<TemplateSettings.State> {
   private static final Logger LOG = Logger.getInstance(TemplateSettings.class);
 
@@ -187,6 +190,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   private TemplateKey myLastSelectedTemplate;
 
+  @Inject
   public TemplateSettings(SchemesManagerFactory schemesManagerFactory) {
     mySchemesManager = schemesManagerFactory.createSchemesManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup>() {
       @Override

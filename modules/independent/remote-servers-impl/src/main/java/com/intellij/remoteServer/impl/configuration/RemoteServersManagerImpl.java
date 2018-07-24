@@ -10,6 +10,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +28,7 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
   private List<RemoteServerState> myUnknownServers = new ArrayList<RemoteServerState>();
   private final MessageBus myMessageBus;
 
+  @Inject
   public RemoteServersManagerImpl(MessageBus messageBus) {
     myMessageBus = messageBus;
   }

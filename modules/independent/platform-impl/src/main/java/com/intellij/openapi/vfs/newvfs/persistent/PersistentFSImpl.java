@@ -44,6 +44,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,6 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author max
  */
+@Singleton
 public class PersistentFSImpl extends PersistentFS implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.persistent.PersistentFS");
 
@@ -69,6 +72,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   private final LowMemoryWatcher myWatcher = LowMemoryWatcher.register(() -> clearIdCache());
   private volatile int myStructureModificationCount;
 
+  @Inject
   public PersistentFSImpl(@Nonnull MessageBus bus) {
     myEventBus = bus;
     ShutDownTracker.getInstance().registerShutdownTask(() -> performShutdown());

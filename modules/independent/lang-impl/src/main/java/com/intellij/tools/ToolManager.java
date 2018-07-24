@@ -15,19 +15,24 @@
  */
 package com.intellij.tools;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author traff
  */
+@Singleton
 public class ToolManager extends BaseToolManager<Tool> {
-  public ToolManager(ActionManagerEx actionManagerEx,
-                     SchemesManagerFactory factory) {
-    super(actionManagerEx, factory);
+  @Inject
+  public ToolManager(ActionManager actionManagerEx, SchemesManagerFactory factory) {
+    super((ActionManagerEx)actionManagerEx, factory);
   }
 
   @Override
