@@ -26,33 +26,25 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author cdr
-*/
-public class ShowIntentionsPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
-  public ShowIntentionsPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL,}, null, false, Pass.POPUP_HINTS);
-  }
-
+ */
+public class ShowIntentionsPassFactory implements TextEditorHighlightingPassFactory {
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ShowIntentionsPassFactory";
+  public void register(@Nonnull Project project, @Nonnull TextEditorHighlightingPassRegistrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL,}, null, false, Pass.POPUP_HINTS);
   }
 
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    return new ShowIntentionsPass(myProject, editor, -1);
+    return new ShowIntentionsPass(file.getProject(), editor, -1);
   }
 }

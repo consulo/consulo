@@ -15,13 +15,16 @@
  */
 package consulo.compiler.server.rmi.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import consulo.annotations.NotLazy;
 import consulo.compiler.server.rmi.CompilerServerConnector;
 import consulo.compiler.server.rmi.CompilerServerInterface;
-import javax.annotation.Nonnull;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.concurrent.Future;
@@ -30,17 +33,20 @@ import java.util.concurrent.Future;
  * @author VISTALL
  * @since 11:16/13.08.13
  */
-public class CompilerServerConnectorImpl extends CompilerServerConnector implements ApplicationComponent {
+@NotLazy
+@Singleton
+public class CompilerServerConnectorImpl extends CompilerServerConnector implements Disposable {
   public static final Logger LOGGER = Logger.getInstance(CompilerServerConnectorImpl.class);
 
   private Future<?> myTask;
   private CompilerServerInterface myServerInterface;
 
+  @Inject
   public CompilerServerConnectorImpl() {
 
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     //tryToConnect();
   }
@@ -84,16 +90,10 @@ public class CompilerServerConnectorImpl extends CompilerServerConnector impleme
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     Future<?> task = myTask;
     if(task != null) {
       task.cancel(false);
     }
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "CompilerSwapperManager";
   }
 }

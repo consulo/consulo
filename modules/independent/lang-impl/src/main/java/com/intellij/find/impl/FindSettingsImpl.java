@@ -27,27 +27,31 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-@State(
-        name = "FindSettings",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/find.xml"),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)
-        }
-)
+@State(name = "FindSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/find.xml"), @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)})
+@Singleton
 public class FindSettingsImpl extends FindSettings implements PersistentStateComponent<FindSettingsImpl> {
-  @NonNls private static final String FIND_DIRECTION_FORWARD = "forward";
-  @NonNls private static final String FIND_DIRECTION_BACKWARD = "backward";
-  @NonNls private static final String FIND_ORIGIN_FROM_CURSOR = "from_cursor";
-  @NonNls private static final String FIND_ORIGIN_ENTIRE_SCOPE = "entire_scope";
-  @NonNls private static final String FIND_SCOPE_GLOBAL = "global";
-  @NonNls private static final String FIND_SCOPE_SELECTED = "selected";
+  @NonNls
+  private static final String FIND_DIRECTION_FORWARD = "forward";
+  @NonNls
+  private static final String FIND_DIRECTION_BACKWARD = "backward";
+  @NonNls
+  private static final String FIND_ORIGIN_FROM_CURSOR = "from_cursor";
+  @NonNls
+  private static final String FIND_ORIGIN_ENTIRE_SCOPE = "entire_scope";
+  @NonNls
+  private static final String FIND_SCOPE_GLOBAL = "global";
+  @NonNls
+  private static final String FIND_SCOPE_SELECTED = "selected";
   private static final String DEFAULT_SEARCH_SCOPE = FindBundle.message("find.scope.all.project.classes");
 
+  @Inject
   public FindSettingsImpl() {
     recentFileMasks.add("*.properties");
     recentFileMasks.add("*.html");
@@ -73,32 +77,55 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     SEARCH_OVERLOADED_METHODS = search;
   }
 
-  @SuppressWarnings({"WeakerAccess"}) public boolean SEARCH_OVERLOADED_METHODS = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean SEARCH_IN_LIBRARIES = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean SKIP_RESULTS_WHEN_ONE_USAGE = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean SEARCH_OVERLOADED_METHODS = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean SEARCH_IN_LIBRARIES = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean SKIP_RESULTS_WHEN_ONE_USAGE = false;
 
-  @SuppressWarnings({"WeakerAccess"}) public String FIND_DIRECTION = FIND_DIRECTION_FORWARD;
-  @SuppressWarnings({"WeakerAccess"}) public String FIND_ORIGIN = FIND_ORIGIN_FROM_CURSOR;
-  @SuppressWarnings({"WeakerAccess"}) public String FIND_SCOPE = FIND_SCOPE_GLOBAL;
-  @SuppressWarnings({"WeakerAccess"}) public String FIND_CUSTOM_SCOPE = null;
+  @SuppressWarnings({"WeakerAccess"})
+  public String FIND_DIRECTION = FIND_DIRECTION_FORWARD;
+  @SuppressWarnings({"WeakerAccess"})
+  public String FIND_ORIGIN = FIND_ORIGIN_FROM_CURSOR;
+  @SuppressWarnings({"WeakerAccess"})
+  public String FIND_SCOPE = FIND_SCOPE_GLOBAL;
+  @SuppressWarnings({"WeakerAccess"})
+  public String FIND_CUSTOM_SCOPE = null;
 
-  @SuppressWarnings({"WeakerAccess"}) public boolean CASE_SENSITIVE_SEARCH = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean LOCAL_CASE_SENSITIVE_SEARCH = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean PRESERVE_CASE_REPLACE = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean WHOLE_WORDS_ONLY = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean COMMENTS_ONLY = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean STRING_LITERALS_ONLY = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean EXCEPT_COMMENTS = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean EXCEPT_COMMENTS_AND_STRING_LITERALS = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean EXCEPT_STRING_LITERALS = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean LOCAL_WHOLE_WORDS_ONLY = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean REGULAR_EXPRESSIONS = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean LOCAL_REGULAR_EXPRESSIONS = false;
-  @SuppressWarnings({"WeakerAccess"}) public boolean WITH_SUBDIRECTORIES = true;
-  @SuppressWarnings({"WeakerAccess"}) public boolean SHOW_RESULTS_IN_SEPARATE_VIEW = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean CASE_SENSITIVE_SEARCH = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean LOCAL_CASE_SENSITIVE_SEARCH = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean PRESERVE_CASE_REPLACE = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean WHOLE_WORDS_ONLY = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean COMMENTS_ONLY = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean STRING_LITERALS_ONLY = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean EXCEPT_COMMENTS = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean EXCEPT_COMMENTS_AND_STRING_LITERALS = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean EXCEPT_STRING_LITERALS = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean LOCAL_WHOLE_WORDS_ONLY = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean REGULAR_EXPRESSIONS = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean LOCAL_REGULAR_EXPRESSIONS = false;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean WITH_SUBDIRECTORIES = true;
+  @SuppressWarnings({"WeakerAccess"})
+  public boolean SHOW_RESULTS_IN_SEPARATE_VIEW = false;
 
-  @SuppressWarnings({"WeakerAccess"}) public String SEARCH_SCOPE = DEFAULT_SEARCH_SCOPE;
-  @SuppressWarnings({"WeakerAccess"}) public String FILE_MASK;
+  @SuppressWarnings({"WeakerAccess"})
+  public String SEARCH_SCOPE = DEFAULT_SEARCH_SCOPE;
+  @SuppressWarnings({"WeakerAccess"})
+  public String FILE_MASK;
 
   @Tag("recentFileMasks")
   @Property(surroundWithTag = false)
@@ -116,12 +143,12 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @Override
-  public boolean isSkipResultsWithOneUsage(){
+  public boolean isSkipResultsWithOneUsage() {
     return SKIP_RESULTS_WHEN_ONE_USAGE;
   }
 
   @Override
-  public void setSkipResultsWithOneUsage(boolean skip){
+  public void setSkipResultsWithOneUsage(boolean skip) {
     SKIP_RESULTS_WHEN_ONE_USAGE = skip;
   }
 
@@ -136,42 +163,42 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @Override
-  public boolean isForward(){
+  public boolean isForward() {
     return FIND_DIRECTION_FORWARD.equals(FIND_DIRECTION);
   }
 
   @Override
-  public void setForward(boolean findDirectionForward){
+  public void setForward(boolean findDirectionForward) {
     FIND_DIRECTION = findDirectionForward ? FIND_DIRECTION_FORWARD : FIND_DIRECTION_BACKWARD;
   }
 
   @Override
-  public boolean isFromCursor(){
+  public boolean isFromCursor() {
     return FIND_ORIGIN_FROM_CURSOR.equals(FIND_ORIGIN);
   }
 
   @Override
-  public void setFromCursor(boolean findFromCursor){
+  public void setFromCursor(boolean findFromCursor) {
     FIND_ORIGIN = findFromCursor ? FIND_ORIGIN_FROM_CURSOR : FIND_ORIGIN_ENTIRE_SCOPE;
   }
 
   @Override
-  public boolean isGlobal(){
+  public boolean isGlobal() {
     return FIND_SCOPE_GLOBAL.equals(FIND_SCOPE);
   }
 
   @Override
-  public void setGlobal(boolean findGlobalScope){
+  public void setGlobal(boolean findGlobalScope) {
     FIND_SCOPE = findGlobalScope ? FIND_SCOPE_GLOBAL : FIND_SCOPE_SELECTED;
   }
 
   @Override
-  public boolean isCaseSensitive(){
+  public boolean isCaseSensitive() {
     return CASE_SENSITIVE_SEARCH;
   }
 
   @Override
-  public void setCaseSensitive(boolean caseSensitiveSearch){
+  public void setCaseSensitive(boolean caseSensitiveSearch) {
     CASE_SENSITIVE_SEARCH = caseSensitiveSearch;
   }
 
@@ -206,22 +233,22 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @Override
-  public boolean isWholeWordsOnly(){
+  public boolean isWholeWordsOnly() {
     return WHOLE_WORDS_ONLY;
   }
 
   @Override
-  public void setWholeWordsOnly(boolean wholeWordsOnly){
+  public void setWholeWordsOnly(boolean wholeWordsOnly) {
     WHOLE_WORDS_ONLY = wholeWordsOnly;
   }
 
   @Override
-  public boolean isRegularExpressions(){
+  public boolean isRegularExpressions() {
     return REGULAR_EXPRESSIONS;
   }
 
   @Override
-  public void setRegularExpressions(boolean regularExpressions){
+  public void setRegularExpressions(boolean regularExpressions) {
     REGULAR_EXPRESSIONS = regularExpressions;
   }
 
@@ -236,33 +263,31 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @Override
-  public void setWithSubdirectories(boolean b){
+  public void setWithSubdirectories(boolean b) {
     WITH_SUBDIRECTORIES = b;
   }
 
-  private boolean isWithSubdirectories(){
+  private boolean isWithSubdirectories() {
     return WITH_SUBDIRECTORIES;
   }
 
   @Override
-  public void initModelBySetings(@Nonnull FindModel model){
+  public void initModelBySetings(@Nonnull FindModel model) {
     model.setCaseSensitive(isCaseSensitive());
     model.setForward(isForward());
     model.setFromCursor(isFromCursor());
     model.setGlobal(isGlobal());
     model.setRegularExpressions(isRegularExpressions());
     model.setWholeWordsOnly(isWholeWordsOnly());
-    FindModel.SearchContext searchContext = isInCommentsOnly() ?
-                                            FindModel.SearchContext.IN_COMMENTS :
-                                            isInStringLiteralsOnly() ?
-                                            FindModel.SearchContext.IN_STRING_LITERALS :
-                                            isExceptComments() ?
-                                            FindModel.SearchContext.EXCEPT_COMMENTS :
-                                            isExceptStringLiterals() ?
-                                            FindModel.SearchContext.EXCEPT_STRING_LITERALS :
-                                            isExceptCommentsAndLiterals() ?
-                                            FindModel.SearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS :
-                                            FindModel.SearchContext.ANY;
+    FindModel.SearchContext searchContext = isInCommentsOnly()
+                                            ? FindModel.SearchContext.IN_COMMENTS
+                                            : isInStringLiteralsOnly()
+                                              ? FindModel.SearchContext.IN_STRING_LITERALS
+                                              : isExceptComments()
+                                                ? FindModel.SearchContext.EXCEPT_COMMENTS
+                                                : isExceptStringLiterals()
+                                                  ? FindModel.SearchContext.EXCEPT_STRING_LITERALS
+                                                  : isExceptCommentsAndLiterals() ? FindModel.SearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS : FindModel.SearchContext.ANY;
     model.setSearchContext(searchContext);
     model.setWithSubdirectories(isWithSubdirectories());
     model.setFileFilter(FILE_MASK);
@@ -271,7 +296,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @Override
-  public void addStringToFind(@Nonnull String s){
+  public void addStringToFind(@Nonnull String s) {
     FindRecents.getInstance().addStringToFind(s);
   }
 
@@ -287,13 +312,13 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
 
   @Nonnull
   @Override
-  public String[] getRecentFindStrings(){
+  public String[] getRecentFindStrings() {
     return FindRecents.getInstance().getRecentFindStrings();
   }
 
   @Nonnull
   @Override
-  public String[] getRecentReplaceStrings(){
+  public String[] getRecentReplaceStrings() {
     return FindRecents.getInstance().getRecentReplaceStrings();
   }
 
@@ -305,7 +330,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
 
   @Nonnull
   @Override
-  public List<String> getRecentDirectories(){
+  public List<String> getRecentDirectories() {
     return FindRecents.getInstance().getRecentDirectories();
   }
 
@@ -393,10 +418,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     EXCEPT_STRING_LITERALS = selected;
   }
 
-  @State(
-          name = "FindRecents",
-          storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/find.recents.xml", roamingType = RoamingType.DISABLED)}
-  )
+  @State(name = "FindRecents", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/find.recents.xml", roamingType = RoamingType.DISABLED)})
   static final class FindRecents extends FindInProjectSettingsBase {
     public static FindRecents getInstance() {
       return ServiceManager.getService(FindRecents.class);

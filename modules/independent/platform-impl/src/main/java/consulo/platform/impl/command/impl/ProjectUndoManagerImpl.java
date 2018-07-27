@@ -19,15 +19,18 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.platform.api.command.undo.ProjectUndoManager;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2018-07-24
  */
-public class ProjectUndoManagerImpl extends UndoManagerImpl {
+@Singleton
+public class ProjectUndoManagerImpl extends UndoManagerImpl implements ProjectUndoManager {
   @Inject
   public ProjectUndoManagerImpl(@Nullable Project project, CommandProcessor commandProcessor) {
     super((ProjectEx)project, commandProcessor);

@@ -33,6 +33,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,11 +43,13 @@ import java.util.List;
 /**
  * @author nik
  */
+@Singleton
 public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifier {
   private final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> myErrors = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
   private final Object myLock = new Object();
   private final Project myProject;
 
+  @Inject
   public ProjectLoadingErrorsNotifierImpl(Project project) {
     myProject = project;
   }

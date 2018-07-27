@@ -22,6 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.annotations.NotLazy;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -36,7 +37,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @State(name = "PathMacrosImpl", storages = @Storage(value = "path.macros.xml", roamingType = RoamingType.DISABLED))
 @Singleton
-public class PathMacrosImpl extends PathMacros implements ApplicationComponent, PersistentStateComponent<Element> {
+@NotLazy
+public class PathMacrosImpl extends PathMacros implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.PathMacrosImpl");
   private final Map<String, String> myLegacyMacros = new HashMap<>();
   private final Map<String, String> myMacros = new HashMap<>();
@@ -77,20 +79,6 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
 
   public static PathMacrosImpl getInstanceEx() {
     return (PathMacrosImpl)ApplicationManager.getApplication().getComponent(PathMacros.class);
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "PathMacrosImpl";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   @Override

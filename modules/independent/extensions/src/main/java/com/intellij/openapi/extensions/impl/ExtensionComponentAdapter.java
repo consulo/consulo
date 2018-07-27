@@ -34,6 +34,9 @@ import java.util.function.Function;
  * @author VISTALL
  */
 public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Function<Injector, Object> {
+  @Deprecated
+  public static ThreadLocal<Boolean> ourUnstableMarker = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
   public static final ExtensionComponentAdapter[] EMPTY_ARRAY = new ExtensionComponentAdapter[0];
 
   private final String myImplementationClassName;
@@ -57,39 +60,46 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Functi
   @Nonnull
   @SuppressWarnings("unchecked")
   public <T> T apply(@Nullable Injector injector, @Nonnull BiFunction<Injector, Class<T>, T> function) {
-    T componentinstance;
     try {
-      if (Element.class.equals(getComponentImplementation())) {
-        componentinstance = (T)myExtensionElement;
-      }
-      else {
-        T componentInstance = (T) function.apply(injector, myImplementationClass);
+      ourUnstableMarker.set(Boolean.TRUE);
 
-        if (myDeserializeInstance) {
-          try {
-            XmlSerializer.deserializeInto(componentInstance, myExtensionElement);
-          }
-          catch (Exception e) {
-            throw new ExceptionInInitializerError(e);
-          }
+      T componentinstance;
+      try {
+        if (Element.class.equals(getComponentImplementation())) {
+          componentinstance = (T)myExtensionElement;
         }
+        else {
+          T componentInstance = (T)function.apply(injector, myImplementationClass);
 
-        componentinstance = componentInstance;
+          if (myDeserializeInstance) {
+            try {
+              XmlSerializer.deserializeInto(componentInstance, myExtensionElement);
+            }
+            catch (Exception e) {
+              throw new ExceptionInInitializerError(e);
+            }
+          }
+
+          componentinstance = componentInstance;
+        }
       }
-    }
-    catch (ProcessCanceledException e) {
-      throw e;
-    }
-    catch (Throwable t) {
-      PluginId pluginId = myPluginDescriptor != null ? myPluginDescriptor.getPluginId() : null;
-      throw new PicoPluginExtensionInitializationException(t.getMessage(), t, pluginId);
-    }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Throwable t) {
+        PluginId pluginId = myPluginDescriptor != null ? myPluginDescriptor.getPluginId() : null;
+        throw new PicoPluginExtensionInitializationException(t.getMessage(), t, pluginId);
+      }
 
-    if (componentinstance instanceof PluginAware) {
-      PluginAware pluginAware = (PluginAware)componentinstance;
-      pluginAware.setPluginDescriptor(myPluginDescriptor);
+      if (componentinstance instanceof PluginAware) {
+        PluginAware pluginAware = (PluginAware)componentinstance;
+        pluginAware.setPluginDescriptor(myPluginDescriptor);
+      }
+      return componentinstance;
     }
-    return componentinstance;
+    finally {
+      ourUnstableMarker.set(Boolean.FALSE);
+    }
   }
 
   @Nonnull

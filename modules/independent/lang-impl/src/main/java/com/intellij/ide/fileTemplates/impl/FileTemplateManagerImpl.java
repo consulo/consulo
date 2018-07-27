@@ -30,6 +30,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.impl.stores.StorageUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -40,14 +41,17 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Singleton
 @State(name = "FileTemplateManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileTemplateManagerImpl extends FileTemplateManager implements PersistentStateComponent<FileTemplateManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.FileTemplateManagerImpl");
@@ -66,10 +70,11 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     return (FileTemplateManagerImpl)getInstance(project);
   }
 
-  public FileTemplateManagerImpl(@Nonnull FileTypeManagerEx typeManager, FileTemplateSettings projectSettings, ExportableFileTemplateSettings defaultSettings,
+  @Inject
+  public FileTemplateManagerImpl(@Nonnull FileTypeManager typeManager, FileTemplateSettings projectSettings, ExportableFileTemplateSettings defaultSettings,
                                  /*need this to ensure disposal of the service _after_ project manager*/
                                  @SuppressWarnings("UnusedParameters") ProjectManager pm, final Project project) {
-    myTypeManager = typeManager;
+    myTypeManager = (FileTypeManagerEx)typeManager;
     myProjectSettings = projectSettings;
     myDefaultSettings = defaultSettings;
     myProject = project;

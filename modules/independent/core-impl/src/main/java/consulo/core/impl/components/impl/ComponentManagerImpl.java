@@ -16,16 +16,14 @@
 package consulo.core.impl.components.impl;
 
 import com.google.inject.*;
+import com.google.inject.Key;
 import com.google.inject.matcher.Matchers;
-import com.google.inject.spi.InjectionListener;
-import com.google.inject.spi.TypeEncounter;
-import com.google.inject.spi.TypeListener;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.ex.ComponentManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
@@ -37,29 +35,26 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
-import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import org.jetbrains.annotations.NonNls;
+import consulo.annotations.NotLazy;
 import org.jetbrains.annotations.TestOnly;
-import org.picocontainer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author VISTALL
- *         <p>
- *         guice variant of ComponentManagerImpl from picocontainer impl - base author mike
  */
-public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManagerEx, Disposable {
+public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManager, Disposable {
   private static final Logger LOG = Logger.getInstance(ComponentManagerImpl.class);
 
   private volatile boolean myDisposed = false;
@@ -73,15 +68,15 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private Injector myInjector;
   private String myName;
 
-  private final Set<Class> myInitedComponents = new ConcurrentHashSet<>();
-
-  private final Map<Class, Boolean> myBindings = new ConcurrentHashMap<>();
-
-  private final List<Class> mySingletonList = new CopyOnWriteArrayList<>();
+  private final AtomicInteger myNotLazyLoadCount = new AtomicInteger();
+  private final Map<Class, Boolean> myAllBindings = new ConcurrentHashMap<>();
+  private final Map<Class, ComponentConfig> myComponentConfigByImplClass = new ConcurrentHashMap<>();
 
   private boolean myComponentCreated;
 
   private ExtensionsArea myExtensionsArea;
+
+  private Map<Key, Object> myInitializeValues = new ConcurrentHashMap<>();
 
   protected ComponentManagerImpl(@Nullable ComponentManager parentComponentManager) {
     this(parentComponentManager, "");
@@ -94,16 +89,50 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myExtensionsArea = new ExtensionsAreaImpl(getAreaId(), this, new PluginManagerCore.IdeaLogProvider());
   }
 
+  protected void _setupComponent(Key key, Object component) {
+    myInitializeValues.computeIfAbsent(key, k -> {
+      if (this != component && component instanceof Disposable) {
+        Disposer.register(this, (Disposable)component);
+      }
+
+      boolean isNotLazy = component.getClass().isAnnotationPresent(NotLazy.class);
+      boolean isXmlSerializer = component instanceof JDOMExternalizable || component instanceof PersistentStateComponent;
+      if (isXmlSerializer) {
+        initializeFromStateStore(component, !isNotLazy);
+      }
+
+      if (isNotLazy) {
+        myNotLazyLoadCount.incrementAndGet();
+
+        componentCreated(component.getClass());
+      }
+
+      if (component.getClass().isAnnotationPresent(Singleton.class)) {
+        LOG.warn("Class is not annotated by @Singleton " + component.getClass());
+      }
+
+      return component;
+    });
+  }
+
   protected void buildInjector() {
     myInjector = createInjector(myName);
   }
 
   @Nonnull
   private Injector createInjector(@Nonnull String name) {
+    myMessageBus = MessageBusFactory.newMessageBus(name, myParentComponentManager == null ? null : myParentComponentManager.getMessageBus());
+
+    ComponentManagerScope scope = new ComponentManagerScope(this);
+
     AbstractModule module = new AbstractModule() {
       @Override
       protected void configure() {
-        bootstrapBinder(name, binder());
+        bindListener(Matchers.any(), PostMethodCaller.INSTANCE);
+        bindListener(Matchers.any(), ScopeProvisionListener.INSTANCE);
+        bindListener(Matchers.any(), ComponentInitListener.INSTANCE);
+
+        bootstrapBinder(scope, binder());
       }
     };
 
@@ -130,11 +159,14 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @SuppressWarnings("unchecked")
   public void init() {
-    for (Map.Entry<Class, Boolean> entry : myBindings.entrySet()) {
+    for (Map.Entry<Class, Boolean> entry : myAllBindings.entrySet()) {
       Class key = entry.getKey();
 
-      Object instance = myInjector.getInstance(key);
-      assert instance != null;
+      // hold @NotLazy
+      if (entry.getValue()) {
+        Object instance = myInjector.getInstance(key);
+        assert instance != null;
+      }
     }
   }
 
@@ -153,16 +185,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myComponentCreated;
   }
 
-  protected synchronized Object createComponent(@Nonnull Class componentInterface) {
-    final Object component = getPicoContainer().getComponentInstance(componentInterface.getName());
-    LOG.assertTrue(component != null, "Can't instantiate component for: " + componentInterface);
-    return component;
+  protected void componentCreated(@Nonnull Class componentInterface) {
   }
 
   protected synchronized void disposeComponents() {
     assert !myDisposeCompleted : "Already disposed!";
 
-    for (Class<?> o : ContainerUtil.reverse(new ArrayList<>(myBindings.keySet()))) {
+    for (Class<?> o : ContainerUtil.reverse(new ArrayList<>(myAllBindings.keySet()))) {
       Object instance = myInjector.getInstance(o);
       if (instance instanceof BaseComponent) {
         ((BaseComponent)instance).disposeComponent();
@@ -172,21 +201,22 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   public <T> T getComponent(@Nonnull Class<T> interfaceClass) {
-    return getComponent(interfaceClass, null);
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementation) {
     if (myDisposeCompleted) {
       ProgressManager.checkCanceled();
       throw new AssertionError("Already disposed: " + this);
     }
 
-    if (myBindings.containsKey(interfaceClass)) {
-      return myInjector.getInstance(interfaceClass);
+    T instance = getCustomComponentInstance(interfaceClass);
+    if (instance != null) {
+      return instance;
     }
-    return defaultImplementation;
+
+    return myInjector.getInstance(interfaceClass);
+  }
+
+  @Nullable
+  protected <T> T getCustomComponentInstance(@Nonnull Class<T> clazz) {
+    return null;
   }
 
   @Nullable
@@ -199,10 +229,9 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected float getPercentageOfComponentsLoaded() {
-    return 1f;
+    return (float)(myNotLazyLoadCount.get() / getNotLazyComponentsSize());
   }
 
-  @Override
   public void initializeFromStateStore(@Nonnull Object component, boolean service) {
   }
 
@@ -211,32 +240,34 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
-  public synchronized void registerComponent(@Nonnull final ComponentConfig config, final PluginDescriptor pluginDescriptor) {
-    if (!config.prepareClasses(isHeadless(), isCompilerServer())) {
-      return;
-    }
-
-    config.pluginDescriptor = pluginDescriptor;
-  }
-
-  @Override
   public boolean hasComponent(@Nonnull Class interfaceClass) {
-    return myBindings.get(interfaceClass) != null;
+    return myAllBindings.get(interfaceClass) != null;
   }
 
   @Override
   @SuppressWarnings({"unchecked"})
   @Nonnull
-  public synchronized <T> T[] getComponents(@Nonnull Class<T> baseClass) {
-    return (T[])new Object[0];
+  public <T> T[] getComponents(@Nonnull Class<T> baseClass) {
+    List<T> list = new ArrayList<T>();
+    for (Map.Entry<Class, Boolean> entry : myAllBindings.entrySet()) {
+      // skip services
+      if (!entry.getValue()) {
+        continue;
+      }
+
+      Class key = entry.getKey();
+      if (key.isAssignableFrom(baseClass)) {
+        list.add((T)getInjector().getInstance(key));
+      }
+    }
+    return list.toArray((T[])Array.newInstance(baseClass, list.size()));
   }
 
   protected boolean isComponentSuitable(Map<String, String> options) {
     return !isTrue(options, "internal") || ApplicationManager.getApplication().isInternal();
   }
 
-  private static boolean isTrue(Map<String, String> options, @NonNls @Nonnull String option) {
+  private static boolean isTrue(Map<String, String> options, @Nonnull String option) {
     return options != null && options.containsKey(option) && Boolean.valueOf(options.get(option));
   }
 
@@ -250,7 +281,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       myMessageBus = null;
     }
 
-    myBindings.clear();
+    myComponentConfigByImplClass.clear();
+    myAllBindings.clear();
   }
 
   @Override
@@ -265,40 +297,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     temporarilyDisposed = disposed;
   }
 
-  protected void bootstrapBinder(String name, Binder binder) {
-    myMessageBus = MessageBusFactory.newMessageBus(name, myParentComponentManager == null ? null : myParentComponentManager.getMessageBus());
-
-    binder.bind(MessageBus.class).toInstance(myMessageBus);
-
-    binder.bindListener(Matchers.any(), new TypeListener() {
-      @Override
-      public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
-        typeEncounter.register((InjectionListener<? super I>)(component) -> {
-          ComponentManagerImpl manager = ComponentManagerImpl.this;
-          if (manager != component && component instanceof com.intellij.openapi.Disposable) {
-            Disposer.register(manager, (com.intellij.openapi.Disposable)component);
-          }
-
-          if (component instanceof JDOMExternalizable || component instanceof PersistentStateComponent) {
-            initializeFromStateStore(component, myBindings.get(typeLiteral.getRawType()) == Boolean.FALSE);
-          }
-
-          if (component instanceof BaseComponent) {
-            if (myInitedComponents.add(component.getClass())) {
-              ((BaseComponent)component).initComponent();
-            }
-          }
-
-          if (mySingletonList.contains(component.getClass())) {
-            LOG.warn("Duplicate initialization. Class is not annotated by @Singleton " + component.getClass() + "?");
-          }
-          else {
-            mySingletonList.add(component.getClass());
-          }
-        });
-      }
-    });
-
+  protected void bootstrapBinder(Scope scope, Binder binder) {
     boolean isDefault = this instanceof Project && ((Project)this).isDefault();
 
     IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
@@ -306,20 +305,12 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
         ComponentConfig[] components = selectComponentConfigs(plugin);
         for (ComponentConfig component : components) {
-          Class interfaceClazz = loadSingleConfig(binder, isDefault, component, plugin);
-          if (interfaceClazz != null) {
-            myBindings.put(interfaceClazz, Boolean.TRUE);
-          }
+          load(binder, isDefault, component, plugin, scope);
         }
       }
     }
 
     PluginManagerCore.registerExtensionPointsAndExtensions(this);
-
-    if (this instanceof Project && isDefault) {
-      myComponentCreated = true;
-      return;
-    }
 
     // we cant initialize extensions since injector is not inited
     ExtensionPointImpl<ServiceDescriptor> point = (ExtensionPointImpl<ServiceDescriptor>)myExtensionsArea.getExtensionPoint(getServiceEpName());
@@ -335,31 +326,22 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       componentConfig.setImplementationClass(descriptor.serviceImplementation);
       componentConfig.pluginDescriptor = descriptor.myPluginDescriptor;
 
-      Class interfaceClazz = loadSingleConfig(binder, isDefault, componentConfig, descriptor.myPluginDescriptor);
-      if (interfaceClazz != null) {
-        myBindings.put(interfaceClazz, Boolean.FALSE);
-      }
+      load(binder, isDefault, componentConfig, descriptor.myPluginDescriptor, scope);
     }
 
     myComponentCreated = true;
   }
 
-  @Nullable
-  private Class loadSingleConfig(Binder binder, final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor) {
-    if (defaultProject && !config.isLoadForDefaultProject()) return null;
-
-    if (!isComponentSuitable(config.options)) return null;
-
-    return registerComponent(binder, config, descriptor);
-  }
-
-  @Nullable
-  public Class registerComponent(Binder binder, @Nonnull final ComponentConfig config, final PluginDescriptor pluginDescriptor) {
-    if (!config.prepareClasses(isHeadless(), isCompilerServer())) {
-      return null;
+  private void load(Binder binder, final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor, Scope scope) {
+    if (defaultProject && !config.isLoadForDefaultProject() || !isComponentSuitable(config.options)) {
+      return;
     }
 
-    config.pluginDescriptor = pluginDescriptor;
+    if (!config.prepareClasses(isHeadless(), isCompilerServer())) {
+      return;
+    }
+
+    config.pluginDescriptor = descriptor;
 
     ClassLoader loader = config.getClassLoader();
 
@@ -367,20 +349,25 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       final Class interfaceClass = Class.forName(config.getInterfaceClass(), true, loader);
       final Class implementationClass = Comparing.equal(config.getInterfaceClass(), config.getImplementationClass()) ? interfaceClass : Class.forName(config.getImplementationClass(), true, loader);
 
+      myComponentConfigByImplClass.put(implementationClass, config);
+
       if (interfaceClass != implementationClass) {
-        binder.bind(interfaceClass).to(implementationClass);
+        binder.bind(interfaceClass).to(implementationClass).in(scope);
       }
       else {
-        binder.bind(interfaceClass);
+        binder.bind(implementationClass).in(scope);
       }
 
-      return interfaceClass;
+      myAllBindings.put(interfaceClass, implementationClass.isAnnotationPresent(NotLazy.class));
     }
     catch (Throwable e) {
       handleInitComponentError(e, null, config);
     }
+  }
 
-    return null;
+  @Nullable
+  public ComponentConfig getConfigByImplClass(@Nonnull Class<?> clazz) {
+    return myComponentConfigByImplClass.get(clazz);
   }
 
   @Nonnull
@@ -391,10 +378,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Nonnull
   protected abstract ComponentConfig[] selectComponentConfigs(IdeaPluginDescriptor descriptor);
-
-  protected ComponentManager getParentComponentManager() {
-    return myParentComponentManager;
-  }
 
   private static class HeadlessHolder {
     private static final boolean myHeadless = Application.get().isHeadlessEnvironment();
@@ -409,9 +392,9 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return HeadlessHolder.myCompilerServer;
   }
 
-  public int getComponentsSize() {
+  public int getNotLazyComponentsSize() {
     int i = 0;
-    for (Boolean value : myBindings.values()) {
+    for (Boolean value : myAllBindings.values()) {
       if (value) {
         i++;
       }

@@ -17,11 +17,11 @@
 package com.intellij.openapi.module.impl;
 
 import com.google.inject.Binder;
+import com.google.inject.Scope;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ServiceDescriptor;
-import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
@@ -70,10 +70,8 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
   @Override
-  protected void bootstrapBinder(String name, Binder binder) {
-    super.bootstrapBinder(name, binder);
-
-    binder.bind(ModulePathMacroManager.class);
+  protected void bootstrapBinder(Scope scope, Binder binder) {
+    super.bootstrapBinder(scope, binder);
   }
 
   @Nonnull
@@ -82,6 +80,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     return descriptor.getAppComponents();
   }
 
+  @Nonnull
   @Override
   public String getAreaId() {
     return ExtensionAreas.MODULE;

@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
  *
  * An extension can implement this interface to get notifications when it is added/removed to {@link ExtensionPoint}
  */
+@Deprecated
 public interface Extension {
   void extensionAdded(@Nonnull ExtensionPoint extensionPoint);
   void extensionRemoved(@Nonnull ExtensionPoint extensionPoint);

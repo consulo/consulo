@@ -16,12 +16,16 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.CommandAdapter;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CommandMerger;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
@@ -30,23 +34,27 @@ import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.xmlb.annotations.Transient;
+import consulo.annotations.NotLazy;
 import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
-@State(
-    name = "IdeDocumentHistory",
-    storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}
-)
-public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements ProjectComponent, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
+@State(name = "IdeDocumentHistory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
+@NotLazy
+public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Disposable, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl");
 
   private static final int BACK_QUEUE_LIMIT = 25;
@@ -93,6 +101,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
   private RecentlyChangedFilesState myRecentlyChangedFiles = new RecentlyChangedFilesState();
 
+  @Inject
   public IdeDocumentHistoryImpl(@Nonnull Project project,
                                 @Nonnull EditorFactory editorFactory,
                                 @Nonnull FileEditorManager editorManager,
@@ -105,10 +114,18 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
     myVfManager = vfManager;
     myCmdProcessor = cmdProcessor;
     myToolWindowManager = toolWindowManager;
+
+    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(myProject == project) {
+          IdeDocumentHistoryImpl.this.projectOpened();
+        }
+      }
+    });
   }
 
-  @Override
-  public final void projectOpened() {
+  private void projectOpened() {
     myEditorManager = (FileEditorManagerEx)FileEditorManager.getInstance(myProject);
     EditorEventMulticaster eventMulticaster = myEditorFactory.getEventMulticaster();
 
@@ -126,7 +143,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
         onCaretPositionChanged(e);
       }
     };
-    eventMulticaster.addCaretListener(caretListener,myProject);
+    eventMulticaster.addCaretListener(caretListener, myProject);
 
     myProject.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
@@ -141,12 +158,13 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
         onFileDeleted();
       }
     };
-    myVfManager.addVirtualFileListener(fileListener,myProject);
-    myCmdProcessor.addCommandListener(myCommandListener,myProject);
+    myVfManager.addVirtualFileListener(fileListener, myProject);
+    myCmdProcessor.addCommandListener(myCommandListener, myProject);
   }
 
   public static class RecentlyChangedFilesState {
-    @Transient private List<String> CHANGED_PATHS = new ArrayList<String>();
+    @Transient
+    private List<String> CHANGED_PATHS = new ArrayList<String>();
 
     public List<String> getChangedFiles() {
       return CHANGED_PATHS;
@@ -163,9 +181,9 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
       trimToSize();
     }
 
-    private void trimToSize(){
+    private void trimToSize() {
       final int limit = UISettings.getInstance().RECENT_FILES_LIMIT + 1;
-      while(CHANGED_PATHS.size()>limit){
+      while (CHANGED_PATHS.size() > limit) {
         CHANGED_PATHS.remove(0);
       }
     }
@@ -216,9 +234,9 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   }
 
   private PlaceInfo getCurrentPlaceInfo() {
-    final Pair<FileEditor,FileEditorProvider> selectedEditorWithProvider = getSelectedEditor();
+    final Pair<FileEditor, FileEditorProvider> selectedEditorWithProvider = getSelectedEditor();
     if (selectedEditorWithProvider != null) {
-      return createPlaceInfo(selectedEditorWithProvider.getFirst (), selectedEditorWithProvider.getSecond ());
+      return createPlaceInfo(selectedEditorWithProvider.getFirst(), selectedEditorWithProvider.getSecond());
     }
     return null;
   }
@@ -247,11 +265,6 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
     }
   }
 
-
-  @Override
-  public final void projectClosed() {
-  }
-
   @Override
   public final void includeCurrentCommandAsNavigation() {
     myCurrentCommandIsNavigation = true;
@@ -264,11 +277,11 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   }
 
   private void setCurrentChangePlace() {
-    final Pair<FileEditor,FileEditorProvider> selectedEditorWithProvider = getSelectedEditor();
+    final Pair<FileEditor, FileEditorProvider> selectedEditorWithProvider = getSelectedEditor();
     if (selectedEditorWithProvider == null) {
       return;
     }
-    final PlaceInfo placeInfo = createPlaceInfo(selectedEditorWithProvider.getFirst(), selectedEditorWithProvider.getSecond ());
+    final PlaceInfo placeInfo = createPlaceInfo(selectedEditorWithProvider.getFirst(), selectedEditorWithProvider.getSecond());
 
     final VirtualFile file = placeInfo.getFile();
     if (myChangedFilesInCurrentCommand.contains(file)) {
@@ -384,7 +397,8 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
     while (!myForwardPlaces.isEmpty()) {
       if (isSame(current, target)) {
         target = myForwardPlaces.removeLast();
-      } else {
+      }
+      else {
         break;
       }
     }
@@ -433,7 +447,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
   private static boolean removeInvalidFilesFrom(final LinkedList<PlaceInfo> backPlaces) {
     boolean removed = false;
-    for (Iterator<PlaceInfo> iterator = backPlaces.iterator(); iterator.hasNext();) {
+    for (Iterator<PlaceInfo> iterator = backPlaces.iterator(); iterator.hasNext(); ) {
       PlaceInfo info = iterator.next();
       final VirtualFile file = info.myFile;
       if (!file.isValid()) {
@@ -448,19 +462,20 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   private void gotoPlaceInfo(@Nonnull PlaceInfo info) { // TODO: Msk
     final boolean wasActive = myToolWindowManager.isEditorComponentActive();
     EditorWindow wnd = info.getWindow();
-    final Pair<FileEditor[],FileEditorProvider[]> editorsWithProviders;
+    final Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders;
     if (wnd != null && wnd.isValid()) {
       editorsWithProviders = myEditorManager.openFileWithProviders(info.getFile(), wasActive, wnd);
-    } else {
+    }
+    else {
       editorsWithProviders = myEditorManager.openFileWithProviders(info.getFile(), wasActive, false);
     }
 
     myEditorManager.setSelectedEditor(info.getFile(), info.getEditorTypeId());
 
-    final FileEditor        [] editors   = editorsWithProviders.getFirst();
+    final FileEditor[] editors = editorsWithProviders.getFirst();
     final FileEditorProvider[] providers = editorsWithProviders.getSecond();
     for (int i = 0; i < editors.length; i++) {
-      String typeId = providers [i].getEditorTypeId();
+      String typeId = providers[i].getEditorTypeId();
       if (typeId.equals(info.getEditorTypeId())) {
         editors[i].setState(info.getNavigationState());
       }
@@ -470,7 +485,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   /**
    * @return currently selected FileEditor or null.
    */
-  protected Pair<FileEditor,FileEditorProvider> getSelectedEditor() {
+  protected Pair<FileEditor, FileEditorProvider> getSelectedEditor() {
     VirtualFile file = myEditorManager.getCurrentFile();
     return file != null ? myEditorManager.getSelectedEditorWithProvider(file) : null;
   }
@@ -486,13 +501,6 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
   private static void clearPlaceList(LinkedList<PlaceInfo> list) {
     list.clear();
-  }
-
-
-  @Override
-  @Nonnull
-  public final String getComponentName() {
-    return "IdeDocumentHistory";
   }
 
   private static void putLastOrMerge(LinkedList<PlaceInfo> list, PlaceInfo next, int limitSizeLimit) {
@@ -562,10 +570,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   }
 
   @Override
-  public final void initComponent() { }
-
-  @Override
-  public final void disposeComponent() {
+  public final void dispose() {
     myLastGroupId = null;
   }
 

@@ -36,13 +36,15 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@State(name = "DependencyValidationManager", storages = {
-        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
+@State(name = "DependencyValidationManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
+@Singleton
 public class DependencyValidationManagerImpl extends DependencyValidationManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packageDependencies.DependencyValidationManagerImpl");
 
@@ -67,6 +69,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   private final Map<String, PackageSet> myUnnamedScopes = new THashMap<String, PackageSet>();
 
+  @Inject
   public DependencyValidationManagerImpl(final Project project, NamedScopeManager namedScopeManager) {
     super(project);
     myNamedScopeManager = namedScopeManager;

@@ -50,7 +50,7 @@ public class CoreProjectEnvironment {
   public CoreProjectEnvironment(Disposable parentDisposable, CoreApplicationEnvironment applicationEnvironment) {
     myParentDisposable = parentDisposable;
     myEnvironment = applicationEnvironment;
-    myProject = new MockProject(myEnvironment.getApplication().getPicoContainer(), myParentDisposable);
+    myProject = new MockProject( myParentDisposable);
 
     preregisterServices();
 
@@ -60,10 +60,10 @@ public class CoreProjectEnvironment {
     PsiModificationTrackerImpl modificationTracker = new PsiModificationTrackerImpl(myProject);
     myProject.registerService(PsiModificationTracker.class, modificationTracker);
     myProject.registerService(FileIndexFacade.class, myFileIndexFacade);
-    myProject.registerService(ResolveCache.class, new ResolveCache(myMessageBus));
+    myProject.registerService(ResolveCache.class, new ResolveCache(myProject));
 
     registerProjectExtensionPoint(PsiTreeChangePreprocessor.EP_NAME, PsiTreeChangePreprocessor.class);
-    myPsiManager = new PsiManagerImpl(myProject, null, null, myFileIndexFacade, myMessageBus, modificationTracker);
+    myPsiManager = new PsiManagerImpl(myProject, null, null, myFileIndexFacade, modificationTracker);
     ((FileManagerImpl)myPsiManager.getFileManager()).markInitialized();
     registerProjectComponent(PsiManager.class, myPsiManager);
 
@@ -110,7 +110,7 @@ public class CoreProjectEnvironment {
 
 
   public <T> void registerProjectComponent(final Class<T> interfaceClass, final T implementation) {
-    CoreApplicationEnvironment.registerComponentInstance(myProject.getPicoContainer(), interfaceClass, implementation);
+   // CoreApplicationEnvironment.registerComponentInstance(myProject.getPicoContainer(), interfaceClass, implementation);
   }
 
   public Disposable getParentDisposable() {

@@ -28,10 +28,13 @@ import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContentProvider {
   private final Project myProject;
   private final FileStatusManagerImpl myFileStatusManager;
@@ -44,6 +47,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.VcsFileStatusProvider");
 
+  @Inject
   public VcsFileStatusProvider(final Project project,
                                final FileStatusManagerImpl fileStatusManager,
                                final ProjectLevelVcsManager vcsManager,

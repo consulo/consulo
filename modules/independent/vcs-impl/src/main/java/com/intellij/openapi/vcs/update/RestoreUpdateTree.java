@@ -31,13 +31,17 @@ import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class RestoreUpdateTree implements ProjectComponent, JDOMExternalizable, RoamingTypeDisabled {
   private final Project myProject;
 
   private UpdateInfo myUpdateInfo;
   @NonNls private static final String UPDATE_INFO = "UpdateInfo";
 
+  @Inject
   public RestoreUpdateTree(Project project) {
     myProject = project;
   }

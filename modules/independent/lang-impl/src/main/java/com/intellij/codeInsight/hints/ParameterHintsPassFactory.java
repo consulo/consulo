@@ -25,7 +25,6 @@ import com.intellij.codeInsight.hints.filtering.MatcherConstructor;
 import com.intellij.codeInsight.hints.settings.Diff;
 import com.intellij.codeInsight.hints.settings.ParameterNameHintsSettings;
 import com.intellij.lang.Language;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.Inlay;
@@ -42,17 +41,17 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import consulo.annotations.RequiredReadAction;
 import gnu.trove.TIntObjectHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ParameterHintsPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
+public class ParameterHintsPassFactory implements TextEditorHighlightingPassFactory {
   private static final Key<Boolean> REPEATED_PASS = Key.create("RepeatedParameterHintsPass");
 
-  public ParameterHintsPassFactory(Project project, TextEditorHighlightingPassRegistrar registrar) {
-    super(project);
+  @Override
+  public void register(@Nonnull Project project, @Nonnull TextEditorHighlightingPassRegistrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, null, null, false, -1);
   }
 
@@ -87,11 +86,7 @@ public class ParameterHintsPassFactory extends AbstractProjectComponent implemen
         blackList.addAll(getBlackList(dependentLanguage));
       }
 
-      List<Matcher> matchers = blackList
-              .stream()
-              .map(MatcherConstructor::createMatcher)
-              .filter(Objects::nonNull)
-              .collect(Collectors.toList());
+      List<Matcher> matchers = blackList.stream().map(MatcherConstructor::createMatcher).filter(Objects::nonNull).collect(Collectors.toList());
 
       SyntaxTraverser.psiTraverser(myFile).forEach(element -> process(element, provider, matchers));
     }

@@ -15,14 +15,13 @@
  */
 package com.intellij.dvcs.test;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.components.BaseComponent;
-import org.picocontainer.PicoContainer;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.messages.MessageBus;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -101,11 +100,6 @@ public class MockProject implements Project {
   }
 
   @Override
-  public BaseComponent getComponent(String name) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public <T> T getComponent(Class<T> interfaceClass) {
     throw new UnsupportedOperationException();
   }
@@ -128,11 +122,6 @@ public class MockProject implements Project {
 
   @Nonnull
   @Override
-  public PicoContainer getPicoContainer() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public MessageBus getMessageBus() {
     return null;
   }
@@ -142,6 +131,7 @@ public class MockProject implements Project {
     return false;
   }
 
+  @Nonnull
   @Override
   public <T> T[] getExtensions(ExtensionPointName<T> extensionPointName) {
     throw new UnsupportedOperationException();

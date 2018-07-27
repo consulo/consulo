@@ -59,6 +59,8 @@ import com.intellij.util.ui.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
@@ -77,10 +79,12 @@ import java.util.List;
 /**
  * @author spleaner
  */
+@Singleton
 public class NotificationsManagerImpl extends NotificationsManager {
   public static final Color FILL_COLOR = new JBColor(Gray._242, new Color(78, 80, 82));
   public static final Color BORDER_COLOR = new JBColor(Gray._178.withAlpha(205), new Color(86, 90, 92, 205));
 
+  @Inject
   public NotificationsManagerImpl() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(null));
   }
@@ -242,7 +246,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
       }
       final Balloon balloon =
-              createBalloon((IdeFrame)window, notification, false, false, layoutDataRef, project != null ? project : ApplicationManager.getApplication());
+              createBalloon((IdeFrame)window, notification, false, false, layoutDataRef, project != null ? project : Application.get());
       if (notification.isExpired()) {
         return null;
       }

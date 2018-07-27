@@ -22,10 +22,10 @@ import com.intellij.history.integration.ui.models.EntireFileHistoryDialogModel;
 import com.intellij.history.integration.ui.models.HistoryDialogModel;
 import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -36,11 +36,13 @@ import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.NotLazy;
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
@@ -50,7 +52,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.intellij.history.integration.LocalHistoryUtil.findRevisionIndexToRevert;
 
 @Singleton
-public class LocalHistoryImpl extends LocalHistory implements ApplicationComponent, Disposable {
+@NotLazy
+public class LocalHistoryImpl extends LocalHistory implements Disposable {
   private final MessageBus myBus;
   private MessageBusConnection myConnection;
   private ChangeList myChangeList;
@@ -67,11 +70,11 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   }
 
   @Inject
-  public LocalHistoryImpl(@Nonnull MessageBus bus) {
-    myBus = bus;
+  public LocalHistoryImpl(@Nonnull Application application) {
+    myBus = application.getMessageBus();
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     if (!ApplicationManager.getApplication().isUnitTestMode() && ApplicationManager.getApplication().isHeadlessEnvironment()) return;
 

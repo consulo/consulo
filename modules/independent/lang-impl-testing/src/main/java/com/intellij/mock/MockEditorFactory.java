@@ -118,17 +118,4 @@ public class MockEditorFactory extends EditorFactory {
   @Override
   public void refreshAllEditors() {
   }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "mockeditorfactory";
-  }
-
-  @Override
-  public void initComponent() { }
-
-  @Override
-  public void disposeComponent() {
-  }
 }

@@ -16,6 +16,7 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.util.NotNullFunction;
@@ -26,15 +27,15 @@ import javax.annotation.Nonnull;
  * For old-style components, the contract specifies a lifecycle: the component gets created and notified during the project opening process.
  * For services, there's no such contract, so we don't even load the class implementing the service until someone requests it.
  */
-public class ServiceManager {
+public final class ServiceManager {
   private ServiceManager() { }
 
   public static <T> T getService(@Nonnull Class<T> serviceClass) {
     return Application.get().getInjector().getInstance(serviceClass);
   }
 
-  public static <T> T getService(@Nonnull Project project, @Nonnull Class<T> serviceClass) {
-    return project.getInjector().getInstance(serviceClass);
+  public static <T> T getService(@Nonnull AreaInstance instance, @Nonnull Class<T> serviceClass) {
+    return instance.getInjector().getInstance(serviceClass);
   }
 
   /**

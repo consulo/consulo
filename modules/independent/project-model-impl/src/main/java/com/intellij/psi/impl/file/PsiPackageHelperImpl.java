@@ -19,17 +19,22 @@ package com.intellij.psi.impl.file;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
-import com.intellij.psi.impl.PsiManagerImpl;
+import com.intellij.psi.PsiManager;
 import consulo.psi.PsiPackageManager;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class PsiPackageHelperImpl extends PsiPackageHelper {
-  private final PsiManagerImpl myManager;
+  private final PsiManager myManager;
 
-  public PsiPackageHelperImpl(final PsiManagerImpl manager) {
+  @Inject
+  public PsiPackageHelperImpl(final PsiManager manager) {
     myManager = manager;
   }
 

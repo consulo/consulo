@@ -16,38 +16,40 @@
 
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import consulo.annotations.NotLazy;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
 @State(name = "VcsDirectoryMappings", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
-public class VcsDirectoryMappingStorage extends AbstractProjectComponent implements PersistentStateComponent<Element> {
+@Singleton
+@NotLazy
+public class VcsDirectoryMappingStorage implements PersistentStateComponent<Element> {
   private final ProjectLevelVcsManager myVcsManager;
 
-  public VcsDirectoryMappingStorage(final ProjectLevelVcsManager vcsManager, Project project) {
-    super(project);
+  @Inject
+  public VcsDirectoryMappingStorage(final ProjectLevelVcsManager vcsManager) {
     myVcsManager = vcsManager;
   }
 
+  @Override
   public Element getState() {
     final Element e = new Element("state");
     ((ProjectLevelVcsManagerImpl)myVcsManager).writeDirectoryMappings(e);
     return e;
   }
 
+  @Override
   public void loadState(Element state) {
     ((ProjectLevelVcsManagerImpl)myVcsManager).readDirectoryMappings(state);
-  }
-
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "VcsDirectoryMappings";
   }
 }

@@ -18,7 +18,6 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -28,6 +27,8 @@ import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
@@ -35,17 +36,21 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.annotations.NotLazy;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class EditorTracker extends AbstractProjectComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.EditorTracker");
+@Singleton
+@NotLazy
+public class EditorTracker {
+  private static final Logger LOG = Logger.getInstance(EditorTracker.class);
 
   private final WindowManager myWindowManager;
   private final EditorFactory myEditorFactory;
@@ -60,15 +65,26 @@ public class EditorTracker extends AbstractProjectComponent {
   private JFrame myIdeFrame;
   private Window myActiveWindow;
 
+  private final Project myProject;
+
+  @Inject
   public EditorTracker(Project project,
                        WindowManager windowManager,
                        EditorFactory editorFactory) {
-    super(project);
+    myProject = project;
     myWindowManager = windowManager;
     myEditorFactory = editorFactory;
+
+    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(myProject == project) {
+          EditorTracker.this.projectOpened();
+        }
+      }
+    });
   }
 
-  @Override
   public void projectOpened() {
     myIdeFrame = myWindowManager.getFrame(myProject);
     myProject.getMessageBus().connect(myProject).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
@@ -87,13 +103,6 @@ public class EditorTracker extends AbstractProjectComponent {
         myEditorFactoryListener.executeOnRelease(null);
       }
     });
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "EditorTracker";
   }
 
   private void editorFocused(Editor editor) {

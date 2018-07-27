@@ -24,40 +24,33 @@ import com.intellij.lang.ExternalLanguageAnnotators;
 import com.intellij.lang.Language;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
  * @author cdr
  */
-public class ExternalToolPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
-  private final MergingUpdateQueue myExternalActivitiesQueue;
-
-  public ExternalToolPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    // start after PostHighlightingPass completion since it could report errors that can prevent us to run
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, null, true, Pass.EXTERNAL_TOOLS);
-
-    myExternalActivitiesQueue = new MergingUpdateQueue("ExternalActivitiesQueue", 300, true, MergingUpdateQueue.ANY_COMPONENT, project,
-                                                       null, false);
-    myExternalActivitiesQueue.setPassThrough(ApplicationManager.getApplication().isUnitTestMode());
-  }
+public class ExternalToolPassFactory implements TextEditorHighlightingPassFactory {
+  private static final Key<MergingUpdateQueue> MERGING_UPDATE_QUEUE_KEY = Key.create("ExternalToolPassFactory.MergingUpdateQueue");
 
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ExternalToolPassFactory";
+  public void register(@Nonnull Project project, @Nonnull TextEditorHighlightingPassRegistrar registrar) {
+    // start after PostHighlightingPass completion since it could report errors that can prevent us to run
+    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, null, true, Pass.EXTERNAL_TOOLS);
+
+    MergingUpdateQueue queue = new MergingUpdateQueue("ExternalActivitiesQueue", 300, true, MergingUpdateQueue.ANY_COMPONENT, project, null, false);
+    queue.setPassThrough(ApplicationManager.getApplication().isUnitTestMode());
+
+    project.putUserData(MERGING_UPDATE_QUEUE_KEY, queue);
   }
 
   @Override
@@ -80,7 +73,9 @@ public class ExternalToolPassFactory extends AbstractProjectComponent implements
     return false;
   }
 
-  void scheduleExternalActivity(@Nonnull Update update) {
-    myExternalActivitiesQueue.queue(update);
+  void scheduleExternalActivity(@Nonnull PsiFile file, @Nonnull Update update) {
+    MergingUpdateQueue queue = file.getUserData(MERGING_UPDATE_QUEUE_KEY);
+    assert queue != null;
+    queue.queue(update);
   }
 }

@@ -15,15 +15,12 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 import com.intellij.openapi.extensions.DefaultPluginDescriptor;
 import com.intellij.openapi.extensions.LoadingOrder;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.junit.Test;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -42,19 +39,6 @@ public class ExtensionComponentAdapterTest {
     assertEquals(LoadingOrder.LAST, createAdapter("<extension order=\"LAST\"/>").getOrder());
     assertEquals(LoadingOrder.before("test"), createAdapter("<extension order=\"BEFORE test\"/>").getOrder());
     assertEquals(LoadingOrder.after("test"), createAdapter("<extension order=\"AFTER test\"/>").getOrder());
-  }
-
-  @Test
-  public void testUnknownAttributes() {
-    String name = TestExtensionClassOne.class.getName();
-    Element element = readElement("<bean implementation=\"123\"/>");
-    DefaultPicoContainer container = new DefaultPicoContainer();
-    DefaultPluginDescriptor descriptor = new DefaultPluginDescriptor("test");
-    new ExtensionComponentAdapter(name, element, descriptor, false).apply(Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-      }
-    }));
   }
 
   private static ExtensionComponentAdapter createAdapter(String text) {

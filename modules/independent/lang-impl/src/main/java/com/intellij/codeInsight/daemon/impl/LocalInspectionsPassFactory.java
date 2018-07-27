@@ -22,7 +22,6 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -32,45 +31,37 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author cdr
  */
-public class LocalInspectionsPassFactory extends AbstractProjectComponent implements MainHighlightingPassFactory {
+public class LocalInspectionsPassFactory implements MainHighlightingPassFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory");
-  public LocalInspectionsPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, ArrayUtil.EMPTY_INT_ARRAY, true, Pass.LOCAL_INSPECTIONS);
-  }
 
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "LocalInspectionsPassFactory";
+  public void register(@Nonnull Project project, @Nonnull TextEditorHighlightingPassRegistrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, ArrayUtil.EMPTY_INT_ARRAY, true, Pass.LOCAL_INSPECTIONS);
   }
 
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
+    Project project = file.getProject();
     TextRange textRange = calculateRangeToProcess(editor);
-    if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()){
-      return new ProgressableTextEditorHighlightingPass.EmptyPass(myProject, editor.getDocument());
+    if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()) {
+      return new ProgressableTextEditorHighlightingPass.EmptyPass(project, editor.getDocument());
     }
     TextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
     return new MyLocalInspectionsPass(file, editor.getDocument(), textRange, visibleRange, new DefaultHighlightInfoProcessor());
   }
 
   @Override
-  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
-                                                               @Nonnull Document document,
-                                                               @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file, @Nonnull Document document, @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     final TextRange textRange = file.getTextRange();
     LOG.assertTrue(textRange != null, "textRange is null for " + file + " (" + PsiUtilCore.getVirtualFile(file) + ")");
     return new MyLocalInspectionsPass(file, document, textRange, LocalInspectionsPass.EMPTY_PRIORITY_RANGE, highlightInfoProcessor);
@@ -81,11 +72,7 @@ public class LocalInspectionsPassFactory extends AbstractProjectComponent implem
   }
 
   private static class MyLocalInspectionsPass extends LocalInspectionsPass {
-    private MyLocalInspectionsPass(PsiFile file,
-                                   Document document,
-                                   @Nonnull TextRange textRange,
-                                   TextRange visibleRange,
-                                   @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+    private MyLocalInspectionsPass(PsiFile file, Document document, @Nonnull TextRange textRange, TextRange visibleRange, @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
       super(file, document, textRange.getStartOffset(), textRange.getEndOffset(), visibleRange, true, highlightInfoProcessor);
     }
 

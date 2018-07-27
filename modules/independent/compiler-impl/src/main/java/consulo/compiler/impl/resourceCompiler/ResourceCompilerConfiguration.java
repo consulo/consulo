@@ -37,6 +37,8 @@ import org.apache.oro.text.regex.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +48,8 @@ import java.util.StringTokenizer;
  * @author VISTALL
  * @since 20:16/24.05.13
  */
-@State(
-  name = "ResourceCompilerConfiguration",
-  storages = {
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")})
+@State(name = "ResourceCompilerConfiguration", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")})
+@Singleton
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
   @Nonnull
   public static ResourceCompilerConfiguration getInstance(@Nonnull Project project) {
@@ -88,6 +88,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   private boolean myWildcardPatternsInitialized = false;
   private final Perl5Matcher myPatternMatcher = new Perl5Matcher();
 
+  @Inject
   public ResourceCompilerConfiguration(Project project) {
     myProject = project;
   }
@@ -181,41 +182,39 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
       if (!ok) {
         final String initialPatternString = patternsToString(getRegexpPatterns());
         final String message = CompilerBundle
-          .message("message.resource.patterns.format.changed", ApplicationNamesInfo.getInstance().getProductName(), initialPatternString,
-                   CommonBundle.getOkButtonText(), CommonBundle.getCancelButtonText());
-        final String wildcardPatterns = Messages
-          .showInputDialog(myProject, message, CompilerBundle.message("pattern.conversion.dialog.title"), Messages.getWarningIcon(),
-                           initialPatternString, new InputValidator() {
-            public boolean checkInput(String inputString) {
-              return true;
-            }
+                .message("message.resource.patterns.format.changed", ApplicationNamesInfo.getInstance().getProductName(), initialPatternString, CommonBundle.getOkButtonText(),
+                         CommonBundle.getCancelButtonText());
+        final String wildcardPatterns =
+                Messages.showInputDialog(myProject, message, CompilerBundle.message("pattern.conversion.dialog.title"), Messages.getWarningIcon(), initialPatternString, new InputValidator() {
+                  public boolean checkInput(String inputString) {
+                    return true;
+                  }
 
-            public boolean canClose(String inputString) {
-              final StringTokenizer tokenizer = new StringTokenizer(inputString, ";", false);
-              StringBuilder malformedPatterns = new StringBuilder();
+                  public boolean canClose(String inputString) {
+                    final StringTokenizer tokenizer = new StringTokenizer(inputString, ";", false);
+                    StringBuilder malformedPatterns = new StringBuilder();
 
-              while (tokenizer.hasMoreTokens()) {
-                String pattern = tokenizer.nextToken();
-                try {
-                  addWildcardResourcePattern(pattern);
-                }
-                catch (MalformedPatternException e) {
-                  malformedPatterns.append("\n\n");
-                  malformedPatterns.append(pattern);
-                  malformedPatterns.append(": ");
-                  malformedPatterns.append(e.getMessage());
-                }
-              }
+                    while (tokenizer.hasMoreTokens()) {
+                      String pattern = tokenizer.nextToken();
+                      try {
+                        addWildcardResourcePattern(pattern);
+                      }
+                      catch (MalformedPatternException e) {
+                        malformedPatterns.append("\n\n");
+                        malformedPatterns.append(pattern);
+                        malformedPatterns.append(": ");
+                        malformedPatterns.append(e.getMessage());
+                      }
+                    }
 
-              if (malformedPatterns.length() > 0) {
-                Messages.showErrorDialog(CompilerBundle.message("error.bad.resource.patterns", malformedPatterns.toString()),
-                                         CompilerBundle.message("bad.resource.patterns.dialog.title"));
-                removeWildcardPatterns();
-                return false;
-              }
-              return true;
-            }
-          });
+                    if (malformedPatterns.length() > 0) {
+                      Messages.showErrorDialog(CompilerBundle.message("error.bad.resource.patterns", malformedPatterns.toString()), CompilerBundle.message("bad.resource.patterns.dialog.title"));
+                      removeWildcardPatterns();
+                      return false;
+                    }
+                    return true;
+                  }
+                });
 
       }
     }
@@ -223,7 +222,6 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
       myWildcardPatternsInitialized = true;
     }
   }
-
 
 
   private void removeWildcardPatterns() {
@@ -308,7 +306,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     return wildcardPattern.length() > 1 && wildcardPattern.charAt(0) == '!';
   }
 
-  public static CompiledPattern convertToRegexp(String wildcardPattern) throws MalformedPatternException{
+  public static CompiledPattern convertToRegexp(String wildcardPattern) throws MalformedPatternException {
     if (isPatternNegated(wildcardPattern)) {
       wildcardPattern = wildcardPattern.substring(1);
     }
@@ -377,7 +375,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   @Override
   public Element getState() {
     String[] patterns = getRegexpPatterns();
-    if(patterns.length == 0 && myWildcardPatterns.isEmpty()) {
+    if (patterns.length == 0 && myWildcardPatterns.isEmpty()) {
       return null;
     }
     Element state = new Element("state");
@@ -389,8 +387,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     if (myWildcardPatternsInitialized || !myWildcardPatterns.isEmpty()) {
       final Element wildcardPatterns = addChild(state, WILDCARD_RESOURCE_PATTERNS);
       for (final String wildcardPattern : myWildcardPatterns) {
-        addChild(wildcardPatterns, ENTRY)
-          .setAttribute(NAME, wildcardPattern);
+        addChild(wildcardPatterns, ENTRY).setAttribute(NAME, wildcardPattern);
       }
     }
     return state;

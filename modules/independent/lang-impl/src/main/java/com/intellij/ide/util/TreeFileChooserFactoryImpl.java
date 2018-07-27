@@ -21,13 +21,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class TreeFileChooserFactoryImpl extends TreeFileChooserFactory {
   private final Project myProject;
 
+  @Inject
   public TreeFileChooserFactoryImpl(Project project) {
     myProject = project;
   }

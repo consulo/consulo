@@ -21,8 +21,6 @@ import com.intellij.testFramework.fixtures.HeavyIdeaTestFixture;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.pico.DefaultPicoContainer;
-import org.picocontainer.MutablePicoContainer;
 
 import java.lang.reflect.Field;
 import java.util.Map;

@@ -17,15 +17,14 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.NotLazy;
 import consulo.application.ex.ApplicationEx2;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +33,8 @@ import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class FrameStateManagerImpl extends FrameStateManager implements ApplicationComponent {
+@NotLazy
+public class FrameStateManagerImpl extends FrameStateManager {
   private final List<FrameStateListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private boolean myShouldSynchronize;
@@ -86,21 +86,6 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   @Override
   public AsyncResult<Void> getApplicationActive() {
     return myActive.getReady(this);
-  }
-
-  @Override
-  @Nonnull
-  @NonNls
-  public String getComponentName() {
-    return "FrameStateManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   private void fireDeactivationEvent() {

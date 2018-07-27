@@ -19,29 +19,32 @@ import com.intellij.lang.DependentLanguage;
 import com.intellij.lang.InjectableLanguage;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguagePerFileMappings;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
  * @author peter
  */
-@State(
-    name = "TemplateDataLanguageMappings",
-    storages = {
-        @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/templateLanguages.xml")
-})
+@State(name = "TemplateDataLanguageMappings", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/templateLanguages.xml")})
+@Singleton
 public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Language> {
 
   public static TemplateDataLanguageMappings getInstance(final Project project) {
     return ServiceManager.getService(project, TemplateDataLanguageMappings.class);
   }
 
+  @Inject
   public TemplateDataLanguageMappings(final Project project) {
     super(project);
   }
@@ -58,7 +61,7 @@ public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Langua
 
   @Override
   public Language getDefaultMapping(@Nullable VirtualFile file) {
-    return file == null? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
+    return file == null ? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
   }
 
   public static List<Language> getTemplateableLanguages() {

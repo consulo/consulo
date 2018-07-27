@@ -18,13 +18,12 @@ package com.intellij.openapi.actionSystem;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.ActionCallback;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -35,13 +34,13 @@ import java.awt.event.InputEvent;
  *
  * @see AnAction
  */
-public abstract class ActionManager implements ApplicationComponent {
+public abstract class ActionManager {
 
   /**
    * Fetches the instance of ActionManager implementation.
    */
   @Nonnull
-  public static ActionManager getInstance(){
+  public static ActionManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ActionManager.class);
   }
 
@@ -50,11 +49,9 @@ public abstract class ActionManager implements ApplicationComponent {
    * specified group. The specified place is associated with the created popup.
    *
    * @param place Determines the place that will be set for {@link AnActionEvent} passed
-   *  when an action from the group is either performed or updated
-   *  See {@link com.intellij.openapi.actionSystem.ActionPlaces}
-   *
+   *              when an action from the group is either performed or updated
+   *              See {@link com.intellij.openapi.actionSystem.ActionPlaces}
    * @param group Group from which the actions for the menu are taken.
-   *
    * @return An instance of <code>ActionPopupMenu</code>
    */
   public abstract ActionPopupMenu createActionPopupMenu(@NonNls String place, @Nonnull ActionGroup group);
@@ -63,14 +60,11 @@ public abstract class ActionManager implements ApplicationComponent {
    * Factory method that creates an <code>ActionToolbar</code> from the
    * specified group. The specified place is associated with the created toolbar.
    *
-   * @param place Determines the place that will be set for {@link AnActionEvent} passed
-   *  when an action from the group is either performed or updated.
-   *  See {@link com.intellij.openapi.actionSystem.ActionPlaces}
-   *
-   * @param group Group from which the actions for the toolbar are taken.
-   *
+   * @param place      Determines the place that will be set for {@link AnActionEvent} passed
+   *                   when an action from the group is either performed or updated.
+   *                   See {@link com.intellij.openapi.actionSystem.ActionPlaces}
+   * @param group      Group from which the actions for the toolbar are taken.
    * @param horizontal The orientation of the toolbar (true - horizontal, false - vertical)
-   *
    * @return An instance of <code>ActionToolbar</code>
    */
   public abstract ActionToolbar createActionToolbar(@NonNls String place, ActionGroup group, boolean horizontal);
@@ -79,12 +73,9 @@ public abstract class ActionManager implements ApplicationComponent {
    * Returns action associated with the specified actionId.
    *
    * @param actionId Id of the registered action
-   *
    * @return Action associated with the specified actionId, <code>null</code> if
-   *  there is no actions associated with the speicified actionId
-   *
-   * @exception java.lang.IllegalArgumentException if <code>actionId</code> is <code>null</code>
-   *
+   * there is no actions associated with the speicified actionId
+   * @throws java.lang.IllegalArgumentException if <code>actionId</code> is <code>null</code>
    * @see com.intellij.openapi.actionSystem.IdeActions
    */
   public abstract AnAction getAction(@NonNls @Nonnull String actionId);
@@ -93,9 +84,8 @@ public abstract class ActionManager implements ApplicationComponent {
    * Returns actionId associated with the specified action.
    *
    * @return id associated with the specified action, <code>null</code> if action
-   *  is not registered
-   *
-   * @exception java.lang.IllegalArgumentException if <code>action</code> is <code>null</code>
+   * is not registered
+   * @throws java.lang.IllegalArgumentException if <code>action</code> is <code>null</code>
    */
   public abstract String getId(@Nonnull AnAction action);
 
@@ -104,7 +94,7 @@ public abstract class ActionManager implements ApplicationComponent {
    * processing deals only with registered actions.
    *
    * @param actionId Id to associate with the action
-   * @param action Action to register
+   * @param action   Action to register
    */
   public abstract void registerAction(@NonNls @Nonnull String actionId, @Nonnull AnAction action);
 
@@ -164,14 +154,19 @@ public abstract class ActionManager implements ApplicationComponent {
 
   public abstract void removeTransparentTimerListener(TimerListener listener);
 
-  public abstract ActionCallback tryToExecute(@Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent,
-                                              @Nullable String place, boolean now);
+  public abstract ActionCallback tryToExecute(@Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent, @Nullable String place, boolean now);
 
   public abstract void addAnActionListener(AnActionListener listener);
+
   public abstract void addAnActionListener(AnActionListener listener, Disposable parentDisposable);
 
   public abstract void removeAnActionListener(AnActionListener listener);
 
   @Nullable
   public abstract KeyboardShortcut getKeyboardShortcut(@Nonnull String actionId);
+
+  @Nonnull
+  public String getComponentName() {
+    return "ActionManager";
+  }
 }

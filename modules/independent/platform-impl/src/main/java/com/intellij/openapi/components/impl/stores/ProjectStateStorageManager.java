@@ -27,7 +27,7 @@ class ProjectStateStorageManager extends StateStorageManagerImpl {
   @NonNls protected static final String ROOT_TAG_NAME = "project";
 
   public ProjectStateStorageManager(final TrackingPathMacroSubstitutor macroSubstitutor, ProjectImpl project) {
-    super(macroSubstitutor, ROOT_TAG_NAME, project.getInjector());
+    super(macroSubstitutor, ROOT_TAG_NAME, project.getMessageBus());
     myProject = project;
   }
 

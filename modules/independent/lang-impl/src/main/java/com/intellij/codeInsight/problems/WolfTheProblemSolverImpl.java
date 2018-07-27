@@ -42,10 +42,13 @@ import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,6 +57,8 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author cdr
  */
+@Singleton
+@NotLazy
 public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private final Map<VirtualFile, ProblemFileInfo> myProblems = new THashMap<VirtualFile, ProblemFileInfo>(); // guarded by myProblems
   private final Collection<VirtualFile> myCheckingQueue = new THashSet<VirtualFile>(10);
@@ -61,6 +66,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private final List<ProblemListener> myProblemListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final List<Condition<VirtualFile>> myFilters = ContainerUtil.createLockFreeCopyOnWriteList();
   private boolean myFiltersLoaded = false;
+  private final Project myProject;
   private final ProblemListener fireProblemListeners = new ProblemListener() {
     @Override
     public void problemsAppeared(@Nonnull VirtualFile file) {
@@ -118,10 +124,11 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
   }
 
+  @Inject
   public WolfTheProblemSolverImpl(@Nonnull Project project,
                                   @Nonnull PsiManager psiManager,
                                   @Nonnull VirtualFileManager virtualFileManager) {
-    super(project);
+    myProject = project;
     PsiTreeChangeListener changeListener = new PsiTreeChangeAdapter() {
       @Override
       public void childAdded(@Nonnull PsiTreeChangeEvent event) {

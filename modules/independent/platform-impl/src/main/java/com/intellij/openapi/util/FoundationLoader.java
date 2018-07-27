@@ -15,28 +15,22 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.ui.mac.foundation.Foundation;
-import javax.annotation.Nonnull;
+import consulo.annotations.NotLazy;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 
 /**
  * User: spLeaner
  */
-public class FoundationLoader implements ApplicationComponent {
-
-  @Nonnull
-  public String getComponentName() {
-    return "FoundationLoader";
-  }
-
+@NotLazy
+@Singleton
+public class FoundationLoader {
+  @PostConstruct
   public void initComponent() {
     if (SystemInfo.isMac) {
       Foundation.init();
     }
   }
-
-  public void disposeComponent() {
-
-  }
-
 }

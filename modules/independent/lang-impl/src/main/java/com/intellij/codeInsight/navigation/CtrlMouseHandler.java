@@ -17,7 +17,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -68,12 +67,15 @@ import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.NotLazy;
 import consulo.codeInsight.TargetElementUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -88,7 +90,9 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CtrlMouseHandler extends AbstractProjectComponent {
+@Singleton
+@NotLazy
+public class CtrlMouseHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.navigation.CtrlMouseHandler");
   private final EditorColorsManager myEditorColorsManager;
 
@@ -209,13 +213,16 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
   }
 
+  private final Project myProject;
+
+  @Inject
   public CtrlMouseHandler(final Project project,
                           StartupManager startupManager,
                           EditorColorsManager colorsManager,
                           FileEditorManager fileEditorManager,
                           @Nonnull DocumentationManager documentationManager,
                           @Nonnull final EditorFactory editorFactory) {
-    super(project);
+    myProject = project;
     myEditorColorsManager = colorsManager;
     startupManager.registerPostStartupActivity(new DumbAwareRunnable() {
       @Override
@@ -235,12 +242,6 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     });
     myFileEditorManager = fileEditorManager;
     myDocumentationManager = documentationManager;
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "CtrlMouseHandler";
   }
 
   private boolean isMouseOverTooltip(@Nonnull Point mouseLocationOnScreen) {

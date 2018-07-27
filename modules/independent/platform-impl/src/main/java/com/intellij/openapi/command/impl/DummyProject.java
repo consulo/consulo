@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
@@ -25,10 +24,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.PicoContainer;
 
 /**
  * @author max
@@ -99,11 +97,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  public BaseComponent getComponent(String name) {
-    return null;
-  }
-
-  @Override
   public <T> T getComponent(Class<T> interfaceClass) {
     return null;
   }
@@ -117,12 +110,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   @Nonnull
   public <T> T[] getComponents(Class<T> baseClass) {
     return (T[]) ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
-
-  @Override
-  @Nonnull
-  public PicoContainer getPicoContainer() {
-    throw new UnsupportedOperationException("getPicoContainer is not implement in : " + getClass());
   }
 
   @Override
@@ -171,6 +158,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
     return false;
   }
 
+  @Nonnull
   @Override
   public MessageBus getMessageBus() {
     return null;
@@ -180,6 +168,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
   public void dispose() {
   }
 
+  @Nonnull
   @Override
   public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
     throw new UnsupportedOperationException("getExtensions()");

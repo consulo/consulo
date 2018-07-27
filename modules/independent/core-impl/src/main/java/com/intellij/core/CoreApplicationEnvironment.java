@@ -22,7 +22,6 @@ import com.intellij.lang.*;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import com.intellij.mock.MockApplication;
 import com.intellij.mock.MockApplicationEx;
-import com.intellij.mock.MockFileDocumentManagerImpl;
 import com.intellij.mock.MockReferenceProvidersRegistry;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationInfo;
@@ -30,12 +29,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CoreCommandProcessor;
-import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.ExtensionsArea;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtension;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -45,7 +42,6 @@ import com.intellij.openapi.util.ClassExtension;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.openapi.util.StaticGetter;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.impl.CoreVirtualFilePointerManager;
@@ -68,7 +64,6 @@ import consulo.psi.tree.ASTLeafFactory;
 import consulo.psi.tree.impl.DefaultASTCompositeFactory;
 import consulo.psi.tree.impl.DefaultASTLazyFactory;
 import consulo.psi.tree.impl.DefaultASTLeafFactory;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Modifier;
@@ -99,12 +94,11 @@ public class CoreApplicationEnvironment {
     myLocalFileSystem = createLocalFileSystem();
     myJarFileSystem = createJarFileSystem();
 
-    final MutablePicoContainer appContainer = myApplication.getPicoContainer();
-    registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(DocumentImpl::new, null));
+    //registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(DocumentImpl::new, null));
 
     VirtualFileSystem[] fs = {myLocalFileSystem, myJarFileSystem};
     VirtualFileManagerImpl virtualFileManager = new VirtualFileManagerImpl(fs, myApplication.getMessageBus());
-    registerComponentInstance(appContainer, VirtualFileManager.class, virtualFileManager);
+   // registerComponentInstance(appContainer, VirtualFileManager.class, virtualFileManager);
 
     registerApplicationExtensionPoint(ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
     registerApplicationExtensionPoint(ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
@@ -222,7 +216,6 @@ public class CoreApplicationEnvironment {
   }
 
   public <T> void registerApplicationComponent(@Nonnull Class<T> interfaceClass, @Nonnull T implementation) {
-    registerComponentInstance(myApplication.getPicoContainer(), interfaceClass, implementation);
   }
 
   public void registerFileType(@Nonnull FileType fileType, @Nonnull String extension) {
@@ -233,10 +226,10 @@ public class CoreApplicationEnvironment {
     addExplicitExtension(LanguageParserDefinitions.INSTANCE, definition.getFileNodeType().getLanguage(), definition);
   }
 
-  public static <T> void registerComponentInstance(@Nonnull MutablePicoContainer container, @Nonnull Class<T> key, @Nonnull T implementation) {
-    container.unregisterComponent(key);
-    container.registerComponentInstance(key, implementation);
-  }
+  //public static <T> void registerComponentInstance(@Nonnull MutablePicoContainer container, @Nonnull Class<T> key, @Nonnull T implementation) {
+  //  container.unregisterComponent(key);
+  //  container.registerComponentInstance(key, implementation);
+  //}
 
   public <T> void addExplicitExtension(@Nonnull LanguageExtension<T> instance, @Nonnull Language language, @Nonnull T object) {
     doAddExplicitExtension(instance, language, object);

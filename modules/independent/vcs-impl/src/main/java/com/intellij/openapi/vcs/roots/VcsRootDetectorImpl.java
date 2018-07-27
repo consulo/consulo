@@ -23,13 +23,16 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.VcsRootChecker;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author Nadya Zabrodina
  */
+@Singleton
 public class VcsRootDetectorImpl implements VcsRootDetector {
   private static final int MAXIMUM_SCAN_DEPTH = 2;
 
@@ -42,9 +45,8 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   @Nonnull
   private final VcsRootChecker[] myCheckers;
 
-  public VcsRootDetectorImpl(@Nonnull Project project,
-                             @Nonnull ProjectRootManager projectRootManager,
-                             @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
+  @Inject
+  public VcsRootDetectorImpl(@Nonnull Project project, @Nonnull ProjectRootManager projectRootManager, @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
     myProject = project;
     myProjectManager = projectRootManager;
     myVcsManager = projectLevelVcsManager;

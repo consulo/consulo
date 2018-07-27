@@ -16,8 +16,8 @@
 package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,6 +35,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
@@ -44,10 +45,13 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
-public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager implements ApplicationComponent, ModificationTracker, BulkFileListener {
+@NotLazy
+@Singleton
+public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager implements Disposable, ModificationTracker, BulkFileListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl");
   // guarded by this
   private final Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = new LinkedHashMap<VirtualFilePointerListener, FilePointerPartNode>();
@@ -63,25 +67,15 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
           SystemInfo.isFileSystemCaseSensitive ? (Comparator<String>)(url1, url2) -> url1.compareTo(url2) : (Comparator<String>)(url1, url2) -> url1.compareToIgnoreCase(url2);
 
   @Inject
-  VirtualFilePointerManagerImpl(@Nonnull VirtualFileManager virtualFileManager, @Nonnull MessageBus bus) {
+  VirtualFilePointerManagerImpl(@Nonnull VirtualFileManager virtualFileManager, @Nonnull Application application) {
     myVirtualFileManager = virtualFileManager;
-    myBus = bus;
-    bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
+    myBus = application.getMessageBus();
+    myBus.connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
   }
 
   @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     assertAllPointersDisposed();
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "VirtualFilePointerManager";
   }
 
   private static class EventDescriptor {
@@ -326,10 +320,6 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
     for (FilePointerPartNode node : out) {
       node.addAllPointersTo(pointers);
     }
-  }
-
-  @Override
-  public void dispose() {
   }
 
   @Override

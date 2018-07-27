@@ -15,14 +15,13 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.openapi.extensions.*;
+import com.intellij.openapi.extensions.ExtensionPoint;
+import com.intellij.openapi.extensions.ExtensionPointListener;
+import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.PluginDescriptor;
 import junit.framework.TestCase;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author AKireyev
@@ -69,93 +68,6 @@ public class ExtensionsImplTest extends TestCase {
     extensionsArea.unregisterExtensionPoint(EXTENSION_POINT_NAME_1);
     assertTrue("Extension point should be removed", extensionsArea.getExtensionPoints().length == numEP);
     assertTrue("Extension point disposed", removed[0]);
-  }
-
-  public void _testPicoContainerDirectRegistration() throws Exception {
-    ExtensionsAreaImpl parentArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
-    ExtensionsAreaImpl childArea = new ExtensionsAreaImpl(new Extensions.SimpleLogProvider());
-
-
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        throw new UnsupportedOperationException("run is not implemented in : " + getClass());
-      }
-    };
-    parentArea.getPicoContainer().registerComponentInstance(runnable);
-
-    assertSame(runnable, parentArea.getPicoContainer().getComponentInstanceOfType(Runnable.class));
-    assertSame(runnable, childArea.getPicoContainer().getComponentInstanceOfType(Runnable.class));
-
-    final Runnable childRunnable = new Runnable() {
-      @Override
-      public void run() {
-        throw new UnsupportedOperationException("This method is not yet implemented");
-      }
-    };
-    childArea.getPicoContainer().registerComponentInstance(childRunnable);
-    assertEquals(2, childArea.getPicoContainer().getComponentInstancesOfType(Runnable.class).size());
-    final List componentInstances = childArea.getPicoContainer().getComponentInstances();
-    assertTrue("parent instance found", componentInstances.contains(runnable));
-    assertTrue("child instance found", componentInstances.contains(childRunnable));
-  }
-
-  public void testTryPicoContainer() {
-    DefaultPicoContainer rootContainer = new DefaultPicoContainer();
-    rootContainer.registerComponentInstance("plugin1", new DefaultPicoContainer(rootContainer));
-    rootContainer.registerComponentInstance("plugin2", new DefaultPicoContainer(rootContainer));
-//    rootContainer.registerComponentImplementation("plugin2", DefaultPicoContainer.class);
-    MutablePicoContainer container1 = (MutablePicoContainer)rootContainer.getComponentInstance("plugin1");
-    MutablePicoContainer container2 = (MutablePicoContainer)rootContainer.getComponentInstance("plugin2");
-    container1.registerComponentImplementation("component1", MyComponent1.class);
-    container1.registerComponentImplementation("component1.1", MyComponent1.class);
-    container2.registerComponentImplementation("component2", MyComponent2.class);
-    MyInterface1 testInstance = new MyInterface1() {
-          @Override
-          public void run() {
-          }
-        };
-    rootContainer.registerComponentInstance(testInstance);
-    MyComponent1 component1 = (MyComponent1)container1.getComponentInstance("component1");
-    assertEquals(testInstance, component1.testObject);
-    rootContainer.registerComponentInstance("component1", component1);
-    MyComponent1 component11 = (MyComponent1)container1.getComponentInstance("component1.1");
-    rootContainer.registerComponentInstance("component11", component11);
-    MyComponent2 component2 = (MyComponent2)container2.getComponentInstance("component2");
-    assertEquals(testInstance, component2.testObject);
-    assertTrue(Arrays.asList(component2.comp1).contains(component1));
-    assertTrue(Arrays.asList(component2.comp1).contains(component11));
-    rootContainer.registerComponentInstance("component2", component2);
-    rootContainer.registerComponentImplementation(MyTestComponent.class);
-    MyTestComponent testComponent = (MyTestComponent)rootContainer.getComponentInstance(MyTestComponent.class);
-    assertTrue(Arrays.asList(testComponent.comp1).contains(component1));
-    assertTrue(Arrays.asList(testComponent.comp1).contains(component11));
-    assertEquals(component2, testComponent.comp2);
-  }
-
-  public void testTryPicoContainer2() {
-    DefaultPicoContainer rootContainer = new DefaultPicoContainer();
-    rootContainer.registerComponentImplementation("component1", MyComponent1.class);
-    rootContainer.registerComponentImplementation("component1.1", MyComponent1.class);
-    rootContainer.registerComponentImplementation("component2", MyComponent2.class);
-    rootContainer.registerComponentImplementation(MyTestComponent.class);
-    MyInterface1 testInstance = new MyInterface1() {
-          @Override
-          public void run() {
-          }
-        };
-    rootContainer.registerComponentInstance(testInstance);
-    MyTestComponent testComponent = (MyTestComponent)rootContainer.getComponentInstance(MyTestComponent.class);
-    MyComponent2 component2 = (MyComponent2)rootContainer.getComponentInstance("component2");
-    MyComponent1 component11 = (MyComponent1)rootContainer.getComponentInstance("component1.1");
-    MyComponent1 component1 = (MyComponent1)rootContainer.getComponentInstance("component1");
-    assertEquals(testInstance, component1.testObject);
-    assertEquals(testInstance, component2.testObject);
-    assertTrue(Arrays.asList(component2.comp1).contains(component1));
-    assertTrue(Arrays.asList(component2.comp1).contains(component11));
-    assertTrue(Arrays.asList(testComponent.comp1).contains(component1));
-    assertTrue(Arrays.asList(testComponent.comp1).contains(component11));
-    assertEquals(component2, testComponent.comp2);
   }
 
   public void testExtensionsNamespaces() {

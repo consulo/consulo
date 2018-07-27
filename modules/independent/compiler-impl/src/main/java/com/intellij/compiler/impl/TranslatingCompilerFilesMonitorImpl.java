@@ -23,7 +23,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
@@ -51,6 +50,7 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.NotLazy;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
@@ -62,11 +62,12 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import gnu.trove.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -85,7 +86,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 2. corresponding source file has been deleted
  */
 @Singleton
-public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements ApplicationComponent {
+@NotLazy
+public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements Disposable {
   private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
 
@@ -537,13 +539,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "TranslatingCompilerFilesMonitor";
-  }
-
-  @Override
+  @PostConstruct
   public void initComponent() {
     ensureOutputStorageInitialized();
   }
@@ -661,7 +657,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     try {
       synchronized (myProjectOutputRoots) {
         myProjectOutputRoots.clear();

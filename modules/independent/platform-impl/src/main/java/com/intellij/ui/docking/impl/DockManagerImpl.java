@@ -57,6 +57,8 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -69,6 +71,7 @@ import java.util.*;
 import java.util.List;
 
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class DockManagerImpl extends DockManager implements PersistentStateComponent<Element> {
 
   private final Project myProject;
@@ -92,6 +95,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
   private Element myLoadedState;
 
+  @Inject
   public DockManagerImpl(Project project) {
     myProject = project;
   }
@@ -498,8 +502,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
     private void updateNorthPanel() {
       if (ApplicationManager.getApplication().isUnitTestMode()) return;
-      myNorthPanel.setVisible(
-              UISettings.getInstance().SHOW_NAVIGATION_BAR && !(myContainer instanceof DockContainer.Dialog) && !UISettings.getInstance().PRESENTATION_MODE);
+      myNorthPanel.setVisible(UISettings.getInstance().SHOW_NAVIGATION_BAR && !(myContainer instanceof DockContainer.Dialog) && !UISettings.getInstance().PRESENTATION_MODE);
 
       IdeRootPaneNorthExtension[] extensions = Extensions.getArea(myProject).getExtensionPoint(IdeRootPaneNorthExtension.EP_NAME).getExtensions();
       HashSet<String> processedKeys = new HashSet<>();

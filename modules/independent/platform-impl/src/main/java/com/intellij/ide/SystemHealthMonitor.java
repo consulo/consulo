@@ -26,7 +26,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
@@ -46,11 +45,13 @@ import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import consulo.annotations.NotLazy;
 import consulo.application.AccessRule;
 import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -64,7 +65,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class SystemHealthMonitor implements ApplicationComponent {
+@NotLazy
+public class SystemHealthMonitor {
   private static final Logger LOG = Logger.getInstance(SystemHealthMonitor.class);
 
   private static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
@@ -73,11 +75,11 @@ public class SystemHealthMonitor implements ApplicationComponent {
   private final PropertiesComponent myProperties;
 
   @Inject
-  public SystemHealthMonitor(@Nonnull PropertiesComponent properties) {
-    myProperties = properties;
+  public SystemHealthMonitor() {
+    myProperties = PropertiesComponent.getInstance();
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     checkRuntime();
     checkReservedCodeCacheSize();
@@ -139,7 +141,7 @@ public class SystemHealthMonitor implements ApplicationComponent {
 
   private void checkHiDPIMode() {
     // if switched from JRE-HiDPI to IDE-HiDPI
-    boolean switchedHiDPIMode = SystemInfo.isJetbrainsJvm && "true".equalsIgnoreCase(System.getProperty("sun.java2d.uiScale.enabled")) && !UIUtil.isJreHiDPIEnabled();
+    boolean switchedHiDPIMode = SystemInfo.isJetBrainsJvm && "true".equalsIgnoreCase(System.getProperty("sun.java2d.uiScale.enabled")) && !UIUtil.isJreHiDPIEnabled();
     if (SystemInfo.isWindows && ((switchedHiDPIMode && JBUI.isHiDPI(JBUI.sysScale())) || RemoteDesktopService.isRemoteSession())) {
       showNotification(new KeyHyperlinkAdapter("ide.set.hidpi.mode"));
     }

@@ -43,6 +43,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -53,6 +55,7 @@ import java.util.regex.Pattern;
  * User: anna
  * Date: 07-Feb-2006
  */
+@Singleton
 public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   private final Map<String, Set<OptionDescription>> myStorage = Collections.synchronizedMap(new THashMap<String, Set<OptionDescription>>(20, 0.9f));
   private final Map<String, String> myId2Name = Collections.synchronizedMap(new THashMap<String, String>(20, 0.9f));
@@ -75,6 +78,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   @NonNls
   private static final Pattern REG_EXP = Pattern.compile("[\\W&&[^-]]+");
 
+  @Inject
   public SearchableOptionsRegistrarImpl() {
     if (ApplicationManager.getApplication().isCommandLine() ||
         ApplicationManager.getApplication().isUnitTestMode()) return;

@@ -16,17 +16,23 @@
 
 package com.intellij.codeHighlighting;
 
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nullable;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: anna
  * Date: 19-Apr-2006
  */
-public interface TextEditorHighlightingPassFactory extends ProjectComponent{
+public interface TextEditorHighlightingPassFactory {
+  ExtensionPointName<TextEditorHighlightingPassFactory> EP_NAME = ExtensionPointName.create("com.intellij.textEditorHighlightingPassFactory");
+
+  void register(@Nonnull Project project, @Nonnull TextEditorHighlightingPassRegistrar registrar);
+
   @Nullable
   TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor);
 }

@@ -166,7 +166,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
       r.run();
     }
     else {
-      myExternalToolPassFactory.scheduleExternalActivity(new Update(myFile) {
+      myExternalToolPassFactory.scheduleExternalActivity(myFile, new Update(myFile) {
         @Override
         public void run() {
           r.run();

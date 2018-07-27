@@ -20,13 +20,14 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.annotations.NotLazy;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -40,7 +41,9 @@ import java.util.Map;
  * @author Eugene Zhuravlev
  *         Date: May 4, 2008
  */
-public class CompilerCacheManager implements ProjectComponent {
+@Singleton
+@NotLazy
+public class CompilerCacheManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompilerCacheManager");
   private final Map<Compiler, Object> myCompilerToCacheMap = new HashMap<Compiler, Object>();
   private final Map<GenericCompiler<?,?,?>, GenericCompilerCache<?,?,?>> myGenericCachesMap = new HashMap<GenericCompiler<?,?,?>, GenericCompilerCache<?,?,?>>();
@@ -48,6 +51,7 @@ public class CompilerCacheManager implements ProjectComponent {
   private final File myCachesRoot;
   private final Project myProject;
 
+  @Inject
   public CompilerCacheManager(Project project) {
     myProject = project;
     myCachesRoot = CompilerPaths.getCacheStoreDirectory(project);
@@ -58,25 +62,7 @@ public class CompilerCacheManager implements ProjectComponent {
   }
 
   @Override
-  public void projectOpened() {
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "CompilerCacheManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     flushCaches();
   }
 

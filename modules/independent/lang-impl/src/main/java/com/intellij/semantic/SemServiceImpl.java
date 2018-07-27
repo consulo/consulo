@@ -35,6 +35,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -43,7 +45,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author peter
  */
-@SuppressWarnings({"unchecked"})
+@Singleton
 public class SemServiceImpl extends SemService{
   private final ConcurrentMap<PsiElement, SemCacheChunk> myCache = ContainerUtil.createConcurrentWeakKeySoftValueMap();
   private volatile MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> myProducers;
@@ -52,6 +54,7 @@ public class SemServiceImpl extends SemService{
   private boolean myBulkChange = false;
   private final AtomicInteger myCreatingSem = new AtomicInteger(0);
 
+  @Inject
   public SemServiceImpl(Project project, PsiManager psiManager) {
     myProject = project;
     final MessageBusConnection connection = project.getMessageBus().connect();

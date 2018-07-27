@@ -26,13 +26,11 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 
-@State(
-  name="HierarchyBrowserManager",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@State(name = "HierarchyBrowserManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public final class HierarchyBrowserManager implements PersistentStateComponent<HierarchyBrowserManager.State> {
   public static class State {
     public boolean IS_AUTOSCROLL_TO_SOURCE;
@@ -45,12 +43,13 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
 
   private final ContentManager myContentManager;
 
+  @Inject
   public HierarchyBrowserManager(final Project project) {
-    final ToolWindowManager toolWindowManager=ToolWindowManager.getInstance(project);
+    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     final ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);
     myContentManager = toolWindow.getContentManager();
     toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowHierarchy);
-    new ContentManagerWatcher(toolWindow,myContentManager);
+    new ContentManagerWatcher(toolWindow, myContentManager);
   }
 
   public final ContentManager getContentManager() {

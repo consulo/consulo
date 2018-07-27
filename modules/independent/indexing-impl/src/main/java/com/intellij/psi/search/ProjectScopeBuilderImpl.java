@@ -22,14 +22,17 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class ProjectScopeBuilderImpl extends ProjectScopeBuilder {
-
   protected final Project myProject;
 
+  @Inject
   public ProjectScopeBuilderImpl(Project project) {
     myProject = project;
   }

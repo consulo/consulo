@@ -23,7 +23,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
@@ -52,6 +51,7 @@ import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.NotLazy;
 import consulo.platform.Platform;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -75,7 +75,8 @@ import java.util.Set;
  */
 @State(name = "ActionMacroManager", storages = @Storage("macros.xml"))
 @Singleton
-public class ActionMacroManager implements ApplicationComponent, JDOMExternalizable {
+@NotLazy
+public class ActionMacroManager implements JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actionMacro.ActionMacroManager");
 
   private static final String TYPING_SAMPLE = "WWWWWWWWWWWWWWWWWWWW";
@@ -160,9 +161,6 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
   @Nonnull
   public String getComponentName() {
     return "ActionMacroManager";
-  }
-
-  public void initComponent() {
   }
 
   public void startRecording(String macroName) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.ex;
-
+package consulo.core.impl.components.impl;
 
 /**
- * @author mike
+ * @author VISTALL
+ * @since 2018-07-27
  */
-public interface ComponentRegistrar {
-  void registerComponents(ComponentManagerEx manager);
+public class ClassAnalyzer {
+  static class AnalyzeInfo {
+  }
 }

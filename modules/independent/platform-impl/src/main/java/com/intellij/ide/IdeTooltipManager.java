@@ -10,7 +10,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -29,9 +28,11 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.*;
+import consulo.annotations.NotLazy;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -46,7 +47,8 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 
 @Singleton
-public class IdeTooltipManager implements Disposable, AWTEventListener, ApplicationComponent {
+@NotLazy
+public class IdeTooltipManager implements Disposable, AWTEventListener {
   public static final String IDE_TOOLTIP_PLACE = "IdeTooltip";
   public static final ColorKey TOOLTIP_COLOR_KEY = ColorKey.createColorKey("TOOLTIP", (Color)null);
 
@@ -85,7 +87,7 @@ public class IdeTooltipManager implements Disposable, AWTEventListener, Applicat
     myPopupFactory = popupFactory;
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     myIsEnabled = Registry.get("ide.tooltip.callout");
     myIsEnabled.addListener(new RegistryValueListener.Adapter() {

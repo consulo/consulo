@@ -24,11 +24,13 @@ import com.intellij.util.xmlb.annotations.OptionTag;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 @State(name = "GeneralSettings", storages = @Storage("ide.general.xml"))
+@Singleton
 public class GeneralSettings implements PersistentStateComponent<GeneralSettings> {
   public static final String PROP_SUPPORT_SCREEN_READERS = "supportScreenReaders";
   public static final String PROP_INACTIVE_TIMEOUT = "inactiveTimeout";

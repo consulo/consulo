@@ -37,6 +37,7 @@ import consulo.web.application.WebApplication;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +46,7 @@ import java.util.List;
  * @author VISTALL
  * @since 23-Sep-17
  */
+@Singleton
 public class WebWelcomeFrameManager implements WelcomeFrameManager {
   private Window myWindow;
 

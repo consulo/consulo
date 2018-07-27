@@ -27,14 +27,12 @@ import com.intellij.ide.PowerSaveMode;
 import com.intellij.ide.todo.TodoConfiguration;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
@@ -78,11 +76,14 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.platform.api.command.undo.ProjectUndoManager;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -92,6 +93,7 @@ import java.util.List;
 /**
  * @author cdr
  */
+@Singleton
 public class DaemonListeners implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.DaemonListeners");
 
@@ -100,7 +102,7 @@ public class DaemonListeners implements Disposable {
   @Nonnull
   private final PsiDocumentManager myPsiDocumentManager;
   private final FileEditorManager myFileEditorManager;
-  private final UndoManager myUndoManager;
+  private final ProjectUndoManager myUndoManager;
   private final ProjectLevelVcsManager myProjectLevelVcsManager;
   private final VcsDirtyScopeManager myVcsDirtyScopeManager;
   private final FileStatusManager myFileStatusManager;
@@ -119,8 +121,9 @@ public class DaemonListeners implements Disposable {
     return project.getComponent(DaemonListeners.class);
   }
 
+  @Inject
   public DaemonListeners(@Nonnull final Project project,
-                         @Nonnull DaemonCodeAnalyzerImpl daemonCodeAnalyzer,
+                         @Nonnull DaemonCodeAnalyzer daemonCodeAnalyzer,
                          @Nonnull final EditorTracker editorTracker,
                          @Nonnull EditorFactory editorFactory,
                          @Nonnull PsiDocumentManager psiDocumentManager,
@@ -130,7 +133,7 @@ public class DaemonListeners implements Disposable {
                          @Nonnull InspectionProfileManager inspectionProfileManager,
                          @Nonnull InspectionProjectProfileManager inspectionProjectProfileManager,
                          @Nonnull TodoConfiguration todoConfiguration,
-                         @Nonnull ActionManagerEx actionManagerEx,
+                         @Nonnull ActionManager actionManagerEx,
                          @Nonnull VirtualFileManager virtualFileManager,
                          @SuppressWarnings("UnusedParameters") // for dependency order
                          @Nonnull final NamedScopeManager namedScopeManager,
@@ -140,12 +143,12 @@ public class DaemonListeners implements Disposable {
                          @Nonnull final PsiManager psiManager,
                          @Nonnull final FileEditorManager fileEditorManager,
                          @Nonnull TooltipController tooltipController,
-                         @Nonnull UndoManager undoManager,
+                         @Nonnull ProjectUndoManager undoManager,
                          @Nonnull ProjectLevelVcsManager projectLevelVcsManager,
                          @Nonnull VcsDirtyScopeManager vcsDirtyScopeManager,
                          @Nonnull FileStatusManager fileStatusManager) {
     myProject = project;
-    myDaemonCodeAnalyzer = daemonCodeAnalyzer;
+    myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl)daemonCodeAnalyzer;
     myPsiDocumentManager = psiDocumentManager;
     myFileEditorManager = fileEditorManager;
     myUndoManager = undoManager;
@@ -255,7 +258,7 @@ public class DaemonListeners implements Disposable {
     editorFactory.addEditorFactoryListener(editorFactoryListener, this);
 
     PsiDocumentManagerImpl documentManager = (PsiDocumentManagerImpl)psiDocumentManager;
-    PsiChangeHandler changeHandler = new PsiChangeHandler(myProject, documentManager, editorFactory,connection, daemonCodeAnalyzer.getFileStatusMap());
+    PsiChangeHandler changeHandler = new PsiChangeHandler(myProject, documentManager, editorFactory,connection, ((DaemonCodeAnalyzerImpl)daemonCodeAnalyzer).getFileStatusMap());
     Disposer.register(this, changeHandler);
     psiManager.addPsiTreeChangeListener(changeHandler, changeHandler);
 

@@ -23,20 +23,24 @@ import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import consulo.annotations.RequiredReadAction;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
  * @author nik
  */
+@Singleton
 public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> implements ModulePointerManager {
   private final Project myProject;
 
+  @Inject
   public ModulePointerManagerImpl(Project project) {
     myProject = project;
     project.getMessageBus().connect().subscribe(ProjectTopics.MODULES, new ModuleAdapter() {

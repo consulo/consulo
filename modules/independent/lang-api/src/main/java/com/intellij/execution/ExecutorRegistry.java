@@ -18,14 +18,14 @@ package com.intellij.execution;
 
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
  */
-public abstract class ExecutorRegistry implements ApplicationComponent {
+public abstract class ExecutorRegistry {
   public static ExecutorRegistry getInstance() {
     return ApplicationManager.getApplication().getComponent(ExecutorRegistry.class);
   }

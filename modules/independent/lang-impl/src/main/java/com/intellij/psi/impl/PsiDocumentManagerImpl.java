@@ -45,31 +45,35 @@ import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.psi.impl.source.tree.injected.MultiHostRegistrarImpl;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.Processor;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.NotLazy;
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 
 //todo listen & notifyListeners readonly events?
+@Singleton
+@NotLazy
 public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements SettingsSavingComponent {
   private final DocumentCommitProcessor myDocumentCommitThread;
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
+  @Inject
   public PsiDocumentManagerImpl(@Nonnull final Project project,
                                 @Nonnull PsiManager psiManager,
                                 @Nonnull EditorFactory editorFactory,
-                                @Nonnull MessageBus bus,
-                                @NonNls @Nonnull final DocumentCommitProcessor documentCommitThread) {
-    super(project, psiManager, bus, documentCommitThread);
+                                @Nonnull final DocumentCommitProcessor documentCommitThread) {
+    super(project, psiManager, project.getMessageBus(), documentCommitThread);
     myDocumentCommitThread = documentCommitThread;
     editorFactory.getEventMulticaster().addDocumentListener(this, project);
-    MessageBusConnection connection = bus.connect();
+    MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
       public void fileContentLoaded(@Nonnull final VirtualFile virtualFile, @Nonnull Document document) {

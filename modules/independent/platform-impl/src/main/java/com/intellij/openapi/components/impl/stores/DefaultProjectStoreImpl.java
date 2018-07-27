@@ -17,28 +17,33 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import com.intellij.openapi.project.impl.ProjectImpl;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@Singleton
 public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private final ProjectManagerImpl myProjectManager;
   @NonNls private static final String ROOT_TAG_NAME = "defaultProject";
 
-  public DefaultProjectStoreImpl(@Nonnull ProjectImpl project, @Nonnull ProjectManagerImpl projectManager, @Nonnull PathMacroManager pathMacroManager) {
-    super(project, pathMacroManager);
+  @Inject
+  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectManager projectManager) {
+    super(project);
 
-    myProjectManager = projectManager;
+    myProjectManager = (ProjectManagerImpl)projectManager;
   }
 
   @Nullable

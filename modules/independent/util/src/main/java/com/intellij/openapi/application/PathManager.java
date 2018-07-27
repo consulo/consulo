@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.application;
 
+import com.google.inject.Injector;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
@@ -33,11 +34,9 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.jdom.Document;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.PicoContainer;
-
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -467,7 +466,7 @@ public class PathManager {
             Document.class,               // jDOM
             Appender.class,               // log4j
             THashSet.class,               // trove4j
-            PicoContainer.class,          // PicoContainer
+            Injector.class,               // guice
             TypeMapper.class,             // JNA
             FileUtils.class,              // JNA (jna-platform)
             PatternMatcher.class          // OROMatcher

@@ -14,17 +14,19 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.ide.BuiltInServerManager;
 import org.jetbrains.ide.BuiltInServerManagerImpl;
 import org.jetbrains.ide.CustomPortServerManager;
 import org.jetbrains.io.CustomPortServerManagerBase;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Collections;
 
 @State(name = "BuiltInServerOptions", storages = @Storage("other.xml"))
+@Singleton
 public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptions>, Getter<BuiltInServerOptions> {
   private static final int DEFAULT_PORT = 63342;
 
@@ -98,8 +100,7 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
                                                                                 port +
                                                                                 ". " +
                                                                                 "Please ensure that port is free (or check your firewall settings) and restart " +
-                                                                                ApplicationNamesInfo.getInstance().getFullProductName(), NotificationType.ERROR)
-              .notify(null);
+                                                                                ApplicationNamesInfo.getInstance().getFullProductName(), NotificationType.ERROR).notify(null);
     }
 
     @Override

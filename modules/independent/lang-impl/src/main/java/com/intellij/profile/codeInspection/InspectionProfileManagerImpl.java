@@ -24,6 +24,7 @@ import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
@@ -41,7 +42,6 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.TestOnly;
@@ -78,7 +78,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   }
 
   @Inject
-  public InspectionProfileManagerImpl(@Nonnull InspectionToolRegistrar registrar, @Nonnull SchemesManagerFactory schemesManagerFactory, @Nonnull MessageBus messageBus) {
+  public InspectionProfileManagerImpl(@Nonnull InspectionToolRegistrar registrar, @Nonnull SchemesManagerFactory schemesManagerFactory, @Nonnull Application application) {
     myRegistrar = registrar;
     registerProvidedSeverities();
 
@@ -134,7 +134,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         }
       }
     }, RoamingType.PER_USER);
-    mySeverityRegistrar = new SeverityRegistrar(messageBus);
+    mySeverityRegistrar = new SeverityRegistrar(application.getMessageBus());
   }
 
   @Nonnull

@@ -51,6 +51,8 @@ import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,6 +60,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@Singleton
 public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   @Nonnull
   public static ArtifactsStructureConfigurable getInstance(@Nonnull Project project) {
@@ -67,6 +70,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   private ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
   private final ArtifactEditorSettings myDefaultSettings = new ArtifactEditorSettings();
 
+  @Inject
   public ArtifactsStructureConfigurable(@Nonnull Project project) {
     super(project, new ArtifactStructureConfigurableState());
   }

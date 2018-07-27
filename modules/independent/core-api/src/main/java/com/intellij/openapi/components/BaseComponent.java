@@ -18,13 +18,13 @@ package com.intellij.openapi.components;
 /**
  * The base interface class for all components.
  *
- * @see ApplicationComponent
  * @see ProjectComponent
  */
+@Deprecated
 public interface BaseComponent extends NamedComponent {
   /**
    * Component should perform initialization and communication with other components in this method.
-   * This is called after {@link com.intellij.openapi.components.PersistentStateComponent#loadState(Object)}.
+   * This is called after {laf@link com.intellij.openapi.components.PersistentStateComponent#loadState(Object)}.
    */
   default void initComponent() {
   }

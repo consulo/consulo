@@ -18,7 +18,6 @@ package com.intellij.openapi.command.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Key;
@@ -31,16 +30,21 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.WeakKeyWeakValueHashMap;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.io.fs.FilePath;
-import javax.annotation.Nonnull;
+import consulo.annotations.NotLazy;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DocumentReferenceManagerImpl extends DocumentReferenceManager implements ApplicationComponent {
+@Singleton
+@NotLazy
+public class DocumentReferenceManagerImpl extends DocumentReferenceManager {
   private static final Key<List<VirtualFile>> DELETED_FILES = Key.create(DocumentReferenceManagerImpl.class.getName() + ".DELETED_FILES");
 
   private final Map<Document, DocumentReference> myDocToRef = new WeakKeyWeakValueHashMap<>();
@@ -49,7 +53,7 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager imple
   private static final Key<DocumentReference> FILE_TO_STRONG_REF_KEY = Key.create("FILE_TO_STRONG_REF_KEY");
   private final Map<FilePath, DocumentReference> myDeletedFilePathToRef = new WeakValueHashMap<>();
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override

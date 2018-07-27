@@ -196,8 +196,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Inject
-  public DesktopToolWindowManagerImpl(final Project project, final WindowManagerEx windowManagerEx, final FileEditorManager fem, final ActionManager actionManager) {
-    super(project, windowManagerEx);
+  public DesktopToolWindowManagerImpl(final Project project, final WindowManager windowManager, final ActionManager actionManager) {
+    super(project, (WindowManagerEx)windowManager);
 
     if (project.isDefault()) {
       return;
@@ -226,7 +226,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       }
     });
 
-    myLayout.copyFrom(windowManagerEx.getLayout());
+    myLayout.copyFrom(((WindowManagerEx)windowManager).getLayout());
 
     busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
       @Override

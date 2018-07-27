@@ -19,12 +19,15 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Locale;
 
 /**
@@ -32,9 +35,8 @@ import java.util.Locale;
  *
  * @author Rustam Vishnyakov
  */
-@State(name = "ExportableFileTemplateSettings", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR +
-                                                                           "/" +
-                                                                           ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE))
+@State(name = "ExportableFileTemplateSettings", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE))
+@Singleton
 public class FileTemplateSettings extends FileTemplatesLoader implements PersistentStateComponent<Element> {
   public final static String EXPORTABLE_SETTINGS_FILE = "file.template.settings.xml";
 
@@ -44,8 +46,9 @@ public class FileTemplateSettings extends FileTemplatesLoader implements Persist
   private static final String ATTRIBUTE_LIVE_TEMPLATE = "live-template-enabled";
   private static final String ATTRIBUTE_ENABLED = "enabled";
 
-  public FileTemplateSettings(@Nonnull FileTypeManagerEx typeManager, @Nullable Project project) {
-    super(typeManager, project);
+  @Inject
+  public FileTemplateSettings(@Nonnull FileTypeManager typeManager, @Nullable Project project) {
+    super((FileTypeManagerEx)typeManager, project);
   }
 
   @Nullable
@@ -57,8 +60,7 @@ public class FileTemplateSettings extends FileTemplatesLoader implements Persist
       Element templatesGroup = null;
       for (FileTemplateBase template : manager.getAllTemplates(true)) {
         // save only those settings that differ from defaults
-        boolean shouldSave = template.isReformatCode() != FileTemplateBase.DEFAULT_REFORMAT_CODE_VALUE ||
-                             template.isLiveTemplateEnabled() != template.isLiveTemplateEnabledByDefault();
+        boolean shouldSave = template.isReformatCode() != FileTemplateBase.DEFAULT_REFORMAT_CODE_VALUE || template.isLiveTemplateEnabled() != template.isLiveTemplateEnabledByDefault();
         if (template instanceof BundledFileTemplate) {
           shouldSave |= ((BundledFileTemplate)template).isEnabled() != FileTemplateBase.DEFAULT_ENABLED_VALUE;
         }

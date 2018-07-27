@@ -17,11 +17,12 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.libraries.Library;
@@ -32,18 +33,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredWriteAction;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
  * @author max
  */
-public class ProjectRootManagerImpl extends ProjectRootManagerEx implements ProjectComponent {
+public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootManagerImpl");
 
   protected final Project myProject;
@@ -135,6 +137,23 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   public ProjectRootManagerImpl(Project project) {
     myProject = project;
     myRootsCache = new OrderRootsCache(project);
+
+    MessageBusConnection busConnection = project.getMessageBus().connect();
+    busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(myProject == project) {
+          ProjectRootManagerImpl.this.projectOpened();
+        }
+      }
+
+      @Override
+      public void projectClosed(Project project) {
+        if (myProject == project) {
+          ProjectRootManagerImpl.this.projectClosed();
+        }
+      }
+    });
   }
 
   @Override
@@ -199,26 +218,10 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     return VfsUtilCore.toVirtualFileArray(result);
   }
 
-  @Override
   public void projectOpened() {
   }
 
-  @Override
   public void projectClosed() {
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "ProjectRootManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   private boolean myMergedCallStarted = false;

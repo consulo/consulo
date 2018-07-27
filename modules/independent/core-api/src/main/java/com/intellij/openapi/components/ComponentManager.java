@@ -17,35 +17,25 @@ package com.intellij.openapi.components;
 
 import com.google.inject.Injector;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 
 /**
- * Provides access to components. Serves as a base interface for {@link com.intellij.openapi.application.Application}
- * and {@link com.intellij.openapi.project.Project}.
+ * Provides access to components. Serves as a base interface for {@link Application}
+ * and {@link Project}.
  *
- * @see ApplicationComponent
  * @see ProjectComponent
- * @see com.intellij.openapi.application.Application
- * @see com.intellij.openapi.project.Project
+ * @see Application
+ * @see Project
  */
 public interface ComponentManager extends AreaInstance, UserDataHolder, Disposable {
-  /**
-   * Gets the component by its name
-   *
-   * @param name the name of the component
-   * @return component with given name or null if there is no such component
-   * @see com.intellij.openapi.components.NamedComponent#getComponentName()
-   */
-  default BaseComponent getComponent(@Nonnull String name) {
-    throw new UnsupportedOperationException();
-  }
 
   /**
    * Gets the component by its interface class.
@@ -63,7 +53,10 @@ public interface ComponentManager extends AreaInstance, UserDataHolder, Disposab
    * @param defaultImplementationIfAbsent the default implementation
    * @return component that matches interface class or default if there is no such component
    */
-  <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementationIfAbsent);
+  @Deprecated
+  default <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementationIfAbsent) {
+    return getComponent(interfaceClass);
+  }
 
   /**
    * Checks whether there is a component with the specified interface class.
@@ -81,14 +74,10 @@ public interface ComponentManager extends AreaInstance, UserDataHolder, Disposab
    * @deprecated use extension points instead
    */
   @Nonnull
+  @Deprecated
   <T> T[] getComponents(@Nonnull Class<T> baseClass);
 
-  @Nonnull
-  @Deprecated
-  default PicoContainer getPicoContainer() {
-    throw new UnsupportedOperationException();
-  }
-
+  @Override
   @Nonnull
   default Injector getInjector() {
     throw new UnsupportedOperationException();
@@ -104,7 +93,7 @@ public interface ComponentManager extends AreaInstance, UserDataHolder, Disposab
 
   /**
    * @return condition for this component being disposed.
-   * see {@link com.intellij.openapi.application.Application#invokeLater(Runnable, Condition)} for the usage example.
+   * see {@link Application#invokeLater(Runnable, Condition)} for the usage example.
    */
   @Nonnull
   Condition getDisposed();

@@ -20,45 +20,44 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author cdr
-*/
-public class WolfPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
-  private long myPsiModificationCount;
-
-  public WolfPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, new int[]{Pass.LOCAL_INSPECTIONS}, false, Pass.WOLF);
-  }
+ */
+public class WolfPassFactory implements TextEditorHighlightingPassFactory {
+  private static final Key<Long> ourModCount = Key.create("WolfPassFactory.ourModCount");
 
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "WolfPassFactory";
+  public void register(@Nonnull Project project, @Nonnull TextEditorHighlightingPassRegistrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, new int[]{Pass.LOCAL_INSPECTIONS}, false, Pass.WOLF);
   }
 
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    final long psiModificationCount = PsiManager.getInstance(myProject).getModificationTracker().getModificationCount();
-    if (psiModificationCount == myPsiModificationCount) {
+    Long oldPsiModificationCount = file.getUserData(ourModCount);
+    if (oldPsiModificationCount == null) {
+      oldPsiModificationCount = 0L;
+    }
+
+    Project project = file.getProject();
+    final long psiModificationCount = PsiManager.getInstance(project).getModificationTracker().getModificationCount();
+    if (psiModificationCount == oldPsiModificationCount) {
       return null; //optimization
     }
-    return new WolfHighlightingPass(myProject, editor.getDocument(), file){
+    return new WolfHighlightingPass(project, editor.getDocument(), file) {
       @Override
       protected void applyInformationWithProgress() {
         super.applyInformationWithProgress();
-        myPsiModificationCount = psiModificationCount;
+        file.putUserData(ourModCount, psiModificationCount);
       }
     };
   }

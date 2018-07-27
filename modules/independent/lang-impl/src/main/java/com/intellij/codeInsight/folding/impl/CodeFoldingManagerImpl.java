@@ -45,11 +45,14 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+@Singleton
 public class CodeFoldingManagerImpl extends CodeFoldingManager implements ProjectComponent {
   private final Project myProject;
 
@@ -58,6 +61,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   private final Key<DocumentFoldingInfo> myFoldingInfoInDocumentKey = Key.create("FOLDING_INFO_IN_DOCUMENT_KEY");
   private static final Key<Boolean> FOLDING_STATE_KEY = Key.create("FOLDING_STATE_KEY");
 
+  @Inject
   CodeFoldingManagerImpl(Project project) {
     myProject = project;
   }
@@ -67,9 +71,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   public String getComponentName() {
     return "CodeFoldingManagerImpl";
   }
-
-  @Override
-  public void initComponent() { }
 
   @Override
   public void disposeComponent() {

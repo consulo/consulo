@@ -29,19 +29,20 @@ import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.roots.ContentFolderScopes;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.roots.ContentFolderScopes;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author spleaner
  */
+@Singleton
 public class LogicalRootsManagerImpl extends LogicalRootsManager {
   private Map<Module, MultiValuesMap<LogicalRootType, LogicalRoot>> myRoots = null;
   private final MultiValuesMap<LogicalRootType, NotNullFunction> myProviders = new MultiValuesMap<LogicalRootType, NotNullFunction>();
@@ -49,11 +50,12 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   private final ModuleManager myModuleManager;
   private final Project myProject;
 
-  public LogicalRootsManagerImpl(final MessageBus bus, final ModuleManager moduleManager, final Project project) {
+  @Inject
+  public LogicalRootsManagerImpl(final ModuleManager moduleManager, final Project project) {
     myModuleManager = moduleManager;
     myProject = project;
 
-    final MessageBusConnection connection = bus.connect();
+    final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(LOGICAL_ROOTS, new LogicalRootListener() {
       @Override
       public void logicalRootsChanged() {
@@ -64,7 +66,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
-        bus.asyncPublisher(LOGICAL_ROOTS).logicalRootsChanged();
+        project.getMessageBus().asyncPublisher(LOGICAL_ROOTS).logicalRootsChanged();
       }
     });
     registerLogicalRootProvider(LogicalRootType.SOURCE_ROOT, new NotNullFunction<Module, List<VirtualFileLogicalRoot>>() {

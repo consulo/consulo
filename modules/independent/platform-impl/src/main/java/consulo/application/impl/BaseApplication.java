@@ -16,6 +16,7 @@
 package consulo.application.impl;
 
 import com.google.inject.Binder;
+import com.google.inject.Scope;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.icons.AllIcons;
@@ -36,7 +37,6 @@ import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
-import com.intellij.openapi.components.impl.stores.IComponentStore;
 import com.intellij.openapi.components.impl.stores.StoreUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -183,6 +183,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
 
+  private final ApplicationPathMacroManager myPathMacroManager = new ApplicationPathMacroManager();
+
   public BaseApplication(ComponentManager parent, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(parent);
     mySplashRef = splashRef;
@@ -199,6 +201,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   protected void initPlugins() {
     PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
     PluginManagerCore.initPlugins(mySplashRef.get());
+  }
+
+  @Nullable
+  @Override
+  @SuppressWarnings("unchecked")
+  protected <T> T getCustomComponentInstance(@Nonnull Class<T> clazz) {
+    if(clazz == PathMacroManager.class) {
+      return (T)myPathMacroManager;
+    }
+    return super.getCustomComponentInstance(clazz);
   }
 
   @Nonnull
@@ -472,31 +484,28 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  protected synchronized Object createComponent(@Nonnull Class componentInterface) {
-    Object component = super.createComponent(componentInterface);
+  protected void componentCreated(@Nonnull Class componentInterface) {
     StartupProgress progress = mySplashRef.get();
     if (progress != null) {
       progress.showProgress("", 0.65f + getPercentageOfComponentsLoaded() * 0.35f);
     }
-    return component;
   }
 
   @Override
-  protected void bootstrapBinder(String name, Binder binder) {
-    super.bootstrapBinder(name, binder);
+  protected void bootstrapBinder(Scope scope, Binder binder) {
+    super.bootstrapBinder(scope, binder);
 
     binder.bind(Application.class).toInstance(this);
     binder.bind(ApplicationEx.class).toInstance(this);
     binder.bind(ApplicationEx2.class).toInstance(this);
-    binder.bind(IComponentStore.class).to(ApplicationStoreImpl.class);
-    binder.bind(PathMacroManager.class).to(ApplicationPathMacroManager.class);
+    binder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class);
     binder.bind(TransactionGuard.class).to(TransactionGuardImpl.class);
   }
 
   @Override
   @Nonnull
   public IApplicationStore getStateStore() {
-    return (IApplicationStore)getInjector().getInstance(IComponentStore.class);
+    return getInjector().getInstance(IApplicationStore.class);
   }
 
   @Override

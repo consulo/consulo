@@ -17,20 +17,19 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.event.EditorEventMulticaster;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Provides services for creating document and editor instances.
  */
-public abstract class EditorFactory implements ApplicationComponent {
+public abstract class EditorFactory {
   /**
    * Returns the editor factory instance.
    *
@@ -38,8 +37,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    */
   @Nonnull
   public static EditorFactory getInstance() {
-    final Application application = ApplicationManager.getApplication();
-    return application == null ? null : application.getComponent(EditorFactory.class);
+    return Application.get().getComponent(EditorFactory.class);
   }
 
   /**

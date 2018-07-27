@@ -48,12 +48,15 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+@Singleton
 public class CreatePatchCommitExecutor extends LocalCommitExecutor implements ProjectComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.patch.CreatePatchCommitExecutor");
 
@@ -66,6 +69,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, CreatePatchCommitExecutor.class);
   }
 
+  @Inject
   public CreatePatchCommitExecutor(final Project project, final ChangeListManager changeListManager) {
     myProject = project;
     myChangeListManager = changeListManager;

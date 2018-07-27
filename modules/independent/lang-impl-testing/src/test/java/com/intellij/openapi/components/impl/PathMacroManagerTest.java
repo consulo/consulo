@@ -198,7 +198,7 @@ public class PathMacroManagerTest {
   public void testPathsOutsideProject() {
     setUpMocks("/tmp/foo");
 
-    final ReplacePathToMacroMap replacePathMap = new ProjectPathMacroManager(myPathMacros, myProject).getReplacePathMap();
+    final ReplacePathToMacroMap replacePathMap = new ProjectPathMacroManager(myProject).getReplacePathMap();
     assertReplacements(replacePathMap, "file:/tmp/foo -> file:$PROJECT_DIR$\n" +
                                        "file://tmp/foo -> file:/$PROJECT_DIR$\n" +
                                        "file:///tmp/foo -> file://$PROJECT_DIR$\n" +
@@ -269,7 +269,7 @@ public class PathMacroManagerTest {
   public void testProjectUnderUserHome_ReplaceRecursively() {
     setUpMocks("/home/user/foo");
 
-    ReplacePathToMacroMap map = new ProjectPathMacroManager(myPathMacros, myProject).getReplacePathMap();
+    ReplacePathToMacroMap map = new ProjectPathMacroManager(myProject).getReplacePathMap();
     String src = "-Dfoo=/home/user/foo/bar/home -Dbar=\"/home/user\"";
     String dst = "-Dfoo=$PROJECT_DIR$/bar/home -Dbar=\"$PROJECT_DIR$/..\"";
     assertEquals(dst, map.substituteRecursively(src, true));

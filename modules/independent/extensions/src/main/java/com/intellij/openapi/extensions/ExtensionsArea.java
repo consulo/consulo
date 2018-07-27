@@ -39,11 +39,6 @@ public interface ExtensionsArea {
   String getId();
 
   // region Deprecated stuff
-  @Nonnull
-  @Deprecated
-  default AreaPicoContainer getPicoContainer() {
-    throw new UnsupportedOperationException();
-  }
 
   @Deprecated
   default void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass) {

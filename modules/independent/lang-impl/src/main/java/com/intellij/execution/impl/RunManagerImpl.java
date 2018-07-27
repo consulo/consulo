@@ -47,9 +47,12 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class RunManagerImpl extends RunManagerEx implements PersistentStateComponent<Element>, NamedComponent, Disposable {
   private static final Logger LOG = Logger.getInstance(RunManagerImpl.class);
 
@@ -92,8 +95,9 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private final ArrayList<RunConfiguration> myRecentlyUsedTemporaries = new ArrayList<>();
   private boolean myOrdered = true;
 
-  public RunManagerImpl(@Nonnull Project project, @Nonnull PropertiesComponent propertiesComponent) {
-    myConfig = new RunManagerConfig(propertiesComponent);
+  @Inject
+  public RunManagerImpl(@Nonnull Project project) {
+    myConfig = new RunManagerConfig(PropertiesComponent.getInstance(project));
     myProject = project;
 
     initializeConfigurationTypes(ConfigurationType.CONFIGURATION_TYPE_EP.getExtensions());

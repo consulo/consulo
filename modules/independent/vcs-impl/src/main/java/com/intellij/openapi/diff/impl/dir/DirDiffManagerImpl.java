@@ -24,6 +24,8 @@ import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -32,9 +34,11 @@ import java.awt.event.WindowEvent;
 /**
  * @author Konstantin Bulenkov
  */
+@Singleton
 public class DirDiffManagerImpl extends DirDiffManager {
   private final Project myProject;
 
+  @Inject
   public DirDiffManagerImpl(Project project) {
     myProject = project;
   }

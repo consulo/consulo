@@ -37,7 +37,7 @@ public class ComponentConfig {
 
   protected String compilerServerImplementationClass;
 
-  protected boolean loadForDefaultProject;
+  protected boolean loadForDefaultProject = true;
 
   @Property(surroundWithTag = false)
   @MapAnnotation(surroundWithTag = false, entryTagName = "option", keyAttributeName = "name", valueAttributeName = "value")

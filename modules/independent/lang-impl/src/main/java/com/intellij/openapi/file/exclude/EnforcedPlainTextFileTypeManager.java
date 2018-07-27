@@ -33,6 +33,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.WeakList;
 import com.intellij.util.indexing.FileBasedIndex;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +46,8 @@ import java.util.List;
  *
  * @author Rustam Vishnyakov
  */
-@State(name = "EnforcedPlainTextFileTypeManager", storages = {@Storage( file = StoragePathMacros.APP_CONFIG + "/plainTextFiles.xml")})
+@State(name = "EnforcedPlainTextFileTypeManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/plainTextFiles.xml")})
+@Singleton
 public class EnforcedPlainTextFileTypeManager extends PersistentFileSetManager implements ProjectManagerListener {
   private Collection<Project> myProcessedProjects = new WeakList<Project>();
   private boolean myNeedsSync = true;
@@ -88,7 +90,7 @@ public class EnforcedPlainTextFileTypeManager extends PersistentFileSetManager i
     }
     fireRootsChanged(filesToSync, true);
   }
-  
+
   public void unmarkPlainText(VirtualFile... files) {
     List<VirtualFile> filesToSync = new ArrayList<VirtualFile>();
     for (VirtualFile file : files) {
@@ -150,7 +152,7 @@ public class EnforcedPlainTextFileTypeManager extends PersistentFileSetManager i
   }
 
   private boolean syncWithProject(Project project) {
-    if (project.isDisposed()) return false;    
+    if (project.isDisposed()) return false;
     ProjectPlainTextFileTypeManager projectPlainTextFileTypeManager = ProjectPlainTextFileTypeManager.getInstance(project);
     if (projectPlainTextFileTypeManager == null) return true;
     for (VirtualFile file : projectPlainTextFileTypeManager.getFiles()) {

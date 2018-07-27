@@ -23,17 +23,17 @@ import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
@@ -47,16 +47,22 @@ import com.intellij.util.Function;
 import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
+import consulo.annotations.NotLazy;
+import consulo.roots.types.BinariesOrderRootType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 import static com.intellij.ide.favoritesTreeView.FavoritesListProvider.EP_NAME;
 
-public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
+@Singleton
+@NotLazy
+public class FavoritesManager implements JDOMExternalizable {
   private final ArrayList<String> myListOrder = new ArrayList<String>();
   // fav list name -> list of (root: root url, root class)
   private final Map<String, List<TreeItem<Pair<AbstractUrl, String>>>> myName2FavoritesRoots =
@@ -144,8 +150,18 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     return project.getComponent(FavoritesManager.class);
   }
 
+  @Inject
   public FavoritesManager(Project project) {
     myProject = project;
+
+    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(myProject == project) {
+          FavoritesManager.this.projectOpened();
+        }
+      }
+    });
   }
 
   @Nonnull
@@ -373,16 +389,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     return false;
   }
 
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Override
-  public void projectOpened() {
+  private void projectOpened() {
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       StartupManager.getInstance(myProject).registerPostStartupActivity(new DumbAwareRunnable() {
         @Override
@@ -401,16 +408,6 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
         }
       });
     }
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "FavoritesManager";
   }
 
   @Nullable

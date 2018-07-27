@@ -40,7 +40,7 @@ public abstract class StateStorageManagerImplTest extends LightPlatformLangTestC
   @Override
   public final void setUp() throws Exception {
     super.setUp();
-    myStateStorageManager = new StateStorageManagerImpl(null, "foo", Application.get().getInjector()) {
+    myStateStorageManager = new StateStorageManagerImpl(null, "foo", Application.get().getMessageBus()) {
       @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {

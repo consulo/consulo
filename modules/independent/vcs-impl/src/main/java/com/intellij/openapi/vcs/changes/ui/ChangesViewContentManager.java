@@ -21,7 +21,6 @@ import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -40,10 +39,13 @@ import com.intellij.ui.content.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.NotNullFunction;
 import consulo.annotations.DeprecationInfo;
+import consulo.annotations.NotLazy;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -51,7 +53,9 @@ import java.util.concurrent.CountDownLatch;
 /**
  * @author yole
  */
-public class ChangesViewContentManager extends AbstractProjectComponent implements ChangesViewContentI {
+@Singleton
+@NotLazy
+public class ChangesViewContentManager implements ChangesViewContentI {
   @Deprecated
   @DeprecationInfo(value = "Use ToolWindowId#VCS", until = "2.0")
   public static final String TOOLWINDOW_ID = ToolWindowId.VCS;
@@ -72,9 +76,11 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
   private final List<Content> myAddedContents = new ArrayList<>();
   @Nonnull
   private final CountDownLatch myInitializationWaiter = new CountDownLatch(1);
+  private final Project myProject;
 
+  @Inject
   public ChangesViewContentManager(@Nonnull Project project, final ProjectLevelVcsManager vcsManager) {
-    super(project);
+    myProject = project;
     myVcsManager = vcsManager;
     myVcsChangeAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
   }
@@ -82,6 +88,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
   public void projectOpened() {
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
     StartupManager.getInstance(myProject).registerPostStartupActivity(new DumbAwareRunnable() {
+      @Override
       public void run() {
         final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
         if (toolWindowManager != null) {
@@ -96,6 +103,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
           myVcsManager.addVcsListener(myVcsListener);
 
           Disposer.register(myProject, new Disposable(){
+            @Override
             public void dispose() {
               contentManager.removeContentManagerListener(myContentManagerListener);
 
@@ -200,6 +208,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
     return "ChangesViewContentManager";
   }
 
+  @Override
   public void addContent(Content content) {
     if (myContentManager == null) {
       myAddedContents.add(content);
@@ -209,16 +218,19 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
     }
   }
 
+  @Override
   public void removeContent(final Content content) {
     if (myContentManager != null && (! myContentManager.isDisposed())) { // for unit tests
       myContentManager.removeContent(content, true);
     }
   }
 
+  @Override
   public void setSelectedContent(final Content content) {
     myContentManager.setSelectedContent(content);
   }
 
+  @Override
   @Nullable
   public <T> T getActiveComponent(final Class<T> aClass) {
     final Content content = myContentManager.getSelectedContent();
@@ -235,6 +247,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
     return Comparing.equal(contentName, selectedContent.getTabName());
   }
 
+  @Override
   public void selectContent(@Nonnull String tabName) {
     selectContent(tabName, false);
   }
@@ -249,9 +262,11 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
   }
 
   private class MyVcsListener implements VcsListener {
+    @Override
     public void directoryMappingChanged() {
       myVcsChangeAlarm.cancelAllRequests();
       myVcsChangeAlarm.addRequest(new Runnable() {
+        @Override
         public void run() {
           if (myProject.isDisposed()) return;
           updateToolWindowAvailability();
@@ -274,6 +289,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
   }
 
   private class MyContentManagerListener extends ContentManagerAdapter {
+    @Override
     public void selectionChanged(final ContentManagerEvent event) {
       Content content = event.getContent();
       if (content.getComponent() instanceof ContentStub) {

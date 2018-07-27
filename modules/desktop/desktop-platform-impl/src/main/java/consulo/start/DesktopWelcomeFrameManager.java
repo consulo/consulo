@@ -19,11 +19,13 @@ import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 14-Oct-17
  */
+@Singleton
 public class DesktopWelcomeFrameManager implements WelcomeFrameManager {
   @RequiredUIAccess
   @Nonnull

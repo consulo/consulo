@@ -34,6 +34,8 @@ import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialo
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ import java.util.List;
  * @since 22:50/06.10.13
  */
 @State(name = "BackgroundTaskByVfsChangeManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsChangeManager implements PersistentStateComponent<Element>, Disposable {
   private static final Key<Boolean> PROCESSING_BACKGROUND_TASK = Key.create("processing.background.task");
 
@@ -51,6 +54,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
   private final List<BackgroundTaskByVfsChangeTaskImpl> myTasks = new ArrayList<>();
 
+  @Inject
   public BackgroundTaskByVfsChangeManagerImpl(@Nonnull Project project) {
     myProject = project;
 

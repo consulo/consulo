@@ -26,6 +26,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.List;
 /**
  * @author Eugene Belyaev
  */
+@Singleton
 public class DefaultKeymap {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.keymap.impl.DefaultKeymap");
 

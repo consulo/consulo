@@ -37,6 +37,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Set;
 
@@ -44,6 +46,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 13:05/10.06.13
  */
+@Singleton
 public class CompilerConfigurationImpl extends CompilerConfiguration {
   public static class MyWatchedRootsProvider implements WatchedRootsProvider {
     private final Project myProject;
@@ -69,6 +72,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
   private VirtualFilePointer myOutputDirPointer;
   private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
 
+  @Inject
   public CompilerConfigurationImpl(@Nonnull Project project, @Nonnull ModuleManager moduleManager) {
     myProject = project;
     myModuleManager = moduleManager;

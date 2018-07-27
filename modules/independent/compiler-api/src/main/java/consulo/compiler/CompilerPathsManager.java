@@ -19,10 +19,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 import consulo.roots.ContentFolderTypeProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -30,6 +33,7 @@ import consulo.roots.ContentFolderTypeProvider;
  */
 @Deprecated
 @DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules", until = "2.0")
+@Singleton
 public class CompilerPathsManager {
   @Nonnull
   public static CompilerPathsManager getInstance(@Nonnull final Project project) {
@@ -38,6 +42,7 @@ public class CompilerPathsManager {
 
   private final Project myProject;
 
+  @Inject
   public CompilerPathsManager(Project project) {
     myProject = project;
   }
@@ -76,9 +81,7 @@ public class CompilerPathsManager {
     ModuleCompilerPathsManager.getInstance(module).setExcludeOutput(val);
   }
 
-  public void setCompilerOutputUrl(@Nonnull Module module,
-                                   @Nonnull ContentFolderTypeProvider contentFolderType,
-                                   @javax.annotation.Nullable String compilerOutputUrl) {
+  public void setCompilerOutputUrl(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType, @javax.annotation.Nullable String compilerOutputUrl) {
     ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
   }
 

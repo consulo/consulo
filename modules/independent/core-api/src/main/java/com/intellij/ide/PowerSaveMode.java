@@ -16,6 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
@@ -33,8 +34,8 @@ public class PowerSaveMode {
   private final MessageBus myBus;
 
   @Inject
-  public PowerSaveMode(MessageBus bus) {
-    myBus = bus;
+  public PowerSaveMode(Application application) {
+    myBus = application.getMessageBus();
   }
 
   public static boolean isEnabled() {

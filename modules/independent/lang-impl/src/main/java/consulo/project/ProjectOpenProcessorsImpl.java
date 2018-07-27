@@ -22,6 +22,7 @@ import consulo.moduleImport.ModuleImportBasedProjectOpenProcessor;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 31-Jan-17
  */
+@Singleton
 public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
   @SuppressWarnings("unchecked")
   private NotNullLazyValue<ProjectOpenProcessor[]> myCacheValue = NotNullLazyValue.createValue(() -> {

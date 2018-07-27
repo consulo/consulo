@@ -39,9 +39,12 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLog;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 public class VcsCherryPickManager {
   private static final Logger LOG = Logger.getInstance(VcsCherryPickManager.class);
   @Nonnull
@@ -51,6 +54,7 @@ public class VcsCherryPickManager {
   @Nonnull
   private final Set<CommitId> myIdsInProgress = ContainerUtil.newConcurrentSet();
 
+  @Inject
   public VcsCherryPickManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
     myProject = project;
     myProjectLevelVcsManager = projectLevelVcsManager;

@@ -39,14 +39,16 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Singleton
 public class PsiManagerImpl extends PsiManagerEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.PsiManagerImpl");
 
@@ -70,15 +72,15 @@ public class PsiManagerImpl extends PsiManagerEx {
   public static final Topic<AnyPsiChangeListener> ANY_PSI_CHANGE_TOPIC =
           Topic.create("ANY_PSI_CHANGE_TOPIC", AnyPsiChangeListener.class, Topic.BroadcastDirection.TO_PARENT);
 
+  @Inject
   public PsiManagerImpl(Project project,
                         FileDocumentManager fileDocumentManager,
                         PsiBuilderFactory psiBuilderFactory,
                         FileIndexFacade fileIndex,
-                        MessageBus messageBus,
                         PsiModificationTracker modificationTracker) {
     myProject = project;
     myFileIndex = fileIndex;
-    myMessageBus = messageBus;
+    myMessageBus = project.getMessageBus();
     myModificationTracker = modificationTracker;
 
     //We need to initialize PsiBuilderFactory service so it won't initialize under PsiLock from ChameleonTransform

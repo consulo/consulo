@@ -16,24 +16,50 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
+import consulo.annotations.NotLazy;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author Bas Leijdekkers
  */
-public class WindowDressing extends AbstractProjectComponent {
+@Singleton
+@NotLazy
+public class WindowDressing {
 
+  private final Project myProject;
+
+  @Inject
   public WindowDressing(@Nonnull Project project) {
-    super(project);
+    myProject = project;
+
+    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if (myProject == project) {
+          WindowDressing.this.projectOpened();
+        }
+      }
+
+      @Override
+      public void projectClosed(Project project) {
+        if (myProject == project) {
+          WindowDressing.this.projectClosed();
+        }
+      }
+    });
   }
 
-  public void projectOpened() {
+  private void projectOpened() {
     getWindowActionGroup().addProject(myProject);
   }
 
-  public void projectClosed() {
+  private void projectClosed() {
     getWindowActionGroup().removeProject(myProject);
   }
 

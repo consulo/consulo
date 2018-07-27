@@ -19,7 +19,6 @@ import com.intellij.ide.actions.QuickSwitchSchemeAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.options.BaseSchemeProcessor;
@@ -29,17 +28,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ThrowableConvertor;
+import consulo.annotations.NotLazy;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.Collection;
 import java.util.Set;
 
 @Singleton
-public class QuickListsManager implements ApplicationComponent {
+@NotLazy
+public class QuickListsManager {
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/quicklists";
 
   private static final String LIST_TAG = "list";
@@ -77,13 +79,7 @@ public class QuickListsManager implements ApplicationComponent {
     return item;
   }
 
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "QuickListsManager";
-  }
-
-  @Override
+  @PostConstruct
   public void initComponent() {
     for (BundledQuickListsProvider provider : BundledQuickListsProvider.EP_NAME.getExtensions()) {
       for (final String path : provider.getBundledListsRelativePaths()) {
@@ -101,10 +97,6 @@ public class QuickListsManager implements ApplicationComponent {
     }
     mySchemesManager.loadSchemes();
     registerActions();
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   @Nonnull

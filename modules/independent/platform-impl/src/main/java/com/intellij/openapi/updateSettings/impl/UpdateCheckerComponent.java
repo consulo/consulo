@@ -15,13 +15,16 @@
  */
 package com.intellij.openapi.updateSettings.impl;
 
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.Disposable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.annotations.NotLazy;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +32,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author yole
  */
-public class UpdateCheckerComponent implements ApplicationComponent {
+@Singleton
+@NotLazy
+public class UpdateCheckerComponent implements Disposable {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
 
   private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
@@ -39,7 +44,7 @@ public class UpdateCheckerComponent implements ApplicationComponent {
     queueNextUpdateCheck(ourCheckInterval);
   });
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     final long interval = consulo.ide.updateSettings.UpdateSettings.getInstance().getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
     queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
@@ -50,13 +55,7 @@ public class UpdateCheckerComponent implements ApplicationComponent {
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     myCheckFuture.cancel(false);
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "UpdateCheckerComponent";
   }
 }

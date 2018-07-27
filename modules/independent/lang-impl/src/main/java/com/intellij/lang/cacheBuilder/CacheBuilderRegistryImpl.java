@@ -20,6 +20,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.Map;
 /**
  * @author yole
  */
+@Singleton
 public class CacheBuilderRegistryImpl extends CacheBuilderRegistry {
   private final Map<FileType, WordsScanner> myMap = new HashMap<FileType, WordsScanner>();
 

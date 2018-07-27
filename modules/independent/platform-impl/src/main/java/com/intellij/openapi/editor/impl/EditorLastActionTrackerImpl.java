@@ -18,7 +18,6 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorLastActionTracker;
@@ -27,14 +26,16 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
+import consulo.annotations.NotLazy;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements ApplicationComponent,
+@NotLazy
+public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable,
                                                                                     AnActionListener,
                                                                                     EditorMouseListener {
   private static final Key<Boolean> DISPOSABLE_SET = Key.create("EditorLastActionTracker.dispose.handler.set");
@@ -52,22 +53,16 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
     myEditorEventMulticaster = editorFactory.getEventMulticaster();
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     myActionManager.addAnActionListener(this);
     myEditorEventMulticaster.addEditorMouseListener(this);
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     myEditorEventMulticaster.removeEditorMouseListener(this);
     myActionManager.removeAnActionListener(this);
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "EditorLastActionTracker";
   }
 
   @Override

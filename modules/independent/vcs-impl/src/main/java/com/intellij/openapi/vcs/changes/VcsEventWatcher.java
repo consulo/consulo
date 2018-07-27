@@ -19,26 +19,43 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NonNls;
+import consulo.annotations.NotLazy;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
-public class VcsEventWatcher extends AbstractProjectComponent {
+@Singleton
+@NotLazy
+public class VcsEventWatcher {
+  private Project myProject;
+
+  @Inject
   public VcsEventWatcher(Project project) {
-    super(project);
+    myProject = project;
+
+    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(project == myProject) {
+          VcsEventWatcher.this.projectOpened();
+        }
+      }
+    });
   }
 
-  @Override
-  public void projectOpened() {
+  private void projectOpened() {
     MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override
@@ -53,15 +70,9 @@ public class VcsEventWatcher extends AbstractProjectComponent {
       }
     });
     final WolfTheProblemSolver.ProblemListener myProblemListener = new MyProblemListener();
-    WolfTheProblemSolver.getInstance(myProject).addProblemListener(myProblemListener,myProject);
+    WolfTheProblemSolver.getInstance(myProject).addProblemListener(myProblemListener, myProject);
   }
 
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "VcsEventWatcher";
-  }
   private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
     @Override
     public void problemsAppeared(@Nonnull final VirtualFile file) {

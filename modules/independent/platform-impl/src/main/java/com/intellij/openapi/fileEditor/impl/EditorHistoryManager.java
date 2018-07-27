@@ -39,6 +39,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +48,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public final class EditorHistoryManager implements PersistentStateComponent<Element>, ProjectComponent {
   private static final Logger LOG = Logger.getInstance(EditorHistoryManager.class);
 
@@ -60,6 +63,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
    */
   private final List<HistoryEntry> myEntriesList = new ArrayList<>();
 
+  @Inject
   EditorHistoryManager(@Nonnull Project project) {
     myProject = project;
 
@@ -149,10 +153,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
     updateHistoryEntry(file, null, null, changeEntryOrderOnly);
   }
 
-  private void updateHistoryEntry(@Nullable final VirtualFile file,
-                                  @Nullable final FileEditor fallbackEditor,
-                                  @Nullable FileEditorProvider fallbackProvider,
-                                  final boolean changeEntryOrderOnly) {
+  private void updateHistoryEntry(@Nullable final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider, final boolean changeEntryOrderOnly) {
     if (file == null) {
       return;
     }

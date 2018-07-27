@@ -40,11 +40,11 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
+import consulo.annotations.NotLazy;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
@@ -73,7 +73,8 @@ import java.util.Set;
  */
 @Singleton
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
-public final class DesktopWindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
+@NotLazy
+public final class DesktopWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.WindowManagerImpl");
 
   @NonNls
@@ -126,14 +127,13 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   private final ActionManagerEx myActionManager;
 
   @Inject
-  public DesktopWindowManagerImpl(DataManager dataManager, ActionManager actionManager, MessageBus bus) {
+  public DesktopWindowManagerImpl(DataManager dataManager, ActionManager actionManager, Application application) {
     myDataManager = dataManager;
     myActionManager = (ActionManagerEx)actionManager;
     if (myDataManager instanceof DataManagerImpl) {
       ((DataManagerImpl)myDataManager).setWindowManager(this);
     }
 
-    final Application application = ApplicationManager.getApplication();
     if (!application.isUnitTestMode()) {
       Disposer.register(application, new Disposable() {
         @Override
@@ -162,7 +162,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
       }
     };
 
-    bus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+    application.getMessageBus().connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         // save full screen window states
@@ -785,12 +785,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   @Override
   public final void setLayout(final ToolWindowLayout layout) {
     myLayout.copyFrom(layout);
-  }
-
-  @Override
-  @Nonnull
-  public final String getComponentName() {
-    return "WindowManager";
   }
 
   public DesktopWindowWatcher getWindowWatcher() {

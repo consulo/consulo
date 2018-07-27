@@ -27,6 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.NotLazy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -36,21 +37,21 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
-@State(
-        name = "KeymapManager",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/keymap.xml", roamingType = RoamingType.PER_PLATFORM),
-        additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH
-)
+@State(name = "KeymapManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
+                                                          "/keymap.xml", roamingType = RoamingType.PER_PLATFORM), additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH)
 @Singleton
-public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element>, ApplicationComponent {
+@NotLazy
+public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element> {
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
 
   private final List<KeymapManagerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private String myActiveKeymapName;
   private final Map<String, String> myBoundShortcuts = new HashMap<String, String>();
 
-  @NonNls private static final String ACTIVE_KEYMAP = "active_keymap";
-  @NonNls private static final String NAME_ATTRIBUTE = "name";
+  @NonNls
+  private static final String ACTIVE_KEYMAP = "active_keymap";
+  @NonNls
+  private static final String NAME_ATTRIBUTE = "name";
   private final SchemesManager<Keymap, KeymapImpl> mySchemesManager;
 
   public static boolean ourKeymapManagerInitialized = false;
@@ -258,19 +259,5 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
         myListeners.remove(listener);
       }
     }
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "KeymapManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 }

@@ -47,10 +47,13 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
+@Singleton
 public class InspectionManagerEx extends InspectionManagerBase {
   private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
   private final NotNullLazyValue<ContentManager> myContentManager;
@@ -58,7 +61,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
   private final AtomicBoolean myToolsAreInitialized = new AtomicBoolean(false);
   private GlobalInspectionContextImpl myGlobalInspectionContext;
 
-
+  @Inject
   public InspectionManagerEx(final Project project) {
     super(project);
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
@@ -78,8 +81,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
         @Override
         protected ContentManager compute() {
           ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-          ToolWindow toolWindow =
-                  toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
+          ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
           ContentManager contentManager = toolWindow.getContentManager();
           toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
           new ContentManagerWatcher(toolWindow, contentManager);
@@ -114,9 +116,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
     });
   }
 
-  private static void processText(@Nonnull @NonNls String descriptionText,
-                                  @Nonnull InspectionToolWrapper tool,
-                                  @Nonnull SearchableOptionsRegistrar myOptionsRegistrar) {
+  private static void processText(@Nonnull @NonNls String descriptionText, @Nonnull InspectionToolWrapper tool, @Nonnull SearchableOptionsRegistrar myOptionsRegistrar) {
     if (ApplicationManager.getApplication().isDisposed()) return;
     final Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
     for (String word : words) {
@@ -157,7 +157,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
     myCurrentProfileName = name;
   }
 
-  public void closeRunningContext(GlobalInspectionContextImpl globalInspectionContext){
+  public void closeRunningContext(GlobalInspectionContextImpl globalInspectionContext) {
     myRunningContexts.remove(globalInspectionContext);
   }
 
@@ -189,7 +189,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
       final Application app = ApplicationManager.getApplication();
       if (app.isUnitTestMode() || app.isHeadlessEnvironment()) return;
 
-      app.executeOnPooledThread(new Runnable(){
+      app.executeOnPooledThread(new Runnable() {
         @Override
         public void run() {
           List<InspectionToolWrapper> tools = toolRegistrar.createTools();

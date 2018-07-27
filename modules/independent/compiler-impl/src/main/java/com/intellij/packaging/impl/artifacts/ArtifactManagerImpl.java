@@ -44,12 +44,15 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author nik
  */
 @State(name = "ArtifactManager", storages = @Storage(value = "artifacts", stateSplitter = ArtifactManagerStateSplitter.class))
+@Singleton
 public class ArtifactManagerImpl extends ArtifactManager implements Disposable, PersistentStateComponent<ArtifactManagerState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.artifacts.ArtifactManagerImpl");
   @NonNls
@@ -70,6 +73,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   };
   private final Map<String, LocalFileSystem.WatchRequest> myWatchedOutputs = new HashMap<>();
 
+  @Inject
   public ArtifactManagerImpl(Project project) {
     myProject = project;
     myModel = new ArtifactManagerModel();

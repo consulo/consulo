@@ -24,11 +24,14 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import com.intellij.openapi.vcs.impl.VcsEP;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
+@Singleton
 public class AllVcses implements AllVcsesI, Disposable {
   private final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.projectlevelman.AllVcses");
   private final Map<String, AbstractVcs> myVcses;
@@ -37,6 +40,7 @@ public class AllVcses implements AllVcsesI, Disposable {
   private final Project myProject;
   private final Map<String, VcsEP> myExtensions;    // +-
 
+  @Inject
   private AllVcses(final Project project) {
     myProject = project;
     myVcses = new HashMap<>();
@@ -79,7 +83,7 @@ public class AllVcses implements AllVcsesI, Disposable {
 
   public void unregisterManually(@Nonnull final AbstractVcs vcs) {
     synchronized (myLock) {
-      if (! myVcses.containsKey(vcs.getName())) return;
+      if (!myVcses.containsKey(vcs.getName())) return;
       unregisterVcs(vcs);
       myVcses.remove(vcs.getName());
     }

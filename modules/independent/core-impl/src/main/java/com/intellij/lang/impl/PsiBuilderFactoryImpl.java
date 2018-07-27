@@ -22,10 +22,12 @@ import com.intellij.openapi.project.Project;
 import consulo.lang.LanguageVersion;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
   @Nonnull
   @Override

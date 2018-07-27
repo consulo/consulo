@@ -18,7 +18,6 @@ package consulo.roots;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -31,9 +30,12 @@ import com.intellij.openapi.vfs.impl.BulkVirtualFileListenerAdapter;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.containers.SmartHashSet;
+import consulo.annotations.NotLazy;
 import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,9 @@ import java.util.Set;
  * @author VISTALL
  * @since 06.04.2015
  */
-public class ContentEntryFileListener implements ApplicationComponent, Disposable {
+@Singleton
+@NotLazy
+public class ContentEntryFileListener {
   public static class Listener implements VirtualFileListener {
     private final Project myProject;
 
@@ -104,6 +108,7 @@ public class ContentEntryFileListener implements ApplicationComponent, Disposabl
     }
   }
 
+  @Inject
   public ContentEntryFileListener(Application application, ProjectManager projectManager) {
     application.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
       @Override
@@ -113,9 +118,5 @@ public class ContentEntryFileListener implements ApplicationComponent, Disposabl
         }
       }
     });
-  }
-
-  @Override
-  public void dispose() {
   }
 }

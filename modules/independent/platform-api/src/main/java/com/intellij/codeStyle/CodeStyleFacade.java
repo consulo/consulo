@@ -26,17 +26,24 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class CodeStyleFacade {
+  public static interface ApplicationLevel {
+  }
+
+  public static interface ProjectLevel {
+  }
+
   public static CodeStyleFacade getInstance() {
-    return ServiceManager.getService(CodeStyleFacade.class);
+    return (CodeStyleFacade)ServiceManager.getService(ApplicationLevel.class);
   }
 
   public static CodeStyleFacade getInstance(@Nullable Project project) {
     if (project == null) return getInstance();
-    return ServiceManager.getService(project, CodeStyleFacade.class);
+    return (CodeStyleFacade)ServiceManager.getService(project, ProjectLevel.class);
   }
 
   /**
@@ -44,9 +51,9 @@ public abstract class CodeStyleFacade {
    * document.
    *
    * @param document the document for which the indent should be calculated.
-   * @param offset the caret offset in the editor.
+   * @param offset   the caret offset in the editor.
    * @return the indent string (containing of tabs and/or white spaces), or null if it
-   *         was not possible to calculate the indent.
+   * was not possible to calculate the indent.
    * @deprecated Use {@link #getLineIndent(Editor, Language, int)} instead.
    */
   @Nullable
@@ -61,7 +68,7 @@ public abstract class CodeStyleFacade {
    * @param language Context language
    * @param offset   The caret offset in the editor.
    * @return the indent string (containing of tabs and/or white spaces), or null if it
-   *         was not possible to calculate the indent.
+   * was not possible to calculate the indent.
    */
   public String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset) {
     //noinspection deprecation

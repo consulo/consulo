@@ -15,21 +15,27 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
 public abstract class WindowStateService {
+  static interface ApplicationLevel {
+  }
+
+  static interface ProjectLevel {
+  }
+
   /**
    * @return an instance of the service for the application
    */
   public static WindowStateService getInstance() {
-    return ServiceManager.getService(WindowStateService.class);
+    return (WindowStateService)ServiceManager.getService(ApplicationLevel.class);
   }
 
   /**
@@ -37,7 +43,7 @@ public abstract class WindowStateService {
    * @return an instance of the service for the specified project
    */
   public static WindowStateService getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, WindowStateService.class);
+    return (WindowStateService)ServiceManager.getService(project, ProjectLevel.class);
   }
 
   /**

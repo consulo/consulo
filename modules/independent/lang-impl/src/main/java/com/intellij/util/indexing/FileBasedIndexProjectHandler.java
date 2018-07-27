@@ -21,9 +21,9 @@ package com.intellij.util.indexing;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.startup.StartupManagerEx;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.*;
@@ -33,35 +33,42 @@ import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.annotations.NotLazy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 
-public class FileBasedIndexProjectHandler extends AbstractProjectComponent implements IndexableFileSet {
+@Singleton
+@NotLazy
+public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.FileBasedIndexProjectHandler");
 
   private final FileBasedIndex myIndex;
   private FileBasedIndexScanRunnableCollector myCollector;
 
-  public FileBasedIndexProjectHandler(FileBasedIndex index,
-                                      Project project,
-                                      FileBasedIndexScanRunnableCollector collector,
-                                      ProjectManager projectManager) {
-    super(project);
+  @Inject
+  public FileBasedIndexProjectHandler(FileBasedIndex index, Project project, FileBasedIndexScanRunnableCollector collector, ProjectManager projectManager) {
     myIndex = index;
     myCollector = collector;
 
     if (ApplicationManager.getApplication().isInternal()) {
       project.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
         @Override
-        public void enteredDumbMode() { }
+        public void enteredDumbMode() {
+        }
 
         @Override
         public void exitDumbMode() {
           LOG.info("Has changed files: " + (createChangedFilesIndexingTask(project) != null) + "; project=" + project);
         }
       });
+    }
+
+    if(project.isDefault()) {
+      return;
     }
 
     final StartupManagerEx startupManager = (StartupManagerEx)StartupManager.getInstance(project);
@@ -79,6 +86,7 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
         myIndex.registerIndexableSet(this, project);
         projectManager.addProjectManagerListener(project, new ProjectManagerAdapter() {
           private boolean removed;
+
           @Override
           public void projectClosing(Project project1) {
             if (!removed) {
@@ -111,7 +119,7 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     // done mostly for tests. In real life this is no-op, because the set was removed on project closing
     myIndex.removeIndexableSet(this);
   }
@@ -139,10 +147,7 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
     };
   }
 
-  private static void reindexRefreshedFiles(ProgressIndicator indicator,
-                                            Collection<VirtualFile> files,
-                                            final Project project,
-                                            final FileBasedIndexImpl index) {
+  private static void reindexRefreshedFiles(ProgressIndicator indicator, Collection<VirtualFile> files, final Project project, final FileBasedIndexImpl index) {
     CacheUpdateRunner.processFiles(indicator, true, files, project, content -> index.processRefreshedFile(project, content));
   }
 }

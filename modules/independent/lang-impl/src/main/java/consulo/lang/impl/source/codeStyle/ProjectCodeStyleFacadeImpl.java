@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.lang.impl.source.codeStyle;
 
-package com.intellij.util.pico;
+import com.intellij.codeStyle.CodeStyleFacade;
+import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 
-import org.picocontainer.ComponentAdapter;
-
-public interface AssignableToComponentAdapter extends ComponentAdapter {
-  String getAssignableToClassName();
+/**
+ * @author VISTALL
+ * @since 2018-07-25
+ */
+public class ProjectCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements CodeStyleFacade.ProjectLevel {
 }

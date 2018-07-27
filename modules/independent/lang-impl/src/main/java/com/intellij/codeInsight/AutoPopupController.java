@@ -46,14 +46,17 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.LockSupport;
 
+@Singleton
 public class AutoPopupController implements Disposable {
   /**
    * Settings this user data key to the editor with a completion provider
@@ -82,6 +85,7 @@ public class AutoPopupController implements Disposable {
     return ServiceManager.getService(project, AutoPopupController.class);
   }
 
+  @Inject
   public AutoPopupController(Project project) {
     myProject = project;
     myAlarm = new Alarm(this);

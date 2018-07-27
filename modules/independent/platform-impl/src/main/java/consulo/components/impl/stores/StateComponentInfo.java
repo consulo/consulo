@@ -18,16 +18,16 @@ package consulo.components.impl.stores;
 import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.RoamingTypeDisabled;
+import consulo.core.impl.components.impl.ComponentManagerImpl;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 
 /**
@@ -52,7 +52,7 @@ public class StateComponentInfo<T> {
       stateComponent = (PersistentStateComponent<?>)o;
 
       if (project != null) {
-        final ComponentConfig config = ((ComponentManagerImpl)project).getConfig(o.getClass());
+        final ComponentConfig config = ((ComponentManagerImpl)project).getConfigByImplClass(o.getClass());
 
         if (config != null && isWorkspace(config.options)) {
           LOGGER.warn("Marker 'workspace' is ignored for component: " + o.getClass().getName());
@@ -64,13 +64,13 @@ public class StateComponentInfo<T> {
 
       if (state == null) {
         RoamingType type = o instanceof RoamingTypeDisabled ? RoamingType.DISABLED : RoamingType.PER_USER;
-        String name = ComponentManagerImpl.getComponentName(o);
+        String name = getComponentName(o);
         String file;
         if (project == null) {
           file = StoragePathMacros.DEFAULT_FILE;
         }
         else {
-          final ComponentConfig config = ((ComponentManagerImpl)project).getConfig(o.getClass());
+          final ComponentConfig config = ((ComponentManagerImpl)project).getConfigByImplClass(o.getClass());
           assert config != null : "Couldn't find old storage for " + o.getClass().getName();
 
           final boolean workspace = isWorkspace(config.options);
@@ -101,6 +101,16 @@ public class StateComponentInfo<T> {
       throw new PluginException("No @State annotation found in " + o.getClass().getName(), pluginId);
     }
     throw new RuntimeException("No @State annotation found in " + o.getClass().getName());
+  }
+
+  @Nonnull
+  private static String getComponentName(@Nonnull final Object component) {
+    if (component instanceof NamedComponent) {
+      return ((NamedComponent)component).getComponentName();
+    }
+    else {
+      return component.getClass().getName();
+    }
   }
 
   private static boolean isWorkspace(@Nullable Map<?, ?> options) {

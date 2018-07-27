@@ -17,6 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -32,7 +33,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.IOException;
 
 @Singleton
@@ -47,49 +47,48 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
-    myApplication = application;
-    myStateStorageManager =
-            new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application.getInjector()) {
-              private boolean myConfigDirectoryRefreshed;
+  public ApplicationStoreImpl(final ApplicationEx application) {
+    myApplication = (ApplicationEx2)application;
+    myStateStorageManager = new StateStorageManagerImpl(PathMacroManager.getInstance(application).createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application.getMessageBus()) {
+      private boolean myConfigDirectoryRefreshed;
 
-              @Nonnull
-              @Override
-              protected String getConfigurationMacro(boolean directorySpec) {
-                return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
-              }
+      @Nonnull
+      @Override
+      protected String getConfigurationMacro(boolean directorySpec) {
+        return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
+      }
 
-              @Override
-              protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
-                return new StorageData(ROOT_ELEMENT_NAME);
-              }
+      @Override
+      protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
+        return new StorageData(ROOT_ELEMENT_NAME);
+      }
 
-              @Override
-              protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
-                if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
-                return super.getMacroSubstitutor(fileSpec);
-              }
+      @Override
+      protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
+        if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
+        return super.getMacroSubstitutor(fileSpec);
+      }
 
-              @Override
-              protected boolean isUseXmlProlog() {
-                return false;
-              }
+      @Override
+      protected boolean isUseXmlProlog() {
+        return false;
+      }
 
-              @Override
-              protected void beforeFileBasedStorageCreate() {
-                if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
-                  try {
-                    VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
-                    if (configDir != null) {
-                      VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
-                    }
-                  }
-                  finally {
-                    myConfigDirectoryRefreshed = true;
-                  }
-                }
-              }
-            };
+      @Override
+      protected void beforeFileBasedStorageCreate() {
+        if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
+          try {
+            VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
+            if (configDir != null) {
+              VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
+            }
+          }
+          finally {
+            myConfigDirectoryRefreshed = true;
+          }
+        }
+      }
+    };
   }
 
   @Override
@@ -97,7 +96,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
     long t = System.currentTimeMillis();
     myApplication.init();
     t = System.currentTimeMillis() - t;
-    LOG.info(((ComponentManagerImpl)myApplication).getComponentsSize() + " application components initialized in " + t + " ms");
+    LOG.info(((ComponentManagerImpl)myApplication).getNotLazyComponentsSize() + " application components initialized in " + t + " ms");
   }
 
   @Override

@@ -58,12 +58,15 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Singleton
 public class PsiSearchHelperImpl implements PsiSearchHelper {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.search.PsiSearchHelperImpl");
   private final PsiManagerEx myManager;
@@ -86,8 +89,9 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     return scope;
   }
 
-  public PsiSearchHelperImpl(@Nonnull PsiManagerEx manager) {
-    myManager = manager;
+  @Inject
+  public PsiSearchHelperImpl(@Nonnull PsiManager manager) {
+    myManager = (PsiManagerEx)manager;
     myDumbService = DumbService.getInstance(myManager.getProject());
   }
 

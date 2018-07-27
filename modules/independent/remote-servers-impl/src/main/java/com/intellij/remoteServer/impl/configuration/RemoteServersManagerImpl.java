@@ -1,5 +1,6 @@
 package com.intellij.remoteServer.impl.configuration;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;
@@ -9,9 +10,9 @@ import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +30,8 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
   private final MessageBus myMessageBus;
 
   @Inject
-  public RemoteServersManagerImpl(MessageBus messageBus) {
-    myMessageBus = messageBus;
+  public RemoteServersManagerImpl(Application application) {
+    myMessageBus = application.getMessageBus();
   }
 
   @Override

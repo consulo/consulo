@@ -16,7 +16,6 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
@@ -26,22 +25,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public abstract class RefResolveService extends AbstractProjectComponent {
+public abstract class RefResolveService {
   /**
    * if true then PsiElement.getUseScope() returns scope restricted to only relevant files which are stored in {@link com.intellij.psi.RefResolveService}
    */
   public static final boolean ENABLED = /*ApplicationManager.getApplication().isUnitTestMode() ||*/ Boolean.getBoolean("ref.back");
-
-  public RefResolveService(Project project) {
-    super(project);
-  }
 
   public static RefResolveService getInstance(Project project) {
     return project.getComponent(RefResolveService.class);
   }
 
   /**
-   *
    * @param file
    * @return null means the service has not resolved all files and is not ready yet
    */
@@ -62,9 +56,14 @@ public abstract class RefResolveService extends AbstractProjectComponent {
   public abstract boolean isUpToDate();
 
   public abstract int getQueueSize();
+
   public abstract void addListener(@Nonnull Disposable parent, @Nonnull Listener listener);
+
   public abstract static class Listener {
-    public void fileResolved(@Nonnull VirtualFile virtualFile) {}
-    public void allFilesResolved() {}
+    public void fileResolved(@Nonnull VirtualFile virtualFile) {
+    }
+
+    public void allFilesResolved() {
+    }
   }
 }

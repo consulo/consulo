@@ -42,7 +42,7 @@ public class BasePathMacroManager extends PathMacroManager {
     myPathMacros = (PathMacrosImpl)pathMacros;
   }
 
-  protected static void addFileHierarchyReplacements(ExpandMacroToPathMap result, String macroName, @javax.annotation.Nullable String path) {
+  protected static void addFileHierarchyReplacements(ExpandMacroToPathMap result, String macroName, @Nullable String path) {
     if (path == null) return;
     addFileHierarchyReplacements(result, getLocalFileSystem().findFileByPath(path), "$" + macroName + "$");
   }
@@ -53,7 +53,7 @@ public class BasePathMacroManager extends PathMacroManager {
     result.put(macro, StringUtil.trimEnd(f.getPath(), "/"));
   }
 
-  protected static void addFileHierarchyReplacements(ReplacePathToMacroMap result, String macroName, @javax.annotation.Nullable String path, @Nullable String stopAt) {
+  protected static void addFileHierarchyReplacements(ReplacePathToMacroMap result, String macroName, @Nullable String path, @Nullable String stopAt) {
     if (path == null) return;
 
     String macro = "$" + macroName + "$";
@@ -230,7 +230,7 @@ public class BasePathMacroManager extends PathMacroManager {
     }
   }
 
-  protected static boolean pathsEqual(@Nullable String path1, @javax.annotation.Nullable String path2) {
+  protected static boolean pathsEqual(@Nullable String path1, @Nullable String path2) {
     return path1 != null && path2 != null &&
            FileUtil.pathsEqual(FileUtil.toSystemIndependentName(path1), FileUtil.toSystemIndependentName(path2));
   }

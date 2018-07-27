@@ -25,6 +25,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.*;
@@ -34,19 +35,22 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.NotLazy;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 
 @Singleton
-public class ExecutorRegistryImpl extends ExecutorRegistry {
+@NotLazy
+public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
   @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
@@ -127,14 +131,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     return myId2Executor.get(executorId);
   }
 
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ExecutorRegistyImpl";
-  }
-
-  @Override
+  @PostConstruct
   public void initComponent() {
     ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
       @Override
@@ -194,7 +191,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   }
 
   @Override
-  public synchronized void disposeComponent() {
+  public synchronized void dispose() {
     if (!myExecutors.isEmpty()) {
       for (Executor executor : new ArrayList<>(myExecutors)) {
         deinitExecutor(executor);

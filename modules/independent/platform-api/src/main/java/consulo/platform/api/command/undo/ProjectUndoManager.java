@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components;
+package consulo.platform.api.command.undo;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import javax.annotation.Nonnull;
-
-import java.io.File;
+import com.intellij.openapi.command.undo.UndoManager;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2018-07-25
  */
-@Deprecated
-public interface ExportableComponent {
-  ExtensionPointName<ServiceBean> EXTENSION_POINT = new ExtensionPointName<ServiceBean>("com.intellij.exportable");
-
-  @Nonnull
-  File[] getExportFiles();
-
-  @Nonnull
-  String getPresentableName();
+public interface ProjectUndoManager extends UndoManager {
 }

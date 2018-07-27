@@ -32,18 +32,21 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.NotLazy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@State(name = "StatisticsApplicationUsages", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
-                                                                        "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
-public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence
-        implements ApplicationComponent, PersistentStateComponent<Element> {
+@State(name = "StatisticsApplicationUsages", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
+@NotLazy
+@Singleton
+public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence implements PersistentStateComponent<Element> {
   private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();
 
   private static final String TOKENIZER = ",";
@@ -161,14 +164,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
     }, TOKENIZER);
   }
 
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ApplicationStatisticsPersistenceComponent";
-  }
-
-  @Override
+  @PostConstruct
   public void initComponent() {
     onAppClosing();
     onProjectClosing();
@@ -223,9 +219,5 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
         persistOnClosing = false;
       }
     });
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 }

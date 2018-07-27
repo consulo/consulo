@@ -15,22 +15,27 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.UserDataHolder;
+import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.util.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author ven
  */
+@Singleton
 public class CachedValuesManagerImpl extends CachedValuesManager {
 
   private final Project myProject;
   private final CachedValuesFactory myFactory;
 
+  @Inject
   public CachedValuesManagerImpl(Project project, CachedValuesFactory factory) {
     myProject = project;
     myFactory = factory == null ? new DefaultCachedValuesFactory(project) : factory;
@@ -42,16 +47,13 @@ public class CachedValuesManagerImpl extends CachedValuesManager {
   }
 
   @Override
-  public <T,P> ParameterizedCachedValue<T,P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T,P> provider, boolean trackValue) {
+  public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue) {
     return myFactory.createParameterizedCachedValue(provider, trackValue);
   }
 
   @Override
   @Nullable
-  public <T, D extends UserDataHolder> T getCachedValue(@Nonnull D dataHolder,
-                                                        @Nonnull Key<CachedValue<T>> key,
-                                                        @Nonnull CachedValueProvider<T> provider,
-                                                        boolean trackValue) {
+  public <T, D extends UserDataHolder> T getCachedValue(@Nonnull D dataHolder, @Nonnull Key<CachedValue<T>> key, @Nonnull CachedValueProvider<T> provider, boolean trackValue) {
     CachedValue<T> value;
     if (dataHolder instanceof UserDataHolderEx) {
       UserDataHolderEx dh = (UserDataHolderEx)dataHolder;

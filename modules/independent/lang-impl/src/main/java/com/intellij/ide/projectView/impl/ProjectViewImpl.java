@@ -97,9 +97,11 @@ import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -110,6 +112,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.projectView.impl.ProjectViewImpl");
   private static final Key<String> ID_KEY = Key.create("pane-id");
@@ -209,7 +212,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private final Map<String, SelectInTarget> mySelectInTargets = new LinkedHashMap<>();
   private ContentManager myContentManager;
 
-  public ProjectViewImpl(@Nonnull Project project, final FileEditorManager fileEditorManager, final ToolWindowManagerEx toolWindowManager) {
+  @Inject
+  public ProjectViewImpl(@Nonnull Project project, final FileEditorManager fileEditorManager, final ToolWindowManager toolWindowManager) {
     myProject = project;
 
     constructUi();
@@ -247,7 +251,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         setAutoscrollToSource(state, myCurrentViewId);
       }
     };
-    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+    ((ToolWindowManagerEx)toolWindowManager).addToolWindowManagerListener(new ToolWindowManagerAdapter() {
       private boolean toolWindowVisible;
 
       @Override
@@ -443,11 +447,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       AbstractProjectViewPane pane = myId2Pane.get(id);
 
       int comp = PANE_WEIGHT_COMPARATOR.compare(pane, newPane);
-      LOG.assertTrue(comp != 0, "Project view pane " +
-                                newPane +
-                                " has the same weight as " +
-                                pane +
-                                ". Please make sure that you overload getWeight() and return a distinct weight value.");
+      LOG.assertTrue(comp != 0, "Project view pane " + newPane + " has the same weight as " + pane + ". Please make sure that you overload getWeight() and return a distinct weight value.");
       if (comp > 0) {
         break;
       }
@@ -612,8 +612,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     if (myActionGroup == null) return;
     List<AnAction> titleActions = ContainerUtil.newSmartList();
     myActionGroup.removeAll();
-    myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"), IdeBundle.message("action.flatten.packages"),
-                                                 AllIcons.ObjectBrowser.FlattenPackages, ourFlattenPackagesDefaults) {
+    myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"), IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages,
+                                                 ourFlattenPackagesDefaults) {
       @Override
       public void setSelected(AnActionEvent event, boolean flag) {
         final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
@@ -646,11 +646,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }).setAsSecondary(true);
 
     class FlattenPackagesDependableAction extends PaneOptionAction {
-      FlattenPackagesDependableAction(@Nonnull Map<String, Boolean> optionsMap,
-                                      @Nonnull String text,
-                                      @Nonnull String description,
-                                      @Nonnull Icon icon,
-                                      boolean optionDefaultValue) {
+      FlattenPackagesDependableAction(@Nonnull Map<String, Boolean> optionsMap, @Nonnull String text, @Nonnull String description, @Nonnull Icon icon, boolean optionDefaultValue) {
         super(optionsMap, text, description, icon, optionDefaultValue);
       }
 
@@ -679,8 +675,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
     myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
     myActionGroup.addAction(new FlattenPackagesDependableAction(myAbbreviatePackageNames, IdeBundle.message("action.abbreviate.qualified.package.names"),
-                                                                IdeBundle.message("action.abbreviate.qualified.package.names"),
-                                                                AllIcons.ObjectBrowser.AbbreviatePackageNames, ourAbbreviatePackagesDefaults) {
+                                                                IdeBundle.message("action.abbreviate.qualified.package.names"), AllIcons.ObjectBrowser.AbbreviatePackageNames,
+                                                                ourAbbreviatePackagesDefaults) {
       @Override
       public boolean isSelected(AnActionEvent event) {
         return isFlattenPackages(myCurrentViewId) && isAbbreviatePackageNames(myCurrentViewId);
@@ -704,22 +700,22 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }).setAsSecondary(true);
     if (isShowMembersOptionSupported()) {
-      myActionGroup.addAction(new PaneOptionAction(myShowMembers, IdeBundle.message("action.show.members"), IdeBundle.message("action.show.hide.members"),
-                                                   AllIcons.ObjectBrowser.ShowMembers, ourShowMembersDefaults) {
-        @Override
-        public boolean isSelected(AnActionEvent event) {
-          if (isGlobalOptions()) return getGlobalOptions().getShowMembers();
-          return super.isSelected(event);
-        }
+      myActionGroup.addAction(
+              new PaneOptionAction(myShowMembers, IdeBundle.message("action.show.members"), IdeBundle.message("action.show.hide.members"), AllIcons.ObjectBrowser.ShowMembers, ourShowMembersDefaults) {
+                @Override
+                public boolean isSelected(AnActionEvent event) {
+                  if (isGlobalOptions()) return getGlobalOptions().getShowMembers();
+                  return super.isSelected(event);
+                }
 
-        @Override
-        public void setSelected(AnActionEvent event, boolean flag) {
-          if (isGlobalOptions()) {
-            getGlobalOptions().setShowMembers(flag);
-          }
-          super.setSelected(event, flag);
-        }
-      }).setAsSecondary(true);
+                @Override
+                public void setSelected(AnActionEvent event, boolean flag) {
+                  if (isGlobalOptions()) {
+                    getGlobalOptions().setShowMembers(flag);
+                  }
+                  super.setSelected(event, flag);
+                }
+              }).setAsSecondary(true);
     }
     myActionGroup.addAction(myAutoScrollToSourceHandler.createToggleAction()).setAsSecondary(true);
     myActionGroup.addAction(myAutoScrollFromSourceHandler.createToggleAction()).setAsSecondary(true);
@@ -986,8 +982,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             while (true) {
               PsiDirectory parent = directory.getParentDirectory();
               if (parent == null) break;
-              if (BaseProjectViewDirectoryHelper.skipDirectory(parent) ||
-                  PsiPackageHelper.getInstance(myProject).getQualifiedName(parent, false).length() == 0) {
+              if (BaseProjectViewDirectoryHelper.skipDirectory(parent) || PsiPackageHelper.getInstance(myProject).getQualifiedName(parent, false).length() == 0) {
                 break;
               }
               PsiElement[] children = parent.getChildren();

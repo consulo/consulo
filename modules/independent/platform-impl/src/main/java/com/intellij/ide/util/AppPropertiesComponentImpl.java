@@ -23,5 +23,5 @@ import javax.inject.Singleton;
 
 @State(name = "PropertiesComponent", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml")})
 @Singleton
-public class AppPropertiesComponentImpl extends PropertiesComponentImpl {
+public class AppPropertiesComponentImpl extends PropertiesComponentImpl implements PropertiesComponent.ApplicationLevel {
 }

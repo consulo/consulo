@@ -1,14 +1,15 @@
 package com.intellij.openapi.externalSystem.service.remote;
 
 import com.intellij.execution.rmi.RemoteObject;
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
-import com.intellij.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+import com.intellij.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ConcurrentHashSet;
-import javax.annotation.Nonnull;
-import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author Denis Zhdanov
  * @since 11/10/11 11:56 AM
  */
+@Singleton
 public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject
   implements ExternalSystemProgressNotificationManager, RemoteExternalSystemProgressNotificationManager
 {

@@ -23,7 +23,7 @@
       <implementation-class>consulo.web.wm.impl.WebWindowManagerImpl</implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
+      <interface-class>consulo.platform.api.wp.ApplicationIdeFocusManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
     </component>
 
@@ -43,7 +43,7 @@
       <implementation-class>consulo.web.wm.impl.WebToolWindowManagerImpl</implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
+      <interface-class>consulo.platform.api.wp.ProjectIdeFocusManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
     </component>
     <component>

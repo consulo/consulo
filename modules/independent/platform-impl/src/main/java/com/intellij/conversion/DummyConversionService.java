@@ -17,6 +17,7 @@ package com.intellij.conversion;
 
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.File;
 
@@ -24,6 +25,7 @@ import java.io.File;
  * @author Dmitry Avdeev
  *         Date: 9/22/11
  */
+@Singleton
 public class DummyConversionService extends ConversionService {
 
   private static final ConversionResult CONVERSION_RESULT = new ConversionResult() {

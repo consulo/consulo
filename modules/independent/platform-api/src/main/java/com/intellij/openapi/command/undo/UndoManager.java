@@ -15,39 +15,50 @@
  */
 package com.intellij.openapi.command.undo;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
+import consulo.platform.api.command.undo.ApplicationUndoManger;
+import consulo.platform.api.command.undo.ProjectUndoManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class UndoManager {
-  public static final Key<Document> ORIGINAL_DOCUMENT = new Key<>("ORIGINAL_DOCUMENT");
-
-  public static UndoManager getInstance(@Nonnull Project project) {
-    return project.getComponent(UndoManager.class);
-  }
-
-  public static UndoManager getGlobalInstance() {
-    return ApplicationManager.getApplication().getComponent(UndoManager.class);
-  }
-
-  public abstract void undoableActionPerformed(@Nonnull UndoableAction action);
-  public abstract void nonundoableActionPerformed(@Nonnull DocumentReference ref, boolean isGlobal);
-
-  public abstract boolean isUndoInProgress();
-  public abstract boolean isRedoInProgress();
-
-  public abstract void undo(@Nullable FileEditor editor);
-  public abstract void redo(@Nullable FileEditor editor);
-  public abstract boolean isUndoAvailable(@Nullable FileEditor editor);
-  public abstract boolean isRedoAvailable(@Nullable FileEditor editor);
+public interface UndoManager {
+  Key<Document> ORIGINAL_DOCUMENT = Key.create("ORIGINAL_DOCUMENT");
 
   @Nonnull
-  public abstract Pair<String, String> getUndoActionNameAndDescription(FileEditor editor);
+  static UndoManager getInstance(@Nonnull Project project) {
+    return project.getComponent(ProjectUndoManager.class);
+  }
+
   @Nonnull
-  public abstract Pair<String, String> getRedoActionNameAndDescription(FileEditor editor);
+  static UndoManager getGlobalInstance() {
+    return Application.get().getComponent(ApplicationUndoManger.class);
+  }
+
+  void undoableActionPerformed(@Nonnull UndoableAction action);
+
+  void nonundoableActionPerformed(@Nonnull DocumentReference ref, boolean isGlobal);
+
+  boolean isUndoInProgress();
+
+  boolean isRedoInProgress();
+
+  void undo(@Nullable FileEditor editor);
+
+  void redo(@Nullable FileEditor editor);
+
+  boolean isUndoAvailable(@Nullable FileEditor editor);
+
+  boolean isRedoAvailable(@Nullable FileEditor editor);
+
+  @Nonnull
+  Pair<String, String> getUndoActionNameAndDescription(FileEditor editor);
+
+  @Nonnull
+  Pair<String, String> getRedoActionNameAndDescription(FileEditor editor);
 }

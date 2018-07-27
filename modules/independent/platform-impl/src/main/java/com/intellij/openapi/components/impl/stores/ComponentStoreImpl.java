@@ -188,7 +188,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     final Project project = getProject();
     if (project == null) return;
 
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode()) {
+    if (!Application.get().isHeadlessEnvironment() && !Application.get().isUnitTestMode()) {
       if (service && componentName != null && project.isInitialized()) {
         final TrackingPathMacroSubstitutor substitutor = getStateStorageManager().getMacroSubstitutor();
         if (substitutor != null) {

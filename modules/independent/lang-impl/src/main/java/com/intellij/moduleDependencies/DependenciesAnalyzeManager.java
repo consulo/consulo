@@ -28,6 +28,9 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * User: anna
  * Date: Feb 10, 2005
@@ -36,6 +39,7 @@ import com.intellij.ui.content.ContentManager;
     name = "DependenciesAnalyzeManager",
     storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}
 )
+@Singleton
 public class DependenciesAnalyzeManager implements PersistentStateComponent<DependenciesAnalyzeManager.State> {
   private final Project myProject;
   private ContentManager myContentManager;
@@ -46,6 +50,7 @@ public class DependenciesAnalyzeManager implements PersistentStateComponent<Depe
 
   private State myState;
 
+  @Inject
   public DependenciesAnalyzeManager(final Project project) {
     myProject = project;
     StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new Runnable() {

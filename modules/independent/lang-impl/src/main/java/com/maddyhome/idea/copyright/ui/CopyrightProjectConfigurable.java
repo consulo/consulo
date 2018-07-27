@@ -22,6 +22,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 
 public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {
@@ -29,6 +30,7 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
   private ProjectSettingsPanel myOptionsPanel = null;
   private final CopyrightProfilesPanel myProfilesPanel;
 
+  @Inject
   public CopyrightProjectConfigurable(Project project) {
     this.project = project;
     myProfilesPanel = new CopyrightProfilesPanel(project);

@@ -23,6 +23,8 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +32,7 @@ import java.util.List;
 
 
 @State(name = "ExecutionTargetManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class ExecutionTargetManagerImpl extends ExecutionTargetManager implements ProjectComponent, PersistentStateComponent<Element> {
   @Nonnull
   private final Project myProject;
@@ -41,16 +44,9 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   @Nullable
   private String mySavedActiveTargetId;
 
+  @Inject
   public ExecutionTargetManagerImpl(@Nonnull Project project) {
     myProject = project;
-  }
-
-  @Override
-  public void projectOpened() {
-  }
-
-  @Override
-  public void projectClosed() {
   }
 
   @Override
@@ -90,10 +86,6 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     });
   }
 
-  @Override
-  public void disposeComponent() {
-  }
-
   @Nonnull
   @Override
   public String getComponentName() {
@@ -129,8 +121,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   }
 
   private void updateActiveTarget(@Nullable RunnerAndConfigurationSettings settings, @Nullable ExecutionTarget toSelect) {
-    List<ExecutionTarget> suitable = settings == null ? Collections.singletonList(DefaultExecutionTarget.INSTANCE)
-                                                      : getTargetsFor(settings);
+    List<ExecutionTarget> suitable = settings == null ? Collections.singletonList(DefaultExecutionTarget.INSTANCE) : getTargetsFor(settings);
     ExecutionTarget toNotify = null;
     synchronized (myActiveTargetLock) {
       if (toSelect == null) toSelect = myActiveTarget;
@@ -147,8 +138,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
           }
         }
       }
-      toNotify =
-        doSetActiveTarget(index >= 0 ? suitable.get(index) : ContainerUtil.getFirstItem(suitable, DefaultExecutionTarget.INSTANCE));
+      toNotify = doSetActiveTarget(index >= 0 ? suitable.get(index) : ContainerUtil.getFirstItem(suitable, DefaultExecutionTarget.INSTANCE));
     }
 
     if (toNotify != null) {

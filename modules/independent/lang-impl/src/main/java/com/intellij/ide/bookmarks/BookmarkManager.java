@@ -18,7 +18,6 @@ package com.intellij.ide.bookmarks;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -40,35 +39,37 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.NotLazy;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.*;
 import java.util.List;
 
-@State(
-        name = "BookmarkManager",
-        storages = {
-                @Storage( file = StoragePathMacros.WORKSPACE_FILE)
-        }
-)
-public class BookmarkManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
+@State(name = "BookmarkManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
+@NotLazy
+public class BookmarkManager implements PersistentStateComponent<Element> {
   private static final int MAX_AUTO_DESCRIPTION_SIZE = 50;
 
   private final List<Bookmark> myBookmarks = new ArrayList<Bookmark>();
 
+  private final Project myProject;
   private final MessageBus myBus;
 
   public static BookmarkManager getInstance(Project project) {
     return project.getComponent(BookmarkManager.class);
   }
 
-  public BookmarkManager(Project project, MessageBus bus, PsiDocumentManager documentManager) {
-    super(project);
-    myBus = bus;
+  @Inject
+  public BookmarkManager(Project project, PsiDocumentManager documentManager) {
+    myProject = project;
+    myBus = project.getMessageBus();
     EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
     multicaster.addDocumentListener(new MyDocumentListener(), myProject);
     multicaster.addEditorMouseListener(new MyEditorMouseListener(), myProject);
@@ -98,10 +99,8 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
   }
 
   public void editDescription(@Nonnull Bookmark bookmark) {
-    String description = Messages
-            .showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"),
-                             IdeBundle.message("action.bookmark.edit.description.dialog.title"), Messages.getQuestionIcon(),
-                             bookmark.getDescription(), new InputValidator() {
+    String description = Messages.showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"), IdeBundle.message("action.bookmark.edit.description.dialog.title"),
+                                                  Messages.getQuestionIcon(), bookmark.getDescription(), new InputValidator() {
               @Override
               public boolean checkInput(String inputString) {
                 return true;
@@ -115,12 +114,6 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     if (description != null) {
       setDescription(bookmark, description);
     }
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "BookmarkManager";
   }
 
   public void addEditorBookmark(Editor editor, int lineIndex) {
@@ -143,13 +136,12 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
 
   public static String getAutoDescription(final Editor editor, final int lineIndex) {
     String autoDescription = editor.getSelectionModel().getSelectedText();
-    if ( autoDescription == null ) {
+    if (autoDescription == null) {
       Document document = editor.getDocument();
-      autoDescription = document.getCharsSequence()
-              .subSequence(document.getLineStartOffset(lineIndex), document.getLineEndOffset(lineIndex)).toString().trim();
+      autoDescription = document.getCharsSequence().subSequence(document.getLineStartOffset(lineIndex), document.getLineEndOffset(lineIndex)).toString().trim();
     }
-    if ( autoDescription.length () > MAX_AUTO_DESCRIPTION_SIZE) {
-      return autoDescription.substring(0, MAX_AUTO_DESCRIPTION_SIZE)+"...";
+    if (autoDescription.length() > MAX_AUTO_DESCRIPTION_SIZE) {
+      return autoDescription.substring(0, MAX_AUTO_DESCRIPTION_SIZE) + "...";
     }
     return autoDescription;
   }

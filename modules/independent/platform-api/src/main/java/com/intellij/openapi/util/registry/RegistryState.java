@@ -16,36 +16,22 @@
 package com.intellij.openapi.util.registry;
 
 import com.intellij.openapi.components.*;
+import consulo.annotations.NotLazy;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
-@State(
-    name = "Registry",
-    storages = {
-        @Storage(
-            file = StoragePathMacros.APP_CONFIG + "/other.xml")}
-)
-public class RegistryState implements BaseComponent, PersistentStateComponent<Element> {
+import javax.inject.Singleton;
 
-  public RegistryState() {
-  }
-
+@State(name = "Registry", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@NotLazy
+@Singleton
+public class RegistryState implements PersistentStateComponent<Element> {
+  @Override
   public Element getState() {
     return Registry.getInstance().getState();
   }
 
+  @Override
   public void loadState(Element state) {
     Registry.getInstance().loadState(state);
-  }
-
-  @Nonnull
-  public String getComponentName() {
-    return "Registry";
-  }
-
-  public void initComponent() {
-  }
-
-  public void disposeComponent() {
   }
 }

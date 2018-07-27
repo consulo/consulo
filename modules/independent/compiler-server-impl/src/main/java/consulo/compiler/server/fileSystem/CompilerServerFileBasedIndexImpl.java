@@ -120,12 +120,4 @@ public class CompilerServerFileBasedIndexImpl extends FileBasedIndex {
   public <K> boolean processAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Processor<K> processor, @javax.annotation.Nullable Project project) {
     return false;
   }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
 }

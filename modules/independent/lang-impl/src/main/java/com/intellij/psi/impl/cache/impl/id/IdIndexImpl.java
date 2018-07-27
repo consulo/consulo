@@ -16,14 +16,15 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -33,9 +34,10 @@ import java.util.Collection;
 
 public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIndexExtension<IdIndexEntry> {
   private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
-  private final FileTypeRegistry myFileTypeManager;
+  private final FileTypeManager myFileTypeManager;
 
-  public IdIndexImpl(FileTypeRegistry manager) {
+  @Inject
+  public IdIndexImpl(FileTypeManager manager) {
     myFileTypeManager = manager;
   }
 

@@ -23,6 +23,8 @@ import com.intellij.refactoring.listeners.RefactoringListenerManager;
 import com.intellij.refactoring.listeners.impl.impl.RefactoringTransactionImpl;
 import com.intellij.util.containers.ContainerUtil;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,10 +32,12 @@ import java.util.List;
 /**
  * @author dsl
  */
+@Singleton
 public class RefactoringListenerManagerImpl extends RefactoringListenerManager {
   private final List<RefactoringElementListenerProvider> myListenerProviders = ContainerUtil.createLockFreeCopyOnWriteList();
   private final Project myProject;
 
+  @Inject
   public RefactoringListenerManagerImpl(Project project) {
     myProject = project;
   }

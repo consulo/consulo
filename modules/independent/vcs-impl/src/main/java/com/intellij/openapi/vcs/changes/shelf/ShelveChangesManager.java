@@ -22,7 +22,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -38,6 +37,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -61,12 +62,15 @@ import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
+import consulo.annotations.NotLazy;
 import org.jdom.Element;
 import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.io.*;
@@ -74,7 +78,9 @@ import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ShelveChangesManager extends AbstractProjectComponent implements JDOMExternalizable {
+@Singleton
+@NotLazy
+public class ShelveChangesManager implements JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager");
   @NonNls
   private static final String ELEMENT_CHANGELIST = "changelist";
@@ -106,11 +112,13 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
 
   public static final Topic<ChangeListener> SHELF_TOPIC = new Topic<>("shelf updates", ChangeListener.class);
   private boolean myShowRecycled;
+  private final Project myProject;
 
-  public ShelveChangesManager(final Project project, final MessageBus bus) {
-    super(project);
+  @Inject
+  public ShelveChangesManager(final Project project) {
+    myProject = project;
     myPathMacroSubstitutor = PathMacroManager.getInstance(myProject).createTrackingSubstitutor();
-    myBus = bus;
+    myBus = project.getMessageBus();
     mySchemeManager = SchemesManagerFactory.getInstance().createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList>() {
       @Nullable
       @Override
@@ -148,6 +156,15 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     if (shelfDirectory.exists()) {
       ChangeListManager.getInstance(project).addDirectoryToIgnoreImplicitly(shelfDirectory.getAbsolutePath());
     }
+
+    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(project == myProject) {
+          ShelveChangesManager.this.projectOpened();
+        }
+      }
+    });
   }
 
   private void stopCleanScheduler() {
@@ -157,7 +174,6 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     }
   }
 
-  @Override
   public void projectOpened() {
     try {
       mySchemeManager.loadSchemes();
@@ -195,13 +211,6 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     myPathMacroSubstitutor.expandPaths(element);
     data.readExternal(element);
     return data;
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ShelveChangesManager";
   }
 
   @Override

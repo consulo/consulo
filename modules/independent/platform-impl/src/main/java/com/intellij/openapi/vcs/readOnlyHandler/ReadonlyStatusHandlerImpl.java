@@ -26,21 +26,21 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.MultiValuesMap;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.WritingAccessProvider;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
-@State(
-  name="ReadonlyStatusHandler",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "ReadonlyStatusHandler", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
   private final Project myProject;
   private final WritingAccessProvider[] myAccessProviders;
@@ -51,6 +51,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
 
   private State myState = new State();
 
+  @Inject
   public ReadonlyStatusHandlerImpl(Project project) {
     myProject = project;
     myAccessProviders = WritingAccessProvider.getProvidersForProject(myProject);
@@ -97,12 +98,12 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
         return new OperationStatusImpl(VfsUtilCore.toVirtualFileArray(denied));
       }
     }
-    
+
     final FileInfo[] fileInfos = createFileInfos(files);
     if (fileInfos.length == 0) { // if all files are already writable
       return createResultStatus(files);
     }
-    
+
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return createResultStatus(files);
     }

@@ -37,6 +37,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +56,7 @@ import java.util.concurrent.ExecutorService;
  * @author Denis Zhdanov, Vladislav Soroka
  * @since 3/21/12 4:04 PM
  */
+@Singleton
 public class ExternalSystemNotificationManager {
   @Nonnull
   private static final Key<Pair<NotificationSource, ProjectSystemId>> CONTENT_ID_KEY = Key.create("CONTENT_ID");
@@ -70,6 +73,7 @@ public class ExternalSystemNotificationManager {
   @Nonnull
   private final MessageCounter myMessageCounter;
 
+  @Inject
   public ExternalSystemNotificationManager(@Nonnull final Project project) {
     myProject = project;
     myNotifications = ContainerUtil.newArrayList();

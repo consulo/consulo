@@ -26,6 +26,7 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,10 +34,8 @@ import java.util.TreeMap;
 /**
  * The password database. The internal component for {@link MasterKeyPasswordSafe}.
  */
-@State(
-  name = "PasswordDatabase",
-  storages = {@Storage(
-    file = StoragePathMacros.APP_CONFIG + "/security.xml")})
+@State(name = "PasswordDatabase", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/security.xml")})
+@Singleton
 public class PasswordDatabase implements PersistentStateComponent<PasswordDatabase.State> {
   /**
    * The name of logger

@@ -17,10 +17,11 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.Convertor;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.DeprecationInfo;
 
 /**
  * @author peter
@@ -28,10 +29,36 @@ import consulo.annotations.DeprecationInfo;
 @Deprecated
 @DeprecationInfo(value = "Use com.intellij.util.ObjectUtil")
 public class ObjectUtils {
+  private static class Sentinel {
+    private final String myName;
+
+    public Sentinel(String name) {
+      myName = name;
+    }
+
+    @Override
+    public String toString() {
+      return myName;
+    }
+  }
+
   private ObjectUtils() {
   }
 
   public static final Object NULL = new Object();
+
+  /**
+   * Creates a new object which could be used as sentinel value (special value to distinguish from any other object). It does not equal
+   * to any other object. Usually should be assigned to the static final field.
+   *
+   * @param name an object name, returned from {@link #toString()} to simplify the debugging or heap dump analysis
+   *             (guaranteed to be stored as sentinel object field). If sentinel is assigned to the static final field,
+   *             it's recommended to supply that field name (possibly qualified with the class name).
+   * @return a new sentinel object
+   */
+  public static Object sentinel(final String name) {
+    return new Sentinel(name);
+  }
 
   @Nonnull
   public static <T> T assertNotNull(@Nullable T t) {
@@ -49,7 +76,7 @@ public class ObjectUtils {
 
   @Contract("null, null -> null")
   public static <T> T chooseNotNull(@Nullable T t1, @Nullable T t2) {
-    return t1 == null? t2 : t1;
+    return t1 == null ? t2 : t1;
   }
 
   @Contract("null,null->null")

@@ -49,6 +49,8 @@ import consulo.application.AccessRule;
 import consulo.psi.PsiPackageSupportProviders;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.beans.PropertyChangeEvent;
@@ -57,6 +59,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @State(name = "TodoView", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class TodoView implements PersistentStateComponent<TodoView.State>, Disposable {
   private final Project myProject;
 
@@ -72,6 +75,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   private final MyVcsListener myVcsListener = new MyVcsListener();
 
   @RequiredReadAction
+  @Inject
   public TodoView(@Nonnull Project project) {
     myProject = project;
 

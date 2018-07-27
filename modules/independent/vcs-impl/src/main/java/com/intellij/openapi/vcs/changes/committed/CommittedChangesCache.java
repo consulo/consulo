@@ -52,10 +52,12 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
 import com.intellij.vcs.ProgressManagerQueue;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -69,6 +71,7 @@ import java.util.concurrent.TimeUnit;
         name = "CommittedChangesCache",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)}
 )
+@Singleton
 public class CommittedChangesCache implements PersistentStateComponent<CommittedChangesCache.State> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.CommittedChangesCache");
 
@@ -137,6 +140,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, CommittedChangesCache.class);
   }
 
+  @Inject
   public CommittedChangesCache(final Project project, final MessageBus bus, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myBus = bus;

@@ -29,6 +29,9 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Date;
 
 /**
@@ -37,6 +40,7 @@ import java.util.Date;
  * Date: 8/3/11
  * Time: 1:04 PM
  */
+@Singleton
 public class VcsContentAnnotationImpl implements VcsContentAnnotation {
   private final Project myProject;
   private final VcsContentAnnotationSettings mySettings;
@@ -47,13 +51,14 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
     return ServiceManager.getService(project, VcsContentAnnotation.class);
   }
 
+  @Inject
   public VcsContentAnnotationImpl(Project project, VcsContentAnnotationSettings settings, final ContentAnnotationCache contentAnnotationCache) {
     myProject = project;
     mySettings = settings;
     myContentAnnotationCache = contentAnnotationCache;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public VcsRevisionNumber fileRecentlyChanged(VirtualFile vf) {
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);

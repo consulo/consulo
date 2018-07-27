@@ -18,15 +18,20 @@ package consulo.roots;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.messages.MessageBus;
-import consulo.module.extension.*;
+import consulo.annotations.NotLazy;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionChangeListener;
+import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +40,12 @@ import java.util.List;
  * @since 31.07.14
  */
 @SuppressWarnings("unchecked")
-public class ExtensionListenerByLayerListenerInvoker extends AbstractProjectComponent {
-  public ExtensionListenerByLayerListenerInvoker(@Nonnull Project project, @Nonnull final MessageBus bus) {
-    super(project);
+@Singleton
+@NotLazy
+public class ExtensionListenerByLayerListenerInvoker {
+  @Inject
+  public ExtensionListenerByLayerListenerInvoker(@Nonnull Project project) {
+    MessageBus bus = project.getMessageBus();
     bus.connect().subscribe(ProjectTopics.MODULE_LAYERS, new ModuleRootLayerListener.Adapter() {
       @Override
       public void currentLayerChanged(@Nonnull final Module module,

@@ -15,6 +15,7 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -22,7 +23,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.MessageBus;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -38,8 +39,8 @@ import javax.inject.Singleton;
 @Singleton
 public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   @Inject
-  public RecentDirectoryProjectsManager(MessageBus messageBus) {
-    super(messageBus);
+  public RecentDirectoryProjectsManager(Application application) {
+    super(application.getMessageBus());
   }
 
   @Override

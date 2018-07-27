@@ -27,14 +27,17 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author yole
  */
+@Singleton
 public class LibraryScopeCache {
   public static LibraryScopeCache getInstance(Project project) {
     return ServiceManager.getService(project, LibraryScopeCache.class);
@@ -45,7 +48,7 @@ public class LibraryScopeCache {
   private final ConcurrentMap<String, GlobalSearchScope> mySdkScopes = ContainerUtil.newConcurrentMap();
   private final LibrariesOnlyScope myLibrariesOnlyScope;
 
-
+  @Inject
   public LibraryScopeCache(Project project) {
     myProject = project;
     myLibrariesOnlyScope = new LibrariesOnlyScope(GlobalSearchScope.allScope(myProject), myProject);
@@ -67,9 +70,7 @@ public class LibraryScopeCache {
     if (scope != null) {
       return scope;
     }
-    GlobalSearchScope newScope = modulesLibraryIsUsedIn.isEmpty()
-                                 ? myLibrariesOnlyScope
-                                 : new LibraryRuntimeClasspathScope(myProject, modulesLibraryIsUsedIn);
+    GlobalSearchScope newScope = modulesLibraryIsUsedIn.isEmpty() ? myLibrariesOnlyScope : new LibraryRuntimeClasspathScope(myProject, modulesLibraryIsUsedIn);
     return ConcurrencyUtil.cacheOrGet(myLibraryScopes, modulesLibraryIsUsedIn, newScope);
   }
 

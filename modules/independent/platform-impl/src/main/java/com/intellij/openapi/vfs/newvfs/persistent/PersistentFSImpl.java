@@ -16,9 +16,9 @@
 package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.concurrency.JobSchedulerImpl;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.LowMemoryWatcher;
@@ -37,6 +37,7 @@ import com.intellij.util.containers.EmptyIntHashSet;
 import com.intellij.util.io.ReplicatorInputStream;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.NotLazy;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;
@@ -44,6 +45,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
@@ -54,7 +56,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author max
  */
 @Singleton
-public class PersistentFSImpl extends PersistentFS implements ApplicationComponent {
+@NotLazy
+public class PersistentFSImpl extends PersistentFS implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.persistent.PersistentFS");
 
   private final MessageBus myEventBus;
@@ -73,18 +76,18 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   private volatile int myStructureModificationCount;
 
   @Inject
-  public PersistentFSImpl(@Nonnull MessageBus bus) {
-    myEventBus = bus;
+  public PersistentFSImpl(@Nonnull Application application) {
+    myEventBus = application.getMessageBus();
     ShutDownTracker.getInstance().registerShutdownTask(() -> performShutdown());
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     FSRecords.connect();
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     performShutdown();
   }
 
@@ -94,13 +97,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
       FSRecords.dispose();
       LOG.info("VFS dispose completed");
     }
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "app.component.PersistentFS";
   }
 
   @Override

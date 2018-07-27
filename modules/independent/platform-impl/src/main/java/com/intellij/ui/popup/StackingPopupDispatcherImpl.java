@@ -24,6 +24,7 @@ import com.intellij.util.containers.WeakList;
 import javax.annotation.Nullable;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Stream;
 
+@Singleton
 public class StackingPopupDispatcherImpl extends StackingPopupDispatcher implements AWTEventListener, KeyEventDispatcher {
 
   private final Stack<JBPopup> myStack = new Stack<>();

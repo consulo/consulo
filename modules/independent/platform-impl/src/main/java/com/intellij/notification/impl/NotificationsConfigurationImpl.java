@@ -18,17 +18,21 @@ package com.intellij.notification.impl;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationsConfiguration;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -37,14 +41,10 @@ import java.util.Map;
 /**
  * @author spleaner
  */
-@State(
-        name = "NotificationConfiguration",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/notifications.xml")
-)
+@State(name = "NotificationConfiguration", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/notifications.xml"))
 @Singleton
-public class NotificationsConfigurationImpl
-        extends NotificationsConfiguration
-        implements ApplicationComponent, PersistentStateComponent<Element> {
+@NotLazy
+public class NotificationsConfigurationImpl extends NotificationsConfiguration implements PersistentStateComponent<Element>, Disposable {
 
   private static final Logger LOG = Logger.getInstance(NotificationsConfiguration.class);
   private static final String SHOW_BALLOONS_ATTRIBUTE = "showBalloons";
@@ -65,8 +65,8 @@ public class NotificationsConfigurationImpl
   public boolean SYSTEM_NOTIFICATIONS = true;
 
   @Inject
-  public NotificationsConfigurationImpl(@Nonnull MessageBus bus) {
-    myMessageBus = bus;
+  public NotificationsConfigurationImpl(@Nonnull Application application) {
+    myMessageBus = application.getMessageBus();
   }
 
   public static NotificationsConfigurationImpl getInstanceImpl() {
@@ -124,19 +124,13 @@ public class NotificationsConfigurationImpl
     return new NotificationSettings(groupId, NotificationDisplayType.BALLOON, true, false);
   }
 
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "NotificationsConfiguration";
-  }
-
-  @Override
+  @PostConstruct
   public void initComponent() {
     myMessageBus.connect().subscribe(TOPIC, this);
   }
 
   @Override
-  public synchronized void disposeComponent() {
+  public synchronized void dispose() {
     myIdToSettingsMap.clear();
   }
 
@@ -146,17 +140,12 @@ public class NotificationsConfigurationImpl
   }
 
   @Override
-  public void register(@Nonnull String groupDisplayName,
-                       @Nonnull NotificationDisplayType displayType,
-                       boolean shouldLog) {
+  public void register(@Nonnull String groupDisplayName, @Nonnull NotificationDisplayType displayType, boolean shouldLog) {
     register(groupDisplayName, displayType, shouldLog, false);
   }
 
   @Override
-  public void register(@Nonnull String groupDisplayName,
-                       @Nonnull NotificationDisplayType displayType,
-                       boolean shouldLog,
-                       boolean shouldReadAloud) {
+  public void register(@Nonnull String groupDisplayName, @Nonnull NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud) {
     if (!isRegistered(groupDisplayName)) {
       // register a new group and remember these settings as default
       new NotificationGroup(groupDisplayName, displayType, shouldLog);

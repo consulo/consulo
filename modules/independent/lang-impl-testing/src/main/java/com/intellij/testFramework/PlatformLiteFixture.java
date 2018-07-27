@@ -18,14 +18,12 @@ package com.intellij.testFramework;
 import com.intellij.mock.MockApplicationEx;
 import com.intellij.mock.MockProjectEx;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Modifier;
@@ -101,20 +99,20 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
     }
   }
 
-  protected void registerComponentImplementation(final MutablePicoContainer container, final Class<?> key, final Class<?> implementation) {
-    container.unregisterComponent(key);
-    container.registerComponentImplementation(key, implementation);
-  }
-
-  public static <T> T registerComponentInstance(final MutablePicoContainer container, final Class<T> key, final T implementation) {
-    Object old = container.getComponentInstance(key);
-    container.unregisterComponent(key);
-    container.registerComponentInstance(key, implementation);
-    return (T)old;
-  }
-
-  public static <T> T registerComponentInstance(final ComponentManager container, final Class<T> key, final T implementation) {
-    return registerComponentInstance((MutablePicoContainer)container.getPicoContainer(), key, implementation);
-  }
+  //protected void registerComponentImplementation(final MutablePicoContainer container, final Class<?> key, final Class<?> implementation) {
+  //  container.unregisterComponent(key);
+  //  container.registerComponentImplementation(key, implementation);
+  //}
+  //
+  //public static <T> T registerComponentInstance(final MutablePicoContainer container, final Class<T> key, final T implementation) {
+  //  Object old = container.getComponentInstance(key);
+  //  container.unregisterComponent(key);
+  //  container.registerComponentInstance(key, implementation);
+  //  return (T)old;
+  //}
+  //
+  //public static <T> T registerComponentInstance(final ComponentManager container, final Class<T> key, final T implementation) {
+  //  return registerComponentInstance((MutablePicoContainer)container.getPicoContainer(), key, implementation);
+  //}
 
 }

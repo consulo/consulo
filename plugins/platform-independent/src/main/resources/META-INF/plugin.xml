@@ -102,7 +102,7 @@
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.roots.ContentFolderSupportPatcher"/>
     <extensionPoint name="createFromTemplateActionModuleResolver" interface="com.intellij.ide.actions.CreateFileFromTemplateAction$ModuleResolver"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
-    <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
+    <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="PROJECT"/>
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
@@ -353,8 +353,7 @@
       <with attribute="instance" implements="com.intellij.profile.codeInspection.ui.ErrorOptionsProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
-
+    <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="MODULE"/>
 
     <extensionPoint name="indexPatternProvider"
                     interface="com.intellij.psi.search.IndexPatternProvider"/>
@@ -1173,6 +1172,8 @@
     <extensionPoint name="fileChooseDialogProvider" interface="consulo.ui.fileOperateDialog.FileChooseDialogProvider" />
     <extensionPoint name="fileSaveDialogProvider" interface="consulo.ui.fileOperateDialog.FileSaveDialogProvider" />
     <extensionPoint name="uiDecorator" interface="consulo.ui.UIDecorator"/>
+
+    <extensionPoint name="textEditorHighlightingPassFactory" interface="com.intellij.codeHighlighting.TextEditorHighlightingPassFactory" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1189,7 +1190,7 @@
 
     <applicationService serviceImplementation="com.intellij.ide.GeneralSettings"/>
 
-    <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent"
+    <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent$ApplicationLevel"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.fileTypes.FileNameMatcherFactory"
@@ -1198,7 +1199,7 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
-    <projectService serviceInterface="com.intellij.ide.util.PropertiesComponent"
+    <projectService serviceInterface="com.intellij.ide.util.PropertiesComponent$ProjectLevel"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.actionSystem.JBAwtEventQueue"
@@ -1336,8 +1337,7 @@
     <applicationService serviceInterface="com.intellij.remote.ext.CredentialsManager"
                         serviceImplementation="com.intellij.remote.ext.CredentialsManagerImpl"/>
 
-    <applicationService serviceInterface="consulo.ide.webService.WebServicesConfiguration"
-                        serviceImplementation="consulo.ide.webService.WebServicesConfiguration"/>
+    <applicationService serviceImplementation="consulo.ide.webService.WebServicesConfiguration"/>
 
     <applicationService serviceImplementation="consulo.auth.ServiceAuthConfiguration"/>
 
@@ -1562,19 +1562,6 @@
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.VcsPathPresenter"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleVcsPathPresenter"/>
 
-    <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration"
-                    serviceImplementation="com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration"/>
-    <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.api.CompilerAPIConfiguration"
-                    serviceImplementation="com.intellij.compiler.impl.javaCompiler.api.CompilerAPIConfiguration"/>
-    <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.eclipse.EclipseCompilerConfiguration"
-                    serviceImplementation="com.intellij.compiler.impl.javaCompiler.eclipse.EclipseCompilerConfiguration"/>
-    <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.eclipse.EclipseEmbeddedCompilerConfiguration"
-                    serviceImplementation="com.intellij.compiler.impl.javaCompiler.eclipse.EclipseEmbeddedCompilerConfiguration"/>
-    <projectService serviceInterface="com.intellij.compiler.impl.rmiCompiler.RmicConfiguration"
-                    serviceImplementation="com.intellij.compiler.impl.rmiCompiler.RmicConfiguration"/>
-    <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.jikes.JikesConfiguration"
-                    serviceImplementation="com.intellij.compiler.impl.javaCompiler.jikes.JikesConfiguration"/>
-
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.FrameTitleBuilder"
                         serviceImplementation="com.intellij.openapi.wm.IdeaFrameTitleBuilder"/>
 
@@ -1647,9 +1634,11 @@
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
     <roots.watchedRootsProvider implementation="consulo.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
-    <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
+
+    <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings$ProjectLevel"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
+
+    <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings$ApplicationLevel"
                         serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
 
     <referencesSearch implementation="com.intellij.psi.impl.search.CachesBasedRefSearcher"/>
@@ -1824,8 +1813,9 @@
 
     <applicationService serviceInterface="com.intellij.openapi.roots.impl.libraries.JarDirectoryWatcherFactory"
                         serviceImplementation="com.intellij.openapi.roots.impl.libraries.JarDirectoryWatcherFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.codeStyle.CodeStyleFacade"
-                        serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl"/>
+
+    <applicationService serviceInterface="com.intellij.codeStyle.CodeStyleFacade$ApplicationLevel"
+                        serviceImplementation="consulo.lang.impl.source.codeStyle.ApplicationCodeStyleFacadeImpl"/>
 
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
@@ -1877,8 +1867,8 @@
     <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController"
                     serviceImplementation="com.intellij.codeInsight.AutoPopupController"/>
 
-    <projectService serviceInterface="com.intellij.codeStyle.CodeStyleFacade"
-                    serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl"/>
+    <projectService serviceInterface="com.intellij.codeStyle.CodeStyleFacade$ProjectLevel"
+                    serviceImplementation="consulo.lang.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
 
     <projectService serviceInterface="com.intellij.usages.UsageViewManager"
                     serviceImplementation="com.intellij.usages.impl.UsageViewManagerImpl"/>
@@ -1956,9 +1946,9 @@
                     serviceImplementation="com.intellij.openapi.roots.impl.LibraryScopeCache"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.util.DimensionService"/>
-    <applicationService serviceInterface="com.intellij.openapi.util.WindowStateService"
+    <applicationService serviceInterface="com.intellij.openapi.util.WindowStateService$ApplicationLevel"
                         serviceImplementation="com.intellij.openapi.util.WindowStateApplicationService"/>
-    <projectService serviceInterface="com.intellij.openapi.util.WindowStateService"
+    <projectService serviceInterface="com.intellij.openapi.util.WindowStateService$ProjectLevel"
                     serviceImplementation="com.intellij.openapi.util.WindowStateProjectService"/>
 
     <colorSettingsPage implementation="com.intellij.openapi.options.colors.pages.GeneralColorsPage" id="general"/>
@@ -2591,5 +2581,21 @@
     <virtualFileSystem id="local" implementation="com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl" />
     <virtualFileSystem id="zip" implementation="consulo.vfs.impl.zip.ZipFileSystemImpl" />
     <virtualFileSystem id="temp" implementation="com.intellij.openapi.vfs.ex.temp.TempFileSystem" />
+
+    <textEditorHighlightingPassFactory implementation="com.intellij.refactoring.changeSignature.inplace.ChangeSignaturePassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.hints.ParameterHintsPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IndentsPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory" />
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory" />
   </extensions>
 </idea-plugin>

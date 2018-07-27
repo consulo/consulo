@@ -46,16 +46,20 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ui.MessageCategory;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author yole
  */
+@Singleton
 public class CodeSmellDetectorImpl extends CodeSmellDetector {
   private final Project myProject;
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.CodeSmellDetectorImpl");
 
+  @Inject
   public CodeSmellDetectorImpl(final Project project) {
     myProject = project;
   }

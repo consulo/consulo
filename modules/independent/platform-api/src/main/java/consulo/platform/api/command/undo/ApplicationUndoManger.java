@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.extensions;
+package consulo.platform.api.command.undo;
 
-import org.picocontainer.MutablePicoContainer;
+import com.intellij.openapi.command.undo.UndoManager;
 
 /**
- * @author Alexander Kireyev
+ * @author VISTALL
+ * @since 2018-07-25
  */
-public interface AreaPicoContainer extends MutablePicoContainer {
+public interface ApplicationUndoManger extends UndoManager {
 }

@@ -24,13 +24,15 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+@Singleton
 public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegistry {
   private static final Logger LOG = Logger.getInstance("#com.intellij.featureStatistics.ProductivityFeaturesRegistry");
   private final Map<String, FeatureDescriptor> myFeatures = new HashMap<String, FeatureDescriptor>();
@@ -76,7 +78,6 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
 
   private void lazyLoadFromPluginsFeaturesProviders() {
     if (myAdditionalFeaturesLoaded) return;
-    loadFeaturesFromProviders(ApplicationManager.getApplication().getComponents(ProductivityFeaturesProvider.class));
     loadFeaturesFromProviders(Extensions.getExtensions(ProductivityFeaturesProvider.EP_NAME));
     myAdditionalFeaturesLoaded = true;
   }

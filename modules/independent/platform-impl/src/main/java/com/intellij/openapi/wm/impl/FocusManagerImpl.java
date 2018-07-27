@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -39,12 +38,14 @@ import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.platform.api.wp.ApplicationIdeFocusManager;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -60,7 +61,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class FocusManagerImpl extends IdeFocusManager implements Disposable {
+@Singleton
+public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable {
   private static final Logger LOG = Logger.getInstance(FocusManagerImpl.class);
   private static final UiActivity FOCUS = new UiActivity.Focus("awtFocusRequest");
   private static final UiActivity TYPEAHEAD = new UiActivity.Focus("typeahead");
@@ -138,7 +140,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
   private IdeFrame myLastFocusedFrame;
 
   @Inject
-  public FocusManagerImpl(ServiceManagerImpl serviceManager, WindowManager wm, UiActivityMonitor monitor) {
+  public FocusManagerImpl(WindowManager wm, UiActivityMonitor monitor) {
     myApp = ApplicationManager.getApplication();
     myQueue = IdeEventQueue.getInstance();
     myActivityMonitor = monitor;

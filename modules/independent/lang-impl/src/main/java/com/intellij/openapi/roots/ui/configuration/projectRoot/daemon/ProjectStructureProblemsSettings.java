@@ -17,20 +17,30 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ProjectStructureProblemsSettings {
-  public static ProjectStructureProblemsSettings getProjectInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, ProjectStructureProblemsSettings.class);
+  static interface ApplicationLevel {
   }
 
+  static interface ProjectLevel {
+  }
+
+  @Nonnull
+  public static ProjectStructureProblemsSettings getProjectInstance(@Nonnull Project project) {
+    return (ProjectStructureProblemsSettings)ServiceManager.getService(project, ProjectLevel.class);
+  }
+
+  @Nonnull
   public static ProjectStructureProblemsSettings getGlobalInstance() {
-    return ServiceManager.getService(ProjectStructureProblemsSettings.class);
+    return (ProjectStructureProblemsSettings)ServiceManager.getService(ApplicationLevel.class);
   }
 
   public abstract boolean isIgnored(@Nonnull ProjectStructureProblemDescription description);
+
   public abstract void setIgnored(@Nonnull ProjectStructureProblemDescription description, boolean ignored);
 }

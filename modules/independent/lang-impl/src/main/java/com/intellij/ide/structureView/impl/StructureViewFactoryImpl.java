@@ -32,8 +32,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ReflectionUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,18 +45,16 @@ import java.util.HashSet;
  * @author Eugene Belyaev
  */
 
-@State(
-  name="StructureViewFactory",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "StructureViewFactory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public final class StructureViewFactoryImpl extends StructureViewFactoryEx implements PersistentStateComponent<StructureViewFactoryImpl.State> {
   public static class State {
-    @SuppressWarnings({"WeakerAccess"}) public boolean AUTOSCROLL_MODE = true;
-    @SuppressWarnings({"WeakerAccess"}) public boolean AUTOSCROLL_FROM_SOURCE = false;
-    @SuppressWarnings({"WeakerAccess"}) public String ACTIVE_ACTIONS = "";
+    @SuppressWarnings({"WeakerAccess"})
+    public boolean AUTOSCROLL_MODE = true;
+    @SuppressWarnings({"WeakerAccess"})
+    public boolean AUTOSCROLL_FROM_SOURCE = false;
+    @SuppressWarnings({"WeakerAccess"})
+    public String ACTIVE_ACTIONS = "";
     public boolean SHOW_TOOLBAR = false;
   }
 
@@ -63,21 +63,22 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   private State myState = new State();
   private Runnable myRunWhenInitialized = null;
 
-  private static final NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>> myExtensions = new NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>>() {
-    @Nonnull
-    @Override
-    protected MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> compute() {
-      MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map =
-        new MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>();
-      StructureViewExtension[] extensions = Extensions.getExtensions(StructureViewExtension.EXTENSION_POINT_NAME);
-      for (StructureViewExtension extension : extensions) {
-        map.put(extension.getType(), extension);
-      }
-      return map;
-    }
-  };
+  private static final NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>> myExtensions =
+          new NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>>() {
+            @Nonnull
+            @Override
+            protected MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> compute() {
+              MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map = new MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>();
+              StructureViewExtension[] extensions = Extensions.getExtensions(StructureViewExtension.EXTENSION_POINT_NAME);
+              for (StructureViewExtension extension : extensions) {
+                map.put(extension.getType(), extension);
+              }
+              return map;
+            }
+          };
   private final MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> myImplExtensions = new MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>();
 
+  @Inject
   public StructureViewFactoryImpl(Project project) {
     myProject = project;
   }
@@ -169,8 +170,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   }
 
   @Override
-  public StructureView createStructureView(final FileEditor fileEditor,
-                                           final StructureViewModel treeModel, final Project project, final boolean showRootNode) {
+  public StructureView createStructureView(final FileEditor fileEditor, final StructureViewModel treeModel, final Project project, final boolean showRootNode) {
     return new StructureViewComponent(fileEditor, treeModel, project, showRootNode);
   }
 }

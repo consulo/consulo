@@ -16,32 +16,26 @@
 package com.intellij.remoteServer.impl.configuration.deployment;
 
 import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.remoteServer.ServerType;
-import javax.annotation.Nonnull;
+import consulo.annotations.NotLazy;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 
 /**
  * @author nik
  */
-public class DeployToServerConfigurationTypesRegistrar implements ApplicationComponent {
-  @Override
+@NotLazy
+@Singleton
+public class DeployToServerConfigurationTypesRegistrar {
+  @PostConstruct
   public void initComponent() {
     //todo[nik] improve this: configuration types should be loaded lazily
     ExtensionPoint<ConfigurationType> point = Extensions.getRootArea().getExtensionPoint(ConfigurationType.CONFIGURATION_TYPE_EP);
     for (ServerType serverType : ServerType.EP_NAME.getExtensions()) {
       point.registerExtension(new DeployToServerConfigurationType(serverType));
     }
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "DeployToServerConfigurationTypesRegistrar";
   }
 }

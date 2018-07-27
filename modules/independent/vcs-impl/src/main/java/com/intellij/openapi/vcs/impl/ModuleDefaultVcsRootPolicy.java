@@ -39,6 +39,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,12 +52,14 @@ import static com.intellij.util.containers.ContainerUtil.newHashSet;
 /**
  * @author yole
  */
+@Singleton
 public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   private static final Logger LOG = Logger.getInstance(ModuleDefaultVcsRootPolicy.class);
   private final Project myProject;
   private final VirtualFile myBaseDir;
   private final ModuleManager myModuleManager;
 
+  @Inject
   public ModuleDefaultVcsRootPolicy(final Project project) {
     myProject = project;
     myBaseDir = project.getBaseDir();

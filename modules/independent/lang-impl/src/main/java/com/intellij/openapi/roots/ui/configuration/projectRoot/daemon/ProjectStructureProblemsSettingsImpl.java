@@ -19,12 +19,12 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 
+import javax.inject.Singleton;
+
 /**
  * @author nik
  */
-@State(
-  name = "ProjectStructureProblems",
-  storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)}
-)
-public class ProjectStructureProblemsSettingsImpl extends ProjectStructureProblemsSettingsBase {
+@State(name = "ProjectStructureProblems", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
+public class ProjectStructureProblemsSettingsImpl extends ProjectStructureProblemsSettingsBase implements ProjectStructureProblemsSettings.ProjectLevel {
 }

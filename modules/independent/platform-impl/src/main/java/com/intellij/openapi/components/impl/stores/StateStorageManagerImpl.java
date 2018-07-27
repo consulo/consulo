@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.google.inject.Injector;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
@@ -55,12 +54,12 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Map<String, StateStorage> myStorages = new THashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
   private final String myRootTagName;
-  private final Injector myInjector;
+  private final MessageBus myMessageBus;
 
   private StreamProvider myStreamProvider;
 
-  public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor, String rootTagName, @Nonnull Injector injector) {
-    myInjector = injector;
+  public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor, String rootTagName, @Nonnull MessageBus messageBus) {
+    myMessageBus = messageBus;
     myRootTagName = rootTagName;
     myPathMacroSubstitutor = pathMacroSubstitutor;
   }
@@ -238,8 +237,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Nullable
   protected StateStorage.Listener createStorageTopicListener() {
-    MessageBus messageBus = myInjector.getInstance(MessageBus.class);
-    return messageBus == null ? null : messageBus.syncPublisher(StateStorage.STORAGE_TOPIC);
+    MessageBus messageBus = myMessageBus;
+    return messageBus.syncPublisher(StateStorage.STORAGE_TOPIC);
   }
 
   protected boolean isUseXmlProlog() {

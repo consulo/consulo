@@ -16,6 +16,7 @@
 package com.intellij.openapi.project.impl;
 
 import com.google.inject.Binder;
+import com.google.inject.Scope;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
@@ -80,6 +81,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
+  private final ProjectPathMacroManager myPathMacroManager = new ProjectPathMacroManager(this);
+
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
@@ -87,6 +90,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
     }
+
+    myOptimiseTestLoadSpeed = isOptimiseTestLoadSpeed;
+
+    myManager = manager;
+
+    buildInjector();
+
+    myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
 
     if (!isDefault()) {
       if (noUIThread) {
@@ -96,14 +107,16 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         getStateStore().setProjectFilePath(dirPath);
       }
     }
+  }
 
-    myOptimiseTestLoadSpeed = isOptimiseTestLoadSpeed;
-
-    myManager = manager;
-
-    myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
-
-    buildInjector();
+  @Nullable
+  @Override
+  @SuppressWarnings("unchecked")
+  protected <T> T getCustomComponentInstance(@Nonnull Class<T> clazz) {
+    if(clazz == PathMacroManager.class) {
+      return (T)myPathMacroManager;
+    }
+    return super.getCustomComponentInstance(clazz);
   }
 
   @Nonnull
@@ -112,6 +125,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return descriptor.getProjectComponents();
   }
 
+  @Nonnull
   @Override
   public String getAreaId() {
     return ExtensionAreas.PROJECT;
@@ -124,10 +138,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  protected void bootstrapBinder(String name, Binder binder) {
-    super.bootstrapBinder(name, binder);
-    binder.bind(ProjectPathMacroManager.class);
-    binder.bind(IComponentStore.class).to(isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class);
+  protected void bootstrapBinder(Scope scope, Binder binder) {
+    super.bootstrapBinder(scope, binder);
+    binder.bind(Project.class).toInstance(this);
+    binder.bind(IProjectStore.class).to(isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class);
   }
 
   @Override
@@ -152,11 +166,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   @Override
   public IProjectStore getStateStore() {
-    return (IProjectStore)getInjector().getInstance(IComponentStore.class);
+    return getInjector().getInstance(IProjectStore.class);
   }
 
   @Override
-  public void initializeFromStateStore(Object component, boolean service) {
+  public void initializeFromStateStore(@Nonnull Object component, boolean service) {
     if (!service) {
       ProgressIndicator indicator = getProgressIndicator();
       if (indicator != null) {
@@ -247,7 +261,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     super.init();
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
-    LOG.info(getComponentsSize() + " project components initialized in " + time + " ms");
+    LOG.info(getNotLazyComponentsSize() + " project components initialized in " + time + " ms");
     getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).projectComponentsInitialized(this);
 
     myProjectManagerListener = new MyProjectManagerListener();
@@ -384,6 +398,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
+  @Nonnull
   @Override
   public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();

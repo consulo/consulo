@@ -21,6 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.FileColorManager;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author spleaner
@@ -31,9 +33,11 @@ import javax.annotation.Nonnull;
     @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/fileColors.xml")
   }
 )
+@Singleton
 public class FileColorSharedConfigurationManager implements PersistentStateComponent<Element> {
   private final Project myProject;
 
+  @Inject
   public FileColorSharedConfigurationManager(@Nonnull final Project project) {
     myProject = project;
   }

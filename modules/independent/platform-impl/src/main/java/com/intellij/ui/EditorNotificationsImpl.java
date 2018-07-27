@@ -42,6 +42,8 @@ import consulo.editor.notifications.EditorNotificationProviders;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -50,6 +52,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * @author peter
  */
+@Singleton
 public class EditorNotificationsImpl extends EditorNotifications {
   private static final Key<WeakReference<ProgressIndicator>> CURRENT_UPDATES = Key.create("CURRENT_UPDATES");
   private static final ExecutorService ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
@@ -64,6 +67,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
     }
   };
 
+  @Inject
   public EditorNotificationsImpl(Project project) {
     myProject = project;
     myUpdateMerger = new MergingUpdateQueue("EditorNotifications update merger", 100, true, null, project);

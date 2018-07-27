@@ -24,14 +24,18 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class ProjectFileIndexFacade extends FileIndexFacade {
   private final DirectoryIndex myDirectoryIndex;
   private final ProjectFileIndex myFileIndex;
 
+  @Inject
   public ProjectFileIndexFacade(final Project project, final ProjectRootManager rootManager, final DirectoryIndex directoryIndex) {
     super(project);
     myDirectoryIndex = directoryIndex;

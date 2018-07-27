@@ -57,9 +57,12 @@ import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 
+@Singleton
 public class ReplaceInProjectManager {
   static final NotificationGroup NOTIFICATION_GROUP = FindInPathAction.NOTIFICATION_GROUP;
 
@@ -70,6 +73,7 @@ public class ReplaceInProjectManager {
     return ServiceManager.getService(project, ReplaceInProjectManager.class);
   }
 
+  @Inject
   public ReplaceInProjectManager(Project project) {
     myProject = project;
   }

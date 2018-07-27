@@ -18,9 +18,6 @@ package com.intellij.ide.ui.laf;
 
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import com.intellij.openapi.components.ApplicationComponent;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,7 +25,7 @@ import javax.swing.*;
  * User: anna
  * Date: 17-May-2006
  */
-public class HeadlessLafManagerImpl extends LafManager implements ApplicationComponent {
+public class HeadlessLafManagerImpl extends LafManager{
   @Override
   public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels() {
     return new UIManager.LookAndFeelInfo[0];
@@ -62,20 +59,5 @@ public class HeadlessLafManagerImpl extends LafManager implements ApplicationCom
 
   @Override
   public void removeLafManagerListener(LafManagerListener l) {
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "HeadlessLafManagerImpl";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 }

@@ -29,14 +29,18 @@ import com.intellij.usageView.UsageViewManager;
 import com.intellij.usages.UsageView;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 
+@Singleton
 public class UsageViewManagerImpl extends UsageViewManager {
   private final Key<Boolean> REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.REUSABLE_CONTENT_KEY");
   private final Key<Boolean> NOT_REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.NOT_REUSABLE_CONTENT_KEY");        //todo[myakovlev] dont use it
   private final Key<UsageView> NEW_USAGE_VIEW_KEY = Key.create("NEW_USAGE_VIEW_KEY");
   private final ContentManager myFindContentManager;
 
+  @Inject
   public UsageViewManagerImpl(final Project project, final ToolWindowManager toolWindowManager) {
     ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.FIND, true, ToolWindowAnchor.BOTTOM, project, true);
     toolWindow.setToHideOnEmptyContent(true);

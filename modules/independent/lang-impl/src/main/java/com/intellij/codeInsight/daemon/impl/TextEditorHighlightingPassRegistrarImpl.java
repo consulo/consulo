@@ -28,6 +28,8 @@ import com.intellij.util.ArrayUtil;
 import gnu.trove.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +39,7 @@ import java.util.List;
  * User: anna
  * Date: 19-Apr-2006
  */
+@Singleton
 public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlightingPassRegistrarEx {
   private final TIntObjectHashMap<PassConfig> myRegisteredPassFactories = new TIntObjectHashMap<>();
   private final List<DirtyScopeTrackingHighlightingPassFactory> myDirtyScopeTrackingFactories = new ArrayList<>();
@@ -44,8 +47,17 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
   private boolean checkedForCycles;
   private final Project myProject;
 
+  @Inject
   public TextEditorHighlightingPassRegistrarImpl(Project project) {
     myProject = project;
+
+    if(project.isDefault()) {
+      return;
+    }
+
+    for (TextEditorHighlightingPassFactory factory : TextEditorHighlightingPassFactory.EP_NAME.getExtensions()) {
+      factory.register(project, this);
+    }
   }
 
   private static class PassConfig {

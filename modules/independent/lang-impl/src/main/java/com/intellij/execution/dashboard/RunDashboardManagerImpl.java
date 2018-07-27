@@ -46,6 +46,8 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +58,7 @@ import java.util.stream.Collectors;
  * @author konstantin.aleev
  */
 @State(name = "RunDashboard", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class RunDashboardManagerImpl implements RunDashboardManager, PersistentStateComponent<RunDashboardManagerImpl.State> {
   @Nonnull
   private final Project myProject;
@@ -66,6 +69,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
 
   private RunDashboardContent myDashboardContent;
 
+  @Inject
   public RunDashboardManagerImpl(@Nonnull final Project project) {
     myProject = project;
 
@@ -73,8 +77,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
     ContentUI contentUI = new PanelContentUI();
     myContentManager = contentFactory.createContentManager(contentUI, false, project);
 
-    myGroupers = Arrays.stream(DashboardGroupingRule.EP_NAME.getExtensions()).sorted(DashboardGroupingRule.PRIORITY_COMPARATOR).map(DashboardGrouper::new)
-            .collect(Collectors.toList());
+    myGroupers = Arrays.stream(DashboardGroupingRule.EP_NAME.getExtensions()).sorted(DashboardGroupingRule.PRIORITY_COMPARATOR).map(DashboardGrouper::new).collect(Collectors.toList());
 
     if (isDashboardEnabled()) {
       initToolWindowListeners();
@@ -167,14 +170,13 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   public List<Pair<RunnerAndConfigurationSettings, RunContentDescriptor>> getRunConfigurations() {
     List<Pair<RunnerAndConfigurationSettings, RunContentDescriptor>> result = new ArrayList<>();
 
-    List<RunnerAndConfigurationSettings> configurations = RunManager.getInstance(myProject).getAllSettings().stream()
-            .filter(runConfiguration -> RunDashboardContributor.isShowInDashboard(runConfiguration.getType())).collect(Collectors.toList());
+    List<RunnerAndConfigurationSettings> configurations =
+            RunManager.getInstance(myProject).getAllSettings().stream().filter(runConfiguration -> RunDashboardContributor.isShowInDashboard(runConfiguration.getType())).collect(Collectors.toList());
 
     //noinspection ConstantConditions ???
     ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(myProject);
     configurations.forEach(configurationSettings -> {
-      List<RunContentDescriptor> descriptors =
-              executionManager.getDescriptors(settings -> Comparing.equal(settings.getConfiguration(), configurationSettings.getConfiguration()));
+      List<RunContentDescriptor> descriptors = executionManager.getDescriptors(settings -> Comparing.equal(settings.getConfiguration(), configurationSettings.getConfiguration()));
       if (descriptors.isEmpty()) {
         result.add(Pair.create(configurationSettings, null));
       }
@@ -249,8 +251,8 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   @Override
   public State getState() {
     State state = new State();
-    state.ruleStates = myGroupers.stream().filter(grouper -> !grouper.getRule().isAlwaysEnabled())
-            .map(grouper -> new RuleState(grouper.getRule().getName(), grouper.isEnabled())).collect(Collectors.toList());
+    state.ruleStates =
+            myGroupers.stream().filter(grouper -> !grouper.getRule().isAlwaysEnabled()).map(grouper -> new RuleState(grouper.getRule().getName(), grouper.isEnabled())).collect(Collectors.toList());
     return state;
   }
 

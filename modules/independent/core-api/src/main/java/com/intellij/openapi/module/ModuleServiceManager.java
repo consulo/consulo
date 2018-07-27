@@ -16,16 +16,21 @@
 
 package com.intellij.openapi.module;
 
+import com.intellij.openapi.components.ServiceManager;
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use ServiceManager")
 public class ModuleServiceManager {
   private ModuleServiceManager() {
   }
 
   public static <T> T getService(@Nonnull Module module, @Nonnull Class<T> serviceClass) {
-    return (T)module.getPicoContainer().getComponentInstance(serviceClass.getName());
+    return ServiceManager.getService(module, serviceClass);
   }
 }

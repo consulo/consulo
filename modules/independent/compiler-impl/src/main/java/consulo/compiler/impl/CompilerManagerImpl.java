@@ -40,21 +40,23 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.graph.InboundSemiGraph;
-import com.intellij.util.messages.MessageBus;
 import consulo.annotations.RequiredReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
 @State(name = "CompilerManager", storages = @Storage(value = "compiler.xml"))
+@Singleton
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
   private class ListenerNotificator implements CompileStatusNotification {
     @Nullable
@@ -88,14 +90,15 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final Set<FileType> myCompilableFileTypes = new THashSet<>();
   private Compiler[] myAllCompilers;
 
-  public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
+  @Inject
+  public CompilerManagerImpl(final Project project) {
     myProject = project;
 
     if (myProject.isDefault()) {
       return;
     }
 
-    myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
+    myEventPublisher = project.getMessageBus().syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
     List<TranslatingCompiler> translatingCompilers = new ArrayList<>();
     for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {

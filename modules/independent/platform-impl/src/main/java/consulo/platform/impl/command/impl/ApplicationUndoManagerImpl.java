@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.platform.impl.command.impl;
 
-package com.intellij.openapi.components;
+import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.command.impl.UndoManagerImpl;
+import consulo.platform.api.command.undo.ApplicationUndoManger;
 
-import com.intellij.openapi.project.Project;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- * @author Dmitry Avdeev
+ * @author VISTALL
+ * @since 2018-07-25
  */
-public abstract class AbstractProjectComponent implements ProjectComponent {
-  protected final Project myProject;
-
-  protected AbstractProjectComponent(Project project) {
-    myProject = project;
+@Singleton
+public class ApplicationUndoManagerImpl extends UndoManagerImpl implements ApplicationUndoManger {
+  @Inject
+  public ApplicationUndoManagerImpl(CommandProcessor commandProcessor) {
+    super(commandProcessor);
   }
 }

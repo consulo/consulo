@@ -38,6 +38,8 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -48,14 +50,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * User: anna
  * Date: 30-Nov-2005
  */
-@State(name = "InspectionProjectProfileManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR +
-                                                                             "/inspectionProfiles/", stateSplitter = InspectionProjectProfileManagerImpl.ProfileStateSplitter.class)})
+@State(name = "InspectionProjectProfileManager", storages = {
+        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/inspectionProfiles/", stateSplitter = InspectionProjectProfileManagerImpl.ProfileStateSplitter.class)})
+@Singleton
 public class InspectionProjectProfileManagerImpl extends InspectionProjectProfileManager {
   private final Map<String, InspectionProfileWrapper> myName2Profile = new ConcurrentHashMap<String, InspectionProfileWrapper>();
   private final SeverityRegistrar mySeverityRegistrar;
   private final NamedScopeManager myLocalScopesHolder;
   private NamedScopesHolder.ScopeListener myScopeListener;
 
+  @Inject
   public InspectionProjectProfileManagerImpl(@Nonnull Project project,
                                              @Nonnull InspectionProfileManager inspectionProfileManager,
                                              @Nonnull DependencyValidationManager holder,

@@ -21,12 +21,14 @@ import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2018-06-28
  */
 @State(name = "FileOperateDialogSettings", storages = @Storage(value = "ide.general.xml", roamingType = RoamingType.PER_PLATFORM))
+@Singleton
 public class FileOperateDialogSettings implements PersistentStateComponent<FileOperateDialogSettings.State> {
   public static class State {
     public String myFileChooseDialogId = FileOperateDialogProvider.APPLICATION_ID;

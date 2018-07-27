@@ -37,20 +37,24 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   private static final Logger LOG = Logger.getInstance(ProjectStoreImpl.class);
 
   protected ProjectImpl myProject;
   private String myPresentableUrl;
 
-  ProjectStoreImpl(@Nonnull ProjectImpl project, @Nonnull PathMacroManager pathMacroManager) {
-    super(pathMacroManager);
-    myProject = project;
+  @Inject
+  ProjectStoreImpl(@Nonnull Project project) {
+    super(PathMacroManager.getInstance(project));
+    myProject = (ProjectImpl)project;
   }
 
   @Override

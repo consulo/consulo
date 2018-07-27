@@ -33,6 +33,8 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,10 +44,12 @@ import java.util.List;
 /**
  * @author nik
  */
+@Singleton
 public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
   private CachedValue<MultiValuesMap<VirtualFile, Artifact>> myFile2Artifacts;
   private final Project myProject;
 
+  @Inject
   public ArtifactBySourceFileFinderImpl(Project project) {
     myProject = project;
   }

@@ -40,21 +40,25 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author yole
  */
+@Singleton
 public class ModuleVcsDetector implements ProjectComponent {
   private final Project myProject;
   private final MessageBus myMessageBus;
   private final ProjectLevelVcsManagerImpl myVcsManager;
   private MessageBusConnection myConnection;
 
-  public ModuleVcsDetector(final Project project, final MessageBus messageBus, final ProjectLevelVcsManager vcsManager) {
+  @Inject
+  public ModuleVcsDetector(final Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
-    myMessageBus = messageBus;
+    myMessageBus = project.getMessageBus();
     myVcsManager = (ProjectLevelVcsManagerImpl) vcsManager;
   }
 

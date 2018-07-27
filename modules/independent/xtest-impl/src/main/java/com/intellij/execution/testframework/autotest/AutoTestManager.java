@@ -21,6 +21,8 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
@@ -29,6 +31,7 @@ import javax.annotation.Nonnull;
         name = "AutoTestManager",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)}
 )
+@Singleton
 public class AutoTestManager extends AbstractAutoTestManager {
 
   @Nonnull
@@ -36,6 +39,7 @@ public class AutoTestManager extends AbstractAutoTestManager {
     return ServiceManager.getService(project, AutoTestManager.class);
   }
 
+  @Inject
   public AutoTestManager(@Nonnull Project project) {
     super(project);
   }

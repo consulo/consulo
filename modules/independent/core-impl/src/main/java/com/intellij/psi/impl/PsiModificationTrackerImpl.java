@@ -27,6 +27,8 @@ import com.intellij.util.messages.MessageBus;
 import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.intellij.psi.impl.PsiTreeChangeEventImpl.PsiEventType.CHILD_MOVED;
@@ -36,12 +38,14 @@ import static com.intellij.psi.impl.PsiTreeChangeEventImpl.PsiEventType.PROPERTY
  * @author mike
  * Date: Jul 18, 2002
  */
+@Singleton
 public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTreeChangePreprocessor {
   private final AtomicLong myModificationCount = new AtomicLong(0);
   private final AtomicLong myOutOfCodeBlockModificationCount = new AtomicLong(0);
   private final AtomicLong myJavaStructureModificationCount = new AtomicLong(0);
   private final Listener myPublisher;
 
+  @Inject
   public PsiModificationTrackerImpl(Project project) {
     final MessageBus bus = project.getMessageBus();
     myPublisher = bus.syncPublisher(TOPIC);

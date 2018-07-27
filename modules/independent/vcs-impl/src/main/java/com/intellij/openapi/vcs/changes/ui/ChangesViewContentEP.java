@@ -19,10 +19,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.xmlb.annotations.Attribute;
+
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -32,11 +34,14 @@ public class ChangesViewContentEP implements PluginAware {
 
   public static final ExtensionPointName<ChangesViewContentEP> EP_NAME = new ExtensionPointName<ChangesViewContentEP>("com.intellij.changesViewContent");
 
-  @Attribute("tabName") public String tabName;
+  @Attribute("tabName")
+  public String tabName;
 
-  @Attribute("className") public String className;
+  @Attribute("className")
+  public String className;
 
-  @Attribute("predicateClassName") public String predicateClassName;
+  @Attribute("predicateClassName")
+  public String predicateClassName;
 
   private PluginDescriptor myPluginDescriptor;
   private ChangesViewContentProvider myInstance;
@@ -77,7 +82,7 @@ public class ChangesViewContentEP implements PluginAware {
     return myInstance;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public NotNullFunction<Project, Boolean> newPredicateInstance(Project project) {
     //noinspection unchecked
     return predicateClassName != null ? (NotNullFunction<Project, Boolean>)newClassInstance(project, predicateClassName) : null;
@@ -85,13 +90,17 @@ public class ChangesViewContentEP implements PluginAware {
 
   private Object newClassInstance(final Project project, final String className) {
     try {
-      final Class<?> aClass =
-              Class.forName(className, true, myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader());
-      return new CachingConstructorInjectionComponentAdapter(className, aClass).getComponentInstance(project.getPicoContainer());
+      ExtensionComponentAdapter.ourUnstableMarker.set(true);
+
+      final Class<?> aClass = Class.forName(className, true, myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader());
+      return project.getInjector().getInstance(aClass);
     }
     catch (Exception e) {
       LOG.error(e);
       return null;
+    }
+    finally {
+      ExtensionComponentAdapter.ourUnstableMarker.set(false);
     }
   }
 }

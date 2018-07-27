@@ -20,17 +20,14 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Singleton;
 import java.io.File;
 
-@State(
-  name = "UsageViewSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@State(name = "UsageViewSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Singleton
 public class UsageViewSettings implements PersistentStateComponent<UsageViewSettings> {
-  @NonNls public String EXPORT_FILE_NAME = "report.txt";
+  @NonNls
+  public String EXPORT_FILE_NAME = "report.txt";
   public boolean IS_EXPANDED = false;
   public boolean IS_SHOW_PACKAGES = true;
   public boolean IS_SHOW_METHODS = false;
@@ -97,7 +94,7 @@ public class UsageViewSettings implements PersistentStateComponent<UsageViewSett
   }
 
   public void setExportFileName(String s) {
-    if (s != null){
+    if (s != null) {
       s = s.replace(File.separatorChar, '/');
     }
     EXPORT_FILE_NAME = s;

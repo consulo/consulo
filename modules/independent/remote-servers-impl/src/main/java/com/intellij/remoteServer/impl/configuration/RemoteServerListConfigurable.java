@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,11 +34,13 @@ import java.util.Set;
 /**
  * @author nik
  */
+@Singleton
 public class RemoteServerListConfigurable extends MasterDetailsComponent implements OptionalConfigurable, SearchableConfigurable, Configurable.NoScroll {
   private final RemoteServersManager myServersManager;
   @Nullable private final ServerType<?> myServerType;
   private RemoteServer<?> myLastSelectedServer;
 
+  @Inject
   public RemoteServerListConfigurable(@Nonnull RemoteServersManager manager) {
     this(manager, null);
   }

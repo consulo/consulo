@@ -15,19 +15,15 @@
  */
 package com.intellij.openapi.components.impl;
 
-import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.PluginDescriptor;
-import com.intellij.openapi.project.Project;
 import com.intellij.util.PairProcessor;
+import consulo.core.impl.components.impl.ComponentManagerImpl;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.List;
 
-public class ServiceManagerImpl implements BaseComponent {
+public class ServiceManagerImpl {
 
 
   public static final ExtensionPointName<ServiceDescriptor> APP_SERVICES = new ExtensionPointName<>("com.intellij.applicationService");

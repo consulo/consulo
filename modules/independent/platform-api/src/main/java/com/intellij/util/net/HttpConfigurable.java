@@ -44,6 +44,7 @@ import com.intellij.util.xmlb.SkipDefaultsSerializationFilter;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
+import consulo.annotations.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectObjectProcedure;
@@ -51,7 +52,9 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.spec.SecretKeySpec;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,7 +72,9 @@ import java.util.stream.Collectors;
     @Storage(file = StoragePathMacros.APP_CONFIG + "/proxy.settings.xml")
   }
 )
-public class HttpConfigurable extends ApplicationComponent.Adapter implements PersistentStateComponent<HttpConfigurable>, Disposable {
+@Singleton
+@NotLazy
+public class HttpConfigurable implements PersistentStateComponent<HttpConfigurable>, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.net.HttpConfigurable");
   private static final File PROXY_CREDENTIALS_FILE = new File(PathManager.getOptionsPath(), "proxy.settings.pwd");
   public static final int CONNECTION_TIMEOUT = SystemProperties.getIntProperty("idea.connection.timeout", 10000);
@@ -138,9 +143,8 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     return state;
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
-
     final HttpConfigurable currentState = getState();
     if (currentState != null) {
       final Element serialized = XmlSerializer.serializeIfNotDefault(currentState, new SkipDefaultsSerializationFilter());

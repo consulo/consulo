@@ -43,24 +43,25 @@ import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.containers.HashMap;
 import com.maddyhome.idea.copyright.actions.UpdateCopyrightProcessor;
 import com.maddyhome.idea.copyright.util.NewFileTracker;
+import consulo.annotations.NotLazy;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@State(name = "CopyrightManager",
-       storages = {
-               @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/",
-                        stateSplitter = CopyrightManager.CopyrightStateSplitter.class)
-       })
-public class CopyrightManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
+@State(name = "CopyrightManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/", stateSplitter = CopyrightManager.CopyrightStateSplitter.class)})
+@Singleton
+@NotLazy
+public class CopyrightManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#" + CopyrightManager.class.getName());
   @NonNls
   private static final String COPYRIGHT = "copyright";
@@ -78,6 +79,9 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
   @Nullable
   private CopyrightProfile myDefaultCopyright = null;
 
+  private final Project myProject;
+
+  @Inject
   public CopyrightManager(@Nonnull Project project,
                           @Nonnull final EditorFactory editorFactory,
                           @Nonnull final Application application,
@@ -85,7 +89,8 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
                           @Nonnull final ProjectRootManager projectRootManager,
                           @Nonnull final PsiManager psiManager,
                           @Nonnull StartupManager startupManager) {
-    super(project);
+    myProject = project;
+
     if (!myProject.isDefault()) {
       final NewFileTracker newFileTracker = NewFileTracker.getInstance();
       Disposer.register(myProject, newFileTracker::clear);
@@ -126,13 +131,6 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
 
   public static CopyrightManager getInstance(Project project) {
     return project.getComponent(CopyrightManager.class);
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "CopyrightManager";
   }
 
   private void readExternal(Element element) throws InvalidDataException {

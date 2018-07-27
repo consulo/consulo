@@ -41,7 +41,7 @@ import java.util.Map;
  * @since 24-Sep-17
  */
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
-public class WebWindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
+public class WebWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {
   private final Map<Project, WebIdeFrameImpl> myProject2Frame = new HashMap<>();
 
   @Override

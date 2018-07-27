@@ -39,12 +39,15 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class DirectoryIndexImpl extends DirectoryIndex {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.DirectoryIndexImpl");
 
@@ -54,6 +57,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   private volatile boolean myDisposed = false;
   private volatile RootIndex myRootIndex = null;
 
+  @Inject
   public DirectoryIndexImpl(@Nonnull Project project) {
     myProject = project;
     myConnection = project.getMessageBus().connect(project);

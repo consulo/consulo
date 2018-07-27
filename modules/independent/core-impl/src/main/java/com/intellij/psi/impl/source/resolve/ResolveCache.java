@@ -27,15 +27,17 @@ import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.util.containers.ConcurrentWeakKeySoftValueHashMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
+@Singleton
 public class ResolveCache {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.resolve.ResolveCache");
   @SuppressWarnings("unchecked")
@@ -74,11 +76,12 @@ public class ResolveCache {
   public interface Resolver extends AbstractResolver<PsiReference, PsiElement> {
   }
 
-  public ResolveCache(@Nonnull MessageBus messageBus) {
+  @Inject
+  public ResolveCache(@Nonnull Project project) {
     for (int i = 0; i < myMaps.length; i++) {
       myMaps[i] = createWeakMap();
     }
-    messageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter() {
+    project.getMessageBus().connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
         clearCache(isPhysical);

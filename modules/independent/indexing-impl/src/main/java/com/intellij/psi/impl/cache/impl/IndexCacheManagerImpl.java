@@ -34,9 +34,11 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +46,12 @@ import java.util.List;
  * @author Eugene Zhuravlev
  *         Date: Jan 16, 2008
  */
+@Singleton
 public class IndexCacheManagerImpl extends CacheManager{
   private final Project myProject;
   private final PsiManager myPsiManager;
 
+  @Inject
   public IndexCacheManagerImpl(PsiManager psiManager) {
     myPsiManager = psiManager;
     myProject = psiManager.getProject();

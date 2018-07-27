@@ -37,6 +37,8 @@ import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Map;
@@ -46,12 +48,14 @@ import java.util.concurrent.ConcurrentMap;
  * @author VISTALL
  * @since 8:05/20.05.13
  */
+@Singleton
 public class PsiPackageManagerImpl extends PsiPackageManager implements Disposable {
   private final Project myProject;
   private final DirectoryIndex myDirectoryIndex;
 
   private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, Object>> myPackageCache = ContainerUtil.newConcurrentMap();
 
+  @Inject
   public PsiPackageManagerImpl(Project project, DirectoryIndex directoryIndex) {
     myProject = project;
     myDirectoryIndex = directoryIndex;

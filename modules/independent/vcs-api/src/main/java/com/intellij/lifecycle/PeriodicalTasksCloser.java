@@ -16,34 +16,23 @@
 package com.intellij.lifecycle;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ExceptionUtil;
-import javax.annotation.Nonnull;
+import consulo.annotations.NotLazy;
 
-public class PeriodicalTasksCloser implements ApplicationComponent {
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+
+@Singleton
+public class PeriodicalTasksCloser {
   private static final Logger LOG = Logger.getInstance("#com.intellij.lifecycle.PeriodicalTasksCloser");
   private final Object myLock = new Object();
 
   public static PeriodicalTasksCloser getInstance() {
     return ApplicationManager.getApplication().getComponent(PeriodicalTasksCloser.class);
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return PeriodicalTasksCloser.class.getName();
-  }
-
-  @Override
-  public void initComponent() {
   }
 
   public <T> T safeGetComponent(@Nonnull final Project project, final Class<T> componentClass) throws ProcessCanceledException {

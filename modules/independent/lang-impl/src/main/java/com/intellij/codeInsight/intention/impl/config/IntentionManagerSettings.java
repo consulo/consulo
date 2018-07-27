@@ -38,18 +38,14 @@ import com.intellij.util.containers.StringInterner;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-@State(
-  name = "IntentionManagerSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/intentionSettings.xml"
-    )}
-)
+@State(name = "IntentionManagerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/intentionSettings.xml")})
+@Singleton
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings");
   private static final StringInterner ourStringInterner = new StringInterner();
@@ -63,8 +59,10 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   private final Set<String> myIgnoredActions = new LinkedHashSet<String>();
 
   private final Map<MetaDataKey, IntentionActionMetaData> myMetaData = new LinkedHashMap<MetaDataKey, IntentionActionMetaData>();
-  @NonNls private static final String IGNORE_ACTION_TAG = "ignoreAction";
-  @NonNls private static final String NAME_ATT = "name";
+  @NonNls
+  private static final String IGNORE_ACTION_TAG = "ignoreAction";
+  @NonNls
+  private static final String NAME_ATT = "name";
   private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
 
 
@@ -77,15 +75,10 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   private static ClassLoader getClassLoader(@Nonnull IntentionAction intentionAction) {
-    return intentionAction instanceof IntentionActionWrapper
-           ? ((IntentionActionWrapper)intentionAction).getImplementationClassLoader()
-           : intentionAction.getClass().getClassLoader();
+    return intentionAction instanceof IntentionActionWrapper ? ((IntentionActionWrapper)intentionAction).getImplementationClassLoader() : intentionAction.getClass().getClassLoader();
   }
 
-  public void registerIntentionMetaData(@Nonnull IntentionAction intentionAction,
-                                        @Nonnull String[] category,
-                                        @Nonnull String descriptionDirectoryName,
-                                        final ClassLoader classLoader) {
+  public void registerIntentionMetaData(@Nonnull IntentionAction intentionAction, @Nonnull String[] category, @Nonnull String descriptionDirectoryName, final ClassLoader classLoader) {
     registerMetaData(new IntentionActionMetaData(intentionAction, classLoader, category, descriptionDirectoryName));
   }
 
@@ -142,6 +135,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   public synchronized boolean isEnabled(@Nonnull IntentionAction action) {
     return !myIgnoredActions.contains(getFamilyName(action));
   }
+
   public synchronized void setEnabled(@Nonnull IntentionAction action, boolean enabled) {
     if (enabled) {
       myIgnoredActions.remove(getFamilyName(action));
@@ -154,7 +148,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   public synchronized void registerMetaData(@Nonnull IntentionActionMetaData metaData) {
     MetaDataKey key = new MetaDataKey(metaData.myCategory, metaData.getFamily());
     //LOG.assertTrue(!myMetaData.containsKey(metaData.myFamily), "Action '"+metaData.myFamily+"' already registered");
-    if (!myMetaData.containsKey(key)){
+    if (!myMetaData.containsKey(key)) {
       processMetaData(metaData);
     }
     myMetaData.put(key, metaData);
@@ -165,7 +159,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     if (app.isUnitTestMode() || app.isHeadlessEnvironment()) return;
 
     final TextDescriptor description = metaData.getDescription();
-    app.executeOnPooledThread(new Runnable(){
+    app.executeOnPooledThread(new Runnable() {
       @Override
       public void run() {
         try {
@@ -176,8 +170,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
           final Set<String> words = registrar.getProcessedWordsWithoutStemming(descriptionText);
           words.addAll(registrar.getProcessedWords(metaData.getFamily()));
           for (String word : words) {
-            registrar.addOption(word, metaData.getFamily(), metaData.getFamily(), IntentionSettingsConfigurable.HELP_ID, CodeInsightBundle
-                    .message("intention.settings"));
+            registrar.addOption(word, metaData.getFamily(), metaData.getFamily(), IntentionSettingsConfigurable.HELP_ID, CodeInsightBundle.message("intention.settings"));
           }
         }
         catch (IOException e) {

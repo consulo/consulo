@@ -33,9 +33,9 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -53,6 +53,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.NotLazy;
 import consulo.application.TransactionGuardEx;
 import consulo.extensions.ListOfElementsEP;
 import gnu.trove.THashMap;
@@ -77,7 +78,8 @@ import java.util.*;
 import java.util.List;
 
 @Singleton
-public final class ActionManagerImpl extends ActionManagerEx implements ApplicationComponent {
+@NotLazy
+public final class ActionManagerImpl extends ActionManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.actionSystem.impl.ActionManagerImpl");
   private static final int DEACTIVATED_TIMER_DELAY = 5000;
   private static final int TIMER_DELAY = 500;
@@ -183,11 +185,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     if (myTimer != null) {
       myTimer.stop();
       myTimer = null;
@@ -585,7 +583,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     try {
       Class aClass = Class.forName(className, true, loader);
 
-      Object obj = Application.get().getInjector().getInstance(aClass);
+      Object obj;
+      try {
+        ExtensionComponentAdapter.ourUnstableMarker.set(true);
+        obj = Application.get().getInjector().getInstance(aClass);
+      }
+      finally {
+        ExtensionComponentAdapter.ourUnstableMarker.set(false);
+      }
 
       if (!(obj instanceof ActionGroup)) {
         reportActionError(pluginId, "class with name \"" + className + "\" should be instance of " + ActionGroup.class.getName());
@@ -1040,12 +1045,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
         }
       }
     }
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "ActionManager";
   }
 
   @Override

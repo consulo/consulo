@@ -7,6 +7,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 
 /**
@@ -31,6 +32,7 @@ public class PasswordSafeConfigurable implements SearchableConfigurable, Configu
    *
    * @param settings the password safe settings
    */
+  @Inject
   public PasswordSafeConfigurable(@Nonnull PasswordSafeSettings settings, @Nonnull PasswordSafe passwordSafe) {
     mySettings = settings;
     myPasswordSafe = passwordSafe;

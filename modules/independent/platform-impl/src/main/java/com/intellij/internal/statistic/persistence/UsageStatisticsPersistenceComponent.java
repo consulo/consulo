@@ -23,19 +23,20 @@ import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.NotLazy;
 import consulo.application.ApplicationProperties;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @State(name = "UsagesStatistic", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/usage.statistics.xml", roamingType = RoamingType.DISABLED))
-public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent
-        implements ApplicationComponent, PersistentStateComponent<Element> {
+@NotLazy
+public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent implements PersistentStateComponent<Element> {
 
   @NonNls
   private boolean myAllowed = true;
@@ -149,20 +150,5 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     if (StringUtil.isEmptyOrSpaces(priority)) return GroupDescriptor.DEFAULT_PRIORITY;
 
     return Double.parseDouble(priority);
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "SentUsagesPersistenceComponent";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 }

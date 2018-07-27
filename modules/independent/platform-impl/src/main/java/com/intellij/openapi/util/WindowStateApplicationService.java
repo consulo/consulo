@@ -19,18 +19,17 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
-@State(
-        name = "WindowStateApplicationService",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/window.state.xml", roamingType = RoamingType.DISABLED)
-)
-final class WindowStateApplicationService extends WindowStateServiceImpl {
+@State(name = "WindowStateApplicationService", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/window.state.xml", roamingType = RoamingType.DISABLED))
+@Singleton
+final class WindowStateApplicationService extends WindowStateServiceImpl implements WindowStateService.ApplicationLevel {
   @Override
   Point getDefaultLocationFor(Object object, @Nonnull String key) {
     //  backward compatibility when this service is used instead of DimensionService

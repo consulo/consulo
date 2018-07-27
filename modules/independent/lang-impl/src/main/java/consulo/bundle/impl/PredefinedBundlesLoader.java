@@ -15,7 +15,6 @@
  */
 package consulo.bundle.impl;
 
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -24,9 +23,12 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
+import consulo.annotations.NotLazy;
 import consulo.bundle.PredefinedBundlesProvider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,9 @@ import java.util.List;
  * @author VISTALL
  * @since 15:05/22.11.13
  */
-public class PredefinedBundlesLoader implements ApplicationComponent {
+@Singleton
+@NotLazy
+public class PredefinedBundlesLoader {
   private static class ContextImpl implements PredefinedBundlesProvider.Context {
     private final List<Sdk> myBundles = new ArrayList<>();
 
@@ -55,7 +59,7 @@ public class PredefinedBundlesLoader implements ApplicationComponent {
     }
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     if (SystemProperties.is("consulo.disable.predefined.bundles")) {
       return;

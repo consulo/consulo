@@ -17,12 +17,17 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class ProjectRootModificationTrackerImpl extends ProjectRootModificationTracker {
   private final Project myProject;
 
+  @Inject
   public ProjectRootModificationTrackerImpl(Project project) {
     myProject = project;
   }

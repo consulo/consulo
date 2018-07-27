@@ -15,6 +15,7 @@
  */
 package com.intellij.util.containers;
 
+import com.intellij.util.IncorrectOperationException;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
@@ -25,6 +26,11 @@ import java.util.*;
 abstract class RefValueHashMap<K,V> implements Map<K,V>{
   private final Map<K,MyReference<K,V>> myMap;
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<V>();
+
+  @Nonnull
+  static IncorrectOperationException pointlessContainsValue() {
+    return new IncorrectOperationException("containsValue() makes no sense for weak/soft map because GC can clear the key any moment now");
+  }
 
   protected interface MyReference<K,T> {
     K getKey();

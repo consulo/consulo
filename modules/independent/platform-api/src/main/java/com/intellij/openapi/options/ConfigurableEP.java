@@ -215,7 +215,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     protected T compute() {
       try {
         final Class<T> aClass = findClass(implementationClass);
-        return instantiate(aClass, myInjector, true);
+        return instantiate(aClass, myInjector);
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

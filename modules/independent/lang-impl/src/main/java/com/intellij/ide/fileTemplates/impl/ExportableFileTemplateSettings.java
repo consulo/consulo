@@ -19,7 +19,6 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -29,17 +28,11 @@ import javax.inject.Singleton;
 /**
  * @author Dmitry Avdeev
  */
-@State(
-  name="ExportableFileTemplateSettings",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE
-    )}
-)
+@State(name = "ExportableFileTemplateSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE)})
 @Singleton
 public class ExportableFileTemplateSettings extends FileTemplateSettings {
   @Inject
   public ExportableFileTemplateSettings(@Nonnull FileTypeManager typeManager) {
-    super((FileTypeManagerEx)typeManager, null);
+    super(typeManager, null);
   }
 }

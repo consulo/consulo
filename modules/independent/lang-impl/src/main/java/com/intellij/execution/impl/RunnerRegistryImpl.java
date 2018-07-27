@@ -19,24 +19,24 @@ package com.intellij.execution.impl;
 import com.intellij.execution.RunnerRegistry;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ProgramRunner;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
+import consulo.annotations.NotLazy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 // TODO[spLeaner]: eliminate
-public class RunnerRegistryImpl extends RunnerRegistry {
-  private final List<ProgramRunner> myRunnersOrder = new ArrayList<ProgramRunner>();
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "RunnerRegistryImpl";
-  }
+@Singleton
+@NotLazy
+public class RunnerRegistryImpl extends RunnerRegistry implements Disposable {
+  private final List<ProgramRunner> myRunnersOrder = new ArrayList<>();
 
   @Override
   public boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings) {
@@ -62,7 +62,7 @@ public class RunnerRegistryImpl extends RunnerRegistry {
     return null;
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     final ProgramRunner[] runners = Extensions.getExtensions(ProgramRunner.PROGRAM_RUNNER_EP);
     for (ProgramRunner runner : runners) {
@@ -71,7 +71,7 @@ public class RunnerRegistryImpl extends RunnerRegistry {
   }
 
   @Override
-  public synchronized void disposeComponent() {
+  public synchronized void dispose() {
     while (myRunnersOrder.size() > 0) {
       final ProgramRunner runner = myRunnersOrder.get(myRunnersOrder.size() - 1);
       unregisterRunner(runner);

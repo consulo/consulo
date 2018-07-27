@@ -46,6 +46,8 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.Collections;
@@ -55,6 +57,7 @@ import java.util.Map;
 /**
  * @author mike
  */
+@Singleton
 public class FileStatusManagerImpl extends FileStatusManager implements ProjectComponent {
   private final Map<VirtualFile, FileStatus> myCachedStatuses = Collections.synchronizedMap(new HashMap<VirtualFile, FileStatus>());
   private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged =
@@ -96,6 +99,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
     }
   }
 
+  @Inject
   public FileStatusManagerImpl(Project project, StartupManager startupManager, @SuppressWarnings("UnusedParameters") DirectoryIndex makeSureIndexIsInitializedFirst) {
     myProject = project;
 
@@ -158,14 +162,6 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  public void projectOpened() {
-  }
-
-  @Override
   public void disposeComponent() {
     myCachedStatuses.clear();
   }
@@ -174,10 +170,6 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   @Nonnull
   public String getComponentName() {
     return "FileStatusManager";
-  }
-
-  @Override
-  public void initComponent() {
   }
 
   @Override

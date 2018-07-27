@@ -18,6 +18,7 @@ package com.intellij.navigation;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.Extensions;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.Collections;
  * Registry of components which contribute items to "Goto Class" and "Goto Symbol" lists.
  */
 
+@Singleton
 public class ChooseByNameRegistry {
   private final List<ChooseByNameContributor> myGotoClassContributors = new ArrayList<ChooseByNameContributor>();
   private final List<ChooseByNameContributor> myGotoSymbolContributors = new ArrayList<ChooseByNameContributor>();

@@ -21,7 +21,6 @@ import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.impl.DocumentImpl;
@@ -29,6 +28,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.*;
@@ -41,9 +41,12 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.annotations.NotLazy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -54,6 +57,7 @@ import java.util.regex.Pattern;
 /**
  * @author peter
  */
+@Singleton
 public class EventLog {
   public static final String LOG_REQUESTOR = "Internal log requestor";
   public static final String LOG_TOOL_WINDOW_ID = "Event Log";
@@ -271,12 +275,7 @@ public class EventLog {
     return statusDoc.getText();
   }
 
-  private static boolean parseHtmlContent(String text,
-                                          Notification notification,
-                                          Document document,
-                                          AtomicBoolean showMore,
-                                          Map<RangeMarker, HyperlinkInfo> links,
-                                          List<RangeMarker> lineSeparators) {
+  private static boolean parseHtmlContent(String text, Notification notification, Document document, AtomicBoolean showMore, Map<RangeMarker, HyperlinkInfo> links, List<RangeMarker> lineSeparators) {
     String content = StringUtil.convertLineSeparators(text);
 
     int initialLen = document.getTextLength();
@@ -330,14 +329,12 @@ public class EventLog {
   }
 
   private static final String[] HTML_TAGS =
-          {"a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body",
-                  "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd", "del", "details", "dfn", "dir",
-                  "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "h1", "h2", "h3", "h4",
-                  "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link",
-                  "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre",
-                  "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style",
-                  "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var",
-                  "video", "wbr"};
+          {"a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body", "br", "button", "canvas", "caption",
+                  "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd", "del", "details", "dfn", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure",
+                  "font", "footer", "form", "frame", "frameset", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen",
+                  "label", "legend", "li", "link", "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre",
+                  "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody",
+                  "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"};
 
   private static final String[] SKIP_TAGS = {"html", "body", "b", "i", "font"};
 
@@ -455,13 +452,17 @@ public class EventLog {
     }, true);
   }
 
-  public static class ProjectTracker extends AbstractProjectComponent {
+  @Singleton
+  @NotLazy
+  public static class ProjectTracker {
     private final Map<String, EventLogConsole> myCategoryMap = ContainerUtil.newConcurrentMap();
     private final List<Notification> myInitial = ContainerUtil.createLockFreeCopyOnWriteList();
     private final LogModel myProjectModel;
+    private final Project myProject;
 
+    @Inject
     public ProjectTracker(@Nonnull final Project project) {
-      super(project);
+      myProject = project;
 
       myProjectModel = new LogModel(project, project);
 
@@ -475,6 +476,15 @@ public class EventLog {
           printNotification(notification);
         }
       });
+
+      project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+        @Override
+        public void projectClosed(Project project) {
+          if(myProject == project) {
+            ProjectTracker.this.projectClosed();
+          }
+        }
+      });
     }
 
     void initDefaultContent() {
@@ -486,11 +496,6 @@ public class EventLog {
       myInitial.clear();
     }
 
-    @Override
-    public void projectOpened() {
-    }
-
-    @Override
     public void projectClosed() {
       getApplicationComponent().myModel.setStatusMessage(null, 0);
       StatusBar.Info.set("", null, LOG_REQUESTOR);

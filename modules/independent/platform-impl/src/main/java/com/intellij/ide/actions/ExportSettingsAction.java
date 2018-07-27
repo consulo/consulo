@@ -33,7 +33,6 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.extensions.PluginDescriptor;
@@ -47,6 +46,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ex.ApplicationEx2;
+import consulo.core.impl.components.impl.ComponentManagerImpl;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;

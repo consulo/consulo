@@ -26,6 +26,8 @@ import com.intellij.util.xmlb.annotations.MapAnnotation;
 import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +36,8 @@ import java.util.Set;
 /**
  * User: ksafonov
  */
-@State(name = "UsageTrigger", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
-                                                         "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
+@State(name = "UsageTrigger", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
+@Singleton
 public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State> {
 
   public static class State {
@@ -50,6 +52,7 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
     getInstance().doTrigger(feature);
   }
 
+  @Inject
   private static UsageTrigger getInstance() {
     return ServiceManager.getService(UsageTrigger.class);
   }

@@ -19,24 +19,23 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author Denis Zhdanov
  * @since 3/26/13 6:40 PM
  */
-@State(
-  name = "EditorRichCopySettings",
-  storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")}
-)
-public class RichCopySettings extends ApplicationComponent.Adapter implements PersistentStateComponent<RichCopySettings>, ApplicationComponent {
-
+@State(name = "EditorRichCopySettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")})
+@Singleton
+public class RichCopySettings implements PersistentStateComponent<RichCopySettings> {
   @Nonnull
   public static final String ACTIVE_GLOBAL_SCHEME_MARKER = "__ACTIVE_GLOBAL_SCHEME__";
 
   private boolean myEnabled = true;
-  private String  mySchemeName = ACTIVE_GLOBAL_SCHEME_MARKER;
+  private String mySchemeName = ACTIVE_GLOBAL_SCHEME_MARKER;
 
   @Nonnull
   public static RichCopySettings getInstance() {

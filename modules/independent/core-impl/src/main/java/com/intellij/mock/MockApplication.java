@@ -38,7 +38,7 @@ public class MockApplication extends MockComponentManager implements Application
   public static int INSTANCES_CREATED = 0;
 
   public MockApplication(@Nonnull Disposable parentDisposable) {
-    super(null, parentDisposable);
+    super(parentDisposable);
     INSTANCES_CREATED++;
   }
 

@@ -15,18 +15,23 @@
  */
 package com.intellij.pom.references;
 
-import javax.annotation.Nonnull;
+import com.intellij.openapi.project.Project;
+import com.intellij.pom.PomTarget;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.PomTargetPsiElementImpl;
-import com.intellij.pom.PomTarget;
-import com.intellij.openapi.project.Project;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author peter
  */
+@Singleton
 public class PomServiceImpl extends PomService {
   private final Project myProject;
 
+  @Inject
   public PomServiceImpl(Project project) {
     myProject = project;
   }

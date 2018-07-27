@@ -32,6 +32,8 @@ import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.*;
@@ -41,9 +43,8 @@ import java.util.List;
  * @author spleaner
  * @author Konstantin Bulenkov
  */
-@State(
-  name = "FileColors",
-  storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "FileColors", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class FileColorManagerImpl extends FileColorManager implements PersistentStateComponent<Element> {
   public static final String FC_ENABLED = "FileColorsEnabled";
   public static final String FC_TABS_ENABLED = "FileColorsForTabsEnabled";
@@ -72,6 +73,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     ourDefaultDarkColors.put("Yellow", new Color(0x494539));
   }
 
+  @Inject
   public FileColorManagerImpl(@Nonnull final Project project) {
     myProject = project;
     myModel = new FileColorsModel(project);
@@ -239,7 +241,8 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     final PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
     if (psiFile != null) {
       return getFileColor(psiFile);
-    } else {
+    }
+    else {
       final String colorName = myModel.getColor(file, getProject());
       return colorName == null ? null : getColor(colorName);
     }

@@ -37,6 +37,8 @@ import com.intellij.util.text.DateFormatUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.List;
 
@@ -44,6 +46,7 @@ import java.util.List;
  * @author yole
  * todo: use EditorNotifications
  */
+@Singleton
 public class OutdatedVersionNotifier implements ProjectComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier");
 
@@ -53,6 +56,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
   private static final Key<OutdatedRevisionPanel> PANEL_KEY = new Key<OutdatedRevisionPanel>("OutdatedRevisionPanel");
   private volatile boolean myIncomingChangesRequested;
 
+  @Inject
   public OutdatedVersionNotifier(FileEditorManager fileEditorManager,
                                  CommittedChangesCache cache,
                                  MessageBus messageBus, Project project) {

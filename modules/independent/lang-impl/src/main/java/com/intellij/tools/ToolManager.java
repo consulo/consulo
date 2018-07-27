@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
+import consulo.annotations.NotLazy;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -29,6 +29,7 @@ import javax.inject.Singleton;
  * @author traff
  */
 @Singleton
+@NotLazy
 public class ToolManager extends BaseToolManager<Tool> {
   @Inject
   public ToolManager(ActionManager actionManagerEx, SchemesManagerFactory factory) {
@@ -63,11 +64,5 @@ public class ToolManager extends BaseToolManager<Tool> {
 
   public static ToolManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ToolManager.class);
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "ToolManager";
   }
 }

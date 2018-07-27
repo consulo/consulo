@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -25,14 +25,18 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import javax.annotation.Nonnull;
+import consulo.annotations.NotLazy;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import java.util.concurrent.Executor;
 
 /**
  * @author peter
  */
-public class Preloader implements ApplicationComponent {
+@Singleton
+@NotLazy
+public class Preloader implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.Preloader");
   private final Executor myExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("com.intellij.openapi.application.Preloader pool");
   private final ProgressIndicator myIndicator = new ProgressIndicatorBase();
@@ -55,7 +59,7 @@ public class Preloader implements ApplicationComponent {
     }
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     if (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
       return;
@@ -88,13 +92,7 @@ public class Preloader implements ApplicationComponent {
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     myIndicator.cancel();
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "Preloader";
   }
 }

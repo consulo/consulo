@@ -27,24 +27,28 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
 @State(name = ModuleManagerImpl.COMPONENT_NAME, storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml"))
+@Singleton
 public class ModuleManagerComponent extends ModuleManagerImpl {
   public static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
 
   private final ProgressManager myProgressManager;
   private final MessageBusConnection myConnection;
 
-  public ModuleManagerComponent(Project project, ProgressManager progressManager, MessageBus bus) {
-    super(project, bus);
-    myConnection = bus.connect(project);
+  @Inject
+  public ModuleManagerComponent(Project project, ProgressManager progressManager) {
+    super(project, project.getMessageBus());
+    myConnection = project.getMessageBus().connect(project);
     myProgressManager = progressManager;
     myConnection.setDefaultHandler((event, params) -> cleanCachedStuff());
 

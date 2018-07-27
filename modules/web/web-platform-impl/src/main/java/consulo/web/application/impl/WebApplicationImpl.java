@@ -2,7 +2,6 @@ package consulo.web.application.impl;
 
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -48,7 +47,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   public WebApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splash) {
     super(null, splash);
 
-    getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), new WebTransactionGuardImpl());
+    //getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), new WebTransactionGuardImpl());
 
     initPlugins();
   }

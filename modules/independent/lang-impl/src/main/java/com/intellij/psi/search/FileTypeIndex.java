@@ -17,6 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -24,9 +25,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -50,7 +52,8 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
 
   private final FileTypeRegistry myFileTypeManager;
 
-  public FileTypeIndex(FileTypeRegistry fileTypeRegistry) {
+  @Inject
+  public FileTypeIndex(FileTypeManager fileTypeRegistry) {
     myFileTypeManager = fileTypeRegistry;
   }
 

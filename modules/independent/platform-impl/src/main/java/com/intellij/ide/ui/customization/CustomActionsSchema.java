@@ -38,6 +38,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -51,6 +52,7 @@ import java.util.List;
  * Date: Jan 20, 2005
  */
 @State(name = "com.intellij.ide.ui.customization.CustomActionsSchema", storages = @Storage("customization.xml"))
+@Singleton
 public class CustomActionsSchema implements JDOMExternalizable {
   @NonNls
   private static final String ACTIONS_SCHEMA = "custom_actions_schema";
@@ -124,8 +126,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
     myIconCustomizations.clear();
 
     for (ActionUrl actionUrl : result.myActions) {
-      final ActionUrl url = new ActionUrl(new ArrayList<String>(actionUrl.getGroupPath()), actionUrl.getComponent(), actionUrl.getActionType(),
-                                          actionUrl.getAbsolutePosition());
+      final ActionUrl url = new ActionUrl(new ArrayList<String>(actionUrl.getGroupPath()), actionUrl.getComponent(), actionUrl.getActionType(), actionUrl.getAbsolutePosition());
       url.setInitialPosition(actionUrl.getInitialPosition());
       myActions.add(url);
     }

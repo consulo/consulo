@@ -16,18 +16,18 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
-import javax.annotation.Nonnull;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MouseGestureManager implements ApplicationComponent {
+@Singleton
+public class MouseGestureManager {
 
   private static final Logger LOG = Logger.getInstance("MouseGestureManager");
 
@@ -81,22 +81,6 @@ public class MouseGestureManager implements ApplicationComponent {
       }
     }
 
-  }
-
-  @Override
-  public void initComponent() {
-
-  }
-
-  @Override
-  public void disposeComponent() {
-
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "MouseGestureListener";
   }
 
   public static MouseGestureManager getInstance() {

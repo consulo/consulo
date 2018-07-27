@@ -22,15 +22,16 @@ import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusRequestor;
-import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
+import consulo.platform.api.wp.ApplicationIdeFocusManager;
+import consulo.platform.api.wp.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class IdeFocusManagerHeadless extends IdeFocusManager {
+public class IdeFocusManagerHeadless implements ProjectIdeFocusManager, ApplicationIdeFocusManager {
 
   public static final IdeFocusManagerHeadless INSTANCE = new IdeFocusManagerHeadless();
 

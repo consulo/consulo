@@ -18,13 +18,12 @@ package com.intellij.codeInsight.problems;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,10 +32,6 @@ import java.util.List;
  */
 public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   private WolfTheProblemSolver myDelegate;
-
-  public MockWolfTheProblemSolver(Project project) {
-    super(project);
-  }
 
   @Override
   public boolean isProblemFile(VirtualFile virtualFile) {

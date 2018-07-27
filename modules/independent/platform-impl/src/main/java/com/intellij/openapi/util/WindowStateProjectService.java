@@ -20,19 +20,21 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.impl.ProjectFrameBounds;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
-@State(
-        name = "WindowStateProjectService",
-        storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-final class WindowStateProjectService extends WindowStateServiceImpl {
+@State(name = "WindowStateProjectService", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
+final class WindowStateProjectService extends WindowStateServiceImpl implements WindowStateService.ProjectLevel {
   private final Project myProject;
 
+  @Inject
   WindowStateProjectService(Project project) {
     myProject = project;
   }

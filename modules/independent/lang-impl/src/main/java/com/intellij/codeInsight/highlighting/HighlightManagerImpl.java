@@ -45,13 +45,17 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.*;
 
+@Singleton
 public class HighlightManagerImpl extends HighlightManager implements ProjectComponent {
   private final Project myProject;
 
+  @Inject
   public HighlightManagerImpl(Project project) {
     myProject = project;
   }
@@ -60,14 +64,6 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
   @Nonnull
   public String getComponentName() {
     return "HighlightManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   @Override

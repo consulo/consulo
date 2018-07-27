@@ -19,10 +19,9 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 
 public abstract class PathMacroManager implements PathMacroSubstitutor {
+  @Nonnull
   public static PathMacroManager getInstance(@Nonnull ComponentManager componentManager) {
-    final PathMacroManager component = (PathMacroManager)componentManager.getPicoContainer().getComponentInstanceOfType(PathMacroManager.class);
-    assert component != null;
-    return component;
+    return componentManager.getComponent(PathMacroManager.class);
   }
 
   @Override

@@ -21,7 +21,7 @@ public class MockModule extends MockComponentManager implements Module {
   }
 
   public MockModule(@javax.annotation.Nullable final Project project, @Nonnull Disposable parentDisposable) {
-    super(project == null ? null : project.getPicoContainer(), parentDisposable);
+    super( parentDisposable);
     myProject = project;
   }
 

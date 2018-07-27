@@ -19,12 +19,12 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Function;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.image.Image;
 
@@ -50,8 +50,8 @@ public class DesktopIconDeferrerImpl extends IconDeferrer {
   private long myLastClearTimestamp;
 
   @Inject
-  public DesktopIconDeferrerImpl(MessageBus bus) {
-    final MessageBusConnection connection = bus.connect();
+  public DesktopIconDeferrerImpl(Application application) {
+    final MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(PsiModificationTracker.TOPIC, this::clear);
     connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
       @Override

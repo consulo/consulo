@@ -16,9 +16,8 @@
 package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.extensions.PluginId;
-import org.picocontainer.PicoInitializationException;
 
-public class PicoPluginExtensionInitializationException extends PicoInitializationException {
+public class PicoPluginExtensionInitializationException extends RuntimeException {
   private final PluginId myPluginId;
 
   public PicoPluginExtensionInitializationException(String message, Throwable cause, PluginId id) {

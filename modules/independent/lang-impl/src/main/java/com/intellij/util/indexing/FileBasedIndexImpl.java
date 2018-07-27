@@ -23,6 +23,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -80,8 +81,8 @@ import com.intellij.util.indexing.impl.MapReduceIndex;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
@@ -90,6 +91,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
@@ -112,7 +114,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @since Dec 20, 2007
  */
 @Singleton
-public class FileBasedIndexImpl extends FileBasedIndex {
+@NotLazy
+public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
   static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.FileBasedIndexImpl");
   private static final String CORRUPTION_MARKER_NAME = "corruption.marker";
   private static final NotificationGroup NOTIFICATIONS = new NotificationGroup("Indexing", NotificationDisplayType.BALLOON, false);
@@ -177,12 +180,12 @@ public class FileBasedIndexImpl extends FileBasedIndex {
   public FileBasedIndexImpl(@SuppressWarnings("UnusedParameters") VirtualFileManager vfManager,
                             FileDocumentManager fdm,
                             FileTypeManager fileTypeManager,
-                            @Nonnull MessageBus bus) {
+                            Application application) {
     myFileDocumentManager = fdm;
     myFileTypeManager = (FileTypeManagerImpl)fileTypeManager;
     myIsUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
-    final MessageBusConnection connection = bus.connect();
+    final MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
       @Override
       public void transactionStarted(@Nonnull final Document doc, @Nonnull final PsiFile file) {
@@ -306,7 +309,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
     if (myInitialized) myChangedFilesCollector.ensureUpToDateAsync();
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     long started = System.nanoTime();
     FileBasedIndexExtension[] extensions = Extensions.getExtensions(FileBasedIndexExtension.EXTENSION_POINT_NAME);
@@ -463,7 +466,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     performShutdown();
   }
 

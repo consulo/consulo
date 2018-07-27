@@ -94,7 +94,7 @@ public abstract class TextEditorHighlightingPassRegistrar {
 
   public abstract int registerTextEditorHighlightingPass(@Nonnull TextEditorHighlightingPassFactory factory,
                                                          @Nullable final int[] runAfterCompletionOf,
-                                                         @javax.annotation.Nullable int[] runAfterStartingOf,
+                                                         @Nullable int[] runAfterStartingOf,
                                                          boolean runIntentionsPassAfter,
                                                          int forcedPassId);
 }

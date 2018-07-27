@@ -72,19 +72,23 @@ import org.jdom.Attribute;
 import org.jdom.DataConversionException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 @State(name = "ProjectLevelVcsManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx implements ProjectComponent, PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl");
-  @NonNls private static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
+  @NonNls
+  private static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
 
   private final ProjectLevelVcsManagerSerialization mySerialization;
   private final OptionsAndConfirmations myOptionsAndConfirmations;
@@ -107,12 +111,18 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   private final VcsInitialization myInitialization;
 
-  @NonNls private static final String ELEMENT_MAPPING = "mapping";
-  @NonNls private static final String ATTRIBUTE_DIRECTORY = "directory";
-  @NonNls private static final String ATTRIBUTE_VCS = "vcs";
-  @NonNls private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
-  @NonNls private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
-  @NonNls private static final String ATTRIBUTE_CLASS = "class";
+  @NonNls
+  private static final String ELEMENT_MAPPING = "mapping";
+  @NonNls
+  private static final String ATTRIBUTE_DIRECTORY = "directory";
+  @NonNls
+  private static final String ATTRIBUTE_VCS = "vcs";
+  @NonNls
+  private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
+  @NonNls
+  private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
+  @NonNls
+  private static final String ATTRIBUTE_CLASS = "class";
 
   private boolean myMappingsLoaded;
   private boolean myHaveLegacyVcsConfiguration;
@@ -130,6 +140,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   private final VcsFileListenerContextHelper myVcsFileListenerContextHelper;
   private final VcsAnnotationLocalChangesListenerImpl myAnnotationLocalChangesListener;
 
+  @Inject
   public ProjectLevelVcsManagerImpl(Project project,
                                     final FileStatusManager manager,
                                     final FileIndexFacade excludedFileIndex,
@@ -433,8 +444,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
       JPanel panel = new JPanel(new BorderLayout());
       panel.add(myConsole.getComponent(), BorderLayout.CENTER);
 
-      ActionToolbar toolbar = ActionManager.getInstance()
-              .createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
+      ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
       panel.add(toolbar.getComponent(), BorderLayout.WEST);
 
       content = ContentFactory.getInstance().createContent(panel, displayName, true);
@@ -564,9 +574,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  public void iterateVcsRoot(VirtualFile root,
-                             Processor<FilePath> iterator,
-                             @Nullable VirtualFileFilter directoryFilter) {
+  public void iterateVcsRoot(VirtualFile root, Processor<FilePath> iterator, @Nullable VirtualFileFilter directoryFilter) {
     VcsRootIterator.iterateVcsRoot(myProject, root, iterator, directoryFilter);
   }
 
@@ -596,8 +604,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   @Nonnull
-  public VcsShowConfirmationOption getStandardConfirmation(@Nonnull VcsConfiguration.StandardConfirmation option,
-                                                           AbstractVcs vcs) {
+  public VcsShowConfirmationOption getStandardConfirmation(@Nonnull VcsConfiguration.StandardConfirmation option, AbstractVcs vcs) {
     final VcsShowConfirmationOptionImpl result = getConfirmation(option);
     if (vcs != null) {
       result.addApplicableVcs(vcs);
@@ -841,11 +848,14 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   public boolean isFileInContent(@Nullable final VirtualFile vf) {
-    ThrowableComputable<Boolean,RuntimeException> action = () ->
-                                      vf != null && (myExcludedIndex.isInContent(vf) || isFileInBaseDir(vf) || vf.equals(myProject.getBaseDir()) ||
-                                                     hasExplicitMapping(vf) || isInDirectoryBasedRoot(vf)
-                                                     || !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf))
-                                      && !isIgnored(vf);
+    ThrowableComputable<Boolean, RuntimeException> action = () -> vf != null &&
+                                                                  (myExcludedIndex.isInContent(vf) ||
+                                                                   isFileInBaseDir(vf) ||
+                                                                   vf.equals(myProject.getBaseDir()) ||
+                                                                   hasExplicitMapping(vf) ||
+                                                                   isInDirectoryBasedRoot(vf) ||
+                                                                   !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)) &&
+                                                                  !isIgnored(vf);
     return AccessRule.read(action);
   }
 

@@ -38,6 +38,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -46,11 +48,13 @@ import java.awt.event.FocusListener;
  * @author MYakovlev
  * Date: Jul 1, 2002
  */
+@Singleton
 public class SelectInEditorManagerImpl extends SelectInEditorManager implements Disposable, FocusListener, CaretListener{
   private final Project myProject;
   private RangeHighlighter mySegmentHighlighter;
   private Editor myEditor;
 
+  @Inject
   public SelectInEditorManagerImpl(Project project){
     myProject = project;
   }

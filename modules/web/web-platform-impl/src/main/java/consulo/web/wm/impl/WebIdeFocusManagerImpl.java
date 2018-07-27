@@ -22,8 +22,9 @@ import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusRequestor;
-import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
+import consulo.platform.api.wp.ApplicationIdeFocusManager;
+import consulo.platform.api.wp.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -34,7 +35,7 @@ import java.awt.event.KeyEvent;
  * @author VISTALL
  * @since 12-Oct-17
  */
-public class WebIdeFocusManagerImpl extends IdeFocusManager {
+public class WebIdeFocusManagerImpl implements ApplicationIdeFocusManager, ProjectIdeFocusManager {
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {

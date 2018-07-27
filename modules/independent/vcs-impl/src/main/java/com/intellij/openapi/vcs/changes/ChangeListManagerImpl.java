@@ -18,7 +18,10 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
@@ -26,6 +29,8 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy;
@@ -55,11 +60,12 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
@@ -69,7 +75,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.intellij.openapi.vcs.ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED;
 
 @State(name = "ChangeListManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class ChangeListManagerImpl extends ChangeListManagerEx implements ProjectComponent, ChangeListOwner, PersistentStateComponent<Element> {
+@Singleton
+public class ChangeListManagerImpl extends ChangeListManagerEx implements ChangeListOwner, PersistentStateComponent<Element> {
   static class Scheduler {
     private final AtomicReference<Future> myLastTask = new AtomicReference<>();
     private final ScheduledExecutorService myExecutor = AppExecutorUtil.createBoundedScheduledExecutorService("ChangeListManagerImpl pool", 1);
@@ -142,6 +149,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     myDirtyScopeManager = dirtyScopeManager;
   }
 
+  @Inject
   public ChangeListManagerImpl(Project project, final VcsConfiguration config) {
     myProject = project;
     myConfig = config;
@@ -167,6 +175,22 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
         if (!ApplicationManager.getApplication().isUnitTestMode()) {
           scheduleAutomaticChangeListDeletionIfEmpty(oldList, config);
+        }
+      }
+    });
+
+    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(myProject == project) {
+          ChangeListManagerImpl.this.projectOpened();
+        }
+      }
+
+      @Override
+      public void projectClosed(Project project) {
+        if(myProject == project) {
+          ChangeListManagerImpl.this.projectClosed();
         }
       }
     });
@@ -257,7 +281,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     myListsToBeDeleted.clear();
   }
 
-  @Override
   public void projectOpened() {
     initializeForNewProject();
 
@@ -322,7 +345,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     }
   }
 
-  @Override
   public void projectClosed() {
     synchronized (myDataLock) {
       myUpdateChangesProgressIndicator.cancel();
@@ -330,21 +352,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
     myUpdater.stop();
     myConflictTracker.stopTracking();
-  }
-
-  @Override
-  @Nonnull
-  @NonNls
-  public String getComponentName() {
-    return "ChangeListManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   /**

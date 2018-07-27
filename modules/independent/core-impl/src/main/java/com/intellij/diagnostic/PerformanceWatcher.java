@@ -16,10 +16,10 @@
 package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
@@ -29,10 +29,13 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.NotLazy;
 import consulo.application.ApplicationProperties;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
@@ -55,7 +58,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author yole
  */
-public class PerformanceWatcher implements ApplicationComponent {
+@Singleton
+@NotLazy
+public class PerformanceWatcher implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.diagnostic.PerformanceWatcher");
   private static final int TOLERABLE_LATENCY = 100;
   private final ScheduledFuture<?> myThread;
@@ -84,15 +89,8 @@ public class PerformanceWatcher implements ApplicationComponent {
     return ApplicationManager.getApplication().getComponent(PerformanceWatcher.class);
   }
 
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "PerformanceWatcher";
-  }
-
   public PerformanceWatcher() {
-    myCurHangLogDir = mySessionLogDir = new File(PathManager.getLogPath() + "/threadDumps-" + myDateFormat.format(new Date())
-                                                 + "-" + ApplicationInfo.getInstance().getBuild().asString());
+    myCurHangLogDir = mySessionLogDir = new File(PathManager.getLogPath() + "/threadDumps-" + myDateFormat.format(new Date()) + "-" + ApplicationInfo.getInstance().getBuild().asString());
     myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(IdePerformanceListener.TOPIC);
     myThreadMXBean = ManagementFactory.getThreadMXBean();
     myThread = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
@@ -103,7 +101,7 @@ public class PerformanceWatcher implements ApplicationComponent {
     }, SAMPLING_INTERVAL_MS, SAMPLING_INTERVAL_MS, TimeUnit.MILLISECONDS);
   }
 
-  @Override
+  @PostConstruct
   public void initComponent() {
     UNRESPONSIVE_THRESHOLD_SECONDS = SystemProperties.getIntProperty("performance.watcher.threshold", 5);
     UNRESPONSIVE_INTERVAL_SECONDS = SystemProperties.getIntProperty("performance.watcher.interval", 5);
@@ -173,23 +171,21 @@ public class PerformanceWatcher implements ApplicationComponent {
       if (dirs != null) {
         Arrays.sort(dirs);
         for (int i = 0; i < dirs.length - 11; i++) {
-          FileUtil.delete(new File(allLogsDir, dirs [i]));
+          FileUtil.delete(new File(allLogsDir, dirs[i]));
         }
       }
     }
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     if (myThread != null) {
       myThread.cancel(true);
     }
   }
 
   private boolean shouldWatch() {
-    return !ApplicationManager.getApplication().isHeadlessEnvironment() &&
-           UNRESPONSIVE_INTERVAL_SECONDS != 0 &&
-           UNRESPONSIVE_THRESHOLD_SECONDS != 0;
+    return !ApplicationManager.getApplication().isHeadlessEnvironment() && UNRESPONSIVE_INTERVAL_SECONDS != 0 && UNRESPONSIVE_THRESHOLD_SECONDS != 0;
   }
 
   private void samplePerformance() {
@@ -296,9 +292,7 @@ public class PerformanceWatcher implements ApplicationComponent {
     long usedMemory = rt.totalMemory() - rt.freeMemory();
     long freeMemory = maxMemory - usedMemory;
     if (freeMemory < maxMemory / 5) {
-      LOG.info("High memory usage (free " + freeMemory / 1024 / 1024 +
-               " of " + maxMemory / 1024 / 1024 +
-               " MB) while dumping threads to " + file);
+      LOG.info("High memory usage (free " + freeMemory / 1024 / 1024 + " of " + maxMemory / 1024 / 1024 + " MB) while dumping threads to " + file);
     }
   }
 
@@ -309,9 +303,9 @@ public class PerformanceWatcher implements ApplicationComponent {
   }
 
   private void updateStacktraceCommonPart(final StackTraceElement[] stackTraceElements) {
-    for(int i=0; i < myStacktraceCommonPart.size() && i < stackTraceElements.length; i++) {
-      StackTraceElement el1 = myStacktraceCommonPart.get(myStacktraceCommonPart.size()-i-1);
-      StackTraceElement el2 = stackTraceElements [stackTraceElements.length-i-1];
+    for (int i = 0; i < myStacktraceCommonPart.size() && i < stackTraceElements.length; i++) {
+      StackTraceElement el1 = myStacktraceCommonPart.get(myStacktraceCommonPart.size() - i - 1);
+      StackTraceElement el2 = stackTraceElements[stackTraceElements.length - i - 1];
       if (!el1.equals(el2)) {
         myStacktraceCommonPart = myStacktraceCommonPart.subList(myStacktraceCommonPart.size() - i, myStacktraceCommonPart.size());
         break;
@@ -341,10 +335,16 @@ public class PerformanceWatcher implements ApplicationComponent {
 
     private Snapshot() {
     }
+
     public void logResponsivenessSinceCreation(@Nonnull String activityName) {
-      LOG.info(activityName + " took " + (System.currentTimeMillis() - myStartMillis) + "ms" +
-               "; general responsiveness: " + myGeneralApdex.summarizePerformanceSince(myStartGeneralSnapshot) +
-               "; EDT responsiveness: " + mySwingApdex.summarizePerformanceSince(myStartSwingSnapshot));
+      LOG.info(activityName +
+               " took " +
+               (System.currentTimeMillis() - myStartMillis) +
+               "ms" +
+               "; general responsiveness: " +
+               myGeneralApdex.summarizePerformanceSince(myStartGeneralSnapshot) +
+               "; EDT responsiveness: " +
+               mySwingApdex.summarizePerformanceSince(myStartSwingSnapshot));
     }
 
   }

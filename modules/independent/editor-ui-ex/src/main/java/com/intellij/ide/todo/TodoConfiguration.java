@@ -17,6 +17,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.InvalidDataException;
@@ -55,8 +56,8 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   private final MessageBus myMessageBus;
 
   @Inject
-  public TodoConfiguration(@Nonnull MessageBus messageBus) {
-    myMessageBus = messageBus;
+  public TodoConfiguration(@Nonnull Application application) {
+    myMessageBus = application.getMessageBus();
     resetToDefaultTodoPatterns();
   }
 
