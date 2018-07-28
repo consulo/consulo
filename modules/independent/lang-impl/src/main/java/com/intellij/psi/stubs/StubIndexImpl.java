@@ -58,7 +58,7 @@ import com.intellij.util.indexing.impl.UpdateData;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.KeyDescriptor;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TObjectIntHashMap;

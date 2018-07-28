@@ -34,7 +34,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.changes.ui.CommitHelper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

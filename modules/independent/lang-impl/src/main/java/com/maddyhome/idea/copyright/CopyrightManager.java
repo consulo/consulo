@@ -43,7 +43,7 @@ import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.containers.HashMap;
 import com.maddyhome.idea.copyright.actions.UpdateCopyrightProcessor;
 import com.maddyhome.idea.copyright.util.NewFileTracker;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jdom.Element;

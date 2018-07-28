@@ -62,7 +62,7 @@ import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jdom.Element;
 import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;

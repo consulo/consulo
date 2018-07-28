@@ -23,7 +23,7 @@ import com.intellij.openapi.compiler.generic.GenericCompiler;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jetbrains.annotations.NonNls;
 
 import javax.inject.Inject;

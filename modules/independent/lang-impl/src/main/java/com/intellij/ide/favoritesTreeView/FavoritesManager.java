@@ -47,7 +47,7 @@ import com.intellij.util.Function;
 import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.roots.types.BinariesOrderRootType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

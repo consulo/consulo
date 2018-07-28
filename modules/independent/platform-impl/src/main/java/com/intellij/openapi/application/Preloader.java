@@ -25,7 +25,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;

@@ -42,7 +42,7 @@ import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;

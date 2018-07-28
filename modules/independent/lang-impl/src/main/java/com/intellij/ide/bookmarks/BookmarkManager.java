@@ -39,7 +39,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

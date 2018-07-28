@@ -28,7 +28,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.*;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;

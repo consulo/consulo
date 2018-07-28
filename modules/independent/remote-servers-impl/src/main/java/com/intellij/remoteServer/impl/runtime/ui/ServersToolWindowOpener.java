@@ -3,7 +3,7 @@ package com.intellij.remoteServer.impl.runtime.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindowManager;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.platform.Platform;
 
 import javax.inject.Inject;

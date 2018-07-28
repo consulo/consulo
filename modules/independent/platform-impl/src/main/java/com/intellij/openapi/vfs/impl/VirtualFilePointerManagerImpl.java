@@ -35,7 +35,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;

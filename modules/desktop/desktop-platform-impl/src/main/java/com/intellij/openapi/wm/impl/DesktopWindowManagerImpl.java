@@ -44,7 +44,7 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;

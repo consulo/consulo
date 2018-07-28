@@ -21,7 +21,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jdom.Element;
 
 import javax.inject.Inject;

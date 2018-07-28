@@ -29,7 +29,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.Topic;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

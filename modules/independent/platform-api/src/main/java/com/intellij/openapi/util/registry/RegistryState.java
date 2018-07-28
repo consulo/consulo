@@ -16,7 +16,7 @@
 package com.intellij.openapi.util.registry;
 
 import com.intellij.openapi.components.*;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jdom.Element;
 
 import javax.inject.Singleton;

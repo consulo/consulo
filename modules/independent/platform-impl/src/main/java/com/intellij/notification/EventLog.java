@@ -41,7 +41,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

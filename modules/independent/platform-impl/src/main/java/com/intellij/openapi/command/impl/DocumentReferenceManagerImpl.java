@@ -30,7 +30,7 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.WeakKeyWeakValueHashMap;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.io.fs.FilePath;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

@@ -38,7 +38,7 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.sun.jna.Callback;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

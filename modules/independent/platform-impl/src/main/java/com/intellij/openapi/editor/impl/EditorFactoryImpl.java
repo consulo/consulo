@@ -50,7 +50,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

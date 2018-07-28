@@ -22,7 +22,7 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;

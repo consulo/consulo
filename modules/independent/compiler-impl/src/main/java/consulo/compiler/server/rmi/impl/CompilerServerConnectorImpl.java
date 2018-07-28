@@ -18,7 +18,7 @@ package consulo.compiler.server.rmi.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.compiler.server.rmi.CompilerServerConnector;
 import consulo.compiler.server.rmi.CompilerServerInterface;
 

@@ -19,7 +19,7 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.remoteServer.ServerType;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;

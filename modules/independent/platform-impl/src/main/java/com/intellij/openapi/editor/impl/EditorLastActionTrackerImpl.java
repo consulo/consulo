@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;

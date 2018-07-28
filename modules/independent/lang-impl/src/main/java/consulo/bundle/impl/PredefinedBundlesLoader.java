@@ -23,7 +23,7 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.bundle.PredefinedBundlesProvider;
 
 import javax.annotation.Nonnull;

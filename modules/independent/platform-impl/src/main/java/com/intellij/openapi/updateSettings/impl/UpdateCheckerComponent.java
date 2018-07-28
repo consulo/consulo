@@ -18,11 +18,10 @@ package com.intellij.openapi.updateSettings.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;

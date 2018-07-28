@@ -38,7 +38,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

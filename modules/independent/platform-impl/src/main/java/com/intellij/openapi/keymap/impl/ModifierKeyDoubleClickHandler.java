@@ -29,7 +29,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.platform.Platform;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;

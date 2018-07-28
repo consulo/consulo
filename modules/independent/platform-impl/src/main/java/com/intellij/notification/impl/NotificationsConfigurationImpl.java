@@ -23,7 +23,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;

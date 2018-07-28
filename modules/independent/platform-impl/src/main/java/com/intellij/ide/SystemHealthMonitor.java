@@ -45,7 +45,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.application.AccessRule;
 import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.PropertyKey;

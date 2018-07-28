@@ -50,7 +50,7 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;

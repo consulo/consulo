@@ -49,7 +49,7 @@ import com.intellij.util.indexing.FileBasedIndexImpl;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
 import com.intellij.util.indexing.UnindexedFilesUpdater;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.annotations.RequiredWriteAction;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;

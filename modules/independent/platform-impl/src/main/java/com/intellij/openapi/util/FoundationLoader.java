@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.ui.mac.foundation.Foundation;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;

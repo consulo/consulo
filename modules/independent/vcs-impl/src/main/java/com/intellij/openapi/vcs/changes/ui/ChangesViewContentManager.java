@@ -39,7 +39,7 @@ import com.intellij.ui.content.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.NotNullFunction;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

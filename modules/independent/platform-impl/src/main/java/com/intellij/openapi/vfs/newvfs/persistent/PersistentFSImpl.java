@@ -37,7 +37,7 @@ import com.intellij.util.containers.EmptyIntHashSet;
 import com.intellij.util.io.ReplicatorInputStream;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;

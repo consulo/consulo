@@ -22,7 +22,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionChangeListener;
 import consulo.module.extension.ModuleExtensionProviderEP;

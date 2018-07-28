@@ -51,7 +51,7 @@ import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.platform.Platform;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

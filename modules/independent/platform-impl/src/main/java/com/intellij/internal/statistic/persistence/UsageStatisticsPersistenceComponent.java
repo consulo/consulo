@@ -23,7 +23,7 @@ import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.application.ApplicationProperties;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

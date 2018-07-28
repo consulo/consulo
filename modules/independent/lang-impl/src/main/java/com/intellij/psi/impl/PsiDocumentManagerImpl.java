@@ -46,7 +46,7 @@ import com.intellij.psi.impl.source.tree.injected.MultiHostRegistrarImpl;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

@@ -53,7 +53,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.NotLazy;
+import consulo.annotation.inject.NotLazy;
 import consulo.application.TransactionGuardEx;
 import consulo.extensions.ListOfElementsEP;
 import gnu.trove.THashMap;
