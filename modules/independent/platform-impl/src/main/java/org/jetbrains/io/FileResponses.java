@@ -15,12 +15,41 @@
  */
 package org.jetbrains.io;
 
-import javax.activation.MimetypesFileTypeMap;
+import com.intellij.Patches;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class FileResponses {
-  private static final MimetypesFileTypeMap FILE_MIMETYPE_MAP = new MimetypesFileTypeMap();
+  private static Method getContentTypeMethod;
+  private static Object ourFileTypeMap;
 
+  static {
+    assert Patches.USE_REFLECTION_TO_ACCESS_JDK11;
+
+    try {
+      Class<?> clazz = Class.forName("javax.activation.MimetypesFileTypeMap");
+      getContentTypeMethod = clazz.getDeclaredMethod("getContentType", String.class);
+      getContentTypeMethod.setAccessible(true);
+
+      ourFileTypeMap = clazz.newInstance();
+    }
+    catch (Exception e) {
+      // class not found at jdk 11
+    }
+  }
+
+  @Nullable
   public static String getContentType(String path) {
-    return FILE_MIMETYPE_MAP.getContentType(path);
+    if (ourFileTypeMap == null) {
+      return null;
+    }
+    try {
+      return (String)getContentTypeMethod.invoke(ourFileTypeMap, path);
+    }
+    catch (IllegalAccessException | InvocationTargetException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
