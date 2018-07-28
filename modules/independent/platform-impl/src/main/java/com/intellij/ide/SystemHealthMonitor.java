@@ -51,7 +51,7 @@ import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;

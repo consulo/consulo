@@ -22,7 +22,7 @@ import consulo.annotation.inject.NotLazy;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 
-import javax.annotation.PostConstruct;
+import consulo.annotation.inject.PostConstruct;
 import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;

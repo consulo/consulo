@@ -35,7 +35,7 @@ import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;

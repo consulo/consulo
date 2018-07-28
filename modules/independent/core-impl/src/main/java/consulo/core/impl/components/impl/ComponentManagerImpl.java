@@ -128,7 +128,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     AbstractModule module = new AbstractModule() {
       @Override
       protected void configure() {
-        bindListener(Matchers.any(), PostMethodCaller.INSTANCE);
+        bindListener(Matchers.any(), PostConstructMethodCaller.INSTANCE);
         bindListener(Matchers.any(), ScopeProvisionListener.INSTANCE);
         bindListener(Matchers.any(), ComponentInitListener.INSTANCE);
 

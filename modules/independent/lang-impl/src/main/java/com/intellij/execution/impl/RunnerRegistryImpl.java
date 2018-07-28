@@ -23,10 +23,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 import java.util.ArrayList;

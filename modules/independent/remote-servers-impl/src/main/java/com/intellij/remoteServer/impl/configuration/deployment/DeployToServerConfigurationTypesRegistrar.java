@@ -20,8 +20,8 @@ import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.remoteServer.ServerType;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 /**

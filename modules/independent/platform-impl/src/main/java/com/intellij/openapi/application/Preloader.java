@@ -26,8 +26,8 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import java.util.concurrent.Executor;
 

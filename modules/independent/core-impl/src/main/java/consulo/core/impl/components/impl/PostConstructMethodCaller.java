@@ -20,7 +20,7 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
-import javax.annotation.PostConstruct;
+import consulo.annotation.inject.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -28,8 +28,8 @@ import java.lang.reflect.Method;
  * @author VISTALL
  * @since 2018-07-27
  */
-class PostMethodCaller implements TypeListener {
-  static final PostMethodCaller INSTANCE = new PostMethodCaller();
+class PostConstructMethodCaller implements TypeListener {
+  static final PostConstructMethodCaller INSTANCE = new PostConstructMethodCaller();
 
   @Override
   public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {

@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl.libraries;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import consulo.annotation.inject.NotLazy;
 
-import javax.annotation.PostConstruct;
+import consulo.annotation.inject.PostConstruct;
 import javax.inject.Singleton;
 
 /**

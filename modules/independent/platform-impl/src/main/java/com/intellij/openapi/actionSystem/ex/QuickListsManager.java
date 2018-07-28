@@ -29,11 +29,11 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ThrowableConvertor;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;

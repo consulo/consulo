@@ -33,11 +33,11 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
