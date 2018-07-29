@@ -27,7 +27,7 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
 public class ModernWhiteLaf extends ModernDarkLaf {
   @Override
   public String getName() {
-    return "Modern White";
+    return "Modern Light";
   }
 
   @Override

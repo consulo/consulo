@@ -49,7 +49,7 @@ public class NativeModernWhiteLaf extends ModernWhiteLaf {
 
   @Override
   public String getName() {
-    return "Modern White (native)";
+    return "Modern Light (native color)";
   }
 
   @Override

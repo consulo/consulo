@@ -1401,11 +1401,20 @@ public class UIUtil {
   }
 
   public static Icon getTreeSelectedCollapsedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_right_arrow : getTreeCollapsedIcon();
+    Icon icon = UIManager.getIcon("Tree.selectedCollapsedIcon");
+    if(icon != null) {
+      return icon;
+    }
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_right_arrow : getTreeCollapsedIcon();
   }
 
   public static Icon getTreeSelectedExpandedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_down_arrow : getTreeExpandedIcon();
+    Icon icon = UIManager.getIcon("Tree.selectedExpandedIcon");
+    if (icon != null) {
+      return icon;
+    }
+
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_down_arrow : getTreeExpandedIcon();
   }
 
   public static Border getTableHeaderCellBorder() {
