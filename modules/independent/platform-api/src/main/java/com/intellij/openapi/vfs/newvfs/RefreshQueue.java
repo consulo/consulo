@@ -28,6 +28,7 @@ import java.util.Collection;
  * @author max
  */
 public abstract class RefreshQueue {
+  @Deprecated
   public static RefreshQueue getInstance() {
     return ServiceManager.getService(RefreshQueue.class);
   }

@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
@@ -41,8 +42,8 @@ import java.util.Collections;
 
 public class VirtualFileImpl extends VirtualFileSystemEntry {
 
-  VirtualFileImpl(int id, VfsData.Segment segment, VirtualDirectoryImpl parent) {
-    super(id, segment, parent);
+  VirtualFileImpl(int id, VfsData.Segment segment, VirtualDirectoryImpl parent, PersistentFS persistentFS) {
+    super(id, segment, parent, persistentFS);
   }
 
   @Override
@@ -106,8 +107,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     final byte[] preloadedContent = getUserData(ourPreloadedContentKey);
 
     return VfsUtilCore.inputStreamSkippingBOM(
-            preloadedContent == null ?
-            ourPersistence.getInputStream(this):
+            preloadedContent == null ? myPersistentFS.getInputStream(this) :
             new DataInputStream(new UnsyncByteArrayInputStream(preloadedContent)),
             this
     );
@@ -124,13 +124,13 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
   public byte[] contentsToByteArray(boolean cacheContent) throws IOException {
     final byte[] preloadedContent = getUserData(ourPreloadedContentKey);
     if (preloadedContent != null) return preloadedContent;
-    return ourPersistence.contentsToByteArray(this, cacheContent);
+    return myPersistentFS.contentsToByteArray(this, cacheContent);
   }
 
   @Override
   @Nonnull
   public OutputStream getOutputStream(final Object requestor, final long modStamp, final long timeStamp) throws IOException {
-    return VfsUtilCore.outputStreamAddingBOM(ourPersistence.getOutputStream(this, requestor, modStamp, timeStamp), this);
+    return VfsUtilCore.outputStreamAddingBOM(myPersistentFS.getOutputStream(this, requestor, modStamp, timeStamp), this);
   }
 
   @Override

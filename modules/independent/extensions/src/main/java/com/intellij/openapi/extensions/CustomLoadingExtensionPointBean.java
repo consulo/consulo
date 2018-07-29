@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.extensions;
 
-import com.google.inject.Injector;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 /**
@@ -29,7 +28,7 @@ public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean 
   @Attribute("factoryArgument")
   public String factoryArgument;
 
-  protected Object instantiateExtension(final String implementationClass, final Injector injector) throws ClassNotFoundException {
+  protected Object instantiateExtension(final String implementationClass, final AreaInstance injector) throws ClassNotFoundException {
     if (factoryClass != null) {
       ExtensionFactory factory = instantiate(factoryClass, injector);
       return factory.createInstance(factoryArgument, implementationClass);

@@ -39,6 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
 import consulo.annotation.inject.NotLazy;
+import consulo.extensions.AreaInstanceEx;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -54,7 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author VISTALL
  */
-public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManager, Disposable {
+public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManager, Disposable, AreaInstanceEx {
   private static final Logger LOG = Logger.getInstance(ComponentManagerImpl.class);
 
   private volatile boolean myDisposed = false;
@@ -89,30 +90,38 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myExtensionsArea = new ExtensionsAreaImpl(getAreaId(), this, new PluginManagerCore.IdeaLogProvider());
   }
 
+  private ThreadLocal<Object> inside = new ThreadLocal<>();
+
   protected void _setupComponent(Key key, Object component) {
-    myInitializeValues.computeIfAbsent(key, k -> {
-      if (this != component && component instanceof Disposable) {
-        Disposer.register(this, (Disposable)component);
-      }
+    try {
+      inside.set(component);
+      myInitializeValues.computeIfAbsent(key, k -> {
+        if (this != component && component instanceof Disposable) {
+          Disposer.register(this, (Disposable)component);
+        }
 
-      boolean isNotLazy = component.getClass().isAnnotationPresent(NotLazy.class);
-      boolean isXmlSerializer = component instanceof JDOMExternalizable || component instanceof PersistentStateComponent;
-      if (isXmlSerializer) {
-        initializeFromStateStore(component, !isNotLazy);
-      }
+        boolean isNotLazy = component.getClass().isAnnotationPresent(NotLazy.class);
+        boolean isXmlSerializer = component instanceof JDOMExternalizable || component instanceof PersistentStateComponent;
+        if (isXmlSerializer) {
+          initializeFromStateStore(component, !isNotLazy);
+        }
 
-      if (isNotLazy) {
-        myNotLazyLoadCount.incrementAndGet();
+        if (isNotLazy) {
+          myNotLazyLoadCount.incrementAndGet();
 
-        componentCreated(component.getClass());
-      }
+          componentCreated(component.getClass());
+        }
 
-      if (component.getClass().isAnnotationPresent(Singleton.class)) {
-        LOG.warn("Class is not annotated by @Singleton " + component.getClass());
-      }
+        if (component.getClass().isAnnotationPresent(Singleton.class)) {
+          LOG.warn("Class is not annotated by @Singleton " + component.getClass());
+        }
 
-      return component;
-    });
+        return component;
+      });
+    }
+    finally {
+      inside.remove();
+    }
   }
 
   protected void buildInjector() {
@@ -137,7 +146,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     };
 
     if (myParentComponentManager != null) {
-      Injector injector = myParentComponentManager.getInjector();
+      Injector injector = ((AreaInstanceEx)myParentComponentManager).getInjector();
       return injector.createChildInjector(module);
     }
     else {
@@ -201,6 +210,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   public <T> T getComponent(@Nonnull Class<T> interfaceClass) {
+    Object o = inside.get();
+
+    if (o != null) {
+      throw new IllegalArgumentException("Can't initialize value while object setup " + o.getClass());
+    }
     if (myDisposeCompleted) {
       ProgressManager.checkCanceled();
       throw new AssertionError("Already disposed: " + this);
@@ -221,7 +235,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Nullable
   protected static ProgressIndicator getProgressIndicator() {
-    Injector container = Application.get().getInjector();
+    Injector container = ((AreaInstanceEx)Application.get()).getInjector();
     Binding<ProgressManager> adapter = container.getBinding(ProgressManager.class);
     if (adapter == null) return null;
     adapter.getProvider();
@@ -229,7 +243,9 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected float getPercentageOfComponentsLoaded() {
-    return (float)(myNotLazyLoadCount.get() / getNotLazyComponentsSize());
+    float value = myNotLazyLoadCount.get();
+    System.out.println(value + "=" + getNotLazyComponentsSize());
+    return value / getNotLazyComponentsSize();
   }
 
   public void initializeFromStateStore(@Nonnull Object component, boolean service) {

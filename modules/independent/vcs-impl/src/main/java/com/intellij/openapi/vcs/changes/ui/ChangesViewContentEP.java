@@ -19,7 +19,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
-import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.xmlb.annotations.Attribute;
@@ -90,17 +89,12 @@ public class ChangesViewContentEP implements PluginAware {
 
   private Object newClassInstance(final Project project, final String className) {
     try {
-      ExtensionComponentAdapter.ourUnstableMarker.set(true);
-
       final Class<?> aClass = Class.forName(className, true, myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader());
-      return project.getInjector().getInstance(aClass);
+      return project.getComponent(aClass);
     }
     catch (Exception e) {
       LOG.error(e);
       return null;
-    }
-    finally {
-      ExtensionComponentAdapter.ourUnstableMarker.set(false);
     }
   }
 }

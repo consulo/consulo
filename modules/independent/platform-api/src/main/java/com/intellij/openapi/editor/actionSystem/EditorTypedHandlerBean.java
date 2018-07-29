@@ -16,11 +16,15 @@
 package com.intellij.openapi.editor.actionSystem;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.extensions.AreaInstanceEx;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -45,9 +49,15 @@ public class EditorTypedHandlerBean extends AbstractExtensionPointBean {
             bind(TypedActionHandler.class).toInstance(originalHandler);
           }
         };
-        myHandler = instantiate(implementationClass, Application.get().getInjector().createChildInjector(module));
+        myHandler = instantiate(implementationClass, new AreaInstanceEx() {
+          @Nonnull
+          @Override
+          public Injector getInjector() {
+            return ((AreaInstanceEx)Application.get()).getInjector().createChildInjector(module);
+          }
+        });
       }
-      catch(Exception e) {
+      catch (Exception e) {
         LOG.error(e);
         return null;
       }

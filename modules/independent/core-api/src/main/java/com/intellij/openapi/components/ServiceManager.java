@@ -16,7 +16,6 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.util.NotNullFunction;
@@ -31,11 +30,11 @@ public final class ServiceManager {
   private ServiceManager() { }
 
   public static <T> T getService(@Nonnull Class<T> serviceClass) {
-    return Application.get().getInjector().getInstance(serviceClass);
+    return Application.get().getComponent(serviceClass);
   }
 
-  public static <T> T getService(@Nonnull AreaInstance instance, @Nonnull Class<T> serviceClass) {
-    return instance.getInjector().getInstance(serviceClass);
+  public static <T> T getService(@Nonnull ComponentManager manager, @Nonnull Class<T> serviceClass) {
+    return manager.getComponent(serviceClass);
   }
 
   /**

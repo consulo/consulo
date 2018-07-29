@@ -70,7 +70,7 @@ public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition
   public ToolWindowFactory getToolWindowFactory() {
     if (myFactory == null) {
       try {
-        myFactory = instantiate(getFactoryClass(), ApplicationManager.getApplication().getInjector());
+        myFactory = instantiate(getFactoryClass(), ApplicationManager.getApplication());
       }
       catch(Exception e) {
         LOG.error(e);
@@ -97,7 +97,7 @@ public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition
   public Condition<Project> getCondition() {
     if (conditionClass != null) {
       try {
-        return instantiate(conditionClass, ApplicationManager.getApplication().getInjector());
+        return instantiate(conditionClass, ApplicationManager.getApplication());
       }
       catch (Exception e) {
         LOG.error(e);

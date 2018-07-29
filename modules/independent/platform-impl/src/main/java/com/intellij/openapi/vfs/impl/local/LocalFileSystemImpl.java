@@ -48,7 +48,6 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Di
   private static final String FS_ROOT = "/";
   private static final int STATUS_UPDATE_PERIOD = 1000;
 
-  private final ManagingFS myManagingFS;
   private final FileWatcher myWatcher;
 
   private final Object myLock = new Object();
@@ -88,8 +87,8 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Di
   }
 
   @Inject
-  public LocalFileSystemImpl(@Nonnull Application app, @Nonnull ManagingFS managingFS) {
-    myManagingFS = managingFS;
+  public LocalFileSystemImpl(@Nonnull Application app, @Nonnull ManagingFS managingFS, @Nonnull RefreshQueue refreshQueue) {
+    super(managingFS, refreshQueue);
     myWatcher = new FileWatcher(myManagingFS);
     if (myWatcher.isOperational()) {
       JobScheduler.getScheduler().scheduleWithFixedDelay(
@@ -237,7 +236,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Di
 
   private void markFlatDirsDirty(Iterable<String> dirtyPaths) {
     for (String dirtyPath : dirtyPaths) {
-      Pair<NewVirtualFile, NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(this, dirtyPath);
+      Pair<NewVirtualFile, NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(myManagingFS, this, dirtyPath);
       if (pair.first != null) {
         pair.first.markDirty();
         for (VirtualFile child : pair.first.getCachedChildren()) {
@@ -252,7 +251,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Di
 
   private void markRecursiveDirsDirty(Iterable<String> dirtyPaths) {
     for (String dirtyPath : dirtyPaths) {
-      Pair<NewVirtualFile, NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(this, dirtyPath);
+      Pair<NewVirtualFile, NewVirtualFile> pair = VfsImplUtil.findCachedFileByPath(myManagingFS, this, dirtyPath);
       if (pair.first != null) {
         pair.first.markDirtyRecursively();
       }

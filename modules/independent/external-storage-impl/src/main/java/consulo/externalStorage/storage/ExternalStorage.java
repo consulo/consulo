@@ -18,7 +18,6 @@ package consulo.externalStorage.storage;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.impl.stores.StateStorageManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -27,8 +26,9 @@ import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import consulo.externalStorage.ExternalStorageUtil;
 import org.iq80.snappy.SnappyInputStream;
 import org.iq80.snappy.SnappyOutputStream;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,8 +42,6 @@ import java.util.Collections;
  * @since 12-Feb-17
  */
 public class ExternalStorage {
-  private static final Logger LOGGER = Logger.getInstance(ExternalStorage.class);
-
   private File myProxyDirectory;
 
   private final ExternalStorageQueue myQueue = new ExternalStorageQueue();
@@ -52,7 +50,7 @@ public class ExternalStorage {
     myProxyDirectory = new File(PathManager.getSystemPath(), "externalStorage");
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public InputStream loadContent(String fileSpec, RoamingType roamingType, StateStorageManager stateStorageManager) throws IOException {
     Ref<byte[]> ref = myQueue.getContent(fileSpec, roamingType);
     if (ref != null) {

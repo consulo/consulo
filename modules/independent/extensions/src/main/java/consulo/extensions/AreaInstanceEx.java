@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.extensions;
+package consulo.extensions;
+
+import com.google.inject.Injector;
+import com.intellij.openapi.extensions.AreaInstance;
 
 import javax.annotation.Nonnull;
 
 /**
- * @author akireyev
+ * @author VISTALL
+ * @since 2018-07-29
  */
-public interface AreaInstance {
+public interface AreaInstanceEx extends AreaInstance {
   @Nonnull
-  default ExtensionsArea getExtensionsArea() {
+  default Injector getInjector() {
     throw new UnsupportedOperationException();
   }
 }

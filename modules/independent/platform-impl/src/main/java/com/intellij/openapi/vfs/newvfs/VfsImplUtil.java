@@ -34,9 +34,9 @@ import com.intellij.util.Consumer;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -56,8 +56,14 @@ public class VfsImplUtil {
   }
 
   @Nullable
+  @Deprecated
   public static NewVirtualFile findFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
-    Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
+    return findFileByPath(ManagingFS.getInstance(), vfs, path);
+  }
+
+  @Nullable
+  public static NewVirtualFile findFileByPath(@Nonnull ManagingFS managingFS, @Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    Pair<NewVirtualFile, Iterable<String>> data = prepare(managingFS, vfs, path);
     if (data == null) return null;
 
     NewVirtualFile file = data.first;
@@ -88,8 +94,14 @@ public class VfsImplUtil {
   }
 
   @Nonnull
+  @Deprecated
   public static Pair<NewVirtualFile, NewVirtualFile> findCachedFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
-    Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
+    return findCachedFileByPath(ManagingFS.getInstance(), vfs, path);
+  }
+
+  @Nonnull
+  public static Pair<NewVirtualFile, NewVirtualFile> findCachedFileByPath(@Nonnull ManagingFS managingFS, @Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    Pair<NewVirtualFile, Iterable<String>> data = prepare(managingFS, vfs, path);
     if (data == null) return Pair.empty();
 
     NewVirtualFile file = data.first;
@@ -118,8 +130,14 @@ public class VfsImplUtil {
   }
 
   @Nullable
+  @Deprecated
   public static NewVirtualFile refreshAndFindFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
-    Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
+    return refreshAndFindFileByPath(ManagingFS.getInstance(), vfs, path);
+  }
+
+  @Nullable
+  public static NewVirtualFile refreshAndFindFileByPath(@Nonnull ManagingFS managingFS, @Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    Pair<NewVirtualFile, Iterable<String>> data = prepare(managingFS, vfs, path);
     if (data == null) return null;
 
     NewVirtualFile file = data.first;
@@ -128,7 +146,7 @@ public class VfsImplUtil {
       if ("..".equals(pathElement)) {
         if (file.is(VFileProperty.SYMLINK)) {
           final String canonicalPath = file.getCanonicalPath();
-          final NewVirtualFile canonicalFile = canonicalPath != null ? refreshAndFindFileByPath(vfs, canonicalPath) : null;
+          final NewVirtualFile canonicalFile = canonicalPath != null ? refreshAndFindFileByPath(managingFS, vfs, canonicalPath) : null;
           file = canonicalFile != null ? canonicalFile.getParent() : null;
         }
         else {
@@ -146,7 +164,7 @@ public class VfsImplUtil {
   }
 
   @Nullable
-  private static Pair<NewVirtualFile, Iterable<String>> prepare(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+  private static Pair<NewVirtualFile, Iterable<String>> prepare(@Nonnull ManagingFS managingFS, @Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
     String normalizedPath = normalize(vfs, path);
     if (StringUtil.isEmptyOrSpaces(normalizedPath)) {
       return null;
@@ -158,7 +176,7 @@ public class VfsImplUtil {
       return null;
     }
 
-    NewVirtualFile root = ManagingFS.getInstance().findRoot(basePath, vfs);
+    NewVirtualFile root = managingFS.findRoot(basePath, vfs);
     if (root == null || !root.exists()) {
       return null;
     }
@@ -185,17 +203,13 @@ public class VfsImplUtil {
   private static final Map<String, Set<String>> ourDominatorsMap = newTroveMap(FileUtil.PATH_HASHING_STRATEGY);
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs,
-                                                        @Nonnull VirtualFile entryFile,
-                                                        @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull VirtualFile entryFile, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
     String localPath = vfs.extractLocalPath(vfs.extractRootPath(entryFile.getPath()));
     return getHandler(vfs, localPath, producer);
   }
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs,
-                                                        @Nonnull String localPath,
-                                                        @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull String localPath, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
     checkSubscription();
 
     ArchiveHandler handler;

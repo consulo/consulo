@@ -39,7 +39,7 @@ public class LanguageExtensionPoint<T> extends CustomLoadingExtensionPointBean i
     @Nonnull
     protected T compute() {
       try {
-        return (T)instantiateExtension(implementationClass, ApplicationManager.getApplication().getInjector());
+        return (T)instantiateExtension(implementationClass, ApplicationManager.getApplication());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

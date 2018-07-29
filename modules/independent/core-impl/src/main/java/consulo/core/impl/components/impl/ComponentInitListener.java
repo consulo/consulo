@@ -36,6 +36,7 @@ public class ComponentInitListener implements TypeListener {
       Pair<Binding, ComponentManagerImpl> info = ScopeProvisionListener.INSTANCE.getComponentManager();
 
       Key<I> key = Key.get(type);
+
       if (info != null && info.getFirst().getKey().equals(key)) {
         info.getSecond()._setupComponent(key, injectee);
       }

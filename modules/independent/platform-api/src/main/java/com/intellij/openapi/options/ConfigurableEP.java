@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.options;
 
-import com.google.inject.Injector;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -29,9 +29,9 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ResourceBundle;
 
 /**
@@ -80,7 +80,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
 
   public ConfigurableEP[] getChildren() {
     for (ConfigurableEP child : children) {
-      child.myInjector = myInjector;
+      child.myAreaInstance = myAreaInstance;
       child.myPluginDescriptor = myPluginDescriptor;
       child.myProject = myProject;
     }
@@ -110,20 +110,20 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   public String providerClass;
 
   private final AtomicNotNullLazyValue<NullableFactory<T>> myFactory;
-  private Injector myInjector;
+  private AreaInstance myAreaInstance;
   private Project myProject;
 
   public ConfigurableEP() {
-    this(Application.get().getInjector(), null);
+    this(Application.get(), null);
   }
 
   public ConfigurableEP(Project project) {
-    this(project.getInjector(), project);
+    this(project, project);
   }
 
-  protected ConfigurableEP(Injector injector, @Nullable Project project) {
+  protected ConfigurableEP(AreaInstance areaInstance, @Nullable Project project) {
     myProject = project;
-    myInjector = injector;
+    myAreaInstance = areaInstance;
     myFactory = new AtomicNotNullLazyValue<NullableFactory<T>>() {
       @Nonnull
       @Override
@@ -178,7 +178,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     @Override
     protected ConfigurableProvider compute() {
       try {
-        return instantiate(providerClass, myInjector);
+        return instantiate(providerClass, myAreaInstance);
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);
@@ -189,7 +189,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   private class NewInstanceFactory extends NotNullLazyValue<Class<? extends T>> implements NullableFactory<T> {
     @Override
     public T create() {
-      return instantiate(getValue(), myInjector);
+      return instantiate(getValue(), myAreaInstance);
     }
 
     @Nonnull
@@ -215,7 +215,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     protected T compute() {
       try {
         final Class<T> aClass = findClass(implementationClass);
-        return instantiate(aClass, myInjector);
+        return instantiate(aClass, myAreaInstance);
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

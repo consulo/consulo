@@ -586,7 +586,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       Object obj;
       try {
         ExtensionComponentAdapter.ourUnstableMarker.set(true);
-        obj = Application.get().getInjector().getInstance(aClass);
+        obj = Application.get().getComponent(aClass);
       }
       finally {
         ExtensionComponentAdapter.ourUnstableMarker.set(false);

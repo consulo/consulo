@@ -98,6 +98,7 @@ import javax.annotation.Nullable;
 public abstract class TransactionGuard {
   private static volatile TransactionGuard ourInstance;
 
+  @Deprecated
   public static TransactionGuard getInstance() {
     TransactionGuard instance = ourInstance;
     if (instance == null) {

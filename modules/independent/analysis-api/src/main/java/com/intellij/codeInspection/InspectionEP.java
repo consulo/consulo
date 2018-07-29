@@ -147,7 +147,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   @Nonnull
   public InspectionProfileEntry instantiateTool() {
     try {
-      final InspectionProfileEntry entry = instantiate(implementationClass, ApplicationManager.getApplication().getInjector());
+      final InspectionProfileEntry entry = instantiate(implementationClass, ApplicationManager.getApplication());
       entry.myNameProvider = this;
       return entry;
     }

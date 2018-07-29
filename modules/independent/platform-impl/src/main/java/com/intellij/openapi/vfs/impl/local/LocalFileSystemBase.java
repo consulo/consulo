@@ -55,12 +55,20 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   private static final FileAttributes FAKE_ROOT_ATTRIBUTES =
           new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false);
 
-  private final List<LocalFileOperationsHandler> myHandlers = new ArrayList<LocalFileOperationsHandler>();
+  private final List<LocalFileOperationsHandler> myHandlers = new ArrayList<>();
+
+  protected final ManagingFS myManagingFS;
+  protected final RefreshQueue myRefreshQueue;
+
+  protected LocalFileSystemBase(ManagingFS managingFS, RefreshQueue refreshQueue) {
+    myManagingFS = managingFS;
+    myRefreshQueue = refreshQueue;
+  }
 
   @Override
   @Nullable
   public VirtualFile findFileByPath(@Nonnull String path) {
-    return VfsImplUtil.findFileByPath(this, path);
+    return VfsImplUtil.findFileByPath(myManagingFS, this, path);
   }
 
   @Override
@@ -71,7 +79,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   @Override
   @Nullable
   public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
-    return VfsImplUtil.refreshAndFindFileByPath(this, path);
+    return VfsImplUtil.refreshAndFindFileByPath(myManagingFS, this, path);
   }
 
   @Override
@@ -252,7 +260,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         }
       }
 
-      RefreshQueue.getInstance().refresh(async, recursive, onFinish, filesToRefresh);
+      myRefreshQueue.refresh(async, recursive, onFinish, filesToRefresh);
     }
     finally {
       if (fireCommonRefreshSession) manager.fireAfterRefreshFinish(false);
@@ -266,7 +274,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   public void refreshFiles(@Nonnull Iterable<VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
-    RefreshQueue.getInstance().refresh(async, recursive, onFinish, ContainerUtil.<VirtualFile>toCollection(files));
+    myRefreshQueue.refresh(async, recursive, onFinish, ContainerUtil.<VirtualFile>toCollection(files));
   }
 
   @Override
@@ -762,6 +770,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   public void refresh(final boolean asynchronous) {
-    RefreshQueue.getInstance().refresh(asynchronous, true, null, ManagingFS.getInstance().getRoots(this));
+    myRefreshQueue.refresh(asynchronous, true, null, myManagingFS.getRoots(this));
   }
 }

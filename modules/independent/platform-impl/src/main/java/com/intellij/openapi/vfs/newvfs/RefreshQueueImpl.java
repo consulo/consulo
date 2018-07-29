@@ -21,7 +21,9 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsBundle;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
@@ -31,6 +33,8 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +51,19 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
 
+  private final TransactionGuardEx myTransactionGuard;
+  private final Provider<VirtualFileManager> myManager;
+
+  @Inject
+  public RefreshQueueImpl(TransactionGuard transactionGuard, Provider<VirtualFileManager> manager) {
+    myManager = manager;
+    myTransactionGuard = (TransactionGuardEx)transactionGuard;
+  }
+
+  protected LocalFileSystem localFileSystem() {
+    return LocalFileSystem.from(myManager.get());
+  }
+
   public void execute(@Nonnull RefreshSessionImpl session) {
     if (session.isAsynchronous()) {
       queueSession(session, session.getTransaction());
@@ -54,7 +71,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     else {
       Application app = ApplicationManager.getApplication();
       if (app.isDispatchThread()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+        myTransactionGuard.assertWriteActionAllowed();
         doScan(session);
         session.fireEvents();
       }
@@ -64,7 +81,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
                     "this will cause a deadlock if there are any events to fire.");
           return;
         }
-        queueSession(session, TransactionGuard.getInstance().getContextTransaction());
+        queueSession(session, myTransactionGuard.getContextTransaction());
         session.waitFor();
       }
     }
@@ -83,7 +100,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       }
       finally {
         myRefreshIndicator.stop();
-        TransactionGuard.getInstance().submitTransaction(ApplicationManager.getApplication(), transaction, session::fireEvents);
+        myTransactionGuard.submitTransaction(ApplicationManager.getApplication(), transaction, session::fireEvents);
       }
     });
     myEventCounter.eventHappened(session);
@@ -127,12 +144,12 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   @Nonnull
   @Override
   public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
-    return new RefreshSessionImpl(async, recursively, finishRunnable, ((TransactionGuardEx)TransactionGuard.getInstance()).getModalityTransaction(state));
+    return new RefreshSessionImpl(this, async, recursively, finishRunnable, myTransactionGuard.getModalityTransaction(state));
   }
 
   @Override
   public void processSingleEvent(@Nonnull VFileEvent event) {
-    new RefreshSessionImpl(Collections.singletonList(event)).launch();
+    new RefreshSessionImpl(this, Collections.singletonList(event)).launch();
   }
 
   public static boolean isRefreshInProgress() {

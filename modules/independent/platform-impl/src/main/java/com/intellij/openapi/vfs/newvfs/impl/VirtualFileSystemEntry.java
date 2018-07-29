@@ -34,9 +34,9 @@ import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -47,7 +47,7 @@ import java.nio.charset.Charset;
 public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   public static final VirtualFileSystemEntry[] EMPTY_ARRAY = new VirtualFileSystemEntry[0];
 
-  protected static final PersistentFS ourPersistence = PersistentFS.getInstance();
+  protected final PersistentFS myPersistentFS;
 
   private static final Key<String> SYMLINK_TARGET = Key.create("local.vfs.symlink.target");
 
@@ -73,10 +73,11 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     assert (~ALL_FLAGS_MASK) == LocalTimeCounter.TIME_MASK;
   }
 
-  public VirtualFileSystemEntry(int id, VfsData.Segment segment, VirtualDirectoryImpl parent) {
+  public VirtualFileSystemEntry(int id, VfsData.Segment segment, VirtualDirectoryImpl parent, PersistentFS persistentFS) {
     mySegment = segment;
     myId = id;
     myParent = parent;
+    myPersistentFS = persistentFS;
   }
 
   void updateLinkStatus() {
@@ -106,7 +107,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   @Override
   public VirtualDirectoryImpl getParent() {
-    VirtualDirectoryImpl changedParent = VfsData.getChangedParent(myId);
+    VirtualDirectoryImpl changedParent = myPersistentFS.getVfsData().getChangedParent(myId);
     return changedParent != null ? changedParent : myParent;
   }
 
@@ -201,21 +202,21 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   @Override
   public void delete(final Object requestor) throws IOException {
-    ourPersistence.deleteFile(requestor, this);
+    myPersistentFS.deleteFile(requestor, this);
   }
 
   @Override
   public void rename(final Object requestor, @Nonnull @NonNls final String newName) throws IOException {
     if (getName().equals(newName)) return;
     validateName(newName);
-    ourPersistence.renameFile(requestor, this, newName);
+    myPersistentFS.renameFile(requestor, this, newName);
   }
 
   @Override
   @Nonnull
   public VirtualFile createChildData(final Object requestor, @Nonnull final String name) throws IOException {
     validateName(name);
-    return ourPersistence.createChildFile(requestor, this, name);
+    return myPersistentFS.createChildFile(requestor, this, name);
   }
 
   @Override
@@ -225,22 +226,22 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   @Override
   public void setWritable(boolean writable) throws IOException {
-    ourPersistence.setWritable(this, writable);
+    myPersistentFS.setWritable(this, writable);
   }
 
   @Override
   public long getTimeStamp() {
-    return ourPersistence.getTimeStamp(this);
+    return myPersistentFS.getTimeStamp(this);
   }
 
   @Override
   public void setTimeStamp(final long time) throws IOException {
-    ourPersistence.setTimeStamp(this, time);
+    myPersistentFS.setTimeStamp(this, time);
   }
 
   @Override
   public long getLength() {
-    return ourPersistence.getLength(this);
+    return myPersistentFS.getLength(this);
   }
 
   @Override
@@ -253,7 +254,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
       throw new IOException(VfsBundle.message("file.copy.target.must.be.directory"));
     }
 
-    return EncodingRegistry.doActionAndRestoreEncoding(this, () -> ourPersistence.copyFile(requestor, this, newParent, copyName));
+    return EncodingRegistry.doActionAndRestoreEncoding(this, () -> myPersistentFS.copyFile(requestor, this, newParent, copyName));
   }
 
   @Override
@@ -263,14 +264,14 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     }
 
     EncodingRegistry.doActionAndRestoreEncoding(this, () -> {
-      ourPersistence.moveFile(requestor, this, newParent);
+      myPersistentFS.moveFile(requestor, this, newParent);
       return this;
     });
   }
 
   @Override
   public int getId() {
-    return VfsData.isFileValid(myId) ? myId : -myId;
+    return myPersistentFS.getVfsData().isFileValid(myId) ? myId : -myId;
   }
 
   @Override
@@ -287,7 +288,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   @Nonnull
   public VirtualFile createChildDirectory(final Object requestor, @Nonnull final String name) throws IOException {
     validateName(name);
-    return ourPersistence.createChildDirectory(requestor, this, name);
+    return myPersistentFS.createChildDirectory(requestor, this, name);
   }
 
   private void validateName(@Nonnull String name) throws IOException {
@@ -298,7 +299,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   @Override
   public boolean exists() {
-    return VfsData.isFileValid(myId);
+    return myPersistentFS.getVfsData().isFileValid(myId);
   }
 
   @Override
@@ -327,7 +328,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     parent.removeChild(this);
 
     VirtualDirectoryImpl directory = (VirtualDirectoryImpl)newParent;
-    VfsData.changeParent(myId, directory);
+    myPersistentFS.getVfsData().changeParent(myId, directory);
     directory.addChild(this);
     updateLinkStatus();
   }
@@ -338,7 +339,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   public void invalidate() {
-    VfsData.invalidateFile(myId);
+    myPersistentFS.getVfsData().invalidateFile(myId);
   }
 
   @Nonnull

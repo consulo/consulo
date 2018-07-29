@@ -57,8 +57,15 @@ public class RefreshSessionImpl extends RefreshSession {
   private volatile RefreshWorker myWorker;
   private volatile boolean myCancelled;
   private final TransactionId myTransaction;
+  private final RefreshQueueImpl myRefreshQueue;
 
-  RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nullable TransactionId context) {
+  RefreshSessionImpl(@Nonnull RefreshQueueImpl refreshQueue, @Nonnull List<VFileEvent> events) {
+    this(refreshQueue, false, false, null, null);
+    myEvents.addAll(events);
+  }
+
+  RefreshSessionImpl(@Nonnull RefreshQueueImpl refreshQueue, boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nullable TransactionId context) {
+    myRefreshQueue = refreshQueue;
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;
@@ -73,11 +80,6 @@ public class RefreshSessionImpl extends RefreshSession {
       return new Throwable();
     }
     return null;
-  }
-
-  RefreshSessionImpl(@Nonnull List<VFileEvent> events) {
-    this(false, false, null, null);
-    myEvents.addAll(events);
   }
 
   @Override
@@ -110,7 +112,7 @@ public class RefreshSessionImpl extends RefreshSession {
   @Override
   public void launch() {
     mySemaphore.down();
-    ((RefreshQueueImpl)RefreshQueue.getInstance()).execute(this);
+    myRefreshQueue.execute(this);
   }
 
   public void scan() {
@@ -119,7 +121,7 @@ public class RefreshSessionImpl extends RefreshSession {
     boolean haveEventsToFire = myFinishRunnable != null || !myEvents.isEmpty();
 
     if (!workQueue.isEmpty()) {
-      LocalFileSystem fs = LocalFileSystem.getInstance();
+      LocalFileSystem fs = myRefreshQueue.localFileSystem();
       if (fs instanceof LocalFileSystemImpl) {
         ((LocalFileSystemImpl)fs).markSuspiciousFilesDirty(workQueue);
       }

@@ -37,6 +37,12 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
     private static final LocalFileSystem ourInstance = (LocalFileSystem)VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
   }
 
+  @Nonnull
+  public static LocalFileSystem from(VirtualFileManager manager) {
+    return (LocalFileSystem)manager.getFileSystem(PROTOCOL);
+  }
+
+  @Deprecated
   public static LocalFileSystem getInstance() {
     return LocalFileSystemHolder.ourInstance;
   }

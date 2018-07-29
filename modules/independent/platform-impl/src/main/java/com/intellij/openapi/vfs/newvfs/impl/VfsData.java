@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
+import com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ConcurrentBitSet;
@@ -31,9 +32,9 @@ import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -47,29 +48,29 @@ import static com.intellij.util.ObjectUtils.assertNotNull;
 
 /**
  * The place where all the data is stored for VFS parts loaded into a memory: name-ids, flags, user data, children.
- *
+ * <p>
  * The purpose is to avoid holding this data in separate immortal file/directory objects because that involves space overhead, significant
  * when there are hundreds of thousands of files.
- *
+ * <p>
  * The data is stored per-id in blocks of {@link #SEGMENT_SIZE}. File ids in one project tend to cluster together,
  * so the overhead for non-loaded id should not be large in most cases.
- *
+ * <p>
  * File objects are still created if needed. There might be several objects for the same file, so equals() should be used instead of ==.
- *
+ * <p>
  * The lifecycle of a file object is as follows:
- *
+ * <p>
  * 1. The file has not been instantiated yet, so {@link #getFileById} returns null.
- *
+ * <p>
  * 2. A file is explicitly requested by calling getChildren or findChild on its parent. The parent initializes all the necessary data (in a thread-safe context)
  * and creates the file instance. See {@link #initFile}
- *
+ * <p>
  * 3. After that the file is live, an object representing it can be retrieved any time from its parent. File system roots are
  * kept on hard references in {@link com.intellij.openapi.vfs.newvfs.persistent.PersistentFS}
- *
+ * <p>
  * 4. If a file is deleted (invalidated), then its data is not needed anymore, and should be removed. But this can only happen after
  * all the listener have been notified about the file deletion and have had their chance to look at the data the last time. See {@link #killInvalidatedFiles()}
- *
- * 5. The file with removed data is marked as "dead" (see {@link #ourDeadMarker}, any access to it will throw {@link com.intellij.openapi.vfs.InvalidVirtualFileAccessException}
+ * <p>
+ * 5. The file with removed data is marked as "dead" (see {@link #myDeadMarker}, any access to it will throw {@link com.intellij.openapi.vfs.InvalidVirtualFileAccessException}
  * Dead ids won't be reused in the same session of the IDE.
  *
  * @author peter
@@ -79,14 +80,19 @@ public class VfsData {
   private static final int SEGMENT_BITS = 9;
   private static final int SEGMENT_SIZE = 1 << SEGMENT_BITS;
   private static final int OFFSET_MASK = SEGMENT_SIZE - 1;
-  private static final Object ourDeadMarker = new String("dead file");
+  private final Object myDeadMarker = new String("dead file");
 
-  private static final ConcurrentIntObjectMap<Segment> ourSegments = ContainerUtil.createConcurrentIntObjectMap();
-  private static final ConcurrentBitSet ourInvalidatedIds = new ConcurrentBitSet();
-  private static TIntHashSet ourDyingIds = new TIntHashSet();
-  private static final ConcurrentIntObjectMap<VirtualDirectoryImpl> ourChangedParents = ContainerUtil.createConcurrentIntObjectMap();
+  private TIntHashSet myDyingIds = new TIntHashSet();
 
-  static {
+  private final ConcurrentIntObjectMap<Segment> mySegments = ContainerUtil.createConcurrentIntObjectMap();
+  private final ConcurrentBitSet myInvalidatedIds = new ConcurrentBitSet();
+  private final ConcurrentIntObjectMap<VirtualDirectoryImpl> myChangedParents = ContainerUtil.createConcurrentIntObjectMap();
+
+  private final PersistentFSImpl myPersistentFS;
+
+  public VfsData(PersistentFSImpl persistentFS) {
+    myPersistentFS = persistentFS;
+
     ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
       @Override
       public void writeActionFinished(@Nonnull Object action) {
@@ -99,20 +105,20 @@ public class VfsData {
     });
   }
 
-  private static void killInvalidatedFiles() {
-    synchronized (ourDeadMarker) {
-      if (!ourDyingIds.isEmpty()) {
-        for (int id : ourDyingIds.toArray()) {
-          assertNotNull(getSegment(id, false)).myObjectArray.set(getOffset(id), ourDeadMarker);
-          ourChangedParents.remove(id);
+  private void killInvalidatedFiles() {
+    synchronized (myDeadMarker) {
+      if (!myDyingIds.isEmpty()) {
+        for (int id : myDyingIds.toArray()) {
+          assertNotNull(getSegment(id, false)).myObjectArray.set(getOffset(id), myDeadMarker);
+          myChangedParents.remove(id);
         }
-        ourDyingIds = new TIntHashSet();
+        myDyingIds = new TIntHashSet();
       }
     }
   }
 
   @Nullable
-  public static VirtualFileSystemEntry getFileById(int id, VirtualDirectoryImpl parent) {
+  public VirtualFileSystemEntry getFileById(int id, VirtualDirectoryImpl parent) {
     Segment segment = getSegment(id, false);
     if (segment == null) return null;
 
@@ -120,8 +126,8 @@ public class VfsData {
     Object o = segment.myObjectArray.get(offset);
     if (o == null) return null;
 
-    if (o == ourDeadMarker) {
-      throw reportDeadFileAccess(new VirtualFileImpl(id, segment, parent));
+    if (o == myDeadMarker) {
+      throw reportDeadFileAccess(new VirtualFileImpl(id, segment, parent, myPersistentFS));
     }
     final int nameId = segment.getNameId(id);
     if (nameId <= 0) {
@@ -129,8 +135,9 @@ public class VfsData {
       throw new AssertionError("nameId=" + nameId + "; data=" + o + "; parent=" + parent + "; parent.id=" + parent.getId() + "; db.parent=" + FSRecords.getParent(id));
     }
 
-    return o instanceof DirectoryData ? new VirtualDirectoryImpl(id, segment, (DirectoryData)o, parent, parent.getFileSystem())
-                                      : new VirtualFileImpl(id, segment, parent);
+    return o instanceof DirectoryData
+           ? new VirtualDirectoryImpl(id, segment, (DirectoryData)o, parent, parent.getFileSystem(), myPersistentFS)
+           : new VirtualFileImpl(id, segment, parent, myPersistentFS);
   }
 
   private static InvalidVirtualFileAccessException reportDeadFileAccess(VirtualFileSystemEntry file) {
@@ -143,11 +150,11 @@ public class VfsData {
 
   @Nullable
   @Contract("_,true->!null")
-  public static Segment getSegment(int id, boolean create) {
+  public Segment getSegment(int id, boolean create) {
     int key = id >>> SEGMENT_BITS;
-    Segment segment = ourSegments.get(key);
+    Segment segment = mySegments.get(key);
     if (segment != null || !create) return segment;
-    return ourSegments.cacheOrGet(key, new Segment());
+    return mySegments.cacheOrGet(key, new Segment());
   }
 
   public static class FileAlreadyCreatedException extends Exception {
@@ -156,7 +163,7 @@ public class VfsData {
     }
   }
 
-  public static void initFile(int id, Segment segment, int nameId, @Nonnull Object data) throws FileAlreadyCreatedException {
+  public void initFile(int id, Segment segment, int nameId, @Nonnull Object data) throws FileAlreadyCreatedException {
     assert id > 0;
     int offset = getOffset(id);
 
@@ -176,27 +183,27 @@ public class VfsData {
     segment.myObjectArray.set(offset, data);
   }
 
-  static CharSequence getNameByFileId(int id) {
+  CharSequence getNameByFileId(int id) {
     return FileNameCache.getVFileName(assertNotNull(getSegment(id, false)).getNameId(id));
   }
 
-  static boolean isFileValid(int id) {
-    return !ourInvalidatedIds.get(id);
+  boolean isFileValid(int id) {
+    return !myInvalidatedIds.get(id);
   }
 
   @Nullable
-  static VirtualDirectoryImpl getChangedParent(int id) {
-    return ourChangedParents.get(id);
+  VirtualDirectoryImpl getChangedParent(int id) {
+    return myChangedParents.get(id);
   }
 
-  static void changeParent(int id, VirtualDirectoryImpl parent) {
-    ourChangedParents.put(id, parent);
+  void changeParent(int id, VirtualDirectoryImpl parent) {
+    myChangedParents.put(id, parent);
   }
 
-  static void invalidateFile(int id) {
-    ourInvalidatedIds.set(id);
-    synchronized (ourDeadMarker) {
-      ourDyingIds.add(id);
+  void invalidateFile(int id) {
+    myInvalidatedIds.set(id);
+    synchronized (myDeadMarker) {
+      myDyingIds.add(id);
     }
   }
 
@@ -269,8 +276,8 @@ public class VfsData {
   }
 
   // non-final field accesses are synchronized on this instance, but this happens in VirtualDirectoryImpl
-  public static class DirectoryData {
-    private static final AtomicFieldUpdater<DirectoryData, KeyFMap> updater = AtomicFieldUpdater.forFieldOfType(DirectoryData.class, KeyFMap.class);
+  public class DirectoryData {
+    private final AtomicFieldUpdater<DirectoryData, KeyFMap> updater = AtomicFieldUpdater.forFieldOfType(DirectoryData.class, KeyFMap.class);
     @Nonnull
     volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
     @Nonnull
@@ -279,7 +286,7 @@ public class VfsData {
 
     VirtualFileSystemEntry[] getFileChildren(int fileId, VirtualDirectoryImpl parent) {
       assert fileId > 0;
-      if(myChildrenIds.length == 0) {
+      if (myChildrenIds.length == 0) {
         return EMPTY_ARRAY;
       }
       VirtualFileSystemEntry[] children = new VirtualFileSystemEntry[myChildrenIds.length];
@@ -305,6 +312,7 @@ public class VfsData {
         }
       }
     }
+
     void addAdoptedName(String name, boolean caseSensitive) {
       if (myAdoptedNames == null) {
         //noinspection unchecked
@@ -323,11 +331,7 @@ public class VfsData {
 
     @Override
     public String toString() {
-      return "DirectoryData{" +
-             "myUserMap=" + myUserMap +
-             ", myChildrenIds=" + Arrays.toString(myChildrenIds) +
-             ", myAdoptedNames=" + myAdoptedNames +
-             '}';
+      return "DirectoryData{" + "myUserMap=" + myUserMap + ", myChildrenIds=" + Arrays.toString(myChildrenIds) + ", myAdoptedNames=" + myAdoptedNames + '}';
     }
   }
 

@@ -19,9 +19,11 @@ import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
+import com.intellij.openapi.vfs.newvfs.ManagingFS;
+import com.intellij.openapi.vfs.newvfs.RefreshQueue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Set;
 
@@ -36,7 +38,7 @@ public class Win32LocalFileSystem extends LocalFileSystemBase {
   private static final ThreadLocal<Win32LocalFileSystem> THREAD_LOCAL = new ThreadLocal<Win32LocalFileSystem>() {
     @Override
     protected Win32LocalFileSystem initialValue() {
-      return new Win32LocalFileSystem();
+      return new Win32LocalFileSystem(ManagingFS.getInstance(), RefreshQueue.getInstance());
     }
   };
 
@@ -49,7 +51,9 @@ public class Win32LocalFileSystem extends LocalFileSystemBase {
 
   private final Win32FsCache myFsCache = new Win32FsCache();
 
-  private Win32LocalFileSystem() { }
+  private Win32LocalFileSystem(ManagingFS managingFS, RefreshQueue refreshQueue) {
+    super(managingFS, refreshQueue);
+  }
 
   @Nonnull
   @Override

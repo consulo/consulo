@@ -67,7 +67,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
       if (Comparing.strEqual(getKey(key), epBean.key)) {
         try {
           if (epBean.implementationClass != null) {
-            return (T)epBean.instantiate(epBean.implementationClass, myComponentManager.getInjector());
+            return (T)epBean.instantiate(epBean.implementationClass, myComponentManager);
           }
         }
         catch (Exception e) {
@@ -84,10 +84,10 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
       if (Comparing.strEqual(epBean.key, key, true)) {
         try {
           if (epBean.implementationClass != null) {
-            result = epBean.instantiate(epBean.implementationClass, myComponentManager.getInjector());
+            result = epBean.instantiate(epBean.implementationClass, myComponentManager);
           }
           else {
-            Object factory = epBean.instantiate(epBean.factoryClass, myComponentManager.getInjector());
+            Object factory = epBean.instantiate(epBean.factoryClass, myComponentManager);
             result = method.invoke(factory, args);
           }
           if (result != null) {

@@ -31,6 +31,7 @@ public abstract class ManagingFS implements FileSystemInterface {
     private static final ManagingFS ourInstance = ApplicationManager.getApplication().getComponent(ManagingFS.class);
   }
 
+  @Deprecated
   public static ManagingFS getInstance() {
     return ManagingFSHolder.ourInstance;
   }

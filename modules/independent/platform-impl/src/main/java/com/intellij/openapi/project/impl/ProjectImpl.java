@@ -166,7 +166,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   @Override
   public IProjectStore getStateStore() {
-    return getInjector().getInstance(IProjectStore.class);
+    return getComponent(IProjectStore.class);
   }
 
   @Override

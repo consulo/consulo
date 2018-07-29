@@ -78,7 +78,7 @@ public class VcsEP extends AbstractExtensionPointBean {
           return PeriodicalTasksCloser.getInstance().safeGetComponent(project, foundClass);
         }
       }
-      return instantiate(vcsClass, project.getInjector());
+      return instantiate(vcsClass, project);
     }
     catch (ProcessCanceledException pce) {
       throw pce;

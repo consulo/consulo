@@ -16,14 +16,17 @@
 package consulo.externalStorage;
 
 import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.impl.stores.StateStorageManager;
+import com.intellij.openapi.components.impl.stores.IApplicationStore;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.externalStorage.storage.ExternalStorage;
 import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServicesConfiguration;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -32,18 +35,22 @@ import java.util.Collection;
  * @author VISTALL
  * @since 11-Feb-17
  */
+@Singleton
 public class ExternalStorageStreamProvider extends StreamProvider {
-  private ExternalStorage myStorage;
-  private StateStorageManager myStateStorageManager;
+  private final IApplicationStore myStore;
+  private final WebServicesConfiguration myWebServicesConfiguration;
 
-  public ExternalStorageStreamProvider(ExternalStorage storage, StateStorageManager stateStorageManager) {
-    myStorage = storage;
-    myStateStorageManager = stateStorageManager;
+  private final ExternalStorage myStorage = new ExternalStorage();
+
+  @Inject
+  public ExternalStorageStreamProvider(IApplicationStore store, WebServicesConfiguration webServicesConfiguration) {
+    myStore = store;
+    myWebServicesConfiguration = webServicesConfiguration;
   }
 
   @Override
   public boolean isEnabled() {
-    return !StringUtil.isEmpty(WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API));
+    return !StringUtil.isEmpty(myWebServicesConfiguration.getOAuthKey(WebServiceApi.SYNCHRONIZE_API));
   }
 
   @Nonnull
@@ -57,10 +64,10 @@ public class ExternalStorageStreamProvider extends StreamProvider {
     myStorage.saveContent(fileSpec, roamingType, content, size);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException {
-    return myStorage.loadContent(fileSpec, roamingType, myStateStorageManager);
+    return myStorage.loadContent(fileSpec, roamingType, myStore.getStateStorageManager());
   }
 
   @Override

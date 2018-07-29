@@ -188,7 +188,7 @@ public class FindUsagesManager {
     for (FindUsagesHandlerFactory factory : Extensions.getExtensions(FindUsagesHandlerFactory.EP_NAME, myProject)) {
       if (factory.canFindUsages(element)) {
         Class<? extends FindUsagesHandlerFactory> aClass = factory.getClass();
-        FindUsagesHandlerFactory copy = myProject.getInjector().getInstance(aClass);
+        FindUsagesHandlerFactory copy = myProject.getComponent(aClass);
         final FindUsagesHandler handler = copy.createFindUsagesHandler(element, forHighlightUsages);
         if (handler == FindUsagesHandler.NULL_HANDLER) return null;
         if (handler != null) {

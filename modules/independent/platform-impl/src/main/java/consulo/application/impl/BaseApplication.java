@@ -487,7 +487,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   protected void componentCreated(@Nonnull Class componentInterface) {
     StartupProgress progress = mySplashRef.get();
     if (progress != null) {
-      progress.showProgress("", 0.65f + getPercentageOfComponentsLoaded() * 0.35f);
+      float progress1 = 0.65f + getPercentageOfComponentsLoaded() * 0.35f;
+      System.out.println(progress1 + "/" + getPercentageOfComponentsLoaded());
+      progress.showProgress("", progress1);
     }
   }
 

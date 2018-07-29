@@ -41,7 +41,7 @@ public class PsiReferenceContributorEP extends CustomLoadingExtensionPointBean i
     @Nonnull
     protected PsiReferenceContributor compute() {
       try {
-        return (PsiReferenceContributor)instantiateExtension(implementationClass, Application.get().getInjector());
+        return (PsiReferenceContributor)instantiateExtension(implementationClass, Application.get());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

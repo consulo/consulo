@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.google.inject.Injector;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.annotations.DeprecationInfo;
+import consulo.extensions.AreaInstanceEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,19 +60,19 @@ public abstract class AbstractExtensionPointBean implements PluginAware {
   }
 
   @Nonnull
-  public final <T> T instantiate(final String className, @Nonnull final Injector container) throws ClassNotFoundException {
+  public final <T> T instantiate(final String className, @Nonnull final AreaInstance container) throws ClassNotFoundException {
     return instantiate(this.<T>findClass(className), container);
   }
 
   @Nonnull
-  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final Injector container) {
-    return container.getInstance(aClass);
+  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final AreaInstance container) {
+    return ((AreaInstanceEx)container).getInjector().getInstance(aClass);
   }
 
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use without 'allowNonPublicClasses'")
-  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final Injector container, final boolean allowNonPublicClasses) {
-    return container.getInstance(aClass);
+  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final AreaInstance container, final boolean allowNonPublicClasses) {
+    return ((AreaInstanceEx)container).getInjector().getInstance(aClass);
   }
 }

@@ -72,18 +72,27 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
 
   private final AtomicBoolean myShutDown = new AtomicBoolean(false);
   @SuppressWarnings({"FieldCanBeLocal", "unused"})
-  private final LowMemoryWatcher myWatcher = LowMemoryWatcher.register(() -> clearIdCache());
+  private final LowMemoryWatcher myWatcher = LowMemoryWatcher.register(this::clearIdCache);
   private volatile int myStructureModificationCount;
+
+  private final VfsData myData;
 
   @Inject
   public PersistentFSImpl(@Nonnull Application application) {
     myEventBus = application.getMessageBus();
-    ShutDownTracker.getInstance().registerShutdownTask(() -> performShutdown());
+    ShutDownTracker.getInstance().registerShutdownTask(this::performShutdown);
+    myData = new VfsData(this);
   }
 
   @PostConstruct
   public void initComponent() {
     FSRecords.connect();
+  }
+
+  @Override
+  @Nonnull
+  public VfsData getVfsData() {
+    return myData;
   }
 
   @Override
@@ -873,9 +882,9 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
 
     int rootId = FSRecords.findRootRecord(rootUrl);
 
-    VfsData.Segment segment = VfsData.getSegment(rootId, true);
-    VfsData.DirectoryData directoryData = new VfsData.DirectoryData();
-    VirtualFileSystemEntry newRoot = new FsRoot(rootId, segment, directoryData, fs, rootName, StringUtil.trimEnd(basePath, "/"));
+    VfsData.Segment segment = myData.getSegment(rootId, true);
+    VfsData.DirectoryData directoryData = myData.new DirectoryData();
+    VirtualFileSystemEntry newRoot = new FsRoot(rootId, segment, directoryData, fs, rootName, StringUtil.trimEnd(basePath, "/"), this);
 
     boolean mark;
     synchronized (myRoots) {
@@ -883,7 +892,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
       if (root != null) return root;
 
       try {
-        VfsData.initFile(rootId, segment, -1, directoryData);
+        myData.initFile(rootId, segment, -1, directoryData);
       }
       catch (VfsData.FileAlreadyCreatedException e) {
         for (Map.Entry<String, VirtualFileSystemEntry> entry : myRoots.entrySet()) {
@@ -1249,8 +1258,8 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
     private final String myName;
     private final String myPathBeforeSlash;
 
-    private FsRoot(int id, VfsData.Segment segment, VfsData.DirectoryData data, NewVirtualFileSystem fs, String name, String pathBeforeSlash) {
-      super(id, segment, data, null, fs);
+    private FsRoot(int id, VfsData.Segment segment, VfsData.DirectoryData data, NewVirtualFileSystem fs, String name, String pathBeforeSlash, PersistentFS persistentFS) {
+      super(id, segment, data, null, fs, persistentFS);
       myName = name;
       myPathBeforeSlash = pathBeforeSlash;
     }

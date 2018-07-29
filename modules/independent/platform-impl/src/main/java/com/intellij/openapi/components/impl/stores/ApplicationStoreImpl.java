@@ -25,6 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
 import consulo.core.impl.components.impl.ComponentManagerImpl;
@@ -42,13 +43,16 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private static final String ROOT_ELEMENT_NAME = "application";
 
   private final ApplicationEx2 myApplication;
+  private final LocalFileSystem myLocalFileSystem;
   private final StateStorageManager myStateStorageManager;
 
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(final ApplicationEx application) {
+  public ApplicationStoreImpl(ApplicationEx application, VirtualFileManager virtualFileManager) {
     myApplication = (ApplicationEx2)application;
+    myLocalFileSystem = LocalFileSystem.from(virtualFileManager);
+
     myStateStorageManager = new StateStorageManagerImpl(PathMacroManager.getInstance(application).createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application.getMessageBus()) {
       private boolean myConfigDirectoryRefreshed;
 
@@ -78,9 +82,9 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
       protected void beforeFileBasedStorageCreate() {
         if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
           try {
-            VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
+            VirtualFile configDir = myLocalFileSystem.refreshAndFindFileByPath(getConfigPath());
             if (configDir != null) {
-              VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
+              VfsUtil.markDirtyAndRefresh(myLocalFileSystem, false, true, true, configDir);
             }
           }
           finally {

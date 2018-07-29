@@ -19,24 +19,27 @@ import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
 import com.intellij.openapi.components.impl.stores.StateStorageManager;
-import consulo.application.ex.ApplicationEx2;
-import consulo.externalStorage.storage.ExternalStorage;
+
+import javax.inject.Inject;
 
 /**
  * @author VISTALL
  * @since 11-Feb-17
  */
 public class ExternalStorageAppListener implements ApplicationLoadListener {
+  private IApplicationStore myStore;
+  private ExternalStorageStreamProvider myProvider;
+
+  @Inject
+  public ExternalStorageAppListener(IApplicationStore store, ExternalStorageStreamProvider provider) {
+    myStore = store;
+    myProvider = provider;
+  }
+
   @Override
   public void beforeApplicationLoaded(Application application) {
-    ApplicationEx2 applicationEx = (ApplicationEx2)application;
+    StateStorageManager stateStorageManager = myStore.getStateStorageManager();
 
-    IApplicationStore stateStore = applicationEx.getStateStore();
-
-    StateStorageManager stateStorageManager = stateStore.getStateStorageManager();
-
-    ExternalStorage storage = new ExternalStorage();
-
-    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(storage, stateStorageManager));
+    stateStorageManager.setStreamProvider(myProvider);
   }
 }

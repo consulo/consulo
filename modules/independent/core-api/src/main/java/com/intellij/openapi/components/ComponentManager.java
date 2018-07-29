@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.components;
 
-import com.google.inject.Injector;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.AreaInstance;
@@ -76,12 +75,6 @@ public interface ComponentManager extends AreaInstance, UserDataHolder, Disposab
   @Nonnull
   @Deprecated
   <T> T[] getComponents(@Nonnull Class<T> baseClass);
-
-  @Override
-  @Nonnull
-  default Injector getInjector() {
-    throw new UnsupportedOperationException();
-  }
 
   @Nonnull
   MessageBus getMessageBus();

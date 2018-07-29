@@ -603,10 +603,30 @@ public class VfsUtil extends VfsUtilCore {
    *
    * @see VirtualFile#refresh(boolean, boolean)
    */
+  @Deprecated
   public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
     List<VirtualFile> list = markDirty(recursive, reloadChildren, files);
     if (list.isEmpty()) return;
     LocalFileSystem.getInstance().refreshFiles(list, async, recursive, null);
+  }
+
+  /**
+   * Refreshes the VFS information of the given files from the local file system.
+   * <p>
+   * This refresh is performed without help of the FileWatcher,
+   * which means that all given files will be refreshed even if the FileWatcher didn't report any changes in them.
+   * This method is slower, but more reliable, and should be preferred
+   * when it is essential to make sure all the given VirtualFiles are actually refreshed from disk.
+   * <p>
+   * NB: when invoking synchronous refresh from a thread other than the event dispatch thread, the current thread must
+   * NOT be in a read action.
+   *
+   * @see VirtualFile#refresh(boolean, boolean)
+   */
+  public static void markDirtyAndRefresh(LocalFileSystem localFileSystem, boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
+    List<VirtualFile> list = markDirty(recursive, reloadChildren, files);
+    if (list.isEmpty()) return;
+    localFileSystem.refreshFiles(list, async, recursive, null);
   }
 
   @Nonnull

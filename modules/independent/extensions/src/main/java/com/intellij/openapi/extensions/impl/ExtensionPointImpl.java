@@ -19,6 +19,7 @@ import com.google.inject.Injector;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
 import com.intellij.util.containers.StringInterner;
+import consulo.extensions.AreaInstanceEx;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
@@ -158,7 +159,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   @SuppressWarnings("unchecked")
   private void processAdapters() {
     myExtensions.clear();
-    Injector injector = myArea.getInjector();
+    Injector injector = ((AreaInstanceEx)myArea).getInjector();
 
     ArrayList<ExtensionComponentAdapter> sorted = new ArrayList<>(myExtensionAdapters);
     LoadingOrder.sort(sorted);

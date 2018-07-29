@@ -1,6 +1,6 @@
 package com.intellij.semantic;
 
-import com.google.inject.Injector;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
@@ -14,7 +14,7 @@ public class SemContributorEP extends AbstractExtensionPointBean {
   @Attribute("implementation")
   public String implementation;
 
-  public void registerSemProviders(Injector container, SemRegistrar registrar) {
+  public void registerSemProviders(ComponentManager container, SemRegistrar registrar) {
     try {
       final SemContributor contributor = instantiate(implementation, container);
       contributor.registerSemProviders(registrar);
@@ -23,5 +23,4 @@ public class SemContributorEP extends AbstractExtensionPointBean {
       LOG.error(e);
     }
   }
-
 }

@@ -21,16 +21,18 @@ import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.openapi.vfs.newvfs.impl.VfsData;
+import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.PathUtil;
+import consulo.annotations.RequiredWriteAction;
+import consulo.compiler.server.fileSystem.archive.ArchiveNewVirtualFile;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
-import consulo.compiler.server.fileSystem.archive.ArchiveNewVirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredWriteAction;
-
 import java.io.*;
 import java.util.List;
 
@@ -39,6 +41,12 @@ import java.util.List;
  * @since 15:39/15.08.13
  */
 public class CompilerServerManagingFSImpl extends PersistentFS {
+  @Nonnull
+  @Override
+  public VfsData getVfsData() {
+    return null;
+  }
+
   @Override
   public void clearIdCache() {
     throw new UnsupportedOperationException();

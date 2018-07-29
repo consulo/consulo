@@ -23,12 +23,12 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.openapi.vfs.newvfs.impl.VfsData;
+import consulo.annotations.RequiredWriteAction;
 import org.intellij.lang.annotations.MagicConstant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.annotations.RequiredWriteAction;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -49,10 +49,13 @@ public abstract class PersistentFS extends ManagingFS {
   static final int ALL_VALID_FLAGS =
           CHILDREN_CACHED_FLAG | IS_DIRECTORY_FLAG | IS_READ_ONLY | MUST_RELOAD_CONTENT | IS_SYMLINK | IS_SPECIAL | IS_HIDDEN;
 
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+  @Deprecated
   public static PersistentFS getInstance() {
     return (PersistentFS)ManagingFS.getInstance();
   }
+
+  @Nonnull
+  public abstract VfsData getVfsData();
 
   public abstract void clearIdCache();
 
