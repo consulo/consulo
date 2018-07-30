@@ -33,14 +33,13 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.SizedIcon;
-import com.intellij.ui.plaf.beg.BegMenuItemUI;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.MenuItemUI;
 import java.awt.*;
@@ -54,8 +53,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ActionMenuItem extends JCheckBoxMenuItem {
-  private static final Icon ourCheckedIcon = new SizedIcon(AllIcons.Actions.Checked, 18, 18);
-  private static final Icon ourUncheckedIcon = EmptyIcon.ICON_18;
   private static final int outIconSize = 18;
 
   private final ActionRef<AnAction> myAction;
@@ -183,16 +180,6 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
 
   private static boolean isEnterKeyStroke(KeyStroke keyStroke) {
     return keyStroke.getKeyCode() == KeyEvent.VK_ENTER && keyStroke.getModifiers() == 0;
-  }
-
-  @Override
-  public void updateUI() {
-    if (UIUtil.isStandardMenuLAF()) {
-      super.updateUI();
-    }
-    else {
-      setUI(BegMenuItemUI.createUI(this));
-    }
   }
 
   @Override

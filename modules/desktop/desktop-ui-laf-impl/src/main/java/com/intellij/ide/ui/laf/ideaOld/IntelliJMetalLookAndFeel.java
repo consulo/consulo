@@ -42,7 +42,6 @@ public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
     LafManagerImplUtil.initInputMapDefaults(defaults);
     initIdeaDefaults(defaults);
 
-
     Pair<String, Integer> systemFont = UIUtil.getSystemFontData();
     if (systemFont != null) {
       LafManagerImplUtil.initFontDefaults(defaults, systemFont.second, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));

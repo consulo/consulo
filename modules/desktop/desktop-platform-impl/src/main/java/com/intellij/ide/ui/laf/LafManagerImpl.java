@@ -483,8 +483,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       uiDefaults.put("Menu.invertedArrowIcon", getAquaMenuInvertedIcon());
       uiDefaults.put("Menu.disabledArrowIcon", getAquaMenuDisabledIcon());
     }
-
-    uiDefaults.put("MenuItem.background", UIManager.getColor("Menu.background"));
   }
 
   private static void fixSeparatorColor(UIDefaults uiDefaults) {

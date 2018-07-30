@@ -25,11 +25,10 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.ui.plaf.beg.IdeaMenuUI;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -72,15 +71,13 @@ public final class ActionMenu extends JMenu {
     if (SystemInfo.isMacSystemMenu) {
       installSynchronizer();
     }
-    if (UIUtil.isUnderIntelliJLaF()) {
-      setOpaque(true);
-    }
   }
 
   public void updateContext(DataContext context) {
     myContext = context;
   }
 
+  @Override
   public void addNotify() {
     super.addNotify();
     installSynchronizer();
@@ -115,18 +112,7 @@ public final class ActionMenu extends JMenu {
       setForeground(null);
     }
 
-    if (UIUtil.isStandardMenuLAF()) {
-      super.updateUI();
-    }
-    else {
-      setUI(IdeaMenuUI.createUI(this));
-      setFont(UIUtil.getMenuFont());
-
-      JPopupMenu popupMenu = getPopupMenu();
-      if (popupMenu != null) {
-        popupMenu.updateUI();
-      }
-    }
+    super.updateUI();
 
     if (myTopLevel && isAmbiance) {
       setForeground(UIUtil.GTK_AMBIANCE_TEXT_COLOR);
@@ -220,16 +206,19 @@ public final class ActionMenu extends JMenu {
   }
 
   private class MenuListenerImpl implements MenuListener {
+    @Override
     public void menuCanceled(MenuEvent e) {
       clearItems();
       addStubItem();
     }
 
+    @Override
     public void menuDeselected(MenuEvent e) {
       clearItems();
       addStubItem();
     }
 
+    @Override
     public void menuSelected(MenuEvent e) {
       fillMenu();
     }
@@ -277,6 +266,7 @@ public final class ActionMenu extends JMenu {
   }
 
   private class MenuItemSynchronizer implements PropertyChangeListener {
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
       String name = e.getPropertyName();
       if (Presentation.PROP_VISIBLE.equals(name)) {

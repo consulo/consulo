@@ -2376,10 +2376,6 @@ public class UIUtil {
     return SystemInfo.isWinVistaOrNewer && "Windows".equals(UIManager.getLookAndFeel().getName());
   }
 
-  public static boolean isStandardMenuLAF() {
-    return isWinLafOnVista() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF();
-  }
-
   public static Color getFocusedFillColor() {
     return toAlpha(getListSelectionBackground(), 100);
   }
