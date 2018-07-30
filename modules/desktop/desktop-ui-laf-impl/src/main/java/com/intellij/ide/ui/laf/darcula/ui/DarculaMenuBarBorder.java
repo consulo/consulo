@@ -16,6 +16,7 @@
 package com.intellij.ide.ui.laf.darcula.ui;
 
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,12 +31,10 @@ public class DarculaMenuBarBorder implements Border, UIResource {
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
     g.translate(x, y);
-    w--;h--;
-    g.setColor(UIManager.getColor("MenuBar.darcula.borderColor"));
-    g.drawLine(0, h, w, h);
+    w--;
     h--;
-    g.setColor(UIManager.getColor("MenuBar.darcula.borderShadowColor"));
-    g.drawLine(0, h, w, h);
+    g.setColor(UIManager.getColor("MenuBar.darcula.borderColor"));
+    UIUtil.drawLine(g, 0, h, w, h);
     g.translate(-x, -y);
   }
 
