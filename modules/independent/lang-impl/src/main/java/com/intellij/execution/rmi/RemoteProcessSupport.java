@@ -234,7 +234,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
 
   private static <T> T narrowImpl(Remote remote, Class<T> to) {
     //noinspection unchecked
-    return (T)(to.isInstance(remote) ? remote : PortableRemoteObject.narrow(remote, to));
+    return (T)(to.isInstance(remote) ? remote : null;
   }
 
   private ProcessListener getProcessListener(final Pair<Target, Parameters> key) {
