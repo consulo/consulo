@@ -21,7 +21,10 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.process.*;
+import com.intellij.execution.process.ProcessEvent;
+import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.ProcessListener;
+import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
@@ -34,10 +37,9 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.rmi.PortableRemoteObject;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -234,7 +236,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
 
   private static <T> T narrowImpl(Remote remote, Class<T> to) {
     //noinspection unchecked
-    return (T)(to.isInstance(remote) ? remote : null;
+    return to.isInstance(remote) ? (T)remote : null;
   }
 
   private ProcessListener getProcessListener(final Pair<Target, Parameters> key) {
