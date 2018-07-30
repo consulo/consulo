@@ -46,7 +46,8 @@ import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
-import com.intellij.ui.mac.MacPopupMenuUI;
+import com.intellij.ui.plaf.beg.BegMenuItemUI;
+import com.intellij.ui.plaf.beg.IdeaMenuUI;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
@@ -416,13 +417,13 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     fixGtkPopupStyle();
 
-    fixMenuIssues(uiDefaults);
-
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Panel.opaque", Boolean.TRUE);
       uiDefaults.put("ScrollBarUI", MacButtonlessScrollbarUI.class.getName());
-      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
       uiDefaults.put("JBEditorTabsUI", MacEditorTabsUI.class.getName());
+      uiDefaults.put("MenuItemUI", BegMenuItemUI.class.getName());
+      uiDefaults.put("CheckBoxMenuItemUI", BegMenuItemUI.class.getName());
+      uiDefaults.put("MenuUI", IdeaMenuUI.class.getName());
     }
     else if (UIUtil.isWinLafOnVista()) {
       uiDefaults.put("ComboBox.border", null);
@@ -454,6 +455,10 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
     }
 
+    if(uiDefaults.get("ActionButtonUI") == null) {
+      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+    }
+
     updateToolWindows();
     for (Frame frame : Frame.getFrames()) {
       updateUI(frame);
@@ -477,16 +482,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
           IJSwingUtilities.updateComponentTreeUI(c);
         }
       }
-    }
-  }
-
-
-  private static void fixMenuIssues(UIDefaults uiDefaults) {
-    if (UIUtil.isUnderAquaLookAndFeel()) {
-      // update ui for popup menu to get round corners
-      uiDefaults.put("PopupMenuUI", MacPopupMenuUI.class.getCanonicalName());
-      uiDefaults.put("Menu.invertedArrowIcon", getAquaMenuInvertedIcon());
-      uiDefaults.put("Menu.disabledArrowIcon", getAquaMenuDisabledIcon());
     }
   }
 
