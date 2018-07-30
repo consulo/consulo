@@ -67,8 +67,8 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
   private static final String uiClassID = "IdeStatusBarUI";
 
-  private final Map<String, WidgetBean> myWidgetMap = new HashMap<String, WidgetBean>();
-  private final List<String> myOrderedWidgets = new ArrayList<String>();
+  private final Map<String, WidgetBean> myWidgetMap = new HashMap<>();
+  private final List<String> myOrderedWidgets = new ArrayList<>();
 
   private JPanel myLeftPanel;
   private JPanel myRightPanel;
@@ -77,10 +77,9 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   private String myInfo;
   private String myRequestor;
 
-  private final List<String> myCustomComponentIds = new ArrayList<String>();
+  private final List<String> myCustomComponentIds = new ArrayList<>();
 
-  private final Set<IdeStatusBarImpl> myChildren = new HashSet<IdeStatusBarImpl>();
-  //private ToolWindowsWidget myToolWindowWidget;
+  private final Set<IdeStatusBarImpl> myChildren = new HashSet<>();
 
   private static class WidgetBean {
     JComponent component;
@@ -154,6 +153,10 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     return this;
   }
 
+  public IdeStatusBarImpl() {
+    this(null);
+  }
+
   IdeStatusBarImpl(@Nullable IdeStatusBarImpl master) {
     setLayout(new BorderLayout());
     setBorder(JBUI.Borders.empty());
@@ -170,11 +173,6 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
     enableEvents(AWTEvent.MOUSE_EVENT_MASK);
     enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);
-  }
-
-
-  public IdeStatusBarImpl() {
-    this(null);
   }
 
   @Override
@@ -314,6 +312,11 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
         myCustomComponentIds.remove(key);
       }
     }
+  }
+
+  @Override
+  public void updateUI() {
+    setUI(UIManager.getUI(this));
   }
 
   @Override
@@ -589,48 +592,6 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   @Override
   public String getUIClassID() {
     return uiClassID;
-  }
-
-  @SuppressWarnings({"MethodOverloadsMethodOfSuperclass"})
-  protected void setUI(StatusBarUI ui) {
-    super.setUI(ui);
-  }
-
-  @Override
-  public void updateUI() {
-    if (UIManager.get(getUIClassID()) != null) {
-      setUI((StatusBarUI)UIManager.getUI(this));
-    }
-    else {
-      setUI(new StatusBarUI());
-    }
-  }
-
-  //@Override
-  //protected void paintChildren(final Graphics g) {
-  //  if (getUI() instanceof MacStatusBarUI && !MacStatusBarUI.isActive(this)) {
-  //    final Graphics2D g2d = (Graphics2D)g.create();
-  //    //g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.4f));
-  //    super.paintChildren(g2d);
-  //    g2d.dispose();
-  //  }
-  //  else {
-  //    super.paintChildren(g);
-  //  }
-  //}
-
-  public StatusBarUI getUI() {
-    return (StatusBarUI)ui;
-  }
-
-  @Override
-  public void paint(Graphics g) {
-    super.paint(g);
-    if (UIUtil.isUnderDarcula()) {
-      //IDEA-112093
-      g.setColor(UIUtil.getPanelBackground());
-      g.drawLine(0, getHeight(), getWidth(), getHeight());
-    }
   }
 
   @Override

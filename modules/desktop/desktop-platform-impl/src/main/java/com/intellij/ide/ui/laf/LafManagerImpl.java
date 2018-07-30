@@ -42,6 +42,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
@@ -447,6 +448,10 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     if (uiDefaults.get("JBEditorTabsUI") == null) {
       uiDefaults.put("JBEditorTabsUI", UIUtil.isUnderDarkTheme() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
+    }
+
+    if(uiDefaults.get("IdeStatusBarUI") == null) {
+      uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
     }
 
     updateToolWindows();
