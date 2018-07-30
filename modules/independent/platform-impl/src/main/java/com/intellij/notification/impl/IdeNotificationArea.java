@@ -32,9 +32,9 @@ import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.ClickListener;
-import com.intellij.ui.JBColor;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.awt.TargetAWT;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextAttribute;
@@ -42,10 +42,10 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.image.canvas.Canvas2DFont;
+import consulo.ui.style.ComponentColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
   public static final String WIDGET_ID = "Notifications";
   private StatusBar myStatusBar;
 
-  private consulo.ui.Label myLabel;
+  private Label myLabel;
 
   public IdeNotificationArea() {
     myLabel = Label.create();
@@ -143,9 +143,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
       mainIcon = ImageEffects.layered(mainIcon, ImageEffects.canvas(width, height, ctx -> {
         ctx.setFont(new Canvas2DFont(NotificationsUtil.getFontName(), 9, TextAttribute.STYLE_BOLD));
 
-        // [FIXME] VISTALL remove awt dep
-        ctx.setFillStyle(TargetAWT.from(type == NotificationType.ERROR ? new JBColor(Color.white, new Color(0xF2F2F2)) : new Color(0x333333)));
-
+        ctx.setFillStyle(ComponentColors.LAYOUT);
         ctx.setTextAlign(Canvas2D.TextAlign.center);
         ctx.setTextBaseline(Canvas2D.TextBaseline.middle);
 
@@ -162,7 +160,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
 
   @Nullable
   @Override
-  public consulo.ui.Component getUIComponent() {
+  public Component getUIComponent() {
     return myLabel;
   }
 

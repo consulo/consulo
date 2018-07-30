@@ -42,6 +42,7 @@ public class WGwtStyleImpl implements Style {
     }
 
     myColors.put(ComponentColors.BORDER, new RGBColor(192, 192, 192));
+    myColors.put(ComponentColors.LAYOUT, StandardColors.WHITE.getStaticValue());
   }
 
   @Nonnull

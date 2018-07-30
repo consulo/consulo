@@ -46,6 +46,9 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
         else if (colorKey == ComponentColors.DISABLED_TEXT) {
           return TargetAWT.from(UIUtil.getInactiveTextColor());
         }
+        else if (colorKey == ComponentColors.LAYOUT) {
+          return TargetAWT.from(UIUtil.getPanelBackground());
+        }
         else if (colorKey == ComponentColors.BORDER) {
           return TargetAWT.from(UIUtil.getBorderColor());
         }
