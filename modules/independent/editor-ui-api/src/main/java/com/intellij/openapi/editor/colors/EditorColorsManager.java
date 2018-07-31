@@ -31,6 +31,7 @@ public abstract class EditorColorsManager {
   @NonNls
   public static final String DEFAULT_SCHEME_NAME = "Default";
 
+  @Deprecated
   public static EditorColorsManager getInstance() {
     return ServiceManager.getService(EditorColorsManager.class);
   }

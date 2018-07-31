@@ -38,7 +38,7 @@ import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
-import consulo.platform.api.wp.ApplicationIdeFocusManager;
+import consulo.platform.api.wm.ApplicationIdeFocusManager;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 

@@ -26,7 +26,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.util.ui.UIUtil;
-import consulo.platform.api.wp.ApplicationIdeFocusManager;
+import consulo.platform.api.wm.ApplicationIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -20,6 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
@@ -28,10 +29,10 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -43,42 +44,48 @@ import java.util.List;
  */
 @Singleton
 public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
+  @Deprecated
+  public static TodoConfiguration getInstance() {
+    return ServiceManager.getService(TodoConfiguration.class);
+  }
+
   private TodoPattern[] myTodoPatterns;
   private TodoFilter[] myTodoFilters;
   private IndexPattern[] myIndexPatterns;
 
   private final EventDispatcher<PropertyChangeListener> myPropertyChangeMulticaster = EventDispatcher.create(PropertyChangeListener.class);
 
-  @NonNls public static final String PROP_TODO_PATTERNS = "todoPatterns";
-  @NonNls public static final String PROP_TODO_FILTERS = "todoFilters";
-  @NonNls private static final String ELEMENT_PATTERN = "pattern";
-  @NonNls private static final String ELEMENT_FILTER = "filter";
+  @NonNls
+  public static final String PROP_TODO_PATTERNS = "todoPatterns";
+  @NonNls
+  public static final String PROP_TODO_FILTERS = "todoFilters";
+  @NonNls
+  private static final String ELEMENT_PATTERN = "pattern";
+  @NonNls
+  private static final String ELEMENT_FILTER = "filter";
+
   private final MessageBus myMessageBus;
+  private final EditorColorsManager myEditorColorsManager;
 
   @Inject
-  public TodoConfiguration(@Nonnull Application application) {
+  public TodoConfiguration(@Nonnull Application application, EditorColorsManager editorColorsManager) {
+    myEditorColorsManager = editorColorsManager;
     myMessageBus = application.getMessageBus();
     resetToDefaultTodoPatterns();
   }
 
   public void resetToDefaultTodoPatterns() {
-    myTodoPatterns = new TodoPattern[]{
-      new TodoPattern("\\btodo\\b.*", TodoAttributesUtil.createDefault(), false),
-      new TodoPattern("\\bfixme\\b.*", TodoAttributesUtil.createDefault(), false),
-    };
+    myTodoPatterns = new TodoPattern[]{new TodoPattern("\\btodo\\b.*", TodoAttributesUtil.createDefault(myEditorColorsManager), false),
+            new TodoPattern("\\bfixme\\b.*", TodoAttributesUtil.createDefault(myEditorColorsManager), false),};
     myTodoFilters = new TodoFilter[]{};
     buildIndexPatterns();
   }
 
   private void buildIndexPatterns() {
     myIndexPatterns = new IndexPattern[myTodoPatterns.length];
-    for(int i=0; i<myTodoPatterns.length; i++) {
-      myIndexPatterns [i] = myTodoPatterns [i].getIndexPattern();
+    for (int i = 0; i < myTodoPatterns.length; i++) {
+      myIndexPatterns[i] = myTodoPatterns[i].getIndexPattern();
     }
-  }
-
-  public static TodoConfiguration getInstance() {
-    return ServiceManager.getService(TodoConfiguration.class);
   }
 
   @Override
@@ -110,8 +117,7 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
 
     // only trigger index refresh actual index patterns have changed
     if (shouldNotifyIndices && !Arrays.deepEquals(myIndexPatterns, oldIndexPatterns)) {
-      final PropertyChangeEvent event =
-        new PropertyChangeEvent(this, IndexPatternProvider.PROP_INDEX_PATTERNS, oldTodoPatterns, todoPatterns);
+      final PropertyChangeEvent event = new PropertyChangeEvent(this, IndexPatternProvider.PROP_INDEX_PATTERNS, oldTodoPatterns, todoPatterns);
       myMessageBus.syncPublisher(IndexPatternProvider.INDEX_PATTERNS_CHANGED).propertyChange(event);
     }
 
@@ -124,7 +130,7 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
 
   /**
    * @return <code>TodoFilter</code> with specified <code>name</code>. Method returns
-   *         <code>null</code> if there is no filter with <code>name</code>.
+   * <code>null</code> if there is no filter with <code>name</code>.
    */
   public TodoFilter getTodoFilter(String name) {
     for (TodoFilter filter : myTodoFilters) {
@@ -152,21 +158,23 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeMulticaster.addListener(listener);
   }
+
   public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
-    myPropertyChangeMulticaster.addListener(listener,parentDisposable);
+    myPropertyChangeMulticaster.addListener(listener, parentDisposable);
   }
+
   public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeMulticaster.removeListener(listener);
   }
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    List<TodoPattern> patternsList = new ArrayList<TodoPattern>();
-    List<TodoFilter> filtersList = new ArrayList<TodoFilter>();
+    List<TodoPattern> patternsList = new ArrayList<>();
+    List<TodoFilter> filtersList = new ArrayList<>();
     for (Element child : element.getChildren()) {
       if (ELEMENT_PATTERN.equals(child.getName())) {
-        TodoPattern pattern = new TodoPattern(TodoAttributesUtil.createDefault());
-        pattern.readExternal(child, TodoAttributesUtil.getDefaultColorSchemeTextAttributes());
+        TodoPattern pattern = new TodoPattern(TodoAttributesUtil.createDefault(myEditorColorsManager));
+        pattern.readExternal(child, TodoAttributesUtil.getDefaultColorSchemeTextAttributes(myEditorColorsManager));
         patternsList.add(pattern);
       }
       else if (ELEMENT_FILTER.equals(child.getName())) {
@@ -199,7 +207,7 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
     for (TodoPattern pattern : myTodoPatterns) {
       TodoAttributes attributes = pattern.getAttributes();
       if (!attributes.shouldUseCustomTodoColor()) {
-        attributes.setUseCustomTodoColor(false, TodoAttributesUtil.getDefaultColorSchemeTextAttributes());
+        attributes.setUseCustomTodoColor(false, TodoAttributesUtil.getDefaultColorSchemeTextAttributes(myEditorColorsManager));
       }
     }
   }

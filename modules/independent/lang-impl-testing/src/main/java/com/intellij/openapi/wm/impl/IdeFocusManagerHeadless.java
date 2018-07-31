@@ -23,8 +23,8 @@ import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusRequestor;
 import com.intellij.openapi.wm.IdeFrame;
-import consulo.platform.api.wp.ApplicationIdeFocusManager;
-import consulo.platform.api.wp.ProjectIdeFocusManager;
+import consulo.platform.api.wm.ApplicationIdeFocusManager;
+import consulo.platform.api.wm.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

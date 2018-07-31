@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.platform.api.wp;
+package consulo.platform.api.wm;
 
 import com.intellij.openapi.wm.IdeFocusManager;
 

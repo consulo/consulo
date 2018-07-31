@@ -23,7 +23,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.*;
-import consulo.platform.api.wp.ProjectIdeFocusManager;
+import consulo.platform.api.wm.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

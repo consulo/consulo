@@ -34,7 +34,7 @@
       <headless-implementation-class>com.intellij.openapi.wm.impl.TestWindowManager</headless-implementation-class>
     </component>
     <component>
-      <interface-class>consulo.platform.api.wp.ApplicationIdeFocusManager</interface-class>
+      <interface-class>consulo.platform.api.wm.ApplicationIdeFocusManager</interface-class>
       <implementation-class>com.intellij.openapi.wm.impl.FocusManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
     </component>
@@ -68,7 +68,7 @@
       <headless-implementation-class>com.intellij.openapi.wm.impl.ToolWindowHeadlessManagerImpl</headless-implementation-class>
     </component>
     <component>
-      <interface-class>consulo.platform.api.wp.ProjectIdeFocusManager</interface-class>
+      <interface-class>consulo.platform.api.wm.ProjectIdeFocusManager</interface-class>
       <implementation-class>com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
     </component>

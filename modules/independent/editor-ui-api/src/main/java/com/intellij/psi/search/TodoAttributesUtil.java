@@ -23,12 +23,24 @@ import javax.annotation.Nonnull;
 
 public class TodoAttributesUtil {
   @Nonnull
+  @Deprecated
   public static TodoAttributes createDefault() {
     return new TodoAttributes(AllIcons.General.TodoDefault, getDefaultColorSchemeTextAttributes());
   }
 
   @Nonnull
+  @Deprecated
   public static TextAttributes getDefaultColorSchemeTextAttributes() {
     return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.TODO_DEFAULT_ATTRIBUTES).clone();
+  }
+
+  @Nonnull
+  public static TodoAttributes createDefault(@Nonnull EditorColorsManager manager) {
+    return new TodoAttributes(AllIcons.General.TodoDefault, getDefaultColorSchemeTextAttributes(manager));
+  }
+
+  @Nonnull
+  public static TextAttributes getDefaultColorSchemeTextAttributes(@Nonnull EditorColorsManager manager) {
+    return manager.getGlobalScheme().getAttributes(CodeInsightColors.TODO_DEFAULT_ATTRIBUTES).clone();
   }
 }
