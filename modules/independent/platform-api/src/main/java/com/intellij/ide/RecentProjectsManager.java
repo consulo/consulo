@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class RecentProjectsManager {
+  @Deprecated
   public static RecentProjectsManager getInstance() {
     return ServiceManager.getService(RecentProjectsManager.class);
   }

@@ -52,6 +52,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   private volatile static UISettings ourInstance;
 
   @Nonnull
+  @Deprecated
   public static UISettings getInstance() {
     if (ourInstance != null) {
       return ourInstance;

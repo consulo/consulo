@@ -16,13 +16,12 @@
 package com.intellij.idea;
 
 import com.intellij.idea.starter.ApplicationPostStarter;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
-import consulo.application.TransactionGuardEx;
+import consulo.extensions.AreaInstanceEx;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
@@ -47,6 +46,8 @@ public class ApplicationStarter {
   private boolean myPerformProjectLoad = true;
   private ApplicationPostStarter myPostStarter;
 
+  private Application myApplication;
+
   public ApplicationStarter(@Nonnull Class<? extends ApplicationPostStarter> postStarterClass, @Nonnull CommandLineArgs args) {
     myPostStarterClass = postStarterClass;
     LOG.assertTrue(ourInstance == null);
@@ -60,7 +61,7 @@ public class ApplicationStarter {
     patchSystem(headless);
 
     myPostStarter = createPostStarter();
-    myPostStarter.createApplication(headless, args);
+    myApplication = myPostStarter.createApplication(headless, args);
     myPostStarter.premain(args);
   }
 
@@ -81,15 +82,17 @@ public class ApplicationStarter {
 
   public void run(boolean newConfigFolder) {
     try {
-      ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-      app.load(PathManager.getOptionsPath());
 
-      if (myPostStarter.needStartInTransaction()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(newConfigFolder, myArgs));
-      }
-      else {
-        myPostStarter.main(newConfigFolder, myArgs);
-      }
+      ApplicationEx applicationEx = (ApplicationEx)myApplication;
+
+      applicationEx.load(PathManager.getOptionsPath());
+
+      AreaInstanceEx areaInstanceEx = (AreaInstanceEx)applicationEx;
+
+      // inject members from fields
+      areaInstanceEx.getInjector().injectMembers(myPostStarter);
+
+      myPostStarter.run(applicationEx, newConfigFolder, myArgs);
 
       myPostStarter = null;
 

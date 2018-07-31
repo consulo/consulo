@@ -15,10 +15,13 @@
  */
 package consulo.start;
 
+import com.google.inject.Injector;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -27,11 +30,18 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class DesktopWelcomeFrameManager implements WelcomeFrameManager {
+  private Injector myInjector;
+
+  @Inject
+  public DesktopWelcomeFrameManager(Injector injector) {
+    myInjector = injector;
+  }
+
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Window openFrame() {
-    FlatWelcomeFrame flatWelcomeFrame = new FlatWelcomeFrame();
+  public Window createFrame() {
+    FlatWelcomeFrame flatWelcomeFrame = myInjector.getInstance(FlatWelcomeFrame.class);
     flatWelcomeFrame.setVisible(true);
     return flatWelcomeFrame;
   }

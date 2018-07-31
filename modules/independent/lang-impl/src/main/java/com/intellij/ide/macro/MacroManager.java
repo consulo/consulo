@@ -47,6 +47,7 @@ import java.util.Map;
 public final class MacroManager {
   private final HashMap<String, Macro> myMacrosMap = new HashMap<String, Macro>();
 
+  @Deprecated
   public static MacroManager getInstance() {
     return ServiceManager.getService(MacroManager.class);
   }

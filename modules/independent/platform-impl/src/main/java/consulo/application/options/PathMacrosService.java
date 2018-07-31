@@ -17,12 +17,11 @@ package consulo.application.options;
 
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.components.CompositePathMacroFilter;
 import com.intellij.openapi.components.ServiceManager;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -32,6 +31,7 @@ import java.util.regex.Pattern;
  */
 public abstract class PathMacrosService {
   @Nonnull
+  @Deprecated
   public static PathMacrosService getInstance() {
     return ServiceManager.getService(PathMacrosService.class);
   }
@@ -39,9 +39,7 @@ public abstract class PathMacrosService {
   public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 
   @Nonnull
-  public Set<String> getMacroNames(@Nonnull final Element e) {
-    return getMacroNames(e, new CompositePathMacroFilter(PathMacroFilter.EP_NAME.getExtensions()), PathMacros.getInstance());
-  }
+  public abstract Set<String> getMacroNames(@Nonnull final Element e);
 
   public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros);
 }

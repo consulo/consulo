@@ -15,10 +15,7 @@
  */
 package com.intellij.openapi.vfs.newvfs.persistent;
 
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.impl.win32.Win32LocalFileSystem;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
@@ -102,14 +99,5 @@ public abstract class PersistentFS extends ManagingFS {
   @RequiredWriteAction
   public abstract void processEvents(@Nonnull List<VFileEvent> events);
 
-  @Nonnull
-  public static NewVirtualFileSystem replaceWithNativeFS(@Nonnull final NewVirtualFileSystem fs) {
-    if (SystemInfo.isWindows &&
-        !(fs instanceof Win32LocalFileSystem) &&
-        fs.getProtocol().equals(LocalFileSystem.PROTOCOL) &&
-        Win32LocalFileSystem.isAvailable()) {
-      return Win32LocalFileSystem.getWin32Instance();
-    }
-    return fs;
-  }
+  public abstract NewVirtualFileSystem replaceWithNativeFS(@Nonnull NewVirtualFileSystem fs);
 }

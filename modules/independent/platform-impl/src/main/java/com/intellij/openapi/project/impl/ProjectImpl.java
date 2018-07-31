@@ -81,8 +81,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
-  private final ProjectPathMacroManager myPathMacroManager = new ProjectPathMacroManager(this);
-
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
@@ -114,7 +112,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @SuppressWarnings("unchecked")
   protected <T> T getCustomComponentInstance(@Nonnull Class<T> clazz) {
     if(clazz == PathMacroManager.class) {
-      return (T)myPathMacroManager;
+      return (T)getComponent(ProjectPathMacroManager.class);
     }
     return super.getCustomComponentInstance(clazz);
   }
@@ -166,7 +164,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   @Override
   public IProjectStore getStateStore() {
-    return getComponent(IProjectStore.class);
+    return getInjector().getInstance(IProjectStore.class);
   }
 
   @Override
@@ -256,12 +254,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void init() {
-    long start = System.currentTimeMillis();
-//    ProfilingUtil.startCPUProfiling();
     super.init();
-//    ProfilingUtil.captureCPUSnapshot();
-    long time = System.currentTimeMillis() - start;
-    LOG.info(getNotLazyComponentsSize() + " project components initialized in " + time + " ms");
+
     getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).projectComponentsInitialized(this);
 
     myProjectManagerListener = new MyProjectManagerListener();

@@ -22,6 +22,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.Map;
 /**
  * @author nik
  */
+@Singleton
 public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
   private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache = new HashMap<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>>();
   

@@ -19,10 +19,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 
-import consulo.annotation.inject.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -38,15 +39,25 @@ public class UpdateCheckerComponent implements Disposable {
 
   private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
 
-  private final Runnable myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
-    UpdateSettings.getInstance().setLastTimeCheck(System.currentTimeMillis());
+  private final UpdateSettings myUpdateSettings;
+
+  private final Runnable myCheckRunnable;
+
+  @Inject
+  public UpdateCheckerComponent(UpdateSettings updateSettings) {
+    myUpdateSettings = updateSettings;
+    myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult(updateSettings).doWhenDone(this::queueNext);
+  }
+
+  private void queueNext() {
+    myUpdateSettings.setLastTimeCheck(System.currentTimeMillis());
     queueNextUpdateCheck(ourCheckInterval);
-  });
+  }
 
   @PostConstruct
   public void initComponent() {
-    final long interval = consulo.ide.updateSettings.UpdateSettings.getInstance().getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
-    queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
+    final long interval = myUpdateSettings.getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
+    queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded(myUpdateSettings) ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
   }
 
   private void queueNextUpdateCheck(long interval) {

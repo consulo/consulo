@@ -46,6 +46,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -502,6 +503,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   }
 
   @State(name = "PlaybackDebugger", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+  @Singleton
   public static class PlaybackDebuggerState implements PersistentStateComponent<Element> {
     private static final String ATTR_CURRENT_SCRIPT = "currentScript";
     public String currentScript = "";

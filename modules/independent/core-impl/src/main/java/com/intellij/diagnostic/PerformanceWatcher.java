@@ -17,6 +17,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
@@ -35,6 +36,7 @@ import consulo.application.ApplicationProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
@@ -89,9 +91,13 @@ public class PerformanceWatcher implements Disposable {
     return ApplicationManager.getApplication().getComponent(PerformanceWatcher.class);
   }
 
-  public PerformanceWatcher() {
+  private final Application myApplication;
+
+  @Inject
+  public PerformanceWatcher(Application application) {
+    myApplication = application;
     myCurHangLogDir = mySessionLogDir = new File(PathManager.getLogPath() + "/threadDumps-" + myDateFormat.format(new Date()) + "-" + ApplicationInfo.getInstance().getBuild().asString());
-    myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(IdePerformanceListener.TOPIC);
+    myPublisher = application.getMessageBus().syncPublisher(IdePerformanceListener.TOPIC);
     myThreadMXBean = ManagementFactory.getThreadMXBean();
     myThread = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
       @Override
@@ -120,7 +126,7 @@ public class PerformanceWatcher implements Disposable {
         }
       });
 
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+      myApplication.executeOnPooledThread(new Runnable() {
         @Override
         public void run() {
           deleteOldThreadDumps();

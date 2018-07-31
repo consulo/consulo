@@ -26,19 +26,20 @@ import com.intellij.util.Function;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
  * @author peter
  */
-@State(
-    name = "TemplateDataLanguagePatterns",
-    storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/templateLanguages.xml") )
+@State(name = "TemplateDataLanguagePatterns", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/templateLanguages.xml"))
+@Singleton
 public class TemplateDataLanguagePatterns implements PersistentStateComponent<Element> {
   private FileTypeAssocTable<Language> myAssocTable = new FileTypeAssocTable<Language>();
-  @NonNls private static final String SEPARATOR = ";";
+  @NonNls
+  private static final String SEPARATOR = ";";
 
   public static TemplateDataLanguagePatterns getInstance() {
     return ServiceManager.getService(TemplateDataLanguagePatterns.class);

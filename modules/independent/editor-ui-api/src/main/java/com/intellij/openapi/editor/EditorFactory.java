@@ -36,6 +36,7 @@ public abstract class EditorFactory {
    * @return the editor factory instance.
    */
   @Nonnull
+  @Deprecated
   public static EditorFactory getInstance() {
     return Application.get().getComponent(EditorFactory.class);
   }

@@ -24,6 +24,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
@@ -31,6 +32,7 @@ import java.util.*;
  * from kotlin
  */
 @State(name = "ParameterNameHintsSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "parameter.hints.xml")})
+@Singleton
 public class ParameterNameHintsSettings implements PersistentStateComponent<Element> {
   private static final String BLACKLISTS = "blacklists";
   private static final String LANGUAGE_LIST = "blacklist";
@@ -99,8 +101,7 @@ public class ParameterNameHintsSettings implements PersistentStateComponent<Elem
     }
 
     if (!myIsDoNotShowIfMethodNameContainsParameterName) {
-      getOrCreateChild(root, DO_NOT_SHOW_IF_PARAM_NAME_CONTAINED_IN_METHOD_NAME)
-              .setAttribute("value", String.valueOf(myIsDoNotShowIfMethodNameContainsParameterName));
+      getOrCreateChild(root, DO_NOT_SHOW_IF_PARAM_NAME_CONTAINED_IN_METHOD_NAME).setAttribute("value", String.valueOf(myIsDoNotShowIfMethodNameContainsParameterName));
     }
 
     if (myIsShowForParamsWithSameType) {

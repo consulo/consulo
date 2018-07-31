@@ -35,16 +35,16 @@ public class Win32LocalFileSystem extends LocalFileSystemBase {
     return IdeaWin32.isAvailable();
   }
 
-  private static final ThreadLocal<Win32LocalFileSystem> THREAD_LOCAL = new ThreadLocal<Win32LocalFileSystem>() {
-    @Override
-    protected Win32LocalFileSystem initialValue() {
-      return new Win32LocalFileSystem(ManagingFS.getInstance(), RefreshQueue.getInstance());
-    }
-  };
+  private static final ThreadLocal<Win32LocalFileSystem> ourFileSystemValue = new ThreadLocal<>();
 
-  public static Win32LocalFileSystem getWin32Instance() {
+  public static Win32LocalFileSystem getWin32Instance(ManagingFS managingFS, RefreshQueue refreshQueue) {
     if (!isAvailable()) throw new RuntimeException("Native filesystem for Windows is not loaded");
-    Win32LocalFileSystem fileSystem = THREAD_LOCAL.get();
+
+    Win32LocalFileSystem fileSystem = ourFileSystemValue.get();
+    if(fileSystem == null) {
+      ourFileSystemValue.set(fileSystem = new Win32LocalFileSystem(managingFS, refreshQueue));
+    }
+
     fileSystem.myFsCache.clearCache();
     return fileSystem;
   }
@@ -68,9 +68,7 @@ public class Win32LocalFileSystem extends LocalFileSystemBase {
 
   @Nonnull
   @Override
-  public Set<WatchRequest> replaceWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests,
-                                               @Nullable Collection<String> recursiveRoots,
-                                               @Nullable Collection<String> flatRoots) {
+  public Set<WatchRequest> replaceWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests, @Nullable Collection<String> recursiveRoots, @Nullable Collection<String> flatRoots) {
     throw new UnsupportedOperationException();
   }
 }

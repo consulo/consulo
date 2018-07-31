@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 
 public abstract class DataManager {
   @Nonnull
+  @Deprecated
   public static DataManager getInstance() {
     return ApplicationManager.getApplication().getComponent(DataManager.class);
   }

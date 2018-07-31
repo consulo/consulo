@@ -56,6 +56,11 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
   }
 
   @Override
+  public <T> T createInstance(@Nonnull Class<T> clazz) {
+    return null;
+  }
+
+  @Override
   public <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementation) {
     return getComponent(interfaceClass);
   }

@@ -21,14 +21,16 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
-import consulo.core.impl.components.impl.ComponentManagerImpl;
+import consulo.application.options.PathMacrosService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,11 +51,15 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(ApplicationEx application, VirtualFileManager virtualFileManager) {
+  public ApplicationStoreImpl(ApplicationEx application,
+                              VirtualFileManager virtualFileManager,
+                              VirtualFileTracker virtualFileTracker,
+                              ApplicationPathMacroManager pathMacroManager,
+                              PathMacrosService pathMacrosService) {
     myApplication = (ApplicationEx2)application;
     myLocalFileSystem = LocalFileSystem.from(virtualFileManager);
 
-    myStateStorageManager = new StateStorageManagerImpl(PathMacroManager.getInstance(application).createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application.getMessageBus()) {
+    myStateStorageManager = new StateStorageManagerImpl(pathMacroManager, ROOT_ELEMENT_NAME, application.getMessageBus(), myLocalFileSystem, virtualFileTracker, pathMacrosService) {
       private boolean myConfigDirectoryRefreshed;
 
       @Nonnull
@@ -64,7 +70,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
 
       @Override
       protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
-        return new StorageData(ROOT_ELEMENT_NAME);
+        return new StorageData(ROOT_ELEMENT_NAME, myPathMacrosService);
       }
 
       @Override
@@ -97,10 +103,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
 
   @Override
   public void load() throws IOException {
-    long t = System.currentTimeMillis();
     myApplication.init();
-    t = System.currentTimeMillis() - t;
-    LOG.info(((ComponentManagerImpl)myApplication).getNotLazyComponentsSize() + " application components initialized in " + t + " ms");
   }
 
   @Override

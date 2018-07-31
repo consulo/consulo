@@ -16,12 +16,12 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -36,14 +36,15 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
+@Singleton
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element> {
-  public static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);
-
   @NonNls
   public static final String ELEMENT_SDK = "sdk";
 
@@ -51,10 +52,11 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   private final MessageBus myMessageBus;
 
-  public SdkTableImpl() {
-    myMessageBus = ApplicationManager.getApplication().getMessageBus();
+  @Inject
+  public SdkTableImpl(Application application, VirtualFileManager virtualFileManager) {
+    myMessageBus = application.getMessageBus();
     // support external changes to sdk libraries (Endorsed Standards Override)
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+    virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@Nonnull VirtualFileEvent event) {
         updateSdks(event.getFile());

@@ -40,28 +40,25 @@ import com.intellij.util.config.*;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Singleton;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@State(
-        name = "DiffManager",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/diff.xml"),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)
-        }
-)
+@State(name = "DiffManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/diff.xml"), @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)})
 @Deprecated
+@Singleton
 public class DiffManagerImpl extends DiffManager implements PersistentStateComponent<Element> {
   public static final int FULL_DIFF_DIVIDER_POLYGONS_OFFSET = 3;
   private static final Logger LOG = Logger.getInstance(DiffManagerImpl.class);
 
   private static final Externalizer<String> TOOL_PATH_UPDATE = new Externalizer<String>() {
-    @NonNls private static final String NEW_VALUE = "newValue";
+    @NonNls
+    private static final String NEW_VALUE = "newValue";
 
     @Override
     public String readValue(Element dataElement) {
@@ -104,8 +101,10 @@ public class DiffManagerImpl extends DiffManager implements PersistentStateCompo
   private ComparisonPolicy myComparisonPolicy = ComparisonPolicy.DEFAULT;
   private HighlightMode myHighlightMode = HighlightMode.BY_WORD;
 
-  @NonNls public static final String COMPARISON_POLICY_ATTR_NAME = "COMPARISON_POLICY";
-  @NonNls public static final String HIGHLIGHT_MODE_ATTR_NAME = "HIGHLIGHT_MODE";
+  @NonNls
+  public static final String COMPARISON_POLICY_ATTR_NAME = "COMPARISON_POLICY";
+  @NonNls
+  public static final String HIGHLIGHT_MODE_ATTR_NAME = "HIGHLIGHT_MODE";
 
   public DiffManagerImpl() {
     myProperties = new ExternalizablePropertyContainer();
@@ -128,30 +127,13 @@ public class DiffManagerImpl extends DiffManager implements PersistentStateCompo
     DiffTool[] standardTools;
     // there is inner check in multiple tool for external viewers as well
     if (!ENABLE_FILES.value(myProperties) || !ENABLE_FOLDERS.value(myProperties) || !ENABLE_MERGE.value(myProperties)) {
-      DiffTool[] embeddableTools = {
-              INTERNAL_DIFF,
-              new MergeTool(),
-              BinaryDiffTool.INSTANCE
-      };
-      standardTools = new DiffTool[]{
-              ExtCompareFolders.INSTANCE,
-              ExtCompareFiles.INSTANCE,
-              ExtMergeFiles.INSTANCE,
-              new MultiLevelDiffTool(Arrays.asList(embeddableTools)),
-              INTERNAL_DIFF,
-              new MergeTool(),
-              BinaryDiffTool.INSTANCE
-      };
+      DiffTool[] embeddableTools = {INTERNAL_DIFF, new MergeTool(), BinaryDiffTool.INSTANCE};
+      standardTools =
+              new DiffTool[]{ExtCompareFolders.INSTANCE, ExtCompareFiles.INSTANCE, ExtMergeFiles.INSTANCE, new MultiLevelDiffTool(Arrays.asList(embeddableTools)), INTERNAL_DIFF, new MergeTool(),
+                      BinaryDiffTool.INSTANCE};
     }
     else {
-      standardTools = new DiffTool[]{
-              ExtCompareFolders.INSTANCE,
-              ExtCompareFiles.INSTANCE,
-              ExtMergeFiles.INSTANCE,
-              INTERNAL_DIFF,
-              new MergeTool(),
-              BinaryDiffTool.INSTANCE
-      };
+      standardTools = new DiffTool[]{ExtCompareFolders.INSTANCE, ExtCompareFiles.INSTANCE, ExtMergeFiles.INSTANCE, INTERNAL_DIFF, new MergeTool(), BinaryDiffTool.INSTANCE};
     }
     if (myAdditionTools.isEmpty()) {
       return new CompositeDiffTool(standardTools);

@@ -46,6 +46,7 @@ public abstract class WindowManagerEx extends WindowManager {
     DISABLED
   }
 
+  @Deprecated
   public static WindowManagerEx getInstanceEx() {
     return (WindowManagerEx)WindowManager.getInstance();
   }

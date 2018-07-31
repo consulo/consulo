@@ -16,7 +16,6 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
@@ -26,6 +25,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.util.pointers.Named;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.List;
@@ -36,17 +36,21 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
 
   private final List<SchemesManagerImpl> myRegisteredManagers = ContainerUtil.createLockFreeCopyOnWriteList();
 
+  private Application myApplication;
+
+  @Inject
+  public SchemesManagerFactoryImpl(Application application) {
+    myApplication = application;
+  }
+
   @Override
-  public <T extends Named, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec,
-                                                                                                      final SchemeProcessor<E> processor,
-                                                                                                      final RoamingType roamingType) {
-    final Application application = ApplicationManager.getApplication();
+  public <T extends Named, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec, final SchemeProcessor<E> processor, final RoamingType roamingType) {
+    final Application application = myApplication;
     if (!(application instanceof ApplicationEx2)) return null;
     String baseDirPath = ((ApplicationEx2)application).getStateStore().getStateStorageManager().expandMacros(fileSpec);
 
-    StreamProvider
-            provider = ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
-    SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<T, E>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
+    StreamProvider provider = ((ApplicationEx2)myApplication).getStateStore().getStateStorageManager().getStreamProvider();
+    SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
     myRegisteredManagers.add(manager);
     return manager;
   }

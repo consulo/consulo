@@ -16,24 +16,15 @@
 
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.xmlb.annotations.Attribute;
 
-public class ServiceDescriptor implements PluginAware {
-  @Attribute("serviceInterface")
+public class ServiceDescriptor {
+  public static final String serviceInterfaceAttribute = "serviceInterface";
+  public static final String serviceImplementationAttribute = "serviceImplementation";
+
+  @Attribute(serviceInterfaceAttribute)
   public String serviceInterface;
 
-  @Attribute("serviceImplementation")
+  @Attribute(serviceImplementationAttribute)
   public String serviceImplementation;
-
-  @Attribute("serviceImplementationForCompilerServer")
-  public String serviceImplementationForCompilerServer;
-
-  public PluginDescriptor myPluginDescriptor;
-
-  @Override
-  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
-    myPluginDescriptor = pluginDescriptor;
-  }
 }

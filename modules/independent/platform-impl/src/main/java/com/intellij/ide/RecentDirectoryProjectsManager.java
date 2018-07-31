@@ -29,18 +29,13 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@State(
-  name = "RecentProjectsManager",
-  storages = {
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true, roamingType = RoamingType.DISABLED),
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/recentProjects.xml", roamingType = RoamingType.DISABLED)
-  }
-)
+@State(name = "RecentProjectsManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true, roamingType = RoamingType.DISABLED),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/recentProjects.xml", roamingType = RoamingType.DISABLED)})
 @Singleton
 public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   @Inject
-  public RecentDirectoryProjectsManager(Application application) {
-    super(application.getMessageBus());
+  public RecentDirectoryProjectsManager(Application application, GeneralSettings generalSettings) {
+    super(application, generalSettings);
   }
 
   @Override

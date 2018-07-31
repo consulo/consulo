@@ -26,6 +26,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.PsiReference;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class DependenciesVisitorFactory {
 
   public static DependenciesVisitorFactory getInstance() {

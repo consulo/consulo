@@ -130,7 +130,7 @@ public class PathMacroManagerTest {
   public void testRightMacrosOrder_RelativeValues_NoVariables() {
     setUpMocks("/tmp/foo");
 
-    final ReplacePathToMacroMap replacePathMap = new ModulePathMacroManager(myPathMacros, myModule).getReplacePathMap();
+    final ReplacePathToMacroMap replacePathMap = new ModulePathMacroManager(myPathMacros, myModule, module).getReplacePathMap();
     assertReplacements(replacePathMap, "file:/tmp/foo/module -> file:$MODULE_DIR$\n" +
                                        "file://tmp/foo/module -> file:/$MODULE_DIR$\n" +
                                        "file:///tmp/foo/module -> file://$MODULE_DIR$\n" +
@@ -279,7 +279,7 @@ public class PathMacroManagerTest {
   public void testProjectUnderUserHome() {
     setUpMocks(USER_HOME + "/IdeaProjects/foo");
 
-    final ReplacePathToMacroMap replacePathMap = new ModulePathMacroManager(myPathMacros, myModule).getReplacePathMap();
+    final ReplacePathToMacroMap replacePathMap = new ModulePathMacroManager(myPathMacros, myModule, module).getReplacePathMap();
     assertReplacements(replacePathMap, "file:" +
                                        USER_HOME +
                                        "/IdeaProjects/foo/module -> file:$MODULE_DIR$\n" +

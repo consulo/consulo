@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,10 +29,8 @@ import java.net.URL;
 /**
  * @author Rustam Vishnyakov
  */
-@State(
-        name = "CodeStyleSchemesUIConfiguration",
-        storages = {@Storage(
-                file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@State(name = "CodeStyleSchemesUIConfiguration", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Singleton
 public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent<CodeStyleSchemesUIConfiguration> {
 
   public String RECENT_IMPORT_FILE_LOCATION = "";

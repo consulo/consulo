@@ -19,6 +19,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.ObjectUtils;
+import consulo.core.api.ide.util.ApplicationPropertiesComponent;
+import consulo.core.api.ide.util.ProjectPropertiesComponent;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -33,19 +35,15 @@ import java.lang.reflect.Field;
  * @author max
  * @author Konstantin Bulenkov
  */
-public abstract class PropertiesComponent {
-  static interface ApplicationLevel {
-  }
-
-  static interface ProjectLevel {
-  }
-
+public interface PropertiesComponent {
+  @Deprecated
   public static PropertiesComponent getInstance(Project project) {
-    return (PropertiesComponent)ServiceManager.getService(project, ProjectLevel.class);
+    return ServiceManager.getService(project, ProjectPropertiesComponent.class);
   }
 
+  @Deprecated
   public static PropertiesComponent getInstance() {
-    return (PropertiesComponent)ServiceManager.getService(ApplicationLevel.class);
+    return ServiceManager.getService(ApplicationPropertiesComponent.class);
   }
 
   public abstract void unsetValue(String name);
@@ -78,7 +76,7 @@ public abstract class PropertiesComponent {
   /**
    * Set value or unset if equals to false
    */
-  public final void setValue(@Nonnull String name, boolean value) {
+  default void setValue(@Nonnull String name, boolean value) {
     setValue(name, value, false);
   }
 
@@ -92,20 +90,20 @@ public abstract class PropertiesComponent {
 
   public abstract void setValues(@NonNls String name, String[] values);
 
-  public final boolean isTrueValue(@NonNls String name) {
+  default boolean isTrueValue(@NonNls String name) {
     return Boolean.valueOf(getValue(name)).booleanValue();
   }
 
-  public final boolean getBoolean(@Nonnull String name, boolean defaultValue) {
+  default boolean getBoolean(@Nonnull String name, boolean defaultValue) {
     return isValueSet(name) ? isTrueValue(name) : defaultValue;
   }
 
-  public final boolean getBoolean(@Nonnull String name) {
+  default boolean getBoolean(@Nonnull String name) {
     return getBoolean(name, false);
   }
 
   @Nonnull
-  public String getValue(@NonNls String name, @Nonnull String defaultValue) {
+  default String getValue(@NonNls String name, @Nonnull String defaultValue) {
     if (!isValueSet(name)) {
       return defaultValue;
     }
@@ -117,15 +115,15 @@ public abstract class PropertiesComponent {
   /**
    * @deprecated Use {@link #getInt(String, int)}
    * Init was never performed and in any case is not recommended.
-   */ public final int getOrInitInt(@Nonnull String name, int defaultValue) {
+   */ default int getOrInitInt(@Nonnull String name, int defaultValue) {
     return getInt(name, defaultValue);
   }
 
-  public int getInt(@Nonnull String name, int defaultValue) {
+  default int getInt(@Nonnull String name, int defaultValue) {
     return StringUtilRt.parseInt(getValue(name), defaultValue);
   }
 
-  public final long getOrInitLong(@NonNls String name, long defaultValue) {
+  default long getOrInitLong(@NonNls String name, long defaultValue) {
     try {
       String value = getValue(name);
       return value == null ? defaultValue : Long.parseLong(value);
@@ -138,7 +136,7 @@ public abstract class PropertiesComponent {
   @Deprecated
   /**
    * @deprecated Use {@link #getValue(String, String)}
-   */ public String getOrInit(@NonNls String name, String defaultValue) {
+   */ default String getOrInit(@NonNls String name, String defaultValue) {
     if (!isValueSet(name)) {
       setValue(name, defaultValue);
       return defaultValue;
@@ -146,7 +144,7 @@ public abstract class PropertiesComponent {
     return getValue(name);
   }
 
-  public final boolean saveFields(@Nonnull Object object) {
+  default boolean saveFields(@Nonnull Object object) {
     try {
       for (Field field : object.getClass().getDeclaredFields()) {
         field.setAccessible(true);
@@ -163,7 +161,7 @@ public abstract class PropertiesComponent {
     }
   }
 
-  public final boolean loadFields(@Nonnull Object object) {
+  default boolean loadFields(@Nonnull Object object) {
     try {
       for (Field field : object.getClass().getDeclaredFields()) {
         field.setAccessible(true);
@@ -239,7 +237,7 @@ public abstract class PropertiesComponent {
     }
   }
 
-  public float getFloat(String name, float defaultValue) {
+  default float getFloat(String name, float defaultValue) {
     if (isValueSet(name)) {
       try {
         return Float.parseFloat(getValue(name));

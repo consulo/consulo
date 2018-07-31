@@ -17,12 +17,12 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.graph.Graph;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -37,6 +37,7 @@ public abstract class ModuleManager {
    * @return the module manager instance.
    */
   @Nonnull
+  @Deprecated
   public static ModuleManager getInstance(@Nonnull Project project) {
     return project.getComponent(ModuleManager.class);
   }

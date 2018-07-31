@@ -98,7 +98,7 @@ public class RootUIBuilder implements UIBuilder {
 
     application.setCurrentSession(currentSession);
 
-    Window frame = WelcomeFrameManager.getInstance().openFrame();
+    Window frame = WelcomeFrameManager.getInstance().createFrame();
 
     frame.show();
   }

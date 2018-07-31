@@ -23,7 +23,6 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -46,12 +45,13 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import consulo.application.AccessRule;
+import consulo.core.api.ide.util.ApplicationPropertiesComponent;
 import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -72,11 +72,15 @@ public class SystemHealthMonitor {
   private static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
   private static final NotificationGroup LOG_GROUP = NotificationGroup.logOnlyGroup("System Health (minor)");
 
+  private final Application myApplication;
   private final PropertiesComponent myProperties;
+  private final WindowManager myWindowManager;
 
   @Inject
-  public SystemHealthMonitor() {
-    myProperties = PropertiesComponent.getInstance();
+  public SystemHealthMonitor(Application application, ApplicationPropertiesComponent propertiesComponent, WindowManager windowManager) {
+    myApplication = application;
+    myProperties = propertiesComponent;
+    myWindowManager = windowManager;
   }
 
   @PostConstruct
@@ -155,12 +159,12 @@ public class SystemHealthMonitor {
 
     String message = IdeBundle.message(key, params) + IdeBundle.message("sys.health.acknowledge.link");
 
-    Application app = ApplicationManager.getApplication();
+    Application app = myApplication;
     app.getMessageBus().connect(app).subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
       public void appFrameCreated(CommandLineArgs commandLineArgs, @Nonnull boolean willOpenProject) {
         app.invokeLater(() -> {
-          JComponent component = WindowManager.getInstance().findVisibleFrame().getRootPane();
+          JComponent component = myWindowManager.findVisibleFrame().getRootPane();
           if (component != null) {
             Rectangle rect = component.getVisibleRect();
             JBPopupFactory.getInstance()
@@ -187,7 +191,7 @@ public class SystemHealthMonitor {
     });
   }
 
-  private static void startDiskSpaceMonitoring() {
+  private void startDiskSpaceMonitoring() {
     if (SystemProperties.getBooleanProperty("idea.no.system.path.space.monitoring", false)) {
       return;
     }
@@ -205,7 +209,7 @@ public class SystemHealthMonitor {
         if (!reported.get()) {
           Future<Long> future = ourFreeSpaceCalculation.get();
           if (future == null) {
-            ourFreeSpaceCalculation.set(future = ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            ourFreeSpaceCalculation.set(future = myApplication.executeOnPooledThread(() -> {
               // file.getUsableSpace() can fail and return 0 e.g. after MacOSX restart or awakening from sleep
               // so several times try to recalculate usable space on receiving 0 to be sure
               long fileUsableSpace = file.getUsableSpace();

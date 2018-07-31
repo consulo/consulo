@@ -37,8 +37,10 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 @SuppressWarnings("deprecation")
+@Singleton
 public class DesktopPsiAwareTextEditorProvider extends DesktopTextEditorProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorProvider");
   @NonNls

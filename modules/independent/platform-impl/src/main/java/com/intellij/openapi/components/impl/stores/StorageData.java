@@ -42,14 +42,17 @@ public class StorageData extends StorageDataBase {
   private final StateMap myStates;
 
   protected final String myRootElementName;
+  private final PathMacrosService myPathMacrosService;
 
-  public StorageData(@Nonnull String rootElementName) {
+  public StorageData(@Nonnull String rootElementName, @Nonnull PathMacrosService pathMacrosService) {
+    myPathMacrosService = pathMacrosService;
     myStates = new StateMap();
     myRootElementName = rootElementName;
   }
 
   StorageData(@Nonnull StorageData storageData) {
     myRootElementName = storageData.myRootElementName;
+    myPathMacrosService = storageData.myPathMacrosService;
     myStates = new StateMap(storageData.myStates);
   }
 
@@ -80,7 +83,7 @@ public class StorageData extends StorageDataBase {
       myStates.put(name, element);
 
       if (pathMacroSubstitutor instanceof TrackingPathMacroSubstitutor) {
-        ((TrackingPathMacroSubstitutor)pathMacroSubstitutor).addUnknownMacros(name, PathMacrosService.getInstance().getMacroNames(element));
+        ((TrackingPathMacroSubstitutor)pathMacroSubstitutor).addUnknownMacros(name, myPathMacrosService.getMacroNames(element));
       }
 
       // remove only after "getMacroNames" - some PathMacroFilter requires element name attribute

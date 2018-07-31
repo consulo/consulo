@@ -23,16 +23,14 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -144,7 +142,7 @@ public class RefreshSessionImpl extends RefreshSession {
             nvf.markDirty();  // always scan when non-recursive AND synchronous - needed e.g. when refreshing project files on open
           }
 
-          RefreshWorker worker = new RefreshWorker(nvf, myIsRecursive);
+          RefreshWorker worker = new RefreshWorker(myRefreshQueue.getPersistentFS(), nvf, myIsRecursive);
           myWorker = worker;
           worker.scan();
           haveEventsToFire |= myEvents.addAll(worker.getEvents());
@@ -190,12 +188,12 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   private void fireEventsInWriteAction() {
-    final VirtualFileManagerEx manager = (VirtualFileManagerEx)VirtualFileManager.getInstance();
+    final VirtualFileManagerEx manager = (VirtualFileManagerEx)myRefreshQueue.getVirtualFileManager();
 
     manager.fireBeforeRefreshStart(myIsAsync);
     try {
       while (!myWorkQueue.isEmpty() || !myEvents.isEmpty()) {
-        PersistentFS.getInstance().processEvents(mergeEventsAndReset());
+        myRefreshQueue.getPersistentFS().processEvents(mergeEventsAndReset());
         scan();
       }
     }

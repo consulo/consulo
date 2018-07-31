@@ -19,18 +19,13 @@ import com.google.inject.Binding;
 import com.google.inject.Scope;
 import com.google.inject.spi.DefaultBindingScopingVisitor;
 import com.google.inject.spi.ProvisionListener;
-import com.intellij.openapi.util.Pair;
-
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-07-27
  */
-public class ScopeProvisionListener implements ProvisionListener {
+class ScopeProvisionListener implements ProvisionListener {
   public static ScopeProvisionListener INSTANCE = new ScopeProvisionListener();
-
-  private ThreadLocal<Pair<Binding, ComponentManagerImpl>> myCompoentManagerValue = new ThreadLocal<>();
 
   @Override
   public <T> void onProvision(ProvisionInvocation<T> provision) {
@@ -47,18 +42,8 @@ public class ScopeProvisionListener implements ProvisionListener {
       return;
     }
 
-    try {
-      myCompoentManagerValue.set(Pair.create(binding, manager));
+    T value = provision.provision();
 
-      provision.provision();
-    }
-    finally {
-      myCompoentManagerValue.remove();
-    }
-  }
-
-  @Nullable
-  public Pair<Binding, ComponentManagerImpl> getComponentManager() {
-    return myCompoentManagerValue.get();
+    manager._setupComponent(value);
   }
 }

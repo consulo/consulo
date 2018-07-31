@@ -37,7 +37,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManagerListener;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBInsets;
@@ -206,7 +206,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   @Override
   public JFrame findVisibleFrame() {
     IdeFrameImpl[] frames = getAllProjectFrames();
-    return frames.length > 0 ? frames[0] : (JFrame)WelcomeFrame.getInstance();
+    return frames.length > 0 ? frames[0] : (JFrame)WelcomeFrameHelper.getInstance().getCurrentFrame();
   }
 
   @Override
@@ -451,7 +451,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   public IdeFrame findFrameFor(@Nullable final Project project) {
     IdeFrame frame = null;
     if (project != null) {
-      frame = project.isDefault() ? WelcomeFrame.getInstance() : getFrame(project);
+      frame = project.isDefault() ? WelcomeFrameHelper.getInstance().getCurrentFrame() : getFrame(project);
       if (frame == null) {
         frame = myProject2Frame.get(null);
       }

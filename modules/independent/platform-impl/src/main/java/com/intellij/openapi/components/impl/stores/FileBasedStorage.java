@@ -21,7 +21,6 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
@@ -30,6 +29,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.LineSeparator;
+import consulo.application.options.PathMacrosService;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -43,6 +43,7 @@ import java.util.Set;
 
 public class FileBasedStorage extends XmlElementStorage {
   private final String myFilePath;
+  private final LocalFileSystem myLocalFileSystem;
   private final File myFile;
   private volatile VirtualFile myCachedVirtualFile;
   private LineSeparator myLineSeparator;
@@ -54,37 +55,38 @@ public class FileBasedStorage extends XmlElementStorage {
                           @Nonnull String rootElementName,
                           @Nonnull Disposable parentDisposable,
                           @Nullable final Listener listener,
-                          @Nullable StreamProvider streamProvider) {
-    super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider);
+                          @Nullable StreamProvider streamProvider,
+                          @Nonnull LocalFileSystem localFileSystem,
+                          @Nonnull VirtualFileTracker virtualFileTracker,
+                          @Nonnull PathMacrosService pathMacrosService) {
+    super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider, pathMacrosService);
 
     myFilePath = filePath;
+    myLocalFileSystem = localFileSystem;
     myFile = new File(filePath);
 
     if (listener != null) {
-      VirtualFileTracker virtualFileTracker = ServiceManager.getService(VirtualFileTracker.class);
-      if (virtualFileTracker != null) {
-        virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myFile.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
-          @Override
-          public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
-            myCachedVirtualFile = null;
-          }
+      virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myFile.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileListener() {
+        @Override
+        public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
+          myCachedVirtualFile = null;
+        }
 
-          @Override
-          public void fileDeleted(@Nonnull VirtualFileEvent event) {
-            myCachedVirtualFile = null;
-          }
+        @Override
+        public void fileDeleted(@Nonnull VirtualFileEvent event) {
+          myCachedVirtualFile = null;
+        }
 
-          @Override
-          public void fileCreated(@Nonnull VirtualFileEvent event) {
-            myCachedVirtualFile = event.getFile();
-          }
+        @Override
+        public void fileCreated(@Nonnull VirtualFileEvent event) {
+          myCachedVirtualFile = event.getFile();
+        }
 
-          @Override
-          public void contentsChanged(@Nonnull final VirtualFileEvent event) {
-            listener.storageFileChanged(event, FileBasedStorage.this);
-          }
-        }, false, parentDisposable);
-      }
+        @Override
+        public void contentsChanged(@Nonnull final VirtualFileEvent event) {
+          listener.storageFileChanged(event, FileBasedStorage.this);
+        }
+      }, false, parentDisposable);
     }
   }
 
@@ -181,14 +183,14 @@ public class FileBasedStorage extends XmlElementStorage {
   @Override
   @Nonnull
   protected StorageData createStorageData() {
-    return new StorageData(myRootElementName);
+    return new StorageData(myRootElementName, myPathMacrosService);
   }
 
   @Nullable
   public VirtualFile getVirtualFile() {
     VirtualFile virtualFile = myCachedVirtualFile;
     if (virtualFile == null) {
-      myCachedVirtualFile = virtualFile = LocalFileSystem.getInstance().findFileByIoFile(myFile);
+      myCachedVirtualFile = virtualFile = myLocalFileSystem.findFileByIoFile(myFile);
     }
     return virtualFile;
   }

@@ -15,11 +15,21 @@
  */
 package com.intellij.openapi.components.impl;
 
+import com.intellij.openapi.application.PathMacros;
+import com.intellij.openapi.vfs.VirtualFileManager;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
 /**
  * @author mike
  */
+@Singleton
 public class ApplicationPathMacroManager extends BasePathMacroManager {
-  public ApplicationPathMacroManager() {
-    super(null);
+  @Inject
+  public ApplicationPathMacroManager(@Nonnull Provider<PathMacros> pathMacros, @Nonnull Provider<VirtualFileManager> virtualFileManager) {
+    super(pathMacros, virtualFileManager);
   }
 }

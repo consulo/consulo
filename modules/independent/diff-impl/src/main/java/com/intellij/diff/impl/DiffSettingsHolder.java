@@ -24,16 +24,15 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@State(
-        name = "DiffSettings",
-        storages = @Storage(file = DiffUtil.DIFF_CONFIG)
-)
+@State(name = "DiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
+@Singleton
 public class DiffSettingsHolder implements PersistentStateComponent<DiffSettingsHolder.State> {
   public static final Key<DiffSettings> KEY = Key.create("DiffSettings");
 
@@ -56,8 +55,7 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
     public DiffSettings() {
     }
 
-    public DiffSettings(@Nonnull SharedSettings SHARED_SETTINGS,
-                        @Nonnull PlaceSettings PLACE_SETTINGS) {
+    public DiffSettings(@Nonnull SharedSettings SHARED_SETTINGS, @Nonnull PlaceSettings PLACE_SETTINGS) {
       this.SHARED_SETTINGS = SHARED_SETTINGS;
       this.PLACE_SETTINGS = PLACE_SETTINGS;
     }
@@ -84,7 +82,7 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
     }
 
     public void setSyncBinaryEditorSettings(boolean value) {
-      PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS= value;
+      PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS = value;
     }
 
     //

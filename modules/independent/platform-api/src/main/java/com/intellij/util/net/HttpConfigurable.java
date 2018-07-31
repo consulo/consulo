@@ -122,6 +122,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
   public transient Getter<PasswordAuthentication> myTestAuthRunnable = new StaticGetter<>(null);
   public transient Getter<PasswordAuthentication> myTestGenericAuthRunnable = new StaticGetter<>(null);
 
+  @Deprecated
   public static HttpConfigurable getInstance() {
     return ApplicationManager.getApplication().getComponent(HttpConfigurable.class);
   }

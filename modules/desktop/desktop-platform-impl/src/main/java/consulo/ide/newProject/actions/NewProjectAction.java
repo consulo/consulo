@@ -16,13 +16,12 @@
 package consulo.ide.newProject.actions;
 
 import com.intellij.CommonBundle;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -30,7 +29,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -39,9 +38,10 @@ import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -51,7 +51,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  */
 public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAware {
-  static class SlideNewProjectPanel extends NewProjectPanel {
+  class SlideNewProjectPanel extends NewProjectPanel {
     private JButton myOkButton;
 
     public SlideNewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
@@ -93,6 +93,17 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     }
   }
 
+  private Application myApplication;
+  private RecentProjectsManager myRecentProjectsManager;
+  private LocalFileSystem myLocalFileSystem;
+
+  @Inject
+  public NewProjectAction(Application application, RecentProjectsManager recentProjectsManager, VirtualFileManager virtualFileManager) {
+    myApplication = application;
+    myRecentProjectsManager = recentProjectsManager;
+    myLocalFileSystem = LocalFileSystem.from(virtualFileManager);
+  }
+
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
@@ -114,7 +125,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @Nullable
   @RequiredDispatchThread
-  protected static Project generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
+  protected Project generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
     final File location = new File(projectPanel.getLocationText());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
@@ -122,12 +133,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       return null;
     }
 
-    final VirtualFile baseDir = ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
-      @Override
-      public VirtualFile compute() {
-        return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location);
-      }
-    });
+    final VirtualFile baseDir = myApplication.runWriteAction((Computable<VirtualFile>)() -> myLocalFileSystem.refreshAndFindFileByIoFile(location));
     baseDir.refresh(false, true);
 
     if (childCount > 0) {
@@ -137,7 +143,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       }
     }
 
-    RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
+    myRecentProjectsManager.setLastProjectCreationLocation(location.getParent());
     return PlatformProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> NewProjectUtilPlatform.doCreate(projectPanel, project1, baseDir));
   }
 }

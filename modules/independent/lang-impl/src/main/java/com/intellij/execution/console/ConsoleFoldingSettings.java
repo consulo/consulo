@@ -21,13 +21,15 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author peter
  */
-@State(name="ConsoleFoldingSettings", storages=@Storage( file = StoragePathMacros.APP_CONFIG + "/consoleFolding.xml"))
+@State(name = "ConsoleFoldingSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/consoleFolding.xml"))
+@Singleton
 public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleFoldingSettings.MyBean> {
   private final List<String> myPositivePatterns = new ArrayList<String>();
   private final List<String> myNegativePatterns = new ArrayList<String>();

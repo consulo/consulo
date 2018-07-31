@@ -20,19 +20,18 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.AccessRule;
+import consulo.application.options.PathMacrosService;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -46,15 +45,24 @@ import java.util.List;
 
 @Singleton
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
-  private static final Logger LOG = Logger.getInstance(ProjectStoreImpl.class);
+  private final VirtualFileTracker myVirtualFileTracker;
+  private final LocalFileSystem myLocalFileSystem;
+  protected final ProjectImpl myProject;
+  protected final PathMacrosService myPathMacrosService;
 
-  protected ProjectImpl myProject;
   private String myPresentableUrl;
 
   @Inject
-  ProjectStoreImpl(@Nonnull Project project) {
-    super(PathMacroManager.getInstance(project));
+  ProjectStoreImpl(@Nonnull Project project,
+                   @Nonnull VirtualFileManager virtualFileManager,
+                   @Nonnull VirtualFileTracker virtualFileTracker,
+                   @Nonnull ProjectPathMacroManager pathMacroManager,
+                   @Nonnull PathMacrosService pathMacrosService) {
+    super(pathMacroManager);
+    myVirtualFileTracker = virtualFileTracker;
+    myPathMacrosService = pathMacrosService;
     myProject = (ProjectImpl)project;
+    myLocalFileSystem = LocalFileSystem.from(virtualFileManager);
   }
 
   @Override
@@ -75,7 +83,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Override
   public void setProjectFilePath(@Nonnull final String filePath) {
     final StateStorageManager stateStorageManager = getStateStorageManager();
-    final LocalFileSystem fs = LocalFileSystem.getInstance();
 
     final File file = new File(filePath);
 
@@ -90,7 +97,8 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
 
-    ApplicationManager.getApplication().invokeAndWait(() -> VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), ModalityState.defaultModalityState());
+    ApplicationManager.getApplication()
+            .invokeAndWait(() -> VfsUtil.markDirtyAndRefresh(myLocalFileSystem, false, true, true, myLocalFileSystem.refreshAndFindFileByIoFile(dirStore)), ModalityState.defaultModalityState());
 
     myPresentableUrl = null;
   }
@@ -98,7 +106,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Override
   public void setProjectFilePathNoUI(@Nonnull final String filePath) {
     final StateStorageManager stateStorageManager = getStateStorageManager();
-    final LocalFileSystem fs = LocalFileSystem.getInstance();
 
     final File file = new File(filePath);
 
@@ -113,7 +120,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
 
-    VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
+    VfsUtil.markDirtyAndRefresh(myLocalFileSystem, false, true, true, myLocalFileSystem.refreshAndFindFileByIoFile(dirStore));
 
     myPresentableUrl = null;
   }
@@ -126,7 +133,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     final String path = getProjectBasePath();
     if (path == null) return null;
 
-    return LocalFileSystem.getInstance().findFileByPath(path);
+    return myLocalFileSystem.findFileByPath(path);
   }
 
   @Override
@@ -239,7 +246,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    return new ProjectStateStorageManager(myPathMacroManager.createTrackingSubstitutor(), myProject);
+    return new ProjectStateStorageManager(myPathMacroManager, myVirtualFileTracker, myLocalFileSystem, myProject, myPathMacrosService);
   }
 
   @Nonnull

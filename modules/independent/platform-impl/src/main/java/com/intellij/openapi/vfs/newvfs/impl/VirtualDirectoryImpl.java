@@ -262,7 +262,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
 
     if (!myPersistentFS.areChildrenLoaded(this)) {
       final String[] names = myPersistentFS.listPersisted(this);
-      final NewVirtualFileSystem delegate = PersistentFS.replaceWithNativeFS(getFileSystem());
+      final NewVirtualFileSystem delegate = myPersistentFS.replaceWithNativeFS(getFileSystem());
       for (String name : names) {
         findChild(name, false, false, delegate);
       }

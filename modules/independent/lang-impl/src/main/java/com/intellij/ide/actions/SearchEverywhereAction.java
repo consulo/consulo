@@ -114,6 +114,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -126,7 +128,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author Konstantin Bulenkov
  */
-@SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
+@Singleton
 public class SearchEverywhereAction extends AnAction implements CustomComponentAction, DumbAware, DataProvider, RightAlignedToolbarAction {
   public static final String SE_HISTORY_KEY = "SearchEverywhereHistoryKey";
   public static final int SEARCH_FIELD_COLUMNS = 25;
@@ -167,8 +169,23 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   private int myHistoryIndex = 0;
   boolean mySkipFocusGain = false;
 
-  static {
-    ModifierKeyDoubleClickHandler.getInstance().registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
+  private volatile JBPopup myBalloon;
+  private int myPopupActualWidth;
+  private Component myFocusOwner;
+  private ChooseByNamePopup myFileChooseByName;
+  private ChooseByNamePopup myClassChooseByName;
+  private ChooseByNamePopup mySymbolsChooseByName;
+  private StructureViewModel myStructureModel;
+
+
+  private Editor myEditor;
+  private FileEditor myFileEditor;
+  private PsiFile myFile;
+  private HistoryItem myHistoryItem;
+
+  @Inject
+  public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
+    modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
 
     IdeEventQueue.getInstance().addPostprocessor(new IdeEventQueue.EventDispatcher() {
       @Override
@@ -183,20 +200,6 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       }
     }, null);
   }
-
-  private volatile JBPopup myBalloon;
-  private int myPopupActualWidth;
-  private Component myFocusOwner;
-  private ChooseByNamePopup myFileChooseByName;
-  private ChooseByNamePopup myClassChooseByName;
-  private ChooseByNamePopup mySymbolsChooseByName;
-  private StructureViewModel myStructureModel;
-
-
-  private Editor myEditor;
-  private FileEditor myFileEditor;
-  private PsiFile myFile;
-  private HistoryItem myHistoryItem;
 
   @Override
   public JComponent createCustomComponent(Presentation presentation) {

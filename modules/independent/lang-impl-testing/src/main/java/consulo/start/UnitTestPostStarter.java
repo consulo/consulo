@@ -22,6 +22,7 @@ import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.idea.starter.SMTestSender;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -41,13 +42,15 @@ public class UnitTestPostStarter extends ApplicationPostStarter {
     super(applicationStarter);
   }
 
+  @Nonnull
   @Override
-  public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
+  public Application createApplication(boolean isHeadlessMode, CommandLineArgs args) {
     //new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(Application application, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
     IdeaPluginDescriptorImpl plugin = (IdeaPluginDescriptorImpl)PluginManager.getPlugin(PluginManagerCore.UNIT_TEST_PLUGIN);
     assert plugin != null;
     PluginClassLoader pluginClassLoader = (PluginClassLoader)plugin.getPluginClassLoader();

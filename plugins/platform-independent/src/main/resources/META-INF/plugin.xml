@@ -1190,7 +1190,7 @@
 
     <applicationService serviceImplementation="com.intellij.ide.GeneralSettings"/>
 
-    <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent$ApplicationLevel"
+    <applicationService serviceInterface="consulo.core.api.ide.util.ApplicationPropertiesComponent"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.fileTypes.FileNameMatcherFactory"
@@ -1199,7 +1199,7 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
-    <projectService serviceInterface="com.intellij.ide.util.PropertiesComponent$ProjectLevel"
+    <projectService serviceInterface="consulo.core.api.ide.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.actionSystem.JBAwtEventQueue"
@@ -1211,8 +1211,7 @@
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
                         serviceImplementation="com.intellij.ide.actions.ShowSettingsUtilImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
-                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"
-                        serviceImplementationForCompilerServer="com.intellij.openapi.progress.impl.CoreProgressManager"/>
+                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
 
@@ -2597,5 +2596,12 @@
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory" />
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory" />
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory" />
+
+    <applicationService serviceInterface="com.intellij.openapi.application.PathMacros" serviceImplementation="com.intellij.application.options.PathMacrosImpl" />
+    <applicationService serviceImplementation="com.intellij.openapi.components.impl.ApplicationPathMacroManager" />
+    <projectService serviceImplementation="com.intellij.openapi.components.impl.ProjectPathMacroManager" />
+    <moduleService serviceImplementation="com.intellij.openapi.components.impl.ModulePathMacroManager" />
+
+    <applicationService serviceImplementation="com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper" />
   </extensions>
 </idea-plugin>

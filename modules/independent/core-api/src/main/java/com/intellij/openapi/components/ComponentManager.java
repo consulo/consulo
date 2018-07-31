@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
  * Provides access to components. Serves as a base interface for {@link Application}
  * and {@link Project}.
  *
- * @see ProjectComponent
  * @see Application
  * @see Project
  */
@@ -42,7 +41,10 @@ public interface ComponentManager extends AreaInstance, UserDataHolder, Disposab
    * @param interfaceClass the interface class of the component
    * @return component that matches interface class or null if there is no such component
    */
+  @Deprecated
   <T> T getComponent(@Nonnull Class<T> interfaceClass);
+
+  <T> T createInstance(@Nonnull Class<T> clazz);
 
   /**
    * Gets the component by its interface class but returns a specified default implementation
@@ -64,6 +66,7 @@ public interface ComponentManager extends AreaInstance, UserDataHolder, Disposab
    * @return <code>true</code> if there is a component with the specified interface class;
    * <code>false</code> otherwise
    */
+  @Deprecated
   boolean hasComponent(@Nonnull Class interfaceClass);
 
   /**

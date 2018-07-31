@@ -183,8 +183,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
 
-  private final ApplicationPathMacroManager myPathMacroManager = new ApplicationPathMacroManager();
-
   public BaseApplication(ComponentManager parent, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(parent);
     mySplashRef = splashRef;
@@ -208,7 +206,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @SuppressWarnings("unchecked")
   protected <T> T getCustomComponentInstance(@Nonnull Class<T> clazz) {
     if(clazz == PathMacroManager.class) {
-      return (T)myPathMacroManager;
+      return (T)getComponent(ApplicationPathMacroManager.class);
     }
     return super.getCustomComponentInstance(clazz);
   }
@@ -219,6 +217,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return descriptor.getAppComponents();
   }
 
+  @Nonnull
   @Override
   public String getAreaId() {
     return ExtensionAreas.APPLICATION;
@@ -488,7 +487,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     StartupProgress progress = mySplashRef.get();
     if (progress != null) {
       float progress1 = 0.65f + getPercentageOfComponentsLoaded() * 0.35f;
-      System.out.println(progress1 + "/" + getPercentageOfComponentsLoaded());
       progress.showProgress("", progress1);
     }
   }
@@ -501,7 +499,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     binder.bind(ApplicationEx.class).toInstance(this);
     binder.bind(ApplicationEx2.class).toInstance(this);
     binder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class);
-    binder.bind(TransactionGuard.class).to(TransactionGuardImpl.class);
   }
 
   @Override

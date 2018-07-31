@@ -22,10 +22,9 @@ import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Couple;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -33,7 +32,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   protected Executor myExecutor;
 
   public EditConfigurationsDialog(final Project project) {
-    super(project, new RunConfigurable(project));
+    super(project, project.createInstance(RunConfigurable.class));
     getConfigurable().setRunDialog(this);
     setTitle(ExecutionBundle.message("run.debug.dialog.title"));
     setHorizontalStretch(1.3F);

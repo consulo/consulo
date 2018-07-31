@@ -156,7 +156,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
-      if (myList.isItemSelected(descriptor) != manager.getState(descriptor.getClass())) {
+      if (myList.isItemSelected(descriptor) != manager.isEnabled(descriptor.getClass())) {
         return true;
       }
     }
@@ -179,7 +179,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
-      myList.setItemSelected(descriptor, manager.getState(descriptor.getClass()));
+      myList.setItemSelected(descriptor, manager.isEnabled(descriptor.getClass()));
     }
   }
 }

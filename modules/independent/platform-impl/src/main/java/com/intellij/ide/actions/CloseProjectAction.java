@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 
 public class CloseProjectAction extends AnAction implements DumbAware {
   @Override
@@ -32,7 +32,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
 
     ProjectUtil.closeAndDispose(project);
     RecentProjectsManagerBase.getInstance().updateLastProjectPath();
-    WelcomeFrame.showIfNoProjectOpened();
+    WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
   }
 
   @Override

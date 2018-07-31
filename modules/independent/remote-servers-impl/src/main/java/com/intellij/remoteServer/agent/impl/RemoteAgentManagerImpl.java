@@ -6,6 +6,7 @@ import com.intellij.remoteServer.agent.RemoteAgentManager;
 import com.intellij.remoteServer.agent.RemoteAgentProxyFactory;
 import com.intellij.util.PathUtil;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * @author michael.golubev
  */
+@Singleton
 public class RemoteAgentManagerImpl extends RemoteAgentManager {
 
   private final RemoteAgentClassLoaderCache myClassLoaderCache = new RemoteAgentClassLoaderCache();

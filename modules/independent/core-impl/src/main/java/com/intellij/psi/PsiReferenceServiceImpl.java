@@ -16,15 +16,17 @@
 package com.intellij.psi;
 
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Gregory.Shrago
  */
+@Singleton
 public class PsiReferenceServiceImpl extends PsiReferenceService {
   @RequiredReadAction
   @Nonnull

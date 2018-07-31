@@ -183,7 +183,7 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
                             Application application) {
     myFileDocumentManager = fdm;
     myFileTypeManager = (FileTypeManagerImpl)fileTypeManager;
-    myIsUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
+    myIsUnitTestMode = application.isUnitTestMode();
 
     final MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
@@ -274,7 +274,7 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
       }
     });
 
-    ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
+    application.addApplicationListener(new ApplicationAdapter() {
       @Override
       public void writeActionStarted(@Nonnull Object action) {
         myUpToDateIndicesForUnsavedOrTransactedDocuments.clear();

@@ -40,16 +40,16 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
   private static final String JAR_PROTOCOL = "jar:";
 
   @Nonnull
-  public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros) {
+  public static Set<String> getMacroNames(MacroManager macroManager, Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros) {
     final PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
     collector.substitute(root, true, false, filter);
-    final HashSet<String> result = new HashSet<String>(collector.myMacroMap.keySet());
+    final HashSet<String> result = new HashSet<>(collector.myMacroMap.keySet());
     result.removeAll(pathMacros.getSystemMacroNames());
     result.removeAll(pathMacros.getLegacyMacroNames());
-    for (Macro macro : MacroManager.getInstance().getMacros()) {
+    for (Macro macro : macroManager.getMacros()) {
       result.remove(macro.getName());
     }
-    result.removeAll(MacroManager.getInstance().getMacros());
+    result.removeAll(macroManager.getMacros());
     result.removeAll(pathMacros.getIgnoredMacroNames());
     return result;
   }

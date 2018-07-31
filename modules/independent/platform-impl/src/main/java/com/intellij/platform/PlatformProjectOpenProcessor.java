@@ -38,7 +38,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ToolWindowType;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
@@ -79,6 +79,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Nullable
+  @RequiredDispatchThread
   public static Project doOpenProject(@Nonnull final VirtualFile virtualFile, Project projectToClose, final boolean forceOpenInNewFrame, final int line, @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
@@ -122,7 +123,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
         project = projectManager.convertAndLoadProject(baseDir.getPath());
         if (project == null) {
-          WelcomeFrame.showIfNoProjectOpened();
+          WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
           return null;
         }
         final Module[] modules = ModuleManager.getInstance(project).getModules();
@@ -146,7 +147,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     openProjectToolWindow(project);
     openFileFromCommandLine(project, virtualFile, line);
     if (!projectManager.openProject(project)) {
-      WelcomeFrame.showIfNoProjectOpened();
+      WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
       final Project finalProject = project;
       ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));
       return project;
@@ -289,7 +290,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
       openProjectToolWindow(project);
       openFileFromCommandLineAsync(project, virtualFile, line, uiAccess);
       if (!projectManager.openProjectAsync(project, uiAccess)) {
-        WelcomeFrame.showIfNoProjectOpened();
+        WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
         final Project finalProject = project;
         ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));
       }
@@ -319,7 +320,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
       anotherResult.doWhenRejected((Runnable)result::setRejected);
 
-      anotherResult.doWhenRejectedButNotThrowable(WelcomeFrame::showIfNoProjectOpened);
+      anotherResult.doWhenRejectedButNotThrowable(() -> WelcomeFrameHelper.getInstance().showIfNoProjectOpened());
 
       anotherResult.doWhenRejectedWithThrowable(LOGGER::error);
 

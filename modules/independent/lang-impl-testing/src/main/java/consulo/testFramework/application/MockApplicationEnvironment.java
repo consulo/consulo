@@ -23,8 +23,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
-import consulo.application.options.PathMacrosService;
-import consulo.application.options.PathMacrosServiceImpl;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -34,8 +33,6 @@ import javax.annotation.Nonnull;
 public class MockApplicationEnvironment extends CoreApplicationEnvironment {
   public MockApplicationEnvironment(@Nonnull Disposable parentDisposable) {
     super(parentDisposable);
-
-    registerApplicationService(PathMacrosService.class, new PathMacrosServiceImpl());
 
     registerApplicationExtensionPoint(Macro.EP_NAME, Macro.class);
     registerApplicationExtensionPoint(PathMacroFilter.EP_NAME, PathMacroFilter.class);

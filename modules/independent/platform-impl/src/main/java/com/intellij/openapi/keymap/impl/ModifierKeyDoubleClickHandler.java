@@ -30,12 +30,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import consulo.platform.Platform;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 
 import javax.annotation.Nonnull;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
@@ -94,6 +94,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     myDispatchers.clear();
   }
 
+  @Deprecated
   public static ModifierKeyDoubleClickHandler getInstance() {
     return ApplicationManager.getApplication().getComponent(ModifierKeyDoubleClickHandler.class);
   }

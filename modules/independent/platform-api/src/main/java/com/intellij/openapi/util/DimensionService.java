@@ -63,13 +63,11 @@ public class DimensionService implements PersistentStateComponent<Element> {
   @NonNls private static final String ATTRIBUTE_WIDTH = "width";
   @NonNls private static final String ATTRIBUTE_HEIGHT = "height";
 
+  @Deprecated
   public static DimensionService getInstance() {
     return ServiceManager.getService(DimensionService.class);
   }
 
-  /**
-   * Invoked by reflection
-   */
   @Inject
   private DimensionService() {
     myKey2Location = new LinkedHashMap<String, Point>();

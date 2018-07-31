@@ -16,13 +16,16 @@
 package consulo.application.options;
 
 import com.intellij.application.options.PathMacrosCollectorImpl;
+import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
+import com.intellij.openapi.components.CompositePathMacroFilter;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.Set;
 
 /**
@@ -31,8 +34,23 @@ import java.util.Set;
  */
 @Singleton
 public class PathMacrosServiceImpl extends PathMacrosService {
+  private final PathMacros myPathMacros;
+  private final MacroManager myMacroManager;
+
+  @Inject
+  public PathMacrosServiceImpl(PathMacros pathMacros, MacroManager macroManager) {
+    myPathMacros = pathMacros;
+    myMacroManager = macroManager;
+  }
+
+  @Override
+  @Nonnull
+  public Set<String> getMacroNames(@Nonnull final Element e) {
+    return getMacroNames(e, new CompositePathMacroFilter(PathMacroFilter.EP_NAME.getExtensions()), myPathMacros);
+  }
+
   @Override
   public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {
-    return PathMacrosCollectorImpl.getMacroNames(root, filter, pathMacros);
+    return PathMacrosCollectorImpl.getMacroNames(myMacroManager, root, filter, pathMacros);
   }
 }

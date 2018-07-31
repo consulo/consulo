@@ -23,11 +23,14 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
+import consulo.application.options.PathMacrosService;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 
@@ -53,15 +56,26 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Lock myStorageLock = new ReentrantLock();
   private final Map<String, StateStorage> myStorages = new THashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
+  private final LocalFileSystem myLocalFileSystem;
+  private final VirtualFileTracker myVirtualFileTracker;
+  protected final PathMacrosService myPathMacrosService;
   private final String myRootTagName;
   private final MessageBus myMessageBus;
 
   private StreamProvider myStreamProvider;
 
-  public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor, String rootTagName, @Nonnull MessageBus messageBus) {
+  public StateStorageManagerImpl(@Nullable PathMacroManager pathMacroManager,
+                                 String rootTagName,
+                                 @Nonnull MessageBus messageBus,
+                                 @Nonnull LocalFileSystem localFileSystem,
+                                 @Nonnull VirtualFileTracker virtualFileTracker,
+                                 @Nonnull PathMacrosService pathMacrosService) {
     myMessageBus = messageBus;
     myRootTagName = rootTagName;
-    myPathMacroSubstitutor = pathMacroSubstitutor;
+    myPathMacroSubstitutor = pathMacroManager == null ? null : pathMacroManager.createTrackingSubstitutor();
+    myLocalFileSystem = localFileSystem;
+    myVirtualFileTracker = virtualFileTracker;
+    myPathMacrosService = pathMacrosService;
   }
 
   @Nonnull
@@ -95,7 +109,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createStateStorage(@Nonnull Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
       StateSplitterEx splitter = ReflectionUtil.newInstance(storageSpec.stateSplitter());
-      return new DirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener());
+      return new DirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener(), myVirtualFileTracker);
     }
     else {
       return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
@@ -221,7 +235,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
 
     beforeFileBasedStorageCreate();
-    return new FileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider) {
+    return new FileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
+                                myLocalFileSystem, myVirtualFileTracker, myPathMacrosService) {
       @Override
       @Nonnull
       protected StorageData createStorageData() {

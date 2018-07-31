@@ -18,6 +18,7 @@ package consulo.vfs.newvfs;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
 import com.intellij.openapi.vfs.newvfs.RefreshSessionImpl;
 
@@ -33,8 +34,8 @@ import javax.inject.Singleton;
 @Singleton
 public class NewRefreshQueueImpl extends RefreshQueueImpl {
   @Inject
-  public NewRefreshQueueImpl(TransactionGuard transactionGuard, Provider<VirtualFileManager> virtualFileManager) {
-    super(transactionGuard, virtualFileManager);
+  public NewRefreshQueueImpl(TransactionGuard transactionGuard, Provider<VirtualFileManager> manager, Provider<ManagingFS> managingFS) {
+    super(transactionGuard, manager, managingFS);
   }
 
   @Override

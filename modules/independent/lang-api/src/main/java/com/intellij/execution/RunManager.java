@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 public abstract class RunManager {
   public static final String UNNAMED = "Unnamed";
 
+  @Deprecated
   public static RunManager getInstance(final Project project) {
     return project.getComponent(RunManager.class);
   }

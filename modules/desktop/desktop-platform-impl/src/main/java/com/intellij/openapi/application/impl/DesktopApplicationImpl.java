@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.application.impl;
 
+import com.google.inject.Binder;
+import com.google.inject.Scope;
 import com.intellij.CommonBundle;
 import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.diagnostic.LogEventException;
@@ -81,7 +83,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   private final boolean myHeadlessMode;
   private final boolean myIsInternal;
 
-  private final TransactionGuardImpl myTransactionGuard = new TransactionGuardImpl();
+  private final TransactionGuardImpl myTransactionGuard = new TransactionGuardImpl(this);
 
   private int myInEditorPaintCounter; // EDT only
 
@@ -193,6 +195,12 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   public boolean isInternal() {
     return myIsInternal;
+  }
+
+  @Override
+  protected void bootstrapBinder(Scope scope, Binder binder) {
+    super.bootstrapBinder(scope, binder);
+    binder.bind(TransactionGuard.class).toInstance(myTransactionGuard);
   }
 
   @Override

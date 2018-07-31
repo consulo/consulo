@@ -19,35 +19,18 @@ package com.intellij.execution.impl;
 import com.intellij.execution.RunnerRegistry;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
-import consulo.annotation.inject.NotLazy;
-import consulo.annotation.inject.PostConstruct;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // TODO[spLeaner]: eliminate
 @Singleton
-@NotLazy
-public class RunnerRegistryImpl extends RunnerRegistry implements Disposable {
-  private final List<ProgramRunner> myRunnersOrder = new ArrayList<>();
-
+public class RunnerRegistryImpl extends RunnerRegistry {
   @Override
   public boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings) {
-    final ProgramRunner[] runners = getRegisteredRunners();
-    for (final ProgramRunner runner : runners) {
-      if (runner.canRun(executorId, settings)) {
-        return true;
-      }
-    }
-
-    return false;
+    return getRunner(executorId, settings) != null;
   }
 
   @Override
@@ -62,36 +45,6 @@ public class RunnerRegistryImpl extends RunnerRegistry implements Disposable {
     return null;
   }
 
-  @PostConstruct
-  public void initComponent() {
-    final ProgramRunner[] runners = Extensions.getExtensions(ProgramRunner.PROGRAM_RUNNER_EP);
-    for (ProgramRunner runner : runners) {
-      registerRunner(runner);
-    }
-  }
-
-  @Override
-  public synchronized void dispose() {
-    while (myRunnersOrder.size() > 0) {
-      final ProgramRunner runner = myRunnersOrder.get(myRunnersOrder.size() - 1);
-      unregisterRunner(runner);
-    }
-  }
-
-  public synchronized void registerRunner(final ProgramRunner runner) {
-    if (myRunnersOrder.contains(runner)) return;
-    myRunnersOrder.add(runner);
-  }
-
-  public synchronized void unregisterRunner(final ProgramRunner runner) {
-    myRunnersOrder.remove(runner);
-  }
-
-  @Override
-  public synchronized ProgramRunner[] getRegisteredRunners() {
-    return myRunnersOrder.toArray(new ProgramRunner[myRunnersOrder.size()]);
-  }
-
   @Override
   @Nullable
   public ProgramRunner findRunnerById(String id) {
@@ -104,4 +57,8 @@ public class RunnerRegistryImpl extends RunnerRegistry implements Disposable {
     return null;
   }
 
+  @Override
+  public ProgramRunner[] getRegisteredRunners() {
+    return ProgramRunner.PROGRAM_RUNNER_EP.getExtensions();
+  }
 }

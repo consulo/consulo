@@ -16,7 +16,6 @@
 package consulo.core.impl.components.impl;
 
 import com.google.inject.*;
-import com.google.inject.Key;
 import com.google.inject.matcher.Matchers;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
@@ -40,15 +39,14 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
 import consulo.annotation.inject.NotLazy;
 import consulo.extensions.AreaInstanceEx;
+import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -77,7 +75,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   private ExtensionsArea myExtensionsArea;
 
-  private Map<Key, Object> myInitializeValues = new ConcurrentHashMap<>();
+  private ThreadLocal<Object> myGetComponentThreadLocal = new ThreadLocal<>();
 
   protected ComponentManagerImpl(@Nullable ComponentManager parentComponentManager) {
     this(parentComponentManager, "");
@@ -90,37 +88,35 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myExtensionsArea = new ExtensionsAreaImpl(getAreaId(), this, new PluginManagerCore.IdeaLogProvider());
   }
 
-  private ThreadLocal<Object> inside = new ThreadLocal<>();
+  private Map<Object, Exception> myAlreadyInit = new ConcurrentHashMap<>();
 
-  protected void _setupComponent(Key key, Object component) {
+  protected void _setupComponent(Object component) {
     try {
-      inside.set(component);
-      myInitializeValues.computeIfAbsent(key, k -> {
-        if (this != component && component instanceof Disposable) {
-          Disposer.register(this, (Disposable)component);
-        }
+      Exception exception = myAlreadyInit.get(component);
+      if (exception != null) {
+        throw new IllegalArgumentException("duplicate init " + component.getClass().getSimpleName(), exception);
+      }
 
-        boolean isNotLazy = component.getClass().isAnnotationPresent(NotLazy.class);
-        boolean isXmlSerializer = component instanceof JDOMExternalizable || component instanceof PersistentStateComponent;
-        if (isXmlSerializer) {
-          initializeFromStateStore(component, !isNotLazy);
-        }
+      myAlreadyInit.put(component, new Exception("init trace"));
+      myGetComponentThreadLocal.set(component);
+      if (this != component && component instanceof Disposable) {
+        Disposer.register(this, (Disposable)component);
+      }
 
-        if (isNotLazy) {
-          myNotLazyLoadCount.incrementAndGet();
+      boolean isNotLazy = component.getClass().isAnnotationPresent(NotLazy.class);
+      boolean isXmlSerializer = component instanceof JDOMExternalizable || component instanceof PersistentStateComponent;
+      if (isXmlSerializer) {
+        initializeFromStateStore(component, !isNotLazy);
+      }
 
-          componentCreated(component.getClass());
-        }
+      if (isNotLazy) {
+        myNotLazyLoadCount.incrementAndGet();
 
-        if (component.getClass().isAnnotationPresent(Singleton.class)) {
-          LOG.warn("Class is not annotated by @Singleton " + component.getClass());
-        }
-
-        return component;
-      });
+        componentCreated(component.getClass());
+      }
     }
     finally {
-      inside.remove();
+      myGetComponentThreadLocal.remove();
     }
   }
 
@@ -139,19 +135,38 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       protected void configure() {
         bindListener(Matchers.any(), PostConstructMethodCaller.INSTANCE);
         bindListener(Matchers.any(), ScopeProvisionListener.INSTANCE);
-        bindListener(Matchers.any(), ComponentInitListener.INSTANCE);
 
+        long start = System.currentTimeMillis();
         bootstrapBinder(scope, binder());
+        logTime(myAllBindings.size() + " bindings done", start);
       }
     };
 
-    if (myParentComponentManager != null) {
-      Injector injector = ((AreaInstanceEx)myParentComponentManager).getInjector();
-      return injector.createChildInjector(module);
+    long start = System.currentTimeMillis();
+    try {
+      if (myParentComponentManager != null) {
+        Injector injector = ((AreaInstanceEx)myParentComponentManager).getInjector();
+        return injector.createChildInjector(module);
+      }
+      else {
+        return Guice.createInjector(module);
+      }
     }
-    else {
-      return Guice.createInjector(module);
+    finally {
+      logTime("injector created", start);
     }
+  }
+
+  private void logTime(String id, long start) {
+    long diff = System.currentTimeMillis() - start;
+    String areaId = getAreaId();
+    if (areaId.isEmpty()) {
+      areaId = "application";
+    }
+
+    areaId = areaId.toLowerCase(Locale.US);
+
+    LOG.info(areaId + " " + id + " in " + diff + " ms");
   }
 
   @Nonnull
@@ -168,15 +183,21 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @SuppressWarnings("unchecked")
   public void init() {
+    long time = System.currentTimeMillis();
+    int i = 0;
     for (Map.Entry<Class, Boolean> entry : myAllBindings.entrySet()) {
       Class key = entry.getKey();
 
       // hold @NotLazy
       if (entry.getValue()) {
+        i++;
+        long l = System.currentTimeMillis();
         Object instance = myInjector.getInstance(key);
         assert instance != null;
+        LOG.info(instance.getClass().getSimpleName() + " init in " + (System.currentTimeMillis() - l) + " ms");
       }
     }
+    logTime(i + " notlazy services done", time);
   }
 
   @Nonnull
@@ -210,7 +231,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   public <T> T getComponent(@Nonnull Class<T> interfaceClass) {
-    Object o = inside.get();
+    Object o = myGetComponentThreadLocal.get();
 
     if (o != null) {
       throw new IllegalArgumentException("Can't initialize value while object setup " + o.getClass());
@@ -226,6 +247,30 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
 
     return myInjector.getInstance(interfaceClass);
+  }
+
+  @Override
+  public <T> T createInstance(@Nonnull Class<T> interfaceClass) {
+    Object o = myGetComponentThreadLocal.get();
+
+    if (o != null) {
+      throw new IllegalArgumentException("Can't initialize value while object setup " + o.getClass());
+    }
+    if (myDisposeCompleted) {
+      ProgressManager.checkCanceled();
+      throw new AssertionError("Already disposed: " + this);
+    }
+
+    T instance = getCustomComponentInstance(interfaceClass);
+    if (instance != null) {
+      return instance;
+    }
+
+    T t = myInjector.getInstance(interfaceClass);
+    if (t.getClass().isAnnotationPresent(Singleton.class)) {
+      throw new IllegalArgumentException();
+    }
+    return t;
   }
 
   @Nullable
@@ -244,7 +289,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   protected float getPercentageOfComponentsLoaded() {
     float value = myNotLazyLoadCount.get();
-    System.out.println(value + "=" + getNotLazyComponentsSize());
     return value / getNotLazyComponentsSize();
   }
 
@@ -334,21 +378,21 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     Set<ExtensionComponentAdapter> extensionAdapters = point.getExtensionAdapters();
 
     for (ExtensionComponentAdapter extension : extensionAdapters) {
-      ServiceDescriptor descriptor = extension.apply(null, (injector, aClass) -> new ServiceDescriptor());
+      Element descriptorElement = extension.getDescribingElement();
 
       ComponentConfig componentConfig = new ComponentConfig();
-      componentConfig.setInterfaceClass(descriptor.serviceInterface);
-      componentConfig.setCompilerServerImplementationClass(descriptor.serviceImplementationForCompilerServer);
-      componentConfig.setImplementationClass(descriptor.serviceImplementation);
-      componentConfig.pluginDescriptor = descriptor.myPluginDescriptor;
+      componentConfig.setInterfaceClass(descriptorElement.getAttributeValue(ServiceDescriptor.serviceInterfaceAttribute));
+      componentConfig.setImplementationClass(descriptorElement.getAttributeValue(ServiceDescriptor.serviceImplementationAttribute));
 
-      load(binder, isDefault, componentConfig, descriptor.myPluginDescriptor, scope);
+      load(binder, isDefault, componentConfig, extension.getPluginDescriptor(), scope);
     }
 
     myComponentCreated = true;
   }
 
-  private void load(Binder binder, final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor, Scope scope) {
+  private Map<Class, Class> myRebindCheck = new HashMap<>();
+
+  private void load(Binder binder, final boolean defaultProject, @Nonnull ComponentConfig config, @Nonnull PluginDescriptor descriptor, Scope scope) {
     if (defaultProject && !config.isLoadForDefaultProject() || !isComponentSuitable(config.options)) {
       return;
     }
@@ -357,9 +401,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       return;
     }
 
-    config.pluginDescriptor = descriptor;
-
-    ClassLoader loader = config.getClassLoader();
+    ClassLoader loader = descriptor.getPluginClassLoader();
 
     try {
       final Class interfaceClass = Class.forName(config.getInterfaceClass(), true, loader);
@@ -372,6 +414,17 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       }
       else {
         binder.bind(implementationClass).in(scope);
+      }
+
+      if (myRebindCheck.containsKey(interfaceClass)) {
+        LOG.error("Service rebind: " + interfaceClass.getName());
+      }
+      else {
+        myRebindCheck.put(interfaceClass, implementationClass);
+      }
+
+      if (!implementationClass.isAnnotationPresent(com.google.inject.Singleton.class) && !implementationClass.isAnnotationPresent(Singleton.class)) {
+        LOG.warn("Component is not annotated by @Singleton. " + implementationClass.getName());
       }
 
       myAllBindings.put(interfaceClass, implementationClass.isAnnotationPresent(NotLazy.class));
@@ -432,9 +485,5 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     else {
       return component.getClass().getName();
     }
-  }
-
-  protected boolean logSlowComponents() {
-    return LOG.isDebugEnabled();
   }
 }

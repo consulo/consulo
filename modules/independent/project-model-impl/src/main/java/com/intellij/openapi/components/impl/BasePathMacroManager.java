@@ -25,35 +25,37 @@ import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.FactoryMap;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Provider;
 
 import java.util.*;
 
 public class BasePathMacroManager extends PathMacroManager {
-  private PathMacrosImpl myPathMacros;
+  private final Provider<PathMacros> myPathMacros;
+  private final Provider<VirtualFileManager> myVirtualFileManager;
 
-  public BasePathMacroManager(@Nullable PathMacros pathMacros) {
-    myPathMacros = (PathMacrosImpl)pathMacros;
+  public BasePathMacroManager(@Nonnull Provider<PathMacros> pathMacros, @Nonnull Provider<VirtualFileManager> virtualFileManager) {
+    myPathMacros = pathMacros;
+    myVirtualFileManager = virtualFileManager;
   }
 
-  protected static void addFileHierarchyReplacements(ExpandMacroToPathMap result, String macroName, @Nullable String path) {
+  protected void addFileHierarchyReplacements(ExpandMacroToPathMap result, String macroName, @Nullable String path) {
     if (path == null) return;
     addFileHierarchyReplacements(result, getLocalFileSystem().findFileByPath(path), "$" + macroName + "$");
   }
 
-  private static void addFileHierarchyReplacements(ExpandMacroToPathMap result, @Nullable VirtualFile f, String macro) {
+  private void addFileHierarchyReplacements(ExpandMacroToPathMap result, @Nullable VirtualFile f, String macro) {
     if (f == null) return;
     addFileHierarchyReplacements(result, f.getParent(), macro + "/..");
     result.put(macro, StringUtil.trimEnd(f.getPath(), "/"));
   }
 
-  protected static void addFileHierarchyReplacements(ReplacePathToMacroMap result, String macroName, @Nullable String path, @Nullable String stopAt) {
+  protected void addFileHierarchyReplacements(ReplacePathToMacroMap result, String macroName, @Nullable String path, @Nullable String stopAt) {
     if (path == null) return;
 
     String macro = "$" + macroName + "$";
@@ -72,9 +74,9 @@ public class BasePathMacroManager extends PathMacroManager {
     }
   }
 
-  private static VirtualFileSystem getLocalFileSystem() {
-    // Use VFM directly because of mocks in tests.
-    return VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.FILE_PROTOCOL);
+  private VirtualFileSystem getLocalFileSystem() {
+    VirtualFileManager manager = myVirtualFileManager.get();
+    return LocalFileSystem.from(manager);
   }
 
   public ExpandMacroToPathMap getExpandMacroMap() {
@@ -130,26 +132,22 @@ public class BasePathMacroManager extends PathMacroManager {
     getReplacePathMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
   }
 
-  public PathMacrosImpl getPathMacros() {
-    if (myPathMacros == null) {
-      myPathMacros = PathMacrosImpl.getInstanceEx();
-    }
-
-    return myPathMacros;
+  private PathMacrosImpl getPathMacros() {
+    return (PathMacrosImpl)myPathMacros.get();
   }
 
   private class MyTrackingPathMacroSubstitutor implements TrackingPathMacroSubstitutor {
     private final Map<String, Set<String>> myMacroToComponentNames = new FactoryMap<String, Set<String>>() {
       @Override
       protected Set<String> create(String key) {
-        return new HashSet<String>();
+        return new HashSet<>();
       }
     };
 
     private final Map<String, Set<String>> myComponentNameToMacros = new FactoryMap<String, Set<String>>() {
       @Override
       protected Set<String> create(String key) {
-        return new HashSet<String>();
+        return new HashSet<>();
       }
     };
 
@@ -200,7 +198,7 @@ public class BasePathMacroManager extends PathMacroManager {
 
     @Override
     public Set<String> getComponents(final Collection<String> macros) {
-      final Set<String> result = new HashSet<String>();
+      final Set<String> result = new HashSet<>();
       for (String macro : myMacroToComponentNames.keySet()) {
         if (macros.contains(macro)) {
           result.addAll(myMacroToComponentNames.get(macro));
@@ -212,7 +210,7 @@ public class BasePathMacroManager extends PathMacroManager {
 
     @Override
     public Set<String> getUnknownMacros(final String componentName) {
-      final Set<String> result = new HashSet<String>();
+      final Set<String> result = new HashSet<>();
       result.addAll(componentName == null ? myMacroToComponentNames.keySet() : myComponentNameToMacros.get(componentName));
       return Collections.unmodifiableSet(result);
     }

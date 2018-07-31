@@ -18,15 +18,12 @@ package com.intellij.openapi.vfs.tracker;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFileListener;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author mike
  */
 public interface VirtualFileTracker {
-  void addTracker(
-    @Nonnull String fileUrl,
-    @Nonnull VirtualFileListener listener,
-    boolean fromRefreshOnly,
-    @Nonnull Disposable parentDisposable);
+  void addTracker(@Nonnull String fileUrl, @Nonnull VirtualFileListener listener, boolean fromRefreshOnly, @Nonnull Disposable parentDisposable);
 }

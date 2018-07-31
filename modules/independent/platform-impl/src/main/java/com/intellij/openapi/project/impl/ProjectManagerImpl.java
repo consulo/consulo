@@ -52,7 +52,7 @@ import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.impl.ZipHandler;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SingleAlarm;
@@ -549,12 +549,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public Project loadAndOpenProject(@Nonnull final String filePath) throws IOException {
     final Project project = convertAndLoadProject(filePath);
     if (project == null) {
-      WelcomeFrame.showIfNoProjectOpened();
+      WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
       return null;
     }
 
     if (!openProject(project)) {
-      WelcomeFrame.showIfNoProjectOpened();
+      WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
       ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(project));
     }
 
@@ -623,7 +623,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   private static void notifyProjectOpenFailed() {
     ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectOpenFailed();
-    WelcomeFrame.showIfNoProjectOpened();
+    WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
   }
 
   private void askToReloadProjectIfConfigFilesChangedExternally() {

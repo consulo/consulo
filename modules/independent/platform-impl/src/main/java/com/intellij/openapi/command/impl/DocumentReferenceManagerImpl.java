@@ -35,6 +35,7 @@ import consulo.annotation.inject.PostConstruct;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -53,9 +54,16 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager {
   private static final Key<DocumentReference> FILE_TO_STRONG_REF_KEY = Key.create("FILE_TO_STRONG_REF_KEY");
   private final Map<FilePath, DocumentReference> myDeletedFilePathToRef = new WeakValueHashMap<>();
 
+  private VirtualFileManager myVirtualFileManager;
+
+  @Inject
+  public DocumentReferenceManagerImpl(VirtualFileManager virtualFileManager) {
+    myVirtualFileManager = virtualFileManager;
+  }
+
   @PostConstruct
   public void initComponent() {
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+    myVirtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@Nonnull VirtualFileEvent event) {
         VirtualFile f = event.getFile();

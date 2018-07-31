@@ -28,11 +28,13 @@ import com.intellij.util.xmlb.annotations.MapAnnotation;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Map;
 import java.util.Set;
 
 @State(name = "PostfixTemplatesSettings", storages = @Storage("postfixTemplates.xml"))
+@Singleton
 public class PostfixTemplatesSettings implements PersistentStateComponent<Element> {
 
   private Map<String, Set<String>> myLangToDisabledTemplates = ContainerUtil.newHashMap();

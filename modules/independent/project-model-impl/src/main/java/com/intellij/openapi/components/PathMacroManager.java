@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 
 public abstract class PathMacroManager implements PathMacroSubstitutor {
   @Nonnull
+  @Deprecated
   public static PathMacroManager getInstance(@Nonnull ComponentManager componentManager) {
     return componentManager.getComponent(PathMacroManager.class);
   }

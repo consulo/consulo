@@ -17,26 +17,45 @@ package com.intellij.idea.starter;
 
 import com.intellij.ide.StartupProgress;
 import com.intellij.idea.ApplicationStarter;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
+import consulo.application.TransactionGuardEx;
 import consulo.start.CommandLineArgs;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 @Internal
 public abstract class ApplicationPostStarter {
   protected final Ref<StartupProgress> mySplashRef = Ref.create();
   protected ApplicationStarter myApplicationStarter;
 
+  @Inject
+  @Nonnull
+  private TransactionGuard myTransactionGuard;
+
   public ApplicationPostStarter(ApplicationStarter applicationStarter) {
     myApplicationStarter = applicationStarter;
   }
 
-  public abstract void createApplication(boolean isHeadlessMode, CommandLineArgs args);
+  @Nonnull
+  public abstract Application createApplication(boolean isHeadlessMode, CommandLineArgs args);
 
   public void premain(@Nonnull CommandLineArgs args) {
   }
 
-  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void run(Application application, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+    if (needStartInTransaction()) {
+      ((TransactionGuardEx)myTransactionGuard).performUserActivity(() -> main(application, newConfigFolder, args));
+    }
+    else {
+      main(application, newConfigFolder, args);
+    }
+  }
+
+  public void main(Application application, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
   }
 
   public boolean needStartInTransaction() {

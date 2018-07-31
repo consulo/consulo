@@ -29,12 +29,14 @@ import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * Created by Denis Fokin
  */
+@Singleton
 public class JBMacMessages extends MacMessagesEmulation {
 
   @Override

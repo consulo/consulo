@@ -69,7 +69,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Window openFrame() {
+  public Window createFrame() {
     Window welcomeFrame = Window.createModal(FrameTitleUtil.buildTitle());
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);

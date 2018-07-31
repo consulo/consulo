@@ -18,10 +18,13 @@ package consulo.diagram.builder.impl;
 import consulo.diagram.builder.GraphBuilder;
 import consulo.diagram.builder.GraphBuilderFactory;
 
+import javax.inject.Singleton;
+
 /**
  * @author VISTALL
  * @since 22:37/15.10.13
  */
+@Singleton
 public class DesktopGraphBuilderFactoryImpl extends GraphBuilderFactory {
   @Override
   public GraphBuilder createBuilder() {

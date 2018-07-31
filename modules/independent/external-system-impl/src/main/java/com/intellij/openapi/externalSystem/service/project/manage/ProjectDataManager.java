@@ -25,6 +25,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.Stack;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +37,7 @@ import java.util.Map;
  * @author Denis Zhdanov
  * @since 4/16/13 11:38 AM
  */
+@Singleton
 public class ProjectDataManager {
 
   private static final Logger LOG = Logger.getInstance("#" + ProjectDataManager.class.getName());

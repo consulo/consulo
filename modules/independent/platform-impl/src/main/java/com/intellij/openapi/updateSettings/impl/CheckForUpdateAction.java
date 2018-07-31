@@ -26,10 +26,20 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class CheckForUpdateAction extends AnAction implements DumbAware {
+  private final UpdateSettings myUpdateSettings;
+
+  @Inject
+  public CheckForUpdateAction(UpdateSettings updateSettings) {
+    myUpdateSettings = updateSettings;
+  }
+
   @RequiredDispatchThread
   @Override
   public void update(@Nonnull AnActionEvent e) {
@@ -47,17 +57,16 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
 
-    actionPerformed(project, consulo.ide.updateSettings.UpdateSettings.getInstance());
+    actionPerformed(project, myUpdateSettings);
   }
 
-  public static void actionPerformed(Project project, final consulo.ide.updateSettings.UpdateSettings updateSettings) {
+  public static void actionPerformed(Project project, final UpdateSettings updateSettings) {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Checking for updates", true) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
 
-        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator)
-                .doWhenDone(() -> updateSettings.setLastTimeCheck(System.currentTimeMillis()));
+        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator).doWhenDone(() -> updateSettings.setLastTimeCheck(System.currentTimeMillis()));
       }
     });
   }

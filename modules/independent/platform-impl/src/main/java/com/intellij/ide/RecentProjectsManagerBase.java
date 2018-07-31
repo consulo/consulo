@@ -18,6 +18,7 @@ package com.intellij.ide;
 import com.intellij.ProjectTopics;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.impl.stores.ProjectStoreImpl;
@@ -37,7 +38,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
@@ -46,9 +46,9 @@ import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.*;
 
@@ -58,10 +58,6 @@ import java.util.*;
  */
 public abstract class RecentProjectsManagerBase extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerBase.State> {
   private static final int MAX_PROJECTS_IN_MAIN_MENU = 6;
-
-  public static RecentProjectsManagerBase getInstanceEx() {
-    return (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
-  }
 
   public static class State {
     public List<String> recentPaths = new SmartList<>();
@@ -90,14 +86,16 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
 
   private final Object myStateLock = new Object();
   private State myState = new State();
+  private final GeneralSettings myGeneralSettings;
 
   private Set<String> myDuplicatesCache = null;
   private boolean isDuplicatesCacheUpdating = false;
 
-  protected RecentProjectsManagerBase(@Nonnull MessageBus messageBus) {
-    MessageBusConnection connection = messageBus.connect();
+  protected RecentProjectsManagerBase(@Nonnull Application application, GeneralSettings generalSettings) {
+    myGeneralSettings = generalSettings;
+    MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(AppLifecycleListener.TOPIC, new MyAppLifecycleListener());
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (!application.isHeadlessEnvironment()) {
       connection.subscribe(ProjectManager.TOPIC, new MyProjectListener());
     }
   }
@@ -444,11 +442,11 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   public boolean willReopenProjectOnStart() {
-    return GeneralSettings.getInstance().isReopenLastProject() && getLastProjectPath() != null;
+    return myGeneralSettings.isReopenLastProject() && getLastProjectPath() != null;
   }
 
   public void doReopenLastProject() {
-    GeneralSettings generalSettings = GeneralSettings.getInstance();
+    GeneralSettings generalSettings = myGeneralSettings;
     if (generalSettings.isReopenLastProject()) {
       Set<String> openPaths;
       boolean forceNewFrame = true;

@@ -51,6 +51,7 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
@@ -65,7 +66,6 @@ import gnu.trove.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
@@ -195,7 +195,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private boolean myForceCompiling;
 
   @Inject
-  public TranslatingCompilerFilesMonitorImpl(VirtualFileManager vfsManager, ProjectManager projectManager, Application application) {
+  public TranslatingCompilerFilesMonitorImpl(Application application, VirtualFileManager vfsManager, ProjectManager projectManager) {
     myProjectManager = projectManager;
 
     projectManager.addProjectManagerListener(new MyProjectManagerListener());

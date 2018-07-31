@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.AppTopics;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
@@ -35,8 +35,8 @@ import com.intellij.openapi.vcs.changes.ui.CommitHelper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.inject.NotLazy;
-
 import consulo.annotation.inject.PostConstruct;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
@@ -46,16 +46,18 @@ import java.util.Map;
 public class VetoSavingCommittingDocumentsAdapter {
   static final Object SAVE_DENIED = new Object();
 
+  private final Application myApplication;
   private final FileDocumentManager myFileDocumentManager;
 
   @Inject
-  public VetoSavingCommittingDocumentsAdapter(final FileDocumentManager fileDocumentManager) {
+  public VetoSavingCommittingDocumentsAdapter(Application application, FileDocumentManager fileDocumentManager) {
+    myApplication = application;
     myFileDocumentManager = fileDocumentManager;
   }
 
   @PostConstruct
   public void initComponent() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
+    myApplication.getMessageBus().connect().subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
       public void beforeAllDocumentsSaving() {
         Map<Document, Project> documentsToWarn = getDocumentsBeingCommitted();

@@ -24,6 +24,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.options.PathMacrosService;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -42,17 +43,20 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
   protected final StreamProvider myStreamProvider;
   protected final String myFileSpec;
   protected boolean myBlockSavingTheContent = false;
-
   protected final RoamingType myRoamingType;
+
+  protected final PathMacrosService myPathMacrosService;
 
   protected XmlElementStorage(@Nonnull String fileSpec,
                               @Nullable RoamingType roamingType,
                               @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
                               @Nonnull String rootElementName,
-                              @Nullable StreamProvider streamProvider) {
+                              @Nullable StreamProvider streamProvider,
+                              @Nonnull PathMacrosService pathMacrosService) {
     super(pathMacroSubstitutor);
 
     myFileSpec = fileSpec;
+    myPathMacrosService = pathMacrosService;
     myRoamingType = roamingType == null ? RoamingType.PER_USER : roamingType;
     myRootElementName = rootElementName;
     myStreamProvider = myRoamingType == RoamingType.DISABLED ? null : streamProvider;
@@ -118,7 +122,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
   @Nonnull
   protected StorageData createStorageData() {
-    return new StorageData(myRootElementName);
+    return new StorageData(myRootElementName, myPathMacrosService);
   }
 
   public void setDefaultState(@Nonnull Element element) {

@@ -38,6 +38,7 @@ import java.util.Collection;
  */
 public abstract class CompilerManager {
   @Nonnull
+  @Deprecated
   public static CompilerManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CompilerManager.class);
   }

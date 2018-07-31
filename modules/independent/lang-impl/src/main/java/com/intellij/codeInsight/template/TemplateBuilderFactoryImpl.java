@@ -18,10 +18,12 @@ package com.intellij.codeInsight.template;
 
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class TemplateBuilderFactoryImpl extends TemplateBuilderFactory {
   @Override
   public TemplateBuilder createTemplateBuilder(@Nonnull PsiElement element) {

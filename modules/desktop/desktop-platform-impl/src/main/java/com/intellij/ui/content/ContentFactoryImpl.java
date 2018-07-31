@@ -19,7 +19,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.ui.content.impl.DesktopContentManagerImpl;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class ContentFactoryImpl implements ContentFactory {
   @Nonnull
   @Override

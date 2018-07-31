@@ -57,6 +57,7 @@ public abstract class WindowManager {
    */
   public abstract void setAlphaModeEnabled(Window window, boolean state);
 
+  @Deprecated
   public static WindowManager getInstance() {
     return ApplicationManager.getApplication().getComponent(WindowManager.class);
   }

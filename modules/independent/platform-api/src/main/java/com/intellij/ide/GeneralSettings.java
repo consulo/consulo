@@ -61,6 +61,7 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
   private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
   private ProcessCloseConfirmation myProcessCloseConfirmation = ProcessCloseConfirmation.ASK;
 
+  @Deprecated
   public static GeneralSettings getInstance() {
     return ServiceManager.getService(GeneralSettings.class);
   }

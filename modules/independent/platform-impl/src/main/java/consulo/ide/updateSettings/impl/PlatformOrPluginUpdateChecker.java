@@ -89,8 +89,7 @@ public class PlatformOrPluginUpdateChecker {
     return ArrayUtil.contains(pluginId, ourPlatformIds);
   }
 
-  public static boolean checkNeeded() {
-    UpdateSettings updateSettings = UpdateSettings.getInstance();
+  public static boolean checkNeeded(UpdateSettings updateSettings) {
     if (!updateSettings.isEnable()) {
       return false;
     }
@@ -100,10 +99,9 @@ public class PlatformOrPluginUpdateChecker {
   }
 
   @Nonnull
-  public static AsyncResult<Void> updateAndShowResult() {
+  public static AsyncResult<Void> updateAndShowResult(@Nonnull UpdateSettings updateSettings) {
     final AsyncResult<Void> result = new AsyncResult<>();
     final Application app = Application.get();
-    final UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       result.setDone();
       return result;

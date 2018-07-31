@@ -20,7 +20,9 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 
+import javax.inject.Singleton;
 
 @State(name = "CodeStyleSettingsManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
+@Singleton
 public class AppCodeStyleSettingsManager extends CodeStyleSettingsManager {
 }

@@ -38,6 +38,7 @@ public abstract class ProjectManager {
    *
    * @return <code>ProjectManager</code> instance
    */
+  @Deprecated
   public static ProjectManager getInstance() {
     return Application.get().getComponent(ProjectManager.class);
   }

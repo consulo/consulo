@@ -62,6 +62,7 @@ public class ToolManager extends BaseToolManager<Tool> {
     return Tool.ACTION_ID_PREFIX;
   }
 
+  @Deprecated
   public static ToolManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ToolManager.class);
   }

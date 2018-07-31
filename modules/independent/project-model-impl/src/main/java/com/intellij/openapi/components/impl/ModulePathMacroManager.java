@@ -22,12 +22,20 @@ import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.vfs.VirtualFileManager;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
+@Singleton
 public class ModulePathMacroManager extends BasePathMacroManager {
   private final Module myModule;
 
-  public ModulePathMacroManager(PathMacros pathMacros, Module module) {
-    super(pathMacros);
+  @Inject
+  public ModulePathMacroManager(@Nonnull Provider<PathMacros> pathMacros, @Nonnull Provider<VirtualFileManager> virtualFileManager, Module module) {
+    super(pathMacros, virtualFileManager);
     myModule = module;
   }
 

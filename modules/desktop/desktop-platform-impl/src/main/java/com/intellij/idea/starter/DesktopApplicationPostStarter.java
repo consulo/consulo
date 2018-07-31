@@ -20,37 +20,44 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 import com.intellij.ui.DesktopSplash;
-import consulo.annotations.Internal;
 import consulo.application.ApplicationProperties;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 
-@Internal
 public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationPostStarter.class);
+
+  @Inject
+  private RecentProjectsManager myRecentProjectsManager;
+  @Inject
+  private WelcomeFrameHelper myWelcomeFrameHelper;
+  @Inject
+  private WindowManager myWindowManager;
 
   public DesktopApplicationPostStarter(ApplicationStarter applicationStarter) {
     super(applicationStarter);
   }
 
+  @Nonnull
   @Override
-  public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
+  public Application createApplication(boolean isHeadlessMode, CommandLineArgs args) {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
@@ -60,7 +67,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
       }
     }
 
-    new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
+    return new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
   }
 
   @Nullable
@@ -75,22 +82,21 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(Application application, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
     SystemDock.updateMenu();
-
-    // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added
-    RecentProjectsManager.getInstance();
 
     // Event queue should not be changed during initialization of application components.
     // It also cannot be changed before initialization of application components because IdeEventQueue uses other
     // application components. So it is proper to perform replacement only here.
-    final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-    DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
+    ApplicationEx app = (ApplicationEx)application;
+
+    DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)myWindowManager;
+
     IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-    RecentProjectsManagerBase recentProjectsManager = RecentProjectsManagerBase.getInstanceEx();
+    RecentProjectsManagerBase recentProjectsManager = (RecentProjectsManagerBase)myRecentProjectsManager;
 
-    LOG.info("App initialization took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
+    LOG.info("application init took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
     PluginManagerCore.dumpPluginClassStatistics();
 
     app.invokeAndWait(() -> {
@@ -114,7 +120,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
       windowManager.showFrame();
     }
     else {
-      WelcomeFrame.showNow();
+      myWelcomeFrameHelper.showNow();
     }
 
     app.invokeLater(() -> {

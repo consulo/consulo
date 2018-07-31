@@ -35,7 +35,6 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -73,7 +72,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.List;
 
@@ -294,9 +292,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     Object obj;
     String className = stub.getClassName();
     try {
-      Constructor<?> constructor = Class.forName(className, true, stub.getLoader()).getDeclaredConstructor();
-      constructor.setAccessible(true);
-      obj = constructor.newInstance();
+      Class<?> clazz = Class.forName(className, true, stub.getLoader());
+
+      obj = Application.get().getComponent(clazz);
     }
     catch (ClassNotFoundException e) {
       PluginId pluginId = stub.getPluginId();
@@ -583,14 +581,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     try {
       Class aClass = Class.forName(className, true, loader);
 
-      Object obj;
-      try {
-        ExtensionComponentAdapter.ourUnstableMarker.set(true);
-        obj = Application.get().getComponent(aClass);
-      }
-      finally {
-        ExtensionComponentAdapter.ourUnstableMarker.set(false);
-      }
+      Object obj = Application.get().getComponent(aClass);
 
       if (!(obj instanceof ActionGroup)) {
         reportActionError(pluginId, "class with name \"" + className + "\" should be instance of " + ActionGroup.class.getName());

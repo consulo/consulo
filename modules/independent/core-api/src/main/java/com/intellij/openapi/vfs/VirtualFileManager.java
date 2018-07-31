@@ -47,6 +47,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @return <code>VirtualFileManager</code>
    */
   @Nonnull
+  @Deprecated
   public static VirtualFileManager getInstance() {
     return Application.get().getComponent(VirtualFileManager.class);
   }

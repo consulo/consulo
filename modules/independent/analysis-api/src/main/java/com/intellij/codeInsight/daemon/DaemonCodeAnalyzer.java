@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class DaemonCodeAnalyzer {
   @Nonnull
+  @Deprecated
   public static DaemonCodeAnalyzer getInstance(@Nonnull Project project) {
     return project.getComponent(DaemonCodeAnalyzer.class);
   }

@@ -45,7 +45,7 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.status.*;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 import com.intellij.ui.*;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
@@ -241,7 +241,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
                     ProjectUtil.closeAndDispose(myProject);
                   }
                   ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectFrameClosed();
-                  WelcomeFrame.showIfNoProjectOpened();
+                  WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
                 }
                 else {
                   ApplicationManagerEx.getApplicationEx().exit();

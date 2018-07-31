@@ -27,10 +27,15 @@ import consulo.ide.updateSettings.UpdateSettings;
  * @since 04-Sep-16
  */
 public class FrameTitleUtil {
+  @Deprecated
   public static String buildTitle() {
+    return buildTitle(UpdateSettings.getInstance());
+  }
+
+  public static String buildTitle(UpdateSettings updateSettings) {
     StringBuilder builder = new StringBuilder(ApplicationNamesInfo.getInstance().getFullProductName());
 
-    UpdateChannel channel = UpdateSettings.getInstance().getChannel();
+    UpdateChannel channel = updateSettings.getChannel();
     if (channel != UpdateChannel.release) {
       BuildNumber buildNumber = ApplicationInfo.getInstance().getBuild();
 

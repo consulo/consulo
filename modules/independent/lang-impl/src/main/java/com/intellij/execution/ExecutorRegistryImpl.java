@@ -36,13 +36,13 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -56,8 +56,10 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
   @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
   @NonNls public static final String RUN_CONTEXT_GROUP = "RunContextGroup";
 
+  private final ActionManager myActionManager;
+  private final ProjectManager myProjectManager;
+
   private List<Executor> myExecutors = new ArrayList<>();
-  private ActionManager myActionManager;
   private final Map<String, Executor> myId2Executor = new HashMap<>();
   private final Set<String> myContextActionIdSet = new HashSet<>();
   private final Map<String, AnAction> myId2Action = new HashMap<>();
@@ -67,8 +69,9 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
   private final Set<Trinity<Project, String, String>> myInProgress = Collections.synchronizedSet(new java.util.HashSet<Trinity<Project, String, String>>());
 
   @Inject
-  public ExecutorRegistryImpl(ActionManager actionManager) {
+  public ExecutorRegistryImpl(ActionManager actionManager, ProjectManager projectManager) {
     myActionManager = actionManager;
+    myProjectManager = projectManager;
   }
 
   synchronized void initExecutor(@Nonnull final Executor executor) {
@@ -133,23 +136,23 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
 
   @PostConstruct
   public void initComponent() {
-    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+    myProjectManager.addProjectManagerListener(new ProjectManagerAdapter() {
       @Override
       public void projectOpened(final Project project) {
         final MessageBusConnection connect = project.getMessageBus().connect(project);
-        connect.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionAdapter(){
+        connect.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener(){
           @Override
-          public void processStartScheduled(String executorId, ExecutionEnvironment environment) {
+          public void processStartScheduled(@Nonnull String executorId, @Nonnull ExecutionEnvironment environment) {
             myInProgress.add(createExecutionId(executorId, environment));
           }
 
           @Override
-          public void processNotStarted(String executorId, @Nonnull ExecutionEnvironment environment) {
+          public void processNotStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment environment) {
             myInProgress.remove(createExecutionId(executorId, environment));
           }
 
           @Override
-          public void processStarted(String executorId, @Nonnull ExecutionEnvironment environment, @Nonnull ProcessHandler handler) {
+          public void processStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment environment, @Nonnull ProcessHandler handler) {
             myInProgress.remove(createExecutionId(executorId, environment));
           }
         });
@@ -198,7 +201,6 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       }
     }
     myExecutors = null;
-    myActionManager = null;
   }
 
   private class ExecutorAction extends AnAction implements DumbAware {

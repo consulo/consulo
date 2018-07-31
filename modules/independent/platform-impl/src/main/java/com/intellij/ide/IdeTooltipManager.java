@@ -9,6 +9,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
@@ -29,10 +30,10 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.*;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -69,7 +70,9 @@ public class IdeTooltipManager implements Disposable, AWTEventListener {
 
   private Runnable myHideRunnable;
 
+  private final Application myApplication;
   private final JBPopupFactory myPopupFactory;
+  private final ActionManager myActionManager;
 
   private boolean myShowDelay = true;
 
@@ -83,8 +86,10 @@ public class IdeTooltipManager implements Disposable, AWTEventListener {
   private IdeTooltip myQueuedTooltip;
 
   @Inject
-  public IdeTooltipManager(JBPopupFactory popupFactory) {
+  public IdeTooltipManager(Application application, JBPopupFactory popupFactory, ActionManager actionManager) {
+    myApplication = application;
     myPopupFactory = popupFactory;
+    myActionManager = actionManager;
   }
 
   @PostConstruct
@@ -95,16 +100,16 @@ public class IdeTooltipManager implements Disposable, AWTEventListener {
       public void afterValueChanged(RegistryValue value) {
         processEnabled();
       }
-    }, ApplicationManager.getApplication());
+    }, myApplication);
 
     Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
 
-    ActionManager.getInstance().addAnActionListener(new AnActionListener.Adapter() {
+    myActionManager.addAnActionListener(new AnActionListener.Adapter() {
       @Override
       public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
         hideCurrent(null, action, event);
       }
-    }, ApplicationManager.getApplication());
+    }, myApplication);
 
     processEnabled();
   }

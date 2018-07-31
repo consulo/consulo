@@ -23,11 +23,13 @@ import consulo.bundle.SdkPointerManager;
 import consulo.util.pointers.NamedPointerManagerImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 17:53/15.06.13
  */
+@Singleton
 public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implements SdkPointerManager {
   public SdkPointerManagerImpl() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener.Adapter() {

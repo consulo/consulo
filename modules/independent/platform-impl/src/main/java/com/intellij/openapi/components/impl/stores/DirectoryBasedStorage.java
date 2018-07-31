@@ -26,10 +26,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
@@ -54,15 +51,15 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
                                @Nonnull String dir,
                                @Nonnull StateSplitterEx splitter,
                                @Nonnull Disposable parentDisposable,
-                               @Nullable final Listener listener) {
+                               @Nullable final Listener listener,
+                               @Nonnull VirtualFileTracker virtualFileTracker) {
     super(pathMacroSubstitutor);
 
     myDir = new File(dir);
     mySplitter = splitter;
 
-    VirtualFileTracker virtualFileTracker = ServiceManager.getService(VirtualFileTracker.class);
-    if (virtualFileTracker != null && listener != null) {
-      virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
+    if (listener != null) {
+      virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileListener() {
         @Override
         public void contentsChanged(@Nonnull VirtualFileEvent event) {
           notifyIfNeed(event);

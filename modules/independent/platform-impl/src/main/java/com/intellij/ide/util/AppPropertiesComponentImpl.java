@@ -18,10 +18,11 @@ package com.intellij.ide.util;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
+import consulo.core.api.ide.util.ApplicationPropertiesComponent;
 
 import javax.inject.Singleton;
 
 @State(name = "PropertiesComponent", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml")})
 @Singleton
-public class AppPropertiesComponentImpl extends PropertiesComponentImpl implements PropertiesComponent.ApplicationLevel {
+public class AppPropertiesComponentImpl extends PropertiesComponentImpl implements ApplicationPropertiesComponent {
 }

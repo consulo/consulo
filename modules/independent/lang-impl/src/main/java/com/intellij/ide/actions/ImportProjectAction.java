@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 import consulo.annotations.RequiredDispatchThread;
 import javax.annotation.Nonnull;
 
@@ -35,7 +35,7 @@ public class ImportProjectAction extends ImportModuleAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+    if (WelcomeFrameHelper.getInstance().isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.ImportProject);
     }
   }

@@ -20,17 +20,20 @@ import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
@@ -57,8 +60,8 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
     }
   };
 
-  private final Map<String, NotificationSettings> myIdToSettingsMap = new THashMap<String, NotificationSettings>();
-  private final Map<String, String> myToolWindowCapable = new THashMap<String, String>();
+  private final Map<String, NotificationSettings> myIdToSettingsMap = new THashMap<>();
+  private final Map<String, String> myToolWindowCapable = new THashMap<>();
   private final MessageBus myMessageBus;
 
   public boolean SHOW_BALLOONS = true;
@@ -84,7 +87,7 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   }
 
   public synchronized NotificationSettings[] getAllSettings() {
-    Collection<NotificationSettings> settings = new THashSet<NotificationSettings>(myIdToSettingsMap.values());
+    Collection<NotificationSettings> settings = new THashSet<>(myIdToSettingsMap.values());
     for (NotificationGroup group : NotificationGroup.getAllRegisteredGroups()) {
       settings.add(getSettings(group.getDisplayId()));
     }

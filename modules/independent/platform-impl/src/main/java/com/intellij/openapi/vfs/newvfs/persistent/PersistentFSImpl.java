@@ -23,10 +23,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
+import com.intellij.openapi.vfs.impl.win32.Win32LocalFileSystem;
 import com.intellij.openapi.vfs.newvfs.*;
 import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.openapi.vfs.newvfs.impl.*;
@@ -62,8 +64,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
 
   private final MessageBus myEventBus;
 
-  private final Map<String, VirtualFileSystemEntry> myRoots =
-          ContainerUtil.newConcurrentMap(10, 0.4f, JobSchedulerImpl.getCPUCoresCount(), FileUtil.PATH_HASHING_STRATEGY);
+  private final Map<String, VirtualFileSystemEntry> myRoots = ContainerUtil.newConcurrentMap(10, 0.4f, JobSchedulerImpl.getCPUCoresCount(), FileUtil.PATH_HASHING_STRATEGY);
   private final ConcurrentIntObjectMap<VirtualFileSystemEntry> myRootsById = ContainerUtil.createConcurrentIntObjectMap(10, 0.4f, JobSchedulerImpl.getCPUCoresCount());
 
   // FS roots must be in this map too. findFileById() relies on this.
@@ -76,9 +77,11 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
   private volatile int myStructureModificationCount;
 
   private final VfsData myData;
+  private final RefreshQueue myRefreshQueue;
 
   @Inject
-  public PersistentFSImpl(@Nonnull Application application) {
+  public PersistentFSImpl(@Nonnull Application application, RefreshQueue refreshQueue) {
+    myRefreshQueue = refreshQueue;
     myEventBus = application.getMessageBus();
     ShutDownTracker.getInstance().registerShutdownTask(this::performShutdown);
     myData = new VfsData(this);
@@ -156,7 +159,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
   }
 
   @Nonnull
-  private static FSRecords.NameId[] persistAllChildren(@Nonnull final VirtualFile file, final int id, @Nonnull FSRecords.NameId[] current) {
+  private FSRecords.NameId[] persistAllChildren(@Nonnull final VirtualFile file, final int id, @Nonnull FSRecords.NameId[] current) {
     final NewVirtualFileSystem fs = replaceWithNativeFS(getDelegate(file));
 
     String[] delegateNames = VfsUtil.filterNames(fs.list(file));
@@ -273,11 +276,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
     return FSRecords.getModCount();
   }
 
-  private static boolean writeAttributesToRecord(final int id,
-                                                 final int parentId,
-                                                 @Nonnull VirtualFile file,
-                                                 @Nonnull NewVirtualFileSystem fs,
-                                                 @Nonnull FileAttributes attributes) {
+  private static boolean writeAttributesToRecord(final int id, final int parentId, @Nonnull VirtualFile file, @Nonnull NewVirtualFileSystem fs, @Nonnull FileAttributes attributes) {
     String name = file.getName();
     if (!name.isEmpty()) {
       if (namesEqual(fs, name, FSRecords.getNameSequence(id))) return false; // TODO: Handle root attributes change.
@@ -512,8 +511,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
       // perforce offline mode as well
       if ((!delegate.isReadOnly() ||
            // do not cache archive content unless asked
-           cacheContent && !application.isInternal() && !application.isUnitTestMode()) &&
-          content.length <= PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD) {
+           cacheContent && !application.isInternal() && !application.isUnitTestMode()) && content.length <= PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD) {
         synchronized (myInputLock) {
           writeContent(file, new ByteSequence(content), delegate.isReadOnly());
           setFlag(file, MUST_RELOAD_CONTENT, false);
@@ -566,8 +564,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
     return len;
   }
 
-  private InputStream createReplicator(@Nonnull final VirtualFile file, final InputStream nativeStream, final long fileLength, final boolean readOnly)
-          throws IOException {
+  private InputStream createReplicator(@Nonnull final VirtualFile file, final InputStream nativeStream, final long fileLength, final boolean readOnly) throws IOException {
     if (nativeStream instanceof BufferExposingByteArrayInputStream) {
       // optimization
       BufferExposingByteArrayInputStream byteStream = (BufferExposingByteArrayInputStream)nativeStream;
@@ -575,8 +572,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
       storeContentToStorage(fileLength, file, readOnly, bytes, bytes.length);
       return nativeStream;
     }
-    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-    final BufferExposingByteArrayOutputStream cache = new BufferExposingByteArrayOutputStream((int)fileLength);
+    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") final BufferExposingByteArrayOutputStream cache = new BufferExposingByteArrayOutputStream((int)fileLength);
     return new ReplicatorInputStream(nativeStream, cache) {
       @Override
       public void close() throws IOException {
@@ -1095,10 +1091,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
     return null;
   }
 
-  private static int createAndFillRecord(@Nonnull NewVirtualFileSystem delegateSystem,
-                                         @Nonnull VirtualFile delegateFile,
-                                         int parentId,
-                                         @Nonnull FileAttributes attributes) {
+  private static int createAndFillRecord(@Nonnull NewVirtualFileSystem delegateSystem, @Nonnull VirtualFile delegateFile, int parentId, @Nonnull FileAttributes attributes) {
     final int childId = FSRecords.createRecord();
     writeAttributesToRecord(childId, parentId, delegateFile, delegateSystem, attributes);
     return childId;
@@ -1157,8 +1150,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
 
     int index = ArrayUtil.indexOf(childList, id);
     if (index == -1) {
-      throw new RuntimeException(
-              "Cannot find child (" + id + ")" + file + "\n\tin (" + parentId + ")" + parent + "\n\tactual children:" + Arrays.toString(childList));
+      throw new RuntimeException("Cannot find child (" + id + ")" + file + "\n\tin (" + parentId + ")" + parent + "\n\tactual children:" + Arrays.toString(childList));
     }
     childList = ArrayUtil.remove(childList, index);
     FSRecords.updateList(parentId, childList);
@@ -1298,5 +1290,13 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
     public String getUrl() {
       return getFileSystem().getProtocol() + "://" + getPath();
     }
+  }
+
+  @Override
+  public NewVirtualFileSystem replaceWithNativeFS(@Nonnull NewVirtualFileSystem fs) {
+    if (SystemInfo.isWindows && !(fs instanceof Win32LocalFileSystem) && fs.getProtocol().equals(LocalFileSystem.PROTOCOL) && Win32LocalFileSystem.isAvailable()) {
+      return Win32LocalFileSystem.getWin32Instance(this, myRefreshQueue);
+    }
+    return fs;
   }
 }

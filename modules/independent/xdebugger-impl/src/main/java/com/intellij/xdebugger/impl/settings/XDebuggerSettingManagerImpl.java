@@ -28,6 +28,7 @@ import com.intellij.xdebugger.settings.XDebuggerSettings;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 
@@ -42,6 +43,7 @@ import java.util.*;
                 @Storage(file = StoragePathMacros.APP_CONFIG + "/debugger.xml")
         }
 )
+@Singleton
 public class XDebuggerSettingManagerImpl extends com.intellij.xdebugger.settings.XDebuggerSettingsManager implements PersistentStateComponent<XDebuggerSettingManagerImpl.SettingsState> {
   private Map<String, XDebuggerSettings<?>> mySettingsById;
   private Map<Class<? extends XDebuggerSettings>, XDebuggerSettings<?>> mySettingsByClass;

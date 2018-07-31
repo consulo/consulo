@@ -19,8 +19,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
@@ -38,20 +37,23 @@ import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.*;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
+import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -64,46 +66,58 @@ import java.util.function.Supplier;
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, AccessibleContextAccessor, UISettingsListener, consulo.ui.Window {
+public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, AccessibleContextAccessor, UISettingsListener, Window {
+  private final Application myApplication;
+  private final DimensionService myDimensionService;
+  private final ProjectManager myProjectManager;
+  private final UpdateSettings myUpdateSettings;
+  private final WelcomeFrameHelper myWelcomeFrameHelper;
+
   private BalloonLayout myBalloonLayout;
-  private final FlatWelcomeScreen myScreen;
   private boolean myDisposed;
 
   @RequiredDispatchThread
-  public FlatWelcomeFrame() {
+  @Inject
+  public FlatWelcomeFrame(Application application, DimensionService dimensionService, ProjectManager projectManager, UpdateSettings updateSettings, WelcomeFrameHelper welcomeFrameHelper) {
+    myApplication = application;
+    myDimensionService = dimensionService;
+    myProjectManager = projectManager;
+    myUpdateSettings = updateSettings;
+    myWelcomeFrameHelper = welcomeFrameHelper;
     final JRootPane rootPane = getRootPane();
-    myScreen = new FlatWelcomeScreen(this);
+
+    FlatWelcomeScreen screen = new FlatWelcomeScreen(this);
 
     final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
 
     setGlassPane(glassPane);
     glassPane.setVisible(false);
     //setUndecorated(true);
-    setContentPane(myScreen);
+    setContentPane(screen);
     setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
     UIUtil.resetRootPaneAppearance(rootPane);
     setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
-    Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrame.DIMENSION_KEY);
+    Point location = myDimensionService.getLocationNoRealKey(WelcomeFrameManager.DIMENSION_KEY);
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
     setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
-    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+    projectManager.addProjectManagerListener(new ProjectManagerAdapter() {
       @Override
       public void projectOpened(Project project) {
         Disposer.dispose(FlatWelcomeFrame.this);
       }
     }, this);
 
-    myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
+    myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), screen.getMainWelcomePanel().myEventListener, screen.getMainWelcomePanel().myEventLocation);
 
     setupCloseAction(this);
     MnemonicHelper.init(this);
-    Disposer.register(ApplicationManager.getApplication(), this);
+    Disposer.register(application, this);
   }
 
-  static void setupCloseAction(final JFrame frame) {
+  void setupCloseAction(final JFrame frame) {
     frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     frame.addWindowListener(new WindowAdapter() {
       @Override
@@ -112,20 +126,20 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
         frame.dispose();
 
-        if (ProjectManager.getInstance().getOpenProjects().length == 0) {
-          ApplicationManagerEx.getApplicationEx().exit();
+        if (myProjectManager.getOpenProjects().length == 0) {
+          myApplication.exit();
         }
       }
     });
   }
 
-  public static void saveLocation(Rectangle location) {
+  public void saveLocation(Rectangle location) {
     Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
-    DimensionService.getInstance().setLocationNoRealKey(WelcomeFrame.DIMENSION_KEY, middle);
+    myDimensionService.setLocationNoRealKey(WelcomeFrameManager.DIMENSION_KEY, middle);
   }
 
   public void setDefaultTitle() {
-    setTitle(FrameTitleUtil.buildTitle());
+    setTitle(FrameTitleUtil.buildTitle(myUpdateSettings));
   }
 
   @Override
@@ -142,7 +156,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
       myBalloonLayout = null;
     }
 
-    WelcomeFrame.resetInstance();
+    myWelcomeFrameHelper.resetInstance();
 
     // open project from welcome screen show progress dialog and call FocusTrackback.register()
     FocusTrackback.release(this);
@@ -171,7 +185,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
   @Nullable
   @Override
   public Project getProject() {
-    return ProjectManager.getInstance().getDefaultProject();
+    return myProjectManager.getDefaultProject();
   }
 
   @Override
@@ -225,7 +239,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey, int width) {
     throw new UnsupportedOperationException();
   }
 

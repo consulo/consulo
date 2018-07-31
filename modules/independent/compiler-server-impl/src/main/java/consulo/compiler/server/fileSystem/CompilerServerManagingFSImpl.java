@@ -22,7 +22,6 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.impl.VfsData;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.PathUtil;
@@ -232,6 +231,11 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
   @Override
   public void processEvents(@Nonnull List<VFileEvent> events) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public NewVirtualFileSystem replaceWithNativeFS(@Nonnull NewVirtualFileSystem fs) {
+    return null;
   }
 
   @Nullable

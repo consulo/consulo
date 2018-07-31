@@ -54,7 +54,7 @@ public class GetFromVcsAction extends WelcomePopupAction{
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(Extensions.getExtensions(CheckoutProvider.EXTENSION_POINT_NAME).length > 0);
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+    if (WelcomeFrameHelper.getInstance().isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.FromVCS);
     }
   }

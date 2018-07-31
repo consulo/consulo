@@ -13,6 +13,7 @@ import com.intellij.util.xmlb.XmlSerializer;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 @State(name = "RemoteServers", storages = {
   @Storage(file = StoragePathMacros.APP_CONFIG + "/remote-servers.xml")
 })
+@Singleton
 public class RemoteServersManagerImpl extends RemoteServersManager implements PersistentStateComponent<RemoteServersManagerState> {
   public static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
   private List<RemoteServer<?>> myServers = new ArrayList<RemoteServer<?>>();

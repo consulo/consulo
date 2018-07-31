@@ -31,6 +31,7 @@ import java.io.File;
 @Singleton
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
   @Nonnull
+  @Deprecated
   public static UpdateSettings getInstance() {
     return ServiceManager.getService(UpdateSettings.class);
   }

@@ -25,6 +25,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsBundle;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.TransactionGuardEx;
@@ -53,15 +54,25 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   private final TransactionGuardEx myTransactionGuard;
   private final Provider<VirtualFileManager> myManager;
+  private final Provider<ManagingFS> myManagingFS;
 
   @Inject
-  public RefreshQueueImpl(TransactionGuard transactionGuard, Provider<VirtualFileManager> manager) {
+  public RefreshQueueImpl(TransactionGuard transactionGuard, Provider<VirtualFileManager> manager, Provider<ManagingFS> managingFS) {
     myManager = manager;
+    myManagingFS = managingFS;
     myTransactionGuard = (TransactionGuardEx)transactionGuard;
   }
 
   protected LocalFileSystem localFileSystem() {
     return LocalFileSystem.from(myManager.get());
+  }
+
+  protected VirtualFileManager getVirtualFileManager() {
+    return myManager.get();
+  }
+
+  protected PersistentFS getPersistentFS() {
+    return (PersistentFS)myManagingFS.get();
   }
 
   public void execute(@Nonnull RefreshSessionImpl session) {
@@ -77,8 +88,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       }
       else {
         if (((ApplicationEx)app).holdsReadLock()) {
-          LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " +
-                    "this will cause a deadlock if there are any events to fire.");
+          LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " + "this will cause a deadlock if there are any events to fire.");
           return;
         }
         queueSession(session, myTransactionGuard.getContextTransaction());
@@ -160,5 +170,6 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   }
 
   @Override
-  public void dispose() { }
+  public void dispose() {
+  }
 }

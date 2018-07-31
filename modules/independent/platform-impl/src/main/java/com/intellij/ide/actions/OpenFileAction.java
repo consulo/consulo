@@ -40,13 +40,13 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrameHelper;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
@@ -97,10 +97,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
       public void consume(final List<VirtualFile> files) {
         for (VirtualFile file : files) {
           if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
-            Messages.showInfoMessage(project,
-                                     file.getPresentableUrl() + " contains no " +
-                                     ApplicationNamesInfo.getInstance().getFullProductName() + " project",
-                                     "Cannot Open Project");
+            Messages.showInfoMessage(project, file.getPresentableUrl() + " contains no " + ApplicationNamesInfo.getInstance().getFullProductName() + " project", "Cannot Open Project");
             return;
           }
         }
@@ -112,13 +109,12 @@ public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+    if (WelcomeFrameHelper.getInstance().isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
     }
   }
 
-  private static void doOpenFile(@Nullable final Project project,
-                                 @Nonnull final List<VirtualFile> result) {
+  private static void doOpenFile(@Nullable final Project project, @Nonnull final List<VirtualFile> result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
         Project openedProject = ProjectUtil.open(file.getPath(), project, false);
@@ -127,10 +123,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
       }
 
       if (OpenProjectFileChooserDescriptor.canOpen(file)) {
-        int answer = Messages.showYesNoDialog(project,
-                                              IdeBundle.message("message.open.file.is.project", file.getName()),
-                                              IdeBundle.message("title.open.project"),
-                                              Messages.getQuestionIcon());
+        int answer = Messages.showYesNoDialog(project, IdeBundle.message("message.open.file.is.project", file.getName()), IdeBundle.message("title.open.project"), Messages.getQuestionIcon());
         if (answer == 0) {
           FileChooserUtil.setLastOpenedFile(ProjectUtil.open(file.getPath(), project, false), file);
           return;
@@ -160,11 +153,8 @@ public class OpenFileAction extends AnAction implements DumbAware {
   public static void openFile(final VirtualFile virtualFile, final Project project) {
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
     if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
-      Messages.showMessageDialog(project,
-                                 IdeBundle.message("error.files.of.this.type.cannot.be.opened",
-                                                   ApplicationNamesInfo.getInstance().getProductName()),
-                                 IdeBundle.message("title.cannot.open.file"),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(project, IdeBundle.message("error.files.of.this.type.cannot.be.opened", ApplicationNamesInfo.getInstance().getProductName()),
+                                 IdeBundle.message("title.cannot.open.file"), Messages.getErrorIcon());
       return;
     }
 

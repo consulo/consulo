@@ -26,7 +26,10 @@ import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
@@ -41,8 +44,8 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
@@ -52,6 +55,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
@@ -71,7 +75,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.inject.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -102,7 +106,7 @@ import java.util.Map;
 @Singleton
 @NotLazy
 public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
+  private static final Logger LOG = Logger.getInstance(LafManagerImpl.class);
 
   @NonNls
   private static final String ELEMENT_LAF = "laf";
@@ -125,11 +129,17 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private PropertyChangeListener myThemeChangeListener = null;
 
+  private final ProjectManager myProjectManager;
+  private final UISettings myUiSettings;
+  private final EditorFactory myEditorFactory;
+  private final WindowManager myWindowManager;
 
-  /**
-   * Invoked via reflection.
-   */
-  LafManagerImpl() {
+  @Inject
+  LafManagerImpl(ProjectManager projectManager, UISettings uiSettings, EditorFactory editorFactory, WindowManager windowManager, EarlyAccessProgramManager earlyAccessProgramManager) {
+    myProjectManager = projectManager;
+    myUiSettings = uiSettings;
+    myEditorFactory = editorFactory;
+    myWindowManager = windowManager;
     myListenerList = new EventListenerList();
 
     List<UIManager.LookAndFeelInfo> lafList = ContainerUtil.newArrayList();
@@ -150,36 +160,13 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
     lafList.add(new DarculaLookAndFeelInfo());
 
-    if (SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
+    if (SystemInfo.isLinux && earlyAccessProgramManager.isEnabled(GTKPlusEAPDescriptor.class)) {
       lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
     }
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
 
     myCurrentLaf = getDefaultLaf();
-  }
-
-  /**
-   * Adds specified listener
-   */
-  @Override
-  public void addLafManagerListener(@Nonnull final LafManagerListener l) {
-    myListenerList.add(LafManagerListener.class, l);
-  }
-
-  /**
-   * Removes specified listener
-   */
-  @Override
-  public void removeLafManagerListener(@Nonnull final LafManagerListener l) {
-    myListenerList.remove(LafManagerListener.class, l);
-  }
-
-  private void fireLookAndFeelChanged() {
-    LafManagerListener[] listeners = myListenerList.getListeners(LafManagerListener.class);
-    for (LafManagerListener listener : listeners) {
-      listener.lookAndFeelChanged(this);
-    }
   }
 
   @PostConstruct
@@ -208,6 +195,29 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         }
       };
       Toolkit.getDefaultToolkit().addPropertyChangeListener(GNOME_THEME_PROPERTY_NAME, myThemeChangeListener);
+    }
+  }
+
+  /**
+   * Adds specified listener
+   */
+  @Override
+  public void addLafManagerListener(@Nonnull final LafManagerListener l) {
+    myListenerList.add(LafManagerListener.class, l);
+  }
+
+  /**
+   * Removes specified listener
+   */
+  @Override
+  public void removeLafManagerListener(@Nonnull final LafManagerListener l) {
+    myListenerList.remove(LafManagerListener.class, l);
+  }
+
+  private void fireLookAndFeelChanged() {
+    LafManagerListener[] listeners = myListenerList.getListeners(LafManagerListener.class);
+    for (LafManagerListener listener : listeners) {
+      listener.lookAndFeelChanged(this);
     }
   }
 
@@ -336,17 +346,16 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     checkLookAndFeel(lookAndFeelInfo, false);
   }
 
-  private static void fireUpdate() {
+  private void fireUpdate() {
+    myUiSettings.fireUISettingsChanged();
+    myEditorFactory.refreshAllEditors();
 
-    UISettings.getInstance().fireUISettingsChanged();
-    EditorFactory.getInstance().refreshAllEditors();
-
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+    Project[] openProjects = myProjectManager.getOpenProjects();
     for (Project openProject : openProjects) {
       FileStatusManager.getInstance(openProject).fileStatusesChanged();
       DaemonCodeAnalyzer.getInstance(openProject).restart();
     }
-    for (IdeFrame frame : WindowManagerEx.getInstanceEx().getAllProjectFrames()) {
+    for (IdeFrame frame : myWindowManager.getAllProjectFrames()) {
       if (frame instanceof IdeFrameEx) {
         ((IdeFrameEx)frame).updateView();
       }
@@ -454,8 +463,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     fireLookAndFeelChanged();
   }
 
-  public static void updateToolWindows() {
-    for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+  public void updateToolWindows() {
+    for (Project project : myProjectManager.getOpenProjects()) {
       final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
       for (String id : toolWindowManager.getToolWindowIds()) {
         final ToolWindow toolWindow = toolWindowManager.getToolWindow(id);
@@ -638,7 +647,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     //    uiDefaults.put(entry.getKey(), entry.getValue());
     //  }
     //} else
-    UISettings uiSettings = UISettings.getInstance();
+    UISettings uiSettings = myUiSettings;
     if (uiSettings.OVERRIDE_NONIDEA_LAF_FONTS) {
       storeOriginalFontDefaults(uiDefaults);
       JBUI.setUserScaleFactor(uiSettings.FONT_SIZE / UIUtil.DEF_SYSTEM_FONT_SIZE);

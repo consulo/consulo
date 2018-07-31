@@ -40,6 +40,7 @@ import com.intellij.util.SequentialTask;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +50,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.intellij.formatting.FormatProcessor.FormatOptions;
 
+@Singleton
 public class FormatterImpl extends FormatterEx
         implements IndentFactory,
                    WrapFactory,

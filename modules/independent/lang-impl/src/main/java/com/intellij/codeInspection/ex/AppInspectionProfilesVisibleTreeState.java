@@ -19,13 +19,10 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.openapi.components.*;
 
-@State(
-  name = "AppInspectionProfilesVisibleTreeState",
-  storages = {
-    @Storage(
-        file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+import javax.inject.Singleton;
+
+@State(name = "AppInspectionProfilesVisibleTreeState", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Singleton
 public class AppInspectionProfilesVisibleTreeState implements PersistentStateComponent<VisibleTreeStateComponent> {
   private final VisibleTreeStateComponent myComponent = new VisibleTreeStateComponent();
 

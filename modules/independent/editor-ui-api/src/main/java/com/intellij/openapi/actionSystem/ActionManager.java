@@ -40,6 +40,7 @@ public abstract class ActionManager {
    * Fetches the instance of ActionManager implementation.
    */
   @Nonnull
+  @Deprecated
   public static ActionManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ActionManager.class);
   }

@@ -27,16 +27,19 @@ import javax.annotation.Nonnull;
  */
 public interface WelcomeFrameManager {
   @Nonnull
-  public static Size getDefaultWindowSize() {
+  static Size getDefaultWindowSize() {
     return new Size(777, 460);
   }
 
+  final String DIMENSION_KEY = "WELCOME_SCREEN";
+
   @Nonnull
+  @Deprecated
   static WelcomeFrameManager getInstance() {
     return ServiceManager.getService(WelcomeFrameManager.class);
   }
 
   @Nonnull
   @RequiredUIAccess
-  Window openFrame();
+  Window createFrame();
 }

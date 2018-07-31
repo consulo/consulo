@@ -22,6 +22,7 @@ import java.util.Set;
 
 public abstract class PathMacros {
 
+  @Deprecated
   public static PathMacros getInstance() {
     return Application.get().getComponent(PathMacros.class);
   }

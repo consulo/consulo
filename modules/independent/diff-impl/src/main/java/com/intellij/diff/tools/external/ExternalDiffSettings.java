@@ -25,13 +25,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.config.AbstractProperty;
 import com.intellij.util.config.BooleanProperty;
 import com.intellij.util.config.StringProperty;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
-@State(
-        name = "ExternalDiffSettings",
-        storages = @Storage(file = DiffUtil.DIFF_CONFIG)
-)
+@State(name = "ExternalDiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
+@Singleton
 public class ExternalDiffSettings implements PersistentStateComponent<ExternalDiffSettings.State> {
   private State myState = new State();
 
@@ -83,15 +83,21 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
   }
 
   public static class State {
-    @Nullable public Boolean DIFF_ENABLED = null;
+    @Nullable
+    public Boolean DIFF_ENABLED = null;
     @javax.annotation.Nullable
     public Boolean DIFF_DEFAULT = null;
-    @Nullable public String DIFF_EXE_PATH = null;
-    @Nullable public String DIFF_PARAMETERS = null;
+    @Nullable
+    public String DIFF_EXE_PATH = null;
+    @Nullable
+    public String DIFF_PARAMETERS = null;
 
-    @Nullable public Boolean MERGE_ENABLED = null;
-    @Nullable public String MERGE_EXE_PATH = null;
-    @Nullable public String MERGE_PARAMETERS = null;
+    @Nullable
+    public Boolean MERGE_ENABLED = null;
+    @Nullable
+    public String MERGE_EXE_PATH = null;
+    @Nullable
+    public String MERGE_PARAMETERS = null;
     public boolean MERGE_TRUST_EXIT_CODE = false;
   }
 

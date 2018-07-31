@@ -19,7 +19,6 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityStateListener;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
@@ -51,10 +50,10 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
@@ -62,14 +61,17 @@ import java.util.List;
 @Singleton
 @NotLazy
 public class EditorFactoryImpl extends EditorFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.EditorFactoryImpl");
+  private static final Logger LOG = Logger.getInstance(EditorFactoryImpl.class);
+
   private final EditorEventMulticasterImpl myEditorEventMulticaster = new EditorEventMulticasterImpl();
   private final EventDispatcher<EditorFactoryListener> myEditorFactoryEventDispatcher = EventDispatcher.create(EditorFactoryListener.class);
   private final List<Editor> myEditors = ContainerUtil.createLockFreeCopyOnWriteList();
 
+  private final Application myApplication;
+
   @Inject
-  public EditorFactoryImpl(EditorActionManager editorActionManager) {
-    Application application = ApplicationManager.getApplication();
+  public EditorFactoryImpl(Application application, ProjectManager projectManager, EditorActionManager editorActionManager) {
+    myApplication = application;
     MessageBus bus = application.getMessageBus();
     MessageBusConnection connect = bus.connect();
     connect.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
@@ -77,14 +79,14 @@ public class EditorFactoryImpl extends EditorFactory {
       public void beforeProjectLoaded(@Nonnull final Project project) {
         // validate all editors are disposed after fireProjectClosed() was called, because it's the place where editor should be released
         Disposer.register(project, () -> {
-          final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+          final Project[] openProjects = projectManager.getOpenProjects();
           final boolean isLastProjectClosed = openProjects.length == 0;
           validateEditorsAreReleased(project, isLastProjectClosed);
         });
       }
     });
 
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, new EditorColorsListener() {
+    bus.connect().subscribe(EditorColorsManager.TOPIC, new EditorColorsListener() {
       @Override
       public void globalSchemeChange(EditorColorsScheme scheme) {
         refreshAllEditors();
@@ -102,7 +104,7 @@ public class EditorFactoryImpl extends EditorFactory {
         ((DesktopEditorImpl)editor).beforeModalityStateChanged();
       }
     };
-    LaterInvocator.addModalityStateListener(myModalityStateListener, ApplicationManager.getApplication());
+    LaterInvocator.addModalityStateListener(myModalityStateListener, myApplication);
   }
 
   public void validateEditorsAreReleased(Project project, boolean isLastProjectClosed) {

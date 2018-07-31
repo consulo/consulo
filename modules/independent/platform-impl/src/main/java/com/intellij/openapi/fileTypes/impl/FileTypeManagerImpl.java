@@ -18,7 +18,6 @@ package com.intellij.openapi.fileTypes.impl;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -57,6 +56,8 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
+import consulo.core.api.ide.util.ApplicationPropertiesComponent;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -66,7 +67,6 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
@@ -171,10 +171,15 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   private final AtomicInteger counterAutoDetect = new AtomicInteger();
   private final AtomicLong elapsedAutoDetect = new AtomicLong();
+  private final Application myApplication;
+  private final ApplicationPropertiesComponent myPropertiesComponent;
 
   @Inject
-  public FileTypeManagerImpl(Application application, SchemesManagerFactory schemesManagerFactory) {
-    int fileTypeChangedCounter = StringUtilRt.parseInt(PropertiesComponent.getInstance().getValue("fileTypeChangedCounter"), 0);
+  public FileTypeManagerImpl(Application application, SchemesManagerFactory schemesManagerFactory, ApplicationPropertiesComponent propertiesComponent) {
+    myApplication = application;
+    myPropertiesComponent = propertiesComponent;
+
+    int fileTypeChangedCounter = StringUtilRt.parseInt(propertiesComponent.getValue("fileTypeChangedCounter"), 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);
     autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);
 
@@ -229,10 +234,9 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       @Override
       public void onSchemeDeleted(@Nonnull final AbstractFileType scheme) {
         GuiUtils.invokeLaterIfNeeded(() -> {
-          Application app = ApplicationManager.getApplication();
-          app.runWriteAction(() -> fireBeforeFileTypesChanged());
+          application.runWriteAction(() -> fireBeforeFileTypesChanged());
           myPatternsTable.removeAllAssociations(scheme);
-          app.runWriteAction(() -> fireFileTypesChanged());
+          application.runWriteAction(() -> fireFileTypesChanged());
         }, ModalityState.NON_MODAL);
       }
     }, RoamingType.PER_USER);
@@ -467,7 +471,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       }
     }
     if (!changed.isEmpty()) {
-      ApplicationManager.getApplication().invokeLater(() -> FileContentUtilCore.reparseFiles(changed), ApplicationManager.getApplication().getDisposed());
+      myApplication.invokeLater(() -> FileContentUtilCore.reparseFiles(changed), myApplication.getDisposed());
     }
   }
 
@@ -711,7 +715,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   private void clearPersistentAttributes() {
     int count = fileTypeChangedCount.incrementAndGet();
     autoDetectedAttribute = autoDetectedAttribute.newVersion(count + getVersionFromDetectors());
-    PropertiesComponent.getInstance().setValue("fileTypeChangedCounter", Integer.toString(count));
+    myPropertiesComponent.setValue("fileTypeChangedCounter", Integer.toString(count));
     if (toLog()) {
       log("F: clearPersistentAttributes()");
     }
@@ -806,7 +810,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       if (toLog()) {
         log("F: processFirstBytes(): inputStream.read() returned " + n + "; retrying with read action. stream=" + streamInfo(stream));
       }
-      n = ApplicationManager.getApplication().runReadAction((ThrowableComputable<Integer, IOException>)() -> stream.read(bytes, 0, length));
+      n = myApplication.runReadAction((ThrowableComputable<Integer, IOException>)() -> stream.read(bytes, 0, length));
       if (toLog()) {
         log("F: processFirstBytes(): under read action inputStream.read() returned " + n + "; stream=" + streamInfo(stream));
       }
@@ -824,102 +828,87 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     try {
       final Ref<FileType> result = new Ref<>(UnknownFileType.INSTANCE);
 
-      boolean excluded = false;
-      /*
-        Disable check - it's provide stackoverflow exception when file inside library order
-        https://github.com/consulo/consulo/issues/275
-      */
-      /*Project project = ProjectLocator.getInstance().guessProjectForFile(file);
-      if (project != null) {
-        ProjectFileIndex fileIndex = ProjectFileIndex.SERVICE.getInstance(project);
-        if (fileIndex.isExcluded(file)) {
-          excluded = true;
-        }
-      } */
+      final InputStream inputStream = ((FileSystemInterface)file.getFileSystem()).getInputStream(file);
+      if (toLog()) {
+        log("F: detectFromContentAndCache(" + file.getName() + "):" + " inputStream=" + streamInfo(inputStream));
+      }
 
-      if (!excluded) {
-        final InputStream inputStream = ((FileSystemInterface)file.getFileSystem()).getInputStream(file);
-        if (toLog()) {
-          log("F: detectFromContentAndCache(" + file.getName() + "):" + " inputStream=" + streamInfo(inputStream));
-        }
+      boolean r = false;
+      try {
+        r = processFirstBytes(inputStream, DETECT_BUFFER_SIZE, byteSequence -> {
+          boolean isText = guessIfText(file, byteSequence);
+          CharSequence text;
+          if (isText) {
+            byte[] bytes = Arrays.copyOf(byteSequence.getBytes(), byteSequence.getLength());
+            text = LoadTextUtil.getTextByBinaryPresentation(bytes, file, true, true, UnknownFileType.INSTANCE);
+          }
+          else {
+            text = null;
+          }
 
-        boolean r = false;
-        try {
-          r = processFirstBytes(inputStream, DETECT_BUFFER_SIZE, byteSequence -> {
-            boolean isText = guessIfText(file, byteSequence);
-            CharSequence text;
-            if (isText) {
-              byte[] bytes = Arrays.copyOf(byteSequence.getBytes(), byteSequence.getLength());
-              text = LoadTextUtil.getTextByBinaryPresentation(bytes, file, true, true, UnknownFileType.INSTANCE);
-            }
-            else {
-              text = null;
-            }
-
-            FileTypeDetector[] detectors = Extensions.getExtensions(FileTypeDetector.EP_NAME);
-            if (FileTypeManagerImpl.this.toLog()) {
-              log("F: detectFromContentAndCache.processFirstBytes(" +
-                  file.getName() +
-                  "): " +
-                  "byteSequence.length=" +
-                  byteSequence.getLength() +
-                  "; isText=" +
-                  isText +
-                  "; text='" +
-                  (text == null ? null : StringUtil.first(text, 100, true)) +
-                  "', detectors=" +
-                  Arrays.toString(detectors));
-            }
-            FileType detected = null;
-            for (FileTypeDetector detector : detectors) {
-              try {
-                detected = detector.detect(file, byteSequence, text);
-              }
-              catch (Exception e) {
-                LOG.error("Detector " + detector + " (" + detector.getClass() + ") exception occurred:", e);
-              }
-              if (detected != null) {
-                if (FileTypeManagerImpl.this.toLog()) {
-                  log("F: detectFromContentAndCache.processFirstBytes(" + file.getName() + "): " + "detector " + detector + " type as " + detected.getId());
-                }
-                break;
-              }
-            }
-
-            if (detected == null) {
-              detected = isText ? PlainTextFileType.INSTANCE : UnknownFileType.INSTANCE;
-              if (FileTypeManagerImpl.this.toLog()) {
-                log("F: detectFromContentAndCache.processFirstBytes(" + file.getName() + "): " + "no detector was able to detect. assigned " + detected.getId());
-              }
-            }
-            result.set(detected);
-            return true;
-          });
-        }
-        finally {
-          if (toLog()) {
-            byte[] buffer = new byte[50];
-            InputStream newStream = ((FileSystemInterface)file.getFileSystem()).getInputStream(file);
-            int n = newStream.read(buffer, 0, buffer.length);
-            log("F: detectFromContentAndCache(" +
+          FileTypeDetector[] detectors = Extensions.getExtensions(FileTypeDetector.EP_NAME);
+          if (FileTypeManagerImpl.this.toLog()) {
+            log("F: detectFromContentAndCache.processFirstBytes(" +
                 file.getName() +
                 "): " +
-                "; result: " +
-                result.get().getId() +
-                "; processor ret: " +
-                r +
-                "; stream: " +
-                streamInfo(inputStream) +
-                "; newStream: " +
-                streamInfo(newStream) +
-                "; read: " +
-                n +
-                "; buffer: " +
-                Arrays.toString(buffer));
-            newStream.close();
+                "byteSequence.length=" +
+                byteSequence.getLength() +
+                "; isText=" +
+                isText +
+                "; text='" +
+                (text == null ? null : StringUtil.first(text, 100, true)) +
+                "', detectors=" +
+                Arrays.toString(detectors));
           }
-          inputStream.close();
+          FileType detected = null;
+          for (FileTypeDetector detector : detectors) {
+            try {
+              detected = detector.detect(file, byteSequence, text);
+            }
+            catch (Exception e) {
+              LOG.error("Detector " + detector + " (" + detector.getClass() + ") exception occurred:", e);
+            }
+            if (detected != null) {
+              if (FileTypeManagerImpl.this.toLog()) {
+                log("F: detectFromContentAndCache.processFirstBytes(" + file.getName() + "): " + "detector " + detector + " type as " + detected.getId());
+              }
+              break;
+            }
+          }
+
+          if (detected == null) {
+            detected = isText ? PlainTextFileType.INSTANCE : UnknownFileType.INSTANCE;
+            if (FileTypeManagerImpl.this.toLog()) {
+              log("F: detectFromContentAndCache.processFirstBytes(" + file.getName() + "): " + "no detector was able to detect. assigned " + detected.getId());
+            }
+          }
+          result.set(detected);
+          return true;
+        });
+      }
+      finally {
+        if (toLog()) {
+          byte[] buffer = new byte[50];
+          InputStream newStream = ((FileSystemInterface)file.getFileSystem()).getInputStream(file);
+          int n = newStream.read(buffer, 0, buffer.length);
+          log("F: detectFromContentAndCache(" +
+              file.getName() +
+              "): " +
+              "; result: " +
+              result.get().getId() +
+              "; processor ret: " +
+              r +
+              "; stream: " +
+              streamInfo(inputStream) +
+              "; newStream: " +
+              streamInfo(newStream) +
+              "; read: " +
+              n +
+              "; buffer: " +
+              Arrays.toString(buffer));
+          newStream.close();
         }
+        inputStream.close();
       }
 
       FileType fileType = result.get();
@@ -1012,7 +1001,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   @Override
   public void registerFileType(@Nonnull final FileType type, @Nonnull final List<FileNameMatcher> defaultAssociations) {
-    ApplicationManager.getApplication().runWriteAction(() -> {
+    myApplication.runWriteAction(() -> {
       FileTypeManagerImpl.this.fireBeforeFileTypesChanged();
       FileTypeManagerImpl.this.registerFileTypeWithoutNotification(type, defaultAssociations, true);
       FileTypeManagerImpl.this.fireFileTypesChanged();
@@ -1021,7 +1010,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   @Override
   public void unregisterFileType(@Nonnull final FileType fileType) {
-    ApplicationManager.getApplication().runWriteAction(() -> {
+    myApplication.runWriteAction(() -> {
       FileTypeManagerImpl.this.fireBeforeFileTypesChanged();
       FileTypeManagerImpl.this.unregisterFileTypeWithoutNotification(fileType);
       FileTypeManagerImpl.this.fireFileTypesChanged();
