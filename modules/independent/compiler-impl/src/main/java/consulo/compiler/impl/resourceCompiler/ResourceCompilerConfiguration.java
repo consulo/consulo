@@ -52,6 +52,7 @@ import java.util.StringTokenizer;
 @Singleton
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
   @Nonnull
+  @Deprecated
   public static ResourceCompilerConfiguration getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ResourceCompilerConfiguration.class);
   }

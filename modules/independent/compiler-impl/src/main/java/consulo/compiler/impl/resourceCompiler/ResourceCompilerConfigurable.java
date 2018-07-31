@@ -24,10 +24,12 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 
@@ -42,11 +44,12 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
 
   private CollectionListModel<String> myModel;
 
-  public ResourceCompilerConfigurable(@Nonnull Project project) {
+  @Inject
+  public ResourceCompilerConfigurable(@Nonnull Project project, @Nonnull ResourceCompilerConfiguration resourceCompilerConfiguration) {
     myProject = project;
-    myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
+    myResourceCompilerConfiguration = resourceCompilerConfiguration;
 
-    myModel = new CollectionListModel<String>(myResourceCompilerConfiguration.getResourceFilePatterns());
+    myModel = new CollectionListModel<>(myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
   @Nls
@@ -55,12 +58,13 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
     return "Resource";
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getHelpTopic() {
     return null;
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -100,17 +104,19 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
 
   private void showAddOrChangeDialog(final String initialValue) {
     String pattern = Messages.showInputDialog(myProject, "Pattern", "Enter Pattern", null, initialValue, new InputValidatorEx() {
+      @RequiredDispatchThread
       @Override
       public boolean checkInput(String inputString) {
         return (initialValue == null && myModel.getElementIndex(inputString) == -1 || initialValue != null) && getErrorText(inputString) == null;
       }
 
+      @RequiredDispatchThread
       @Override
       public boolean canClose(String inputString) {
         return true;
       }
 
-      @javax.annotation.Nullable
+      @Nullable
       @Override
       public String getErrorText(String inputString) {
         try {
@@ -132,11 +138,13 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return !Comparing.haveEqualElements(myModel.toList(), myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     myResourceCompilerConfiguration.removeResourceFilePatterns();
@@ -150,6 +158,7 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     myResourceCompilerConfiguration.convertPatterns();
@@ -157,6 +166,7 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
     myModel.replaceAll(myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
   }

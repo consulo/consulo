@@ -6,9 +6,11 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -22,6 +24,7 @@ public class CoverageOptionsConfigurable implements SearchableConfigurable, Conf
   private final CoverageOptionsProvider myManager;
   private Project myProject;
 
+  @Inject
   public CoverageOptionsConfigurable(CoverageOptionsProvider manager, Project project) {
     myManager = manager;
     myProject = project;
@@ -49,6 +52,7 @@ public class CoverageOptionsConfigurable implements SearchableConfigurable, Conf
     return "reference.project.settings.coverage";
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     myPanel = new CoverageOptionsPanel();

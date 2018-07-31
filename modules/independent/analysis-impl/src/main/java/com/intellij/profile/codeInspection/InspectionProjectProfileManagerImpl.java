@@ -37,10 +37,10 @@ import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +69,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
     mySeverityRegistrar = new SeverityRegistrar(project.getMessageBus());
   }
 
+  @Deprecated
   public static InspectionProjectProfileManagerImpl getInstanceImpl(Project project) {
     return (InspectionProjectProfileManagerImpl)project.getComponent(InspectionProjectProfileManager.class);
   }

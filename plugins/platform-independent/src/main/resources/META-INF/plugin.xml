@@ -110,7 +110,7 @@
                     interface="com.intellij.openapi.startup.StartupActivity"/>
 
     <extensionPoint name="projectConfigurable"
-                    beanClass="com.intellij.openapi.options.ConfigurableEP"
+                    beanClass="consulo.platform.api.options.ProjectConfigurableEP"
                     area="PROJECT">
       <with attribute="instanceClass" implements="com.intellij.openapi.options.Configurable"/>
     </extensionPoint>

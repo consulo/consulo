@@ -41,6 +41,7 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
     super(project, inspectionProfileManager, holder);
   }
 
+  @Deprecated
   public static InspectionProjectProfileManager getInstance(Project project) {
     return project.getComponent(InspectionProjectProfileManager.class);
   }

@@ -34,6 +34,7 @@ public abstract class DependencyValidationManager extends NamedScopesHolder {
     super(project);
   }
 
+  @Deprecated
   public static DependencyValidationManager getInstance(Project project) {
     return ServiceManager.getService(project, DependencyValidationManager.class);
   }

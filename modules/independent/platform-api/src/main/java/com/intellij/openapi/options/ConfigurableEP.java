@@ -32,6 +32,7 @@ import com.intellij.util.xmlb.annotations.Tag;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.ResourceBundle;
 
 /**
@@ -113,6 +114,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   private AreaInstance myAreaInstance;
   private Project myProject;
 
+  @Inject
   public ConfigurableEP() {
     this(Application.get(), null);
   }

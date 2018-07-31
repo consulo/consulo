@@ -56,14 +56,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@State(
-        name = "InspectionProfileManager",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)
-        },
-        additionalExportFile = InspectionProfileManager.FILE_SPEC
-)
+@State(name = "InspectionProfileManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)}, additionalExportFile = InspectionProfileManager.FILE_SPEC)
 @Singleton
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
@@ -73,6 +67,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   protected static final Logger LOG = Logger.getInstance("#com.intellij.profile.DefaultProfileManager");
 
+  @Deprecated
   public static InspectionProfileManagerImpl getInstanceImpl() {
     return (InspectionProfileManagerImpl)ServiceManager.getService(InspectionProfileManager.class);
   }
@@ -94,8 +89,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
           ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-              Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
-                                       InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
+              Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()), InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
             }
           }, ModalityState.NON_MODAL);
         }
@@ -162,6 +156,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   }
 
   private volatile boolean LOAD_PROFILES = !ApplicationManager.getApplication().isUnitTestMode();
+
   @TestOnly
   public void forceInitProfiles(boolean flag) {
     LOAD_PROFILES = flag;
@@ -214,8 +209,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
-            Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file),
-                                     InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
+            Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file), InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
           }
         }, ModalityState.NON_MODAL);
       }

@@ -1,22 +1,20 @@
 package com.intellij.coverage;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
+
+import javax.inject.Singleton;
 
 /**
  * User: anna
  * Date: 4/28/11
  */
-@State(
-  name = "CoverageOptionsProvider",
-  storages = {
-    @Storage( file = StoragePathMacros.WORKSPACE_FILE)
-  }
-)
+@State(name = "CoverageOptionsProvider", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class CoverageOptionsProvider implements PersistentStateComponent<CoverageOptionsProvider.State> {
   private State myState = new State();
 
+  @Deprecated
   public static CoverageOptionsProvider getInstance(Project project) {
     return ServiceManager.getService(project, CoverageOptionsProvider.class);
   }
@@ -32,7 +30,7 @@ public class CoverageOptionsProvider implements PersistentStateComponent<Coverag
   public boolean activateViewOnRun() {
     return myState.myActivateViewOnRun;
   }
-  
+
   public void setActivateViewOnRun(boolean state) {
     myState.myActivateViewOnRun = state;
   }

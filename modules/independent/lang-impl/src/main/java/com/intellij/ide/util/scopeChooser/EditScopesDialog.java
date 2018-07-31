@@ -90,7 +90,7 @@ public class EditScopesDialog extends SingleConfigurableEditor {
   }
 
   public static EditScopesDialog showDialog(final Project project, @Nullable final String scopeToSelect, final boolean checkShared) {
-    final ScopeChooserConfigurable configurable = new ScopeChooserConfigurable(project);
+    final ScopeChooserConfigurable configurable = project.createInstance(ScopeChooserConfigurable.class);
     final EditScopesDialog dialog = new EditScopesDialog(project, configurable, checkShared);
     if (scopeToSelect != null) {
       configurable.selectNodeInTree(scopeToSelect);

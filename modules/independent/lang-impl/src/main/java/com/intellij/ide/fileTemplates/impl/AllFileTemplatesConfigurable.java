@@ -42,11 +42,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -95,9 +95,10 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   private static final String CURRENT_TAB = "FileTemplates.CurrentTab";
   private static final String SELECTED_TEMPLATE = "FileTemplates.SelectedTemplate";
 
-  public AllFileTemplatesConfigurable(Project project) {
+  @Inject
+  public AllFileTemplatesConfigurable(Project project, FileTemplateManager templateManager) {
     myProject = project;
-    myManager = getInstance(project);
+    myManager = templateManager;
     myScheme = myManager.getCurrentScheme();
     myInternalTemplateNames = ContainerUtil.map2Set(myManager.getInternalTemplates(), template -> template.getName());
   }
@@ -646,7 +647,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
   public static void editCodeTemplate(@Nonnull final String templateId, Project project) {
     final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-    final AllFileTemplatesConfigurable configurable = new AllFileTemplatesConfigurable(project);
+    final AllFileTemplatesConfigurable configurable = project.createInstance(AllFileTemplatesConfigurable.class);
     util.editConfigurable(project, configurable, () -> {
       configurable.myTabbedPane.setSelectedIndex(ArrayUtil.indexOf(configurable.myTabs, configurable.myCodeTemplatesList));
       for (FileTemplate template : configurable.myCodeTemplatesList.getTemplates()) {

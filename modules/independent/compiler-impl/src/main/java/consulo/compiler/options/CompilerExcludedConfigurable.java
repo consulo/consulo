@@ -21,9 +21,11 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 
 /**
@@ -33,48 +35,39 @@ import javax.swing.*;
 public class CompilerExcludedConfigurable implements Configurable {
   private ExcludedEntriesConfigurable myConfigurable;
 
-  public CompilerExcludedConfigurable(final Project project) {
-    CompilerManager compilerManager = CompilerManager.getInstance(project);
-
+  @Inject
+  public CompilerExcludedConfigurable(Project project, CompilerManager compilerManager) {
     myConfigurable = new ExcludedEntriesConfigurable(project, new FileChooserDescriptor(true, true, false, false, false, true),
-                                                     compilerManager.getExcludedEntriesConfiguration());
-  }
+                                                     compilerManager.getExcludedEntriesConfiguration());    }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createComponent() {
     return myConfigurable.createComponent();
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return myConfigurable.isModified();
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     myConfigurable.apply();
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     myConfigurable.reset();
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     myConfigurable.disposeUIResources();
-  }
-
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
   }
 }

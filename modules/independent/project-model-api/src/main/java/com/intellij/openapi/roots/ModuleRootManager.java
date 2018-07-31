@@ -16,8 +16,9 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
+
+import javax.annotation.Nonnull;
 
 /**
  * Interface for getting information about the contents and dependencies of a module.
@@ -31,6 +32,7 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    * @param module the module for which the root manager is requested.
    * @return the root manager instance.
    */
+  @Deprecated
   public static ModuleRootManager getInstance(@Nonnull Module module) {
     return module.getComponent(ModuleRootManager.class);
   }

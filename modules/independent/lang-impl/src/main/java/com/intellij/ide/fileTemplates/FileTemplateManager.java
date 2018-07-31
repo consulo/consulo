@@ -54,6 +54,7 @@ public abstract class FileTemplateManager{
 
   public static final String PROJECT_NAME_VARIABLE = "PROJECT_NAME";
 
+  @Deprecated
   public static FileTemplateManager getInstance(@Nonnull Project project){
     return ServiceManager.getService(project, FileTemplateManager.class).checkInitialized();
   }

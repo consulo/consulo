@@ -27,13 +27,7 @@ import consulo.ui.image.Image;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@State(
-  name="NamedScopeManager",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "NamedScopeManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 @Singleton
 public class NamedScopeManager extends NamedScopesHolder {
   @Inject
@@ -41,6 +35,7 @@ public class NamedScopeManager extends NamedScopesHolder {
     super(project);
   }
 
+  @Deprecated
   public static NamedScopeManager getInstance(Project project) {
     return ServiceManager.getService(project, NamedScopeManager.class);
   }

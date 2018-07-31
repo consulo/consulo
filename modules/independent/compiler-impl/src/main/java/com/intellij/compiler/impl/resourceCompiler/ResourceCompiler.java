@@ -19,12 +19,11 @@ package com.intellij.compiler.impl.resourceCompiler;
 
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.make.MakeUtil;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -33,8 +32,9 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Chunk;
 import com.intellij.util.ExceptionUtil;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -45,15 +45,19 @@ import java.util.*;
  * Time: 3:48:26 PM
  */
 public class ResourceCompiler implements TranslatingCompiler {
-  public static final Logger LOGGER = Logger.getInstance(ResourceCompiler.class);
+  private static final Logger LOGGER = Logger.getInstance(ResourceCompiler.class);
 
   private final ResourceCompilerExtension[] myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensions();
+
+  private final Application myApplication;
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
   private final ProjectFileIndex myProjectFileIndex;
 
-  public ResourceCompiler(Project project) {
-    myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
-    myProjectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
+  @Inject
+  public ResourceCompiler(Application application, ResourceCompilerConfiguration resourceCompilerConfiguration, ProjectFileIndex projectFileIndex) {
+    myApplication = application;
+    myResourceCompilerConfiguration = resourceCompilerConfiguration;
+    myProjectFileIndex = projectFileIndex;
   }
 
   @Override
@@ -92,7 +96,7 @@ public class ResourceCompiler implements TranslatingCompiler {
     final Map<String, Collection<OutputItem>> processed = new HashMap<String, Collection<OutputItem>>();
     final LinkedList<CopyCommand> copyCommands = new LinkedList<CopyCommand>();
     final Module singleChunkModule = moduleChunk.getNodes().size() == 1 ? moduleChunk.getNodes().iterator().next() : null;
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
+    myApplication.runReadAction(new Runnable() {
       @Override
       public void run() {
         for (final VirtualFile file : files) {

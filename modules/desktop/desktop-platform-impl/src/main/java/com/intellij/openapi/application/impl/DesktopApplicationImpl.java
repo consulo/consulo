@@ -201,6 +201,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   protected void bootstrapBinder(Scope scope, Binder binder) {
     super.bootstrapBinder(scope, binder);
     binder.bind(TransactionGuard.class).toInstance(myTransactionGuard);
+    binder.bind(IdeEventQueue.class).toInstance(IdeEventQueue.getInstance());
   }
 
   @Override

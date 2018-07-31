@@ -35,11 +35,11 @@ import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -51,16 +51,24 @@ import java.util.concurrent.ConcurrentMap;
 @Singleton
 public class PsiPackageManagerImpl extends PsiPackageManager implements Disposable {
   private final Project myProject;
+  private final PsiManager myPsiManager;
   private final DirectoryIndex myDirectoryIndex;
+  private final ProjectFileIndex myProjectFileIndex;
 
   private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, Object>> myPackageCache = ContainerUtil.newConcurrentMap();
 
   @Inject
-  public PsiPackageManagerImpl(Project project, DirectoryIndex directoryIndex) {
+  public PsiPackageManagerImpl(Project project,
+                               PsiManager psiManager,
+                               DirectoryIndex directoryIndex,
+                               ProjectFileIndex projectFileIndex,
+                               VirtualFileManager virtualFileManager) {
     myProject = project;
+    myPsiManager = psiManager;
     myDirectoryIndex = directoryIndex;
+    myProjectFileIndex = projectFileIndex;
 
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+    virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@Nonnull VirtualFileEvent event) {
         myPackageCache.clear();
@@ -139,9 +147,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   }
 
   @Nullable
-  private PsiPackage createPackageFromProviders(@Nonnull VirtualFile virtualFile,
-                                                @Nonnull Class<? extends ModuleExtension> extensionClass,
-                                                @Nonnull String qualifiedName) {
+  private PsiPackage createPackageFromProviders(@Nonnull VirtualFile virtualFile, @Nonnull Class<? extends ModuleExtension> extensionClass, @Nonnull String qualifiedName) {
     final Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
     if (moduleForFile == null) {
       return null;
@@ -154,7 +160,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
       return null;
     }
 
-    PsiManager psiManager = PsiManager.getInstance(myProject);
+    PsiManager psiManager = myPsiManager;
     for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
       if (p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile)) {
         return p.createPackage(psiManager, this, extensionClass, qualifiedName);
@@ -163,11 +169,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     return null;
   }
 
-  private PsiPackage createPackageFromLibrary(@Nonnull VirtualFile virtualFile,
-                                              @Nonnull Class<? extends ModuleExtension> extensionClass,
-                                              @Nonnull String qualifiedName) {
-    ProjectFileIndex fileIndexFacade = ProjectFileIndex.getInstance(myProject);
-    PsiManager psiManager = PsiManager.getInstance(myProject);
+  private PsiPackage createPackageFromLibrary(@Nonnull VirtualFile virtualFile, @Nonnull Class<? extends ModuleExtension> extensionClass, @Nonnull String qualifiedName) {
+    ProjectFileIndex fileIndexFacade = myProjectFileIndex;
+    PsiManager psiManager = myPsiManager;
     if (fileIndexFacade.isInLibraryClasses(virtualFile)) {
       List<OrderEntry> orderEntriesForFile = fileIndexFacade.getOrderEntriesForFile(virtualFile);
       for (OrderEntry orderEntry : orderEntriesForFile) {
@@ -216,7 +220,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
       if (aPackage != null) return aPackage;
     }
     else {
-      List<OrderEntry> orderEntriesForFile = ProjectFileIndex.getInstance(myProject).getOrderEntriesForFile(directory);
+      List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(directory);
       for (OrderEntry orderEntry : orderEntriesForFile) {
         Module ownerModule = orderEntry.getOwnerModule();
         return findForModule(packageName, ownerModule);

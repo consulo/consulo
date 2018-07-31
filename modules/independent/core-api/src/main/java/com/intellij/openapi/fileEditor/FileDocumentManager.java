@@ -20,12 +20,14 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.SavingRequestor;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class FileDocumentManager implements SavingRequestor {
+  @Deprecated
   public static FileDocumentManager getInstance() {
     return ApplicationManager.getApplication().getComponent(FileDocumentManager.class);
   }

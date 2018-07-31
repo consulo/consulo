@@ -40,6 +40,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -53,6 +55,7 @@ import java.util.*;
 
 @Singleton
 @State(name = "FileTemplateManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@NotLazy
 public class FileTemplateManagerImpl extends FileTemplateManager implements PersistentStateComponent<FileTemplateManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.FileTemplateManagerImpl");
 
@@ -66,6 +69,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   private FileTemplatesScheme myScheme = FileTemplatesScheme.DEFAULT;
   private boolean myInitialized;
 
+  @Deprecated
   public static FileTemplateManagerImpl getInstanceImpl(@Nonnull Project project) {
     return (FileTemplateManagerImpl)getInstance(project);
   }
@@ -92,6 +96,11 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
         return project;
       }
     };
+  }
+
+  @PostConstruct
+  private void postInit() {
+    checkInitialized();
   }
 
   private FileTemplateSettings getSettings() {

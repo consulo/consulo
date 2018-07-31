@@ -25,6 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
 
 /**
  * User: anna
@@ -37,6 +38,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
     getTemplatePresentation().setIcon(AllIcons.Ide.LocalScope);
   }
 
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
@@ -44,7 +46,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
     LOG.assertTrue(project != null);
     final String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
     LOG.assertTrue(scopeName != null);
-    final ScopeChooserConfigurable scopeChooserConfigurable = new ScopeChooserConfigurable(project);
+    final ScopeChooserConfigurable scopeChooserConfigurable = project.createInstance(ScopeChooserConfigurable.class);
     ShowSettingsUtil.getInstance().editConfigurable(project, scopeChooserConfigurable, new Runnable(){
       @Override
       public void run() {

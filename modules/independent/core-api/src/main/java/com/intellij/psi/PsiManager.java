@@ -21,9 +21,10 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * The main entry point for accessing the PSI services for a project.
@@ -37,6 +38,7 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @return the PSI manager instance.
    */
   @Nonnull
+  @Deprecated
   public static PsiManager getInstance(@Nonnull Project project) {
     return project.getComponent(PsiManager.class);
   }

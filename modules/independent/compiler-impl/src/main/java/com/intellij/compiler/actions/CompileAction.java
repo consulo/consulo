@@ -32,32 +32,44 @@ import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class CompileAction extends CompileActionBase {
+  private final CompilerManager myCompilerManager;
+  private final PsiManager myPsiManager;
+
+  @Inject
+  public CompileAction(CompilerManager compilerManager, PsiManager psiManager) {
+    myCompilerManager = compilerManager;
+    myPsiManager = psiManager;
+  }
+
+  @Override
   @RequiredDispatchThread
   protected void doAction(DataContext dataContext, Project project) {
     final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     if (module != null) {
-      CompilerManager.getInstance(project).compile(module, null);
+      myCompilerManager.compile(module, null);
     }
     else {
       VirtualFile[] files = getCompilableFiles(project, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY));
       if (files.length > 0) {
-        CompilerManager.getInstance(project).compile(files, null);
+        myCompilerManager.compile(files, null);
       }
     }
 
   }
 
+  @Override
   @RequiredDispatchThread
   public void update(@Nonnull AnActionEvent event) {
     super.update(event);
@@ -92,7 +104,7 @@ public class CompileAction extends CompileActionBase {
     else {
       PsiPackage aPackage = null;
       if (files.length == 1) {
-        final PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files[0]);
+        final PsiDirectory directory = myPsiManager.findDirectory(files[0]);
         if (directory != null) {
           aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
         }

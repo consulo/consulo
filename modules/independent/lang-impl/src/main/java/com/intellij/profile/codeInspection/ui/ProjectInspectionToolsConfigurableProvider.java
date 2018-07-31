@@ -18,6 +18,8 @@ package com.intellij.profile.codeInspection.ui;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 
+import javax.inject.Inject;
+
 /**
  * @author nik
  */
@@ -25,6 +27,7 @@ public class ProjectInspectionToolsConfigurableProvider extends ErrorsConfigurab
   private final InspectionProfileManager myProfileManager;
   private final InspectionProjectProfileManager myProjectProfileManager;
 
+  @Inject
   public ProjectInspectionToolsConfigurableProvider(InspectionProfileManager profileManager,
                                                     InspectionProjectProfileManager projectProfileManager) {
     myProfileManager = profileManager;

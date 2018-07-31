@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.charset.Charset;
@@ -94,6 +95,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
   private MyChooseFileEncodingAction myIdeEncodingAction;
   private MyChooseFileEncodingAction myProjectEncodingAction;
 
+  @Inject
   public FileEncodingConfigurable(@Nonnull Project project) {
     myProject = project;
     myTitleLabel.setText(myTitleLabel.getText().replace("$productName", ApplicationNamesInfo.getInstance().getFullProductName()));

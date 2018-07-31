@@ -17,13 +17,14 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.ArrayFactory;
+import consulo.platform.api.options.ProjectConfigurableEP;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -59,7 +60,7 @@ public interface Configurable extends UnnamedConfigurable {
 
   ExtensionPointName<ConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("com.intellij.applicationConfigurable");
 
-  ExtensionPointName<ConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("com.intellij.projectConfigurable");
+  ExtensionPointName<ProjectConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("com.intellij.projectConfigurable");
 
   /**
    * Returns the user-visible name of the settings component.

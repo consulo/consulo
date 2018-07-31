@@ -102,6 +102,11 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
+  public <T> T createInstance(@Nonnull Class<T> clazz) {
+    return null;
+  }
+
+  @Override
   public boolean hasComponent(@Nonnull Class interfaceClass) {
     return false;
   }

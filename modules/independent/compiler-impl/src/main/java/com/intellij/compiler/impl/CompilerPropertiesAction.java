@@ -23,6 +23,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -33,10 +36,12 @@ class CompilerPropertiesAction extends AnAction {
     super(CompilerBundle.message("action.compiler.properties.text"), null, AllIcons.General.Settings);
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
-      ShowSettingsUtil.getInstance().editConfigurable(project, new CompilerConfigurable(project));
+      ShowSettingsUtil.getInstance().editConfigurable(project, project.createInstance(CompilerConfigurable.class));
     }
   }
 }

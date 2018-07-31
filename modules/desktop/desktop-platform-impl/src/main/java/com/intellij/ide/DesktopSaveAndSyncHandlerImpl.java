@@ -17,7 +17,6 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.LaterInvocator;
@@ -35,10 +34,10 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -54,24 +53,31 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   private final Runnable myIdleListener;
   private final PropertyChangeListener myGeneralSettingsListener;
+  private final Application myApplication;
   private final GeneralSettings mySettings;
   private final ProgressManager myProgressManager;
+  private final RefreshQueue myRefreshQueue;
   private final SingleAlarm myRefreshDelayAlarm = new SingleAlarm(this::doScheduledRefresh, 300, this);
   private final AtomicInteger myBlockSaveOnFrameDeactivationCount = new AtomicInteger();
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
   private volatile long myRefreshSessionId;
 
   @Inject
-  public DesktopSaveAndSyncHandlerImpl(@Nonnull GeneralSettings generalSettings,
+  public DesktopSaveAndSyncHandlerImpl(@Nonnull Application application,
+                                       @Nonnull TransactionGuard guard,
+                                       @Nonnull GeneralSettings generalSettings,
                                        @Nonnull ProgressManager progressManager,
                                        @Nonnull FrameStateManager frameStateManager,
-                                       @Nonnull FileDocumentManager fileDocumentManager) {
+                                       @Nonnull FileDocumentManager fileDocumentManager,
+                                       @Nonnull RefreshQueue refreshQueue) {
+    myApplication = application;
     mySettings = generalSettings;
     myProgressManager = progressManager;
+    myRefreshQueue = refreshQueue;
 
     myIdleListener = () -> {
       if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
+        TransactionGuard.submitTransaction(guard, application, () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
       }
     };
     IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
@@ -93,7 +99,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       @Override
       public void onFrameDeactivated() {
         LOG.debug("save(): enter");
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
+        TransactionGuard.submitTransaction(guard, application, () -> {
           if (canSyncOrSave()) {
             saveProjectsAndDocuments();
           }
@@ -103,7 +109,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
       @Override
       public void onFrameActivated() {
-        if (!ApplicationManager.getApplication().isDisposed() && mySettings.isSyncOnFrameActivation()) {
+        if (!application.isDisposed() && mySettings.isSyncOnFrameActivation()) {
           scheduleRefresh();
         }
       }
@@ -112,7 +118,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   @Override
   public void dispose() {
-    RefreshQueue.getInstance().cancelSession(myRefreshSessionId);
+    myRefreshQueue.cancelSession(myRefreshSessionId);
     mySettings.removePropertyChangeListener(myGeneralSettingsListener);
     IdeEventQueue.getInstance().removeIdleListener(myIdleListener);
   }
@@ -123,7 +129,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   @Override
   public void saveProjectsAndDocuments() {
-    Application app = ApplicationManager.getApplication();
+    Application app = myApplication;
     if (!app.isDisposed() &&
         mySettings.isSaveOnFrameDeactivation() &&
         myBlockSaveOnFrameDeactivationCount.get() == 0) {
@@ -145,7 +151,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   public void maybeRefresh(@Nonnull ModalityState modalityState) {
     if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
-      RefreshQueue queue = RefreshQueue.getInstance();
+      RefreshQueue queue = myRefreshQueue;
       queue.cancelSession(myRefreshSessionId);
 
       RefreshSession session = queue.createSession(true, true, null, modalityState);
@@ -174,7 +180,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
     if (!files.isEmpty()) {
       // refresh open files synchronously so it doesn't wait for potentially longish refresh request in the queue to finish
-      RefreshQueue.getInstance().refresh(false, false, null, files);
+      myRefreshQueue.refresh(false, false, null, files);
     }
   }
 

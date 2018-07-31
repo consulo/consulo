@@ -32,17 +32,18 @@ import javax.annotation.Nullable;
  */
 public abstract class PsiPackageManager {
   @Nonnull
+  @Deprecated
   public static PsiPackageManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, PsiPackageManager.class);
   }
 
   public abstract void dropCache(@Nonnull Class<? extends ModuleExtension> extensionClass);
 
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredReadAction
   public abstract PsiPackage findPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass);
 
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredReadAction
   public abstract PsiPackage findPackage(@Nonnull PsiDirectory directory, @Nonnull Class<? extends ModuleExtension> extensionClass);
 

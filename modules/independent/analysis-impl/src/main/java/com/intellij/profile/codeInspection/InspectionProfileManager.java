@@ -44,6 +44,7 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
 
   protected static final Logger LOG = Logger.getInstance("#com.intellij.profile.DefaultProfileManager");
 
+  @Deprecated
   public static InspectionProfileManager getInstance() {
     return ServiceManager.getService(InspectionProfileManager.class);
   }

@@ -26,9 +26,11 @@ import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,10 +49,12 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   private boolean myApplyCompleted = false;
   private final Project myProject;
 
+  @Inject
   public CodeStyleSchemesConfigurable(Project project) {
     myProject = project;
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     myModel = ensureModel();

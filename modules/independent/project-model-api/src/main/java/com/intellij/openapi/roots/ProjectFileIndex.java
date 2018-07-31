@@ -41,6 +41,7 @@ public interface ProjectFileIndex extends FileIndex {
   }
 
   @Nonnull
+  @Deprecated
   static ProjectFileIndex getInstance(Project project) {
     return ServiceManager.getService(project, ProjectFileIndex.class);
   }

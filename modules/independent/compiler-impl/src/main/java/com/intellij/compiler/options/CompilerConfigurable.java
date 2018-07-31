@@ -27,6 +27,7 @@ import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements Configurable {
   protected static class Root implements NotNullComputable<Component> {
@@ -61,8 +62,9 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
 
   private final CompilerWorkspaceConfiguration myCompilerWorkspaceConfiguration;
 
-  public CompilerConfigurable(Project project) {
-    myCompilerWorkspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(project);
+  @Inject
+  public CompilerConfigurable(Project project, CompilerWorkspaceConfiguration compilerWorkspaceConfiguration) {
+    myCompilerWorkspaceConfiguration = compilerWorkspaceConfiguration;
   }
 
   @RequiredUIAccess
