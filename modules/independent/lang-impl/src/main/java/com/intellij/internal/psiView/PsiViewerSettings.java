@@ -18,12 +18,13 @@ package com.intellij.internal.psiView;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * @author Konstantin Bulenkov
  */
-@State(
-  name = "PsiViewerSettings",
-  storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@State(name = "PsiViewerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Singleton
 public class PsiViewerSettings implements PersistentStateComponent<PsiViewerSettings> {
   public boolean showWhiteSpaces = true;
   public boolean showTreeNodes = true;

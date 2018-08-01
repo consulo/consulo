@@ -16,23 +16,23 @@
 package com.intellij.openapi.vcs.contentAnnotation;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
+
+import javax.inject.Singleton;
 
 /**
  * @author Irina.Chernushina
  * @since 3.08.2011
  */
-@State(
-  name = "VcsContentAnnotationSettings",
-  storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)}
-)
+@State(name = "VcsContentAnnotationSettings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class VcsContentAnnotationSettings implements PersistentStateComponent<VcsContentAnnotationSettings.State> {
   public static final long ourMillisecondsInDay = 24 * 60 * 60 * 1000L;
   public static final int ourMaxDays = 31; // approx
   public static final long ourAbsoluteLimit = ourMillisecondsInDay * ourMaxDays;
 
   private State myState = new State();
+
   {
     myState.myLimit = ourAbsoluteLimit;
   }
@@ -40,7 +40,7 @@ public class VcsContentAnnotationSettings implements PersistentStateComponent<Vc
   public static VcsContentAnnotationSettings getInstance(final Project project) {
     return ServiceManager.getService(project, VcsContentAnnotationSettings.class);
   }
-  
+
   public static class State {
     public boolean myShow1 = false;
     public long myLimit;
@@ -61,7 +61,7 @@ public class VcsContentAnnotationSettings implements PersistentStateComponent<Vc
   }
 
   public int getLimitDays() {
-    return (int) (myState.myLimit / ourMillisecondsInDay);
+    return (int)(myState.myLimit / ourMillisecondsInDay);
   }
 
   public void setLimit(int limit) {

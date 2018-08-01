@@ -21,6 +21,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class CodeStyleSettingsUtilImpl extends CodeStyleSettingsUtil {
   /**
    * Shows code style settings sutable for the project passed. I.e. it shows project code style page if one

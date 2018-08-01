@@ -21,8 +21,10 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.ProjectReloadState;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 @State(name = "ProjectReloadState", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class ProjectReloadStateImpl implements ProjectReloadState, PersistentStateComponent<ProjectReloadStateImpl> {
   public static final int UNKNOWN = 0;
   public static final int BEFORE_RELOAD = 1;

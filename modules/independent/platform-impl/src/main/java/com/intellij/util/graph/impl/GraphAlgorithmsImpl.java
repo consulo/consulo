@@ -19,12 +19,14 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.Chunk;
 import com.intellij.util.graph.*;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author nik
  */
+@Singleton
 public class GraphAlgorithmsImpl extends GraphAlgorithms {
   @Override
   public <Node> List<Node> findShortestPath(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish) {

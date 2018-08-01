@@ -27,12 +27,23 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.testFramework.LightVirtualFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.highlighter.EditorHighlighterFactoryImpl");
+  private static final Logger LOG = Logger.getInstance(EditorHighlighterFactoryImpl.class);
+
+  private final EditorColorsManager myEditorColorsManager;
+
+  @Inject
+  public EditorHighlighterFactoryImpl(EditorColorsManager editorColorsManager) {
+    myEditorColorsManager = editorColorsManager;
+  }
 
   @Nonnull
   @Override
@@ -55,12 +66,12 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
   @Nonnull
   @Override
   public EditorHighlighter createEditorHighlighter(final Project project, @Nonnull final FileType fileType) {
-    return createEditorHighlighter(fileType, EditorColorsManager.getInstance().getGlobalScheme(), project);
+    return createEditorHighlighter(fileType, myEditorColorsManager.getGlobalScheme(), project);
   }
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull VirtualFile vFile, @Nonnull EditorColorsScheme settings, @javax.annotation.Nullable Project project) {
+  public EditorHighlighter createEditorHighlighter(@Nonnull VirtualFile vFile, @Nonnull EditorColorsScheme settings, @Nullable Project project) {
     FileType fileType = vFile.getFileType();
     if (fileType instanceof LanguageFileType) {
       LanguageFileType substFileType = substituteFileType(((LanguageFileType)fileType).getLanguage(), vFile, project);
@@ -87,7 +98,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
     return createEditorHighlighter(highlighter, settings);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static LanguageFileType substituteFileType(Language language, VirtualFile vFile, Project project) {
     LanguageFileType fileType = null;
     if (vFile != null && project != null) {
@@ -102,20 +113,20 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
   @Nonnull
   @Override
   public EditorHighlighter createEditorHighlighter(final Project project, @Nonnull final VirtualFile file) {
-    return createEditorHighlighter(file, EditorColorsManager.getInstance().getGlobalScheme(), project);
+    return createEditorHighlighter(file, myEditorColorsManager.getGlobalScheme(), project);
   }
 
   @Nonnull
   @Override
   public EditorHighlighter createEditorHighlighter(final Project project, @Nonnull final String fileName) {
-    return createEditorHighlighter(EditorColorsManager.getInstance().getGlobalScheme(), fileName, project);
+    return createEditorHighlighter(myEditorColorsManager.getGlobalScheme(), fileName, project);
   }
 
   @Nonnull
   @Override
   public EditorHighlighter createEditorHighlighter(@Nonnull final EditorColorsScheme settings,
                                                    @Nonnull final String fileName,
-                                                   @javax.annotation.Nullable final Project project) {
+                                                   @Nullable final Project project) {
     return createEditorHighlighter(new LightVirtualFile(fileName), settings, project);
   }
 }

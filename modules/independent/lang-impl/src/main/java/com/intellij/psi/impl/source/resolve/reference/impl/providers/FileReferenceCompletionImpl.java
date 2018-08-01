@@ -33,12 +33,14 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author yole
  */
+@Singleton
 public class FileReferenceCompletionImpl extends FileReferenceCompletion {
   private static final TObjectHashingStrategy<PsiElement> VARIANTS_HASHING_STRATEGY = new TObjectHashingStrategy<PsiElement>() {
     @Override

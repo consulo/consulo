@@ -23,6 +23,7 @@ import com.intellij.openapi.components.Storage;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
@@ -30,6 +31,7 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 @State(name = "AbbreviationManager", storages = @Storage(value = "abbreviations.xml", roamingType = RoamingType.PER_PLATFORM))
+@Singleton
 public class AbbreviationManagerImpl extends AbbreviationManager implements PersistentStateComponent<Element> {
   private final Map<String, List<String>> myAbbreviation2ActionId = new THashMap<>();
   private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new THashMap<>();

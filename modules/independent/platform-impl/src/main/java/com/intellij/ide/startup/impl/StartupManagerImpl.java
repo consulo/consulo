@@ -21,13 +21,15 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.*;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbModeTask;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
@@ -71,13 +73,28 @@ public class StartupManagerImpl extends StartupManagerEx {
   private volatile boolean myPreStartupActivitiesPassed;
   private volatile boolean myStartupActivitiesRunning;
   private volatile boolean myStartupActivitiesPassed;
-
-  private final Project myProject;
   private boolean myInitialRefreshScheduled;
 
+  private final Application myApplication;
+  private final Project myProject;
+  private final VirtualFileManager myVirtualFileManager;
+  private final DumbService myDumbService;
+  private final ProjectRootManager myProjectRootManager;
+  private final RefreshQueue myRefreshQueue;
+
   @Inject
-  public StartupManagerImpl(Project project) {
+  public StartupManagerImpl(Application application,
+                            Project project,
+                            VirtualFileManager virtualFileManager,
+                            DumbService dumbService,
+                            ProjectRootManager projectRootManager,
+                            RefreshQueue refreshQueue) {
+    myApplication = application;
     myProject = project;
+    myVirtualFileManager = virtualFileManager;
+    myDumbService = dumbService;
+    myProjectRootManager = projectRootManager;
+    myRefreshQueue = refreshQueue;
   }
 
   private void checkNonDefaultProject() {
@@ -171,7 +188,7 @@ public class StartupManagerImpl extends StartupManagerEx {
 
   // queue each activity in smart mode separately so that if one of them starts dumb mode, the next ones just wait for it to finish
   private void queueSmartModeActivity(final Consumer<UIAccess> activity, @Nonnull UIAccess uiAccess) {
-    DumbService.getInstance(myProject).runWhenSmart(() -> runActivity(activity, uiAccess));
+    myDumbService.runWhenSmart(() -> runActivity(activity, uiAccess));
   }
 
   public void runPostStartupActivities(UIAccess uiAccess) {
@@ -179,7 +196,7 @@ public class StartupManagerImpl extends StartupManagerEx {
       return;
     }
 
-    final Application app = Application.get();
+    final Application app = myApplication;
 
     if (!app.isHeadlessEnvironment()) {
       checkFsSanity();
@@ -188,7 +205,7 @@ public class StartupManagerImpl extends StartupManagerEx {
 
     runActivities(myDumbAwarePostStartupActivities, uiAccess);
 
-    DumbService dumbService = DumbService.getInstance(myProject);
+    DumbService dumbService = myDumbService;
     dumbService.runWhenSmart(new Runnable() {
       @Override
       public void run() {
@@ -229,24 +246,23 @@ public class StartupManagerImpl extends StartupManagerEx {
       if (myProject.isDisposed() || myInitialRefreshScheduled) return;
 
       myInitialRefreshScheduled = true;
-      ((ProjectRootManagerImpl)ProjectRootManager.getInstance(myProject)).markRootsForRefresh();
+      ((ProjectRootManagerImpl)myProjectRootManager).markRootsForRefresh();
 
-      Application app = Application.get();
-      if (!app.isCommandLine()) {
-        final long sessionId = VirtualFileManager.getInstance().asyncRefresh(null);
-        final MessageBusConnection connection = app.getMessageBus().connect();
+      if (!myApplication.isCommandLine()) {
+        final long sessionId = myVirtualFileManager.asyncRefresh(null);
+        final MessageBusConnection connection = myApplication.getMessageBus().connect();
         connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
           @Override
           public void afterProjectClosed(@Nonnull Project project) {
             if (project != myProject) return;
 
-            RefreshQueue.getInstance().cancelSession(sessionId);
+            myRefreshQueue.cancelSession(sessionId);
             connection.disconnect();
           }
         });
       }
       else {
-        VirtualFileManager.getInstance().syncRefresh();
+        myVirtualFileManager.syncRefresh();
       }
     }, ModalityState.defaultModalityState());
   }
@@ -272,9 +288,9 @@ public class StartupManagerImpl extends StartupManagerEx {
   }
 
   private void checkProjectRoots() {
-    VirtualFile[] roots = ProjectRootManager.getInstance(myProject).getContentRoots();
+    VirtualFile[] roots = myProjectRootManager.getContentRoots();
     if (roots.length == 0) return;
-    LocalFileSystem fs = LocalFileSystem.getInstance();
+    LocalFileSystem fs = LocalFileSystem.from(myVirtualFileManager);
     if (!(fs instanceof LocalFileSystemImpl)) return;
     FileWatcher watcher = ((LocalFileSystemImpl)fs).getFileWatcher();
     if (!watcher.isOperational()) return;
@@ -314,7 +330,7 @@ public class StartupManagerImpl extends StartupManagerEx {
     if (myProject.isDisposed()) return;
 
     try {
-      DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
+      DumbService dumbService = myDumbService;
 
       // pre-startup activities have registered dumb tasks that load VFS (scanning files to index)
       // only after these tasks pass does VFS refresh make sense
@@ -360,7 +376,7 @@ public class StartupManagerImpl extends StartupManagerEx {
 
   @Override
   public void runWhenProjectIsInitialized(@Nonnull final Runnable action) {
-    final ApplicationEx application = (ApplicationEx)ApplicationManager.getApplication();
+    final Application application = myApplication;
     if (application == null) return;
 
     Runnable runnable = () -> {
@@ -380,7 +396,7 @@ public class StartupManagerImpl extends StartupManagerEx {
       action.run();
     };
 
-    if(application.isDispatchThread()) {
+    if (application.isDispatchThread()) {
       runnable.run();
     }
     else {

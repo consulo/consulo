@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
  */
 public abstract class NotificationsManager {
 
+  @Deprecated
   public static NotificationsManager getNotificationsManager() {
     return ApplicationManager.getApplication().getComponent(NotificationsManager.class);
   }

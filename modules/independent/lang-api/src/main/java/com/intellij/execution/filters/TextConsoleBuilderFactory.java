@@ -35,6 +35,7 @@ public abstract class TextConsoleBuilderFactory {
 
   public abstract TextConsoleBuilder createBuilder(@Nonnull Project project, @Nonnull GlobalSearchScope scope);
 
+  @Deprecated
   public static TextConsoleBuilderFactory getInstance() {
     return ServiceManager.getService(TextConsoleBuilderFactory.class);
   }

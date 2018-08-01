@@ -17,6 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.TextRange;
+import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,6 +36,7 @@ public abstract class EditorCopyPasteHelper {
   /**
    * Copies text selected in editor to clipboard.
    */
+  @RequiredDispatchThread
   public abstract void copySelectionToClipboard(@Nonnull Editor editor);
 
   /**

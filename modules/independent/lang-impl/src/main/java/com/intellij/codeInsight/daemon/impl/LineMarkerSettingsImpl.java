@@ -23,6 +23,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import java.util.Map;
  * @author Dmitry Avdeev
  */
 @State(name = "LineMarkerSettings", storages = @Storage("gutter.xml"))
+@Singleton
 public class LineMarkerSettingsImpl extends LineMarkerSettings implements PersistentStateComponent<LineMarkerSettingsImpl> {
   @MapAnnotation
   public Map<String, Boolean> providers = new HashMap<>();

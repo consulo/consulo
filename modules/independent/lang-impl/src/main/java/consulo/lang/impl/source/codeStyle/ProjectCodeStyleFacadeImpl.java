@@ -18,9 +18,12 @@ package consulo.lang.impl.source.codeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 
+import javax.inject.Singleton;
+
 /**
  * @author VISTALL
  * @since 2018-07-25
  */
+@Singleton
 public class ProjectCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements CodeStyleFacade.ProjectLevel {
 }

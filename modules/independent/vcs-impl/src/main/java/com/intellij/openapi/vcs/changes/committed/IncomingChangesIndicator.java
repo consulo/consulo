@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.*;
@@ -27,13 +27,14 @@ import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.wm.*;
 import com.intellij.util.Consumer;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@Singleton
 public class IncomingChangesIndicator {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator");
 
@@ -48,14 +50,15 @@ public class IncomingChangesIndicator {
   private final CommittedChangesCache myCache;
   private IndicatorComponent myIndicatorComponent;
 
-  public IncomingChangesIndicator(Project project, CommittedChangesCache cache, MessageBus bus) {
+  @Inject
+  public IncomingChangesIndicator(Application application, Project project, CommittedChangesCache cache) {
     myProject = project;
     myCache = cache;
-    final MessageBusConnection connection = bus.connect();
+    final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
       @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
+        application.invokeLater(new Runnable() {
           @Override
           public void run() {
             refreshIndicator();

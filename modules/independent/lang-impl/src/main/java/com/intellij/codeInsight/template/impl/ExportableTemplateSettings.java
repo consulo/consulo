@@ -19,15 +19,14 @@ import com.intellij.openapi.components.*;
 import com.intellij.util.SmartList;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
 @Deprecated
-@State(
-        name = "ExportableTemplateSettings",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/template.settings.xml", roamingType = RoamingType.DISABLED)
-)
+@State(name = "ExportableTemplateSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/template.settings.xml", roamingType = RoamingType.DISABLED))
+@Singleton
 final class ExportableTemplateSettings implements PersistentStateComponent<ExportableTemplateSettings> {
   public Collection<TemplateSettings.TemplateKey> deletedKeys = new SmartList<TemplateSettings.TemplateKey>();
 

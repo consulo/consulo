@@ -16,8 +16,8 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.impl.stores.BatchUpdateListener;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
@@ -50,6 +50,7 @@ import com.intellij.util.indexing.FileBasedIndexProjectHandler;
 import com.intellij.util.indexing.UnindexedFilesUpdater;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.inject.NotLazy;
+import consulo.annotation.inject.PostConstruct;
 import consulo.annotations.RequiredWriteAction;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
@@ -58,7 +59,6 @@ import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.inject.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
@@ -72,6 +72,7 @@ import java.util.Set;
 @NotLazy
 public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
   private static final Logger LOG = Logger.getInstance(ProjectRootManagerComponent.class);
+  private final Application myApplication;
 
   private boolean myPointerChangesDetected = false;
   private int myInsideRefresh = 0;
@@ -82,8 +83,9 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
   private final boolean myDoLogCachesUpdate;
 
   @Inject
-  public ProjectRootManagerComponent(Project project, StartupManager startupManager) {
+  public ProjectRootManagerComponent(Application application, Project project, StartupManager startupManager) {
     super(project);
+    myApplication = application;
 
     myConnection = project.getMessageBus().connect(project);
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
@@ -125,7 +127,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
     };
 
     myConnection.subscribe(VirtualFilePointerListener.TOPIC, new MyVirtualFilePointerListener());
-    myDoLogCachesUpdate = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
+    myDoLogCachesUpdate = application.isInternal() && !application.isUnitTestMode();
   }
 
   @PostConstruct
@@ -136,7 +138,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
   @Override
   public void projectOpened() {
     addRootsToWatch();
-    ApplicationManager.getApplication().addApplicationListener(new AppListener(), myProject);
+    myApplication.addApplicationListener(new AppListener(), myProject);
   }
 
   @Override
@@ -163,7 +165,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
   }
 
   private void doUpdateOnRefresh() {
-    if (ApplicationManager.getApplication().isUnitTestMode() && (!myStartupActivityPerformed || myProject.isDisposed())) {
+    if (myApplication.isUnitTestMode() && (!myStartupActivityPerformed || myProject.isDisposed())) {
       return; // in test mode suppress addition to a queue unless project is properly initialized
     }
     if (myProject.isDefault()) {
@@ -295,7 +297,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
     if (myDoLogCachesUpdate) {
       LOG.debug(new Throwable("sync roots"));
     }
-    else if (!ApplicationManager.getApplication().isUnitTestMode()) LOG.info("project roots have changed");
+    else if (!myApplication.isUnitTestMode()) LOG.info("project roots have changed");
 
     DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
     if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {

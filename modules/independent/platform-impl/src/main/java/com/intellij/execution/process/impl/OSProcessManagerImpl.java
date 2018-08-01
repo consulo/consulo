@@ -21,10 +21,11 @@ import com.intellij.execution.process.UnixProcessManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
 import org.jvnet.winp.WinProcess;
 import org.jvnet.winp.WinpException;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@Singleton
 public class OSProcessManagerImpl extends OSProcessManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.process.impl.OSProcessManagerImpl");
 

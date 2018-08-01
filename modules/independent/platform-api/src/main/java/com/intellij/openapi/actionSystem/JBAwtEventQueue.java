@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 
 import java.awt.event.MouseEvent;
 
+@Deprecated
 public abstract class JBAwtEventQueue {
   public abstract void blockNextEvents(MouseEvent e);
 

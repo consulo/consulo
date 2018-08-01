@@ -34,6 +34,7 @@ public abstract class StartupManagerEx extends StartupManager {
   @Override
   public abstract void registerPreStartupActivity(@Nonnull Consumer<UIAccess> consumer); // should be used only to register to FileSystemSynchronizer!
 
+  @Deprecated
   public static StartupManagerEx getInstanceEx(Project project) {
     return (StartupManagerEx)getInstance(project);
   }

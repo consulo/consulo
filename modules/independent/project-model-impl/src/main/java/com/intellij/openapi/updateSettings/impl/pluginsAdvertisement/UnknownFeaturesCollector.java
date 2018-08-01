@@ -19,28 +19,27 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * User: anna
  */
-@State(
-  name = "UnknownFeatures",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "UnknownFeatures", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class UnknownFeaturesCollector implements PersistentStateComponent<Element> {
-  @NonNls private static final String FEATURE_ID = "featureType";
-  @NonNls private static final String IMPLEMENTATION_NAME = "implementationName";
+  @NonNls
+  private static final String FEATURE_ID = "featureType";
+  @NonNls
+  private static final String IMPLEMENTATION_NAME = "implementationName";
 
   private final Set<UnknownExtension> myUnknownExtensions = new HashSet<UnknownExtension>();
   private final Set<UnknownExtension> myIgnoredUnknownExtensions = new HashSet<UnknownExtension>();
 
+  @Deprecated
   public static UnknownFeaturesCollector getInstance(Project project) {
     return ServiceManager.getService(project, UnknownFeaturesCollector.class);
   }
@@ -83,8 +82,7 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
   public void loadState(Element state) {
     myIgnoredUnknownExtensions.clear();
     for (Element element : state.getChildren()) {
-      myIgnoredUnknownExtensions.add(
-        new UnknownExtension(element.getAttributeValue(FEATURE_ID), element.getAttributeValue(IMPLEMENTATION_NAME)));
+      myIgnoredUnknownExtensions.add(new UnknownExtension(element.getAttributeValue(FEATURE_ID), element.getAttributeValue(IMPLEMENTATION_NAME)));
     }
   }
 }

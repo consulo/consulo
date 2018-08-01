@@ -948,7 +948,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return application.isUnitTestMode() || application.isCommandLine();
   }
 
+  @Singleton
   public static class ProjectNotificationsComponent {
+    @Inject
     public ProjectNotificationsComponent(@Nonnull final Project project) {
       if (isDummyEnvironment()) {
         return;

@@ -21,7 +21,6 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -30,19 +29,15 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Singleton;
 import java.util.*;
 
-@State(
-  name="masterDetails",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
-public class MasterDetailsStateService implements PersistentStateComponent<MasterDetailsStateService.States>{
+@State(name = "masterDetails", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
+public class MasterDetailsStateService implements PersistentStateComponent<MasterDetailsStateService.States> {
   private final SkipDefaultValuesSerializationFilters mySerializationFilter = new SkipDefaultValuesSerializationFilters();
   private final Map<String, ComponentState> myStates = new HashMap<String, ComponentState>();
 

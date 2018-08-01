@@ -27,11 +27,13 @@ import com.intellij.util.xmlb.annotations.Tag;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @State(name = "TestHistory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class TestHistoryConfiguration implements PersistentStateComponent<TestHistoryConfiguration.State> {
 
   public static class State {
@@ -60,6 +62,7 @@ public class TestHistoryConfiguration implements PersistentStateComponent<TestHi
 
   private State myState = new State();
 
+  @Deprecated
   public static TestHistoryConfiguration getInstance(Project project) {
     return ServiceManager.getService(project, TestHistoryConfiguration.class);
   }

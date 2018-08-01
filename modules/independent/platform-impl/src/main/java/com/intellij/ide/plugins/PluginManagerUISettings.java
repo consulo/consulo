@@ -27,12 +27,14 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 
 /**
  * @author yole
  */
 @State(name = "PluginManagerConfigurable", storages = @Storage("plugin_ui.xml"))
+@Singleton
 public class PluginManagerUISettings implements PersistentStateComponent<Element>, PerformInBackgroundOption {
   private static final SkipDefaultValuesSerializationFilters FILTERS = new SkipDefaultValuesSerializationFilters();
 

@@ -58,11 +58,14 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 public class LineStatusTrackerManager implements ProjectComponent, LineStatusTrackerManagerI {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.LineStatusTrackerManager");
 
@@ -93,6 +96,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, LineStatusTrackerManagerI.class);
   }
 
+  @Inject
   public LineStatusTrackerManager(@Nonnull final Project project,
                                   @Nonnull final VcsBaseContentProvider statusProvider,
                                   @Nonnull final Application application,

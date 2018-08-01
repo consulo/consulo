@@ -34,9 +34,11 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 
 @State(name = "CodeInsightSettings", storages = @Storage("editor.codeinsight.xml"))
+@Singleton
 public class CodeInsightSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance(CodeInsightSettings.class);
 
@@ -70,7 +72,8 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public boolean SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS = false;
   public boolean AUTOCOMPLETE_ON_CODE_COMPLETION = true;
   public boolean AUTOCOMPLETE_ON_SMART_TYPE_COMPLETION = true;
-  @Deprecated public boolean AUTOCOMPLETE_ON_CLASS_NAME_COMPLETION = false;
+  @Deprecated
+  public boolean AUTOCOMPLETE_ON_CLASS_NAME_COMPLETION = false;
   public boolean AUTOCOMPLETE_COMMON_PREFIX = true;
   public boolean SHOW_STATIC_AFTER_INSTANCE = false;
 
@@ -117,10 +120,8 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public boolean ADD_MEMBER_IMPORTS_ON_THE_FLY = true;
   public boolean JSP_ADD_UNAMBIGIOUS_IMPORTS_ON_THE_FLY = false;
 
-  @Property(surroundWithTag = false) @AbstractCollection(
-          surroundWithTag = false,
-          elementTag = "EXCLUDED_PACKAGE",
-          elementValueAttribute = "NAME")
+  @Property(surroundWithTag = false)
+  @AbstractCollection(surroundWithTag = false, elementTag = "EXCLUDED_PACKAGE", elementValueAttribute = "NAME")
   public String[] EXCLUDED_PACKAGES = ArrayUtil.EMPTY_STRING_ARRAY;
 
   @Transient

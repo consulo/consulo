@@ -20,10 +20,12 @@ import com.intellij.remote.RemoteSdkAdditionalData;
 import org.jdom.Element;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Singleton
 public class CredentialsManagerImpl extends CredentialsManager {
 
   @Override

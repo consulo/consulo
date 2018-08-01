@@ -51,6 +51,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
   public static class MyWatchedRootsProvider implements WatchedRootsProvider {
     private final Project myProject;
 
+    @Inject
     public MyWatchedRootsProvider(final Project project) {
       myProject = project;
     }

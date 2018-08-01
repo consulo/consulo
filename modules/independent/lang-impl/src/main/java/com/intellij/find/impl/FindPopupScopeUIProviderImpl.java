@@ -16,7 +16,9 @@
 package com.intellij.find.impl;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class FindPopupScopeUIProviderImpl implements FindPopupScopeUIProvider {
   @Nonnull
   @Override

@@ -15,10 +15,11 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.crypto.BadPaddingException;
+import javax.inject.Singleton;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,7 +43,7 @@ import static org.apache.http.conn.ssl.SSLConnectionSocketFactory.BROWSER_COMPAT
  * <h1>Integration details:</h1>
  * If you're using httpclient-3.1 without custom {@code Protocol} instance for HTTPS you don't have to do anything
  * at all: default {@code HttpClient} will use "Default" {@code SSLContext}, which is set up by this component itself.
- * <p/>
+ * <p>
  * However for httpclient-4.x you have several of choices:
  * <pre>
  * <ol>
@@ -62,13 +63,13 @@ import static org.apache.http.conn.ssl.SSLConnectionSocketFactory.BROWSER_COMPAT
  * @author Mikhail Golubev
  */
 
-@State(
-  name = "CertificateManager",
-  storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")
-)
+@State(name = "CertificateManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
+@Singleton
 public class CertificateManager implements PersistentStateComponent<CertificateManager.Config> {
-  @NonNls private static final String DEFAULT_PATH = FileUtil.join(PathManager.getSystemPath(), "tasks", "cacerts");
-  @NonNls private static final String DEFAULT_PASSWORD = "changeit";
+  @NonNls
+  private static final String DEFAULT_PATH = FileUtil.join(PathManager.getSystemPath(), "tasks", "cacerts");
+  @NonNls
+  private static final String DEFAULT_PASSWORD = "changeit";
 
   private static final Logger LOG = Logger.getInstance(CertificateManager.class);
 
@@ -309,8 +310,7 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
       if (!inTime) {
         DialogWrapper dialog = dialogRef.get();
         if (dialog == null || !dialog.isShowing()) {
-          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " +
-                    "Rejecting certificate. Current thread: " + Thread.currentThread().getName());
+          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " + "Rejecting certificate. Current thread: " + Thread.currentThread().getName());
           proceeded.countDown();
           return false;
         }

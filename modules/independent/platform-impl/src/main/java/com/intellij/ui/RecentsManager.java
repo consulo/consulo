@@ -16,32 +16,30 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author ven
  */
-@State(
-  name="RecentsManager",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "RecentsManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class RecentsManager implements PersistentStateComponent<Element> {
   private final Map<String, LinkedList<String>> myMap = new HashMap<String, LinkedList<String>>();
 
   private int myRecentsNumberToKeep = 5;
-  @NonNls private static final String KEY_ELEMENT_NAME = "key";
-  @NonNls private static final String RECENT_ELEMENT_NAME = "recent";
-  @NonNls protected static final String NAME_ATTR = "name";
+  @NonNls
+  private static final String KEY_ELEMENT_NAME = "key";
+  @NonNls
+  private static final String RECENT_ELEMENT_NAME = "recent";
+  @NonNls
+  protected static final String NAME_ATTR = "name";
 
   public static RecentsManager getInstance(Project project) {
     return ServiceManager.getService(project, RecentsManager.class);
@@ -77,12 +75,12 @@ public class RecentsManager implements PersistentStateComponent<Element> {
   public void loadState(Element element) {
     myMap.clear();
     final List keyElements = element.getChildren(KEY_ELEMENT_NAME);
-    for (Iterator iterator = keyElements.iterator(); iterator.hasNext();) {
+    for (Iterator iterator = keyElements.iterator(); iterator.hasNext(); ) {
       Element keyElement = (Element)iterator.next();
       final String key = keyElement.getAttributeValue(NAME_ATTR);
       LinkedList<String> recents = new LinkedList<String>();
       final List children = keyElement.getChildren(RECENT_ELEMENT_NAME);
-      for (Iterator<Element> iterator1 = children.iterator(); iterator1.hasNext();) {
+      for (Iterator<Element> iterator1 = children.iterator(); iterator1.hasNext(); ) {
         recents.addLast(iterator1.next().getAttributeValue(NAME_ATTR));
       }
 

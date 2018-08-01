@@ -25,6 +25,7 @@ import javax.swing.*;
 /**
  * @author yole
  */
+@Deprecated
 public abstract class PsiActionSupportFactory {
   public static PsiActionSupportFactory getInstance() {
     return ServiceManager.getService(PsiActionSupportFactory.class);

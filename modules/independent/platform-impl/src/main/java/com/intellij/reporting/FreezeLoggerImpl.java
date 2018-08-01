@@ -26,10 +26,12 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.Alarm;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 
+@Singleton
 public class FreezeLoggerImpl extends FreezeLogger {
 
   private static final Logger LOG = Logger.getInstance(FreezeLoggerImpl.class);

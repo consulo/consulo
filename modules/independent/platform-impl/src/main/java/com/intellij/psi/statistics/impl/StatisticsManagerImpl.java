@@ -30,14 +30,16 @@ import com.intellij.util.ScrambledInputStream;
 import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+@Singleton
 public class StatisticsManagerImpl extends StatisticsManager {
   private static final int UNIT_COUNT = 997;
   private static final Object LOCK = new Object();
@@ -48,6 +50,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
   private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<>();
   private boolean myTestingStatistics;
 
+  @Override
   public int getUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return 0;
 
@@ -89,6 +92,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
   }
 
+  @Override
   public void incUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return;
     if (ApplicationManager.getApplication().isUnitTestMode() && !myTestingStatistics) {
@@ -112,6 +116,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
   }
 
+  @Override
   public StatisticsInfo[] getAllValues(final String context) {
     final String[] strings;
     synchronized (LOCK) {
@@ -120,6 +125,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     return ContainerUtil.map2Array(strings, StatisticsInfo.class, (NotNullFunction<String, StatisticsInfo>)s -> new StatisticsInfo(context, s));
   }
 
+  @Override
   public void save() {
     synchronized (LOCK) {
       if (!ApplicationManager.getApplication().isUnitTestMode()){

@@ -23,11 +23,13 @@ import com.intellij.codeHighlighting.ColorGenerator;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class AnnotationsSettings {
   private static final int ANCHORS_COUNT = 5;
   private static final int COLORS_BETWEEN_ANCHORS = 4;

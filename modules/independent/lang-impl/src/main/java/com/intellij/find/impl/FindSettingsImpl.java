@@ -419,6 +419,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @State(name = "FindRecents", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/find.recents.xml", roamingType = RoamingType.DISABLED)})
+  @Singleton
   static final class FindRecents extends FindInProjectSettingsBase {
     public static FindRecents getInstance() {
       return ServiceManager.getService(FindRecents.class);

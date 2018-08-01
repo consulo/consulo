@@ -32,14 +32,13 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.util.Consumer;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.DateFormatUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.List;
 
 /**
@@ -59,11 +58,11 @@ public class OutdatedVersionNotifier implements ProjectComponent {
   @Inject
   public OutdatedVersionNotifier(FileEditorManager fileEditorManager,
                                  CommittedChangesCache cache,
-                                 MessageBus messageBus, Project project) {
+                                 Project project) {
     myFileEditorManager = fileEditorManager;
     myCache = cache;
     myProject = project;
-    messageBus.connect().subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
+    myProject.getMessageBus().connect().subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
         if (myCache.getCachedIncomingChanges() == null) {
           requestLoadIncomingChanges();

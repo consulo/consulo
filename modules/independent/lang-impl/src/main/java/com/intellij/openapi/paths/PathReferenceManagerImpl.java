@@ -25,12 +25,14 @@ import com.intellij.psi.PsiReference;
 import com.intellij.util.SmartList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author Dmitry Avdeev
  */
+@Singleton
 public class PathReferenceManagerImpl extends PathReferenceManager {
   private final StaticPathReferenceProvider myStaticProvider = new StaticPathReferenceProvider(null);
   private final PathReferenceProvider myGlobalPathsProvider = new GlobalPathReferenceProvider();

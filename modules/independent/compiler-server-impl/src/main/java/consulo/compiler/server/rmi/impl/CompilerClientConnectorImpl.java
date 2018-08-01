@@ -21,6 +21,7 @@ import consulo.compiler.server.rmi.CompilerClientConnector;
 import consulo.compiler.server.rmi.CompilerClientInterface;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.rmi.RemoteException;
 
@@ -28,6 +29,7 @@ import java.rmi.RemoteException;
  * @author VISTALL
  * @since 16:08/19.08.13
  */
+@Singleton
 public class CompilerClientConnectorImpl extends CompilerClientConnector implements Disposable {
   private CompilerClientInterface myClientInterface;
 

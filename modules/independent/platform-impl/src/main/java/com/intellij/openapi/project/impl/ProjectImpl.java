@@ -18,12 +18,11 @@ package com.intellij.openapi.project.impl;
 import com.google.inject.Binder;
 import com.google.inject.Scope;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.startup.StartupManagerEx;
+import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.*;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
@@ -32,7 +31,6 @@ import com.intellij.openapi.components.impl.stores.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -63,10 +61,13 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.project.impl.ProjectImpl");
+  private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
   public static final String NAME_FILE = ".name";
 
-  private ProjectManager myManager;
+  @Nonnull
+  private final Application myApplication;
+  @Nonnull
+  private final ProjectManager myManager;
 
   private MyProjectManagerListener myProjectManagerListener;
 
@@ -81,11 +82,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
-  protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
-    super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
+  private StartupManagerImpl myStartupManager;
+
+  protected ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
+    super(application, "Project " + (projectName == null ? dirPath : projectName));
+    myApplication = application;
     putUserData(CREATION_TIME, System.nanoTime());
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (application.isUnitTestMode()) {
       putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
     }
 
@@ -111,7 +115,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   @SuppressWarnings("unchecked")
   protected <T> T getCustomComponentInstance(@Nonnull Class<T> clazz) {
-    if(clazz == PathMacroManager.class) {
+    if (clazz == PathMacroManager.class) {
       return (T)getComponent(ProjectPathMacroManager.class);
     }
     return super.getCustomComponentInstance(clazz);
@@ -146,16 +150,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public void setProjectName(@Nonnull String projectName) {
     if (!projectName.equals(myName)) {
       myName = projectName;
-      StartupManager.getInstance(this).runWhenProjectIsInitialized(new DumbAwareRunnable() {
-        @Override
-        public void run() {
-          if (isDisposed()) return;
+      myStartupManager.runWhenProjectIsInitialized((DumbAwareRunnable)() -> {
+        if (isDisposed()) return;
 
-          JFrame frame = WindowManager.getInstance().getFrame(ProjectImpl.this);
-          String title = FrameTitleBuilder.getInstance().getProjectTitle(ProjectImpl.this);
-          if (frame != null && title != null) {
-            frame.setTitle(title);
-          }
+        JFrame frame = WindowManager.getInstance().getFrame(ProjectImpl.this);
+        String title = FrameTitleBuilder.getInstance().getProjectTitle(ProjectImpl.this);
+        if (frame != null && title != null) {
+          frame.setTitle(title);
         }
       });
     }
@@ -169,15 +170,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void initializeFromStateStore(@Nonnull Object component, boolean service) {
-    if (!service) {
-      ProgressIndicator indicator = getProgressIndicator();
-      if (indicator != null) {
-        indicator.setText2(getComponentName(component));
-        //      indicator.setIndeterminate(false);
-        //      indicator.setFraction(myComponentsRegistry.getPercentageOfComponentsLoaded());
-      }
-    }
-
     getStateStore().initComponent(component);
   }
 
@@ -188,7 +180,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public boolean isInitialized() {
-    return isOpen() && !isDisposed() && StartupManagerEx.getInstanceEx(this).startupActivityPassed();
+    return isOpen() && !isDisposed() && myStartupManager.startupActivityPassed();
   }
 
   @Override
@@ -254,6 +246,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void init() {
+    myStartupManager = (StartupManagerImpl) getInjector().getInstance(StartupManager.class);
+
     super.init();
 
     getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).projectComponentsInitialized(this);
@@ -264,7 +258,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void save() {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+    if (((ApplicationEx)myApplication).isDoNotSave()) {
       // no need to save
       return;
     }
@@ -299,13 +293,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      myApplication.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
     }
   }
 
   @Override
   public void saveAsync() {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+    if (((ApplicationEx)myApplication).isDoNotSave()) {
       // no need to save
       return;
     }
@@ -338,13 +332,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      myApplication.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
     }
   }
 
   @Override
   public synchronized void dispose() {
-    ApplicationEx application = ApplicationManagerEx.getApplicationEx();
+    Application application = myApplication;
     assert application.isWriteAccessAllowed();  // dispose must be under write action
 
     // can call dispose only via com.intellij.ide.impl.ProjectUtil.closeAndDispose()
@@ -356,7 +350,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     disposeComponents();
-    myManager = null;
     myProjectManagerListener = null;
 
     super.dispose();
@@ -394,7 +387,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Nonnull
   @Override
-  public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
   }
 
@@ -455,7 +448,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
               if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
             }
 
-            ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
+            myApplication.runWriteAction(() -> stateStore.reinitComponents(components, true));
           }
           else {
             if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed", Messages.getQuestionIcon()) == Messages.YES) {

@@ -26,6 +26,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -35,8 +36,8 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author peter
  */
+@Singleton
 public class TypePresentationServiceImpl extends TypePresentationService {
-
   @Override
   public Image getIcon(Object o) {
     return getIcon(o.getClass(), o);

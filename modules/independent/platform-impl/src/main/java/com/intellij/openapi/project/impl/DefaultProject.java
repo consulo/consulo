@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.project.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.ProjectManager;
 import javax.annotation.Nonnull;
 
@@ -24,8 +25,8 @@ import javax.annotation.Nonnull;
 public class DefaultProject extends ProjectImpl {
   private static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
-  protected DefaultProject(@Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
-    super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
+  protected DefaultProject(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
+    super(application, manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
   }
 
   @Override

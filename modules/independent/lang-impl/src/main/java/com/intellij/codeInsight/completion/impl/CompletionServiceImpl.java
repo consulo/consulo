@@ -32,19 +32,23 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 
 /**
  * @author peter
  */
+@Singleton
 public final class CompletionServiceImpl extends CompletionService {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.impl.CompletionServiceImpl");
   private static volatile CompletionPhase ourPhase = CompletionPhase.NoCompletion;
   private static String ourPhaseTrace;
 
-  public CompletionServiceImpl() {
-    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+  @Inject
+  public CompletionServiceImpl(ProjectManager projectManager) {
+    projectManager.addProjectManagerListener(new ProjectManagerAdapter() {
       @Override
       public void projectClosing(Project project) {
         CompletionProgressIndicator indicator = getCurrentCompletion();

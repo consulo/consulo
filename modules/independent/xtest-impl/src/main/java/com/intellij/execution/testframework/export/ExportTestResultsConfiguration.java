@@ -16,18 +16,19 @@
 package com.intellij.execution.testframework.export;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.Attribute;
 
-@State(
-  name = "ExportTestResults",
-  storages = {@Storage(
-    file = StoragePathMacros.WORKSPACE_FILE)})
+import javax.inject.Singleton;
+
+@State(name = "ExportTestResults", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class ExportTestResultsConfiguration implements PersistentStateComponent<ExportTestResultsConfiguration.State> {
 
   public enum ExportFormat {
-    Xml("xml"), BundledTemplate("html"), UserTemplate("html");
+    Xml("xml"),
+    BundledTemplate("html"),
+    UserTemplate("html");
 
     private final String myExtension;
 

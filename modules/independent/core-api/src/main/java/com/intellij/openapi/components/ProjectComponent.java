@@ -26,6 +26,7 @@ package com.intellij.openapi.components;
  * actions explicitly.</strong>
  *
  */
+@Deprecated
 public interface ProjectComponent extends BaseComponent {
   /**
    * Invoked when the project corresponding to this component instance is opened.<p>

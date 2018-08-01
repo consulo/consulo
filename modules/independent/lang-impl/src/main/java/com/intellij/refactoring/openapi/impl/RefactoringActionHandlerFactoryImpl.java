@@ -21,9 +21,12 @@ import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.refactoring.rename.PsiElementRenameHandler;
 import com.intellij.refactoring.safeDelete.SafeDeleteHandler;
 
+import javax.inject.Singleton;
+
 /**
  * @author dsl
  */
+@Singleton
 public class RefactoringActionHandlerFactoryImpl extends RefactoringActionHandlerFactory {
 
   @Override

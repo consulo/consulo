@@ -18,13 +18,13 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * We don't use roaming type PER_OS - path macros is enough ($USER_HOME$/Dropbox for example)
  */
-@State(
-        name = "VcsApplicationSettings",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/vcs.xml")
-)
+@State(name = "VcsApplicationSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/vcs.xml"))
+@Singleton
 public class VcsApplicationSettings implements PersistentStateComponent<VcsApplicationSettings> {
   public String PATCH_STORAGE_LOCATION = null;
   public boolean SHOW_WHITESPACES_IN_LST = false;

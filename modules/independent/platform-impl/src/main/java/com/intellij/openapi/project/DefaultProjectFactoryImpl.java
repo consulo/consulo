@@ -15,12 +15,23 @@
  */
 package com.intellij.openapi.project;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class DefaultProjectFactoryImpl extends DefaultProjectFactory {
+  private ProjectManager myProjectManager;
+
+  @Inject
+  public DefaultProjectFactoryImpl(ProjectManager projectManager) {
+    myProjectManager = projectManager;
+  }
+
   @Override
   public Project getDefaultProject() {
-    return ProjectManager.getInstance().getDefaultProject();
+    return myProjectManager.getDefaultProject();
   }
 }

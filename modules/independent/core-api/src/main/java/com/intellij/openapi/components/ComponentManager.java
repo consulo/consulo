@@ -44,6 +44,9 @@ public interface ComponentManager extends AreaInstance, UserDataHolder, Disposab
   @Deprecated
   <T> T getComponent(@Nonnull Class<T> interfaceClass);
 
+  /**
+   * Return new object from injector. Must be not singleton
+   */
   <T> T createInstance(@Nonnull Class<T> clazz);
 
   /**

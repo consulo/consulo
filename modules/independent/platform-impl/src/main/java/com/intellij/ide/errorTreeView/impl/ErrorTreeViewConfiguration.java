@@ -16,18 +16,14 @@
 package com.intellij.ide.errorTreeView.impl;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
 
-@State(
-  name = "ErrorTreeViewConfiguration",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+
+@State(name = "ErrorTreeViewConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class ErrorTreeViewConfiguration implements PersistentStateComponent<ErrorTreeViewConfiguration> {
   public boolean IS_AUTOSCROLL_TO_SOURCE = false;
   public boolean SHOW_WARNINGS = true;

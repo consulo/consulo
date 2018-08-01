@@ -25,12 +25,10 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
-@State(
-  name = "UpdateCopyrightCheckinHandler",
-  storages = {@Storage(
-    file = StoragePathMacros.WORKSPACE_FILE
-  )}
-)
+import javax.inject.Singleton;
+
+@State(name = "UpdateCopyrightCheckinHandler", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class UpdateCopyrightCheckinHandlerState implements PersistentStateComponent<UpdateCopyrightCheckinHandlerState> {
   public boolean UPDATE_COPYRIGHT = false;
 

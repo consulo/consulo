@@ -21,10 +21,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author mike
  */
+@Singleton
 public class SystemNotificationsImpl extends SystemNotifications {
   interface Notifier {
     void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description);

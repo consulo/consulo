@@ -23,15 +23,15 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
+
 /**
  * Configuration for file type filtering popup in "Go to | File" action.
  *
  * @author Constantine.Plotnikov
  */
-@State(
-    name = "GotoFileConfiguration",
-    storages = {@Storage(
-        file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "GotoFileConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class GotoFileConfiguration extends ChooseByNameFilterConfiguration<FileType> {
   /**
    * Get configuration instance

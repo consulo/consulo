@@ -45,6 +45,7 @@ import java.util.concurrent.Future;
  */
 public interface Application extends ComponentManager {
   @Nonnull
+  @Deprecated
   public static Application get() {
     Application application = ApplicationManager.getApplication();
     if (application == null) {

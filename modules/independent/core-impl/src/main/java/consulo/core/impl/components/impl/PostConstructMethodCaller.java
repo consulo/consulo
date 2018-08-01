@@ -19,10 +19,12 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-
 import consulo.annotation.inject.PostConstruct;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author VISTALL
@@ -31,9 +33,14 @@ import java.lang.reflect.Method;
 class PostConstructMethodCaller implements TypeListener {
   static final PostConstructMethodCaller INSTANCE = new PostConstructMethodCaller();
 
+  private Set<Object> duplicateCall = new CopyOnWriteArraySet<>();
+
   @Override
   public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
     encounter.register((InjectionListener<? super I>)instance -> {
+      if(!duplicateCall.add(instance)) {
+        System.out.println("twice call of " + instance.getClass().getSimpleName());
+      }
       for (Method method : instance.getClass().getDeclaredMethods()) {
         if (method.isAnnotationPresent(PostConstruct.class)) {
           method.setAccessible(true);

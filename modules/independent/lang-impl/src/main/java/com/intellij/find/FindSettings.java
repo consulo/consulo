@@ -23,6 +23,7 @@ import java.util.List;
 
 public abstract class FindSettings{
 
+  @Deprecated
   public static FindSettings getInstance() {
     return ServiceManager.getService(FindSettings.class);
   }

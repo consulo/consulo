@@ -25,7 +25,7 @@ import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
@@ -102,6 +102,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   private final List<StateStorage> myChangedApplicationFiles = new SmartList<>();
   private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
 
+  private final Application myApplication;
   private final ProgressManager myProgressManager;
   private volatile boolean myDefaultProjectWasDisposed = false;
 
@@ -119,14 +120,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Inject
-  public ProjectManagerImpl(@Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
+  public ProjectManagerImpl(@Nonnull Application application, @Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
+    myApplication = application;
     myProgressManager = progressManager;
-    Application app = ApplicationManager.getApplication();
-    MessageBus messageBus = app.getMessageBus();
 
-    messageBus.connect(app).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, null));
+    MessageBus appMessageBus = application.getMessageBus();
+    appMessageBus.connect().subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, null));
 
-    final ProjectManagerListener busPublisher = messageBus.syncPublisher(TOPIC);
+    final ProjectManagerListener busPublisher = appMessageBus.syncPublisher(TOPIC);
     addProjectManagerListener(new ProjectManagerListener() {
       @Override
       public void projectOpened(final Project project) {
@@ -192,7 +193,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   @RequiredWriteAction
   public void dispose() {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    myApplication.assertWriteAccessAllowed();
     Disposer.dispose(myChangedFilesAlarm);
     if (myDefaultProject != null) {
       Disposer.dispose(myDefaultProject);
@@ -213,7 +214,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     dirPath = toCanonicalName(dirPath);
 
     //noinspection ConstantConditions
-    if (LOG_PROJECT_LEAKAGE_IN_TESTS && ApplicationManager.getApplication().isUnitTestMode()) {
+    if (LOG_PROJECT_LEAKAGE_IN_TESTS && myApplication.isUnitTestMode()) {
       for (int i = 0; i < 42; i++) {
         if (myProjects.size() < MAX_LEAKY_PROJECTS) break;
         System.gc();
@@ -228,7 +229,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
     }
 
-    ProjectImpl project = createProject(projectName, dirPath, false, ApplicationManager.getApplication().isUnitTestMode());
+    ProjectImpl project = createProject(projectName, dirPath, false, myApplication.isUnitTestMode());
     try {
       initProject(project, useDefaultProjectSettings ? (ProjectImpl)getDefaultProject() : null);
       if (LOG_PROJECT_LEAKAGE_IN_TESTS) {
@@ -267,7 +268,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       indicator.setIndeterminate(true);
     }
 
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
+    myApplication.getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
 
     boolean succeed = false;
     try {
@@ -294,7 +295,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   @Nonnull
   private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed, boolean noUICall) {
-    return isDefault ? new DefaultProject(this, "", isOptimiseTestLoadSpeed) : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
+    return isDefault
+           ? new DefaultProject(myApplication, this, "", isOptimiseTestLoadSpeed)
+           : new ProjectImpl(myApplication, this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
   }
 
   @Override
@@ -335,7 +338,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     if (myDefaultProject == null) {
       ProgressManager.getInstance().executeNonCancelableSection(() -> {
         try {
-          myDefaultProject = createProject(null, "", true, ApplicationManager.getApplication().isUnitTestMode());
+          myDefaultProject = createProject(null, "", true, myApplication.isUnitTestMode());
           initProject(myDefaultProject, null);
           myDefaultProjectRootElement = null;
         }
@@ -408,7 +411,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
           startupManager.runPostStartupActivities(uiAccess);
 
 
-          Application application = ApplicationManager.getApplication();
+          Application application = myApplication;
           if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
             final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
             if (macroSubstitutor != null) {
@@ -416,7 +419,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
             }
           }
 
-          if (ApplicationManager.getApplication().isActive()) {
+          if (myApplication.isActive()) {
             JFrame projectFrame = WindowManager.getInstance().getFrame(project);
             if (projectFrame != null) {
               IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
@@ -483,7 +486,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
         if (!project.isDisposed()) {
           startupManager.runPostStartupActivities(uiAccess);
 
-          Application application = ApplicationManager.getApplication();
+          Application application = myApplication;
           if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
             final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
             if (macroSubstitutor != null) {
@@ -491,7 +494,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
             }
           }
 
-          if (ApplicationManager.getApplication().isActive()) {
+          if (myApplication.isActive()) {
             JFrame projectFrame = WindowManager.getInstance().getFrame(project);
             if (projectFrame != null) {
               IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
@@ -555,7 +558,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
     if (!openProject(project)) {
       WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
-      ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(project));
+      myApplication.runWriteAction(() -> Disposer.dispose(project));
     }
 
     return project;
@@ -621,8 +624,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return project;
   }
 
-  private static void notifyProjectOpenFailed() {
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectOpenFailed();
+  private void notifyProjectOpenFailed() {
+    myApplication.getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectOpenFailed();
     WelcomeFrameHelper.getInstance().showIfNoProjectOpened();
   }
 
@@ -648,7 +651,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   private boolean tryToReloadApplication() {
-    if (ApplicationManager.getApplication().isDisposed()) {
+    if (myApplication.isDisposed()) {
       return false;
     }
     if (myChangedApplicationFiles.isEmpty()) {
@@ -658,9 +661,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     Set<StateStorage> causes = new THashSet<>(myChangedApplicationFiles);
     myChangedApplicationFiles.clear();
 
-    ReloadComponentStoreStatus status = ComponentStoreImpl.reloadStore(causes, ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore());
+    ReloadComponentStoreStatus status = ComponentStoreImpl.reloadStore(Application.get(), causes, ((ApplicationEx2)myApplication).getStateStore());
     if (status == ReloadComponentStoreStatus.RESTART_AGREED) {
-      ApplicationManagerEx.getApplicationEx().restart(true);
+      ((ApplicationEx)myApplication).restart(true);
       return false;
     }
     else {
@@ -684,7 +687,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
     }
 
-    return !causes.isEmpty() && ComponentStoreImpl.reloadStore(causes, ((ProjectEx)project).getStateStore()) == ReloadComponentStoreStatus.RESTART_AGREED;
+    return !causes.isEmpty() && ComponentStoreImpl.reloadStore(Application.get(), causes, ((ProjectEx)project).getStateStore()) == ReloadComponentStoreStatus.RESTART_AGREED;
   }
 
   @Override
@@ -695,7 +698,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   public void unblockReloadingProjectOnExternalChanges() {
     if (myReloadBlockCount.decrementAndGet() == 0 && myChangedFilesAlarm.isEmpty()) {
-      ApplicationManager.getApplication().invokeLater(restartApplicationOrReloadProjectTask, ModalityState.NON_MODAL);
+      myApplication.invokeLater(restartApplicationOrReloadProjectTask, ModalityState.NON_MODAL);
     }
   }
 
@@ -710,7 +713,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   @RequiredDispatchThread
   public void openTestProject(@Nonnull final Project project) {
-    assert ApplicationManager.getApplication().isUnitTestMode();
+    assert myApplication.isUnitTestMode();
     openProject(project);
     UIUtil.dispatchAllInvocationEvents(); // post init activities are invokeLatered
   }
@@ -718,7 +721,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   @RequiredDispatchThread
   public Collection<Project> closeTestProject(@Nonnull Project project) {
-    assert ApplicationManager.getApplication().isUnitTestMode();
+    assert myApplication.isUnitTestMode();
     closeProject(project, false, false, false);
     Project[] projects = getOpenProjects();
     return projects.length == 0 ? Collections.<Project>emptyList() : Arrays.asList(projects);
@@ -763,10 +766,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     doReloadProject(project);
   }
 
-  private static void doReloadProject(@Nonnull Project project) {
+  private void doReloadProject(@Nonnull Project project) {
     final Ref<Project> projectRef = Ref.create(project);
     ProjectReloadState.getInstance(project).onBeforeAutomaticProjectReload();
-    ApplicationManager.getApplication().invokeLater(() -> {
+    myApplication.invokeLater(() -> {
       LOG.debug("Reloading project.");
       Project project1 = projectRef.get();
       // Let it go
@@ -817,7 +820,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
       fireProjectClosing(project); // somebody can start progress here, do not wrap in write action
 
-      ApplicationManager.getApplication().runWriteAction(() -> {
+      myApplication.runWriteAction(() -> {
         removeFromOpened(project);
 
         fireProjectClosed(project);
@@ -889,8 +892,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return true;
   }
 
-  public static boolean isLight(@Nonnull Project project) {
-    return ApplicationManager.getApplication().isUnitTestMode() && project.toString().contains("light_temp_");
+  public boolean isLight(@Nonnull Project project) {
+    return myApplication.isUnitTestMode() && project.toString().contains("light_temp_");
   }
 
   @RequiredDispatchThread
@@ -1089,7 +1092,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       indicator.setIndeterminate(true);
     }
 
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
+    myApplication.getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
 
     boolean succeed = false;
     try {

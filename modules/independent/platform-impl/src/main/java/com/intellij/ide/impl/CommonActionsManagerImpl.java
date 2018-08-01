@@ -22,11 +22,13 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.AutoScrollToSourceHandler;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 
 /**
  * @author max
  */
+@Singleton
 public class CommonActionsManagerImpl extends CommonActionsManager {
   public AnAction createPrevOccurenceAction(OccurenceNavigator navigator) {
     return new PreviousOccurenceToolbarAction(navigator);

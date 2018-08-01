@@ -29,21 +29,24 @@ import java.awt.*;
 @State(name = "ProjectFrameBounds", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 public class ProjectFrameBounds implements PersistentStateComponent<Rectangle> {
+  @Deprecated
   public static ProjectFrameBounds getInstance(Project project) {
     return ServiceManager.getService(project, ProjectFrameBounds.class);
   }
 
   private final Project myProject;
+  private final WindowManager myWindowManager;
   private Rectangle myBounds;
 
   @Inject
-  public ProjectFrameBounds(Project project) {
+  public ProjectFrameBounds(Project project, WindowManager windowManager) {
     myProject = project;
+    myWindowManager = windowManager;
   }
 
   @Override
   public Rectangle getState() {
-    return WindowManager.getInstance().getFrame(myProject).getBounds();
+    return myWindowManager.getFrame(myProject).getBounds();
   }
 
   @Override

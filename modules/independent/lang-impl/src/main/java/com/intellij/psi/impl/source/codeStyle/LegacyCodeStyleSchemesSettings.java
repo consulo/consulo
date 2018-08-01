@@ -23,14 +23,13 @@ import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author Rustam Vishnyakov
  */
-@SuppressWarnings("deprecation")
+@Singleton
 public class LegacyCodeStyleSchemesSettings implements JDOMExternalizable, NamedComponent {
-
-
   public String CURRENT_SCHEME_NAME = CodeStyleSchemesImpl.DEFAULT_SCHEME_NAME;
 
   @Override

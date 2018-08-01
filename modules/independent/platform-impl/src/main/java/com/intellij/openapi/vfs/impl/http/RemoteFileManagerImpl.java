@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
 import com.intellij.util.EventDispatcher;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.Map;
 /**
  * @author nik
  */
+@Singleton
 public class RemoteFileManagerImpl extends RemoteFileManager implements Disposable {
   private final LocalFileStorage myStorage;
   private final Map<Pair<Boolean, String>, VirtualFileImpl> myRemoteFiles;

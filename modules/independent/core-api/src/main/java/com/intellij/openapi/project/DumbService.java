@@ -163,6 +163,7 @@ public abstract class DumbService {
 
   private static final NotNullLazyKey<DumbService, Project> INSTANCE_KEY = ServiceManager.createLazyKey(DumbService.class);
 
+  @Deprecated
   public static DumbService getInstance(@Nonnull Project project) {
     return INSTANCE_KEY.getValue(project);
   }

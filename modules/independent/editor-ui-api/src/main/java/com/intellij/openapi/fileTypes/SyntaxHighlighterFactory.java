@@ -23,6 +23,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class SyntaxHighlighterFactory {
   public static final SyntaxHighlighterLanguageFactory LANGUAGE_FACTORY = new SyntaxHighlighterLanguageFactory();
@@ -34,7 +35,7 @@ public abstract class SyntaxHighlighterFactory {
    * @param virtualFile might be necessary to collect file specific settings
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
-  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language lang, @javax.annotation.Nullable Project project, @javax.annotation.Nullable final VirtualFile virtualFile) {
+  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language lang, @Nullable Project project, @Nullable final VirtualFile virtualFile) {
     return LANGUAGE_FACTORY.forLanguage(lang).getSyntaxHighlighter(project, virtualFile);
   }
 
@@ -47,8 +48,8 @@ public abstract class SyntaxHighlighterFactory {
    * @param virtualFile might be necessary to collect file specific settings
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
-  @javax.annotation.Nullable
-  public static SyntaxHighlighter getSyntaxHighlighter(final FileType fileType, final @javax.annotation.Nullable Project project, final @javax.annotation.Nullable VirtualFile virtualFile) {
+  @Nullable
+  public static SyntaxHighlighter getSyntaxHighlighter(final FileType fileType, final @Nullable Project project, final @Nullable VirtualFile virtualFile) {
     return SyntaxHighlighter.PROVIDER.create(fileType, project, virtualFile);
   }
 
@@ -64,5 +65,5 @@ public abstract class SyntaxHighlighterFactory {
    * @return <code>SyntaxHighlighter</code> interface implementation for this particular language.
    */
   @Nonnull
-  public abstract SyntaxHighlighter getSyntaxHighlighter(@javax.annotation.Nullable Project project, @javax.annotation.Nullable VirtualFile virtualFile);
+  public abstract SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile);
 }

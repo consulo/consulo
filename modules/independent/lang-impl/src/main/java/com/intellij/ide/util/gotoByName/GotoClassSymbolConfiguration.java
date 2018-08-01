@@ -22,13 +22,13 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
-@State(
-    name = "GotoClassSymbolConfiguration",
-    storages = {@Storage(
-        file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "GotoClassSymbolConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class GotoClassSymbolConfiguration extends ChooseByNameFilterConfiguration<Language> {
   public static GotoClassSymbolConfiguration getInstance(Project project) {
     return ServiceManager.getService(project, GotoClassSymbolConfiguration.class);

@@ -94,7 +94,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     myStartupManager = startupManager;
   }
 
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+  @Deprecated
   public static DumbServiceImpl getInstance(@Nonnull Project project) {
     return (DumbServiceImpl)DumbService.getInstance(project);
   }

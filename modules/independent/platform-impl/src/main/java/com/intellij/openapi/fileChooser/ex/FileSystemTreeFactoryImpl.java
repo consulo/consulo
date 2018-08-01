@@ -24,9 +24,20 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
 
-public class FileSystemTreeFactoryImpl extends FileSystemTreeFactory{
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
+public class FileSystemTreeFactoryImpl extends FileSystemTreeFactory {
+  private final ActionManager myActionManager;
+
+  @Inject
+  public FileSystemTreeFactoryImpl(ActionManager actionManager) {
+    myActionManager = actionManager;
+  }
+
   @Override
   @Nonnull
   public FileSystemTree createFileSystemTree(Project project, FileChooserDescriptor fileChooserDescriptor) {
@@ -37,7 +48,7 @@ public class FileSystemTreeFactoryImpl extends FileSystemTreeFactory{
   @Nonnull
   public DefaultActionGroup createDefaultFileSystemActions(FileSystemTree fileSystemTree) {
     DefaultActionGroup group = new DefaultActionGroup();
-    final ActionManager actionManager = ActionManager.getInstance();
+    final ActionManager actionManager = myActionManager;
     group.add(actionManager.getAction("FileChooser.GotoHome"));
     group.add(actionManager.getAction("FileChooser.GotoProject"));
     group.addSeparator();

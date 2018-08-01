@@ -21,13 +21,10 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.packageDependencies.ui.PatternDialectProvider;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
-@State(
-  name = "DependencyUISettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+import javax.inject.Singleton;
+
+@State(name = "DependencyUISettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Singleton
 public class DependencyUISettings implements PersistentStateComponent<DependencyUISettings> {
   public boolean UI_FLATTEN_PACKAGES = true;
   public boolean UI_SHOW_FILES = true;

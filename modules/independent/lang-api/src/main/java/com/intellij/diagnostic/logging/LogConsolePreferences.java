@@ -33,6 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -41,11 +42,8 @@ import java.util.regex.Pattern;
  * User: anna
  * Date: 06-Feb-2006
  */
-@State(
-  name = "LogFilters",
-  storages = {@Storage(
-    file = StoragePathMacros.WORKSPACE_FILE)})
-@SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+@State(name = "LogFilters", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class LogConsolePreferences extends LogFilterRegistrar {
   private final SortedMap<LogFilter, Boolean> myRegisteredLogFilters = new TreeMap<LogFilter, Boolean>(new Comparator<LogFilter>() {
     @Override
@@ -53,8 +51,10 @@ public class LogConsolePreferences extends LogFilterRegistrar {
       return -1;
     }
   });
-  @NonNls private static final String FILTER = "filter";
-  @NonNls private static final String IS_ACTIVE = "is_active";
+  @NonNls
+  private static final String FILTER = "filter";
+  @NonNls
+  private static final String IS_ACTIVE = "is_active";
 
   public boolean FILTER_ERRORS = false;
   public boolean FILTER_WARNINGS = false;
@@ -62,12 +62,18 @@ public class LogConsolePreferences extends LogFilterRegistrar {
   public boolean FILTER_DEBUG = true;
 
   public String CUSTOM_FILTER = null;
-  @NonNls public static final String ERROR = "ERROR";
-  @NonNls public static final String WARNING = "WARNING";
-  @NonNls private static final String WARN = "WARN";
-  @NonNls public static final String INFO = "INFO";
-  @NonNls public static final String DEBUG = "DEBUG";
-  @NonNls public static final String CUSTOM = "CUSTOM";
+  @NonNls
+  public static final String ERROR = "ERROR";
+  @NonNls
+  public static final String WARNING = "WARNING";
+  @NonNls
+  private static final String WARN = "WARN";
+  @NonNls
+  public static final String INFO = "INFO";
+  @NonNls
+  public static final String DEBUG = "DEBUG";
+  @NonNls
+  public static final String CUSTOM = "CUSTOM";
 
   public final static Pattern ERROR_PATTERN = Pattern.compile(".*(" + ERROR + "|FATAL).*");
   public final static Pattern WARNING_PATTERN = Pattern.compile(".*" + WARNING + ".*");
@@ -75,7 +81,8 @@ public class LogConsolePreferences extends LogFilterRegistrar {
   public final static Pattern INFO_PATTERN = Pattern.compile(".*" + INFO + ".*");
   public static final Pattern DEBUG_PATTERN = Pattern.compile(".*" + DEBUG + ".*");
 
-  @NonNls public final static Pattern EXCEPTION_PATTERN = Pattern.compile(".*at .*");
+  @NonNls
+  public final static Pattern EXCEPTION_PATTERN = Pattern.compile(".*at .*");
 
   private final List<LogFilterListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private static final Logger LOG = Logger.getInstance("#" + LogConsolePreferences.class.getName());

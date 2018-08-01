@@ -19,9 +19,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.im.InputContext;
 import java.util.Locale;
@@ -30,13 +31,11 @@ import java.util.Locale;
  * @author Denis Fokin
  */
 
-@State(
-        name = "KeyboardSettings",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/keyboard.xml")}
-)
+@State(name = "KeyboardSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/keyboard.xml")})
+@Singleton
 public class KeyboardSettingsExternalizable implements PersistentStateComponent<KeyboardSettingsExternalizable.OptionSet> {
 
-  private static final String [] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};
+  private static final String[] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};
 
   public static boolean isSupportedKeyboardLayout(@Nonnull Component component) {
     if (Registry.is("ide.keyboard.dvorak")) return true;
@@ -94,15 +93,15 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
     myOptions = state;
   }
 
-  public boolean isUkrainianKeyboard (Component c) {
-    return c!=null && "uk".equals(c.getInputContext().getLocale().getLanguage());
+  public boolean isUkrainianKeyboard(Component c) {
+    return c != null && "uk".equals(c.getInputContext().getLocale().getLanguage());
   }
 
-  public boolean isNonEnglishKeyboardSupportEnabled () {
+  public boolean isNonEnglishKeyboardSupportEnabled() {
     return myOptions.USE_NON_ENGLISH_KEYBOARD;
   }
 
-  public void setNonEnglishKeyboardSupportEnabled (boolean enabled) {
+  public void setNonEnglishKeyboardSupportEnabled(boolean enabled) {
     myOptions.USE_NON_ENGLISH_KEYBOARD = enabled;
   }
 

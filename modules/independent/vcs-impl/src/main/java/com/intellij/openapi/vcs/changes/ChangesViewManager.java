@@ -57,10 +57,11 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -75,6 +76,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @State(name = "ChangesViewManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class ChangesViewManager implements ChangesViewI, ProjectComponent, PersistentStateComponent<ChangesViewManager.State> {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangesViewManager");
@@ -118,6 +120,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ChangesViewI.class);
   }
 
+  @Inject
   public ChangesViewManager(@Nonnull Project project, @Nonnull ChangesViewContentManager contentManager) {
     myProject = project;
     myContentManager = contentManager;
@@ -182,11 +185,6 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     myRepaintAlarm.cancelAllRequests();
   }
 
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ChangesViewManager";
-  }
 
   private JComponent createChangeViewComponent() {
     SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true);
@@ -196,8 +194,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     EmptyAction.registerWithShortcutSet("ChangesView.RemoveChangeList", CommonShortcuts.getDelete(), panel);
     EmptyAction.registerWithShortcutSet(IdeActions.MOVE_TO_ANOTHER_CHANGE_LIST, CommonShortcuts.getMove(), panel);
     EmptyAction.registerWithShortcutSet("ChangesView.Rename", CommonShortcuts.getRename(), panel);
-    EmptyAction.registerWithShortcutSet("ChangesView.SetDefault",
-                                        new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.ALT_DOWN_MASK | ctrlMask())), panel);
+    EmptyAction.registerWithShortcutSet("ChangesView.SetDefault", new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.ALT_DOWN_MASK | ctrlMask())), panel);
     EmptyAction.registerWithShortcutSet("ChangesView.Diff", CommonShortcuts.getDiff(), panel);
 
     DefaultActionGroup group = (DefaultActionGroup)ActionManager.getInstance().getAction("ChangesViewToolbar");
@@ -220,8 +217,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     visualActionsGroup.add(new IgnoredSettingsAction());
     visualActionsGroup.add(new ToggleDetailsAction());
     visualActionsGroup.add(new ContextHelpAction(ChangesListView.HELP_ID));
-    toolbarPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, visualActionsGroup, false).getComponent(),
-                     BorderLayout.CENTER);
+    toolbarPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, visualActionsGroup, false).getComponent(), BorderLayout.CENTER);
 
 
     myView.setMenuActions((DefaultActionGroup)ActionManager.getInstance().getAction("ChangesViewPopupMenu"));
@@ -341,11 +337,11 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
 
     ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(myProject);
 
-    TreeModelBuilder treeModelBuilder = new TreeModelBuilder(myProject, myView.isShowFlatten()).setChangeLists(changeListManager.getChangeListsCopy())
-            .setLocallyDeletedPaths(changeListManager.getDeletedFiles()).setModifiedWithoutEditing(changeListManager.getModifiedWithoutEditing())
-            .setSwitchedFiles(changeListManager.getSwitchedFilesMap()).setSwitchedRoots(changeListManager.getSwitchedRoots())
-            .setLockedFolders(changeListManager.getLockedFolders()).setLogicallyLockedFiles(changeListManager.getLogicallyLockedFolders())
-            .setUnversioned(changeListManager.getUnversionedFiles());
+    TreeModelBuilder treeModelBuilder =
+            new TreeModelBuilder(myProject, myView.isShowFlatten()).setChangeLists(changeListManager.getChangeListsCopy()).setLocallyDeletedPaths(changeListManager.getDeletedFiles())
+                    .setModifiedWithoutEditing(changeListManager.getModifiedWithoutEditing()).setSwitchedFiles(changeListManager.getSwitchedFilesMap())
+                    .setSwitchedRoots(changeListManager.getSwitchedRoots()).setLockedFolders(changeListManager.getLockedFolders())
+                    .setLogicallyLockedFiles(changeListManager.getLogicallyLockedFolders()).setUnversioned(changeListManager.getUnversionedFiles());
     if (myState.myShowIgnored) {
       treeModelBuilder.setIgnored(changeListManager.getIgnoredFiles(), changeListManager.isIgnoredInUpdateMode());
     }
@@ -410,9 +406,11 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
 
   public static class State {
 
-    @Attribute("flattened_view") public boolean myShowFlatten = true;
+    @Attribute("flattened_view")
+    public boolean myShowFlatten = true;
 
-    @Attribute("show_ignored") public boolean myShowIgnored;
+    @Attribute("show_ignored")
+    public boolean myShowIgnored;
   }
 
   private class MyChangeListListener extends ChangeListAdapter {
@@ -479,8 +477,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
 
   private class ToggleShowFlattenAction extends ToggleAction implements DumbAware {
     public ToggleShowFlattenAction() {
-      super(VcsBundle.message("changes.action.show.directories.text"), VcsBundle.message("changes.action.show.directories.description"),
-            AllIcons.Actions.GroupByPackage);
+      super(VcsBundle.message("changes.action.show.directories.text"), VcsBundle.message("changes.action.show.directories.description"), AllIcons.Actions.GroupByPackage);
     }
 
     public boolean isSelected(AnActionEvent e) {
@@ -572,8 +569,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
       if (attachedObject instanceof ShelvedChangeListDragBean) {
         FileDocumentManager.getInstance().saveAllDocuments();
         ShelvedChangeListDragBean shelvedBean = (ShelvedChangeListDragBean)attachedObject;
-        ShelveChangesManager.getInstance(myProject)
-                .unshelveSilentlyAsynchronously(myProject, shelvedBean.getShelvedChangelists(), shelvedBean.getChanges(), shelvedBean.getBinaryFiles(), null);
+        ShelveChangesManager.getInstance(myProject).unshelveSilentlyAsynchronously(myProject, shelvedBean.getShelvedChangelists(), shelvedBean.getChanges(), shelvedBean.getBinaryFiles(), null);
       }
     }
 

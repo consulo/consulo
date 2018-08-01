@@ -21,13 +21,10 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
-@State(
-  name = "ProjectInspectionProfilesVisibleTreeState",
-  storages = {
-    @Storage(
-        file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+import javax.inject.Singleton;
+
+@State(name = "ProjectInspectionProfilesVisibleTreeState", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class ProjectInspectionProfilesVisibleTreeState implements PersistentStateComponent<VisibleTreeStateComponent> {
   private final VisibleTreeStateComponent myComponent = new VisibleTreeStateComponent();
 

@@ -24,6 +24,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,13 +36,13 @@ import java.util.regex.Pattern;
 /**
  * @author yole
  */
-@State(name = "IssueNavigationConfiguration", storages = {
-        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
+@State(name = "IssueNavigationConfiguration", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
+@Singleton
 public class IssueNavigationConfiguration extends SimpleModificationTracker implements PersistentStateComponent<IssueNavigationConfiguration> {
   @NonNls
-  private static final Pattern ourHtmlPattern =
-          Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
+  private static final Pattern ourHtmlPattern = Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
 
+  @Deprecated
   public static IssueNavigationConfiguration getInstance(Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetService(project, IssueNavigationConfiguration.class);
   }

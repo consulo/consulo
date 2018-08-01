@@ -58,13 +58,13 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -77,6 +77,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@Singleton
 public class ShelvedChangesViewManager implements ProjectComponent {
   private final ChangesViewContentManager myContentManager;
   private final ShelveChangesManager myShelveChangesManager;
@@ -99,12 +100,12 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ShelvedChangesViewManager.class);
   }
 
-  public ShelvedChangesViewManager(Project project, ChangesViewContentManager contentManager, ShelveChangesManager shelveChangesManager,
-                                   final MessageBus bus) {
+  @Inject
+  public ShelvedChangesViewManager(Project project, ChangesViewContentManager contentManager, ShelveChangesManager shelveChangesManager) {
     myProject = project;
     myContentManager = contentManager;
     myShelveChangesManager = shelveChangesManager;
-    bus.connect().subscribe(ShelveChangesManager.SHELF_TOPIC, new ChangeListener() {
+    project.getMessageBus().connect().subscribe(ShelveChangesManager.SHELF_TOPIC, new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
         myUpdatePending = true;
         ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -140,14 +141,16 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
       public String convert(TreePath o) {
         final Object lc = o.getLastPathComponent();
-        final Object lastComponent = lc == null ? null : ((DefaultMutableTreeNode) lc).getUserObject();
+        final Object lastComponent = lc == null ? null : ((DefaultMutableTreeNode)lc).getUserObject();
         if (lastComponent instanceof ShelvedChangeList) {
-          return ((ShelvedChangeList) lastComponent).DESCRIPTION;
-        } else if (lastComponent instanceof ShelvedChange) {
+          return ((ShelvedChangeList)lastComponent).DESCRIPTION;
+        }
+        else if (lastComponent instanceof ShelvedChange) {
           final ShelvedChange shelvedChange = (ShelvedChange)lastComponent;
           return shelvedChange.getBeforeFileName() == null ? shelvedChange.getAfterFileName() : shelvedChange.getBeforeFileName();
-        } else if (lastComponent instanceof ShelvedBinaryFile) {
-          final ShelvedBinaryFile sbf = (ShelvedBinaryFile) lastComponent;
+        }
+        else if (lastComponent instanceof ShelvedBinaryFile) {
+          final ShelvedBinaryFile sbf = (ShelvedBinaryFile)lastComponent;
           final String value = sbf.BEFORE_PATH == null ? sbf.AFTER_PATH : sbf.BEFORE_PATH;
           int idx = value.lastIndexOf("/");
           idx = (idx == -1) ? value.lastIndexOf("\\") : idx;
@@ -160,20 +163,6 @@ public class ShelvedChangesViewManager implements ProjectComponent {
 
   public void projectOpened() {
     updateChangesContent();
-  }
-
-  public void projectClosed() {
-  }
-
-  @NonNls @Nonnull
-  public String getComponentName() {
-    return "ShelvedChangesViewManager";
-  }
-
-  public void initComponent() {
-  }
-
-  public void disposeComponent() {
   }
 
   private void updateChangesContent() {
@@ -200,7 +189,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       state.applyTo(myTree);
       if (myPostUpdateRunnable != null) {
         myPostUpdateRunnable.run();
-      }      
+      }
     }
     myPostUpdateRunnable = null;
   }
@@ -211,25 +200,24 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     final List<ShelvedChangeList> changeLists = new ArrayList<ShelvedChangeList>(myShelveChangesManager.getShelvedChangeLists());
     Collections.sort(changeLists, ChangelistComparator.getInstance());
     if (myShelveChangesManager.isShowRecycled()) {
-      ArrayList<ShelvedChangeList> recycled =
-              new ArrayList<ShelvedChangeList>(myShelveChangesManager.getRecycledShelvedChangeLists());
+      ArrayList<ShelvedChangeList> recycled = new ArrayList<ShelvedChangeList>(myShelveChangesManager.getRecycledShelvedChangeLists());
       Collections.sort(recycled, ChangelistComparator.getInstance());
       changeLists.addAll(recycled);
     }
     myMoveRenameInfo.clear();
 
-    for(ShelvedChangeList changeList: changeLists) {
+    for (ShelvedChangeList changeList : changeLists) {
       DefaultMutableTreeNode node = new DefaultMutableTreeNode(changeList);
       model.insertNodeInto(node, myRoot, myRoot.getChildCount());
 
       final List<Object> shelvedFilesNodes = new ArrayList<Object>();
       List<ShelvedChange> changes = changeList.getChanges(myProject);
-      for(ShelvedChange change: changes) {
+      for (ShelvedChange change : changes) {
         putMovedMessage(change.getBeforePath(), change.getAfterPath());
         shelvedFilesNodes.add(change);
       }
       List<ShelvedBinaryFile> binaryFiles = changeList.getBinaryFiles();
-      for(ShelvedBinaryFile file: binaryFiles) {
+      for (ShelvedBinaryFile file : binaryFiles) {
         putMovedMessage(file.BEFORE_PATH, file.AFTER_PATH);
         shelvedFilesNodes.add(file);
       }
@@ -245,11 +233,11 @@ public class ShelvedChangesViewManager implements ProjectComponent {
 
   private static class ChangelistComparator implements Comparator<ShelvedChangeList> {
     private final static ChangelistComparator ourInstance = new ChangelistComparator();
-    
+
     public static ChangelistComparator getInstance() {
       return ourInstance;
     }
-    
+
     @Override
     public int compare(ShelvedChangeList o1, ShelvedChangeList o2) {
       return o2.DATE.compareTo(o1.DATE);
@@ -310,10 +298,11 @@ public class ShelvedChangesViewManager implements ProjectComponent {
         sink.put(VcsDataKeys.HAVE_SELECTED_CHANGES, getSelectionCount() > 0);
         /*List<ShelvedChange> shelvedChanges = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChange.class);
         final List<ShelvedChangeList> changeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeList.class);*/
-      } else if (key == VcsDataKeys.CHANGES) {
+      }
+      else if (key == VcsDataKeys.CHANGES) {
         List<ShelvedChange> shelvedChanges = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChange.class);
         final List<ShelvedBinaryFile> shelvedBinaryFiles = TreeUtil.collectSelectedObjectsOfType(this, ShelvedBinaryFile.class);
-        if (! shelvedChanges.isEmpty() || ! shelvedBinaryFiles.isEmpty()) {
+        if (!shelvedChanges.isEmpty() || !shelvedBinaryFiles.isEmpty()) {
           final List<Change> changes = new ArrayList<Change>(shelvedChanges.size() + shelvedBinaryFiles.size());
           for (ShelvedChange shelvedChange : shelvedChanges) {
             changes.add(shelvedChange.getChange(myProject));
@@ -326,9 +315,9 @@ public class ShelvedChangesViewManager implements ProjectComponent {
         else {
           final List<ShelvedChangeList> changeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeList.class);
           final List<Change> changes = new ArrayList<Change>();
-          for(ShelvedChangeList changeList: changeLists) {
+          for (ShelvedChangeList changeList : changeLists) {
             shelvedChanges = changeList.getChanges(myProject);
-            for(ShelvedChange shelvedChange: shelvedChanges) {
+            for (ShelvedChange shelvedChange : shelvedChanges) {
               changes.add(shelvedChange.getChange(myProject));
             }
             final List<ShelvedBinaryFile> binaryFiles = changeList.getBinaryFiles();
@@ -341,7 +330,8 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       }
       else if (key == PlatformDataKeys.DELETE_ELEMENT_PROVIDER) {
         sink.put(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, myDeleteProvider);
-      } else if (PlatformDataKeys.NAVIGATABLE_ARRAY.equals(key)) {
+      }
+      else if (PlatformDataKeys.NAVIGATABLE_ARRAY.equals(key)) {
         List<ShelvedChange> shelvedChanges = new ArrayList<ShelvedChange>(TreeUtil.collectSelectedObjectsOfType(this, ShelvedChange.class));
         final ArrayDeque<Navigatable> navigatables = new ArrayDeque<Navigatable>();
         final List<ShelvedChangeList> changeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeList.class);
@@ -349,7 +339,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
           shelvedChanges.addAll(changeList.getChanges(myProject));
         }
         for (final ShelvedChange shelvedChange : shelvedChanges) {
-          if (shelvedChange.getBeforePath() != null && ! FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
+          if (shelvedChange.getBeforePath() != null && !FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
             final NavigatableAdapter navigatable = new NavigatableAdapter() {
               @Override
               public void navigate(boolean requestFocus) {
@@ -371,13 +361,12 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       final TreePath[] selections = getSelectionPaths();
       final Set<ShelvedChangeList> changeLists = new HashSet<ShelvedChangeList>();
       if (selections != null) {
-        for(TreePath path: selections) {
+        for (TreePath path : selections) {
           if (path.getPathCount() >= 2) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getPathComponent(1);
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getPathComponent(1);
             if (node.getUserObject() instanceof ShelvedChangeList) {
               final ShelvedChangeList list = (ShelvedChangeList)node.getUserObject();
-              if (((! recycled) && (! list.isRecycled())) ||
-                (recycled && list.isRecycled())) {
+              if (((!recycled) && (!list.isRecycled())) || (recycled && list.isRecycled())) {
                 changeLists.add(list);
               }
             }
@@ -407,10 +396,11 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     private static String getPath(final Object patch) {
       String path = null;
       if (patch instanceof ShelvedBinaryFile) {
-        final ShelvedBinaryFile binaryFile = (ShelvedBinaryFile) patch;
+        final ShelvedBinaryFile binaryFile = (ShelvedBinaryFile)patch;
         path = binaryFile.BEFORE_PATH;
         path = (path == null) ? binaryFile.AFTER_PATH : path;
-      } else if (patch instanceof ShelvedChange) {
+      }
+      else if (patch instanceof ShelvedChange) {
         final ShelvedChange shelvedChange = (ShelvedChange)patch;
         path = shelvedChange.getBeforePath().replace('/', File.separatorChar);
       }
@@ -432,30 +422,31 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     }
 
     public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
       Object nodeValue = node.getUserObject();
       if (nodeValue instanceof ShelvedChangeList) {
-        ShelvedChangeList changeListData = (ShelvedChangeList) nodeValue;
+        ShelvedChangeList changeListData = (ShelvedChangeList)nodeValue;
         if (changeListData.isRecycled()) {
           myIssueLinkRenderer.appendTextWithLinks(changeListData.DESCRIPTION, SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
-        } else {
+        }
+        else {
           myIssueLinkRenderer.appendTextWithLinks(changeListData.DESCRIPTION);
         }
         final int count = node.getChildCount();
         final String numFilesText = " (" + count + ((count == 1) ? " file) " : " files) ");
         append(numFilesText, SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
-        
+
         final String date = DateFormatUtil.formatPrettyDateTime(changeListData.DATE);
         append(" (" + date + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
         setIcon(TargetAWT.to(PatchFileType.INSTANCE.getIcon()));
       }
       else if (nodeValue instanceof ShelvedChange) {
-        ShelvedChange change = (ShelvedChange) nodeValue;
+        ShelvedChange change = (ShelvedChange)nodeValue;
         final String movedMessage = myMoveRenameInfo.get(new Pair<String, String>(change.getBeforePath(), change.getAfterPath()));
         renderFileName(change.getBeforePath(), change.getFileStatus(), movedMessage);
       }
       else if (nodeValue instanceof ShelvedBinaryFile) {
-        ShelvedBinaryFile binaryFile = (ShelvedBinaryFile) nodeValue;
+        ShelvedBinaryFile binaryFile = (ShelvedBinaryFile)nodeValue;
         String path = binaryFile.BEFORE_PATH;
         if (path == null) {
           path = binaryFile.AFTER_PATH;
@@ -472,7 +463,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       String directory;
       if (pos >= 0) {
         directory = path.substring(0, pos).replace(File.separatorChar, File.separatorChar);
-        fileName = path.substring(pos+1);
+        fileName = path.substring(pos + 1);
       }
       else {
         directory = "<project root>";
@@ -482,7 +473,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       if (movedMessage != null) {
         append(movedMessage, SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
-      append(" ("+ directory + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      append(" (" + directory + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
       setIcon(TargetAWT.to(FileTypeManager.getInstance().getFileTypeByFileName(fileName).getIcon()));
     }
   }
@@ -493,26 +484,26 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       final List<ShelvedChangeList> shelvedChangeLists = getLists(dataContext);
       if (shelvedChangeLists.isEmpty()) return;
       String message = (shelvedChangeLists.size() == 1)
-        ? VcsBundle.message("shelve.changes.delete.confirm", shelvedChangeLists.get(0).DESCRIPTION)
-        : VcsBundle.message("shelve.changes.delete.multiple.confirm", shelvedChangeLists.size());
-      int rc = Messages.showOkCancelDialog(myProject, message, VcsBundle.message("shelvedChanges.delete.title"), CommonBundle.message("button.delete"), CommonBundle.getCancelButtonText(), Messages.getWarningIcon());
+                       ? VcsBundle.message("shelve.changes.delete.confirm", shelvedChangeLists.get(0).DESCRIPTION)
+                       : VcsBundle.message("shelve.changes.delete.multiple.confirm", shelvedChangeLists.size());
+      int rc = Messages.showOkCancelDialog(myProject, message, VcsBundle.message("shelvedChanges.delete.title"), CommonBundle.message("button.delete"), CommonBundle.getCancelButtonText(),
+                                           Messages.getWarningIcon());
       if (rc != 0) return;
-      for(ShelvedChangeList changeList: shelvedChangeLists) {
+      for (ShelvedChangeList changeList : shelvedChangeLists) {
         ShelveChangesManager.getInstance(myProject).deleteChangeList(changeList);
       }
     }
 
     public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       //noinspection unchecked
-      return ! getLists(dataContext).isEmpty();
+      return !getLists(dataContext).isEmpty();
     }
 
     private List<ShelvedChangeList> getLists(final DataContext dataContext) {
       final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
       final ShelvedChangeList[] recycled = dataContext.getData(SHELVED_RECYCLED_CHANGELIST_KEY);
 
-      final List<ShelvedChangeList> shelvedChangeLists = (shelved == null && recycled == null) ?
-                                                         Collections.<ShelvedChangeList>emptyList() : new ArrayList<ShelvedChangeList>();
+      final List<ShelvedChangeList> shelvedChangeLists = (shelved == null && recycled == null) ? Collections.<ShelvedChangeList>emptyList() : new ArrayList<ShelvedChangeList>();
       if (shelved != null) {
         ContainerUtil.addAll(shelvedChangeLists, shelved);
       }
@@ -534,8 +525,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
 
       final ShelvedChangeList list = shelved[0];
 
-      final String message = VcsBundle.message("shelve.changes.delete.files.from.list", (changes == null ? 0 : changes.size()) +
-                                                                                        (binaryFiles == null ? 0 : binaryFiles.size()));
+      final String message = VcsBundle.message("shelve.changes.delete.files.from.list", (changes == null ? 0 : changes.size()) + (binaryFiles == null ? 0 : binaryFiles.size()));
       int rc = Messages.showOkCancelDialog(myProject, message, VcsBundle.message("shelve.changes.delete.files.from.list.title"), Messages.getWarningIcon());
       if (rc != 0) return;
 
@@ -564,7 +554,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
 
       myShelveChangesManager.saveRemainingPatches(list, patches, oldBinaries, commitContext);
 
-      if (! exceptions.isEmpty()) {
+      if (!exceptions.isEmpty()) {
         String title = list.DESCRIPTION == null ? "" : list.DESCRIPTION;
         title = title.substring(0, Math.min(10, list.DESCRIPTION.length()));
         AbstractVcsHelper.getInstance(myProject).showErrors(exceptions, "Deleting files from '" + title + "'");
@@ -575,9 +565,9 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
       if (shelved == null || (shelved.length != 1)) return false;
       final List<ShelvedChange> changes = dataContext.getData(SHELVED_CHANGE_KEY);
-      if (changes != null && (! changes.isEmpty())) return true;
+      if (changes != null && (!changes.isEmpty())) return true;
       final List<ShelvedBinaryFile> binaryFiles = dataContext.getData(SHELVED_BINARY_FILE_KEY);
-      return (binaryFiles != null && (! binaryFiles.isEmpty()));
+      return (binaryFiles != null && (!binaryFiles.isEmpty()));
     }
   }
 

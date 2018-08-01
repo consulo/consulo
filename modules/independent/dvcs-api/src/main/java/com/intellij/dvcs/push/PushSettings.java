@@ -25,11 +25,14 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Set;
 
 @State(name = "Push.Settings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class PushSettings implements PersistentStateComponent<PushSettings.State> {
 
   private State myState = new State();
@@ -43,7 +46,7 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
     public List<ForcePushTargetInfo> FORCE_PUSH_TARGETS = ContainerUtil.newArrayList();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public State getState() {
     return myState;
@@ -84,8 +87,10 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
 
   @Tag("force-push-target")
   private static class ForcePushTargetInfo {
-    @Attribute(value = "remote-path") public String targetRemoteName;
-    @Attribute(value = "branch") public String targetBranchName;
+    @Attribute(value = "remote-path")
+    public String targetRemoteName;
+    @Attribute(value = "branch")
+    public String targetBranchName;
 
     @SuppressWarnings("unused")
     ForcePushTargetInfo() {

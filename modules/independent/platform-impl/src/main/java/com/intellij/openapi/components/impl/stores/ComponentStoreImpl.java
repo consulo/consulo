@@ -408,7 +408,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   @Nonnull
-  public static ReloadComponentStoreStatus reloadStore(@Nonnull Collection<StateStorage> changedStorages, @Nonnull IComponentStore.Reloadable store) {
+  public static ReloadComponentStoreStatus reloadStore(@Nonnull Application application, @Nonnull Collection<StateStorage> changedStorages, @Nonnull IComponentStore.Reloadable store) {
     Collection<String> notReloadableComponents;
     boolean willBeReloaded = false;
     try {
@@ -428,7 +428,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
         return ReloadComponentStoreStatus.SUCCESS;
       }
 
-      willBeReloaded = askToRestart(store, notReloadableComponents, changedStorages);
+      willBeReloaded = askToRestart(application, store, notReloadableComponents, changedStorages);
       return willBeReloaded ? ReloadComponentStoreStatus.RESTART_AGREED : ReloadComponentStoreStatus.RESTART_CANCELLED;
     }
     finally {
@@ -443,7 +443,8 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   // used in settings repository plugin
-  public static boolean askToRestart(@Nonnull Reloadable store,
+  public static boolean askToRestart(@Nonnull Application application,
+                                     @Nonnull Reloadable store,
                                      @Nonnull Collection<String> notReloadableComponents,
                                      @Nullable Collection<? extends StateStorage> changedStorages) {
     StringBuilder message = new StringBuilder();
@@ -463,7 +464,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
 
     message.append("\nWould you like to ");
     if (store instanceof IApplicationStore) {
-      message.append(ApplicationManager.getApplication().isRestartCapable() ? "restart" : "shutdown").append(' ');
+      message.append(application.isRestartCapable() ? "restart" : "shutdown").append(' ');
       message.append(ApplicationNamesInfo.getInstance().getProductName()).append('?');
     }
     else {

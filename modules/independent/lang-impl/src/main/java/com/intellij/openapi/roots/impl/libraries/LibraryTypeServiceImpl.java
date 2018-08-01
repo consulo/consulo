@@ -29,6 +29,7 @@ import com.intellij.util.PathUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +37,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@Singleton
 public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static final String DEFAULT_LIBRARY_NAME = "Unnamed";
 

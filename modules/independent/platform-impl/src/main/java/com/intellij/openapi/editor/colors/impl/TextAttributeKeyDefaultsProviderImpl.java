@@ -19,12 +19,23 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * @author Dennis.Ushakov
  */
+@Singleton
 public class TextAttributeKeyDefaultsProviderImpl implements TextAttributesKey.TextAttributeKeyDefaultsProvider {
+  private EditorColorsManagerImpl myEditorColorsManager;
+
+  @Inject
+  public TextAttributeKeyDefaultsProviderImpl(EditorColorsManager editorColorsManager) {
+    myEditorColorsManager = (EditorColorsManagerImpl)editorColorsManager;
+  }
+
   @Override
   public TextAttributes getDefaultAttributes(TextAttributesKey key) {
-    return ((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getDefaultAttributes(key);
+    return myEditorColorsManager.getDefaultAttributes(key);
   }
 }

@@ -17,15 +17,18 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeInsight.editorActions.TextBlockTransferable;
 import com.intellij.codeInsight.editorActions.TextBlockTransferableData;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.LineTokenizer;
+import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -36,12 +39,21 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+@Singleton
 public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   private static final Logger LOG = Logger.getInstance(EditorCopyPasteHelperImpl.class);
 
+  private final Application myApplication;
+
+  @Inject
+  public EditorCopyPasteHelperImpl(Application application) {
+    myApplication = application;
+  }
+
+  @RequiredDispatchThread
   @Override
   public void copySelectionToClipboard(@Nonnull Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     List<TextBlockTransferableData> extraData = new ArrayList<TextBlockTransferableData>();
     String s = editor.getCaretModel().supportsMultipleCarets() ? getSelectedTextForClipboard(editor, extraData)
                                                                : editor.getSelectionModel().getSelectedText();
@@ -142,8 +154,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
     try {
       return (String)content.getTransferData(DataFlavor.stringFlavor);
     }
-    catch (UnsupportedFlavorException ignore) { }
-    catch (IOException ignore) { }
+    catch (UnsupportedFlavorException | IOException ignore) { }
 
     return null;
   }

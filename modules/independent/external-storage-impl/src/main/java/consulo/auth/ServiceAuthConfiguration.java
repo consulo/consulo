@@ -28,6 +28,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.Base64;
@@ -37,6 +38,7 @@ import java.util.Base64;
  * @since 06-Mar-17
  */
 @State(name = "ServiceAuthConfiguration", storages = @Storage(value = "auth.xml", roamingType = RoamingType.DISABLED))
+@Singleton
 public class ServiceAuthConfiguration implements PersistentStateComponent<ServiceAuthConfiguration.State> {
   private static final Logger LOGGER = Logger.getInstance(ServiceAuthConfiguration.class);
 
@@ -80,12 +82,12 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
 
   @Nullable
   public Icon getUserIcon() {
-    if(myUserIcon != null) {
+    if (myUserIcon != null) {
       return myUserIcon;
     }
 
     String iconBytes = myState.iconBytes;
-    if(iconBytes != null) {
+    if (iconBytes != null) {
       byte[] bytes = Base64.getDecoder().decode(iconBytes);
       myUserIcon = new JBImageIcon(ImageLoader.loadFromStream(new UnsyncByteArrayInputStream(bytes)));
     }
@@ -102,7 +104,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
     XmlSerializerUtil.copyBean(state, myState);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getEmail() {
     return myState.email;
   }

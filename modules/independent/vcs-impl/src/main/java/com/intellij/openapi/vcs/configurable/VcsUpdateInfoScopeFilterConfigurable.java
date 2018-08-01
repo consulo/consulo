@@ -97,7 +97,7 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
       public void linkSelected(LinkLabel aSource, Object aLinkData) {
         final OptionsEditor optionsEditor = DataManager.getInstance().getDataContext(panel).getData(OptionsEditor.KEY);
         if (optionsEditor != null) {
-          SearchableConfigurable configurable = optionsEditor.findConfigurableById(new ScopeChooserConfigurable(myProject).getId());
+          SearchableConfigurable configurable = optionsEditor.findConfigurableById(myProject.createInstance(ScopeChooserConfigurable.class).getId());
           if (configurable != null) {
             optionsEditor.select(configurable);
           }

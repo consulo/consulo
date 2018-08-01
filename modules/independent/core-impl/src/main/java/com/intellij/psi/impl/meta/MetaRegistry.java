@@ -35,6 +35,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ import java.util.List;
  * Time: 3:31:09
  * To change this template use Options | File Templates.
  */
+@Singleton
 public class MetaRegistry extends MetaDataRegistrar {
   private static final List<MyBinding> ourBindings = ContainerUtil.createLockFreeCopyOnWriteList();
   private static volatile boolean ourContributorsLoaded = false;

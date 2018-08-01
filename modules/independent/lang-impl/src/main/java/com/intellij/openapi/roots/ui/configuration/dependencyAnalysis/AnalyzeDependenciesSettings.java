@@ -19,13 +19,13 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
+
 /**
  * The default mode for classpath details settings
  */
-@State(
-  name = "AnalyzeDependenciesSettings",
-  storages = {@Storage(
-    file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "AnalyzeDependenciesSettings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class AnalyzeDependenciesSettings implements PersistentStateComponent<AnalyzeDependenciesSettings.State> {
   /**
    * The current state

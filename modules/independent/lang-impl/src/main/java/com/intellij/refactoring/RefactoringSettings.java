@@ -19,16 +19,13 @@ package com.intellij.refactoring;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
-@State(
-  name = "BaseRefactoringSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@State(name = "BaseRefactoringSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Singleton
 public class RefactoringSettings implements PersistentStateComponent<RefactoringSettings> {
   public static RefactoringSettings getInstance() {
     return ServiceManager.getService(RefactoringSettings.class);

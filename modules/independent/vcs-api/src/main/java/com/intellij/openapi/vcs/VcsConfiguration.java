@@ -30,20 +30,22 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 
-@State(
-        name = "VcsManagerConfiguration",
-        storages = {@Storage(
-                file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "VcsManagerConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public final class VcsConfiguration implements PersistentStateComponent<VcsConfiguration> {
   public final static long ourMaximumFileForBaseRevisionSize = 500 * 1000;
 
-  @NonNls static final String VALUE_ATTR = "value";
+  @NonNls
+  static final String VALUE_ATTR = "value";
 
-  @NonNls public static final String PATCH = "patch";
-  @NonNls public static final String DIFF = "diff";
+  @NonNls
+  public static final String PATCH = "patch";
+  @NonNls
+  public static final String DIFF = "diff";
 
   public boolean OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT = true;
   public boolean CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT = true;
@@ -80,7 +82,8 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
   public boolean SHOW_UNVERSIONED_FILES_WHILE_COMMIT = true;
   public boolean LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN = false;
 
-  @AbstractCollection(surroundWithTag = false, elementTag = "path") @Tag("ignored-roots")
+  @AbstractCollection(surroundWithTag = false, elementTag = "path")
+  @Tag("ignored-roots")
   public List<String> IGNORED_UNREGISTERED_ROOTS = ContainerUtil.newArrayList();
 
   public enum StandardOption {
@@ -120,7 +123,8 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
   public boolean FORCE_NON_EMPTY_COMMENT = false;
   public boolean CLEAR_INITIAL_COMMIT_MESSAGE = false;
 
-  @Property(surroundWithTag = false) @AbstractCollection(elementTag = "MESSAGE", elementValueAttribute = "value", surroundWithTag = false)
+  @Property(surroundWithTag = false)
+  @AbstractCollection(elementTag = "MESSAGE", elementValueAttribute = "value", surroundWithTag = false)
   public List<String> myLastCommitMessages = new ArrayList<>();
   public String LAST_COMMIT_MESSAGE = null;
   public boolean MAKE_NEW_CHANGELIST_ACTIVE = false;
@@ -143,7 +147,8 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
   @Deprecated
   public float FILE_HISTORY_SPLITTER_PROPORTION = 0.6f; // to remove after 2016.3
   private static final int MAX_STORED_MESSAGES = 25;
-  @NonNls static final String MESSAGE_ELEMENT_NAME = "MESSAGE";
+  @NonNls
+  static final String MESSAGE_ELEMENT_NAME = "MESSAGE";
 
   private final PerformInBackgroundOption myUpdateOption = new UpdateInBackgroundOption();
   private final PerformInBackgroundOption myCommitOption = new CommitInBackgroundOption();

@@ -25,10 +25,12 @@ package com.intellij.execution.filters;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author dyoma
  */
+@Singleton
 public class TextConsoleBuilderFactoryImpl extends TextConsoleBuilderFactory {
   @Override
   public TextConsoleBuilder createBuilder(@Nonnull final Project project) {

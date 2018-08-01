@@ -18,16 +18,13 @@ package com.intellij.usages.impl;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
-@State(
-  name = "ImportFilteringUsageViewSetting",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@State(name = "ImportFilteringUsageViewSetting", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Singleton
 public class ImportFilteringUsageViewSetting implements PersistentStateComponent<ImportFilteringUsageViewSetting> {
   public static ImportFilteringUsageViewSetting getInstance() {
     return ServiceManager.getService(ImportFilteringUsageViewSetting.class);
