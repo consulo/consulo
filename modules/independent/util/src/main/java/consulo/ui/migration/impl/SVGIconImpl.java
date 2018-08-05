@@ -38,6 +38,7 @@ package consulo.ui.migration.impl;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
@@ -47,10 +48,10 @@ import com.kitfox.svg.SVGUniverse;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageFilter;
 import java.net.URI;
+import java.util.function.Supplier;
 
 
 /**
@@ -59,24 +60,9 @@ import java.net.URI;
 class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
   public static final long serialVersionUID = 1;
 
-  public static final String PROP_AUTOSIZE = "PROP_AUTOSIZE";
-
-  private final PropertyChangeSupport changes = new PropertyChangeSupport(this);
-
-  SVGUniverse svgUniverse = SVGCache.getSVGUniverse();
-
-  private boolean clipToViewbox;
-
-  URI svgURI;
-
-  AffineTransform scaleXform = new AffineTransform();
-
-  public static final int AUTOSIZE_NONE = 0;
-  public static final int AUTOSIZE_HORIZ = 1;
-  public static final int AUTOSIZE_VERT = 2;
-  public static final int AUTOSIZE_BESTFIT = 3;
-  public static final int AUTOSIZE_STRETCH = 4;
-  private int autosize = AUTOSIZE_NONE;
+  private SVGUniverse svgUniverse = SVGCache.getSVGUniverse();
+  private URI svgURI;
+  private Supplier<ImageFilter>[] myImageFilters;
 
   /**
    * Creates a new instance of SVGIcon
@@ -93,18 +79,10 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
     return svgIcon;
   }
 
-  public void addPropertyChangeListener(PropertyChangeListener p) {
-    changes.addPropertyChangeListener(p);
-  }
-
-  public void removePropertyChangeListener(PropertyChangeListener p) {
-    changes.removePropertyChangeListener(p);
-  }
-
   /**
    * @return height of this icon
    */
-  public int getIconHeightIgnoreAutosize() {
+  private int getIconHeightIgnoreAutosize() {
     SVGDiagram diagram = svgUniverse.getDiagram(svgURI);
     if (diagram == null) {
       return 0;
@@ -116,15 +94,13 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
    * @return width of this icon
    */
 
-  public int getIconWidthIgnoreAutosize() {
-
+  private int getIconWidthIgnoreAutosize() {
     SVGDiagram diagram = svgUniverse.getDiagram(svgURI);
     if (diagram == null) {
       return 0;
     }
     return (int)diagram.getWidth();
   }
-
 
   @Override
   public int getIconWidth() {
@@ -142,22 +118,37 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
   /**
    * Draws the icon to the specified component.
    *
-   * @param comp - Component to draw icon to.  This is ignored by SVGIcon, and can be set to null; only gg is used for drawing the icon
-   * @param gg   - Graphics context to render SVG content to
-   * @param x    - X coordinate to draw icon
-   * @param y    - Y coordinate to draw icon
+   * @param comp             - Component to draw icon to.  This is ignored by SVGIcon, and can be set to null; only gg is used for drawing the icon
+   * @param originalGraphics - Graphics context to render SVG content to
+   * @param x                - X coordinate to draw icon
+   * @param y                - Y coordinate to draw icon
    */
   @Override
-  public void paintIcon(Component comp, Graphics gg, int x, int y) {
-    //Copy graphics object so that
-    Graphics2D g = (Graphics2D)gg.create();
-    GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-    paintIcon(comp, g, x, y);
-    config.restore();
-    g.dispose();
+  public void paintIcon(Component comp, Graphics originalGraphics, int x, int y) {
+    if (myImageFilters == null || myImageFilters.length == 0) {
+      Graphics2D g = (Graphics2D)originalGraphics.create();
+      GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
+      paintIcon(g, x, y);
+      config.restore();
+      g.dispose();
+
+    }
+    else {
+      Image image = new BufferedImage(getIconWidthIgnoreAutosize(), getIconWidthIgnoreAutosize(), BufferedImage.TYPE_INT_ARGB);
+      Graphics2D g = ((BufferedImage)image).createGraphics();
+      GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
+      paintIcon(g, 0, 0);
+      for (Supplier<ImageFilter> filter : myImageFilters) {
+        image = ImageUtil.filter(image, filter.get());
+      }
+      config.restore();
+      g.dispose();
+
+      originalGraphics.drawImage(image, x, y, null);
+    }
   }
 
-  private void paintIcon(Component comp, Graphics2D g, int x, int y) {
+  private void paintIcon(Graphics2D g, int x, int y) {
     SVGDiagram diagram = svgUniverse.getDiagram(svgURI);
     if (diagram == null) {
       return;
@@ -166,10 +157,7 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
     diagram.setDeviceViewport(new Rectangle(getIconWidth(), getIconHeight()));
 
     g.translate(x, y);
-    diagram.setIgnoringClipHeuristic(!clipToViewbox);
-    if (clipToViewbox) {
-      g.setClip(new Rectangle2D.Float(0, 0, diagram.getWidth(), diagram.getHeight()));
-    }
+    diagram.setIgnoringClipHeuristic(true);
 
     final int width = getIconWidthIgnoreAutosize();
     final int height = getIconHeightIgnoreAutosize();
@@ -179,7 +167,7 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
     }
 
     AffineTransform oldXform = g.getTransform();
-    g.transform(scaleXform);
+    g.transform(new AffineTransform());
 
     try {
       diagram.render(g);
@@ -201,9 +189,7 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
   }
 
   public void setSvgUniverse(SVGUniverse svgUniverse) {
-    SVGUniverse old = this.svgUniverse;
     this.svgUniverse = svgUniverse;
-    changes.firePropertyChange("svgUniverse", old, svgUniverse);
   }
 
   /**
@@ -219,43 +205,16 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
    * @param svgURI - URI to load document from
    */
   public void setSvgURI(URI svgURI) {
-    URI old = this.svgURI;
     this.svgURI = svgURI;
 
     SVGDiagram diagram = svgUniverse.getDiagram(svgURI);
     if (diagram != null) {
       Dimension size = getPreferredSize();
-      if (size == null) {
-        size = new Dimension((int)diagram.getRoot().getDeviceWidth(), (int)diagram.getRoot().getDeviceHeight());
-      }
       diagram.setDeviceViewport(new Rectangle(0, 0, size.width, size.height));
     }
-
-    changes.firePropertyChange("svgURI", old, svgURI);
   }
 
-  /**
-   * If this SVG document has a viewbox, if scaleToFit is set, will scale the viewbox to match the
-   * preferred size of this icon
-   *
-   * @return
-   * @deprecated
-   */
-  public boolean isScaleToFit() {
-    return autosize == AUTOSIZE_STRETCH;
-  }
-
-  /**
-   * @deprecated
-   */
-  public void setScaleToFit(boolean scaleToFit) {
-    setAutosize(AUTOSIZE_STRETCH);
-//        boolean old = this.scaleToFit;
-//        this.scaleToFit = scaleToFit;
-//        firePropertyChange("scaleToFit", old, scaleToFit);
-  }
-
-  public Dimension getPreferredSize() {
+  private Dimension getPreferredSize() {
     SVGDiagram diagram = svgUniverse.getDiagram(svgURI);
     if (diagram != null) {
       //preferredSize = new Dimension((int)diagram.getWidth(), (int)diagram.getHeight());
@@ -265,40 +224,14 @@ class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
     return new Dimension();
   }
 
-  public void setPreferredSize(Dimension preferredSize) {
-
+  private void setPreferredSize(Dimension preferredSize) {
     SVGDiagram diagram = svgUniverse.getDiagram(svgURI);
     if (diagram != null) {
       diagram.setDeviceViewport(new Rectangle(0, 0, preferredSize.width, preferredSize.height));
     }
   }
 
-  /**
-   * clipToViewbox will set a clip box equivilant to the SVG's viewbox before
-   * rendering.
-   */
-  public boolean isClipToViewbox() {
-    return clipToViewbox;
+  public void setImageFilters(Supplier<ImageFilter>[] imageFilters) {
+    myImageFilters = imageFilters;
   }
-
-  public void setClipToViewbox(boolean clipToViewbox) {
-    this.clipToViewbox = clipToViewbox;
-  }
-
-  /**
-   * @return the autosize
-   */
-  public int getAutosize() {
-    return autosize;
-  }
-
-  /**
-   * @param autosize the autosize to set
-   */
-  public void setAutosize(int autosize) {
-    int oldAutosize = this.autosize;
-    this.autosize = autosize;
-    changes.firePropertyChange(PROP_AUTOSIZE, oldAutosize, autosize);
-  }
-
 }

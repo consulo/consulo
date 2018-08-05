@@ -585,6 +585,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
         if (svg) {
           SVGIconImpl svgIcon = new SVGIconImpl();
+          svgIcon.setImageFilters(myFilters);
           icon = svgIcon;
           try {
             URI uri = myUrl.toURI();
