@@ -969,11 +969,13 @@
               use-shortcut-of="CompareDirs" icon="AllIcons.Actions.Diff"/>
     </group>
 
+    <action class="com.intellij.openapi.vcs.actions.VcsToolbarLabelAction" id="VcsToolbarLabelAction" text="VCS Label"/>
     <group id="VcsNavBarToobarActions">
+      <reference ref="VcsToolbarLabelAction"/>
       <reference ref="Vcs.UpdateProject"/>
       <reference ref="CheckinProject"/>
       <reference ref="Vcs.ShowTabbedFileHistory"/>
-      <reference ref="ChangesView.Rollback"/>
+      <reference ref="ChangesView.Revert"/>
       <separator/>
       <add-to-group group-id="NavBarVcsGroup" anchor="first"/>
     </group>
@@ -988,11 +990,12 @@
     </group>
 
     <group id="VcsToobarActions">
+      <reference ref="VcsToolbarLabelAction"/>
       <reference ref="Vcs.UpdateProject"/>
       <reference ref="CheckinProject"/>
       <reference ref="Compare.SameVersion"/>
       <reference ref="Vcs.ShowTabbedFileHistory"/>
-      <reference ref="ChangesView.Rollback"/>
+      <reference ref="ChangesView.Revert"/>
       <separator/>
       <add-to-group group-id="MainToolBarSettings" relative-to-action="ShowSettings" anchor="before"/>
     </group>

@@ -38,9 +38,9 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.VcsSynchronousProgressWrapper;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -97,6 +97,16 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
   @NonNls
   public abstract String getDisplayName();
+
+  /**
+   * Returns the short or abbreviated name of this VCS, which name can be used in those places in the UI where the space is limited.
+   * (e.g. it can be "SVN" for Subversion or "Hg" for Mercurial).<br/><br/>
+   * By default returns the same as {@link #getDisplayName()}.
+   */
+  @Nonnull
+  public String getShortName() {
+    return getDisplayName();
+  }
 
   public abstract Configurable getConfigurable();
 
