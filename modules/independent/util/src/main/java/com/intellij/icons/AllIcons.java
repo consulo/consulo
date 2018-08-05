@@ -40,7 +40,7 @@ public class AllIcons {
     public static final SwingImageRef Checked_small = IconLoader.getIcon("/actions/checked_small.png"); // 11x11
     public static final SwingImageRef Checked_small_selected = IconLoader.getIcon("/actions/checked_small_selected.png"); // 11x11
     public static final SwingImageRef CheckMulticaret = IconLoader.getIcon("/actions/CheckMulticaret.png"); // 16x16
-    public static final SwingImageRef CheckOut = IconLoader.getIcon("/actions/checkOut.png"); // 16x16
+    public static final SwingImageRef CheckOut = IconLoader.getIcon("/actions/checkOut.svg"); // 16x16
     public static final SwingImageRef Clear = IconLoader.getIcon("/actions/clear.png"); // 16x16
     public static final SwingImageRef Clean = IconLoader.getIcon("/actions/clean.png"); // 16x16
     public static final SwingImageRef CleanLight = IconLoader.getIcon("/actions/cleanLight.png"); // 16x16
@@ -49,7 +49,7 @@ public class AllIcons {
     public static final SwingImageRef CloseNew = IconLoader.getIcon("/actions/closeNew.png"); // 16x16
     public static final SwingImageRef CloseNewHovered = IconLoader.getIcon("/actions/closeNewHovered.png"); // 16x16
     public static final SwingImageRef Collapseall = IconLoader.getIcon("/actions/collapseall.png"); // 16x16
-    public static final SwingImageRef Commit = IconLoader.getIcon("/actions/commit.png"); // 16x16
+    public static final SwingImageRef Commit = IconLoader.getIcon("/actions/commit.svg"); // 16x16
     public static final SwingImageRef Compile = IconLoader.getIcon("/actions/compile.png"); // 16x16
     public static final SwingImageRef Copy = IconLoader.getIcon("/actions/copy.png"); // 16x16
     public static final SwingImageRef CreateFromUsage = IconLoader.getIcon("/actions/createFromUsage.png"); // 16x16
@@ -136,7 +136,7 @@ public class AllIcons {
     public static final SwingImageRef Restart = IconLoader.getIcon("/actions/restart.png"); // 16x16
     public static final SwingImageRef Resume = IconLoader.getIcon("/actions/resume.png"); // 16x16
     public static final SwingImageRef Right = IconLoader.getIcon("/actions/right.png"); // 16x16
-    public static final SwingImageRef Rollback = IconLoader.getIcon("/actions/rollback.png"); // 16x16
+    public static final SwingImageRef Rollback = IconLoader.getIcon("/actions/rollback.svg"); // 16x16
     public static final SwingImageRef RunToCursor = IconLoader.getIcon("/actions/runToCursor.png"); // 16x16
     public static final SwingImageRef Scratch = IconLoader.getIcon("/actions/scratch.png"); // 16x16
     public static final SwingImageRef Search = IconLoader.getIcon("/actions/search.png"); // 16x16

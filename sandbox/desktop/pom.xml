@@ -168,5 +168,10 @@
       <groupId>dk.brics.automaton</groupId>
       <artifactId>automaton</artifactId>
     </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>svg-salamander</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

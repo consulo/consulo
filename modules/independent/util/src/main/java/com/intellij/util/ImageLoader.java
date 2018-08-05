@@ -370,6 +370,7 @@ public class ImageLoader implements Serializable {
     return ImageDescList.create(url.toString(), null, UIUtil.isUnderDarcula(), allowFloatScaling, ctx).load(ImageConverterChain.create().
             withFilter(filters).
             with(new ImageConverter() {
+              @Override
               public Image convert(Image source, ImageDesc desc) {
                 if (source != null && desc.type != SVG) {
                   double scale = adjustScaleFactor(allowFloatScaling, ctx.getScale(PIX_SCALE));

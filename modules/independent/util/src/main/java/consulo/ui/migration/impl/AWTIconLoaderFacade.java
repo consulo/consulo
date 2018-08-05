@@ -46,8 +46,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -241,7 +244,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   }
 
   @Nullable
-  private static ImageIcon checkIcon(final Image image, @Nonnull URL url) {
+  private static Icon checkIcon(final Image image, @Nonnull URL url) {
     if (image == null || image.getHeight(null) < 1) { // image wasn't loaded or broken
       return null;
     }
@@ -252,7 +255,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       return EMPTY_ICON;
     }
     assert icon instanceof ImageIcon;
-    return (ImageIcon)icon;
+    return icon;
   }
 
   public static boolean isGoodSize(@Nonnull final Icon icon) {
@@ -364,16 +367,17 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       BufferedImage image;
       if (GraphicsEnvironment.isHeadless()) { // for testing purpose
         image = UIUtil.createImage(ctx, icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.FLOOR);
-      } else {
+      }
+      else {
         // [tav] todo: match the screen with the provided ctx
-        image = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice().getDefaultConfiguration()
+        image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
                 .createCompatibleImage(icon.getIconWidth(), icon.getIconHeight(), Transparency.TRANSLUCENT);
       }
       Graphics2D g = image.createGraphics();
       try {
         icon.paintIcon(null, g, 0, 0);
-      } finally {
+      }
+      finally {
         g.dispose();
       }
       return image;
@@ -446,7 +450,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
 
     @Nonnull
-    private synchronized ImageIcon getRealIcon() {
+    private synchronized Icon getRealIcon() {
       return getRealIcon(null);
     }
 
@@ -461,7 +465,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
 
     @Nonnull
-    private synchronized ImageIcon getRealIcon(@Nullable JBUI.ScaleContext ctx) {
+    private synchronized Icon getRealIcon(@Nullable JBUI.ScaleContext ctx) {
       if (!isValid()) {
         if (isLoaderDisabled()) return EMPTY_ICON;
         myRealIcon = null;
@@ -476,9 +480,9 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
         if (icon instanceof ImageIcon) return (ImageIcon)icon;
       }
 
-      ImageIcon icon = myScaledIconsCache.getOrScaleIcon(1f);
+      Icon icon = myScaledIconsCache.getOrScaleIcon(1f);
       if (icon != null) {
-        myRealIcon = icon.getIconWidth() < 50 && icon.getIconHeight() < 50 ? icon : new SoftReference<ImageIcon>(icon);
+        myRealIcon = icon.getIconWidth() < 50 && icon.getIconHeight() < 50 ? icon : new SoftReference<Icon>(icon);
         return icon;
       }
       return EMPTY_ICON;
@@ -556,9 +560,9 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     private class MyScaledIconsCache {
       private static final int SCALED_ICONS_CACHE_LIMIT = 5;
 
-      private final Map<Couple<Double>, SoftReference<ImageIcon>> scaledIconsCache = Collections.synchronizedMap(new LinkedHashMap<Couple<Double>, SoftReference<ImageIcon>>(SCALED_ICONS_CACHE_LIMIT) {
+      private final Map<Couple<Double>, SoftReference<Icon>> scaledIconsCache = Collections.synchronizedMap(new LinkedHashMap<Couple<Double>, SoftReference<Icon>>(SCALED_ICONS_CACHE_LIMIT) {
         @Override
-        public boolean removeEldestEntry(Map.Entry<Couple<Double>, SoftReference<ImageIcon>> entry) {
+        public boolean removeEldestEntry(Map.Entry<Couple<Double>, SoftReference<Icon>> entry) {
           return size() > SCALED_ICONS_CACHE_LIMIT;
         }
       });
@@ -570,30 +574,47 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       /**
        * Retrieves the orig icon scaled by the provided scale.
        */
-      ImageIcon getOrScaleIcon(final float scale) {
+      Icon getOrScaleIcon(final float scale) {
         final JBUI.ScaleContext ctx = scale == 1 ? getScaleContext() : (JBUI.ScaleContext)getScaleContext().copy(); // not modifying this scale context
         if (scale != 1) ctx.update(OBJ_SCALE.of(scale));
 
-        ImageIcon icon = SoftReference.dereference(scaledIconsCache.get(key(ctx)));
+        Icon icon = SoftReference.dereference(scaledIconsCache.get(key(ctx)));
         if (icon != null) {
           return icon;
         }
-        Image image;
+
         if (svg) {
-          image = doWithTmpRegValue("ide.svg.icon", true, new Callable<Image>() {
-            @Override
-            public Image call() {
-              return loadFromUrl(ctx);
+          SVGIconImpl svgIcon = new SVGIconImpl();
+          icon = svgIcon;
+          try {
+            URI uri = myUrl.toURI();
+            if (dark) {
+              String path = uri.toString();
+              path = path.replace(".svg", "_dark.svg");
+              uri = new URI(path);
             }
-          });
+            try {
+              InputStream stream = uri.toURL().openStream();
+              stream.close();
+
+              svgIcon.setSvgURI(uri);
+            }
+            catch (Exception e) {
+              svgIcon.setSvgURI(myUrl.toURI());
+            }
+          }
+          catch (URISyntaxException e) {
+            throw new Error(e);
+          }
         }
         else {
-          image = loadFromUrl(ctx);
+          Image image = loadFromUrl(ctx);
+
+          icon = checkIcon(image, myUrl);
         }
-        icon = checkIcon(image, myUrl);
 
         if (icon != null && icon.getIconWidth() * icon.getIconHeight() * 4 < ImageLoader.CACHED_IMAGE_MAX_SIZE) {
-          scaledIconsCache.put(key(ctx), new SoftReference<ImageIcon>(icon));
+          scaledIconsCache.put(key(ctx), new SoftReference<Icon>(icon));
         }
         return icon;
       }

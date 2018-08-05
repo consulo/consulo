@@ -40,6 +40,11 @@
     <!--internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>
+      <artifactId>svg-salamander</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
       <artifactId>jdom</artifactId>
     </dependency>
     <dependency>
