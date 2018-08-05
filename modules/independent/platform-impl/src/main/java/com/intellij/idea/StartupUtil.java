@@ -36,10 +36,10 @@ import consulo.start.CommandLineArgs;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.PatternLayout;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.io.BuiltInServer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -212,7 +212,7 @@ public class StartupUtil {
 
     if (SystemInfo.isWindows) {
       // WinP should not unpack .dll files into parent directory
-      System.setProperty("winp.unpack.dll.to.parent.dir", "false");
+      System.setProperty("winp.folder.preferred", ideTempDir.getPath());
     }
   }
 
