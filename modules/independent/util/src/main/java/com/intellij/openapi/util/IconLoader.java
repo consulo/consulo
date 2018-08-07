@@ -193,7 +193,7 @@ public final class IconLoader {
   @Deprecated
   @DeprecationInfo("Use ImageEffects#transparent()")
   public static Icon getTransparentIcon(@Nonnull final Icon icon) {
-    return getTransparentIcon(icon, 0.5f);
+    return ourIconLoaderFacade.getTransparentIcon(icon, 0.5f);
   }
 
   @Nullable

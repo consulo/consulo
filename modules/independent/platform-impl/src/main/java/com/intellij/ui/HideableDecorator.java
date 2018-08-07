@@ -16,8 +16,9 @@
 package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -101,8 +102,8 @@ public class HideableDecorator {
 
   protected void on() {
     myOn = true;
-    myTitledSeparator.getLabel().setIcon(AllIcons.General.SplitDown);
-    myTitledSeparator.getLabel().setDisabledIcon(IconLoader.getTransparentIcon(AllIcons.General.SplitDown, 0.5f));
+    myTitledSeparator.getLabel().setIcon(TargetAWT.to(AllIcons.General.SplitDown));
+    myTitledSeparator.getLabel().setDisabledIcon(TargetAWT.to(ImageEffects.transparent(AllIcons.General.SplitDown, 0.5f)));
     myTitledSeparator.getLabel().setIconTextGap(5);
     if (myContent != null) {
       myContent.setVisible(true);
@@ -114,8 +115,8 @@ public class HideableDecorator {
 
   protected void off() {
     myOn = false;
-    myTitledSeparator.getLabel().setIcon(AllIcons.General.SplitRight);
-    myTitledSeparator.getLabel().setDisabledIcon(IconLoader.getTransparentIcon(AllIcons.General.SplitRight, 0.5f));
+    myTitledSeparator.getLabel().setIcon(TargetAWT.to(AllIcons.General.SplitRight));
+    myTitledSeparator.getLabel().setDisabledIcon(TargetAWT.to(ImageEffects.transparent(AllIcons.General.SplitRight, 0.5f)));
     if (myContent != null) {
       myContent.setVisible(false);
       myPreviousContentSize = myContent.getSize();

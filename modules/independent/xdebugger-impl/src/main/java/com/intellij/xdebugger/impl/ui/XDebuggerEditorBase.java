@@ -50,6 +50,7 @@ import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.evaluate.CodeFragmentInputComponent;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,7 +164,7 @@ public abstract class XDebuggerEditorBase {
     ComponentWithBrowseButton<JComponent> componentWithButton =
             new ComponentWithBrowseButton<>(component, e -> showCodeFragmentEditor(component, this));
     componentWithButton.setButtonIcon(AllIcons.Actions.ShowViewer);
-    componentWithButton.getButton().setDisabledIcon(IconLoader.getDisabledIcon(AllIcons.Actions.ShowViewer));
+    componentWithButton.getButton().setDisabledIcon(TargetAWT.to(ImageEffects.grayed(AllIcons.Actions.ShowViewer)));
     return componentWithButton;
   }
 

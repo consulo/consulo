@@ -26,7 +26,6 @@ import com.intellij.openapi.actionSystem.ActionPopupMenu;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapManagerListener;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
@@ -37,9 +36,11 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -336,9 +337,9 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
   public void updatePresentation() {
     updateState();
     updateText();
-    Icon icon = TargetAWT.to(myDecorator.getToolWindow().getIcon());
-    setIcon(icon);
-    setDisabledIcon(IconLoader.getDisabledIcon(icon));
+    Image image = myDecorator.getToolWindow().getIcon();
+    setIcon(TargetAWT.to(image));
+    setDisabledIcon(TargetAWT.to(ImageEffects.grayed(image)));
   }
 
   private void updateText() {

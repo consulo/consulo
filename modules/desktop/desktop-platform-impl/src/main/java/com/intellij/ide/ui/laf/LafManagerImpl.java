@@ -85,7 +85,6 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -356,42 +355,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       }
     }
     ActionToolbarImpl.updateAllToolbarsImmediately();
-  }
-
-  @Nullable
-  private static Icon getAquaMenuDisabledIcon() {
-    final Icon arrowIcon = (Icon)UIManager.get("Menu.arrowIcon");
-    if (arrowIcon != null) {
-      return IconLoader.getDisabledIcon(arrowIcon);
-    }
-
-    return null;
-  }
-
-  @Nullable
-  private static Icon getAquaMenuInvertedIcon() {
-    if (!UIUtil.isUnderAquaLookAndFeel()) return null;
-    final Icon arrow = (Icon)UIManager.get("Menu.arrowIcon");
-    if (arrow == null) return null;
-
-    try {
-      final Method method = arrow.getClass().getMethod("getInvertedIcon");
-      if (method != null) {
-        method.setAccessible(true);
-        return (Icon)method.invoke(arrow);
-      }
-
-      return null;
-    }
-    catch (NoSuchMethodException e1) {
-      return null;
-    }
-    catch (InvocationTargetException e1) {
-      return null;
-    }
-    catch (IllegalAccessException e1) {
-      return null;
-    }
   }
 
   @Override
