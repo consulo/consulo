@@ -587,7 +587,6 @@ public class AllIcons {
     }
     public static final SwingImageRef EmptyFatalError = IconLoader.getIcon("/ide/emptyFatalError.png"); // 16x16
     public static final SwingImageRef Error = IconLoader.getIcon("/ide/error.png"); // 16x16
-    public static final SwingImageRef Error_notifications = IconLoader.getIcon("/ide/error_notifications.png"); // 16x16
     public static final SwingImageRef ErrorPoint = IconLoader.getIcon("/ide/errorPoint.png"); // 6x6
     public static final SwingImageRef FatalError_read = IconLoader.getIcon("/ide/fatalError-read.png"); // 16x16
     public static final SwingImageRef FatalError = IconLoader.getIcon("/ide/fatalError.png"); // 16x16
@@ -618,13 +617,13 @@ public class AllIcons {
       public static final SwingImageRef Collapse = IconLoader.getIcon("/ide/notification/collapse.png"); // 16x16
       public static final SwingImageRef CollapseHover = IconLoader.getIcon("/ide/notification/collapseHover.png"); // 16x16
       public static final SwingImageRef DropTriangle = IconLoader.getIcon("/ide/notification/dropTriangle.png"); // 11x8
-      public static final SwingImageRef ErrorEvents = IconLoader.getIcon("/ide/notification/errorEvents.png"); // 16x16
+      public static final SwingImageRef ErrorEvents = IconLoader.getIcon("/ide/notification/errorEvents.svg"); // 16x16
       public static final SwingImageRef Expand = IconLoader.getIcon("/ide/notification/expand.png"); // 16x16
       public static final SwingImageRef ExpandHover = IconLoader.getIcon("/ide/notification/expandHover.png"); // 16x16
       public static final SwingImageRef Gear = IconLoader.getIcon("/ide/notification/gear.png"); // 16x16
       public static final SwingImageRef GearHover = IconLoader.getIcon("/ide/notification/gearHover.png"); // 16x16
-      public static final SwingImageRef InfoEvents = IconLoader.getIcon("/ide/notification/infoEvents.png"); // 13x13
-      public static final SwingImageRef NoEvents = IconLoader.getIcon("/ide/notification/noEvents.png"); // 16x16
+      public static final SwingImageRef InfoEvents = IconLoader.getIcon("/ide/notification/infoEvents.svg"); // 13x13
+      public static final SwingImageRef NoEvents = IconLoader.getIcon("/ide/notification/noEvents.svg"); // 16x16
 
       public static class Shadow {
         public static final SwingImageRef Bottom_left = IconLoader.getIcon("/ide/notification/shadow/bottom-left.png"); // 14x16
@@ -637,12 +636,10 @@ public class AllIcons {
         public static final SwingImageRef Top = IconLoader.getIcon("/ide/notification/shadow/top.png"); // 4x4
 
       }
-      public static final SwingImageRef WarningEvents = IconLoader.getIcon("/ide/notification/warningEvents.png"); // 16x16
+      public static final SwingImageRef WarningEvents = IconLoader.getIcon("/ide/notification/warningEvents.svg"); // 16x16
 
     }
 
-    public static final SwingImageRef NoNotifications13 = IconLoader.getIcon("/ide/noNotifications13.png"); // 13x13
-    public static final SwingImageRef Notifications = IconLoader.getIcon("/ide/notifications.png"); // 16x16
     public static final SwingImageRef OutgoingChangesOn = IconLoader.getIcon("/ide/outgoingChangesOn.png"); // 16x16
     public static final SwingImageRef Pipette = IconLoader.getIcon("/ide/pipette.png"); // 16x16
     public static final SwingImageRef Pipette_rollover = IconLoader.getIcon("/ide/pipette_rollover.png"); // 16x16
@@ -680,7 +677,6 @@ public class AllIcons {
     public static final SwingImageRef SharedScope = IconLoader.getIcon("/ide/sharedScope.png"); // 16x16
     public static final SwingImageRef Statusbar_arrows = IconLoader.getIcon("/ide/statusbar_arrows.png"); // 7x10
     public static final SwingImageRef UpDown = IconLoader.getIcon("/ide/upDown.png"); // 16x16
-    public static final SwingImageRef Warning_notifications = IconLoader.getIcon("/ide/warning_notifications.png"); // 16x16
 
   }
 

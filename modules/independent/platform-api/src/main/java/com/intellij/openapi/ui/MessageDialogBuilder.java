@@ -108,7 +108,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
 
     }
 
-    public boolean is() {
+    public boolean isYes() {
       return show() == Messages.YES;
     }
   }

@@ -339,7 +339,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     updateText();
     Image image = myDecorator.getToolWindow().getIcon();
     setIcon(TargetAWT.to(image));
-    setDisabledIcon(TargetAWT.to(ImageEffects.grayed(image)));
+    setDisabledIcon(image == null ? null : TargetAWT.to(ImageEffects.grayed(image)));
   }
 
   private void updateText() {
