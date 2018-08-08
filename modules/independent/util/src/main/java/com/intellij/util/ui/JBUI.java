@@ -7,6 +7,7 @@ import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.util.Function;
 import com.intellij.util.LazyInitializer.NotNullValue;
 import com.intellij.util.LazyInitializer.NullableValue;
 import com.intellij.util.ObjectUtils;
@@ -14,8 +15,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.util.ui.components.VerticalLayoutPanel;
 import gnu.trove.TDoubleObjectHashMap;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -29,6 +30,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.intellij.util.ui.JBUI.ScaleType.*;
 
@@ -998,6 +1000,45 @@ public class JBUI {
     public String toString() {
       return usrScale + ", " + objScale + ", " + pixScale;
     }
+
+    /**
+     * A cache for the last usage of a data object matching a scale context.
+     *
+     * @param <D> the data type
+     * @param <S> the context type
+     */
+    public static class Cache<D, S extends BaseScaleContext> {
+      private final Function<S, D> myDataProvider;
+      private final AtomicReference<Pair<Double, D>> myData = new AtomicReference<Pair<Double, D>>(null);
+
+      /**
+       * @param dataProvider provides a data object matching the passed scale context
+       */
+      public Cache(@Nonnull Function<S, D> dataProvider) {
+        this.myDataProvider = dataProvider;
+      }
+
+      /**
+       * Retunrs the data object from the cache if it matches the {@code ctx},
+       * otherwise provides the new data via the provider and caches it.
+       */
+      @Nullable
+      public D getOrProvide(@Nonnull S ctx) {
+        Pair<Double, D> data = myData.get();
+        double scale = ctx.getScale(PIX_SCALE);
+        if (data == null || Double.compare(scale, data.first) != 0) {
+          myData.set(data = Pair.create(scale, myDataProvider.fun(ctx)));
+        }
+        return data.second;
+      }
+
+      /**
+       * Clears the cache.
+       */
+      public void clear() {
+        myData.set(null);
+      }
+    }
   }
 
   /**
@@ -1206,6 +1247,12 @@ public class JBUI {
     @Override
     public String toString() {
       return usrScale + ", " + sysScale + ", " + objScale + ", " + pixScale;
+    }
+
+    public static class Cache<D> extends BaseScaleContext.Cache<D, ScaleContext> {
+      public Cache(@Nonnull Function<ScaleContext, D> dataProvider) {
+        super(dataProvider);
+      }
     }
   }
 
