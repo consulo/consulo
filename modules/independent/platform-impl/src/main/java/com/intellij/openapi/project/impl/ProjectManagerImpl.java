@@ -866,7 +866,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
       beforeWrite.set(Boolean.FALSE);
 
-      AccessRule.write(() -> {
+      AccessRule.writeAsync(() -> {
         removeFromOpened(project);
 
         fireProjectClosed(project);

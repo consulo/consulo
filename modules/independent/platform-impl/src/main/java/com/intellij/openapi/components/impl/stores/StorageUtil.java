@@ -173,7 +173,7 @@ public class StorageUtil {
                                            @Nullable final VirtualFile fileRef,
                                            @Nonnull BufferExposingByteArrayOutputStream content,
                                            @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
-    return AccessRule.write(() -> {
+    return AccessRule.writeAsync(() -> {
       VirtualFile virtualFile = fileRef;
 
       if (file != null && (virtualFile == null || !virtualFile.isValid())) {

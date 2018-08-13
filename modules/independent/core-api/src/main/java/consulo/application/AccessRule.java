@@ -48,7 +48,8 @@ public final class AccessRule {
   }
 
   @SuppressWarnings("deprecation")
-  public static AsyncResult<Void> write(@Nonnull ThrowableRunnable<Throwable> action) {
+  @Nonnull
+  public static AsyncResult<Void> writeAsync(@Nonnull ThrowableRunnable<Throwable> action) {
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
 
     Application application = Application.get();
@@ -77,8 +78,8 @@ public final class AccessRule {
   }
 
   @SuppressWarnings("deprecation")
-  public static <T> AsyncResult<T> write(@Nonnull ThrowableComputable<T, Throwable> action) {
-
+  @Nonnull
+  public static <T> AsyncResult<T> writeAsync(@Nonnull ThrowableComputable<T, Throwable> action) {
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
 
     Application application = Application.get();

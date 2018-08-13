@@ -62,7 +62,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
     final VirtualFile[] files = getFiles(e);
     if (project == null || files == null || files.length == 0) return;
 
-    AccessRule.write(() -> {
+    AccessRule.writeAsync(() -> {
       for (VirtualFile file : files) {
         final VirtualFileSystem fs = file.getFileSystem();
         if (fs instanceof LocalFileSystem && file instanceof NewVirtualFile) {

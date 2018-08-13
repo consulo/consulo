@@ -61,19 +61,19 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @RequiredDispatchThread
   @Override
   public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    return AccessRule.<T>write(computation::compute).getResultSync(-1);
+    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
   }
 
   @RequiredDispatchThread
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return AccessRule.<T>write(computation::compute).getResultSync(-1);
+    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
   }
 
   @RequiredDispatchThread
   @Override
   public void runWriteAction(@Nonnull Runnable action) {
-    AccessRule.write(action::run).getResultSync(-1);
+    AccessRule.writeAsync(action::run).getResultSync(-1);
   }
 
   @Override
