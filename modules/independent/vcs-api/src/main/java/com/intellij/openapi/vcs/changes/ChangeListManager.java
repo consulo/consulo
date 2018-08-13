@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -25,10 +24,10 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.List;
 public abstract class ChangeListManager implements ChangeListModification {
   @Nonnull
   public static ChangeListManager getInstance(Project project) {
-    return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ChangeListManager.class);
+    return project.getComponent(ChangeListManager.class);
   }
 
   public abstract void scheduleUpdate();

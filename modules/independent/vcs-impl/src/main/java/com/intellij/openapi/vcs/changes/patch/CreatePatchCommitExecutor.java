@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.changes.patch;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.ShowFilePathAction;
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ProjectComponent;
@@ -63,7 +62,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
   public String PATCH_PATH = "";
 
   public static CreatePatchCommitExecutor getInstance(Project project) {
-    return PeriodicalTasksCloser.getInstance().safeGetComponent(project, CreatePatchCommitExecutor.class);
+    return project.getComponent(CreatePatchCommitExecutor.class);
   }
 
   public CreatePatchCommitExecutor(final Project project, final ChangeListManager changeListManager) {

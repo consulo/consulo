@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.*;
@@ -184,7 +183,7 @@ public class RollbackWorker {
         public void run() {
           action.finish();
           LocalHistory.getInstance().putSystemLabel(myProject, (myLocalHistoryActionName == null) ? myOperationName : myLocalHistoryActionName, -1);
-          final VcsDirtyScopeManager manager = PeriodicalTasksCloser.getInstance().safeGetComponent(project, VcsDirtyScopeManager.class);
+          final VcsDirtyScopeManager manager = project.getComponent(VcsDirtyScopeManager.class);
           VcsGuess vcsGuess = new VcsGuess(myProject);
 
           for (Change change : changesToRefresh) {

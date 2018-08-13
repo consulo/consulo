@@ -27,7 +27,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
 import com.intellij.ide.util.treeView.TreeState;
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -96,7 +95,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   private final Map<Pair<String, String>, String> myMoveRenameInfo;
 
   public static ShelvedChangesViewManager getInstance(Project project) {
-    return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ShelvedChangesViewManager.class);
+    return project.getComponent(ShelvedChangesViewManager.class);
   }
 
   public ShelvedChangesViewManager(Project project, ChangesViewContentManager contentManager, ShelveChangesManager shelveChangesManager,

@@ -17,7 +17,6 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -62,7 +61,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
   private final ProjectLevelVcsManager myVcsManager;
 
   public static ChangesViewContentI getInstance(Project project) {
-    return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ChangesViewContentI.class);
+    return project.getComponent(ChangesViewContentI.class);
   }
 
   private ContentManager myContentManager;

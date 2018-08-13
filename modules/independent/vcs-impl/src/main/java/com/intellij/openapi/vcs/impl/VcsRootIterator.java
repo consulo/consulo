@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Comparing;
@@ -40,7 +40,7 @@ public class VcsRootIterator {
   public VcsRootIterator(final Project project, final AbstractVcs vcs) {
     final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
     myOtherVcsFolders = new HashMap<String, MyRootFilter>();
-    myExcludedFileIndex = PeriodicalTasksCloser.getInstance().safeGetService(project, FileIndexFacade.class);
+    myExcludedFileIndex = ServiceManager.getService(project, FileIndexFacade.class);
 
     final VcsRoot[] allRoots = plVcsManager.getAllVcsRoots();
     final VirtualFile[] roots = plVcsManager.getRootsUnderVcs(vcs);
@@ -162,7 +162,7 @@ public class VcsRootIterator {
       if (myRootPresentFilter != null) {
         myRootPresentFilter.init(ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots());
       }
-      myExcludedFileIndex = PeriodicalTasksCloser.getInstance().safeGetService(project, FileIndexFacade.class);
+      myExcludedFileIndex = ServiceManager.getService(project, FileIndexFacade.class);
     }
 
     public void iterate() {

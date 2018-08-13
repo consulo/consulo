@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
@@ -135,7 +134,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   private final Collection<LocalChangeList> myListsToBeDeleted = new HashSet<>();
 
   public static ChangeListManagerImpl getInstanceImpl(final Project project) {
-    return (ChangeListManagerImpl)PeriodicalTasksCloser.getInstance().safeGetComponent(project, ChangeListManager.class);
+    return (ChangeListManagerImpl)project.getComponent(ChangeListManager.class);
   }
 
   void setDirtyScopeManager(VcsDirtyScopeManager dirtyScopeManager) {

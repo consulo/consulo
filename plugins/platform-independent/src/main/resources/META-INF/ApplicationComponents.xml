@@ -234,16 +234,10 @@
     <component>
       <implementation-class>com.intellij.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter</implementation-class>
     </component>
-    <component>
-      <implementation-class>com.intellij.lifecycle.PeriodicalTasksCloser</implementation-class>
-    </component>
+
     <component>
       <interface-class>com.intellij.execution.ExecutorRegistry</interface-class>
       <implementation-class>com.intellij.execution.ExecutorRegistryImpl</implementation-class>
-    </component>
-    <component>
-      <interface-class>com.intellij.execution.RunnerRegistry</interface-class>
-      <implementation-class>com.intellij.execution.impl.RunnerRegistryImpl</implementation-class>
     </component>
 
     <component>
@@ -257,11 +251,6 @@
       <compiler-server-implementation-class>consulo.compiler.server.compiler.TranslatingCompilerFilesMonitorImpl</compiler-server-implementation-class>
     </component>
 
-    <component>
-      <interface-class>consulo.compiler.server.rmi.CompilerServerConnector</interface-class>
-      <implementation-class>consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
-      <compiler-server-implementation-class></compiler-server-implementation-class>
-    </component>
     <component>
       <implementation-class>consulo.bundle.impl.PredefinedBundlesLoader</implementation-class>
     </component>

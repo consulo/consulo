@@ -1225,6 +1225,8 @@
 
     <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings" />
 
+    <applicationService serviceInterface="com.intellij.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl" />
+
     <undoProvider implementation="com.intellij.openapi.command.impl.FileUndoProvider"/>
     <projectUndoProvider implementation="com.intellij.openapi.command.impl.FileUndoProvider"/>
 

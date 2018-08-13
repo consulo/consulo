@@ -16,15 +16,14 @@
 
 package com.intellij.openapi.vcs;
 
-import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -43,7 +42,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
           Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
 
   public static IssueNavigationConfiguration getInstance(Project project) {
-    return PeriodicalTasksCloser.getInstance().safeGetService(project, IssueNavigationConfiguration.class);
+    return ServiceManager.getService(project, IssueNavigationConfiguration.class);
   }
 
   private List<IssueNavigationLink> myLinks = new ArrayList<>();

@@ -17,14 +17,14 @@ package com.intellij.execution;
 
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.ServiceManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class RunnerRegistry implements ApplicationComponent {
+public abstract class RunnerRegistry {
   public static RunnerRegistry getInstance() {
-    return ApplicationManager.getApplication().getComponent(RunnerRegistry.class);
+    return ServiceManager.getService(RunnerRegistry.class);
   }
 
   public abstract boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings);
@@ -34,6 +34,6 @@ public abstract class RunnerRegistry implements ApplicationComponent {
 
   public abstract ProgramRunner[] getRegisteredRunners();
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract ProgramRunner findRunnerById(String id);
 }

@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.lifecycle.PeriodicalTasksCloser;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -116,7 +116,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   @Override
   @javax.annotation.Nullable
   public VirtualFile getVcsRootFor(@Nonnull VirtualFile file) {
-    FileIndexFacade indexFacade = PeriodicalTasksCloser.getInstance().safeGetService(myProject, FileIndexFacade.class);
+    FileIndexFacade indexFacade = ServiceManager.getService(myProject, FileIndexFacade.class);
     if (myBaseDir != null && indexFacade.isValidAncestor(myBaseDir, file)) {
       LOG.debug("File " + file + " is under project base dir " + myBaseDir);
       return myBaseDir;
