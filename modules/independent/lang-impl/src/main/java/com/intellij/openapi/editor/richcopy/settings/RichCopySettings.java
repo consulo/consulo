@@ -26,11 +26,8 @@ import javax.annotation.Nullable;
  * @author Denis Zhdanov
  * @since 3/26/13 6:40 PM
  */
-@State(
-  name = "EditorRichCopySettings",
-  storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")}
-)
-public class RichCopySettings extends ApplicationComponent.Adapter implements PersistentStateComponent<RichCopySettings>, ApplicationComponent {
+@State(name = "EditorRichCopySettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")})
+public class RichCopySettings implements PersistentStateComponent<RichCopySettings>, ApplicationComponent {
 
   @Nonnull
   public static final String ACTIVE_GLOBAL_SCHEME_MARKER = "__ACTIVE_GLOBAL_SCHEME__";

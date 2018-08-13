@@ -69,7 +69,7 @@ import java.util.stream.Collectors;
     @Storage(file = StoragePathMacros.APP_CONFIG + "/proxy.settings.xml")
   }
 )
-public class HttpConfigurable extends ApplicationComponent.Adapter implements PersistentStateComponent<HttpConfigurable>, Disposable {
+public class HttpConfigurable implements ApplicationComponent, PersistentStateComponent<HttpConfigurable>, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.net.HttpConfigurable");
   private static final File PROXY_CREDENTIALS_FILE = new File(PathManager.getOptionsPath(), "proxy.settings.pwd");
   public static final int CONNECTION_TIMEOUT = SystemProperties.getIntProperty("idea.connection.timeout", 10000);
