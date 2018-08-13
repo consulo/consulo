@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 /**
  * @author Dmitry Avdeev
  */
+@Deprecated
 public abstract class AbstractProjectComponent implements ProjectComponent {
   protected final Project myProject;
 

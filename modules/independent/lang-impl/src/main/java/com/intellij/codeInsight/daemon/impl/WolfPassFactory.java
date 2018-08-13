@@ -19,42 +19,32 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author cdr
 */
-public class WolfPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
+public class WolfPassFactory  implements TextEditorHighlightingPassFactory {
   private long myPsiModificationCount;
 
-  public WolfPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, new int[]{Pass.LOCAL_INSPECTIONS}, false, Pass.WOLF);
-  }
-
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "WolfPassFactory";
+  public void register(@Nonnull Registrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, new int[]{Pass.LOCAL_INSPECTIONS}, false, Pass.WOLF);
   }
 
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    final long psiModificationCount = PsiManager.getInstance(myProject).getModificationTracker().getModificationCount();
+    final long psiModificationCount = PsiManager.getInstance(file.getProject()).getModificationTracker().getModificationCount();
     if (psiModificationCount == myPsiModificationCount) {
       return null; //optimization
     }
-    return new WolfHighlightingPass(myProject, editor.getDocument(), file){
+    return new WolfHighlightingPass(file.getProject(), editor.getDocument(), file){
       @Override
       protected void applyInformationWithProgress() {
         super.applyInformationWithProgress();

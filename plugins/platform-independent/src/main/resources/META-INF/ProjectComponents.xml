@@ -151,66 +151,16 @@
       <implementation-class>com.intellij.codeInsight.daemon.impl.EditorTracker</implementation-class>
       <loadForDefaultProject/>
     </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.refactoring.changeSignature.inplace.ChangeSignaturePassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.IndentsPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
+
+
+
+
+
     <component>
       <implementation-class>com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory</implementation-class>
       <skipForDefaultProject/>
     </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.WolfPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.hints.ParameterHintsPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory</implementation-class>
-      <skipForDefaultProject/>
-    </component>
+
 
     <component>
       <interface-class>com.intellij.codeInsight.template.TemplateManager</interface-class>

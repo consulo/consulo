@@ -18,6 +18,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
+import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -27,8 +28,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
       return Collections.emptyList();
     }
 
-    TextEditorHighlightingPassRegistrarEx passRegistrar = TextEditorHighlightingPassRegistrarEx.getInstanceEx(myProject);
+    TextEditorHighlightingPassManager passRegistrar = TextEditorHighlightingPassManager.getInstance(myProject);
 
     return passRegistrar.instantiatePasses(myFile, myEditor, passesToIgnore);
   }

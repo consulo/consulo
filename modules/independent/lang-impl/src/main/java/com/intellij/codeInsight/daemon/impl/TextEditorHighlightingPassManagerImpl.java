@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.*;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -26,9 +27,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,17 +38,7 @@ import java.util.List;
  * User: anna
  * Date: 19-Apr-2006
  */
-public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlightingPassRegistrarEx {
-  private final TIntObjectHashMap<PassConfig> myRegisteredPassFactories = new TIntObjectHashMap<>();
-  private final List<DirtyScopeTrackingHighlightingPassFactory> myDirtyScopeTrackingFactories = new ArrayList<>();
-  private int nextAvailableId = Pass.LAST_PASS + 1;
-  private boolean checkedForCycles;
-  private final Project myProject;
-
-  public TextEditorHighlightingPassRegistrarImpl(Project project) {
-    myProject = project;
-  }
-
+public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightingPassManager {
   private static class PassConfig {
     private final TextEditorHighlightingPassFactory passFactory;
     private final int[] startingPredecessorIds;
@@ -60,40 +51,51 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
     }
   }
 
-  @Override
-  public void registerTextEditorHighlightingPass(TextEditorHighlightingPassFactory factory, int anchor, int anchorPass) {
-    Anchor anc = Anchor.FIRST;
-    switch (anchor) {
-      case FIRST : anc = Anchor.FIRST;
-        break;
-      case LAST : anc = Anchor.LAST;
-        break;
-      case BEFORE : anc = Anchor.BEFORE;
-        break;
-      case AFTER : anc = Anchor.AFTER;
-        break;
+  class RegistrarImpl implements TextEditorHighlightingPassFactory.Registrar {
+    @Override
+    public int registerTextEditorHighlightingPass(@Nonnull TextEditorHighlightingPassFactory factory,
+                                                  @Nullable int[] runAfterCompletionOf,
+                                                  @Nullable int[] runAfterOfStartingOf,
+                                                  boolean runIntentionsPassAfter,
+                                                  int forcedPassId) {
+      assert !checkedForCycles;
+      PassConfig info = new PassConfig(factory, runAfterCompletionOf == null || runAfterCompletionOf.length == 0 ? ArrayUtil.EMPTY_INT_ARRAY : runAfterCompletionOf,
+                                       runAfterOfStartingOf == null || runAfterOfStartingOf.length == 0 ? ArrayUtil.EMPTY_INT_ARRAY : runAfterOfStartingOf);
+      int passId = forcedPassId == -1 ? nextAvailableId++ : forcedPassId;
+      PassConfig registered = myRegisteredPassFactories.get(passId);
+      assert registered == null : "Pass id " + passId + " has already been registered in: " + registered.passFactory;
+      myRegisteredPassFactories.put(passId, info);
+      if (factory instanceof DirtyScopeTrackingHighlightingPassFactory) {
+        myDirtyScopeTrackingFactories.add((DirtyScopeTrackingHighlightingPassFactory)factory);
+      }
+      return passId;
     }
-    registerTextEditorHighlightingPass(factory, anc, anchorPass, true, true);
   }
 
-  @Override
-  public synchronized int registerTextEditorHighlightingPass(@Nonnull TextEditorHighlightingPassFactory factory,
-                                                             @Nullable int[] runAfterCompletionOf,
-                                                             @Nullable int[] runAfterOfStartingOf,
-                                                             boolean runIntentionsPassAfter,
-                                                             int forcedPassId) {
-    assert !checkedForCycles;
-    PassConfig info = new PassConfig(factory,
-                                     runAfterCompletionOf == null || runAfterCompletionOf.length == 0 ? ArrayUtil.EMPTY_INT_ARRAY : runAfterCompletionOf,
-                                     runAfterOfStartingOf == null || runAfterOfStartingOf.length == 0 ? ArrayUtil.EMPTY_INT_ARRAY : runAfterOfStartingOf);
-    int passId = forcedPassId == -1 ? nextAvailableId++ : forcedPassId;
-    PassConfig registered = myRegisteredPassFactories.get(passId);
-    assert registered == null: "Pass id "+passId +" has already been registered in: "+ registered.passFactory;
-    myRegisteredPassFactories.put(passId, info);
-    if (factory instanceof DirtyScopeTrackingHighlightingPassFactory) {
-      myDirtyScopeTrackingFactories.add((DirtyScopeTrackingHighlightingPassFactory) factory);
+  private static final Logger LOG = Logger.getInstance(TextEditorHighlightingPassManagerImpl.class);
+
+  private final TIntObjectHashMap<PassConfig> myRegisteredPassFactories = new TIntObjectHashMap<>();
+  private final List<DirtyScopeTrackingHighlightingPassFactory> myDirtyScopeTrackingFactories = new ArrayList<>();
+  private int nextAvailableId = Pass.LAST_PASS + 1;
+  private boolean checkedForCycles;
+  private final Project myProject;
+
+  public TextEditorHighlightingPassManagerImpl(Project project) {
+    myProject = project;
+
+    if (myProject.isDefault()) {
+      return;
     }
-    return passId;
+
+    RegistrarImpl impl = new RegistrarImpl();
+
+    for (TextEditorHighlightingPassFactory factory : TextEditorHighlightingPassFactory.EP_NAME.getExtensions(myProject)) {
+      int old = myRegisteredPassFactories.size();
+      factory.register(impl);
+      if (old == myRegisteredPassFactories.size()) {
+        LOG.error(factory.getClass().getName() + " is not registered to manager");
+      }
+    }
   }
 
   @Override
@@ -111,7 +113,13 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
     if (!(fileFromDoc instanceof PsiCompiledElement)) {
       assert fileFromDoc == psiFile : "Files are different: " + psiFile + ";" + fileFromDoc;
       Document documentFromFile = documentManager.getDocument(psiFile);
-      assert documentFromFile == document : "Documents are different. Doc: " + document + "; Doc from file: " + documentFromFile +"; File: "+psiFile +"; Virtual file: "+
+      assert documentFromFile == document : "Documents are different. Doc: " +
+                                            document +
+                                            "; Doc from file: " +
+                                            documentFromFile +
+                                            "; File: " +
+                                            psiFile +
+                                            "; Virtual file: " +
                                             PsiUtilCore.getVirtualFile(psiFile);
     }
     final TIntObjectHashMap<TextEditorHighlightingPass> id2Pass = new TIntObjectHashMap<>();
@@ -165,9 +173,7 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
 
   @Nonnull
   @Override
-  public List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull final PsiFile psiFile,
-                                                                @Nonnull final Document document,
-                                                                @Nonnull final HighlightInfoProcessor highlightInfoProcessor) {
+  public List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull final PsiFile psiFile, @Nonnull final Document document, @Nonnull final HighlightInfoProcessor highlightInfoProcessor) {
     final THashSet<TextEditorHighlightingPass> ids = new THashSet<>();
     myRegisteredPassFactories.forEachKey(new TIntProcedure() {
       @Override
@@ -200,7 +206,7 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
           @Override
           public boolean execute(int predecessorId) {
             PassConfig predecessor = myRegisteredPassFactories.get(predecessorId);
-            if (predecessor == null) return  true;
+            if (predecessor == null) return true;
             TIntHashSet transitives = transitivePredecessors.get(predecessorId);
             if (transitives == null) {
               transitives = new TIntHashSet();

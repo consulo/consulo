@@ -25,34 +25,24 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author cdr
 */
-public class ShowAutoImportPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
-  public ShowAutoImportPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL,}, null, false, -1);
-  }
-
+public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFactory {
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ShowAutoImportPassFactory";
+  public void register(@Nonnull Registrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL,}, null, false, -1);
   }
 
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    return new ShowAutoImportPass(myProject, file, editor);
+    return new ShowAutoImportPass(file.getProject(), file, editor);
   }
 }

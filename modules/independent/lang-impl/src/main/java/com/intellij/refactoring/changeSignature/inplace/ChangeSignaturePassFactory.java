@@ -17,12 +17,10 @@ package com.intellij.refactoring.changeSignature.inplace;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.UpdateHighlightersUtil;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -34,16 +32,16 @@ import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Collections;
 
-public class ChangeSignaturePassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
-  public ChangeSignaturePassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, null, null, true, -1);
+public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFactory {
+  @Override
+  public void register(@Nonnull Registrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, null, null, true, -1);
   }
 
   @Override

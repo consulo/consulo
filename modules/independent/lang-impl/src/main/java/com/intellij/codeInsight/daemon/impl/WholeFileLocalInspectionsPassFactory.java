@@ -19,15 +19,16 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.profile.Profile;
@@ -37,10 +38,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,28 +49,29 @@ import java.util.stream.Collectors;
 /**
  * @author cdr
  */
-public class WholeFileLocalInspectionsPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
+public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlightingPassFactory {
   private final Map<PsiFile, Boolean> myFileToolsCache = ContainerUtil.createConcurrentWeakMap();
+  private final Project myProject;
   private final InspectionProjectProfileManager myProfileManager;
+
   private volatile long myPsiModificationCount;
 
-  public WholeFileLocalInspectionsPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar,
-                                              final InspectionProjectProfileManager profileManager) {
-    super(project);
-    // can run in the same time with LIP, but should start after it, since I believe whole-file inspections would run longer
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.LOCAL_INSPECTIONS}, true, Pass.WHOLE_FILE_LOCAL_INSPECTIONS);
+  @Inject
+  public WholeFileLocalInspectionsPassFactory(Application application, Project project, InspectionProjectProfileManager profileManager) {
+    myProject = project;
     myProfileManager = profileManager;
+
+    application.getMessageBus().connect(project).subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        if(myProject == project) {
+          WholeFileLocalInspectionsPassFactory.this.projectOpened();
+        }
+      }
+    });
   }
 
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "WholeFileLocalInspectionsPassFactory";
-  }
-
-  @Override
-  public void projectOpened() {
+  private void projectOpened() {
     final ProfileChangeAdapter myProfilesListener = new ProfileChangeAdapter() {
       @Override
       public void profileChanged(Profile profile) {
@@ -86,6 +88,11 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
   }
 
   @Override
+  public void register(@Nonnull Registrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.LOCAL_INSPECTIONS}, true, Pass.WHOLE_FILE_LOCAL_INSPECTIONS);
+  }
+
+  @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
     final long psiModificationCount = PsiManager.getInstance(myProject).getModificationTracker().getModificationCount();
@@ -97,8 +104,7 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
       return null;
     }
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
-    return new LocalInspectionsPass(file, editor.getDocument(), 0, file.getTextLength(), visibleRange, true,
-                                    new DefaultHighlightInfoProcessor()) {
+    return new LocalInspectionsPass(file, editor.getDocument(), 0, file.getTextLength(), visibleRange, true, new DefaultHighlightInfoProcessor()) {
       @Nonnull
       @Override
       List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {

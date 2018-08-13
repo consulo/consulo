@@ -19,33 +19,23 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author cdr
 */
-public class IndentsPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
-  public IndentsPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, TextEditorHighlightingPassRegistrar.Anchor.BEFORE, Pass.UPDATE_FOLDING, false, false);
-  }
-
+public class IndentsPassFactory implements TextEditorHighlightingPassFactory {
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "IndentsPassFactory";
+  public void register(@Nonnull Registrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, Registrar.Anchor.BEFORE, Pass.UPDATE_FOLDING, false);
   }
 
   @Override
   @Nonnull
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    return new IndentsPass(myProject, editor, file);
+    return new IndentsPass(file.getProject(), editor, file);
   }
 }

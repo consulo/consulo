@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,32 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.daemon.impl;
+package com.intellij.codeHighlighting;
 
-import com.intellij.codeHighlighting.DirtyScopeTrackingHighlightingPassFactory;
-import com.intellij.codeHighlighting.TextEditorHighlightingPass;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
+import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * User: anna
- * Date: 21-Jun-2006
+ * Date: 20-Apr-2006
  */
-public abstract class TextEditorHighlightingPassRegistrarEx extends TextEditorHighlightingPassRegistrar {
-
-  public static TextEditorHighlightingPassRegistrarEx getInstanceEx(Project project) {
-    return (TextEditorHighlightingPassRegistrarEx)getInstance(project);
+public abstract class TextEditorHighlightingPassManager {
+  public static TextEditorHighlightingPassManager getInstance(Project project) {
+    return ServiceManager.getService(project, TextEditorHighlightingPassManager.class);
   }
 
   @Nonnull
   public abstract List<TextEditorHighlightingPass> instantiatePasses(@Nonnull PsiFile psiFile, @Nonnull Editor editor, @Nonnull int[] passesToIgnore);
+
   @Nonnull
-  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile,
-                                                                         @Nonnull Document document,
-                                                                         @Nonnull HighlightInfoProcessor highlightInfoProcessor);
+  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull HighlightInfoProcessor highlightInfoProcessor);
 
   @Nonnull
   public abstract List<DirtyScopeTrackingHighlightingPassFactory> getDirtyScopeTrackingFactories();

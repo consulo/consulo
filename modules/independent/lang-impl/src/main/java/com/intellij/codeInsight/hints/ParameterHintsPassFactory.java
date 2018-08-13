@@ -18,14 +18,12 @@ package com.intellij.codeInsight.hints;
 import com.intellij.codeHighlighting.EditorBoundHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
 import com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager;
 import com.intellij.codeInsight.hints.filtering.Matcher;
 import com.intellij.codeInsight.hints.filtering.MatcherConstructor;
 import com.intellij.codeInsight.hints.settings.Diff;
 import com.intellij.codeInsight.hints.settings.ParameterNameHintsSettings;
 import com.intellij.lang.Language;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.Inlay;
@@ -33,7 +31,6 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.CaretVisualPositionKeeper;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -42,17 +39,17 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import consulo.annotations.RequiredReadAction;
 import gnu.trove.TIntObjectHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ParameterHintsPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
+public class ParameterHintsPassFactory implements TextEditorHighlightingPassFactory {
   private static final Key<Boolean> REPEATED_PASS = Key.create("RepeatedParameterHintsPass");
 
-  public ParameterHintsPassFactory(Project project, TextEditorHighlightingPassRegistrar registrar) {
-    super(project);
+  @Override
+  public void register(@Nonnull Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, null, null, false, -1);
   }
 

@@ -19,41 +19,31 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.MainHighlightingPassFactory;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
-import com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author cdr
  */
-public class LocalInspectionsPassFactory extends AbstractProjectComponent implements MainHighlightingPassFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory");
-  public LocalInspectionsPassFactory(Project project, TextEditorHighlightingPassRegistrar highlightingPassRegistrar) {
-    super(project);
-    highlightingPassRegistrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, ArrayUtil.EMPTY_INT_ARRAY, true, Pass.LOCAL_INSPECTIONS);
-  }
+public class LocalInspectionsPassFactory implements MainHighlightingPassFactory {
+  private static final Logger LOG = Logger.getInstance(LocalInspectionsPassFactory.class);
 
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "LocalInspectionsPassFactory";
+  public void register(@Nonnull Registrar registrar) {
+    registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, ArrayUtil.EMPTY_INT_ARRAY, true, Pass.LOCAL_INSPECTIONS);
   }
 
   @Override
@@ -61,7 +51,7 @@ public class LocalInspectionsPassFactory extends AbstractProjectComponent implem
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
     TextRange textRange = calculateRangeToProcess(editor);
     if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()){
-      return new ProgressableTextEditorHighlightingPass.EmptyPass(myProject, editor.getDocument());
+      return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), editor.getDocument());
     }
     TextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
     return new MyLocalInspectionsPass(file, editor.getDocument(), textRange, visibleRange, new DefaultHighlightInfoProcessor());

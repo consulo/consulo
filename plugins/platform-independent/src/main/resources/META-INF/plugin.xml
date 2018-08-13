@@ -146,7 +146,7 @@
 
     <extensionPoint name="getDataRule" interface="com.intellij.ide.impl.dataRules.GetDataRule"/>
 
-    <extensionPoint name="dataValidator" interface="com.intellij.ide.impl.DataValidator" />
+    <extensionPoint name="dataValidator" interface="com.intellij.ide.impl.DataValidator"/>
 
     <extensionPoint name="cutElementMarker"
                     interface="com.intellij.openapi.ide.CutElementMarker"/>
@@ -1173,9 +1173,11 @@
     <extensionPoint name="remote.credentialsLanguageContribution"
                     interface="com.intellij.remote.ext.CredentialsLanguageContribution"/>
 
-    <extensionPoint name="fileChooseDialogProvider" interface="consulo.ui.fileOperateDialog.FileChooseDialogProvider" />
-    <extensionPoint name="fileSaveDialogProvider" interface="consulo.ui.fileOperateDialog.FileSaveDialogProvider" />
+    <extensionPoint name="fileChooseDialogProvider" interface="consulo.ui.fileOperateDialog.FileChooseDialogProvider"/>
+    <extensionPoint name="fileSaveDialogProvider" interface="consulo.ui.fileOperateDialog.FileSaveDialogProvider"/>
     <extensionPoint name="uiDecorator" interface="consulo.ui.UIDecorator"/>
+
+    <extensionPoint name="textEditorHighlightingPassFactory" area="PROJECT" interface="com.intellij.codeHighlighting.TextEditorHighlightingPassFactory"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1348,7 +1350,7 @@
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
 
-    <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings" />
+    <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
@@ -1850,8 +1852,8 @@
                     serviceImplementation="com.intellij.find.findInProject.FindInProjectManager"/>
     <projectService serviceInterface="com.intellij.find.replaceInProject.ReplaceInProjectManager"
                     serviceImplementation="com.intellij.find.replaceInProject.ReplaceInProjectManager"/>
-    <projectService serviceInterface="com.intellij.codeHighlighting.TextEditorHighlightingPassRegistrar"
-                    serviceImplementation="com.intellij.codeInsight.daemon.impl.TextEditorHighlightingPassRegistrarImpl"/>
+    <projectService serviceInterface="com.intellij.codeHighlighting.TextEditorHighlightingPassManager"
+                    serviceImplementation="com.intellij.codeInsight.daemon.impl.TextEditorHighlightingPassManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.PsiFileFactory"
                     serviceImplementation="com.intellij.psi.impl.PsiFileFactoryImpl"/>
     <projectService serviceInterface="com.intellij.psi.text.BlockSupport"
@@ -2590,5 +2592,21 @@
 
     <idIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.id.PlainTextIndexer"/>
     <todoIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
+
+    <textEditorHighlightingPassFactory implementation="com.intellij.refactoring.changeSignature.inplace.ChangeSignaturePassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.hints.ParameterHintsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IndentsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
   </extensions>
 </idea-plugin>
