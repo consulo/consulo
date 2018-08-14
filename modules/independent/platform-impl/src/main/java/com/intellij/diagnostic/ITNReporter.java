@@ -24,7 +24,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.idea.IdeaLogger;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationListener;
@@ -45,8 +44,9 @@ import com.intellij.util.Consumer;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.webService.WebServiceApi;
-import javax.annotation.Nonnull;
+import consulo.platform.impl.action.LastActionTracker;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
@@ -71,7 +71,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                                    String additionalInfo,
                                    final Component parentComponent,
                                    final Consumer<SubmittedReportInfo> callback) {
-    ErrorBean errorBean = new ErrorBean(event.getThrowable(), IdeaLogger.ourLastActionId);
+    ErrorBean errorBean = new ErrorBean(event.getThrowable(), LastActionTracker.ourLastActionId);
 
     return doSubmit(event, parentComponent, callback, errorBean, additionalInfo);
   }

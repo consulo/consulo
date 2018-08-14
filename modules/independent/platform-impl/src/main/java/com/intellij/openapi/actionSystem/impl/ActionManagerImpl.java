@@ -24,7 +24,6 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.idea.IdeaLogger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -55,6 +54,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.extensions.ListOfElementsEP;
+import consulo.platform.impl.action.LastActionTracker;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
@@ -1132,7 +1132,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       myPrevPerformedActionId = myLastPreformedActionId;
       myLastPreformedActionId = getId(action);
       //noinspection AssignmentToStaticFieldFromInstanceMethod
-      IdeaLogger.ourLastActionId = myLastPreformedActionId;
+      LastActionTracker.ourLastActionId = myLastPreformedActionId;
     }
     for (AnActionListener listener : myActionListeners) {
       listener.beforeActionPerformed(action, dataContext, event);
@@ -1145,7 +1145,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       myPrevPerformedActionId = myLastPreformedActionId;
       myLastPreformedActionId = getId(action);
       //noinspection AssignmentToStaticFieldFromInstanceMethod
-      IdeaLogger.ourLastActionId = myLastPreformedActionId;
+      LastActionTracker.ourLastActionId = myLastPreformedActionId;
     }
     for (AnActionListener listener : myActionListeners) {
       try {

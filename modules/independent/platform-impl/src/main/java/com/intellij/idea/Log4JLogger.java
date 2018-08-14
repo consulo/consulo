@@ -25,6 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ex.ApplicationEx2;
+import consulo.platform.impl.action.LastActionTracker;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -32,17 +33,14 @@ import javax.annotation.Nullable;
 /**
  * @author Mike
  */
-@SuppressWarnings({"HardCodedStringLiteral"})
-public class IdeaLogger extends Logger {
+public class Log4JLogger extends Logger {
   private static ApplicationInfoProvider ourApplicationInfoProvider = getIdeaInfoProvider();
-
-  public static String ourLastActionId = "";
 
   private final org.apache.log4j.Logger myLogger;
   /** If not null - it means that errors occurred and it is the first of them. */
   public static Exception ourErrorsOccurred;
 
-  IdeaLogger(org.apache.log4j.Logger logger) {
+  Log4JLogger(org.apache.log4j.Logger logger) {
     myLogger = logger;
   }
 
@@ -117,7 +115,7 @@ public class IdeaLogger extends Logger {
 
     ApplicationEx2 application = (ApplicationEx2)ApplicationManager.getApplication();
     if (application != null && application.isComponentsCreated()) {
-      final String lastPreformedActionId = ourLastActionId;
+      final String lastPreformedActionId = LastActionTracker.ourLastActionId;
       if (lastPreformedActionId != null) {
         myLogger.error("Last Action: " + lastPreformedActionId);
       }

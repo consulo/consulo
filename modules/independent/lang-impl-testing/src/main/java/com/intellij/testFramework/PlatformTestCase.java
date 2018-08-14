@@ -18,7 +18,7 @@ package com.intellij.testFramework;
 import com.intellij.history.LocalHistory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.IdeaLogger;
+import com.intellij.idea.Log4JLogger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
@@ -139,7 +139,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       ourTestCase = null;
       fail(message);
     }
-    IdeaLogger.ourErrorsOccurred = null;
+    Log4JLogger.ourErrorsOccurred = null;
 
     LOGGER.info(getClass().getName() + ".setUp()");
 
@@ -378,8 +378,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       }
 
       if (!myAssertionsInTestDetected) {
-        if (IdeaLogger.ourErrorsOccurred != null) {
-          result.add(IdeaLogger.ourErrorsOccurred);
+        if (Log4JLogger.ourErrorsOccurred != null) {
+          result.add(Log4JLogger.ourErrorsOccurred);
         }
       }
 
@@ -580,8 +580,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
     runBareRunnable(runnable);
 
-    if (IdeaLogger.ourErrorsOccurred != null) {
-      throw IdeaLogger.ourErrorsOccurred;
+    if (Log4JLogger.ourErrorsOccurred != null) {
+      throw Log4JLogger.ourErrorsOccurred;
     }
 
     if (throwables[0] != null) {
@@ -590,8 +590,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
     // just to make sure all deferred Runnable's to finish
     waitForAllLaters();
-    if (IdeaLogger.ourErrorsOccurred != null) {
-      throw IdeaLogger.ourErrorsOccurred;
+    if (Log4JLogger.ourErrorsOccurred != null) {
+      throw Log4JLogger.ourErrorsOccurred;
     }
 
     /*

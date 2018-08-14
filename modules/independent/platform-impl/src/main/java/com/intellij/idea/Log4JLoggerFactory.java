@@ -26,21 +26,20 @@ import org.apache.log4j.xml.DOMConfigurator;
 import java.io.File;
 import java.io.StringReader;
 
-@SuppressWarnings({"CallToPrintStackTrace", "UseOfSystemOutOrSystemErr"})
-public class LoggerFactory implements Logger.Factory {
+public class Log4JLoggerFactory implements Logger.Factory {
   private static final String SYSTEM_MACRO = "$SYSTEM_DIR$";
   private static final String APPLICATION_MACRO = "$APPLICATION_DIR$";
   private static final String LOG_DIR_MACRO = "$LOG_DIR$";
 
   private boolean myInitialized = false;
 
-  private static final LoggerFactory ourInstance = new LoggerFactory();
+  private static final Log4JLoggerFactory ourInstance = new Log4JLoggerFactory();
 
-  public static LoggerFactory getInstance() {
+  public static Log4JLoggerFactory getInstance() {
     return ourInstance;
   }
 
-  private LoggerFactory() { }
+  private Log4JLoggerFactory() { }
 
   @Override
   public synchronized Logger getLoggerInstance(String name) {
@@ -48,7 +47,7 @@ public class LoggerFactory implements Logger.Factory {
       init();
     }
 
-    return new IdeaLogger(org.apache.log4j.Logger.getLogger(name));
+    return new Log4JLogger(org.apache.log4j.Logger.getLogger(name));
   }
 
   private void init() {

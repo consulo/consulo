@@ -31,7 +31,7 @@ import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.IdeaLogger;
+import com.intellij.idea.Log4JLogger;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.Application;
@@ -358,7 +358,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
                              @Nonnull LocalInspectionTool[] localInspectionTools,
                              @Nonnull final Map<String, InspectionToolWrapper> availableInspectionTools) throws Exception {
     assertNull("Previous test " + ourTestCase + " hasn't called tearDown(). Probably overridden without super call.", ourTestCase);
-    IdeaLogger.ourErrorsOccurred = null;
+    Log4JLogger.ourErrorsOccurred = null;
 
     PsiTestExtensionUtil.registerExtensionPointIfNeed(ApplicationLoadListener.EP_NAME, ApplicationLoadListener.class);
 
@@ -572,8 +572,8 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
     assertFalse(PsiManager.getInstance(project).isDisposed());
     if (!ourAssertionsInTestDetected) {
-      if (IdeaLogger.ourErrorsOccurred != null) {
-        throw IdeaLogger.ourErrorsOccurred;
+      if (Log4JLogger.ourErrorsOccurred != null) {
+        throw Log4JLogger.ourErrorsOccurred;
       }
     }
     PsiDocumentManagerImpl documentManager = clearUncommittedDocuments(project);
@@ -687,8 +687,8 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     // just to make sure all deferred Runnables to finish
     UIUtil.invokeAndWaitIfNeeded(EmptyRunnable.getInstance());
 
-    if (IdeaLogger.ourErrorsOccurred != null) {
-      throw IdeaLogger.ourErrorsOccurred;
+    if (Log4JLogger.ourErrorsOccurred != null) {
+      throw Log4JLogger.ourErrorsOccurred;
     }
   }
 

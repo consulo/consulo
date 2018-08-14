@@ -21,6 +21,7 @@ import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
@@ -28,16 +29,14 @@ import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.application.DefaultPaths;
 import gnu.trove.THashSet;
-import org.apache.log4j.Appender;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.jdom.Document;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.picocontainer.PicoContainer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -465,7 +464,7 @@ public class PathManager {
             Nonnull.class,                // module 'annotations'
             SystemInfoRt.class,           // module 'util-rt'
             Document.class,               // jDOM
-            Appender.class,               // log4j
+            ReflectionUtil.forName("org.apache.log4j.Appender"), // log4j
             THashSet.class,               // trove4j
             PicoContainer.class,          // PicoContainer
             TypeMapper.class,             // JNA

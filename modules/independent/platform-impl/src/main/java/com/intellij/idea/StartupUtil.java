@@ -107,7 +107,7 @@ public class StartupUtil {
       System.exit(Main.INSTANCE_CHECK_FAILED);
     }
 
-    Logger.setFactory(LoggerFactory.class);
+    Logger.setFactory(Log4JLoggerFactory.class);
     Logger log = Logger.getInstance(Main.class);
     startLogging(log);
     loadSystemLibraries(log);
