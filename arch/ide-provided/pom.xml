@@ -224,12 +224,6 @@
     </dependency>
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-slf4j-bind</artifactId>
-      <version>${project.parent.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
       <artifactId>consulo-remote-servers-agent-rt</artifactId>
       <version>${project.parent.version}</version>
       <scope>provided</scope>

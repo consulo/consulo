@@ -180,11 +180,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-slf4j-bind</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-remote-servers-agent-rt</artifactId>
       <version>${project.version}</version>
     </dependency>
