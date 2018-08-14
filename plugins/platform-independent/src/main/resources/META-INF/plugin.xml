@@ -1224,6 +1224,7 @@
                         serviceImplementation="com.intellij.openapi.project.DefaultProjectFactoryImpl"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings" />
+    <applicationService serviceImplementation="com.intellij.openapi.actionSystem.impl.MouseGestureManager" />
 
     <applicationService serviceInterface="com.intellij.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl" />
 

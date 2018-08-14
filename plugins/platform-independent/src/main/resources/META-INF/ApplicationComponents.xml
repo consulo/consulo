@@ -167,10 +167,6 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.actionSystem.impl.MouseGestureManager</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.ide.FrameStateManager</interface-class>
       <implementation-class>com.intellij.ide.FrameStateManagerImpl</implementation-class>
     </component>

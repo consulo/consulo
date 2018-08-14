@@ -15,27 +15,25 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
-import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MouseGestureManager implements ApplicationComponent {
-
-  private static final Logger LOG = Logger.getInstance("MouseGestureManager");
-
-  private Map<IdeFrame, Object> myListeners = new HashMap<IdeFrame, Object>();
-  private boolean HAS_TRACKPAD = false;
-
-  public MouseGestureManager() {
+public class MouseGestureManager {
+  public static MouseGestureManager getInstance() {
+    return ServiceManager.getService(MouseGestureManager.class);
   }
+
+  private static final Logger LOG = Logger.getInstance(MouseGestureManager.class);
+
+  private Map<IdeFrame, Object> myListeners = new HashMap<>();
+  private boolean HAS_TRACKPAD = false;
 
   public void add(final IdeFrame frame) {
     if (!Registry.is("actionSystem.mouseGesturesEnabled")) return;
@@ -81,25 +79,5 @@ public class MouseGestureManager implements ApplicationComponent {
       }
     }
 
-  }
-
-  @Override
-  public void initComponent() {
-
-  }
-
-  @Override
-  public void disposeComponent() {
-
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "MouseGestureListener";
-  }
-
-  public static MouseGestureManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(MouseGestureManager.class);
   }
 }
