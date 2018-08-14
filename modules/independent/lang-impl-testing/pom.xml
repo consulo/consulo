@@ -78,11 +78,6 @@
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
     </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <optional>true</optional>
-    </dependency>
     <!--Internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>
