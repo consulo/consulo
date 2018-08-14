@@ -16,12 +16,16 @@
 package consulo.web.boot.util.logger;
 
 import com.intellij.openapi.diagnostic.Logger;
+import consulo.util.logging.LoggerFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 16-May-17
  */
-public class WebLoggerFactory implements Logger.Factory {
+public class WebLoggerFactory implements LoggerFactory {
+  @Nonnull
   @Override
   public Logger getLoggerInstance(String category) {
     return new WebLogger();

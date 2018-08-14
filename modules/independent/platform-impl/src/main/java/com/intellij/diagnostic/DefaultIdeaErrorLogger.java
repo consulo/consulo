@@ -20,30 +20,28 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.ErrorLogger;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.io.MappingFailedException;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author kir
  */
-@SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
-public class DefaultIdeaErrorLogger implements ErrorLogger {
+public class DefaultIdeaErrorLogger {
+  public static DefaultIdeaErrorLogger INSTANCE = new DefaultIdeaErrorLogger();
+
   private static boolean ourOomOccurred = false;
   private static boolean ourLoggerBroken = false;
   private static boolean ourMappingFailedNotificationPosted = false;
 
-  @Override
   public boolean canHandle(IdeaLoggingEvent event) {
     return !ourLoggerBroken;
   }
 
-  @Override
   public void handle(IdeaLoggingEvent event) {
     if (ourLoggerBroken) return;
 

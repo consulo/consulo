@@ -18,12 +18,9 @@ package com.intellij.diagnostic;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.util.containers.ContainerUtil;
-import org.apache.log4j.Category;
-import org.apache.log4j.Priority;
-import org.apache.log4j.spi.LoggingEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -60,8 +57,7 @@ public class MessagePool {
         return message;
       }
     } else if (myIdeFatals.size() == MAX_POOL_SIZE_FOR_FATALS) {
-      String msg = DiagnosticBundle.message("error.monitor.too.many.errors");
-      LogMessage tooMany = new LogMessage(new LoggingEvent(msg, Category.getRoot(), Priority.ERROR, null, new TooManyErrorsException()));
+      LogMessage tooMany = new LogMessage(DiagnosticBundle.message("error.monitor.too.many.errors"), new TooManyErrorsException());
       myFatalsGrouper.addToGroup(tooMany);
       return tooMany;
     }

@@ -18,7 +18,6 @@ package com.intellij.testFramework;
 import com.intellij.history.LocalHistory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.Log4JLogger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
@@ -139,7 +138,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       ourTestCase = null;
       fail(message);
     }
-    Log4JLogger.ourErrorsOccurred = null;
 
     LOGGER.info(getClass().getName() + ".setUp()");
 
@@ -377,12 +375,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
         result.add(e);
       }
 
-      if (!myAssertionsInTestDetected) {
-        if (Log4JLogger.ourErrorsOccurred != null) {
-          result.add(Log4JLogger.ourErrorsOccurred);
-        }
-      }
-
       try {
         super.tearDown();
       }
@@ -580,19 +572,12 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
     runBareRunnable(runnable);
 
-    if (Log4JLogger.ourErrorsOccurred != null) {
-      throw Log4JLogger.ourErrorsOccurred;
-    }
-
     if (throwables[0] != null) {
       throw throwables[0];
     }
 
     // just to make sure all deferred Runnable's to finish
     waitForAllLaters();
-    if (Log4JLogger.ourErrorsOccurred != null) {
-      throw Log4JLogger.ourErrorsOccurred;
-    }
 
     /*
     if (++LEAK_WALKS % 1 == 0) {

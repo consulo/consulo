@@ -37,8 +37,6 @@ public class Log4JLogger extends Logger {
   private static ApplicationInfoProvider ourApplicationInfoProvider = getIdeaInfoProvider();
 
   private final org.apache.log4j.Logger myLogger;
-  /** If not null - it means that errors occurred and it is the first of them. */
-  public static Exception ourErrorsOccurred;
 
   Log4JLogger(org.apache.log4j.Logger logger) {
     myLogger = logger;
@@ -87,12 +85,6 @@ public class Log4JLogger extends Logger {
     }
 
     String detailString = StringUtil.join(details, "\n");
-
-    if (ourErrorsOccurred == null) {
-      String s = message != null && !message.isEmpty() ? "Error message is '" + message + "'" : "";
-      String mess = "Logger errors occurred. See IDEA logs for details. " + s;
-      ourErrorsOccurred = new Exception(mess + (!detailString.isEmpty() ? "\nDetails: " + detailString : ""), t);
-    }
 
     myLogger.error(message + (!detailString.isEmpty() ? "\nDetails: " + detailString : ""), t);
     logErrorHeader();

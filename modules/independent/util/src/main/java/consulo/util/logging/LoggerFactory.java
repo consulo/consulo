@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.diagnostic;
+package consulo.util.logging;
+
+import com.intellij.openapi.diagnostic.Logger;
+
+import javax.annotation.Nonnull;
 
 /**
- * @author kir
+ * @author VISTALL
+ * @since 2018-08-14
  */
-public interface ErrorLogger {
-  boolean canHandle(IdeaLoggingEvent event);
-
-  /** Error event handling occurs in a separate thread. */
-  void handle(IdeaLoggingEvent event);
+public interface LoggerFactory {
+  @Nonnull
+  Logger getLoggerInstance(String category);
 }

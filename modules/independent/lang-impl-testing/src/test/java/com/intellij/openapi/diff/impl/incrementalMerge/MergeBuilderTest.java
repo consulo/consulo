@@ -1,6 +1,5 @@
 package com.intellij.openapi.diff.impl.incrementalMerge;
 
-import com.intellij.idea.Log4JLogger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.util.ContextLogger;
 import com.intellij.openapi.util.TextRange;
@@ -115,20 +114,5 @@ public abstract class MergeBuilderTest extends TestCase {
 
   private List<MergeFragment> finish(int left, int base, int right) {
     return myMergeBuilder.finish(left, base, right);
-  }
-
-  @Override
-  protected void runTest() throws Throwable {
-    try {
-      super.runTest();
-    } finally {
-      if (Log4JLogger.ourErrorsOccurred != null) throw Log4JLogger.ourErrorsOccurred;
-    }
-  }
-
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    Log4JLogger.ourErrorsOccurred = null;
   }
 }

@@ -17,29 +17,26 @@ package com.intellij.openapi.diagnostic;
 
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ExceptionUtil;
+import consulo.util.logging.LoggerFactory;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.lang.reflect.Constructor;
-
 public abstract class Logger {
-  public interface Factory {
-    Logger getLoggerInstance(String category);
-  }
-
-  private static class DefaultFactory implements Factory {
+  private static class DefaultFactory implements LoggerFactory {
+    @Nonnull
     @Override
     public Logger getLoggerInstance(String category) {
       return new DefaultLogger(category);
     }
   }
 
-  private static Factory ourFactory = new DefaultFactory();
+  private static LoggerFactory ourFactory = new DefaultFactory();
 
-  public static void setFactory(Class<? extends Factory> factory) {
+  public static void setFactory(LoggerFactory factory) {
     if (isInitialized()) {
-      if (factory.isInstance(ourFactory)) {
+      if (factory == ourFactory) {
         return;
       }
 
@@ -47,16 +44,7 @@ public abstract class Logger {
       System.out.println("Changing log factory\n" + ExceptionUtil.getThrowableText(new Throwable()));
     }
 
-    try {
-      Constructor<? extends Factory> constructor = factory.getDeclaredConstructor();
-      constructor.setAccessible(true);
-      ourFactory = constructor.newInstance();
-    }
-    catch (Exception e) {
-      //noinspection CallToPrintStackTrace
-      e.printStackTrace();
-      throw new RuntimeException(e);
-    }
+    ourFactory = factory;
   }
 
   public static boolean isInitialized() {

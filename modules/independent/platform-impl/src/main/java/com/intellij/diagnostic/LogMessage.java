@@ -17,7 +17,6 @@ package com.intellij.diagnostic;
 
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.text.StringUtil;
-import org.apache.log4j.spi.LoggingEvent;
 import org.jetbrains.annotations.NonNls;
 
 public class LogMessage extends AbstractMessage {
@@ -27,17 +26,9 @@ public class LogMessage extends AbstractMessage {
   private String myHeader = NO_MESSAGE;
   private final Throwable myThrowable;
 
-  public LogMessage(LoggingEvent aEvent) {
-    super();
-
-    myThrowable = aEvent.getThrowableInformation() == null ? null : aEvent.getThrowableInformation().getThrowable();
-
-    if (aEvent.getMessage() == null || aEvent.getMessage().toString().length() == 0) {
-      myHeader = getThrowable().toString();
-    }
-    else {
-      myHeader = aEvent.getMessage().toString();
-    }
+  public LogMessage(String header, Throwable throwable) {
+    myThrowable = throwable;
+    myHeader = header;
   }
 
   public LogMessage(IdeaLoggingEvent aEvent) {
@@ -62,16 +53,18 @@ public class LogMessage extends AbstractMessage {
     }
   }
 
+  @Override
   public Throwable getThrowable() {
     return myThrowable;
   }
 
+  @Override
   public String getMessage() {
     return myHeader;
   }
 
+  @Override
   public String getThrowableText() {
     return StringUtil.getThrowableText(getThrowable());
   }
-
 }

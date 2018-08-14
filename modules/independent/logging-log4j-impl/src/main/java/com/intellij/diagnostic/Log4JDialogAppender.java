@@ -19,28 +19,23 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.Main;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.ErrorLogger;
 import com.intellij.openapi.diagnostic.ExceptionWithAttachments;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.containers.ContainerUtil;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Mike
  */
-public class DialogAppender extends AppenderSkeleton {
-  private static final ErrorLogger DEFAULT_LOGGER = new DefaultIdeaErrorLogger();
+public class Log4JDialogAppender extends AppenderSkeleton {
   private static final int MAX_ASYNC_LOGGING_EVENTS = 5;
 
   private volatile Runnable myDialogRunnable = null;
@@ -48,32 +43,9 @@ public class DialogAppender extends AppenderSkeleton {
 
   @Override
   protected synchronized void append(@Nonnull final LoggingEvent event) {
-    if (!event.level.isGreaterOrEqual(Level.ERROR) ||
-        Main.isCommandLine() ||
-        !ApplicationStarter.isLoaded()) {
+    if (!event.getLevel().isGreaterOrEqual(Level.ERROR) || Main.isCommandLine() || !ApplicationStarter.isLoaded()) {
       return;
     }
-
-    Runnable action = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          List<ErrorLogger> loggers = new ArrayList<ErrorLogger>();
-          loggers.add(DEFAULT_LOGGER);
-
-          Application application = ApplicationManager.getApplication();
-          if (application != null) {
-            if (application.isHeadlessEnvironment() || application.isDisposed()) return;
-            ContainerUtil.addAll(loggers, application.getComponents(ErrorLogger.class));
-          }
-
-          appendToLoggers(event, loggers.toArray(new ErrorLogger[loggers.size()]));
-        }
-        finally {
-          myPendingAppendCounts.decrementAndGet();
-        }
-      }
-    };
 
     if (myPendingAppendCounts.addAndGet(1) > MAX_ASYNC_LOGGING_EVENTS) {
       // Stop adding requests to the queue or we can get OOME on pending logging requests (IDEA-95327)
@@ -82,11 +54,18 @@ public class DialogAppender extends AppenderSkeleton {
     else {
       // Note, we MUST avoid SYNCHRONOUS invokeAndWait to prevent deadlocks
       //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(action);
+      SwingUtilities.invokeLater(() -> {
+        try {
+          appendToLoggers(event);
+        }
+        finally {
+          myPendingAppendCounts.decrementAndGet();
+        }
+      });
     }
   }
 
-  void appendToLoggers(@Nonnull LoggingEvent event, @Nonnull ErrorLogger[] errorLoggers) {
+  void appendToLoggers(@Nonnull LoggingEvent event) {
     if (myDialogRunnable != null) {
       return;
     }
@@ -103,31 +82,26 @@ public class DialogAppender extends AppenderSkeleton {
       }
       ideaEvent = extractLoggingEvent(message, info.getThrowable());
     }
-    for (int i = errorLoggers.length - 1; i >= 0; i--) {
-      final ErrorLogger logger = errorLoggers[i];
-      if (!logger.canHandle(ideaEvent)) {
-        continue;
-      }
-      myDialogRunnable = new Runnable() {
-        @Override
-        public void run() {
-          try {
-            logger.handle(ideaEvent);
-          }
-          finally {
-            myDialogRunnable = null;
-          }
-        }
-      };
 
-      final Application app = ApplicationManager.getApplication();
-      if (app == null) {
-        new Thread(myDialogRunnable).start();
+    final DefaultIdeaErrorLogger logger = DefaultIdeaErrorLogger.INSTANCE;
+    if (!logger.canHandle(ideaEvent)) {
+      return;
+    }
+    myDialogRunnable = () -> {
+      try {
+        logger.handle(ideaEvent);
       }
-      else {
-        app.executeOnPooledThread(myDialogRunnable);
+      finally {
+        myDialogRunnable = null;
       }
-      break;
+    };
+
+    final Application app = ApplicationManager.getApplication();
+    if (app == null) {
+      new Thread(myDialogRunnable).start();
+    }
+    else {
+      app.executeOnPooledThread(myDialogRunnable);
     }
   }
 

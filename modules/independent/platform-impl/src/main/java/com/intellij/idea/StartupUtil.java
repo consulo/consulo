@@ -33,9 +33,8 @@ import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.lang.UrlClassLoader;
 import consulo.start.CommandLineArgs;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.PatternLayout;
+import consulo.util.ServiceLoaderUtil;
+import consulo.util.logging.LoggerFactory;
 import org.jetbrains.io.BuiltInServer;
 
 import javax.annotation.Nonnull;
@@ -85,19 +84,7 @@ public class StartupUtil {
       newConfigFolder = !new File(PathManager.getConfigPath()).exists();
     }
 
-    // avoiding "log4j:WARN No appenders could be found"
-    System.setProperty("log4j.defaultInitOverride", "true");
-    try {
-      org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
-      if (!root.getAllAppenders().hasMoreElements()) {
-        root.setLevel(Level.WARN);
-        root.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.DEFAULT_CONVERSION_PATTERN)));
-      }
-    }
-    catch (Throwable e) {
-      //noinspection CallToPrintStackTrace
-      e.printStackTrace();
-    }
+    Logger.setFactory(ServiceLoaderUtil.loadSingleOrError(LoggerFactory.class));
 
     ActivationResult result = lockSystemFolders(args);
     if (result == ActivationResult.ACTIVATED) {
@@ -107,7 +94,6 @@ public class StartupUtil {
       System.exit(Main.INSTANCE_CHECK_FAILED);
     }
 
-    Logger.setFactory(Log4JLoggerFactory.class);
     Logger log = Logger.getInstance(Main.class);
     startLogging(log);
     loadSystemLibraries(log);

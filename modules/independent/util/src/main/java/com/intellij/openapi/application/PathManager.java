@@ -464,7 +464,6 @@ public class PathManager {
             Nonnull.class,                // module 'annotations'
             SystemInfoRt.class,           // module 'util-rt'
             Document.class,               // jDOM
-            ReflectionUtil.forName("org.apache.log4j.Appender"), // log4j
             THashSet.class,               // trove4j
             PicoContainer.class,          // PicoContainer
             TypeMapper.class,             // JNA

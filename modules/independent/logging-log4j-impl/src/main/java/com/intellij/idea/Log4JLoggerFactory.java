@@ -20,33 +20,45 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
-import org.apache.log4j.*;
+import consulo.util.logging.LoggerFactory;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.PatternLayout;
 import org.apache.log4j.xml.DOMConfigurator;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.StringReader;
 
-public class Log4JLoggerFactory implements Logger.Factory {
+public class Log4JLoggerFactory implements LoggerFactory {
   private static final String SYSTEM_MACRO = "$SYSTEM_DIR$";
   private static final String APPLICATION_MACRO = "$APPLICATION_DIR$";
   private static final String LOG_DIR_MACRO = "$LOG_DIR$";
 
-  private boolean myInitialized = false;
+  public Log4JLoggerFactory() {
+    // FIXME [VISTALL] idk need we this code or not, since we don't use log4j as logger
 
-  private static final Log4JLoggerFactory ourInstance = new Log4JLoggerFactory();
-
-  public static Log4JLoggerFactory getInstance() {
-    return ourInstance;
-  }
-
-  private Log4JLoggerFactory() { }
-
-  @Override
-  public synchronized Logger getLoggerInstance(String name) {
-    if (!myInitialized) {
-      init();
+    // avoiding "log4j:WARN No appenders could be found"
+    System.setProperty("log4j.defaultInitOverride", "true");
+    try {
+      org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
+      if (!root.getAllAppenders().hasMoreElements()) {
+        root.setLevel(Level.WARN);
+        root.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.DEFAULT_CONVERSION_PATTERN)));
+      }
+    }
+    catch (Throwable e) {
+      //noinspection CallToPrintStackTrace
+      e.printStackTrace();
     }
 
+    init();
+  }
+
+  @Nonnull
+  @Override
+  public synchronized Logger getLoggerInstance(String name) {
     return new Log4JLogger(org.apache.log4j.Logger.getLogger(name));
   }
 
@@ -54,12 +66,7 @@ public class Log4JLoggerFactory implements Logger.Factory {
     try {
       System.setProperty("log4j.defaultInitOverride", "true");
 
-      File logXmlFile = new File(PathManager.getHomePath(), "bin/log.xml");
-      if (!logXmlFile.exists()) {
-        throw new RuntimeException("log.xml file does not exist! Path: [ $home/bin/log.xml]");
-      }
-
-      String text = FileUtil.loadFile(logXmlFile);
+      String text = FileUtil.loadTextAndClose(Log4JLoggerFactory.class.getResourceAsStream("/log4j.xml"));
       text = StringUtil.replace(text, SYSTEM_MACRO, StringUtil.replace(PathManager.getSystemPath(), "\\", "\\\\"));
       text = StringUtil.replace(text, APPLICATION_MACRO, StringUtil.replace(PathManager.getHomePath(), "\\", "\\\\"));
       text = StringUtil.replace(text, LOG_DIR_MACRO, StringUtil.replace(PathManager.getLogPath(), "\\", "\\\\"));
@@ -78,8 +85,6 @@ public class Log4JLoggerFactory implements Logger.Factory {
         consoleAppender.setThreshold(Level.INFO);
         rootLogger.addAppender(consoleAppender);
       }
- 
-      myInitialized = true;
     }
     catch (Exception e) {
       e.printStackTrace();

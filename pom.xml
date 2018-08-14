@@ -113,6 +113,8 @@
     <module>modules/independent/xtest-impl</module>
     <module>modules/independent/xtest-sm-impl</module>
 
+    <module>modules/independent/logging-log4j-impl</module>
+
     <module>modules/independent/trash-can</module>
   </modules>
 

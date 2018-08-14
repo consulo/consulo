@@ -58,7 +58,7 @@ public class Initializer implements ServletContextListener {
       platformDirectory = new File(platformPath).listFiles()[0];
     }
 
-    Logger.setFactory(WebLoggerFactory.class);
+    Logger.setFactory(new WebLoggerFactory());
     try {
       initApplication(platformDirectory, servletContext);
     }
