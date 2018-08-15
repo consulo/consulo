@@ -24,6 +24,14 @@ import javax.annotation.Nonnull;
  * @since 2018-08-14
  */
 public interface LoggerFactory {
+  static int HIGHT_PRIORITY = 100;
+  static int DEFAULT_PRIORITY = 1;
+  static int DISABLE_PRIORITY = -100;
+
   @Nonnull
   Logger getLoggerInstance(String category);
+
+  int getPriority();
+
+  void shutdown();
 }

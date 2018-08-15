@@ -74,6 +74,7 @@ public class Main {
     return isHeadless;
   }
 
+  @Deprecated
   public static boolean isCommandLine() {
     return isCommandLine;
   }

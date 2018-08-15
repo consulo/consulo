@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+  - Copyright 2013-2018 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<Configuration packages="consulo.logging.impl.log4j2.appender">
+  <Appenders>
+    <Console name="CONSOLE" target="SYSTEM_OUT">
+      <PatternLayout pattern="[%7r] %6p - %30.30c - %m \n"/>
+      <ThresholdFilter level="INFO"/>
+    </Console>
+
+    <Dialog name="DIALOG">
+      <ThresholdFilter level="ERROR"/>
+    </Dialog>
+
+    <RollingFile name="FILE" fileName="$LOG_DIR$/consulo.log" filePattern="$LOG_DIR$/consulo.log.%i">
+      <PatternLayout pattern="[%7r] %6p - %30.30c - %m \n"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="1 Mb"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="DIALOG"/>
+      <AppenderRef ref="CONSOLE"/>
+      <AppenderRef ref="FILE"/>
+    </Root>
+  </Loggers>
+</Configuration>

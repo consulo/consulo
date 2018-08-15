@@ -31,9 +31,9 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import consulo.start.CommandLineArgs;
-import consulo.util.ServiceLoaderUtil;
 import consulo.util.logging.LoggerFactory;
 import org.jetbrains.io.BuiltInServer;
 
@@ -45,6 +45,7 @@ import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.ServiceLoader;
 
 /**
  * @author yole
@@ -84,7 +85,10 @@ public class StartupUtil {
       newConfigFolder = !new File(PathManager.getConfigPath()).exists();
     }
 
-    Logger.setFactory(ServiceLoaderUtil.loadSingleOrError(LoggerFactory.class));
+    List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
+    ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
+    LoggerFactory factory = factories.get(0);
+    Logger.setFactory(factory);
 
     ActivationResult result = lockSystemFolders(args);
     if (result == ActivationResult.ACTIVATED) {
@@ -95,7 +99,7 @@ public class StartupUtil {
     }
 
     Logger log = Logger.getInstance(Main.class);
-    startLogging(log);
+    startLogging(log, factory);
     loadSystemLibraries(log);
     fixProcessEnvironment(log);
 
@@ -202,19 +206,16 @@ public class StartupUtil {
     }
   }
 
-  private static void logError(Logger log, String message, Throwable t) {
-    message = message + " (OS: " + SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION + ")";
-    log.error(message, t);
-  }
-
-  private static void startLogging(final Logger log) {
+  private static void startLogging(final Logger log, LoggerFactory factory) {
     Runtime.getRuntime().addShutdownHook(new Thread("Shutdown hook - logging") {
       @Override
       public void run() {
         log.info("------------------------------------------------------ IDE SHUTDOWN ------------------------------------------------------");
+        factory.shutdown();
       }
     });
     log.info("------------------------------------------------------ IDE STARTED ------------------------------------------------------");
+    log.info("Using logger factory: " + factory.getClass().getSimpleName());
 
     ApplicationInfo appInfo = ApplicationInfoImpl.getShadowInstance();
     ApplicationNamesInfo namesInfo = ApplicationNamesInfo.getInstance();

@@ -114,6 +114,7 @@
 
     <module>modules/independent/logging-slf4j-binding-impl</module>
     <module>modules/independent/logging-log4j-impl</module>
+    <module>modules/independent/logging-log4j2-impl</module>
 
     <module>modules/independent/trash-can</module>
   </modules>

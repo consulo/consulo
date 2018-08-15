@@ -30,6 +30,16 @@ public abstract class Logger {
     public Logger getLoggerInstance(String category) {
       return new DefaultLogger(category);
     }
+
+    @Override
+    public int getPriority() {
+      return DEFAULT_PRIORITY;
+    }
+
+    @Override
+    public void shutdown() {
+
+    }
   }
 
   private static LoggerFactory ourFactory = new DefaultFactory();

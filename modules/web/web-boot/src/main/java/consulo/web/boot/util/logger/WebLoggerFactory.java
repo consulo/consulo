@@ -30,4 +30,14 @@ public class WebLoggerFactory implements LoggerFactory {
   public Logger getLoggerInstance(String category) {
     return new WebLogger();
   }
+
+  @Override
+  public int getPriority() {
+    return DEFAULT_PRIORITY;
+  }
+
+  @Override
+  public void shutdown() {
+
+  }
 }

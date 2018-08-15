@@ -16,7 +16,6 @@
 package com.intellij.diagnostic;
 
 import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.Main;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.ExceptionWithAttachments;
@@ -43,7 +42,7 @@ public class Log4JDialogAppender extends AppenderSkeleton {
 
   @Override
   protected synchronized void append(@Nonnull final LoggingEvent event) {
-    if (!event.getLevel().isGreaterOrEqual(Level.ERROR) || Main.isCommandLine() || !ApplicationStarter.isLoaded()) {
+    if (!event.getLevel().isGreaterOrEqual(Level.ERROR) || !ApplicationStarter.isLoaded()) {
       return;
     }
 
