@@ -34,17 +34,17 @@ import java.io.PrintWriter;
  * @author traff
  */
 public class RunnerMediator {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.process.RunnerMediator");
+  private static final Logger LOG = Logger.getInstance(RunnerMediator.class);
 
   private static final char IAC = (char)5;
   private static final char BRK = (char)3;
   private static final char C = (char)5;
-  private static final String STANDARD_RUNNERW = "runnerw.exe";
+  private static final String RUNNERW = "runnerw.exe";
+  private static final String RUNNERW64 = "runnerw64.exe";
   private static final String IDEA_RUNNERW = "IDEA_RUNNERW";
 
   /**
    * Creates default runner mediator
-   * @return
    */
   public static RunnerMediator getInstance() {
     return new RunnerMediator();
@@ -91,13 +91,13 @@ public class RunnerMediator {
       if (new File(path).exists()) {
         return path;
       }
-      LOG.warn("Cannot locate " + STANDARD_RUNNERW + " by " + IDEA_RUNNERW + " environment variable (" + path + ")");
+      LOG.warn("Cannot locate " + RUNNERW + " by " + IDEA_RUNNERW + " environment variable (" + path + ")");
     }
-    File runnerw = new File(PathManager.getBinPath(), STANDARD_RUNNERW);
+    File runnerw = new File(PathManager.getBinPath(), SystemInfo.is64Bit ? RUNNERW64 : RUNNERW);
     if (runnerw.exists()) {
       return runnerw.getPath();
     }
-    LOG.warn("Cannot locate " + STANDARD_RUNNERW + " by default path (" + runnerw.getAbsolutePath() + ")");
+    LOG.warn("Cannot locate " + RUNNERW + " by default path (" + runnerw.getAbsolutePath() + ")");
     return null;
   }
 
