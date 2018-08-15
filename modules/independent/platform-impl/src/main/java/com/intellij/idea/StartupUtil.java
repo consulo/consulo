@@ -32,7 +32,6 @@ import com.intellij.util.Consumer;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.lang.UrlClassLoader;
 import consulo.start.CommandLineArgs;
 import consulo.util.logging.LoggerFactory;
 import org.jetbrains.io.BuiltInServer;
@@ -188,16 +187,6 @@ public class StartupUtil {
 
     if (SystemInfo.isWin2kOrNewer) {
       IdeaWin32.isAvailable();  // logging is done there
-    }
-
-    if (SystemInfo.isWin2kOrNewer && !Main.isHeadless()) {
-      try {
-        UrlClassLoader.loadPlatformLibrary("focusKiller");
-        log.info("Using \"FocusKiller\" library to prevent focus stealing.");
-      }
-      catch (Throwable t) {
-        log.info("\"FocusKiller\" library not found or there were problems loading it.", t);
-      }
     }
 
     if (SystemInfo.isWindows) {
