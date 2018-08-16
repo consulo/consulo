@@ -41,13 +41,9 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -59,19 +55,16 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.io.SafeFileOutputStream;
-import com.intellij.xml.util.XmlStringUtil;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.xml.XppReader;
+import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
-
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -117,10 +110,7 @@ public class ConsoleHistoryController {
     this(rootType, persistenceId, console, ourModels.get(getHistoryName(rootType, fixNullPersistenceId(persistenceId, console))));
   }
 
-  private ConsoleHistoryController(@Nonnull ConsoleRootType rootType,
-                                   @Nullable String persistenceId,
-                                   @Nonnull LanguageConsoleView console,
-                                   @Nonnull ConsoleHistoryModel model) {
+  private ConsoleHistoryController(@Nonnull ConsoleRootType rootType, @Nullable String persistenceId, @Nonnull LanguageConsoleView console, @Nonnull ConsoleHistoryModel model) {
     myHelper = new ModelHelper(rootType, fixNullPersistenceId(persistenceId, console), model.copy());
     myConsole = console;
   }
@@ -354,8 +344,7 @@ public class ConsoleHistoryController {
     }
     else {
       final int lineCount = document.getLineCount();
-      return (lineCount == 0 || document.getLineNumber(caretModel.getOffset()) == lineCount - 1) &&
-             StringUtil.isEmptyOrSpaces(document.getText().substring(caretModel.getOffset()));
+      return (lineCount == 0 || document.getLineNumber(caretModel.getOffset()) == lineCount - 1) && StringUtil.isEmptyOrSpaces(document.getText().substring(caretModel.getOffset()));
     }
   }
 
@@ -372,8 +361,7 @@ public class ConsoleHistoryController {
     public void actionPerformed(AnActionEvent e) {
       String s1 = KeymapUtil.getFirstKeyboardShortcutText(myHistoryNext);
       String s2 = KeymapUtil.getFirstKeyboardShortcutText(myHistoryPrev);
-      String title = myConsole.getTitle() + " History" +
-                     (StringUtil.isNotEmpty(s1) && StringUtil.isNotEmpty(s2) ? " (" + s1 + " and " + s2 + " while in editor)" : "");
+      String title = myConsole.getTitle() + " History" + (StringUtil.isNotEmpty(s1) && StringUtil.isNotEmpty(s2) ? " (" + s1 + " and " + s2 + " while in editor)" : "");
       final ContentChooser<String> chooser = new ContentChooser<String>(myConsole.getProject(), title, true, true) {
 
         @Override
@@ -400,8 +388,7 @@ public class ConsoleHistoryController {
           Project project = consoleFile.getProject();
 
           PsiFile psiFile = PsiFileFactory.getInstance(project)
-                  .createFileFromText("a." + consoleFile.getFileType().getDefaultExtension(), language, StringUtil.convertLineSeparators(new String(text)),
-                                      false, true);
+                  .createFileFromText("a." + consoleFile.getFileType().getDefaultExtension(), language, StringUtil.convertLineSeparators(new String(text)), false, true);
           VirtualFile virtualFile = psiFile.getViewProvider().getVirtualFile();
           if (virtualFile instanceof LightVirtualFile) ((LightVirtualFile)virtualFile).setWritable(false);
           Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
@@ -461,9 +448,7 @@ public class ConsoleHistoryController {
 
     public boolean loadHistory(String id, VirtualFile consoleFile) {
       try {
-        VirtualFile file = myRootType.isHidden()
-                           ? null
-                           : HistoryRootType.getInstance().findFile(null, getHistoryName(myRootType, id), ScratchFileService.Option.existing_only);
+        VirtualFile file = myRootType.isHidden() ? null : HistoryRootType.getInstance().findFile(null, getHistoryName(myRootType, id), ScratchFileService.Option.existing_only);
         if (file == null) {
           if (loadHistoryOld(id)) {
             if (!myRootType.isHidden()) {
@@ -492,10 +477,9 @@ public class ConsoleHistoryController {
     public boolean loadHistoryOld(String id) {
       File file = new File(PathUtil.toSystemDependentName(getOldHistoryFilePath(id)));
       if (!file.exists()) return false;
-      HierarchicalStreamReader xmlReader = null;
       try {
-        xmlReader = new XppReader(new InputStreamReader(new FileInputStream(file), CharsetToolkit.UTF8));
-        String text = loadHistory(xmlReader, id);
+        Element rootElement = JDOMUtil.load(file);
+        String text = loadHistory(rootElement, id);
         if (text != null) {
           myContent = text;
           return true;
@@ -512,11 +496,6 @@ public class ConsoleHistoryController {
           LOG.error(ex);
         }
       }
-      finally {
-        if (xmlReader != null) {
-          xmlReader.close();
-        }
-      }
       return false;
     }
 
@@ -528,32 +507,11 @@ public class ConsoleHistoryController {
         return;
       }
 
-      OutputStream os = null;
       try {
-        os = new SafeFileOutputStream(file);
-        XmlSerializer serializer = XmlPullParserFactory.newInstance("org.xmlpull.mxp1.MXParserFactory", null).newSerializer();
-        try {
-          serializer.setProperty("http://xmlpull.org/v1/doc/properties.html#serializer-indentation", "  ");
-        }
-        catch (Exception ignored) {
-          // not recognized
-        }
-        serializer.setOutput(os, CharsetToolkit.UTF8);
-        saveHistory(serializer);
-        serializer.flush();
+        JDOMUtil.writeDocument(new org.jdom.Document(saveHistoryElement()), file, "\n");
       }
       catch (Exception ex) {
         LOG.error(ex);
-      }
-      finally {
-        try {
-          if (os != null) {
-            os.close();
-          }
-        }
-        catch (Exception ignored) {
-          // nothing
-        }
       }
     }
 
@@ -579,62 +537,47 @@ public class ConsoleHistoryController {
     }
 
     @Nullable
-    private String loadHistory(HierarchicalStreamReader in, String expectedId) {
-      if (!in.getNodeName().equals("console-history")) return null;
-      String id = in.getAttribute("id");
+    private String loadHistory(Element rootElement, String expectedId) {
+      if (!rootElement.getName().equals("console-history")) return null;
+      String id = rootElement.getAttributeValue("id");
       if (!expectedId.equals(id)) return null;
       List<String> entries = ContainerUtil.newArrayList();
       String consoleContent = null;
-      while (in.hasMoreChildren()) {
-        in.moveDown();
-        if ("history-entry".equals(in.getNodeName())) {
-          entries.add(StringUtil.notNullize(in.getValue()));
+      for (Element childElement : rootElement.getChildren()) {
+        String childName = childElement.getName();
+
+        if ("history-entry".equals(childName)) {
+          entries.add(StringUtil.notNullize(childElement.getText()));
         }
-        else if ("console-content".equals(in.getNodeName())) {
-          consoleContent = StringUtil.notNullize(in.getValue());
+        else if ("console-content".equals(childName)) {
+          consoleContent = StringUtil.notNullize(childElement.getText());
         }
-        in.moveUp();
       }
       getModel().resetEntries(entries);
       return consoleContent;
     }
 
-    private void saveHistory(XmlSerializer out) throws IOException {
-      out.startDocument(CharsetToolkit.UTF8, null);
-      out.startTag(null, "console-history");
-      out.attribute(null, "version", "1");
-      out.attribute(null, "id", myId);
-      try {
-        for (String s : getModel().getEntries()) {
-          textTag(out, "history-entry", s);
-        }
-        String current = myContent;
-        if (StringUtil.isNotEmpty(current)) {
-          textTag(out, "console-content", current);
-        }
+    private Element saveHistoryElement() {
+      Element rootElement = new Element("console-history");
+      rootElement.setAttribute("version", "1");
+      rootElement.setAttribute("id", myId);
+      for (String s : getModel().getEntries()) {
+        Element historyEntryElement = new Element("history-element");
+        historyEntryElement.setText(s);
+        rootElement.addContent(historyEntryElement);
       }
-      finally {
-        out.endTag(null, "console-history");
-        out.endDocument();
+
+      String current = myContent;
+      if (StringUtil.isNotEmpty(current)) {
+        rootElement.addContent(new Element("console-content").setText(current));
       }
+      return rootElement;
     }
   }
-
-  private static void textTag(@Nonnull XmlSerializer out, @Nonnull String tag, @Nonnull String text) throws IOException {
-    out.startTag(null, tag);
-    try {
-      out.ignorableWhitespace(XmlStringUtil.wrapInCDATA(text));
-    }
-    finally {
-      out.endTag(null, tag);
-    }
-  }
-
 
   @Nonnull
   private static String getHistoryName(@Nonnull ConsoleRootType rootType, @Nonnull String id) {
-    return rootType.getConsoleTypeId() + "/" +
-           PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
+    return rootType.getConsoleTypeId() + "/" + PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
   }
 
   @Nullable
