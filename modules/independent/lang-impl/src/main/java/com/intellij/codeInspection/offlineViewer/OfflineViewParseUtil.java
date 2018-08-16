@@ -28,7 +28,6 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.thoughtworks.xstream.io.xml.XppReader;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
@@ -36,7 +35,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -150,16 +148,12 @@ public class OfflineViewParseUtil {
   }
 
   @Nullable
-  public static String parseProfileName(String descriptors) {
-    final XppReader reader = new XppReader(new StringReader(descriptors));
+  public static String parseProfileName(VirtualFile virtualFile) {
     try {
-      return reader.getAttribute(InspectionApplication.PROFILE);
+      return JDOMUtil.load(VfsUtil.virtualToIoFile(virtualFile)).getAttributeValue(InspectionApplication.PROFILE);
     }
     catch (Exception e) {
       return null;
-    }
-    finally {
-      reader.close();
     }
   }
 }

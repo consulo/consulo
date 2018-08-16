@@ -43,7 +43,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
@@ -58,9 +57,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,7 +118,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
                         @Override
                         @Nullable
                         public String compute() {
-                          return OfflineViewParseUtil.parseProfileName(LoadTextUtil.loadText(inspectionFile).toString());
+                          return OfflineViewParseUtil.parseProfileName(inspectionFile);
                         }
                       }
               );
