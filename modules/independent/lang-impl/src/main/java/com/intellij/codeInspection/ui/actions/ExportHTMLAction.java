@@ -54,13 +54,13 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -88,8 +88,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
       new BaseListPopupStep<String>(InspectionsBundle.message("inspection.action.export.popup.title"), new String[]{HTML, XML}) {
         @Override
         public PopupStep onChosen(final String selectedValue, final boolean finalChoice) {
-          exportHTML(Comparing.strEqual(selectedValue, HTML));
-          return PopupStep.FINAL_CHOICE;
+          return doFinalStep(() -> exportHTML(Comparing.strEqual(selectedValue, HTML)));
         }
       });
     InspectionResultsView.showPopup(e, popup);

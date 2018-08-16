@@ -50,7 +50,10 @@ import java.util.Collection;
 
 public abstract class RefElementImpl extends RefEntityImpl implements RefElement {
   private static final ArrayList<RefElement> EMPTY_REFERNCES_LIST = new ArrayList<RefElement>(0);
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.reference.RefElement");
+  @Deprecated
+  public static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.reference.RefElement");
+
+  private static final Logger LOGGER = Logger.getInstance(RefElementImpl.class);
 
   private static final int IS_ENTRY_MASK = 0x80;
   private static final int IS_PERMANENT_ENTRY_MASK = 0x100;
@@ -256,7 +259,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
       if (virtualFile == null) return null;
       return new URL(virtualFile.getUrl() + "#" + element.getTextOffset());
     } catch (MalformedURLException e) {
-      LOG.error(e);
+      LOGGER.error(e);
     }
 
     return null;
