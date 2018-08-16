@@ -128,12 +128,12 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public PsiElement getElement() {
     return myID.getElement();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public PsiFile getContainingFile() {
     return myID.getContainingFile();
   }
@@ -248,7 +248,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public URL getURL() {
     try {
       final PsiElement element = getElement();
