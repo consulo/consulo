@@ -75,15 +75,6 @@
       <artifactId>miglayout</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.ogce</groupId>
-      <artifactId>xpp3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>oro</groupId>
       <artifactId>oro</artifactId>
       <optional>true</optional>

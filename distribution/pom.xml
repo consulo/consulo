@@ -134,10 +134,6 @@
       <artifactId>snappy</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-    </dependency>
-    <dependency>
       <groupId>javax.help</groupId>
       <artifactId>javahelp</artifactId>
     </dependency>
