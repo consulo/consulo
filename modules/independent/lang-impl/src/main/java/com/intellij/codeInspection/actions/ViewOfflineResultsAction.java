@@ -129,7 +129,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
                       new Computable<Map<String, Set<OfflineProblemDescriptor>>>() {
                         @Override
                         public Map<String, Set<OfflineProblemDescriptor>> compute() {
-                          return OfflineViewParseUtil.parse(LoadTextUtil.loadText(inspectionFile).toString());
+                          return OfflineViewParseUtil.parse(inspectionFile);
                         }
                       }
               ));

@@ -23,14 +23,19 @@ package com.intellij.codeInspection.offlineViewer;
 import com.intellij.codeInspection.InspectionApplication;
 import com.intellij.codeInspection.offline.OfflineProblemDescriptor;
 import com.intellij.codeInspection.reference.SmartRefElementPointerImpl;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
+import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,110 +43,107 @@ import java.util.Map;
 import java.util.Set;
 
 public class OfflineViewParseUtil {
-  @NonNls private static final String PACKAGE = "package";
-  @NonNls private static final String DESCRIPTION = "description";
-  @NonNls private static final String HINTS = "hints";
-  @NonNls private static final String LINE = "line";
-  @NonNls private static final String MODULE = "module";
+  private static final Logger LOGGER = Logger.getInstance(OfflineViewParseUtil.class);
+
+  @NonNls
+  private static final String PACKAGE = "package";
+  @NonNls
+  private static final String DESCRIPTION = "description";
+  @NonNls
+  private static final String HINTS = "hints";
+  @NonNls
+  private static final String LINE = "line";
+  @NonNls
+  private static final String MODULE = "module";
 
   private OfflineViewParseUtil() {
   }
 
-  public static Map<String, Set<OfflineProblemDescriptor>> parse(final String problems) {
-    final TObjectIntHashMap<String> fqName2IdxMap = new TObjectIntHashMap<String>();
-    final Map<String, Set<OfflineProblemDescriptor>> package2Result = new THashMap<String, Set<OfflineProblemDescriptor>>();
-    final XppReader reader = new XppReader(new StringReader(problems));
+  public static Map<String, Set<OfflineProblemDescriptor>> parse(VirtualFile file) {
+    final TObjectIntHashMap<String> fqName2IdxMap = new TObjectIntHashMap<>();
+    final Map<String, Set<OfflineProblemDescriptor>> package2Result = new THashMap<>();
     try {
-      while(reader.hasMoreChildren()) {
-        reader.moveDown(); //problem
+      Element rootElement = JDOMUtil.load(VfsUtil.virtualToIoFile(file));
+      for (Element problemElement : rootElement.getChildren()) {
         final OfflineProblemDescriptor descriptor = new OfflineProblemDescriptor();
         boolean added = false;
-        while(reader.hasMoreChildren()) {
-          reader.moveDown();
-          if (SmartRefElementPointerImpl.ENTRY_POINT.equals(reader.getNodeName())) {
-            descriptor.setType(reader.getAttribute(SmartRefElementPointerImpl.TYPE_ATTR));
-            final String fqName = reader.getAttribute(SmartRefElementPointerImpl.FQNAME_ATTR);
-            descriptor.setFQName(fqName);
 
-            if (!fqName2IdxMap.containsKey(fqName)) {
-              fqName2IdxMap.put(fqName, 0);
-            }
-            int idx = fqName2IdxMap.get(fqName);
-            descriptor.setProblemIndex(idx);
-            fqName2IdxMap.put(fqName, idx + 1);
+        for (Element childElement : problemElement.getChildren()) {
+          String chilName = childElement.getName();
 
-            final List<String> parentTypes = new ArrayList<String>();
-            final List<String> parentNames = new ArrayList<String>();
-            int deep = 0;
-            while (true) {
-              if (reader.hasMoreChildren()) {
-                reader.moveDown();
-                parentTypes.add(reader.getAttribute(SmartRefElementPointerImpl.TYPE_ATTR));
-                parentNames.add(reader.getAttribute(SmartRefElementPointerImpl.FQNAME_ATTR));                
-                deep ++;
-              } else {
-                while (deep-- > 0) {
-                  reader.moveUp();
+          switch (chilName) {
+            case SmartRefElementPointerImpl.ENTRY_POINT:
+              descriptor.setType(childElement.getAttributeValue(SmartRefElementPointerImpl.TYPE_ATTR));
+              final String fqName = childElement.getAttributeValue(SmartRefElementPointerImpl.FQNAME_ATTR);
+              descriptor.setFQName(fqName);
+
+              if (!fqName2IdxMap.containsKey(fqName)) {
+                fqName2IdxMap.put(fqName, 0);
+              }
+              int idx = fqName2IdxMap.get(fqName);
+              descriptor.setProblemIndex(idx);
+              fqName2IdxMap.put(fqName, idx + 1);
+
+              final List<String> parentTypes = new ArrayList<>();
+              final List<String> parentNames = new ArrayList<>();
+
+              for (Element element : childElement.getChildren()) {
+                parentTypes.add(element.getAttributeValue(SmartRefElementPointerImpl.TYPE_ATTR));
+                parentNames.add(element.getAttributeValue(SmartRefElementPointerImpl.FQNAME_ATTR));
+              }
+
+              if (!parentTypes.isEmpty() && !parentNames.isEmpty()) {
+                descriptor.setParentType(ArrayUtil.toStringArray(parentTypes));
+                descriptor.setParentFQName(ArrayUtil.toStringArray(parentNames));
+              }
+              break;
+            case DESCRIPTION:
+              descriptor.setDescription(childElement.getText());
+              break;
+            case LINE:
+              descriptor.setLine(Integer.parseInt(childElement.getText()));
+              break;
+            case MODULE:
+              descriptor.setModule(childElement.getText());
+              break;
+            case HINTS:
+              for (Element hintElement : childElement.getChildren()) {
+                List<String> hints = descriptor.getHints();
+                if (hints == null) {
+                  hints = new ArrayList<>();
+                  descriptor.setHints(hints);
                 }
-                break;
+                hints.add(hintElement.getAttributeValue("value"));
               }
-            }
-            if (!parentTypes.isEmpty() && !parentNames.isEmpty()) {
-              descriptor.setParentType(ArrayUtil.toStringArray(parentTypes));
-              descriptor.setParentFQName(ArrayUtil.toStringArray(parentNames));
-            }
-          }
-          if (DESCRIPTION.equals(reader.getNodeName())) {
-            descriptor.setDescription(reader.getValue());
-          }
-          if (LINE.equals(reader.getNodeName())) {
-            descriptor.setLine(Integer.parseInt(reader.getValue()));
-          }
-          if (MODULE.equals(reader.getNodeName())) {
-            descriptor.setModule(reader.getValue());
-          }
-          if (HINTS.equals(reader.getNodeName())) {
-            while(reader.hasMoreChildren()) {
-              reader.moveDown();
-              List<String> hints = descriptor.getHints();
-              if (hints == null) {
-                hints = new ArrayList<String>();
-                descriptor.setHints(hints);
-              }
-              hints.add(reader.getAttribute("value"));
-              reader.moveUp();
-            }
-          }
-          if (PACKAGE.equals(reader.getNodeName())) {
-            appendDescriptor(package2Result, reader.getValue(), descriptor);
-            added = true;
-          }
-          while(reader.hasMoreChildren()) {
-            reader.moveDown();
-            if (PACKAGE.equals(reader.getNodeName())) {
-              appendDescriptor(package2Result, reader.getValue(), descriptor);
+              break;
+            case PACKAGE:
+              appendDescriptor(package2Result, childElement.getText(), descriptor);
               added = true;
-            }
-            reader.moveUp();
+              break;
+            default:
+              for (Element nextElement : childElement.getChildren()) {
+                if (PACKAGE.equals(nextElement.getName())) {
+                  appendDescriptor(package2Result, nextElement.getText(), descriptor);
+                  added = true;
+                }
+              }
+              break;
           }
-          reader.moveUp();
         }
+
         if (!added) appendDescriptor(package2Result, "", descriptor);
-        reader.moveUp();
       }
     }
-    finally {
-      reader.close();
+    catch (Exception e) {
+      LOGGER.error(e);
     }
     return package2Result;
   }
 
-  private static void appendDescriptor(final Map<String, Set<OfflineProblemDescriptor>> package2Result,
-                                       final String packageName,
-                                       final OfflineProblemDescriptor descriptor) {
+  private static void appendDescriptor(final Map<String, Set<OfflineProblemDescriptor>> package2Result, final String packageName, final OfflineProblemDescriptor descriptor) {
     Set<OfflineProblemDescriptor> descriptors = package2Result.get(packageName);
     if (descriptors == null) {
-      descriptors = new THashSet<OfflineProblemDescriptor>();
+      descriptors = new THashSet<>();
       package2Result.put(packageName, descriptors);
     }
     descriptors.add(descriptor);
