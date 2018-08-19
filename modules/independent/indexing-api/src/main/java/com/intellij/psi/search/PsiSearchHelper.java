@@ -32,13 +32,19 @@ import javax.annotation.Nonnull;
  * Use {@link com.intellij.psi.search.PsiSearchHelper.SERVICE#getInstance}() to get a search helper instance.
  */
 public interface PsiSearchHelper {
+  @Deprecated
   class SERVICE {
     private SERVICE() {
     }
 
+    @Deprecated
     public static PsiSearchHelper getInstance(Project project) {
       return ServiceManager.getService(project, PsiSearchHelper.class);
     }
+  }
+
+  public static PsiSearchHelper getInstance(Project project) {
+    return ServiceManager.getService(project, PsiSearchHelper.class);
   }
 
   /**
