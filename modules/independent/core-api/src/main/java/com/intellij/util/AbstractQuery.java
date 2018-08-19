@@ -4,8 +4,8 @@ package com.intellij.util;
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
 import com.intellij.openapi.application.ReadActionProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +19,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
   private boolean myIsProcessing;
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<Result> findAll() {
     assertNotProcessing();
     List<Result> result = new ArrayList<>();
@@ -28,7 +28,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<Result> iterator() {
     assertNotProcessing();
@@ -48,9 +48,9 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     assert !myIsProcessing : "Operation is not allowed while query is being processed";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Result[] toArray(@NotNull Result[] a) {
+  public Result[] toArray(@Nonnull Result[] a) {
     assertNotProcessing();
 
     final Collection<Result> all = findAll();
@@ -58,7 +58,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
   }
 
   @Override
-  public boolean forEach(@NotNull Processor<Result> consumer) {
+  public boolean forEach(@Nonnull Processor<Result> consumer) {
     assertNotProcessing();
 
     myIsProcessing = true;
@@ -70,24 +70,24 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@NotNull Processor<Result> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<Result> consumer) {
     return AsyncUtil.wrapBoolean(forEach(consumer));
   }
 
-  protected abstract boolean processResults(@NotNull Processor<Result> consumer);
+  protected abstract boolean processResults(@Nonnull Processor<Result> consumer);
 
-  @NotNull
-  protected AsyncFuture<Boolean> processResultsAsync(@NotNull Processor<Result> consumer) {
+  @Nonnull
+  protected AsyncFuture<Boolean> processResultsAsync(@Nonnull Processor<Result> consumer) {
     return AsyncUtil.wrapBoolean(processResults(consumer));
   }
 
-  @NotNull
-  public static <T> Query<T> wrapInReadAction(@NotNull final Query<T> query) {
+  @Nonnull
+  public static <T> Query<T> wrapInReadAction(@Nonnull final Query<T> query) {
     return new AbstractQuery<T>() {
       @Override
-      protected boolean processResults(@NotNull Processor<T> consumer) {
+      protected boolean processResults(@Nonnull Processor<T> consumer) {
         return query.forEach(ReadActionProcessor.wrapInReadAction(consumer));
       }
     };
