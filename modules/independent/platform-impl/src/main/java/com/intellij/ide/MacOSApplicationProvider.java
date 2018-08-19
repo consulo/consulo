@@ -29,7 +29,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -39,8 +38,8 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.sun.jna.Callback;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.color.ColorSpace;
@@ -54,7 +53,7 @@ import java.io.InputStream;
 /**
  * @author max
  */
-public class MacOSApplicationProvider implements ApplicationComponent {
+public class MacOSApplicationProvider {
   private static final Logger LOG = Logger.getInstance(MacOSApplicationProvider.class);
   private static final Callback IMPL = new Callback() {
     @SuppressWarnings("unused")
@@ -107,20 +106,6 @@ public class MacOSApplicationProvider implements ApplicationComponent {
     finally {
       StreamUtil.closeStream(is);
     }
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "MACOSApplicationProvider";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   @Nullable

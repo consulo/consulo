@@ -111,7 +111,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
     List<Comparable> options = ContainerUtil.newArrayList();
     final Set<String> words = myIndex.getProcessedWords(pattern);
     Set<OptionDescription> optionDescriptions = null;
-    final String actionManagerName = myActionManager.getComponentName();
+    final String actionManagerName = "ActionManager";
     for (String word : words) {
       final Set<OptionDescription> descriptions = ((SearchableOptionsRegistrarImpl)myIndex).getAcceptableDescriptions(word);
       if (descriptions != null) {

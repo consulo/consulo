@@ -18,7 +18,6 @@ package consulo.roots;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -32,8 +31,8 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.containers.SmartHashSet;
 import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +42,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 06.04.2015
  */
-public class ContentEntryFileListener implements ApplicationComponent, Disposable {
+public class ContentEntryFileListener implements Disposable {
   public static class Listener implements VirtualFileListener {
     private final Project myProject;
 

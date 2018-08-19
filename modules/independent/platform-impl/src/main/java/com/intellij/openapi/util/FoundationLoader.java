@@ -17,26 +17,15 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.ui.mac.foundation.Foundation;
-import javax.annotation.Nonnull;
 
 /**
  * User: spLeaner
  */
 public class FoundationLoader implements ApplicationComponent {
-
-  @Nonnull
-  public String getComponentName() {
-    return "FoundationLoader";
-  }
-
+  @Override
   public void initComponent() {
     if (SystemInfo.isMac) {
       Foundation.init();
     }
   }
-
-  public void disposeComponent() {
-
-  }
-
 }

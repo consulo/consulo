@@ -34,8 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 @State(name = "UsagesStatistic", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/usage.statistics.xml", roamingType = RoamingType.DISABLED))
-public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent
-        implements ApplicationComponent, PersistentStateComponent<Element> {
+public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent implements PersistentStateComponent<Element> {
 
   @NonNls
   private boolean myAllowed = true;
@@ -149,20 +148,5 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     if (StringUtil.isEmptyOrSpaces(priority)) return GroupDescriptor.DEFAULT_PRIORITY;
 
     return Double.parseDouble(priority);
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "SentUsagesPersistenceComponent";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 }

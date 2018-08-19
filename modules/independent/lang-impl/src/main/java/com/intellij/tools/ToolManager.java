@@ -19,12 +19,16 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
-import javax.annotation.Nonnull;
 
 /**
  * @author traff
  */
 public class ToolManager extends BaseToolManager<Tool> {
+
+  public static ToolManager getInstance() {
+    return ApplicationManager.getApplication().getComponent(ToolManager.class);
+  }
+
   public ToolManager(ActionManagerEx actionManagerEx,
                      SchemesManagerFactory factory) {
     super(actionManagerEx, factory);
@@ -54,15 +58,5 @@ public class ToolManager extends BaseToolManager<Tool> {
   @Override
   protected String getActionIdPrefix() {
     return Tool.ACTION_ID_PREFIX;
-  }
-
-  public static ToolManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(ToolManager.class);
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "ToolManager";
   }
 }

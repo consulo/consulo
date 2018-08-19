@@ -15,15 +15,15 @@
  */
 package com.intellij.psi.stubs;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /*
  * @author max
  */
-public class SerializationManagerImpl extends SerializationManagerEx implements ApplicationComponent {
+public class SerializationManagerImpl extends SerializationManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.SerializationManagerImpl");
 
   private final AtomicBoolean myNameStorageCrashed = new AtomicBoolean(false);
@@ -118,17 +118,7 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
   }
 
   @Override
-  @Nonnull
-  public String getComponentName() {
-    return "PSI.SerializationManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     performShutdown();
   }
 

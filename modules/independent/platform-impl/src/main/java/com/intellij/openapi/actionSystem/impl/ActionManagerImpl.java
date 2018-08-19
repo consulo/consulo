@@ -32,7 +32,6 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.keymap.Keymap;
@@ -75,7 +74,7 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.List;
 
-public final class ActionManagerImpl extends ActionManagerEx implements ApplicationComponent {
+public final class ActionManagerImpl extends ActionManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.actionSystem.impl.ActionManagerImpl");
   private static final int DEACTIVATED_TIMER_DELAY = 5000;
   private static final int TIMER_DELAY = 500;
@@ -180,11 +179,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     if (myTimer != null) {
       myTimer.stop();
       myTimer = null;
@@ -1036,12 +1031,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
         }
       }
     }
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "ActionManager";
   }
 
   @Override

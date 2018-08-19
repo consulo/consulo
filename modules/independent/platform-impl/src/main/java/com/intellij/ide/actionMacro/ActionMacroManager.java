@@ -23,7 +23,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
@@ -72,7 +71,11 @@ import java.util.Set;
  * @author max
  */
 @State(name = "ActionMacroManager", storages = @Storage("macros.xml"))
-public class ActionMacroManager implements ApplicationComponent, JDOMExternalizable {
+public class ActionMacroManager implements JDOMExternalizable {
+  public static ActionMacroManager getInstance() {
+    return ApplicationManager.getApplication().getComponent(ActionMacroManager.class);
+  }
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actionMacro.ActionMacroManager");
 
   private static final String TYPING_SAMPLE = "WWWWWWWWWWWWWWWWWWWW";
@@ -97,6 +100,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
   public ActionMacroManager(ActionManagerEx actionManagerEx) {
     myActionManager = actionManagerEx;
     myActionManager.addAnActionListener(new AnActionListener() {
+      @Override
       public void beforeActionPerformed(AnAction action, DataContext dataContext, final AnActionEvent event) {
         String id = myActionManager.getId(action);
         if (id == null) return;
@@ -114,12 +118,6 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
           myLastActionInputEvent.add(event.getInputEvent());
         }
       }
-
-      public void beforeEditorTyping(char c, DataContext dataContext) {
-      }
-
-      public void afterActionPerformed(final AnAction action, final DataContext dataContext, final AnActionEvent event) {
-      }
     });
 
     myKeyProcessor = new MyKeyPostpocessor();
@@ -127,6 +125,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null));
   }
 
+  @Override
   public void readExternal(Element element) throws InvalidDataException {
     myMacros = new ArrayList<ActionMacro>();
     final List macros = element.getChildren(ELEMENT_MACRO);
@@ -140,25 +139,13 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     registerActions();
   }
 
-
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     for (ActionMacro macro : myMacros) {
       Element macroElement = new Element(ELEMENT_MACRO);
       macro.writeExternal(macroElement);
       element.addContent(macroElement);
     }
-  }
-
-  public static ActionMacroManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(ActionMacroManager.class);
-  }
-
-  @Nonnull
-  public String getComponentName() {
-    return "ActionMacroManager";
-  }
-
-  public void initComponent() {
   }
 
   public void startRecording(String macroName) {
@@ -170,7 +157,6 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     myWidget = new Widget(statusBar);
     statusBar.addWidget(myWidget);
   }
-
 
   private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
@@ -372,6 +358,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
 
     final PlaybackRunner runner = new PlaybackRunner(script.toString(), new PlaybackRunner.StatusCallback.Edt() {
 
+      @Override
       public void messageEdt(PlaybackContext context, String text, Type type) {
         if (type == Type.message || type == Type.error) {
           if (context != null) {
@@ -387,10 +374,12 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     myIsPlaying = true;
 
     runner.run().doWhenDone(new Runnable() {
+      @Override
       public void run() {
         frame.getStatusBar().setInfo("Script execution finished");
       }
     }).doWhenProcessed(new Runnable() {
+      @Override
       public void run() {
         myIsPlaying = false;
       }
@@ -494,6 +483,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
       getTemplatePresentation().setText(macro.getName(), false);
     }
 
+    @Override
     public void actionPerformed(AnActionEvent e) {
       IdeEventQueue.getInstance().doWhenReady(new Runnable() {
         @Override
@@ -503,6 +493,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
       });
     }
 
+    @Override
     public void update(AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(!getInstance().isPlaying());
@@ -511,6 +502,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
 
   private class MyKeyPostpocessor implements IdeEventQueue.EventDispatcher {
 
+    @Override
     public boolean dispatch(AWTEvent e) {
       if (isRecording() && e instanceof KeyEvent) {
         postProcessKeyEvent((KeyEvent)e);

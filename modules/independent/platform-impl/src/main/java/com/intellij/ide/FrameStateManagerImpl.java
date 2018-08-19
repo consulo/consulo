@@ -17,7 +17,6 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Disposer;
@@ -25,13 +24,12 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ex.ApplicationEx2;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FrameStateManagerImpl extends FrameStateManager implements ApplicationComponent {
+public class FrameStateManagerImpl extends FrameStateManager {
   private final List<FrameStateListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private boolean myShouldSynchronize;
@@ -84,21 +82,6 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
     return myActive.getReady(this);
   }
 
-  @Override
-  @Nonnull
-  @NonNls
-  public String getComponentName() {
-    return "FrameStateManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
   private void fireDeactivationEvent() {
     for (FrameStateListener listener : myListeners) {
       listener.onFrameDeactivated();
@@ -120,12 +103,7 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   public void addListener(@Nonnull final FrameStateListener listener, @Nullable Disposable disposable) {
     myListeners.add(listener);
     if (disposable != null) {
-      Disposer.register(disposable, new Disposable() {
-        @Override
-        public void dispose() {
-          removeListener(listener);
-        }
-      });
+      Disposer.register(disposable, () -> removeListener(listener));
     }
   }
 

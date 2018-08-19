@@ -39,7 +39,7 @@ import java.util.*;
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/keymap.xml", roamingType = RoamingType.PER_PLATFORM),
         additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH
 )
-public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element>, ApplicationComponent {
+public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element> {
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
 
   private final List<KeymapManagerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -254,19 +254,5 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
         myListeners.remove(listener);
       }
     }
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "KeymapManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 }
