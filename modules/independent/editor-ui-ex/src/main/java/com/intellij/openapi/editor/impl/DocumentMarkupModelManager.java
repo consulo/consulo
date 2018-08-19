@@ -15,20 +15,19 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.WeakList;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
-public class DocumentMarkupModelManager extends AbstractProjectComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.DocumentMarkupModelManager");
+public class DocumentMarkupModelManager {
+  private static final Logger LOG = Logger.getInstance(DocumentMarkupModelManager.class);
 
   private final WeakList<Document> myDocumentSet = new WeakList<Document>();
   private volatile boolean myDisposed;
@@ -37,14 +36,11 @@ public class DocumentMarkupModelManager extends AbstractProjectComponent {
     return project.getComponent(DocumentMarkupModelManager.class);
   }
 
+  private Project myProject;
+
   public DocumentMarkupModelManager(@Nonnull Project project) {
-    super(project);
-    Disposer.register(project, new Disposable() {
-      @Override
-      public void dispose() {
-        cleanupProjectMarkups();
-      }
-    });
+    myProject = project;
+    Disposer.register(project, () -> cleanupProjectMarkups());
   }
 
   public void registerDocument(Document document) {

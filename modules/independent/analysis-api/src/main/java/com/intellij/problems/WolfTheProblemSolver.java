@@ -17,29 +17,24 @@
 package com.intellij.problems;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * @author cdr
  */
-public abstract class WolfTheProblemSolver extends AbstractProjectComponent {
+public abstract class WolfTheProblemSolver {
   public static final ExtensionPointName<Condition<VirtualFile>> FILTER_EP_NAME = ExtensionPointName.create("com.intellij.problemFileHighlightFilter");
 
   public static WolfTheProblemSolver getInstance(Project project) {
     return project.getComponent(WolfTheProblemSolver.class);
-  }
-
-  protected WolfTheProblemSolver(Project project) {
-    super(project);
   }
 
   public abstract boolean isProblemFile(VirtualFile virtualFile);

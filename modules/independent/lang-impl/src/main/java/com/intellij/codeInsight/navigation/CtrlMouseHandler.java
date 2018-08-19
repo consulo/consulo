@@ -17,7 +17,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -88,7 +87,7 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CtrlMouseHandler extends AbstractProjectComponent {
+public class CtrlMouseHandler  {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.navigation.CtrlMouseHandler");
   private final EditorColorsManager myEditorColorsManager;
 
@@ -209,13 +208,15 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
   }
 
+  protected Project myProject;
+
   public CtrlMouseHandler(final Project project,
                           StartupManager startupManager,
                           EditorColorsManager colorsManager,
                           FileEditorManager fileEditorManager,
                           @Nonnull DocumentationManager documentationManager,
                           @Nonnull final EditorFactory editorFactory) {
-    super(project);
+    myProject = project;
     myEditorColorsManager = colorsManager;
     startupManager.registerPostStartupActivity(new DumbAwareRunnable() {
       @Override
@@ -235,12 +236,6 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     });
     myFileEditorManager = fileEditorManager;
     myDocumentationManager = documentationManager;
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "CtrlMouseHandler";
   }
 
   private boolean isMouseOverTooltip(@Nonnull Point mouseLocationOnScreen) {

@@ -16,23 +16,28 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Bas Leijdekkers
  */
-public class WindowDressing extends AbstractProjectComponent {
+public class WindowDressing implements ProjectComponent {
+
+  private Project myProject;
 
   public WindowDressing(@Nonnull Project project) {
-    super(project);
+    myProject = project;
   }
 
+  @Override
   public void projectOpened() {
     getWindowActionGroup().addProject(myProject);
   }
 
+  @Override
   public void projectClosed() {
     getWindowActionGroup().removeProject(myProject);
   }

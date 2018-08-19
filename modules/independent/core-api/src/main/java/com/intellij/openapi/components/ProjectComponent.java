@@ -24,8 +24,6 @@ package com.intellij.openapi.components;
  * {@link #initComponent()} and {@link #projectOpened()} methods will be called for each project even if user doesn't use any feature of your
  * plugin. So consider using specific extensions instead to ensure that the plugin will not impact IDE performance until user calls its
  * actions explicitly.</strong>
- *
- * @see AbstractProjectComponent
  */
 public interface ProjectComponent extends BaseComponent {
   /**

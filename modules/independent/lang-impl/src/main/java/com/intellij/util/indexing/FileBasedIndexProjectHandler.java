@@ -21,9 +21,9 @@ package com.intellij.util.indexing;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.startup.StartupManagerEx;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.*;
@@ -33,12 +33,12 @@ import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
-public class FileBasedIndexProjectHandler extends AbstractProjectComponent implements IndexableFileSet {
+public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.FileBasedIndexProjectHandler");
 
   private final FileBasedIndex myIndex;
@@ -48,7 +48,6 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
                                       Project project,
                                       FileBasedIndexScanRunnableCollector collector,
                                       ProjectManager projectManager) {
-    super(project);
     myIndex = index;
     myCollector = collector;
 
@@ -111,7 +110,7 @@ public class FileBasedIndexProjectHandler extends AbstractProjectComponent imple
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     // done mostly for tests. In real life this is no-op, because the set was removed on project closing
     myIndex.removeIndexableSet(this);
   }

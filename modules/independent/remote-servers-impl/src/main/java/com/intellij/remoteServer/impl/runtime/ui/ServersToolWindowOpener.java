@@ -1,30 +1,25 @@
 package com.intellij.remoteServer.impl.runtime.ui;
 
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import consulo.platform.Platform;
-import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: michael.golubev
  */
-public class ServersToolWindowOpener extends AbstractProjectComponent {
+public class ServersToolWindowOpener implements ProjectComponent {
+
+  private Project myProject;
 
   public ServersToolWindowOpener(final Project project) {
-    super(project);
+    myProject = project;
   }
 
   @Override
   public void projectOpened() {
     Platform.onlyAtDesktop(() -> StartupManager.getInstance(myProject).registerPostStartupActivity(() -> ToolWindowManager.getInstance(myProject).invokeLater(() -> new ServersToolWindow(myProject))));
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "ServersToolWindowOpener";
   }
 }

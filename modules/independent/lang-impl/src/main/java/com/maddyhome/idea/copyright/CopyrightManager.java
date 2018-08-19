@@ -60,8 +60,8 @@ import java.util.Map;
                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/",
                         stateSplitter = CopyrightManager.CopyrightStateSplitter.class)
        })
-public class CopyrightManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance("#" + CopyrightManager.class.getName());
+public class CopyrightManager implements PersistentStateComponent<Element> {
+  private static final Logger LOG = Logger.getInstance(CopyrightManager.class.getName());
   @NonNls
   private static final String COPYRIGHT = "copyright";
   @NonNls
@@ -78,6 +78,8 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
   @Nullable
   private CopyrightProfile myDefaultCopyright = null;
 
+  private Project myProject;
+
   public CopyrightManager(@Nonnull Project project,
                           @Nonnull final EditorFactory editorFactory,
                           @Nonnull final Application application,
@@ -85,54 +87,49 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
                           @Nonnull final ProjectRootManager projectRootManager,
                           @Nonnull final PsiManager psiManager,
                           @Nonnull StartupManager startupManager) {
-    super(project);
-    if (!myProject.isDefault()) {
-      final NewFileTracker newFileTracker = NewFileTracker.getInstance();
-      Disposer.register(myProject, newFileTracker::clear);
-      startupManager.runWhenProjectIsInitialized(new Runnable() {
-        @Override
-        public void run() {
-          DocumentListener listener = new DocumentAdapter() {
-            @Override
-            public void documentChanged(DocumentEvent e) {
-              final Document document = e.getDocument();
-              final VirtualFile virtualFile = fileDocumentManager.getFile(document);
-              if (virtualFile == null) return;
-              if (!newFileTracker.poll(virtualFile)) return;
-              if (!CopyrightUpdaters.hasExtension(virtualFile)) return;
-              final Module module = projectRootManager.getFileIndex().getModuleForFile(virtualFile);
-              if (module == null) return;
-              final PsiFile file = psiManager.findFile(virtualFile);
-              if (file == null) return;
-              application.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  if (myProject.isDisposed()) return;
-                  if (file.isValid() && file.isWritable()) {
-                    final CopyrightProfile opts = getCopyrightOptions(file);
-                    if (opts != null) {
-                      new UpdateCopyrightProcessor(myProject, module, file).run();
-                    }
+    myProject = project;
+    if (myProject.isDefault()) {
+      return;
+    }
+
+    final NewFileTracker newFileTracker = NewFileTracker.getInstance();
+    Disposer.register(myProject, newFileTracker::clear);
+    startupManager.runWhenProjectIsInitialized(new Runnable() {
+      @Override
+      public void run() {
+        DocumentListener listener = new DocumentAdapter() {
+          @Override
+          public void documentChanged(DocumentEvent e) {
+            final Document document = e.getDocument();
+            final VirtualFile virtualFile = fileDocumentManager.getFile(document);
+            if (virtualFile == null) return;
+            if (!newFileTracker.poll(virtualFile)) return;
+            if (!CopyrightUpdaters.hasExtension(virtualFile)) return;
+            final Module module = projectRootManager.getFileIndex().getModuleForFile(virtualFile);
+            if (module == null) return;
+            final PsiFile file = psiManager.findFile(virtualFile);
+            if (file == null) return;
+            application.invokeLater(new Runnable() {
+              @Override
+              public void run() {
+                if (myProject.isDisposed()) return;
+                if (file.isValid() && file.isWritable()) {
+                  final CopyrightProfile opts = getCopyrightOptions(file);
+                  if (opts != null) {
+                    new UpdateCopyrightProcessor(myProject, module, file).run();
                   }
                 }
-              }, ModalityState.NON_MODAL, myProject.getDisposed());
-            }
-          };
-          editorFactory.getEventMulticaster().addDocumentListener(listener, myProject);
-        }
-      });
-    }
+              }
+            }, ModalityState.NON_MODAL, myProject.getDisposed());
+          }
+        };
+        editorFactory.getEventMulticaster().addDocumentListener(listener, myProject);
+      }
+    });
   }
 
   public static CopyrightManager getInstance(Project project) {
     return project.getComponent(CopyrightManager.class);
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "CopyrightManager";
   }
 
   private void readExternal(Element element) throws InvalidDataException {

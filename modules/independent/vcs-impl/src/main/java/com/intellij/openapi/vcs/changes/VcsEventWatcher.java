@@ -19,22 +19,24 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
-public class VcsEventWatcher extends AbstractProjectComponent {
+public class VcsEventWatcher implements ProjectComponent {
+  private Project myProject;
+
   public VcsEventWatcher(Project project) {
-    super(project);
+    myProject = project;
   }
 
   @Override
@@ -53,15 +55,9 @@ public class VcsEventWatcher extends AbstractProjectComponent {
       }
     });
     final WolfTheProblemSolver.ProblemListener myProblemListener = new MyProblemListener();
-    WolfTheProblemSolver.getInstance(myProject).addProblemListener(myProblemListener,myProject);
+    WolfTheProblemSolver.getInstance(myProject).addProblemListener(myProblemListener, myProject);
   }
 
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "VcsEventWatcher";
-  }
   private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
     @Override
     public void problemsAppeared(@Nonnull final VirtualFile file) {

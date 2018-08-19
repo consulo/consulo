@@ -21,7 +21,7 @@ import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.impl.DocumentImpl;
@@ -41,9 +41,9 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -455,13 +455,14 @@ public class EventLog {
     }, true);
   }
 
-  public static class ProjectTracker extends AbstractProjectComponent {
+  public static class ProjectTracker implements ProjectComponent {
     private final Map<String, EventLogConsole> myCategoryMap = ContainerUtil.newConcurrentMap();
     private final List<Notification> myInitial = ContainerUtil.createLockFreeCopyOnWriteList();
     private final LogModel myProjectModel;
+    private final Project myProject;
 
     public ProjectTracker(@Nonnull final Project project) {
-      super(project);
+      myProject = project;
 
       myProjectModel = new LogModel(project, project);
 
@@ -484,10 +485,6 @@ public class EventLog {
         doPrintNotification(notification, ObjectUtils.assertNotNull(getConsole(notification)));
       }
       myInitial.clear();
-    }
-
-    @Override
-    public void projectOpened() {
     }
 
     @Override

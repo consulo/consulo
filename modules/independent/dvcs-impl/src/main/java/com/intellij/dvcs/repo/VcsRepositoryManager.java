@@ -16,7 +16,6 @@
 package com.intellij.dvcs.repo;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
@@ -30,9 +29,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.Topic;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -40,7 +39,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * VcsRepositoryManager creates,stores and updates all Repositories information using registered {@link VcsRepositoryCreator}
  * extension point in a thread safe way.
  */
-public class VcsRepositoryManager extends AbstractProjectComponent implements Disposable, VcsListener {
+public class VcsRepositoryManager implements Disposable, VcsListener {
 
   public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED =
           Topic.create("VCS repository mapping updated", VcsRepositoryMappingListener.class);
@@ -67,14 +66,12 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     return ObjectUtils.assertNotNull(project.getComponent(VcsRepositoryManager.class));
   }
 
+  private final Project myProject;
+
   public VcsRepositoryManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager) {
-    super(project);
+    myProject = project;
     myVcsManager = vcsManager;
     myRepositoryCreators = Arrays.asList(Extensions.getExtensions(VcsRepositoryCreator.EXTENSION_POINT_NAME, project));
-  }
-
-  @Override
-  public void initComponent() {
     myProject.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this);
   }
 
@@ -109,24 +106,24 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     return getRepositoryForFile(file, true);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Repository getRepositoryForFile(@Nonnull VirtualFile file, boolean quick) {
     final VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
     if (vcsRoot == null) return null;
     return quick ? getRepositoryForRootQuick(vcsRoot.getPath()) : getRepositoryForRoot(vcsRoot.getPath());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Repository getRepositoryForRootQuick(@Nullable VirtualFile root) {
     return getRepositoryForRoot(root, false);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Repository getRepositoryForRoot(@Nullable VirtualFile root) {
     return getRepositoryForRoot(root, true);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Repository getRepositoryForRoot(@Nullable VirtualFile root, boolean updateIfNeeded) {
     if (root == null) return null;
     Repository result;
@@ -200,7 +197,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
   }
 
   // note: we are not calling this method during the project startup - it is called anyway by f.e the GitRootTracker
-  private void checkAndUpdateRepositoriesCollection(@javax.annotation.Nullable VirtualFile checkedRoot) {
+  private void checkAndUpdateRepositoriesCollection(@Nullable VirtualFile checkedRoot) {
     Map<VirtualFile, Repository> repositories;
     try {
       MODIFY_LOCK.lock();

@@ -21,10 +21,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.AbstractProjectComponent;
-import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
@@ -73,7 +70,7 @@ import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ShelveChangesManager extends AbstractProjectComponent implements JDOMExternalizable {
+public class ShelveChangesManager implements ProjectComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager");
   @NonNls
   private static final String ELEMENT_CHANGELIST = "changelist";
@@ -105,9 +102,10 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
 
   public static final Topic<ChangeListener> SHELF_TOPIC = new Topic<>("shelf updates", ChangeListener.class);
   private boolean myShowRecycled;
+  private final Project myProject;
 
   public ShelveChangesManager(final Project project, final MessageBus bus) {
-    super(project);
+    myProject = project;
     myPathMacroSubstitutor = PathMacroManager.getInstance(myProject).createTrackingSubstitutor();
     myBus = bus;
     mySchemeManager = SchemesManagerFactory.getInstance().createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList>() {
@@ -194,13 +192,6 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     myPathMacroSubstitutor.expandPaths(element);
     data.readExternal(element);
     return data;
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ShelveChangesManager";
   }
 
   @Override

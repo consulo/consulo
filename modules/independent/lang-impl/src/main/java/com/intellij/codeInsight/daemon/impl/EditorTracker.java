@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -35,16 +35,15 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class EditorTracker extends AbstractProjectComponent {
+public class EditorTracker implements ProjectComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.EditorTracker");
 
   private final WindowManager myWindowManager;
@@ -59,11 +58,12 @@ public class EditorTracker extends AbstractProjectComponent {
 
   private JFrame myIdeFrame;
   private Window myActiveWindow;
+  private Project myProject;
 
   public EditorTracker(Project project,
                        WindowManager windowManager,
                        EditorFactory editorFactory) {
-    super(project);
+    myProject = project;
     myWindowManager = windowManager;
     myEditorFactory = editorFactory;
   }
@@ -87,13 +87,6 @@ public class EditorTracker extends AbstractProjectComponent {
         myEditorFactoryListener.executeOnRelease(null);
       }
     });
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "EditorTracker";
   }
 
   private void editorFocused(Editor editor) {

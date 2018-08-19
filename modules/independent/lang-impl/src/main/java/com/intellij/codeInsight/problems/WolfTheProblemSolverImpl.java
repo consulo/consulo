@@ -118,10 +118,12 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
   }
 
+  private final Project myProject;
+
   public WolfTheProblemSolverImpl(@Nonnull Project project,
                                   @Nonnull PsiManager psiManager,
                                   @Nonnull VirtualFileManager virtualFileManager) {
-    super(project);
+    myProject = project;
     PsiTreeChangeListener changeListener = new PsiTreeChangeAdapter() {
       @Override
       public void childAdded(@Nonnull PsiTreeChangeEvent event) {

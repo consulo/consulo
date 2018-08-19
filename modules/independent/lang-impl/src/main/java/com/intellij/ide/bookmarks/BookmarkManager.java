@@ -49,26 +49,23 @@ import java.awt.event.InputEvent;
 import java.util.*;
 import java.util.List;
 
-@State(
-        name = "BookmarkManager",
-        storages = {
-                @Storage( file = StoragePathMacros.WORKSPACE_FILE)
-        }
-)
-public class BookmarkManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
+@State(name = "BookmarkManager", storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)})
+public class BookmarkManager implements PersistentStateComponent<Element> {
   private static final int MAX_AUTO_DESCRIPTION_SIZE = 50;
-
-  private final List<Bookmark> myBookmarks = new ArrayList<Bookmark>();
-
-  private final MessageBus myBus;
 
   public static BookmarkManager getInstance(Project project) {
     return project.getComponent(BookmarkManager.class);
   }
 
+  private final List<Bookmark> myBookmarks = new ArrayList<>();
+
+  private final MessageBus myBus;
+
+  private Project myProject;
+
   public BookmarkManager(Project project, MessageBus bus, PsiDocumentManager documentManager) {
-    super(project);
     myBus = bus;
+    myProject = project;
     EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
     multicaster.addDocumentListener(new MyDocumentListener(), myProject);
     multicaster.addEditorMouseListener(new MyEditorMouseListener(), myProject);
@@ -115,12 +112,6 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     if (description != null) {
       setDescription(bookmark, description);
     }
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "BookmarkManager";
   }
 
   public void addEditorBookmark(Editor editor, int lineIndex) {
