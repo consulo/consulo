@@ -23,7 +23,6 @@ package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.ProblemsView;
-import consulo.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
@@ -49,18 +48,18 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.OrderedSet;
 import com.intellij.util.indexing.FileBasedIndex;
-import consulo.compiler.impl.AdditionalOutputDirectoriesProvider;
-import gnu.trove.TIntHashSet;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.compiler.server.rmi.CompilerClientConnector;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.compiler.impl.AdditionalOutputDirectoriesProvider;
+import consulo.compiler.make.impl.CompositeDependencyCache;
 import consulo.compiler.roots.CompilerPathsImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
+import gnu.trove.TIntHashSet;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
@@ -293,15 +292,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
       myTask.addMessage(msg);
     }
 
-    if (ApplicationManager.getApplication().isCompilerServerMode()) {
-      VirtualFile virtualFile = msg.getVirtualFile();
-      CompilerClientConnector.getInstance(myProject)
-              .addMessage(msg.getCategory(), msg.getMessage(), virtualFile == null ? null : virtualFile.getPath(), msg.getLine(),
-                          msg.getColumn());
-    }
-    else {
-      ProblemsView.getInstance(myProject).addMessage(msg);
-    }
+    ProblemsView.getInstance(myProject).addMessage(msg);
   }
 
   @Override

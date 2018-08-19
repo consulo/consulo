@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * To be used for those non-LocalFileSystems which can provide corresponding
  * LocalFileSystem file for their element
  */
-public interface LocalFileProvider{
+public interface LocalFileProvider {
 
   @Nullable
   VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile);

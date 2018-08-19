@@ -42,12 +42,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-compiler-bridge-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>oro</groupId>
       <artifactId>oro</artifactId>
       <optional>true</optional>

@@ -32,12 +32,6 @@ public class OldComponentConfig extends ComponentConfig {
     super.setHeadlessImplementationClass(clazz);
   }
 
-  @Tag("compiler-server-implementation-class")
-  @Override
-  public void setCompilerServerImplementationClass(String clazz) {
-    super.setCompilerServerImplementationClass(clazz);
-  }
-
   @Tag(value = "loadForDefaultProject", textIfEmpty="true")
   @Override
   public void setLoadForDefaultProject(boolean loadForDefaultProject) {

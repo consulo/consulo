@@ -16,11 +16,12 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.KeyedLazyInstanceEP;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -31,6 +32,8 @@ import java.io.IOException;
  * @see VirtualFileManager
  */
 public interface VirtualFileSystem {
+  ExtensionPointName<VirtualFileSystem> EP_NAME = ExtensionPointName.create("com.intellij.virtualFileSystem");
+
   /**
    * Gets the protocol for this file system. Protocols should differ for all file systems.
    * Should be the same as corresponding {@link KeyedLazyInstanceEP#key}.

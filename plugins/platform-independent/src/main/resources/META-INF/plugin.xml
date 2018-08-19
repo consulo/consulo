@@ -136,10 +136,7 @@
     <extensionPoint name="fileTypeFactory"
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
 
-    <extensionPoint name="virtualFileSystem"
-                    beanClass="com.intellij.util.KeyedLazyInstanceEP">
-      <with attribute="implementationClass" implements="com.intellij.openapi.vfs.VirtualFileSystem"/>
-    </extensionPoint>
+    <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem" />
 
     <extensionPoint name="keymapExtension"
                     interface="com.intellij.openapi.keymap.KeymapExtension"/>
@@ -1215,8 +1212,7 @@
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
                         serviceImplementation="com.intellij.ide.actions.ShowSettingsUtilImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
-                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"
-                        serviceImplementationForCompilerServer="com.intellij.openapi.progress.impl.CoreProgressManager"/>
+                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl" />
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
 
@@ -1459,9 +1455,12 @@
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.ideSettings.LaFUsagesCollector"/>
 
 
-    <virtualFileSystem key="dummy" implementationClass="com.intellij.openapi.vfs.ex.dummy.DummyFileSystem"/>
-    <virtualFileSystem key="http" implementationClass="com.intellij.openapi.vfs.impl.http.HttpFileSystemImpl"/>
-    <virtualFileSystem key="https" implementationClass="com.intellij.openapi.vfs.impl.http.HttpsFileSystem"/>
+    <virtualFileSystem implementation="com.intellij.openapi.vfs.ex.dummy.DummyFileSystem"/>
+    <virtualFileSystem implementation="com.intellij.openapi.vfs.impl.http.HttpFileSystemImpl"/>
+    <virtualFileSystem implementation="com.intellij.openapi.vfs.impl.http.HttpsFileSystem"/>
+    <virtualFileSystem implementation="com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl"/>
+    <virtualFileSystem implementation="consulo.vfs.impl.zip.ZipFileSystemImpl"/>
+    <virtualFileSystem implementation="com.intellij.openapi.vfs.ex.temp.TempFileSystem"/>
 
     <toolWindow id="Event Log" anchor="bottom" secondary="true"
                 icon="AllIcons.Ide.Notification.NoEvents"
@@ -1531,7 +1530,7 @@
 
     <keymapExtension implementation="com.intellij.openapi.vcs.impl.VcsKeymapExtension"/>
     <fileTypeFactory implementation="com.intellij.openapi.vcs.impl.VcsFileTypeFactory"/>
-    <virtualFileSystem key="vcs" implementationClass="com.intellij.openapi.vcs.vfs.VcsFileSystem"/>
+    <virtualFileSystem implementation="com.intellij.openapi.vcs.vfs.VcsFileSystem"/>
     <fileDocumentSynchronizationVetoer implementation="com.intellij.openapi.vcs.changes.SaveCommittingDocumentsVetoer"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.vcs.VcsApplicationSettings"/>

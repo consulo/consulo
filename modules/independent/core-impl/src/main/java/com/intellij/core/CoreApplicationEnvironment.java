@@ -106,7 +106,7 @@ public class CoreApplicationEnvironment {
     registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(DocumentImpl::new, null));
 
     VirtualFileSystem[] fs = {myLocalFileSystem, myJarFileSystem};
-    VirtualFileManagerImpl virtualFileManager = new VirtualFileManagerImpl(fs, myApplication.getMessageBus());
+    VirtualFileManagerImpl virtualFileManager = new VirtualFileManagerImpl(myApplication.getMessageBus(), fs);
     registerComponentInstance(appContainer, VirtualFileManager.class, virtualFileManager);
 
     registerApplicationExtensionPoint(ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);

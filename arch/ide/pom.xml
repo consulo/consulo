@@ -115,11 +115,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-compiler-server-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-vcs-log-graph-api</artifactId>
       <version>${project.version}</version>
     </dependency>

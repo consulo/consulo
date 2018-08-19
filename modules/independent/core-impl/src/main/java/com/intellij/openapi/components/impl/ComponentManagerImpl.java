@@ -229,7 +229,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
   public synchronized void registerComponent(final ComponentConfig config, final PluginDescriptor pluginDescriptor) {
-    if (!config.prepareClasses(isHeadless(), isCompilerServer())) {
+    if (!config.prepareClasses(isHeadless())) {
       return;
     }
 
@@ -360,15 +360,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   private static class HeadlessHolder {
     private static final boolean myHeadless = ApplicationManager.getApplication().isHeadlessEnvironment();
-    private static final boolean myCompilerServer = ApplicationManager.getApplication().isCompilerServerMode();
   }
 
   private boolean isHeadless() {
     return HeadlessHolder.myHeadless;
-  }
-
-  private boolean isCompilerServer() {
-    return HeadlessHolder.myCompilerServer;
   }
 
   @Override

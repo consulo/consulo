@@ -358,6 +358,8 @@ public interface Application extends ComponentManager {
    *
    * @return true if IDE is running in compiler server, false otherwise
    */
+  @Deprecated
+  @DeprecationInfo("Unused anymore")
   default boolean isCompilerServerMode() {
     return false;
   }

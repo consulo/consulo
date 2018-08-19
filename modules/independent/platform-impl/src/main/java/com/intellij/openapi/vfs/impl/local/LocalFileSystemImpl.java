@@ -18,8 +18,8 @@ package com.intellij.openapi.vfs.impl.local;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -33,18 +33,18 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
+import consulo.vfs.RefreshableFileSystem;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public final class LocalFileSystemImpl extends LocalFileSystemBase implements ApplicationComponent {
+public final class LocalFileSystemImpl extends LocalFileSystemBase implements RefreshableFileSystem {
   private static final String FS_ROOT = "/";
   private static final int STATUS_UPDATE_PERIOD = 1000;
 
@@ -95,25 +95,13 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
               () -> { if (!app.isDisposed()) storeRefreshStatusToFiles(); },
               STATUS_UPDATE_PERIOD, STATUS_UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
+
+    Disposer.register(app, () -> myWatcher.dispose());
   }
 
   @Nonnull
   public FileWatcher getFileWatcher() {
     return myWatcher;
-  }
-
-  @Override
-  public void initComponent() { }
-
-  @Override
-  public void disposeComponent() {
-    myWatcher.dispose();
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "LocalFileSystem";
   }
 
   private List<WatchRequestImpl> normalizeRootsForRefresh() {

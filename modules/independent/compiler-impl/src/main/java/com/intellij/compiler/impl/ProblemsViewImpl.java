@@ -17,7 +17,6 @@ package com.intellij.compiler.impl;
 
 import com.intellij.compiler.ProblemsView;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -33,7 +32,6 @@ import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.compiler.server.rmi.CompilerClientConnector;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -130,11 +128,6 @@ public class ProblemsViewImpl extends ProblemsView {
   @RequiredDispatchThread
   @Override
   public void showOrHide(final boolean hide) {
-    if (ApplicationManager.getApplication().isCompilerServerMode()) {
-      CompilerClientConnector.getInstance(myProject).showOrHide(hide);
-      return;
-    }
-
     ToolWindow toolWindow = MessageView.SERVICE.getInstance(myProject).getToolWindow();
     // dont try hide if toolwindow closed
     if (hide && !toolWindow.isVisible()) {
@@ -187,10 +180,6 @@ public class ProblemsViewImpl extends ProblemsView {
 
   @Override
   public void selectFirstMessage() {
-    if (ApplicationManager.getApplication().isCompilerServerMode()) {
-      CompilerClientConnector.getInstance(myProject).selectFirstMessage();
-      return;
-    }
     final ProblemsViewPanel panel = myPanel;
     if (panel != null) {
       UIUtil.invokeLaterIfNeeded(new Runnable() {

@@ -41,6 +41,11 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
     return LocalFileSystemHolder.ourInstance;
   }
 
+  @Nonnull
+  public static LocalFileSystem get(@Nonnull VirtualFileManager manager) {
+    return (LocalFileSystem)manager.getFileSystem(PROTOCOL);
+  }
+
   @Nullable
   public abstract VirtualFile findFileByIoFile(@Nonnull File file);
 

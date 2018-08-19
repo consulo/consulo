@@ -62,15 +62,14 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
   private final VirtualFileManager myVirtualFileManager;
   @Nonnull
   private final MessageBus myBus;
-  private static final Comparator<String> URL_COMPARATOR =
-          SystemInfo.isFileSystemCaseSensitive ? (Comparator<String>)(url1, url2) -> url1.compareTo(url2) : (Comparator<String>)(url1, url2) -> url1.compareToIgnoreCase(url2);
+  private static final Comparator<String> URL_COMPARATOR = SystemInfo.isFileSystemCaseSensitive ? String::compareTo : String::compareToIgnoreCase;
 
-  VirtualFilePointerManagerImpl(@Nonnull VirtualFileManager virtualFileManager, @Nonnull MessageBus bus, @Nonnull TempFileSystem tempFileSystem, @Nonnull LocalFileSystem localFileSystem) {
+  VirtualFilePointerManagerImpl(@Nonnull VirtualFileManager virtualFileManager, @Nonnull MessageBus bus) {
     myVirtualFileManager = virtualFileManager;
     myBus = bus;
     bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
-    TEMP_FILE_SYSTEM = tempFileSystem;
-    LOCAL_FILE_SYSTEM = localFileSystem;
+    TEMP_FILE_SYSTEM = TempFileSystem.get(virtualFileManager);
+    LOCAL_FILE_SYSTEM = LocalFileSystem.get(virtualFileManager);
   }
 
 

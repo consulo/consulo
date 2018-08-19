@@ -25,6 +25,8 @@ import consulo.annotations.DeprecationInfo;
  * @author VISTALL
  * @since 06-Aug-16
  */
-public interface ArchiveFileSystem extends VirtualFileSystem, ArchiveCopyingFileSystem, LocalFileProvider {
-  @Deprecated @DeprecationInfo("Use URLUtil#ARCHIVE_SEPARATOR") String ARCHIVE_SEPARATOR = URLUtil.ARCHIVE_SEPARATOR;
+public interface ArchiveFileSystem extends VirtualFileSystem, ArchiveCopyingFileSystem, LocalFileProvider, RefreshableFileSystem {
+  @Deprecated
+  @DeprecationInfo("Use URLUtil#ARCHIVE_SEPARATOR")
+  String ARCHIVE_SEPARATOR = URLUtil.ARCHIVE_SEPARATOR;
 }

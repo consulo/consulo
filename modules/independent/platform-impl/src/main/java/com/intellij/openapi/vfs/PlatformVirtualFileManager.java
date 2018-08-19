@@ -28,8 +28,8 @@ public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   @Nonnull
   private final ManagingFS myManagingFS;
 
-  public PlatformVirtualFileManager(@Nonnull VirtualFileSystem[] fileSystems, @Nonnull MessageBus bus, @Nonnull ManagingFS managingFS) {
-    super(fileSystems, bus);
+  public PlatformVirtualFileManager( @Nonnull MessageBus bus, @Nonnull ManagingFS managingFS) {
+    super(bus);
     myManagingFS = managingFS;
   }
 

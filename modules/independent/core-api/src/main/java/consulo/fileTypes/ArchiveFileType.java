@@ -20,6 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 
@@ -30,13 +31,13 @@ import javax.annotation.Nonnull;
  * @since 19:19/13.07.13
  */
 public abstract class ArchiveFileType implements FileType {
-  private final NotNullLazyValue<ArchiveFileSystem> myFileSystemLazyValue = new NotNullLazyValue<ArchiveFileSystem>() {
-    @Nonnull
-    @Override
-    protected ArchiveFileSystem compute() {
-      return (ArchiveFileSystem)VirtualFileManager.getInstance().getFileSystem(getProtocol());
+  private final NotNullLazyValue<ArchiveFileSystem> myFileSystemLazyValue = NotNullLazyValue.createValue(() -> {
+    VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(getProtocol());
+    if(fileSystem == null) {
+      throw new IllegalArgumentException("VirtualFileSystem with protocol: " + getProtocol() + " is not registered");
     }
-  };
+    return (ArchiveFileSystem) fileSystem;
+  });
 
   @Nonnull
   public abstract String getProtocol();

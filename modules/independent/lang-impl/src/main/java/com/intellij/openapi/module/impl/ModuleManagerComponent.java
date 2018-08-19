@@ -69,13 +69,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
   @Override
   protected void fireModulesAdded() {
-    if (ApplicationManager.getApplication().isCompilerServerMode()) {
-      for (final Module module : myModuleModel.getModules()) {
-        fireModuleAdded(module);
-      }
-      return;
-    }
-
     Runnable runnableWithProgress = () -> {
       for (final Module module : myModuleModel.getModules()) {
         final Application app = ApplicationManager.getApplication();

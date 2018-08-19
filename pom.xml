@@ -54,8 +54,6 @@
     <module>modules/independent/core-impl</module>
     <module>modules/independent/compiler-api</module>
     <module>modules/independent/compiler-impl</module>
-    <module>modules/independent/compiler-bridge-impl</module>
-    <module>modules/independent/compiler-server-impl</module>
     <module>modules/independent/diff-api</module>
     <module>modules/independent/diff-impl</module>
     <module>modules/independent/dvcs-api</module>

@@ -35,13 +35,11 @@ public class ComponentConfig {
 
   protected String headlessImplementationClass;
 
-  protected String compilerServerImplementationClass;
-
   protected boolean loadForDefaultProject;
 
   @Property(surroundWithTag = false)
   @MapAnnotation(surroundWithTag = false, entryTagName = "option", keyAttributeName = "name", valueAttributeName = "value")
-  public Map<String,String> options = new HashMap<String, String>();
+  public Map<String, String> options = new HashMap<String, String>();
 
   @Transient
   public PluginDescriptor pluginDescriptor;
@@ -69,11 +67,6 @@ public class ComponentConfig {
     return headlessImplementationClass;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  public String getCompilerServerImplementationClass() {
-    return compilerServerImplementationClass;
-  }
-
   public boolean isLoadForDefaultProject() {
     return loadForDefaultProject;
   }
@@ -82,12 +75,8 @@ public class ComponentConfig {
    * @param headless
    * @return false if the component should not be loaded in headless mode
    */
-  public boolean prepareClasses(boolean headless, boolean compilerServer) {
-    if (compilerServer && compilerServerImplementationClass != null) {
-      if (StringUtil.isEmpty(compilerServerImplementationClass)) return false;
-      setImplementationClass(compilerServerImplementationClass);
-    }
-    else if (headless && headlessImplementationClass != null) {
+  public boolean prepareClasses(boolean headless) {
+    if (headless && headlessImplementationClass != null) {
       if (StringUtil.isEmpty(headlessImplementationClass)) return false;
       setImplementationClass(headlessImplementationClass);
     }
@@ -108,11 +97,6 @@ public class ComponentConfig {
   public void setHeadlessImplementationClass(String headlessImplementationClass) {
     headlessImplementationClass = headlessImplementationClass == null ? null : headlessImplementationClass.trim();
     this.headlessImplementationClass = headlessImplementationClass == null ? null : StringUtil.isEmpty(headlessImplementationClass) ? "" : headlessImplementationClass;
-  }
-
-  public void setCompilerServerImplementationClass(String clazz) {
-    clazz = clazz == null ? null : clazz.trim();
-    this.compilerServerImplementationClass = clazz == null ? null : StringUtil.isEmpty(clazz) ? "" : clazz;
   }
 
   public void setLoadForDefaultProject(boolean loadForDefaultProject) {

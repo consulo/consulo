@@ -76,7 +76,7 @@ public class Messages {
   @TestOnly
   public static TestDialog setTestDialog(TestDialog newValue) {
     Application application = ApplicationManager.getApplication();
-    if (application != null && !application.isCompilerServerMode()) {
+    if (application != null) {
       LOG.assertTrue(application.isUnitTestMode(), "This method is available for tests only");
     }
     TestDialog oldValue = ourTestImplementation;

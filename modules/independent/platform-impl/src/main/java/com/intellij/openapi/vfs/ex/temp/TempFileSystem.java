@@ -16,11 +16,11 @@
 
 package com.intellij.openapi.vfs.ex.temp;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -29,10 +29,11 @@ import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.LocalTimeCounter;
+import consulo.vfs.RefreshableFileSystem;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +41,17 @@ import java.util.List;
 /**
  * @author max
  */
-public class TempFileSystem extends NewVirtualFileSystem {
+public class TempFileSystem extends NewVirtualFileSystem implements RefreshableFileSystem {
+  public static final String PROTOCOL = "temp";
   private final FSItem myRoot = new FSDir(null, "/");
 
+  @Nonnull
+  public static TempFileSystem get(@Nonnull VirtualFileManager manager) {
+    return (TempFileSystem)manager.getFileSystem(PROTOCOL);
+  }
+
   public static TempFileSystem getInstance() {
-    return ApplicationManager.getApplication().getComponent(TempFileSystem.class);
+    return (TempFileSystem)VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
   }
 
   @Nonnull
@@ -149,7 +156,7 @@ public class TempFileSystem extends NewVirtualFileSystem {
   @Override
   @Nonnull
   public String getProtocol() {
-    return "temp";
+    return PROTOCOL;
   }
 
   @Override

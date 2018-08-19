@@ -146,12 +146,6 @@
     </dependency>
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-compiler-server-impl</artifactId>
-      <version>${project.parent.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
       <artifactId>consulo-vcs-log-graph-api</artifactId>
       <version>${project.parent.version}</version>
       <scope>provided</scope>

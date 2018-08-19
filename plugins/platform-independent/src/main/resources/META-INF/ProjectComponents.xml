@@ -90,7 +90,6 @@
     <component>
       <interface-class>com.intellij.openapi.roots.impl.DirectoryIndex</interface-class>
       <implementation-class>com.intellij.openapi.roots.impl.DirectoryIndexImpl</implementation-class>
-      <compiler-server-implementation-class>consulo.compiler.server.roots.impl.CompilerServerDirectoryIndex</compiler-server-implementation-class>
       <loadForDefaultProject/>
     </component>
 
@@ -169,7 +168,6 @@
 
     <component>
       <implementation-class>com.intellij.util.indexing.FileBasedIndexProjectHandler</implementation-class>
-      <compiler-server-implementation-class></compiler-server-implementation-class>
     </component>
 
     <component>
@@ -318,11 +316,6 @@
    <component>
       <interface-class>com.intellij.compiler.impl.CompilerCacheManager</interface-class>
       <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.compiler.server.rmi.CompilerClientConnector</interface-class>
-      <implementation-class>consulo.compiler.server.rmi.impl.CompilerClientConnectorImpl</implementation-class>
     </component>
 
     <component>
