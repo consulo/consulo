@@ -367,20 +367,29 @@ public class IconUtil {
       }
     }
 
-    return createImageIcon(img);
+    return createImageIcon((Image) img);
+  }
+
+  /**
+   * @deprecated Use {@link #createImageIcon(Image)}
+   */
+  @Deprecated
+  @Nonnull
+  public static JBImageIcon createImageIcon(@Nonnull final BufferedImage img) {
+    return createImageIcon((Image)img);
   }
 
   @Nonnull
-  public static JBImageIcon createImageIcon(@Nonnull final BufferedImage img) {
+  public static JBImageIcon createImageIcon(@Nonnull final Image img) {
     return new JBImageIcon(img) {
       @Override
       public int getIconWidth() {
-        return getImage() instanceof JBHiDPIScaledImage ? super.getIconWidth() / 2 : super.getIconWidth();
+        return ImageUtil.getUserWidth(getImage());
       }
 
       @Override
       public int getIconHeight() {
-        return getImage() instanceof JBHiDPIScaledImage ? super.getIconHeight() / 2 : super.getIconHeight();
+        return ImageUtil.getUserHeight(getImage());
       }
     };
   }

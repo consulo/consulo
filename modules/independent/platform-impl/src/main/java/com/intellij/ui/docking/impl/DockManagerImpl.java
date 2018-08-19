@@ -48,14 +48,15 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.docking.*;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -243,14 +244,14 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
         ratio = requiredSize / height;
       }
 
-      BufferedImage buffer = UIUtil.createImage((int)width, (int)height, BufferedImage.TYPE_INT_ARGB);
+      BufferedImage buffer = UIUtil.createImage(myWindow, (int)width, (int)height, BufferedImage.TYPE_INT_ARGB);
       buffer.createGraphics().drawImage(previewImage, 0, 0, (int)width, (int)height, null);
 
       myDefaultDragImage = buffer.getScaledInstance((int)(width * ratio), (int)(height * ratio), Image.SCALE_SMOOTH);
       myDragImage = myDefaultDragImage;
 
       myWindow.getContentPane().setLayout(new BorderLayout());
-      myImageContainer = new JLabel(new ImageIcon(myDragImage));
+      myImageContainer = new JLabel(IconUtil.createImageIcon(myDragImage));
       myImageContainer.setBorder(new LineBorder(Color.lightGray));
       myWindow.getContentPane().add(myImageContainer, BorderLayout.CENTER);
 
@@ -267,9 +268,10 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
       Point showPoint = me.getPoint();
       SwingUtilities.convertPointToScreen(showPoint, me.getComponent());
 
-      showPoint.x -= myDragImage.getWidth(null) / 2;
-      showPoint.y += 10;
-      myWindow.setBounds(new Rectangle(showPoint, new Dimension(myDragImage.getWidth(null), myDragImage.getHeight(null))));
+      Dimension size = myImageContainer.getSize();
+      showPoint.x -= size.width / 2;
+      showPoint.y -= size.height / 2;
+      myWindow.setBounds(new Rectangle(showPoint, size));
     }
 
     @Nonnull
@@ -315,7 +317,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
         if (img != myDragImage) {
           myDragImage = img;
-          myImageContainer.setIcon(new ImageIcon(myDragImage));
+          myImageContainer.setIcon(IconUtil.createImageIcon(myDragImage));
           myWindow.pack();
         }
 
