@@ -45,10 +45,7 @@ public class InspectionToolRegistrar {
 
   public void ensureInitialized() {
     if (!myInspectionComponentsLoaded.getAndSet(true)) {
-      Set<InspectionToolProvider> providers = new THashSet<InspectionToolProvider>();
-      ContainerUtil.addAll(providers, ApplicationManager.getApplication().getComponents(InspectionToolProvider.class));
-      ContainerUtil.addAll(providers, Extensions.getExtensions(InspectionToolProvider.EXTENSION_POINT_NAME));
-      registerTools(providers.toArray(new InspectionToolProvider[providers.size()]));
+      registerTools(InspectionToolProvider.EXTENSION_POINT_NAME.getExtensions());
       for (final LocalInspectionEP ep : Extensions.getExtensions(LocalInspectionEP.LOCAL_INSPECTION)) {
         myInspectionToolFactories.add(new Factory<InspectionToolWrapper>() {
           @Override

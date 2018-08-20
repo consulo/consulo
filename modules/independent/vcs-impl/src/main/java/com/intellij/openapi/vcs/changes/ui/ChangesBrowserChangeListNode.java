@@ -22,6 +22,7 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +40,11 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
     super(userObject);
     myChangeListRemoteState = changeListRemoteState;
     myClManager = (ChangeListManagerEx) ChangeListManager.getInstance(project);
-    myDecorators = project.getComponents(ChangeListDecorator.class);
+    myDecorators = ChangeListDecorator.EP_NAME.getExtensions(project);
   }
 
   @Override
-  public void render(final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
+  public void render(@Nonnull final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
     if (userObject instanceof LocalChangeList) {
       final LocalChangeList list = ((LocalChangeList)userObject);
       renderer.appendTextWithIssueLinks(list.getName(),

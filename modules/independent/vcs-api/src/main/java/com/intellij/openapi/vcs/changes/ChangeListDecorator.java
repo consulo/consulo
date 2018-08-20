@@ -22,6 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.ui.ColoredTreeCellRenderer;
 
 /**
@@ -29,6 +30,7 @@ import com.intellij.ui.ColoredTreeCellRenderer;
  * interface need to be registered as project components.
  */
 public interface ChangeListDecorator {
-  void decorateChangeList(LocalChangeList changeList, ColoredTreeCellRenderer cellRenderer,
-                          boolean selected, boolean expanded, boolean hasFocus);
+  ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create("com.intellij.changeListDecorator");
+
+  void decorateChangeList(LocalChangeList changeList, ColoredTreeCellRenderer cellRenderer, boolean selected, boolean expanded, boolean hasFocus);
 }

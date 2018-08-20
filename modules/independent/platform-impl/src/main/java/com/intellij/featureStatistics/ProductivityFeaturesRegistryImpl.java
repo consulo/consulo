@@ -76,8 +76,7 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
 
   private void lazyLoadFromPluginsFeaturesProviders() {
     if (myAdditionalFeaturesLoaded) return;
-    loadFeaturesFromProviders(ApplicationManager.getApplication().getComponents(ProductivityFeaturesProvider.class));
-    loadFeaturesFromProviders(Extensions.getExtensions(ProductivityFeaturesProvider.EP_NAME));
+    loadFeaturesFromProviders(ProductivityFeaturesProvider.EP_NAME.getExtensions());
     myAdditionalFeaturesLoaded = true;
   }
 
