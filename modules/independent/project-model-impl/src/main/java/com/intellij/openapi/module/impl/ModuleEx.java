@@ -26,10 +26,11 @@ public interface ModuleEx extends Module {
   public static ArrayFactory<ModuleEx> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new ModuleEx[count];
 
   void init();
+
   void loadModuleComponents();
+
   void moduleAdded();
-  void projectOpened();
-  void projectClosed();
+
   void rename(String newName);
 
   void clearScopesCache();

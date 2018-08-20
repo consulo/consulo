@@ -26,20 +26,20 @@ import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
+import org.picocontainer.MutablePicoContainer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.MutablePicoContainer;
 
 /**
  * @author max
@@ -49,7 +49,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Nonnull
   private final Project myProject;
-  private boolean isModuleAdded;
+
   @Nonnull
   @NonNls
   private String myName;
@@ -78,7 +78,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
 
- @Override
+  @Override
   public void loadModuleComponents() {
     final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
@@ -112,35 +112,9 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Override
   public synchronized void dispose() {
-    isModuleAdded = false;
     disposeComponents();
     Extensions.disposeArea(this);
     super.dispose();
-  }
-
-  @Override
-  public void projectOpened() {
-    for (ModuleComponent component : getComponents(ModuleComponent.class)) {
-      try {
-        component.projectOpened();
-      }
-      catch (Exception e) {
-        LOGGER.error(e);
-      }
-    }
-  }
-
-  @Override
-  public void projectClosed() {
-    final ModuleComponent[] components = ArrayUtil.reverseArray(getComponents(ModuleComponent.class));
-    for (ModuleComponent component : components) {
-      try {
-        component.projectClosed();
-      }
-      catch (Exception e) {
-        LOGGER.error(e);
-      }
-    }
   }
 
   @Override
@@ -156,16 +130,10 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
   @Override
-  public boolean isLoaded() {
-    return isModuleAdded;
-  }
-
-  @Override
   public void moduleAdded() {
-    isModuleAdded = true;
-    for (ModuleComponent component : getComponents(ModuleComponent.class)) {
-      component.moduleAdded();
-    }
+    ModuleRootManagerImpl manager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(this);
+
+    manager.moduleAdded();
   }
 
   @Nonnull

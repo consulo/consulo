@@ -76,7 +76,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     private final String[] myGroups;
     private final Element myElement;
 
-    public ModuleLoadItem(@Nonnull String name, @javax.annotation.Nullable String dirUrl, @Nonnull Element element) {
+    public ModuleLoadItem(@Nonnull String name, @Nullable String dirUrl, @Nonnull Element element) {
       myDirUrl = dirUrl;
       myElement = element;
 
@@ -92,7 +92,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       }
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public String[] getGroups() {
       return myGroups;
     }
@@ -253,8 +253,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
   }
 
-  @javax.annotation.Nullable
-  private ModuleLoadItem findModuleByUrl(@Nonnull String name, @javax.annotation.Nullable String url) {
+  @Nullable
+  private ModuleLoadItem findModuleByUrl(@Nonnull String name, @Nullable String url) {
     if (url == null) {
       for (ModuleLoadItem item : myModuleLoadItems) {
         if (item.getName().equals(name) && item.getDirUrl() == null) {
@@ -518,8 +518,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   @Override
   public void projectOpened() {
     fireModulesAdded();
-
-    myModuleModel.projectOpened();
   }
 
   protected void fireModulesAdded() {
@@ -536,11 +534,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     });
   }
 
-  @Override
-  public void projectClosed() {
-    myModuleModel.projectClosed();
-  }
-
   @RequiredWriteAction
   public static void commitModelWithRunnable(ModifiableModuleModel model, Runnable runnable) {
     ((ModuleModelImpl)model).commitWithRunnable(runnable);
@@ -550,7 +543,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   protected abstract ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
 
   @Nonnull
-  protected ModuleEx createAndLoadModule(@Nonnull final ModuleLoadItem moduleLoadItem, @Nonnull ModuleModelImpl moduleModel, @javax.annotation.Nullable final ProgressIndicator progressIndicator) {
+  protected ModuleEx createAndLoadModule(@Nonnull final ModuleLoadItem moduleLoadItem, @Nonnull ModuleModelImpl moduleModel, @Nullable final ProgressIndicator progressIndicator) {
     final ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl(), progressIndicator);
     moduleModel.initModule(module);
 
@@ -628,7 +621,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       return myNewNameToModule.get(newName);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public Module getModuleByNewName(String newName) {
       final Module moduleToBeRenamed = getModuleToBeRenamed(newName);
       if (moduleToBeRenamed != null) {
@@ -650,7 +643,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
     @Override
     @Nonnull
-    public Module newModule(@Nonnull @NonNls String name, @javax.annotation.Nullable @NonNls String dirPath) {
+    public Module newModule(@Nonnull @NonNls String name, @Nullable @NonNls String dirPath) {
       assertWritable();
 
       final String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
@@ -667,7 +660,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       return moduleEx;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private ModuleEx getModuleByDirUrl(@Nonnull String dirUrl) {
       for (Module module : myModules) {
         if (FileUtil.pathsEqual(dirUrl, module.getModuleDirUrl())) {
@@ -690,7 +683,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Nonnull
-    private Module loadModuleInternal(@Nonnull ModuleLoadItem item, boolean firstLoad, @javax.annotation.Nullable ProgressIndicator progressIndicator)
+    private Module loadModuleInternal(@Nonnull ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
 
       final String moduleName = item.getName();
@@ -856,22 +849,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       myModuleGroupPath = null;
     }
 
-    public void projectOpened() {
-      for (final Module aCollection : myModules) {
-        ModuleEx module = (ModuleEx)aCollection;
-        module.projectOpened();
-      }
-    }
-
-    public void projectClosed() {
-      for (final Module aCollection : myModules) {
-        ModuleEx module = (ModuleEx)aCollection;
-        module.projectClosed();
-      }
-    }
-
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public String[] getModuleGroupPath(Module module) {
       return myModuleGroupPath == null ? null : myModuleGroupPath.get(module);
     }

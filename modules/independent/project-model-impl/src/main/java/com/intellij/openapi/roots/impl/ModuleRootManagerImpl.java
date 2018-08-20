@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.*;
@@ -40,12 +41,15 @@ import gnu.trove.THashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleComponent {
+@Singleton
+public class ModuleRootManagerImpl extends ModuleRootManager implements Disposable {
   private static final Logger LOGGER = Logger.getInstance(ModuleRootManagerImpl.class);
 
   private final Module myModule;
@@ -55,6 +59,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   private final OrderRootsCache myOrderRootsCache;
   private final Map<RootModelImpl, Throwable> myModelCreations = new THashMap<>();
 
+  @Inject
   public ModuleRootManagerImpl(Module module) {
     myModule = module;
     myRootModel = new RootModelImpl(this);
@@ -80,17 +85,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  @Nonnull
-  public String getComponentName() {
-    return "NewModuleRootManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     myRootModel.dispose();
     myIsDisposed = true;
 
@@ -220,7 +215,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getExtension(key);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
     return myRootModel.getExtensionWithoutCheck(clazz);
@@ -353,7 +348,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getCurrentLayerName();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public ModuleRootLayer findLayerByName(@Nonnull String name) {
     LOGGER.assertTrue(!myIsDisposed);
@@ -367,15 +362,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getLayers();
   }
 
-  @Override
-  public void projectOpened() {
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
   public void moduleAdded() {
     isModuleAdded = true;
   }
@@ -389,12 +375,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @RequiredReadAction
-  public void loadState(Element parent, @javax.annotation.Nullable ProgressIndicator indicator) {
+  public void loadState(Element parent, @Nullable ProgressIndicator indicator) {
     loadState(parent, indicator, myRootModel != null);
   }
 
   @RequiredReadAction
-  protected void loadState(Element element, @javax.annotation.Nullable ProgressIndicator indicator, boolean throwEvent) {
+  protected void loadState(Element element, @Nullable ProgressIndicator indicator, boolean throwEvent) {
     try {
       final RootModelImpl newModel = new RootModelImpl(element, indicator, this, throwEvent);
 

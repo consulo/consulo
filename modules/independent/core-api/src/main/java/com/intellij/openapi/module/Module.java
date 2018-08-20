@@ -31,7 +31,6 @@ import javax.annotation.Nullable;
  * Represents a module in an Consulo project.
  *
  * @see ModuleManager#getModules()
- * @see ModuleComponent
  */
 public interface Module extends ComponentManager, AreaInstance, Disposable, Named {
   public static final Module[] EMPTY_ARRAY = new Module[0];
@@ -86,8 +85,6 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    */
   @Override
   boolean isDisposed();
-
-  boolean isLoaded();
 
   /**
    * Sets a custom option for this module.

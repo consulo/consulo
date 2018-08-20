@@ -1957,6 +1957,8 @@
                     serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
     <moduleService serviceInterface="com.intellij.openapi.roots.ModuleFileIndex"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
+    <moduleService serviceInterface="com.intellij.openapi.roots.ModuleRootManager"
+                   serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl" />
     <projectService serviceInterface="com.intellij.openapi.roots.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>
 
