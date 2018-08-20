@@ -99,11 +99,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  public BaseComponent getComponent(String name) {
-    return null;
-  }
-
-  @Override
   public <T> T getComponent(Class<T> interfaceClass) {
     return null;
   }

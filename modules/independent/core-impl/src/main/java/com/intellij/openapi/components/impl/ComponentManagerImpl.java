@@ -302,11 +302,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return result;
   }
 
-  @Override
-  public synchronized BaseComponent getComponent(@Nonnull String name) {
-    return myComponentsRegistry.getComponentByName(name);
-  }
-
   protected boolean isComponentSuitable(Map<String, String> options) {
     return !isTrue(options, "internal") || ApplicationManager.getApplication().isInternal();
   }

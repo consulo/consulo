@@ -20,8 +20,9 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
-import javax.annotation.Nonnull;
 import org.picocontainer.PicoContainer;
+
+import javax.annotation.Nonnull;
 
 /**
  * Provides access to components. Serves as a base interface for {@link com.intellij.openapi.application.Application}
@@ -33,15 +34,6 @@ import org.picocontainer.PicoContainer;
  * @see com.intellij.openapi.project.Project
  */
 public interface ComponentManager extends UserDataHolder, Disposable {
-  /**
-   * Gets the component by its name
-   *
-   * @param name the name of the component
-   * @return component with given name or null if there is no such component
-   * @see com.intellij.openapi.components.NamedComponent#getComponentName()
-   */
-  BaseComponent getComponent(@Nonnull String name);
-
   /**
    * Gets the component by its interface class.
    *

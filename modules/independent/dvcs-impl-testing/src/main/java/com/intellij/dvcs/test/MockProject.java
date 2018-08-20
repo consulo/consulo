@@ -101,11 +101,6 @@ public class MockProject implements Project {
   }
 
   @Override
-  public BaseComponent getComponent(String name) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public <T> T getComponent(Class<T> interfaceClass) {
     throw new UnsupportedOperationException();
   }

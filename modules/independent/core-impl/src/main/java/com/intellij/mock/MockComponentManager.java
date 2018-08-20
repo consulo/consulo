@@ -63,11 +63,6 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
     Disposer.register(parentDisposable, this);
   }
 
-  @Override
-  public BaseComponent getComponent(@Nonnull String name) {
-    return null;
-  }
-
   public <T> void registerService(@Nonnull Class<T> serviceInterface, @Nonnull Class<? extends T> serviceImplementation) {
     myPicoContainer.unregisterComponent(serviceInterface.getName());
     myPicoContainer.registerComponentImplementation(serviceInterface.getName(), serviceImplementation);
