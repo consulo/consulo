@@ -87,8 +87,10 @@ bool IsValidJRE(const char* path)
 bool Is64BitJRE(const char* path)
 {
   std::string cfgPath(path);
+  std::string cfgJava9Path(path);
   cfgPath += "\\lib\\amd64\\jvm.cfg";
-  return FileExists(cfgPath);
+  cfgJava9Path += "\\lib\\jvm.cfg";
+  return FileExists(cfgPath) || FileExists(cfgJava9Path);
 }
 
 bool FindValidJVM(const char* path)
@@ -165,11 +167,30 @@ bool FindJVMInRegistryKey(const char* key, bool wow64_32)
 
 bool FindJVMInRegistryWithVersion(const char* version, bool wow64_32)
 {
-  const char* keyName = "Java Runtime Environment";
+  char* keyName = "Java Runtime Environment";
+  // starting from java 9 key name has been changed
+  char* jreKeyName = "JRE";
+  char* jdkKeyName = "JDK";
 
+  bool foundJava = false;
   char buf[_MAX_PATH];
   sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", keyName, version);
-  return FindJVMInRegistryKey(buf, wow64_32);
+  foundJava = FindJVMInRegistryKey(buf, wow64_32);
+  if (!foundJava) {
+    sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", jreKeyName, version);
+    foundJava = FindJVMInRegistryKey(buf, wow64_32);
+  }
+  //search jdk in registry if the product requires tools.jar or jre isn't installed.
+  if (!foundJava) {
+    keyName = "Java Development Kit";
+    sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", keyName, version);
+    foundJava = FindJVMInRegistryKey(buf, wow64_32);
+    if (!foundJava) {
+      sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", jdkKeyName, version);
+      foundJava = FindJVMInRegistryKey(buf, wow64_32);
+    }
+  }
+  return foundJava;
 }
 
 bool FindJVMInRegistry()
@@ -177,6 +198,14 @@ bool FindJVMInRegistry()
 #ifndef _M_X64
   if (FindJVMInRegistryWithVersion("1.8", true))
     return true;
+  if (FindJVMInRegistryWithVersion("9", true))
+    return true;
+  if (FindJVMInRegistryWithVersion("10", true))
+    return true;
+  if (FindJVMInRegistryWithVersion("11", true))
+    return true;
+
+  //obsolete java versions
   if (FindJVMInRegistryWithVersion("1.7", true))
     return true;
   if (FindJVMInRegistryWithVersion("1.6", true))
@@ -185,6 +214,14 @@ bool FindJVMInRegistry()
 
   if (FindJVMInRegistryWithVersion("1.8", false))
     return true;
+  if (FindJVMInRegistryWithVersion("9", false))
+    return true;
+  if (FindJVMInRegistryWithVersion("10", false))
+    return true;
+  if (FindJVMInRegistryWithVersion("11", false))
+    return true;
+
+  //obsolete java versions
   if (FindJVMInRegistryWithVersion("1.7", false))
     return true;
   if (FindJVMInRegistryWithVersion("1.6", false))
@@ -207,8 +244,7 @@ BOOL IsWow64()
   //Use GetModuleHandle to get a handle to the DLL that contains the function
   //and GetProcAddress to get a pointer to the function if available.
 
-  fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
-      GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
+  fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
 
   if (NULL != fnIsWow64Process)
   {
@@ -680,9 +716,9 @@ extern "C" int __declspec(dllexport) __cdecl launchConsulo(HINSTANCE hInstance,
 }
 
 extern "C" int __declspec(dllexport) __cdecl launchConsulo2(HINSTANCE hInstance,
-                       HINSTANCE hPrevInstance,
-                       LPTSTR    lpCmdLine,
-                       int       nCmdShow,
+					   HINSTANCE hPrevInstance,
+					   LPTSTR lpCmdLine,
+					   int nCmdShow,
 					   int argc,
 					   WCHAR** wargv,
 					   WCHAR* moduleFile,
