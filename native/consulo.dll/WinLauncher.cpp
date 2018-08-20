@@ -357,8 +357,12 @@ bool AddClassPathOptions(std::vector<std::string>& vmOptionLines)
 
 void AddPredefinedVMOptions(std::vector<std::string>& vmOptionLines)
 {
+	// deprecated options - will removed later
 	vmOptionLines.push_back("-Didea.properties.file=" + EncodeWideACP(std::wstring(propertiesFilePath)));
 	vmOptionLines.push_back("-Didea.home.path=" + EncodeWideACP(std::wstring(workingDirectoryPath)));
+
+	vmOptionLines.push_back("-Dconsulo.properties.file=" + EncodeWideACP(std::wstring(propertiesFilePath)));
+	vmOptionLines.push_back("-Dconsulo.home.path=" + EncodeWideACP(std::wstring(workingDirectoryPath)));
 	vmOptionLines.push_back("-Dconsulo.app.home.path=" + EncodeWideACP(std::wstring(appHomePath)));
 }
 
@@ -388,7 +392,10 @@ bool LoadVMOptions(WCHAR* targetVmOptionFile)
     }
   }
 
+  // deprecated options - will removed later
   vmOptionLines.push_back(std::string("-Djb.vmOptions=") + EncodeWideACP(used));
+
+  vmOptionLines.push_back(std::string("-Dconsulo.vm.options.files=") + EncodeWideACP(used));
 
   if (!AddClassPathOptions(vmOptionLines)) return false;
   AddPredefinedVMOptions(vmOptionLines);
