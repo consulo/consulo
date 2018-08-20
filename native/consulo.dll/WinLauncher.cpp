@@ -19,6 +19,8 @@
 
 typedef JNIIMPORT jint(JNICALL *JNI_createJavaVM)(JavaVM **pvm, JNIEnv **env, void *args);
 
+std::string EMPTY_STRING = "";
+
 WCHAR* moduleFilePath = NULL;
 WCHAR* propertiesFilePath = NULL;
 WCHAR* workingDirectoryPath = NULL;
@@ -148,12 +150,12 @@ bool FindJVMInEnvVar(const char* envVarName, bool& result)
   return false;
 }
 
-bool FindJVMInRegistryKey(const char* key, bool wow64_32)
+bool FindJVMInRegistryKey(std::string key, bool wow64_32)
 {
   HKEY hKey;
   int flags = KEY_READ;
   if (wow64_32) flags |= KEY_WOW64_32KEY;
-  if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hKey) != ERROR_SUCCESS) return false;
+  if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, key.c_str(), 0, KEY_READ, &hKey) != ERROR_SUCCESS) return false;
   char javaHome[_MAX_PATH];
   DWORD javaHomeSize = _MAX_PATH - 1;
   bool success = false;
@@ -165,30 +167,37 @@ bool FindJVMInRegistryKey(const char* key, bool wow64_32)
   return success;
 }
 
-bool FindJVMInRegistryWithVersion(const char* version, bool wow64_32)
+std::string FindJRECurrentVersionRegistryKey(bool wow64_32)
 {
-  char* keyName = "Java Runtime Environment";
-  // starting from java 9 key name has been changed
-  char* jreKeyName = "JRE";
-  char* jdkKeyName = "JDK";
-
-  bool foundJava = false;
-  char buf[_MAX_PATH];
-  sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", keyName, version);
-  foundJava = FindJVMInRegistryKey(buf, wow64_32);
-  if (!foundJava) {
-    sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", jreKeyName, version);
-    foundJava = FindJVMInRegistryKey(buf, wow64_32);
+  HKEY hKey;
+  int flags = KEY_READ;
+  if (wow64_32) flags |= KEY_WOW64_32KEY;
+  if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "Software\\JavaSoft\\JRE", 0, KEY_READ, &hKey) != ERROR_SUCCESS) return EMPTY_STRING;
+  char version[_MAX_PATH];
+  DWORD versionSize = _MAX_PATH - 1;
+  bool success = false;
+  if (RegQueryValueExA(hKey, "CurrentVersion", NULL, NULL, (LPBYTE)version, &versionSize) == ERROR_SUCCESS){
+    success = true;
   }
-  //search jdk in registry if the product requires tools.jar or jre isn't installed.
+  RegCloseKey(hKey);
+
+  return success ? std::string(version) : EMPTY_STRING;
+}
+
+bool FindJVMInRegistryWithVersion(std::string version, bool wow64_32)
+{
+  bool foundJava = false;
+
+  // java 9+
+  foundJava = FindJVMInRegistryKey("Software\\JavaSoft\\JRE\\" + version, wow64_32);
+
   if (!foundJava) {
-    keyName = "Java Development Kit";
-    sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", keyName, version);
-    foundJava = FindJVMInRegistryKey(buf, wow64_32);
-    if (!foundJava) {
-      sprintf_s(buf, "Software\\JavaSoft\\%s\\%s", jdkKeyName, version);
-      foundJava = FindJVMInRegistryKey(buf, wow64_32);
-    }
+    foundJava = FindJVMInRegistryKey("Software\\JavaSoft\\JDK\\" + version, wow64_32);
+  }
+
+  // old registry path
+  if (!foundJava) {
+    foundJava = FindJVMInRegistryKey("Software\\JavaSoft\\Java Runtime Environment\\" + version, wow64_32);
   }
   return foundJava;
 }
@@ -210,6 +219,11 @@ bool FindJVMInRegistry()
     return true;
   if (FindJVMInRegistryWithVersion("1.6", true))
     return true;
+
+  std::string currentVersion2 = FindJRECurrentVersionRegistryKey(true);
+  if(currentVersion2 != EMPTY_STRING && FindJVMInRegistryWithVersion(currentVersion2, true)) {
+    return true;
+  }
 #endif
 
   if (FindJVMInRegistryWithVersion("1.8", false))
@@ -226,6 +240,11 @@ bool FindJVMInRegistry()
     return true;
   if (FindJVMInRegistryWithVersion("1.6", false))
     return true;
+
+  std::string currentVersion = FindJRECurrentVersionRegistryKey(false);
+  if(currentVersion != EMPTY_STRING && FindJVMInRegistryWithVersion(currentVersion, false)) {
+    return true;
+  }
   return false;
 }
 
@@ -282,8 +301,8 @@ bool LocateJVM()
   }
 
   std::string jvmError;
-  jvmError = "No JVM installation found. Please install a " BITS_STR " JDK.\n"
-    "If you already have a JDK installed, define a JAVA_HOME variable in\n"
+  jvmError = "No JVM installation found. Please install a " BITS_STR " JRE/JDK.\n"
+    "If you already have a JRE/JDK installed, define a JAVA_HOME variable in\n"
     "Computer > System Properties > System Settings > Environment Variables.";
 
   if (IsWow64())
@@ -474,7 +493,7 @@ bool LoadJVMLibrary()
     std::string jvmError = "Failed to load JVM DLL ";
     jvmError += dllName.c_str();
     jvmError += "\n"
-        "If you already have a " BITS_STR " JDK installed, define a JAVA_HOME variable in "
+        "If you already have a " BITS_STR " JRE/JDK installed, define a JAVA_HOME variable in "
         "Computer > System Properties > System Settings > Environment Variables.";
     std::string error = LoadStdString(IDS_ERROR_LAUNCHING_APP);
     MessageBoxA(NULL, jvmError.c_str(), error.c_str(), MB_OK);
@@ -506,7 +525,7 @@ bool CreateJVM()
 
     buf << "Failed to create JVM: error code " << result << ".\n";
     buf << "JVM Path: " << jvmPath << "\n";
-    buf << "If you already have a " BITS_STR " JDK installed, define a JAVA_HOME variable in \n";
+    buf << "If you already have a " BITS_STR " JRE/JDK installed, define a JAVA_HOME variable in \n";
     buf << "Computer > System Properties > System Settings > Environment Variables.";
     std::string error = LoadStdString(IDS_ERROR_LAUNCHING_APP);
     MessageBoxA(NULL, buf.str().c_str(), error.c_str(), MB_OK);
