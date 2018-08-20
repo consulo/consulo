@@ -16,15 +16,16 @@
 package com.intellij.codeInspection;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.annotations.DeprecationInfo;
 
-/**
- * Plugin's ApplicationComponent or extension that implements this interface will be automatically queried for inspection tool classes.
- */
+@Deprecated
+@DeprecationInfo("Use globalInspection")
 public interface InspectionToolProvider {
   ExtensionPointName<InspectionToolProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.inspectionToolProvider");
 
   /**
    * Query method for inspection tools provided by a plugin.
+   *
    * @return classes that extend {@link InspectionProfileEntry}
    */
   Class[] getInspectionClasses();
