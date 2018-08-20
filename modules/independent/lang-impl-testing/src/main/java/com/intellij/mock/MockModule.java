@@ -112,11 +112,6 @@ public class MockModule extends MockComponentManager implements Module {
   }
 
   @Override
-  public boolean isLoaded() {
-    return !isDisposed();
-  }
-
-  @Override
   @Nonnull
   public Project getProject() {
     return myProject;
