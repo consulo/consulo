@@ -84,11 +84,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
   @Override
-  public void loadModuleComponents() {
-
-  }
-
-  @Override
   public void rename(String newName) {
     myName = newName;
   }
