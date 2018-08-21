@@ -346,12 +346,6 @@ public class PluginNode implements IdeaPluginDescriptor {
 
   @Nonnull
   @Override
-  public ComponentConfig[] getModuleComponents() {
-    return ComponentConfig.EMPTY_ARRAY;
-  }
-
-  @Nonnull
-  @Override
   public HelpSetPath[] getHelpSets() {
     return HelpSetPath.EMPTY;
   }

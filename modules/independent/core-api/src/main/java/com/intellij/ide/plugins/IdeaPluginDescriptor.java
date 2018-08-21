@@ -68,9 +68,6 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
   @Nonnull
   ComponentConfig[] getProjectComponents();
 
-  @Nonnull
-  ComponentConfig[] getModuleComponents();
-
   String getVendorEmail();
 
   String getVendorUrl();

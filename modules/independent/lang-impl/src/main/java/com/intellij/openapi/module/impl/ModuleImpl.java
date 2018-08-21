@@ -85,11 +85,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Override
   public void loadModuleComponents() {
-    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
-      loadComponentsConfiguration(plugin.getModuleComponents(), plugin, false);
-    }
+
   }
 
   @Override

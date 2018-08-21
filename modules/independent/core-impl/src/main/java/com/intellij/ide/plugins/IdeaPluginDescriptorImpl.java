@@ -90,7 +90,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private List<Element> myActionsElements;
   private ComponentConfig[] myAppComponents = ComponentConfig.EMPTY_ARRAY;
   private ComponentConfig[] myProjectComponents = ComponentConfig.EMPTY_ARRAY;
-  private ComponentConfig[] myModuleComponents = ComponentConfig.EMPTY_ARRAY;
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private HelpSetPath[] myHelpSets;
@@ -245,11 +244,9 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
     myAppComponents = pluginBean.applicationComponents;
     myProjectComponents = pluginBean.projectComponents;
-    myModuleComponents = pluginBean.moduleComponents;
 
     if (myAppComponents == null) myAppComponents = ComponentConfig.EMPTY_ARRAY;
     if (myProjectComponents == null) myProjectComponents = ComponentConfig.EMPTY_ARRAY;
-    if (myModuleComponents == null) myModuleComponents = ComponentConfig.EMPTY_ARRAY;
 
     StringInterner interner = new StringInterner();
     List<Element> extensions = copyElements(pluginBean.extensions, interner);
@@ -459,12 +456,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   }
 
   @Override
-  @Nonnull
-  public ComponentConfig[] getModuleComponents() {
-    return myModuleComponents;
-  }
-
-  @Override
   public String getVendorEmail() {
     return myVendorEmail;
   }
@@ -641,7 +632,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
     myAppComponents = mergeComponents(myAppComponents, descriptor.myAppComponents);
     myProjectComponents = mergeComponents(myProjectComponents, descriptor.myProjectComponents);
-    myModuleComponents = mergeComponents(myModuleComponents, descriptor.myModuleComponents);
   }
 
   public Boolean getSkipped() {

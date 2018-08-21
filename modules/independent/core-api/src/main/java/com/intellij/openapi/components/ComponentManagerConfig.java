@@ -29,11 +29,6 @@ public class ComponentManagerConfig {
   @AbstractCollection(surroundWithTag = false)
   public OldComponentConfig[] projectComponents;
 
-  @Tag(MODULE_COMPONENTS)
-  @AbstractCollection(surroundWithTag = false)
-  public OldComponentConfig[] moduleComponents;
-
   @NonNls public static final String APPLICATION_COMPONENTS = "application-components";
   @NonNls public static final String PROJECT_COMPONENTS = "project-components";
-  @NonNls public static final String MODULE_COMPONENTS = "module-components";
 }
