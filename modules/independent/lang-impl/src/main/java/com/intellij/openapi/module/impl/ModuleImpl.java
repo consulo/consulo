@@ -19,9 +19,9 @@ package com.intellij.openapi.module.impl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
  * @author max
  */
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
-  public static final Logger LOGGER = Logger.getInstance(ModuleImpl.class);
+  private static final ExtensionPointName<ServiceDescriptor> MODULE_SERVICES = ExtensionPointName.create("com.intellij.moduleService");
 
   @Nonnull
   private final Project myProject;
@@ -77,6 +77,11 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     getPicoContainer().registerComponentImplementation(ModulePathMacroManager.class);
   }
 
+  @Nullable
+  @Override
+  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+    return MODULE_SERVICES;
+  }
 
   @Override
   public void loadModuleComponents() {

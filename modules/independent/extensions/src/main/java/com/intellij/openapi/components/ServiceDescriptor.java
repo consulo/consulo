@@ -16,14 +16,18 @@
 
 package com.intellij.openapi.components;
 
+import com.intellij.openapi.extensions.PluginAware;
+import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.xmlb.annotations.Attribute;
 
-public class ServiceDescriptor {
+public class ServiceDescriptor implements PluginAware {
   @Attribute("serviceInterface")
   public String serviceInterface;
 
   @Attribute("serviceImplementation")
   public String serviceImplementation;
+
+  private PluginDescriptor myPluginDescriptor;
 
   public String getInterface() {
     return serviceInterface != null ? serviceInterface : getImplementation();
@@ -31,5 +35,14 @@ public class ServiceDescriptor {
 
   public String getImplementation() {
     return serviceImplementation;
+  }
+
+  @Override
+  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
+    myPluginDescriptor = pluginDescriptor;
+  }
+
+  public PluginDescriptor getPluginDescriptor() {
+    return myPluginDescriptor;
   }
 }

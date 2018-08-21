@@ -25,6 +25,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
@@ -67,6 +68,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.project.impl.ProjectImpl");
+  private static final ExtensionPointName<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointName.create("com.intellij.projectService");
+
   public static final String NAME_FILE = ".name";
 
   private ProjectManager myManager;
@@ -108,6 +111,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager = manager;
 
     myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
+  }
+
+  @Nullable
+  @Override
+  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+    return PROJECT_SERVICES;
   }
 
   @Override

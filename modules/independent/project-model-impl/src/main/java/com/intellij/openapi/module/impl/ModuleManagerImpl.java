@@ -190,10 +190,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   }
 
   @Override
-  public void initComponent() {
-  }
-
-  @Override
   public void disposeComponent() {
     myModuleModel.disposeModel();
   }

@@ -16,10 +16,13 @@
 package com.intellij.openapi.components.impl;
 
 import com.intellij.diagnostic.PluginException;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.ex.ComponentManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.AreaInstance;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -29,7 +32,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -49,6 +51,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author mike
@@ -80,6 +83,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myParentComponentManager = parentComponentManager;
     bootstrapPicoContainer(toString());
   }
+
   protected ComponentManagerImpl(ComponentManager parentComponentManager, @Nonnull String name) {
     myParentComponentManager = parentComponentManager;
     bootstrapPicoContainer(name);
@@ -87,7 +91,29 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   public void init() {
     createComponents();
-    getComponents();
+  }
+
+  private void loadServices() {
+    ExtensionPointName<ServiceDescriptor> ep = getServiceExtensionPointName();
+    if (ep != null) {
+      MutablePicoContainer picoContainer = getPicoContainer();
+      ServiceDescriptor[] descriptors = this instanceof Application ? ep.getExtensions() : ep.getExtensions((AreaInstance)this);
+      for (ServiceDescriptor descriptor : descriptors) {
+        PluginDescriptor pluginDescriptor = descriptor.getPluginDescriptor();
+
+        picoContainer.registerComponent(new ServiceComponentAdapter(descriptor, pluginDescriptor, this));
+
+      }
+    }
+  }
+
+  protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
+    return runnable.get();
+  }
+
+  @Nullable
+  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+    return null;
   }
 
   @Nonnull
@@ -108,6 +134,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private void createComponents() {
     try {
       myComponentsRegistry.loadClasses();
+
+      loadServices();
 
       Class[] componentInterfaces = myComponentsRegistry.getComponentInterfaces();
       for (Class componentInterface : componentInterfaces) {
@@ -233,7 +261,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       return;
     }
 
-    config.pluginDescriptor =  pluginDescriptor;
+    config.pluginDescriptor = pluginDescriptor;
     myComponentsRegistry.registerComponent(config);
   }
 
@@ -255,21 +283,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myComponentsRegistry != null && myComponentsRegistry.containsInterface(interfaceClass);
   }
 
-  @Nonnull
-  protected synchronized Object[] getComponents() {
-    Class[] componentClasses = myComponentsRegistry.getComponentInterfaces();
-    List<Object> components = new ArrayList<>(componentClasses.length);
-    for (Class<?> interfaceClass : componentClasses) {
-      ProgressIndicator indicator = getProgressIndicator();
-      if (indicator != null) {
-        indicator.checkCanceled();
-      }
-      Object component = getComponent(interfaceClass);
-      if (component != null) components.add(component);
-    }
-    return ArrayUtil.toObjectArray(components);
-  }
-
   @Override
   @SuppressWarnings({"unchecked"})
   @Nonnull
@@ -283,7 +296,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     MutablePicoContainer container = myPicoContainer;
     if (container == null || myDisposeCompleted) {
       ProgressManager.checkCanceled();
-      throw new AssertionError("Already disposed: "+toString());
+      throw new AssertionError("Already disposed: " + toString());
     }
     return container;
   }
@@ -331,6 +344,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected volatile boolean temporarilyDisposed = false;
+
   @TestOnly
   public void setTemporarilyDisposed(boolean disposed) {
     temporarilyDisposed = disposed;
@@ -404,7 +418,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     private final Map<Class, Object> myInterfaceToLockMap = new THashMap<>();
     private final Map<Class, Class> myInterfaceToClassMap = new THashMap<>();
     private final List<Class> myComponentInterfaces = new ArrayList<>(); // keeps order of component's registration
-    private final Map<String, BaseComponent> myNameToComponent = new THashMap<>();
     private final List<ComponentConfig> myComponentConfigs = new ArrayList<>();
     private final List<Object> myImplementations = new ArrayList<>();
     private final Map<Class, ComponentConfig> myComponentClassToConfig = new THashMap<>();
@@ -425,8 +438,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
       try {
         final Class<?> interfaceClass = Class.forName(config.getInterfaceClass(), true, loader);
-        final Class<?> implementationClass = Comparing.equal(config.getInterfaceClass(), config.getImplementationClass()) ?
-                                             interfaceClass : Class.forName(config.getImplementationClass(), true, loader);
+        final Class<?> implementationClass =
+                Comparing.equal(config.getInterfaceClass(), config.getImplementationClass()) ? interfaceClass : Class.forName(config.getImplementationClass(), true, loader);
 
         if (myInterfaceToClassMap.get(interfaceClass) != null) {
           throw new RuntimeException("Component already registered: " + interfaceClass.getName());
@@ -465,22 +478,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     private void registerComponentInstance(final Object component) {
       myImplementations.add(component);
-
-      if (component instanceof BaseComponent) {
-        BaseComponent baseComponent = (BaseComponent)component;
-        final String componentName = baseComponent.getComponentName();
-
-        if (myNameToComponent.containsKey(componentName)) {
-          BaseComponent loadedComponent = myNameToComponent.get(componentName);
-          // component may have been already loaded by PicoContainer, so fire error only if components are really different
-          if (!component.equals(loadedComponent)) {
-            LOG.error("Component name collision: " + componentName + " " + loadedComponent.getClass() + " and " + component.getClass());
-          }
-        }
-        else {
-          myNameToComponent.put(componentName, baseComponent);
-        }
-      }
     }
 
     @Nonnull
@@ -494,10 +491,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       if (myClassesLoaded) {
         loadClasses(config);
       }
-    }
-
-    private BaseComponent getComponentByName(final String name) {
-      return myNameToComponent.get(name);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -563,7 +556,12 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
                 myInitializing = true;
                 myComponentsRegistry.registerComponentInstance(componentInstance);
 
+                if(componentInstance instanceof com.intellij.openapi.Disposable) {
+                  Disposer.register(ComponentManagerImpl.this, (com.intellij.openapi.Disposable)componentInstance);
+                }
+
                 initializeComponent(componentInstance, false);
+
                 if (componentInstance instanceof BaseComponent) {
                   ((BaseComponent)componentInstance).initComponent();
                 }

@@ -24,8 +24,8 @@ import javax.annotation.Nonnull;
  * @author max
  */
 public interface ComponentManagerEx extends ComponentManager {
-
   void registerComponent(@Nonnull ComponentConfig config);
+
   void registerComponent(@Nonnull ComponentConfig config, PluginDescriptor pluginDescriptor);
 
   void initializeComponent(@Nonnull Object component, boolean service);

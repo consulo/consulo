@@ -16,10 +16,15 @@
 package com.intellij.openapi.components.impl;
 
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.util.io.storage.HeavyProcessLatch;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
   private boolean myHandlingInitComponentError;
@@ -30,6 +35,14 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
 
   protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name) {
     super(parent, name);
+  }
+
+  @Override
+  protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
+    // prevent storages from flushing and blocking FS
+    try(AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplementation() + "'")) {
+      return super.runServiceInitialize(descriptor, runnable);
+    }
   }
 
   @Override

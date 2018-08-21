@@ -30,6 +30,7 @@ import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
@@ -154,6 +155,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   private static final Logger LOG = Logger.getInstance(BaseApplication.class);
+  private static final ExtensionPointName<ServiceDescriptor> APP_SERVICES = ExtensionPointName.create("com.intellij.applicationService");
 
   private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
 
@@ -191,6 +193,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
 
     getPicoContainer().registerComponentInstance(Application.class, this);
+  }
+
+  @Nullable
+  @Override
+  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+    return APP_SERVICES;
   }
 
   protected void loadApplicationComponents() {
