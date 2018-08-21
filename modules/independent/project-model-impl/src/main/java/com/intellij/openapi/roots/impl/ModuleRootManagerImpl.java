@@ -19,9 +19,11 @@ package com.intellij.openapi.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.*;
+import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -39,11 +41,11 @@ import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import gnu.trove.THashMap;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -81,7 +83,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @Override
   @Nonnull
   public ModuleFileIndex getFileIndex() {
-    return ModuleServiceManager.getService(myModule, ModuleFileIndex.class);
+    return ServiceManager.getService(myModule, ModuleFileIndex.class);
   }
 
   @Override

@@ -15,11 +15,12 @@
  */
 package consulo.compiler;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import consulo.roots.ContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,7 +31,7 @@ import javax.annotation.Nullable;
 public abstract class ModuleCompilerPathsManager {
   @Nonnull
   public static ModuleCompilerPathsManager getInstance(@Nonnull Module module) {
-    return ModuleServiceManager.getService(module, ModuleCompilerPathsManager.class);
+    return ServiceManager.getService(module, ModuleCompilerPathsManager.class);
   }
 
   public abstract boolean isInheritedCompilerOutput();
@@ -46,7 +47,7 @@ public abstract class ModuleCompilerPathsManager {
   @Nullable
   public abstract String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType);
 
   @Nonnull

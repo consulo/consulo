@@ -15,10 +15,12 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.util.NotNullFunction;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -29,13 +31,21 @@ public class ServiceManager {
   private ServiceManager() { }
 
   public static <T> T getService(@Nonnull Class<T> serviceClass) {
-    @SuppressWarnings("unchecked") T instance = (T)ApplicationManager.getApplication().getPicoContainer().getComponentInstance(serviceClass.getName());
-    return instance;
+    return getService(Application.get(), serviceClass);
   }
 
   public static <T> T getService(@Nonnull Project project, @Nonnull Class<T> serviceClass) {
-    @SuppressWarnings("unchecked") T instance = (T)project.getPicoContainer().getComponentInstance(serviceClass.getName());
-    return instance;
+    return getService((ComponentManager)project, serviceClass);
+  }
+
+  public static <T> T getService(@Nonnull Module module, @Nonnull Class<T> serviceClass) {
+    return getService((ComponentManager)module, serviceClass);
+  }
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public static <T> T getService(@Nonnull ComponentManager manager, @Nonnull Class<T> serviceClass) {
+    return (T)manager.getPicoContainer().getComponentInstance(serviceClass);
   }
 
   /**

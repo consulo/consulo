@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleServiceManager;
 import consulo.annotations.RequiredReadAction;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    * @return the root manager instance.
    */
   public static ModuleRootManager getInstance(@Nonnull Module module) {
-    return ModuleServiceManager.getService(module, ModuleRootManager.class);
+    return ServiceManager.getService(module, ModuleRootManager.class);
   }
 
   /**
