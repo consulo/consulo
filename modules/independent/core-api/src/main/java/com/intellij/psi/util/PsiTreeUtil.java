@@ -16,9 +16,6 @@
 package com.intellij.psi.util;
 
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
-import consulo.lang.LanguageVersionResolver;
-import consulo.lang.LanguageVersionResolvers;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
@@ -34,10 +31,13 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.lang.LanguageVersion;
+import consulo.lang.LanguageVersionResolver;
+import consulo.lang.LanguageVersionResolvers;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class PsiTreeUtil {
@@ -358,6 +358,24 @@ public class PsiTreeUtil {
       if (aClass.isInstance(child)) {
         //noinspection unchecked
         result.add((T)child);
+      }
+    }
+    return result;
+  }
+
+  @Nonnull
+  public static <T extends PsiElement> List<T> getStubChildrenOfTypeAsList(@Nullable PsiElement element, @Nonnull Class<T> aClass) {
+    if (element == null) return Collections.emptyList();
+    StubElement<?> stub = element instanceof StubBasedPsiElement ? ((StubBasedPsiElement)element).getStub() : null;
+    if (stub == null) {
+      return getChildrenOfTypeAsList(element, aClass);
+    }
+
+    List<T> result = new SmartList<>();
+    for (StubElement childStub : stub.getChildrenStubs()) {
+      PsiElement child = childStub.getPsi();
+      if (aClass.isInstance(child)) {
+        result.add(aClass.cast(child));
       }
     }
     return result;
