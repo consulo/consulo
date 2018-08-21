@@ -46,7 +46,6 @@ public abstract class HeavyFileEditorManagerTestCase extends CodeInsightFixtureT
     myManager = new FileEditorManagerImpl(getProject(), DockManager.getInstance(getProject())) {};
     ((ComponentManagerImpl)getProject()).registerComponentInstance(FileEditorManager.class, myManager);
     ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(getProject())).projectOpened();
-    EditorHistoryManager.getInstance(getProject()).projectOpened();
   }
 
   @Override
