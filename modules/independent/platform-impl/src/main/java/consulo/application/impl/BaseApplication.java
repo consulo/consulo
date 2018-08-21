@@ -504,8 +504,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public void initializeComponent(@Nonnull Object component, boolean service) {
-    getStateStore().initComponent(component);
+  public boolean initializeComponent(@Nonnull Object component, boolean service) {
+    return getStateStore().initComponent(component);
   }
 
   @Nonnull

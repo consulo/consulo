@@ -197,7 +197,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public void initializeComponent(@Nonnull Object component, boolean service) {
+  public boolean initializeComponent(@Nonnull Object component, boolean service) {
     if (!service) {
       ProgressIndicator indicator = getProgressIndicator();
       if (indicator != null) {
@@ -209,7 +209,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       }
     }
 
-    getStateStore().initComponent(component);
+    return getStateStore().initComponent(component);
   }
 
   @Override

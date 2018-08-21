@@ -55,14 +55,14 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
 
   @Override
-  public void initComponent(@Nonnull Object component) {
+  public boolean initComponent(@Nonnull Object component) {
     if (component instanceof SettingsSavingComponent) {
       mySettingsSavingComponents.add((SettingsSavingComponent)component);
     }
 
     StateComponentInfo<?> componentInfo = StateComponentInfo.of(component, getProject());
     if (componentInfo == null) {
-      return;
+      return false;
     }
 
     try {
@@ -74,6 +74,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     catch (Exception e) {
       LOG.error(e);
     }
+    return true;
   }
 
   @Override

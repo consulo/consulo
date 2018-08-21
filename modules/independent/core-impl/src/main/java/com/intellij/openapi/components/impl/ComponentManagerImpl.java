@@ -70,12 +70,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private final ComponentManagerConfigurator myConfigurator = new ComponentManagerConfigurator(this);
   private final ComponentManager myParentComponentManager;
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
-  private final Condition myDisposedCondition = new Condition() {
-    @Override
-    public boolean value(final Object o) {
-      return isDisposed();
-    }
-  };
+  private final Condition myDisposedCondition = o -> isDisposed();
 
   protected ComponentManagerImpl(ComponentManager parentComponentManager) {
     myParentComponentManager = parentComponentManager;
@@ -244,8 +239,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myComponentsRegistry.getPercentageOfComponentsLoaded();
   }
 
-  @Override
-  public void initializeComponent(@Nonnull Object component, boolean service) {
+  public boolean initializeComponent(@Nonnull Object component, boolean service) {
+    return false;
   }
 
   protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
@@ -531,13 +526,17 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
                 myInitializing = true;
                 myComponentsRegistry.registerComponentInstance(componentInstance);
 
-                if(componentInstance instanceof com.intellij.openapi.Disposable) {
+                if (componentInstance instanceof com.intellij.openapi.Disposable) {
                   Disposer.register(ComponentManagerImpl.this, (com.intellij.openapi.Disposable)componentInstance);
                 }
 
-                initializeComponent(componentInstance, false);
+                boolean isStorableComponent = initializeComponent(componentInstance, false);
 
                 if (componentInstance instanceof BaseComponent) {
+                  if (!isStorableComponent) {
+                    LOG.warn("Not storable component implement initComponent() method, which can moved to constructor, component: " + componentInstance.getClass().getName());
+                  }
+
                   ((BaseComponent)componentInstance).initComponent();
                 }
 
@@ -553,10 +552,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
               myInitialized = true;
             }
           }
-          catch (ProcessCanceledException e) {
-            throw e;
-          }
-          catch (StateStorageException e) {
+          catch (ProcessCanceledException | StateStorageException e) {
             throw e;
           }
           catch (Throwable t) {
