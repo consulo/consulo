@@ -621,7 +621,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     return myComponent.getLocationOnScreen();
   }
 
-  private class MyToolWindowManagerListener extends ToolWindowManagerAdapter {
+  private class MyToolWindowManagerListener implements ToolWindowManagerListener {
     @Override
     public void stateChanged() {
       manageSearchPopup(null);

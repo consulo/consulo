@@ -69,10 +69,6 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
     myStatisticsSplitterProportionProperty = mySplitterProportionProperty + "_Statistics";
     final ToolWindowManagerListener listener = new ToolWindowManagerListener() {
       @Override
-      public void toolWindowRegistered(@Nonnull String id) {
-      }
-
-      @Override
       public void stateChanged() {
         final boolean splitVertically = splitVertically();
         myStatusLine.setPreferredSize(splitVertically);

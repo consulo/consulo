@@ -42,8 +42,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
-import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.SimpleTextAttributes;
@@ -144,7 +144,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
     updateTabBorder();
 
-    ((ToolWindowManagerEx)ToolWindowManager.getInstance(myProject)).addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+    ((ToolWindowManagerEx)ToolWindowManager.getInstance(myProject)).addToolWindowManagerListener(new ToolWindowManagerListener() {
       @Override
       public void stateChanged() {
         updateTabBorder();

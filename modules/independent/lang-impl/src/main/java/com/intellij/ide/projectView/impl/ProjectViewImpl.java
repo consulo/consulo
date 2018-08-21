@@ -66,8 +66,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.util.PsiUtilCore;
@@ -97,9 +97,9 @@ import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -247,7 +247,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         setAutoscrollToSource(state, myCurrentViewId);
       }
     };
-    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
       private boolean toolWindowVisible;
 
       @Override

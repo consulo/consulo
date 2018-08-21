@@ -21,8 +21,11 @@ package com.intellij.openapi.wm.ex;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public abstract class ToolWindowManagerAdapter implements ToolWindowManagerListener{
+  @Override
   public void toolWindowRegistered(@Nonnull final String id){}
 
+  @Override
   public void stateChanged(){}
 }

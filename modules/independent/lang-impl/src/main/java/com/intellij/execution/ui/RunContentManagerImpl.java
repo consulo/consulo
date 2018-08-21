@@ -46,8 +46,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.content.*;
 import com.intellij.ui.docking.DockManager;
@@ -98,7 +98,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     RunDashboardManager dashboardManager = RunDashboardManager.getInstance(myProject);
     initToolWindow(null, dashboardManager.getToolWindowId(), dashboardManager.getToolWindowIcon(), dashboardManager.getDashboardContentManager());
 
-    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerAdapter() {
+    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
       @Override
       public void stateChanged() {
         if (myProject.isDisposed()) {

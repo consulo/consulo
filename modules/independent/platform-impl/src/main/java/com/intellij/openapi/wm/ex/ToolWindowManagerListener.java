@@ -16,15 +16,17 @@
 package com.intellij.openapi.wm.ex;
 
 import javax.annotation.Nonnull;
-
 import java.util.EventListener;
 
-public interface ToolWindowManagerListener extends EventListener{
+public interface ToolWindowManagerListener extends EventListener {
   /**
    * Invoked when tool window with specified <code>id</code> is registered in {@link ToolWindowManagerEx}.
+   *
    * @param id <code>id</code> of registered tool window.
    */
-  void toolWindowRegistered(@Nonnull String id);
+  default void toolWindowRegistered(@Nonnull String id) {
+  }
 
-  void stateChanged();
+  default void stateChanged() {
+  }
 }
