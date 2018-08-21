@@ -76,22 +76,4 @@ public class SendStatisticsProjectComponent implements ProjectComponent {
       }
     }, DELAY_IN_MIN * 60 * 1000);
   }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return SendStatisticsProjectComponent.class.getName();
-  }
 }

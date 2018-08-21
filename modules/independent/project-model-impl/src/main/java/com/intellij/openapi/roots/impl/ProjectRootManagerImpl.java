@@ -199,28 +199,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     return VfsUtilCore.toVirtualFileArray(result);
   }
 
-  @Override
-  public void projectOpened() {
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "ProjectRootManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
   private boolean myMergedCallStarted = false;
   private boolean myMergedCallHasRootChange = false;
   private int myRootsChangesDepth = 0;

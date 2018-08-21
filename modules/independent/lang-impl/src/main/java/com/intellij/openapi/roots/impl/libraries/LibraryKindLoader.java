@@ -17,7 +17,6 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.roots.libraries.LibraryType;
-import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,15 +27,5 @@ public class LibraryKindLoader implements ApplicationComponent {
     //todo[nik] this is temporary workaround for IDEA-98118: we need to initialize all library types to ensure that their kinds are created and registered in LibraryKind.ourAllKinds
     //In order to properly fix the problem we should extract all UI-related methods from LibraryType to a separate class and move LibraryType to projectModel-impl module
     LibraryType.EP_NAME.getExtensions();
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "LibraryKindLoader";
   }
 }

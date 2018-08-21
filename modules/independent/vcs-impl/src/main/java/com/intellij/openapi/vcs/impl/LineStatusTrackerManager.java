@@ -175,25 +175,6 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     });
   }
 
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "LineStatusTrackerManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
   public boolean isDisabled() {
     return !myProject.isOpen() || myProject.isDisposed();
   }

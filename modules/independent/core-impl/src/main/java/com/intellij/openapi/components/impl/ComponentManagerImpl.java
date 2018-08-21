@@ -57,7 +57,7 @@ import java.util.function.Supplier;
  * @author mike
  */
 public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManagerEx, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.components.ComponentManager");
+  private static final Logger LOG = Logger.getInstance(ComponentManagerImpl.class);
 
   private final Map<Class, Object> myInitializedComponents = ContainerUtil.newConcurrentMap();
 

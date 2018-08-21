@@ -36,9 +36,9 @@ import com.intellij.util.ParameterizedRunnable;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -117,6 +117,9 @@ public abstract class LightToolWindowManager implements ProjectComponent {
     }
   }
 
+  public void disposeComponent() {
+  }
+
   private void initListeners() {
     myConnection = myProject.getMessageBus().connect(myProject);
     myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, myListener);
@@ -172,14 +175,6 @@ public abstract class LightToolWindowManager implements ProjectComponent {
 
   protected abstract ToolWindowAnchor getAnchor();
 
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
   //////////////////////////////////////////////////////////////////////////////////////////
   //
   // LightToolWindow
@@ -231,8 +226,8 @@ public abstract class LightToolWindowManager implements ProjectComponent {
                                                 @Nonnull JComponent focusedComponent,
                                                 int defaultWidth,
                                                 @Nullable AnAction[] actions) {
-    return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this, myProject,
-                               myPropertiesComponent, getComponentName(), defaultWidth, actions);
+    return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this, myProject, myPropertiesComponent, getComponentName(),
+                               defaultWidth, actions);
   }
 
   protected final void disposeContent(DesignerEditorPanelFacade designer) {

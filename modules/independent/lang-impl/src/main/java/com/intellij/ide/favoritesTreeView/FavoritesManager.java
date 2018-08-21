@@ -374,14 +374,6 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   }
 
   @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Override
   public void projectOpened() {
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       StartupManager.getInstance(myProject).registerPostStartupActivity(new DumbAwareRunnable() {
@@ -401,10 +393,6 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
         }
       });
     }
-  }
-
-  @Override
-  public void projectClosed() {
   }
 
   @Override

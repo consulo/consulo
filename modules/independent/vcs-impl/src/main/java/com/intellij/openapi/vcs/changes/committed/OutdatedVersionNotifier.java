@@ -50,7 +50,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
   private final FileEditorManager myFileEditorManager;
   private final CommittedChangesCache myCache;
   private final Project myProject;
-  private static final Key<OutdatedRevisionPanel> PANEL_KEY = new Key<OutdatedRevisionPanel>("OutdatedRevisionPanel");
+  private static final Key<OutdatedRevisionPanel> PANEL_KEY = Key.create("OutdatedRevisionPanel");
   private volatile boolean myIncomingChangesRequested;
 
   public OutdatedVersionNotifier(FileEditorManager fileEditorManager,
@@ -60,6 +60,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
     myCache = cache;
     myProject = project;
     messageBus.connect().subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
+      @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
         if (myCache.getCachedIncomingChanges() == null) {
           requestLoadIncomingChanges();
@@ -81,6 +82,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
     if (!myIncomingChangesRequested) {
       myIncomingChangesRequested = true;
       myCache.loadIncomingChangesAsync(new Consumer<List<CommittedChangeList>>() {
+        @Override
         public void consume(final List<CommittedChangeList> committedChangeLists) {
           myIncomingChangesRequested = false;
           updateAllEditorsLater();
@@ -93,29 +95,16 @@ public class OutdatedVersionNotifier implements ProjectComponent {
     LOG.debug(message);
   }
 
+  @Override
   public void projectOpened() {
     final FileEditorManagerListener myFileEditorManagerListener = new MyFileEditorManagerListener();
     myFileEditorManager.addFileEditorManagerListener(myFileEditorManagerListener, myProject);
   }
 
-  public void projectClosed() {
-  }
-
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "OutdatedVersionNotifier";
-  }
-
-  public void initComponent() {
-  }
-
-  public void disposeComponent() {
-  }
-
   private void updateAllEditorsLater() {
     debug("Queueing update of editors");
     ApplicationManager.getApplication().invokeLater(new Runnable() {
+      @Override
       public void run() {
         updateAllEditors();
       }
@@ -160,6 +149,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
   }
 
   private class MyFileEditorManagerListener implements FileEditorManagerListener {
+    @Override
     public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
       if (myCache.getCachedIncomingChanges() == null) {
         requestLoadIncomingChanges();
@@ -175,9 +165,11 @@ public class OutdatedVersionNotifier implements ProjectComponent {
       }
     }
 
+    @Override
     public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     }
 
+    @Override
     public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     }
   }

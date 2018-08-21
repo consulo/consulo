@@ -123,16 +123,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   }
 
   @Override
-  public void disposeComponent() {
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "ProjectRootManager";
-  }
-
-  @Override
   public void initComponent() {
     myConnection.subscribe(BatchUpdateListener.TOPIC, myHandler);
   }

@@ -17,6 +17,7 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -46,7 +47,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public final class EditorHistoryManager implements PersistentStateComponent<Element>, ProjectComponent {
+public final class EditorHistoryManager implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(EditorHistoryManager.class);
 
   private final Project myProject;
@@ -340,29 +341,11 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
   }
 
   @Override
-  public void projectOpened() {
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public synchronized void disposeComponent() {
+  public synchronized void dispose() {
     for (HistoryEntry entry : myEntriesList) {
       entry.destroy();
     }
     myEntriesList.clear();
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "editorHistoryManager";
   }
 
   /**

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -33,16 +34,15 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
  * @author max
  */
-public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements ProjectComponent {
+public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements ProjectComponent, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.VcsDirtyScopeManagerImpl");
 
   private final Project myProject;
@@ -86,6 +86,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     });
   }
 
+  @Override
   public void markEverythingDirty() {
     if ((! myProject.isOpen()) || myProject.isDisposed() || myVcsManager.getAllActiveVcss().length == 0) return;
 
@@ -103,20 +104,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
   }
 
   @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  @Nonnull
-  @NonNls
-  public String getComponentName() {
-    return "VcsDirtyScopeManager";
-  }
-
-  @Override
-  public void initComponent() {}
-
-  public void disposeComponent() {
+  public void dispose() {
     synchronized (LOCK) {
       myReady = false;
       myDirtBuilder.reset();
@@ -179,6 +167,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     }
   }
 
+  @Override
   public void filesDirty(@Nullable final Collection<VirtualFile> filesDirty, @Nullable final Collection<VirtualFile> dirsRecursivelyDirty) {
     filePathsDirty(toFilePaths(filesDirty), toFilePaths(dirsRecursivelyDirty));
   }

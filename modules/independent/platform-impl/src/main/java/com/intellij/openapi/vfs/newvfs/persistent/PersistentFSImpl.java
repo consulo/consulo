@@ -16,6 +16,7 @@
 package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.concurrency.JobSchedulerImpl;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
@@ -51,7 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author max
  */
-public class PersistentFSImpl extends PersistentFS implements ApplicationComponent {
+public class PersistentFSImpl extends PersistentFS implements ApplicationComponent, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.persistent.PersistentFS");
 
   private final MessageBus myEventBus;
@@ -80,7 +81,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     performShutdown();
   }
 
@@ -90,13 +91,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
       FSRecords.dispose();
       LOG.info("VFS dispose completed");
     }
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "app.component.PersistentFS";
   }
 
   @Override

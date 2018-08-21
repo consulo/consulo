@@ -55,10 +55,10 @@ import com.intellij.vcsUtil.VcsUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
@@ -336,14 +336,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   @NonNls
   public String getComponentName() {
     return "ChangeListManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
   }
 
   /**

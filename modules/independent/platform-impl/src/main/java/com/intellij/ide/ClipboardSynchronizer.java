@@ -16,6 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.Patches;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -26,11 +27,10 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.sun.jna.IntegerType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import sun.awt.datatransfer.DataTransferer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
@@ -53,7 +53,7 @@ import java.util.Set;
  *
  * @author nik
  */
-public class ClipboardSynchronizer implements ApplicationComponent {
+public class ClipboardSynchronizer implements ApplicationComponent, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ClipboardSynchronizer");
 
   private final ClipboardHandler myClipboardHandler;
@@ -83,7 +83,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     myClipboardHandler.dispose();
   }
 

@@ -16,6 +16,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.CommandAdapter;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
@@ -46,7 +47,7 @@ import java.util.*;
     name = "IdeDocumentHistory",
     storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}
 )
-public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements ProjectComponent, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
+public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements ProjectComponent, Disposable, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl");
 
   private static final int BACK_QUEUE_LIMIT = 25;
@@ -562,10 +563,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   }
 
   @Override
-  public final void initComponent() { }
-
-  @Override
-  public final void disposeComponent() {
+  public final void dispose() {
     myLastGroupId = null;
   }
 

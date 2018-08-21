@@ -224,8 +224,4 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
       }
     });
   }
-
-  @Override
-  public void disposeComponent() {
-  }
 }

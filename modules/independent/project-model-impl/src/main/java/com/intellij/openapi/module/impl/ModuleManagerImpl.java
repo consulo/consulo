@@ -17,6 +17,7 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
@@ -67,7 +68,7 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ModuleManagerImpl extends ModuleManager implements ProjectComponent, PersistentStateComponent<Element>, ModificationTracker {
+public abstract class ModuleManagerImpl extends ModuleManager implements ProjectComponent, PersistentStateComponent<Element>, ModificationTracker, Disposable {
   public static final Logger LOGGER = Logger.getInstance(ModuleManagerImpl.class);
 
   public static class ModuleLoadItem {
@@ -146,8 +147,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   protected final MessageBus myMessageBus;
   protected volatile ModuleModelImpl myModuleModel = new ModuleModelImpl();
 
-  @NonNls
-  public static final String COMPONENT_NAME = "ModuleManager";
   private static final String MODULE_GROUP_SEPARATOR = "/";
 
   private final List<ModuleLoadItem> myFailedModulePaths = new ArrayList<>();
@@ -182,15 +181,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     myMessageBus = messageBus;
   }
 
-
   @Override
-  @Nonnull
-  public String getComponentName() {
-    return COMPONENT_NAME;
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     myModuleModel.disposeModel();
   }
 

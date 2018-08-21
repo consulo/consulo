@@ -61,9 +61,9 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -104,9 +104,11 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     myContentManager = contentManager;
     myShelveChangesManager = shelveChangesManager;
     bus.connect().subscribe(ShelveChangesManager.SHELF_TOPIC, new ChangeListener() {
+      @Override
       public void stateChanged(ChangeEvent e) {
         myUpdatePending = true;
         ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
           public void run() {
             updateChangesContent();
           }
@@ -137,6 +139,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     }.installOn(myTree);
 
     new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
+      @Override
       public String convert(TreePath o) {
         final Object lc = o.getLastPathComponent();
         final Object lastComponent = lc == null ? null : ((DefaultMutableTreeNode) lc).getUserObject();
@@ -157,22 +160,9 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     }, true);
   }
 
+  @Override
   public void projectOpened() {
     updateChangesContent();
-  }
-
-  public void projectClosed() {
-  }
-
-  @NonNls @Nonnull
-  public String getComponentName() {
-    return "ShelvedChangesViewManager";
-  }
-
-  public void initComponent() {
-  }
-
-  public void disposeComponent() {
   }
 
   private void updateChangesContent() {
@@ -264,6 +254,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
 
   public void activateView(final ShelvedChangeList list) {
     Runnable runnable = new Runnable() {
+      @Override
       public void run() {
         if (list != null) {
           TreeUtil.selectNode(myTree, TreeUtil.findNodeWithObject(myRoot, list));
@@ -284,6 +275,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   }
 
   private class ShelfTree extends Tree implements TypeSafeDataProvider {
+    @Override
     public void calcData(Key<?> key, DataSink sink) {
       if (key == SHELVED_CHANGELIST_KEY) {
         final Set<ShelvedChangeList> changeLists = getSelectedLists(false);
@@ -394,6 +386,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       return ourInstance;
     }
 
+    @Override
     public int compare(final Object o1, final Object o2) {
       final String path1 = getPath(o1);
       final String path2 = getPath(o2);
@@ -430,6 +423,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       myIssueLinkRenderer = new IssueLinkRenderer(project, this);
     }
 
+    @Override
     public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
       Object nodeValue = node.getUserObject();
@@ -487,6 +481,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   }
 
   private class MyChangeListDeleteProvider implements DeleteProvider {
+    @Override
     public void deleteElement(@Nonnull DataContext dataContext) {
       //noinspection unchecked
       final List<ShelvedChangeList> shelvedChangeLists = getLists(dataContext);
@@ -501,6 +496,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       }
     }
 
+    @Override
     public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       //noinspection unchecked
       return ! getLists(dataContext).isEmpty();
@@ -523,6 +519,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   }
 
   private class MyChangesDeleteProvider implements DeleteProvider {
+    @Override
     public void deleteElement(@Nonnull DataContext dataContext) {
       final Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
@@ -570,6 +567,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       }
     }
 
+    @Override
     public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
       if (shelved == null || (shelved.length != 1)) return false;
@@ -587,7 +585,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       myProviders = Arrays.asList(new MyChangesDeleteProvider(), new MyChangeListDeleteProvider());
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private DeleteProvider selectDelegate(final DataContext dataContext) {
       for (DeleteProvider provider : myProviders) {
         if (provider.canDeleteElement(dataContext)) {
@@ -597,6 +595,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       return null;
     }
 
+    @Override
     public void deleteElement(@Nonnull DataContext dataContext) {
       final DeleteProvider delegate = selectDelegate(dataContext);
       if (delegate != null) {
@@ -604,6 +603,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       }
     }
 
+    @Override
     public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       return selectDelegate(dataContext) != null;
     }

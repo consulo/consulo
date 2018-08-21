@@ -87,9 +87,6 @@ public class VetoSavingCommittingDocumentsAdapter implements ApplicationComponen
     }
   }
 
-  public void disposeComponent() {
-  }
-
   boolean showAllowSaveDialog(Map<Document, Project> documentsToWarn) {
     StringBuilder messageBuilder = new StringBuilder("The following " + (documentsToWarn.size() == 1 ? "file is" : "files are") +
                                                      " currently being committed to the VCS. " +

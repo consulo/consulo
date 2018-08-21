@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@State(name = ModuleManagerImpl.COMPONENT_NAME, storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml"))
+@State(name = "ModuleManager", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml"))
 public class ModuleManagerComponent extends ModuleManagerImpl {
   public static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
 

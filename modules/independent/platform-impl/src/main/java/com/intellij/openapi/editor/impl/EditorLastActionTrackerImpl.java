@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements ApplicationComponent,
+                                                                                    Disposable,
                                                                                     AnActionListener,
                                                                                     EditorMouseListener {
   private static final Key<Boolean> DISPOSABLE_SET = Key.create("EditorLastActionTracker.dispose.handler.set");
@@ -52,7 +53,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     myEditorEventMulticaster.removeEditorMouseListener(this);
     myActionManager.removeAnActionListener(this);
   }

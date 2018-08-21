@@ -64,21 +64,9 @@ public class RestoreUpdateTree implements ProjectComponent, JDOMExternalizable, 
   }
 
   @Override
-  public void projectClosed() {
-
-  }
-
-  @Override
   @Nonnull
   public String getComponentName() {
     return "RestoreUpdateTree";
-  }
-
-  @Override
-  public void initComponent() { }
-
-  @Override
-  public void disposeComponent() {
   }
 
   @Override

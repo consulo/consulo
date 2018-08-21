@@ -491,13 +491,9 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     }
   }
 
-  @Override
-  public void disposeComponent() {
-    // This index must be disposed only after StubUpdatingIndex is disposed
-    // To ensure this, disposing is done explicitly from StubUpdatingIndex by calling dispose() method
-    // do not call this method here to avoid double-disposal
-  }
-
+  // This index must be disposed only after StubUpdatingIndex is disposed
+  // To ensure this, disposing is done explicitly from StubUpdatingIndex by calling dispose() method
+  // do not call this method here to avoid double-disposal
   public void dispose() {
     for (UpdatableIndex index : getAsyncState().myIndices.values()) {
       index.dispose();

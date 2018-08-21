@@ -47,6 +47,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
@@ -70,6 +71,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
     myChangeListManager = changeListManager;
   }
 
+  @Override
   @Nls
   public String getActionText() {
     return "Create Patch...";
@@ -80,34 +82,30 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
     return "reference.dialogs.vcs.patch.create";
   }
 
+  @Override
   @Nonnull
   public CommitSession createCommitSession() {
     return new CreatePatchCommitSession();
   }
 
+  @Override
   public void projectOpened() {
     myChangeListManager.registerCommitExecutor(this);
   }
 
-  public void projectClosed() {
-  }
-
+  @Override
   @NonNls
   @Nonnull
   public String getComponentName() {
     return "CreatePatchCommitExecutor";
   }
 
-  public void initComponent() {
-  }
-
-  public void disposeComponent() {
-  }
-
+  @Override
   public void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
   }
 
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     DefaultJDOMExternalizer.writeExternal(this, element);
   }
@@ -124,11 +122,13 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
       myCommitContext = context;
     }
 
-    @javax.annotation.Nullable
+    @Override
+    @Nullable
     public JComponent getAdditionalConfigurationUI() {
       return myPanel.getPanel();
     }
 
+    @Override
     public JComponent getAdditionalConfigurationUI(final Collection<Change> changes, final String commitMessage) {
       if (PATCH_PATH.length() == 0) {
         VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
@@ -154,10 +154,12 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
       return panel;
     }
 
+    @Override
     public boolean canExecute(Collection<Change> changes, String commitMessage) {
       return myPanel.isOkToExecute();
     }
 
+    @Override
     public void execute(Collection<Change> changes, String commitMessage) {
       final String fileName = myPanel.getFileName();
       final File file = new File(fileName).getAbsoluteFile();
@@ -192,6 +194,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
       }
       if (binaryCount == changes.size()) {
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
+          @Override
           public void run() {
             Messages.showInfoMessage(myProject, VcsBundle.message("create.patch.all.binary"),
                                      VcsBundle.message("create.patch.commit.action.title"));
@@ -218,6 +221,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
                                       binaryCount);
         }
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
+          @Override
           public void run() {
             final VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
             if (Boolean.TRUE.equals(configuration.SHOW_PATCH_IN_EXPLORER)) {
@@ -235,6 +239,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
       } catch (final Exception ex) {
         LOG.info(ex);
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
+          @Override
           public void run() {
             Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", ex.getMessage()),
                                      CommonBundle.getErrorTitle());
@@ -243,11 +248,12 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
       }
     }
 
+    @Override
     public void executionCanceled() {
     }
 
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public ValidationInfo validateFields() {
       return myPanel.validateFields();
     }

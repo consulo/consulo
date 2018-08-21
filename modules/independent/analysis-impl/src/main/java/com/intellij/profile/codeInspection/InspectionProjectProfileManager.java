@@ -66,21 +66,6 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
 
   public abstract boolean isProfileLoaded();
 
-  @Override
-  @Nonnull
-  @NonNls
-  public String getComponentName() {
-    return "InspectionProjectProfileManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
   public abstract void initProfileWrapper(@Nonnull Profile profile);
 
   @Override

@@ -17,6 +17,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
@@ -38,15 +39,13 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
 import java.util.*;
 
 /**
  * @author yole
  */
-public class ModuleVcsDetector implements ProjectComponent {
+public class ModuleVcsDetector implements ProjectComponent, Disposable {
   private final Project myProject;
   private final MessageBus myMessageBus;
   private final ProjectLevelVcsManagerImpl myVcsManager;
@@ -118,22 +117,7 @@ public class ModuleVcsDetector implements ProjectComponent {
   }
 
   @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ModuleVcsDetector";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     if (myConnection != null) {
       myConnection.disconnect();
     }

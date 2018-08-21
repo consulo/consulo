@@ -35,10 +35,6 @@ public class DeployToServerConfigurationTypesRegistrar implements ApplicationCom
     }
   }
 
-  @Override
-  public void disposeComponent() {
-  }
-
   @Nonnull
   @Override
   public String getComponentName() {

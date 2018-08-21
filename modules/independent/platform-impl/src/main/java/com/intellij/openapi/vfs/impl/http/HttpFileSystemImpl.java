@@ -28,10 +28,4 @@ public class HttpFileSystemImpl extends HttpFileSystemBase {
   public static HttpFileSystemImpl getInstanceImpl() {
     return (HttpFileSystemImpl)getInstance();
   }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "HttpFileSystem";
-  }
 }

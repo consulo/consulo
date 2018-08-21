@@ -19,6 +19,7 @@ package com.intellij.codeInsight.folding.impl;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.codeInsight.hint.HintManager;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ProjectComponent;
@@ -50,7 +51,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class CodeFoldingManagerImpl extends CodeFoldingManager implements ProjectComponent {
+public class CodeFoldingManagerImpl extends CodeFoldingManager implements ProjectComponent, Disposable {
   private final Project myProject;
 
   private final List<Document> myDocumentsWithFoldingInfo = new WeakList<>();
@@ -63,16 +64,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  @Nonnull
-  public String getComponentName() {
-    return "CodeFoldingManagerImpl";
-  }
-
-  @Override
-  public void initComponent() { }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     for (Document document : myDocumentsWithFoldingInfo) {
       if (document != null) {
         document.putUserData(myFoldingInfoInDocumentKey, null);

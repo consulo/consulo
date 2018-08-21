@@ -24,6 +24,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -96,7 +97,7 @@ import java.util.Map;
  * @author Vladimir Kondratyev
  */
 @State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_PLATFORM))
-public final class LafManagerImpl extends LafManager implements ApplicationComponent, PersistentStateComponent<Element> {
+public final class LafManagerImpl extends LafManager implements ApplicationComponent, Disposable, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
   @NonNls
@@ -214,7 +215,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     if (myThemeChangeListener != null) {
       Toolkit.getDefaultToolkit().removePropertyChangeListener(GNOME_THEME_PROPERTY_NAME, myThemeChangeListener);
       myThemeChangeListener = null;

@@ -57,20 +57,6 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
   }
 
   @Override
-  @Nonnull
-  public String getComponentName() {
-    return "HighlightManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Override
   public void projectOpened() {
     AnActionListener anActionListener = new MyAnActionListener();
     ActionManagerEx.getInstanceEx().addAnActionListener(anActionListener, myProject);
@@ -100,10 +86,6 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
       }
     };
     EditorFactory.getInstance().getEventMulticaster().addDocumentListener(documentListener, myProject);
-  }
-
-  @Override
-  public void projectClosed() {
   }
 
   @Nullable

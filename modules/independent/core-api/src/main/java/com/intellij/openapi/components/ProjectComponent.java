@@ -25,6 +25,7 @@ package com.intellij.openapi.components;
  * plugin. So consider using specific extensions instead to ensure that the plugin will not impact IDE performance until user calls its
  * actions explicitly.</strong>
  */
+@Deprecated
 public interface ProjectComponent extends BaseComponent {
   /**
    * Invoked when the project corresponding to this component instance is opened.<p>

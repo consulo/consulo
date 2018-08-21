@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.updateSettings.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author yole
  */
-public class UpdateCheckerComponent implements ApplicationComponent {
+public class UpdateCheckerComponent implements ApplicationComponent, Disposable {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
 
   private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
@@ -50,7 +51,7 @@ public class UpdateCheckerComponent implements ApplicationComponent {
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     myCheckFuture.cancel(false);
   }
 

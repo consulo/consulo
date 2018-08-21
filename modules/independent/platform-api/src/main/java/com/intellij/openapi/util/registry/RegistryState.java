@@ -15,37 +15,20 @@
  */
 package com.intellij.openapi.util.registry;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
-@State(
-    name = "Registry",
-    storages = {
-        @Storage(
-            file = StoragePathMacros.APP_CONFIG + "/other.xml")}
-)
-public class RegistryState implements BaseComponent, PersistentStateComponent<Element> {
-
-  public RegistryState() {
-  }
-
+@State(name = "Registry", storages = @Storage("other.xml"))
+public class RegistryState implements PersistentStateComponent<Element> {
+  @Override
   public Element getState() {
     return Registry.getInstance().getState();
   }
 
+  @Override
   public void loadState(Element state) {
     Registry.getInstance().loadState(state);
-  }
-
-  @Nonnull
-  public String getComponentName() {
-    return "Registry";
-  }
-
-  public void initComponent() {
-  }
-
-  public void disposeComponent() {
   }
 }

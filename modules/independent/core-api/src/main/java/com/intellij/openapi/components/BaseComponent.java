@@ -21,6 +21,7 @@ package com.intellij.openapi.components;
  * @see ApplicationComponent
  * @see ProjectComponent
  */
+@Deprecated
 public interface BaseComponent extends NamedComponent {
   /**
    * Component should perform initialization and communication with other components in this method.
@@ -32,6 +33,7 @@ public interface BaseComponent extends NamedComponent {
   /**
    * @see {@link com.intellij.openapi.Disposable}
    */
+  @Deprecated
   default void disposeComponent() {
   }
 }

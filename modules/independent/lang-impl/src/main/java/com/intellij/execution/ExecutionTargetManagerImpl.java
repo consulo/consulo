@@ -46,14 +46,6 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   }
 
   @Override
-  public void projectOpened() {
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
   public Element getState() {
     synchronized (myActiveTargetLock) {
       Element state = new Element("state");
@@ -88,16 +80,6 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
         updateActiveTarget();
       }
     });
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return ExecutionTargetManager.class.getName();
   }
 
   @Nonnull

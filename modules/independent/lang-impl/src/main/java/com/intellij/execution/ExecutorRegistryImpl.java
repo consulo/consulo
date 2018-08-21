@@ -25,6 +25,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -44,7 +45,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
-public class ExecutorRegistryImpl extends ExecutorRegistry implements ApplicationComponent {
+public class ExecutorRegistryImpl extends ExecutorRegistry implements ApplicationComponent, Disposable {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
   @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
@@ -125,13 +126,6 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Applicatio
   }
 
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ExecutorRegistyImpl";
-  }
-
-  @Override
   public void initComponent() {
     ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
       @Override
@@ -191,7 +185,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Applicatio
   }
 
   @Override
-  public synchronized void disposeComponent() {
+  public synchronized void dispose() {
     if (!myExecutors.isEmpty()) {
       for (Executor executor : new ArrayList<>(myExecutors)) {
         deinitExecutor(executor);

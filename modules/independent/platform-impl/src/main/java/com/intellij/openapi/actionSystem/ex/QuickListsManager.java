@@ -99,10 +99,6 @@ public class QuickListsManager implements ApplicationComponent {
     registerActions();
   }
 
-  @Override
-  public void disposeComponent() {
-  }
-
   @Nonnull
   public QuickList[] getAllQuickLists() {
     Collection<QuickList> lists = mySchemesManager.getAllSchemes();

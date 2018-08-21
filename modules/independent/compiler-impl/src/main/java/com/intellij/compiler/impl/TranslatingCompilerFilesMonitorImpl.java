@@ -82,7 +82,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 1. corresponding source file has been scheduled for recompilation (see above)
  * 2. corresponding source file has been deleted
  */
-public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements ApplicationComponent {
+public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements ApplicationComponent, Disposable {
   private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
 
@@ -658,7 +658,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   @Override
-  public void disposeComponent() {
+  public void dispose() {
     try {
       synchronized (myProjectOutputRoots) {
         myProjectOutputRoots.clear();

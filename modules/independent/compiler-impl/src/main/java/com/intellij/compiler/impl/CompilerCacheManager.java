@@ -40,7 +40,7 @@ import java.util.Map;
  * @author Eugene Zhuravlev
  *         Date: May 4, 2008
  */
-public class CompilerCacheManager implements ProjectComponent {
+public class CompilerCacheManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompilerCacheManager");
   private final Map<Compiler, Object> myCompilerToCacheMap = new HashMap<Compiler, Object>();
   private final Map<GenericCompiler<?,?,?>, GenericCompilerCache<?,?,?>> myGenericCachesMap = new HashMap<GenericCompiler<?,?,?>, GenericCompilerCache<?,?,?>>();
@@ -58,25 +58,7 @@ public class CompilerCacheManager implements ProjectComponent {
   }
 
   @Override
-  public void projectOpened() {
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "CompilerCacheManager";
-  }
-
-  @Override
-  public void initComponent() {
-  }
-
-  @Override
-  public void disposeComponent() {
+  public void dispose() {
     flushCaches();
   }
 

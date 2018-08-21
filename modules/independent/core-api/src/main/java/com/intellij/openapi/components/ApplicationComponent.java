@@ -20,5 +20,6 @@ package com.intellij.openapi.components;
  * It may have constructor with parameters that are also application components.
  * See <a href=../../../../../plugins.html>plugins.html</a> for more information.
  */
+@Deprecated
 public interface ApplicationComponent extends BaseComponent {
 }

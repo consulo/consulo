@@ -18,6 +18,7 @@ package com.intellij.notification.impl;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationsConfiguration;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
@@ -39,9 +40,7 @@ import java.util.Map;
         name = "NotificationConfiguration",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/notifications.xml")
 )
-public class NotificationsConfigurationImpl
-        extends NotificationsConfiguration
-        implements ApplicationComponent, PersistentStateComponent<Element> {
+public class NotificationsConfigurationImpl extends NotificationsConfiguration implements ApplicationComponent, Disposable, PersistentStateComponent<Element> {
 
   private static final Logger LOG = Logger.getInstance(NotificationsConfiguration.class);
   private static final String SHOW_BALLOONS_ATTRIBUTE = "showBalloons";
@@ -132,7 +131,7 @@ public class NotificationsConfigurationImpl
   }
 
   @Override
-  public synchronized void disposeComponent() {
+  public synchronized void dispose() {
     myIdToSettingsMap.clear();
   }
 
