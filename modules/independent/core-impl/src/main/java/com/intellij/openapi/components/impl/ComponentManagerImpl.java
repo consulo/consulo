@@ -33,7 +33,6 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
@@ -47,7 +46,6 @@ import org.picocontainer.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -284,13 +282,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  @SuppressWarnings({"unchecked"})
-  @Nonnull
-  public synchronized <T> T[] getComponents(@Nonnull Class<T> baseClass) {
-    return myComponentsRegistry.getComponentsByType(baseClass);
-  }
-
-  @Override
   @Nonnull
   public MutablePicoContainer getPicoContainer() {
     MutablePicoContainer container = myPicoContainer;
@@ -491,22 +482,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       if (myClassesLoaded) {
         loadClasses(config);
       }
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public <T> T[] getComponentsByType(final Class<T> baseClass) {
-      List<T> array = new ArrayList<>();
-
-      //noinspection ForLoopReplaceableByForEach
-      for (int i = 0; i < myComponentInterfaces.size(); i++) {
-        Class interfaceClass = myComponentInterfaces.get(i);
-        final Class implClass = myInterfaceToClassMap.get(interfaceClass);
-        if (ReflectionUtil.isAssignable(baseClass, implClass)) {
-          array.add((T)getComponent(interfaceClass));
-        }
-      }
-
-      return array.toArray((T[])Array.newInstance(baseClass, array.size()));
     }
 
     public ComponentConfig[] getComponentConfigurations() {

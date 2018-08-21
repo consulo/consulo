@@ -16,7 +16,9 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
@@ -25,13 +27,11 @@ import org.picocontainer.PicoContainer;
 import javax.annotation.Nonnull;
 
 /**
- * Provides access to components. Serves as a base interface for {@link com.intellij.openapi.application.Application}
- * and {@link com.intellij.openapi.project.Project}.
+ * Provides access to components. Serves as a base interface for {@link Application}
+ * and {@link Project}.
  *
- * @see ApplicationComponent
- * @see ProjectComponent
- * @see com.intellij.openapi.application.Application
- * @see com.intellij.openapi.project.Project
+ * @see Application
+ * @see Project
  */
 public interface ComponentManager extends UserDataHolder, Disposable {
   /**
@@ -61,15 +61,6 @@ public interface ComponentManager extends UserDataHolder, Disposable {
    */
   boolean hasComponent(@Nonnull Class interfaceClass);
 
-  /**
-   * Gets all components whose implementation class is derived from <code>baseClass</code>.
-   *
-   * @return array of components
-   * @deprecated use extension points instead
-   */
-  @Nonnull
-  <T> T[] getComponents(@Nonnull Class<T> baseClass);
-
   @Nonnull
   PicoContainer getPicoContainer();
 
@@ -83,7 +74,7 @@ public interface ComponentManager extends UserDataHolder, Disposable {
 
   /**
    * @return condition for this component being disposed.
-   * see {@link com.intellij.openapi.application.Application#invokeLater(Runnable, Condition)} for the usage example.
+   * see {@link Application#invokeLater(Runnable, Condition)} for the usage example.
    */
   @Nonnull
   Condition getDisposed();

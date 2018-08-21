@@ -17,7 +17,6 @@ package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ExtensionAreas;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
@@ -26,10 +25,10 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+import org.picocontainer.PicoContainer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.PicoContainer;
 
 /**
  * @author yole
@@ -136,14 +135,6 @@ public class MockProject extends MockComponentManager implements Project {
   }
 
   public void projectOpened() {
-    final ProjectComponent[] components = getComponents(ProjectComponent.class);
-    for (ProjectComponent component : components) {
-      try {
-        component.projectOpened();
-      }
-      catch (Throwable e) {
-        LOG.error(component.toString(), e);
-      }
-    }
+    // nothing?
   }
 }

@@ -64,6 +64,7 @@ import javax.swing.event.HyperlinkEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
@@ -87,6 +88,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
+  private final List<ProjectComponent> myProjectComponents = new CopyOnWriteArrayList<>();
+
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
@@ -98,7 +101,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     getPicoContainer().registerComponentInstance(Project.class, this);
 
     if (!isDefault()) {
-      if(noUIThread) {
+      if (noUIThread) {
         getStateStore().setProjectFilePathNoUI(dirPath);
       }
       else {
@@ -194,13 +197,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public void initializeComponent(Object component, boolean service) {
+  public void initializeComponent(@Nonnull Object component, boolean service) {
     if (!service) {
       ProgressIndicator indicator = getProgressIndicator();
       if (indicator != null) {
         indicator.setText2(getComponentName(component));
-        //      indicator.setIndeterminate(false);
-        //      indicator.setFraction(myComponentsRegistry.getPercentageOfComponentsLoaded());
+      }
+
+      if (component instanceof ProjectComponent) {
+        myProjectComponents.add((ProjectComponent)component);
       }
     }
 
@@ -314,7 +319,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
 
     try {
-      if(!isDefault()) {
+      if (!isDefault()) {
         String projectBasePath = getStateStore().getProjectBasePath();
         if (projectBasePath != null) {
           File projectDir = new File(projectBasePath);
@@ -353,7 +358,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     try {
-      if(!isDefault()) {
+      if (!isDefault()) {
         String projectBasePath = getStateStore().getProjectBasePath();
         if (projectBasePath != null) {
           File projectDir = new File(projectBasePath);
@@ -407,8 +412,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   private void projectOpened() {
-    final ProjectComponent[] components = getComponents(ProjectComponent.class);
-    for (ProjectComponent component : components) {
+    for (ProjectComponent component : myProjectComponents) {
       try {
         component.projectOpened();
       }
@@ -419,7 +423,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   private void projectClosed() {
-    List<ProjectComponent> components = new ArrayList<ProjectComponent>(Arrays.asList(getComponents(ProjectComponent.class)));
+    List<ProjectComponent> components = new ArrayList<>(myProjectComponents);
     Collections.reverse(components);
     for (ProjectComponent component : components) {
       try {
@@ -431,8 +435,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
+  @Nonnull
   @Override
-  public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
   }
 
@@ -450,6 +455,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
+  @Nonnull
   @Override
   protected MutablePicoContainer createPicoContainer() {
     return Extensions.getArea(this).getPicoContainer();

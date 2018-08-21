@@ -15,14 +15,14 @@
  */
 package com.intellij.dvcs.test;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.components.BaseComponent;
-import org.picocontainer.PicoContainer;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.messages.MessageBus;
+import org.picocontainer.PicoContainer;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -112,12 +112,6 @@ public class MockProject implements Project {
 
   @Override
   public boolean hasComponent(@Nonnull Class interfaceClass) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public <T> T[] getComponents(Class<T> baseClass) {
     throw new UnsupportedOperationException();
   }
 

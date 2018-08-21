@@ -16,7 +16,6 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Condition;
@@ -27,14 +26,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
 import com.intellij.util.pico.DefaultPicoContainer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 
-import java.lang.reflect.Array;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,13 +91,6 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
   @Override
   public boolean hasComponent(@Nonnull Class interfaceClass) {
     return false;
-  }
-
-  @Override
-  @Nonnull
-  public <T> T[] getComponents(@Nonnull Class<T> baseClass) {
-    final List<?> list = myPicoContainer.getComponentInstancesOfType(baseClass);
-    return list.toArray((T[])Array.newInstance(baseClass, 0));
   }
 
   @Override
