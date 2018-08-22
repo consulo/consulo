@@ -106,11 +106,6 @@ public class MockProject implements Project {
   }
 
   @Override
-  public <T> T getComponent(Class<T> interfaceClass, T defaultImplementationIfAbsent) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public boolean hasComponent(@Nonnull Class interfaceClass) {
     throw new UnsupportedOperationException();
   }
