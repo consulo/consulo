@@ -18,7 +18,6 @@ package com.intellij.ide;
 import com.intellij.Patches;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
@@ -53,7 +52,7 @@ import java.util.Set;
  *
  * @author nik
  */
-public class ClipboardSynchronizer implements ApplicationComponent, Disposable {
+public class ClipboardSynchronizer implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ClipboardSynchronizer");
 
   private final ClipboardHandler myClipboardHandler;
@@ -75,22 +74,13 @@ public class ClipboardSynchronizer implements ApplicationComponent, Disposable {
     else {
       myClipboardHandler = new ClipboardHandler();
     }
-  }
 
-  @Override
-  public void initComponent() {
     myClipboardHandler.init();
   }
 
   @Override
   public void dispose() {
     myClipboardHandler.dispose();
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "ClipboardSynchronizer";
   }
 
   public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {

@@ -23,7 +23,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
@@ -82,7 +81,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 1. corresponding source file has been scheduled for recompilation (see above)
  * 2. corresponding source file has been deleted
  */
-public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements ApplicationComponent, Disposable {
+public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements Disposable {
   private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
 
@@ -194,8 +193,9 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     projectManager.addProjectManagerListener(new MyProjectManagerListener());
     vfsManager.addVirtualFileListener(new MyVfsListener(), application);
-  }
 
+    ensureOutputStorageInitialized();
+  }
 
   @Override
   public void suspendProject(Project project) {
@@ -532,17 +532,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     synchronized (myProjectOutputRoots) {
       myProjectOutputRoots.put(projectId, map);
     }
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "TranslatingCompilerFilesMonitor";
-  }
-
-  @Override
-  public void initComponent() {
-    ensureOutputStorageInitialized();
   }
 
   private static File getOutputRootsFile() {

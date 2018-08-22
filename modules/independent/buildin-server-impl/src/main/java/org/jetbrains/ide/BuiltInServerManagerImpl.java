@@ -7,7 +7,6 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -17,13 +16,13 @@ import com.intellij.util.UrlImpl;
 import com.intellij.util.net.NetUtils;
 import io.netty.channel.oio.OioEventLoopGroup;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.builtInWebServer.BuiltInServerOptions;
 import org.jetbrains.builtInWebServer.BuiltInWebServerKt;
 import org.jetbrains.io.BuiltInServer;
 import org.jetbrains.io.SubServer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -32,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BuiltInServerManagerImpl extends BuiltInServerManager implements ApplicationComponent {
+public class BuiltInServerManagerImpl extends BuiltInServerManager {
   private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 
   public static final NotNullLazyValue<NotificationGroup> NOTIFICATION_GROUP = new NotNullLazyValue<NotificationGroup>() {
@@ -51,6 +50,10 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
 
   @Nullable
   private BuiltInServer server;
+
+  public BuiltInServerManagerImpl() {
+    startServerInPooledThread();
+  }
 
   @Override
   public int getPort() {
@@ -79,11 +82,6 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
     else {
       return Integer.parseInt(System.getProperty(PROPERTY_RPC_PORT));
     }
-  }
-
-  @Override
-  public void initComponent() {
-    startServerInPooledThread();
   }
 
   private Future<?> startServerInPooledThread() {

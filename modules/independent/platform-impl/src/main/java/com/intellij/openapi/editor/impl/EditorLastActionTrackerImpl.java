@@ -18,18 +18,18 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorLastActionTracker;
-import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.event.EditorEventMulticaster;
+import com.intellij.openapi.editor.event.EditorMouseEvent;
+import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
-public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements ApplicationComponent,
-                                                                                    Disposable,
+public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable,
                                                                                     AnActionListener,
                                                                                     EditorMouseListener {
   private static final Key<Boolean> DISPOSABLE_SET = Key.create("EditorLastActionTracker.dispose.handler.set");
@@ -44,10 +44,6 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   EditorLastActionTrackerImpl(ActionManager actionManager, EditorFactory editorFactory) {
     myActionManager = actionManager;
     myEditorEventMulticaster = editorFactory.getEventMulticaster();
-  }
-
-  @Override
-  public void initComponent() {
     myActionManager.addAnActionListener(this);
     myEditorEventMulticaster.addEditorMouseListener(this);
   }
@@ -56,12 +52,6 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   public void dispose() {
     myEditorEventMulticaster.removeEditorMouseListener(this);
     myActionManager.removeAnActionListener(this);
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return "EditorLastActionTracker";
   }
 
   @Override

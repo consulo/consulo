@@ -97,7 +97,7 @@ import java.util.Map;
  * @author Vladimir Kondratyev
  */
 @State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_PLATFORM))
-public final class LafManagerImpl extends LafManager implements ApplicationComponent, Disposable, PersistentStateComponent<Element> {
+public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
   @NonNls
@@ -180,13 +180,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   @Override
-  @Nonnull
-  public String getComponentName() {
-    return "LafManager";
-  }
-
-  @Override
-  public void initComponent() {
+  public void afterLoadState() {
     if (myCurrentLaf != null) {
       final UIManager.LookAndFeelInfo laf = findLaf(myCurrentLaf.getClassName());
       if (laf != null) {

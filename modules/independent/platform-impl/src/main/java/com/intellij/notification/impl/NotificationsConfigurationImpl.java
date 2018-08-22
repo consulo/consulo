@@ -25,9 +25,9 @@ import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -36,11 +36,8 @@ import java.util.Map;
 /**
  * @author spleaner
  */
-@State(
-        name = "NotificationConfiguration",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/notifications.xml")
-)
-public class NotificationsConfigurationImpl extends NotificationsConfiguration implements ApplicationComponent, Disposable, PersistentStateComponent<Element> {
+@State(name = "NotificationConfiguration", storages = @Storage("notifications.xml"))
+public class NotificationsConfigurationImpl extends NotificationsConfiguration implements Disposable, PersistentStateComponent<Element> {
 
   private static final Logger LOG = Logger.getInstance(NotificationsConfiguration.class);
   private static final String SHOW_BALLOONS_ATTRIBUTE = "showBalloons";
@@ -120,13 +117,7 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   }
 
   @Override
-  @Nonnull
-  public String getComponentName() {
-    return "NotificationsConfiguration";
-  }
-
-  @Override
-  public void initComponent() {
+  public void afterLoadState() {
     myMessageBus.connect().subscribe(TOPIC, this);
   }
 
@@ -141,17 +132,12 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   }
 
   @Override
-  public void register(@Nonnull String groupDisplayName,
-                       @Nonnull NotificationDisplayType displayType,
-                       boolean shouldLog) {
+  public void register(@Nonnull String groupDisplayName, @Nonnull NotificationDisplayType displayType, boolean shouldLog) {
     register(groupDisplayName, displayType, shouldLog, false);
   }
 
   @Override
-  public void register(@Nonnull String groupDisplayName,
-                       @Nonnull NotificationDisplayType displayType,
-                       boolean shouldLog,
-                       boolean shouldReadAloud) {
+  public void register(@Nonnull String groupDisplayName, @Nonnull NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud) {
     if (!isRegistered(groupDisplayName)) {
       // register a new group and remember these settings as default
       new NotificationGroup(groupDisplayName, displayType, shouldLog);

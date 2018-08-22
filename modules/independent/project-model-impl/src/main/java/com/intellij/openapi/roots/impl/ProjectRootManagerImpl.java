@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -43,7 +42,7 @@ import java.util.*;
 /**
  * @author max
  */
-public class ProjectRootManagerImpl extends ProjectRootManagerEx implements ProjectComponent {
+public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootManagerImpl");
 
   protected final Project myProject;

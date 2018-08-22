@@ -30,7 +30,7 @@ import java.util.List;
 
 
 @State(name = "ExecutionTargetManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class ExecutionTargetManagerImpl extends ExecutionTargetManager implements ProjectComponent, PersistentStateComponent<Element> {
+public class ExecutionTargetManagerImpl extends ExecutionTargetManager implements PersistentStateComponent<Element> {
   @Nonnull
   private final Project myProject;
   @Nonnull
@@ -66,7 +66,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   }
 
   @Override
-  public void initComponent() {
+  public void afterLoadState() {
     myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
       @Override
       public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {

@@ -533,11 +533,16 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
                 boolean isStorableComponent = initializeIfStorableComponent(componentInstance, false);
 
                 if (componentInstance instanceof BaseComponent) {
-                  if (!isStorableComponent) {
-                    LOG.warn("Not storable component implement initComponent() method, which can moved to constructor, component: " + componentInstance.getClass().getName());
-                  }
+                  try {
+                    ((BaseComponent)componentInstance).initComponent();
 
-                  ((BaseComponent)componentInstance).initComponent();
+                    if (!isStorableComponent) {
+                      LOG.warn("Not storable component implement initComponent() method, which can moved to constructor, component: " + componentInstance.getClass().getName());
+                    }
+                  }
+                  catch (BaseComponent.DefaultImplException ignored) {
+                    // skip default impl
+                  }
                 }
 
                 long ms = (System.nanoTime() - startTime) / 1000000;

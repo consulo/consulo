@@ -120,10 +120,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
     myConnection.subscribe(VirtualFilePointerListener.TOPIC, new MyVirtualFilePointerListener());
     myDoLogCachesUpdate = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
-  }
 
-  @Override
-  public void initComponent() {
     myConnection.subscribe(BatchUpdateListener.TOPIC, myHandler);
   }
 

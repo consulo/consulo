@@ -27,7 +27,6 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.Trinity;
@@ -39,13 +38,13 @@ import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
-public class ExecutorRegistryImpl extends ExecutorRegistry implements ApplicationComponent, Disposable {
+public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
   @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
@@ -63,6 +62,47 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Applicatio
 
   public ExecutorRegistryImpl(ActionManager actionManager) {
     myActionManager = actionManager;
+
+    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+      @Override
+      public void projectOpened(final Project project) {
+        final MessageBusConnection connect = project.getMessageBus().connect(project);
+        connect.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener() {
+          @Override
+          public void processStartScheduled(String executorId, ExecutionEnvironment environment) {
+            myInProgress.add(createExecutionId(executorId, environment));
+          }
+
+          @Override
+          public void processNotStarted(String executorId, @Nonnull ExecutionEnvironment environment) {
+            myInProgress.remove(createExecutionId(executorId, environment));
+          }
+
+          @Override
+          public void processStarted(String executorId, @Nonnull ExecutionEnvironment environment, @Nonnull ProcessHandler handler) {
+            myInProgress.remove(createExecutionId(executorId, environment));
+          }
+        });
+      }
+
+      @Override
+      public void projectClosed(final Project project) {
+        // perform cleanup
+        synchronized (myInProgress) {
+          for (Iterator<Trinity<Project, String, String>> it = myInProgress.iterator(); it.hasNext(); ) {
+            final Trinity<Project, String, String> trinity = it.next();
+            if (project.equals(trinity.first)) {
+              it.remove();
+            }
+          }
+        }
+      }
+    });
+
+
+    for (Executor executor : Executor.EP_NAME.getExtensions()) {
+      initExecutor(executor);
+    }
   }
 
   synchronized void initExecutor(@Nonnull final Executor executor) {
@@ -123,50 +163,6 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Applicatio
   @Override
   public Executor getExecutorById(final String executorId) {
     return myId2Executor.get(executorId);
-  }
-
-  @Override
-  public void initComponent() {
-    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
-      @Override
-      public void projectOpened(final Project project) {
-        final MessageBusConnection connect = project.getMessageBus().connect(project);
-        connect.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionAdapter(){
-          @Override
-          public void processStartScheduled(String executorId, ExecutionEnvironment environment) {
-            myInProgress.add(createExecutionId(executorId, environment));
-          }
-
-          @Override
-          public void processNotStarted(String executorId, @Nonnull ExecutionEnvironment environment) {
-            myInProgress.remove(createExecutionId(executorId, environment));
-          }
-
-          @Override
-          public void processStarted(String executorId, @Nonnull ExecutionEnvironment environment, @Nonnull ProcessHandler handler) {
-            myInProgress.remove(createExecutionId(executorId, environment));
-          }
-        });
-      }
-
-      @Override
-      public void projectClosed(final Project project) {
-        // perform cleanup
-        synchronized (myInProgress) {
-          for (Iterator<Trinity<Project, String, String>> it = myInProgress.iterator(); it.hasNext(); ) {
-            final Trinity<Project, String, String> trinity = it.next();
-            if (project.equals(trinity.first)) {
-              it.remove();
-            }
-          }
-        }
-      }
-    });
-
-
-    for (Executor executor : Executor.EP_NAME.getExtensions()) {
-      initExecutor(executor);
-    }
   }
 
   @Nonnull

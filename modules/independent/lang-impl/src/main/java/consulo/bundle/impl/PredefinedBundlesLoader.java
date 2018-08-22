@@ -15,14 +15,12 @@
  */
 package consulo.bundle.impl;
 
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import consulo.bundle.PredefinedBundlesProvider;
@@ -36,14 +34,19 @@ import java.util.List;
  * @author VISTALL
  * @since 15:05/22.11.13
  */
-public class PredefinedBundlesLoader implements ApplicationComponent {
+public class PredefinedBundlesLoader {
   private static class ContextImpl implements PredefinedBundlesProvider.Context {
     private final List<Sdk> myBundles = new ArrayList<>();
+    private final SdkTable mySdkTable;
+
+    public ContextImpl(SdkTable sdkTable) {
+      mySdkTable = sdkTable;
+    }
 
     @Override
     @Nonnull
     public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
-      Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(SdkTable.getInstance().getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
+      Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
       String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
       SdkImpl sdk = new SdkImpl(uniqueSdkName, sdkType);
       myBundles.add(sdk);
@@ -57,13 +60,13 @@ public class PredefinedBundlesLoader implements ApplicationComponent {
     }
   }
 
-  @Override
-  public void initComponent() {
+  @Inject
+  public PredefinedBundlesLoader(SdkTable sdkTable) {
     if (SystemProperties.is("consulo.disable.predefined.bundles")) {
       return;
     }
 
-    ContextImpl context = new ContextImpl();
+    ContextImpl context = new ContextImpl(sdkTable);
     for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
       provider.createBundles(context);
     }
@@ -71,8 +74,6 @@ public class PredefinedBundlesLoader implements ApplicationComponent {
     List<Sdk> bundles = context.myBundles;
 
     if (!bundles.isEmpty()) {
-      SdkTable sdkTable = SdkTable.getInstance();
-
       for (Sdk bundle : bundles) {
         ((SdkImpl)bundle).setPredefined(true);
       }

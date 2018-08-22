@@ -50,6 +50,6 @@ public interface PersistentStateComponent<T> {
   /**
    * This method will be called after call #loadState method (even if no state exists)
    */
-  default void callAfterLoadState() {
+  default void afterLoadState() {
   }
 }

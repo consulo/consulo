@@ -20,7 +20,9 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -48,9 +50,9 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
 import java.io.File;
@@ -61,15 +63,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@State(
-  name = "HttpConfigurable",
-  storages = {
-    // we use two storages due to backward compatibility, see http://crucible.labs.intellij.net/cru/CR-IC-5142
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true),
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/proxy.settings.xml")
-  }
-)
-public class HttpConfigurable implements ApplicationComponent, PersistentStateComponent<HttpConfigurable>, Disposable {
+@State(name = "HttpConfigurable", storages = @Storage("proxy.settings.xml"))
+public class HttpConfigurable implements PersistentStateComponent<HttpConfigurable>, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.net.HttpConfigurable");
   private static final File PROXY_CREDENTIALS_FILE = new File(PathManager.getOptionsPath(), "proxy.settings.pwd");
   public static final int CONNECTION_TIMEOUT = SystemProperties.getIntProperty("idea.connection.timeout", 10000);
@@ -139,8 +134,7 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
   }
 
   @Override
-  public void initComponent() {
-
+  public void afterLoadState() {
     final HttpConfigurable currentState = getState();
     if (currentState != null) {
       final Element serialized = XmlSerializer.serializeIfNotDefault(currentState, new SkipDefaultsSerializationFilter());
@@ -252,7 +246,7 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
   }
 
   @Transient
-  public void setPlainProxyPassword (String password) {
+  public void setPlainProxyPassword(String password) {
     storeSecure("proxy.password", password);
   }
 
@@ -282,8 +276,7 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
         return;
       }
 
-      AuthenticationDialog dialog = new AuthenticationDialog(PopupUtil.getActiveComponent(), prefix + host,
-                                                             "Please enter credentials for: " + prompt, "", "", remember);
+      AuthenticationDialog dialog = new AuthenticationDialog(PopupUtil.getActiveComponent(), prefix + host, "Please enter credentials for: " + prompt, "", "", remember);
       dialog.show();
       if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
         AuthenticationPanel panel = dialog.getPanel();
@@ -311,8 +304,7 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
     }
 
     // do not try to show any dialogs if application is exiting
-    if (ApplicationManager.getApplication() == null || ApplicationManager.getApplication().isDisposeInProgress() ||
-        ApplicationManager.getApplication().isDisposed()) return null;
+    if (ApplicationManager.getApplication() == null || ApplicationManager.getApplication().isDisposeInProgress() || ApplicationManager.getApplication().isDisposed()) return null;
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return myTestGenericAuthRunnable.get();
@@ -332,14 +324,8 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
           return;
         }
       }
-      AuthenticationDialog dialog = new AuthenticationDialog(
-              PopupUtil.getActiveComponent(),
-              "Proxy authentication: " + host,
-              "Please enter credentials for: " + prompt,
-              getSecure("proxy.login"),
-              "",
-              KEEP_PROXY_PASSWORD
-      );
+      AuthenticationDialog dialog =
+              new AuthenticationDialog(PopupUtil.getActiveComponent(), "Proxy authentication: " + host, "Please enter credentials for: " + prompt, getSecure("proxy.login"), "", KEEP_PROXY_PASSWORD);
       dialog.show();
       if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
         PROXY_AUTHENTICATION = true;
@@ -354,7 +340,8 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
           removeSecure("proxy.password");
         }
         value[0] = new PasswordAuthentication(panel.getLogin(), panel.getPassword());
-      } else {
+      }
+      else {
         AUTHENTICATION_CANCELLED = true;
       }
     });
@@ -387,9 +374,9 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
         IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
         if (frame != null) {
           USE_PROXY_PAC = false;
-          Messages.showMessageDialog(frame.getComponent(), "Proxy: both 'use proxy' and 'autodetect proxy' settings were set." +
-                                                           "\nOnly one of these options should be selected.\nPlease re-configure.",
-                                     "Proxy Setup", Messages.getWarningIcon());
+          Messages.showMessageDialog(frame.getComponent(),
+                                     "Proxy: both 'use proxy' and 'autodetect proxy' settings were set." + "\nOnly one of these options should be selected.\nPlease re-configure.", "Proxy Setup",
+                                     Messages.getWarningIcon());
           editConfigurable(frame.getComponent());
         }
       }, ModalityState.NON_MODAL);
@@ -399,7 +386,7 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
   /**
    * todo [all] It is NOT necessary to call anything if you obey common IDEA proxy settings;
    * todo if you want to define your own behaviour, refer to {@link CommonProxy}
-   *
+   * <p>
    * also, this method is useful in a way that it test connection to the host [through proxy]
    *
    * @param url URL for HTTP connection
@@ -454,6 +441,7 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
 
   /**
    * Opens HTTP connection to a given location using configured http proxy settings.
+   *
    * @param location url to connect to
    * @return instance of {@link HttpURLConnection}
    * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
@@ -462,7 +450,7 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
   public HttpURLConnection openHttpConnection(@Nonnull String location) throws IOException {
     URLConnection urlConnection = openConnection(location);
     if (urlConnection instanceof HttpURLConnection) {
-      return (HttpURLConnection) urlConnection;
+      return (HttpURLConnection)urlConnection;
     }
     else {
       throw new IOException("Expected " + HttpURLConnection.class + ", but got " + urlConnection.getClass());
@@ -475,7 +463,9 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
     return uri == null || !mySelector.isProxyException(uri.getHost());
   }
 
-  /** @deprecated use {@link #getJvmProperties(boolean, URI)} (to be removed in IDEA 2018) */
+  /**
+   * @deprecated use {@link #getJvmProperties(boolean, URI)} (to be removed in IDEA 2018)
+   */
   @SuppressWarnings({"deprecation", "unused"})
   public static List<KeyValue<String, String>> getJvmPropertiesList(boolean withAutodetection, @Nullable URI uri) {
     List<Pair<String, String>> properties = getInstance().getJvmProperties(withAutodetection, uri);
@@ -542,7 +532,9 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
     return !Proxy.NO_PROXY.equals(proxy) && !Proxy.Type.DIRECT.equals(proxy.type());
   }
 
-  /** @deprecated use {@link com.intellij.execution.configurations.ParametersList#addProperty(String, String)} (to be removed in IDEA 2018) */
+  /**
+   * @deprecated use {@link com.intellij.execution.configurations.ParametersList#addProperty(String, String)} (to be removed in IDEA 2018)
+   */
   @SuppressWarnings({"deprecation", "unused"})
   @Nonnull
   public static List<String> convertArguments(@Nonnull final List<KeyValue<String, String>> list) {
@@ -575,7 +567,8 @@ public class HttpConfigurable implements ApplicationComponent, PersistentStateCo
     public String myPasswordCrypt;
 
     @SuppressWarnings("UnusedDeclaration")
-    public ProxyInfo() { }
+    public ProxyInfo() {
+    }
 
     public ProxyInfo(boolean store, String username, String passwordCrypt) {
       myStore = store;

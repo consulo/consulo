@@ -25,7 +25,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -36,19 +35,18 @@ import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.intellij.history.integration.LocalHistoryUtil.findRevisionIndexToRevert;
 
-public class LocalHistoryImpl extends LocalHistory implements ApplicationComponent, Disposable {
+public class LocalHistoryImpl extends LocalHistory implements Disposable {
   private final MessageBus myBus;
   private MessageBusConnection myConnection;
   private ChangeList myChangeList;
@@ -66,10 +64,11 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
 
   public LocalHistoryImpl(@Nonnull MessageBus bus) {
     myBus = bus;
+
+    initComponent();
   }
 
-  @Override
-  public void initComponent() {
+  private void initComponent() {
     if (!ApplicationManager.getApplication().isUnitTestMode() && ApplicationManager.getApplication().isHeadlessEnvironment()) return;
 
     myShutdownTask = () -> doDispose();
@@ -191,7 +190,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   public byte[] getByteContent(final VirtualFile f, final FileRevisionTimestampComparator c) {
     if (!isInitialized()) return null;
     if (!myGateway.areContentChangesVersioned(f)) return null;
-    ThrowableComputable<byte[],RuntimeException> action = () -> new ByteContentRetriever(myGateway, myVcs, f, c).getResult();
+    ThrowableComputable<byte[], RuntimeException> action = () -> new ByteContentRetriever(myGateway, myVcs, f, c).getResult();
     return AccessRule.read(action);
   }
 
@@ -214,10 +213,8 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
     return myGateway;
   }
 
-  private void revertToLabel(@Nonnull Project project, @Nonnull VirtualFile f, @Nonnull LabelImpl impl) throws LocalHistoryException{
-    HistoryDialogModel dirHistoryModel = f.isDirectory()
-                                         ? new DirectoryHistoryDialogModel(project, myGateway, myVcs, f)
-                                         : new EntireFileHistoryDialogModel(project, myGateway, myVcs, f);
+  private void revertToLabel(@Nonnull Project project, @Nonnull VirtualFile f, @Nonnull LabelImpl impl) throws LocalHistoryException {
+    HistoryDialogModel dirHistoryModel = f.isDirectory() ? new DirectoryHistoryDialogModel(project, myGateway, myVcs, f) : new EntireFileHistoryDialogModel(project, myGateway, myVcs, f);
     int leftRev = findRevisionIndexToRevert(dirHistoryModel, impl);
     if (leftRev < 0) {
       throw new LocalHistoryException("Couldn't find label revision");

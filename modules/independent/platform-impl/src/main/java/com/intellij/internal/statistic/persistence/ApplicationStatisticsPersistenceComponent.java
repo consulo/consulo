@@ -42,8 +42,7 @@ import java.util.Set;
 
 @State(name = "StatisticsApplicationUsages", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
                                                                         "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
-public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence
-        implements ApplicationComponent, PersistentStateComponent<Element> {
+public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence implements PersistentStateComponent<Element> {
   private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();
 
   private static final String TOKENIZER = ",";
@@ -162,14 +161,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   }
 
   @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ApplicationStatisticsPersistenceComponent";
-  }
-
-  @Override
-  public void initComponent() {
+  public void afterLoadState() {
     onAppClosing();
     onProjectClosing();
   }

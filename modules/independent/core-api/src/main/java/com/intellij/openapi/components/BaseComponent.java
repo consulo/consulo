@@ -15,19 +15,30 @@
  */
 package com.intellij.openapi.components;
 
+import com.intellij.openapi.diagnostic.ControlFlowException;
+
 /**
  * The base interface class for all components.
  *
- * @see ApplicationComponent
  * @see ProjectComponent
  */
 @Deprecated
 public interface BaseComponent extends NamedComponent {
+  class DefaultImplException extends RuntimeException implements ControlFlowException {
+    public static final DefaultImplException INSTANCE = new DefaultImplException();
+
+    @Override
+    public synchronized Throwable fillInStackTrace() {
+      return this;
+    }
+  }
+
   /**
    * Component should perform initialization and communication with other components in this method.
-   * This is called after {@link com.intellij.openapi.components.PersistentStateComponent#loadState(Object)}.
+   * This is called after {@link PersistentStateComponent#loadState(Object)}.
    */
   default void initComponent() {
+    throw DefaultImplException.INSTANCE;
   }
 
   /**

@@ -76,9 +76,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-@State(name = "FileTypeManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
-                                                            "/filetypes.xml"), additionalExportFile = FileTypeManagerImpl.FILE_SPEC)
-public class FileTypeManagerImpl extends FileTypeManagerEx implements PersistentStateComponent<Element>, ApplicationComponent, Disposable {
+@State(name = "FileTypeManager", storages = @Storage("filetypes.xml"), additionalExportFile = FileTypeManagerImpl.FILE_SPEC)
+public class FileTypeManagerImpl extends FileTypeManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(FileTypeManagerImpl.class);
 
   // You must update all existing default configurations accordingly
@@ -477,7 +476,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   }
 
   @Override
-  public void initComponent() {
+  public void afterLoadState() {
     if (!myUnresolvedMappings.isEmpty()) {
       for (StandardFileType pair : myStandardFileTypes.values()) {
         registerReDetectedMappings(pair);
@@ -1528,21 +1527,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   private static boolean shouldSave(@Nonnull FileType fileType) {
     return fileType != UnknownFileType.INSTANCE && !fileType.isReadOnly();
-  }
-
-  // -------------------------------------------------------------------------
-  // Setup
-  // -------------------------------------------------------------------------
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return getFileTypeComponentName();
-  }
-
-  @Nonnull
-  public static String getFileTypeComponentName() {
-    return "FileTypeManager";
   }
 
   @Nonnull

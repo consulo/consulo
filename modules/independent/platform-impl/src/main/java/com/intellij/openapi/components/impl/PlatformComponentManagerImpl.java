@@ -45,7 +45,7 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
     if(stateStore != null) {
       StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
       if(info != null) {
-        info.getComponent().callAfterLoadState();
+        info.getComponent().afterLoadState();
         return true;
       }
     }

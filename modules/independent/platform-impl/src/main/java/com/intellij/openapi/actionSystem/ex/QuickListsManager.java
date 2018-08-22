@@ -19,7 +19,6 @@ import com.intellij.ide.actions.QuickSwitchSchemeAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.options.BaseSchemeProcessor;
@@ -31,12 +30,16 @@ import com.intellij.util.PathUtilRt;
 import com.intellij.util.ThrowableConvertor;
 import gnu.trove.THashSet;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
-public class QuickListsManager implements ApplicationComponent {
+public class QuickListsManager {
+  public static QuickListsManager getInstance() {
+    return ApplicationManager.getApplication().getComponent(QuickListsManager.class);
+  }
+
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/quicklists";
 
   private static final String LIST_TAG = "list";
@@ -60,27 +63,7 @@ public class QuickListsManager implements ApplicationComponent {
         return element;
       }
     }, RoamingType.PER_USER);
-  }
 
-  public static QuickListsManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(QuickListsManager.class);
-  }
-
-  @Nonnull
-  private static QuickList createItem(@Nonnull Element element) {
-    QuickList item = new QuickList();
-    item.readExternal(element);
-    return item;
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "QuickListsManager";
-  }
-
-  @Override
-  public void initComponent() {
     for (BundledQuickListsProvider provider : BundledQuickListsProvider.EP_NAME.getExtensions()) {
       for (final String path : provider.getBundledListsRelativePaths()) {
         mySchemesManager.loadBundledScheme(path, provider, new ThrowableConvertor<Element, QuickList, Throwable>() {
@@ -97,6 +80,13 @@ public class QuickListsManager implements ApplicationComponent {
     }
     mySchemesManager.loadSchemes();
     registerActions();
+  }
+
+  @Nonnull
+  private static QuickList createItem(@Nonnull Element element) {
+    QuickList item = new QuickList();
+    item.readExternal(element);
+    return item;
   }
 
   @Nonnull

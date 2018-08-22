@@ -22,8 +22,10 @@ import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
@@ -45,9 +47,9 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
 import consulo.start.CommandLineArgs;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -58,7 +60,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SystemHealthMonitor implements ApplicationComponent {
+public class SystemHealthMonitor {
   private static final Logger LOG = Logger.getInstance(SystemHealthMonitor.class);
 
   private static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
@@ -68,10 +70,7 @@ public class SystemHealthMonitor implements ApplicationComponent {
 
   public SystemHealthMonitor(@Nonnull PropertiesComponent properties) {
     myProperties = properties;
-  }
 
-  @Override
-  public void initComponent() {
     checkRuntime();
     checkReservedCodeCacheSize();
     checkIBus();

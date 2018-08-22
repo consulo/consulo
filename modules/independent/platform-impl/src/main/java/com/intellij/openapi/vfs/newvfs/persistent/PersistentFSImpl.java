@@ -19,7 +19,6 @@ import com.intellij.concurrency.JobSchedulerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.LowMemoryWatcher;
@@ -52,8 +51,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author max
  */
-public class PersistentFSImpl extends PersistentFS implements ApplicationComponent, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.persistent.PersistentFS");
+public class PersistentFSImpl extends PersistentFS implements Disposable {
+  private static final Logger LOG = Logger.getInstance(PersistentFSImpl.class);
 
   private final MessageBus myEventBus;
 
@@ -73,10 +72,6 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   public PersistentFSImpl(@Nonnull MessageBus bus) {
     myEventBus = bus;
     ShutDownTracker.getInstance().registerShutdownTask(() -> performShutdown());
-  }
-
-  @Override
-  public void initComponent() {
     FSRecords.connect();
   }
 

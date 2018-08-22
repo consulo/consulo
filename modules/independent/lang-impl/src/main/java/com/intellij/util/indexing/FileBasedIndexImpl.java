@@ -279,6 +279,17 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
     myConnection = connection;
 
     myConnection.subscribe(VirtualFileManager.VFS_CHANGES, myChangedFilesCollector);
+
+    long started = System.nanoTime();
+    FileBasedIndexExtension[] extensions = Extensions.getExtensions(FileBasedIndexExtension.EXTENSION_POINT_NAME);
+    LOG.info("Index exts enumerated:" + (System.nanoTime() - started) / 1000000);
+    started = System.nanoTime();
+
+    myStateFuture = IndexInfrastructure.submitGenesisTask(new FileIndexDataInitialization(extensions));
+    LOG.info("Index scheduled:" + (System.nanoTime() - started) / 1000000);
+    if (!IndexInfrastructure.ourDoAsyncIndicesInitialization) {
+      waitUntilIndicesAreInitialized();
+    }
   }
 
   public static boolean isProjectOrWorkspaceFile(@Nonnull VirtualFile file, @Nullable FileType fileType) {
@@ -301,20 +312,6 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
     ((GistManagerImpl)GistManager.getInstance()).invalidateData();
     myChangedFilesCollector.invalidateIndicesRecursively(file, true);
     if (myInitialized) myChangedFilesCollector.ensureUpToDateAsync();
-  }
-
-  @Override
-  public void initComponent() {
-    long started = System.nanoTime();
-    FileBasedIndexExtension[] extensions = Extensions.getExtensions(FileBasedIndexExtension.EXTENSION_POINT_NAME);
-    LOG.info("Index exts enumerated:" + (System.nanoTime() - started) / 1000000);
-    started = System.nanoTime();
-
-    myStateFuture = IndexInfrastructure.submitGenesisTask(new FileIndexDataInitialization(extensions));
-    LOG.info("Index scheduled:" + (System.nanoTime() - started) / 1000000);
-    if (!IndexInfrastructure.ourDoAsyncIndicesInitialization) {
-      waitUntilIndicesAreInitialized();
-    }
   }
 
   private void waitUntilIndicesAreInitialized() {
