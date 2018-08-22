@@ -19,7 +19,6 @@ import com.intellij.diagnostic.PluginException;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.ex.ComponentManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -54,7 +53,7 @@ import java.util.function.Supplier;
 /**
  * @author mike
  */
-public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManagerEx, Disposable {
+public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManager, Disposable {
   private static final Logger LOG = Logger.getInstance(ComponentManagerImpl.class);
 
   private final Map<Class, Object> myInitializedComponents = ContainerUtil.newConcurrentMap();
@@ -247,8 +246,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     LOG.error(ex);
   }
 
-  @Override
-  @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
   public synchronized void registerComponent(final ComponentConfig config, final PluginDescriptor pluginDescriptor) {
     if (!config.prepareClasses(isHeadless())) {
       return;
@@ -359,11 +356,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   private boolean isHeadless() {
     return HeadlessHolder.myHeadless;
-  }
-
-  @Override
-  public void registerComponent(@Nonnull final ComponentConfig config) {
-    registerComponent(config, null);
   }
 
   @Nonnull
