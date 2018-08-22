@@ -2613,5 +2613,7 @@
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
+
+    <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false" />
   </extensions>
 </idea-plugin>

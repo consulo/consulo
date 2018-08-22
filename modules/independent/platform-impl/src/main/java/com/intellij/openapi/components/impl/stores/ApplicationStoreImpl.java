@@ -91,9 +91,9 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Override
   public void load() throws IOException {
     long t = System.currentTimeMillis();
-    myApplication.init();
+    myApplication.buildInjector();
     t = System.currentTimeMillis() - t;
-    LOG.info(myApplication.getComponentConfigurations().length + " application components initialized in " + t + " ms");
+    LOG.info(myApplication.getNotLazyServicesCount() + " application services initialized in " + t + " ms");
   }
 
   @Override

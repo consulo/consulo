@@ -26,10 +26,12 @@ import consulo.components.impl.stores.StateComponentInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
   private boolean myHandlingInitComponentError;
+  private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
   protected PlatformComponentManagerImpl(ComponentManager parent) {
     super(parent);
@@ -39,18 +41,40 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
     super(parent, name);
   }
 
+  protected void notifyAboutInitialization(float percentOfLoad, Object component) {
+  }
+
   @Override
-  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service) {
+  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
+    if (!lazy) {
+      myCreatedNotLazyServicesCount.incrementAndGet();
+    }
+
+    boolean result = false;
     IComponentStore stateStore = getStateStore();
-    if(stateStore != null) {
+    if (stateStore != null) {
       StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
-      if(info != null) {
+      if (info != null) {
         info.getComponent().afterLoadState();
-        return true;
+        result = true;
       }
     }
 
-    return false;
+    if(!lazy) {
+      notifyAboutInitialization(getPercentageOfComponentsLoaded(), component);
+    }
+
+    return result;
+  }
+
+  private float getPercentageOfComponentsLoaded() {
+    return ((float)myCreatedNotLazyServicesCount.get()) / getNotLazyServicesCount();
+  }
+
+  @Override
+  public synchronized void dispose() {
+    myCreatedNotLazyServicesCount.set(0);
+    super.dispose();
   }
 
   @Nullable
@@ -61,7 +85,7 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
   @Override
   protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
     // prevent storages from flushing and blocking FS
-    try(AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplementation() + "'")) {
+    try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplementation() + "'")) {
       return super.runServiceInitialize(descriptor, runnable);
     }
   }

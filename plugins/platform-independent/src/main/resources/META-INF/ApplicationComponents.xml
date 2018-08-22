@@ -16,9 +16,6 @@
 <idea-plugin>
   <application-components>
     <component>
-      <implementation-class>com.intellij.ide.ScreenReaderSupportHandler</implementation-class>
-    </component>
-    <component>
       <implementation-class>com.intellij.openapi.util.registry.RegistryState</implementation-class>
     </component>
 

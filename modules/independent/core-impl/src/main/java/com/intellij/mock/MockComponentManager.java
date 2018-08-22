@@ -84,13 +84,8 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
   }
 
   @Override
-  public <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementation) {
-    return getComponent(interfaceClass);
-  }
-
-  @Override
   public boolean hasComponent(@Nonnull Class interfaceClass) {
-    return false;
+    return true;
   }
 
   @Override

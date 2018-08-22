@@ -34,6 +34,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.util.Alarm;
+
 import javax.annotation.Nonnull;
 
 public class StatusBarUpdater implements Disposable {
@@ -82,8 +83,12 @@ public class StatusBarUpdater implements Disposable {
   }
 
   private void updateStatus() {
+    if (myProject.isDisposed()) {
+      return;
+    }
+
     Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
-    if (editor == null || !editor.getContentComponent().hasFocus()){
+    if (editor == null || !editor.getContentComponent().hasFocus()) {
       return;
     }
 
@@ -98,7 +103,7 @@ public class StatusBarUpdater implements Disposable {
     StatusBar statusBar = WindowManager.getInstance().getStatusBar(editor.getContentComponent(), myProject);
     if (statusBar instanceof StatusBarEx) {
       StatusBarEx barEx = (StatusBarEx)statusBar;
-      if (!text.equals(barEx.getInfo())){
+      if (!text.equals(barEx.getInfo())) {
         statusBar.setInfo(text, "updater");
       }
     }

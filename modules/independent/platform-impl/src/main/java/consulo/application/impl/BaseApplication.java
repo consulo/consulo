@@ -29,6 +29,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
+import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
@@ -173,7 +174,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   protected ReadMostlyRWLock myLock;
 
-  private boolean myIsFiringLoadingEvent;
   protected boolean myDoNotSave;
   private boolean myLoaded;
   private volatile boolean myWriteActionPending;
@@ -201,15 +201,15 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return APP_SERVICES;
   }
 
-  protected void loadApplicationComponents() {
+  @Nonnull
+  @Override
+  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
+    return ideaPluginDescriptor.getAppComponents();
+  }
+
+  protected void initPlugins() {
     PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
     PluginManagerCore.initPlugins(mySplashRef.get());
-    IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
-        loadComponentsConfiguration(plugin.getAppComponents(), plugin, false);
-      }
-    }
   }
 
   protected void fireApplicationExiting() {
@@ -242,13 +242,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     store.setOptionsPath(optionsPath);
     store.setConfigPath(configPath);
 
-    myIsFiringLoadingEvent = true;
-    try {
-      fireBeforeApplicationLoaded();
-    }
-    finally {
-      myIsFiringLoadingEvent = false;
-    }
+    fireBeforeApplicationLoaded();
 
     AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Loading application components");
     try {
@@ -348,14 +342,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
-  }
-
-  @Override
-  protected <T> T getComponentFromContainer(@Nonnull final Class<T> interfaceClass) {
-    if (myIsFiringLoadingEvent) {
-      return null;
-    }
-    return super.getComponentFromContainer(interfaceClass);
   }
 
   @Override
@@ -464,8 +450,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     ShutDownTracker.getInstance().ensureStopperThreadsFinished();
 
-    disposeComponents();
-
     AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
     service.shutdownAppScheduledExecutorService();
 
@@ -474,13 +458,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  protected synchronized Object createComponent(@Nonnull Class componentInterface) {
-    Object component = super.createComponent(componentInterface);
+  protected void notifyAboutInitialization(float percentOfLoad, Object component) {
     StartupProgress progress = mySplashRef.get();
     if (progress != null) {
-      progress.showProgress("", 0.65f + getPercentageOfComponentsLoaded() * 0.35f);
+      float progress1 = 0.65f + percentOfLoad * 0.35f;
+      progress.showProgress("", progress1);
     }
-    return component;
   }
 
   @Nonnull
@@ -488,7 +471,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   protected MutablePicoContainer createPicoContainer() {
     return Extensions.getRootArea().getPicoContainer();
   }
-
 
   @Override
   protected void bootstrapPicoContainer(@Nonnull String name) {

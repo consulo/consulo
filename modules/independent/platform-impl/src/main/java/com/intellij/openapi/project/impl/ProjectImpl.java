@@ -16,17 +16,13 @@
 package com.intellij.openapi.project.impl;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.ExtensionAreas;
-import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.components.ServiceDescriptor;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.components.impl.stores.*;
@@ -122,6 +118,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return PROJECT_SERVICES;
   }
 
+  @Nonnull
+  @Override
+  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
+    return ideaPluginDescriptor.getProjectComponents();
+  }
+
   @Override
   public void setProjectName(@Nonnull String projectName) {
     if (!projectName.equals(myName)) {
@@ -197,18 +199,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service) {
-    if (!service) {
-      ProgressIndicator indicator = getProgressIndicator();
-      if (indicator != null) {
-        indicator.setText2(getComponentName(component));
-      }
-
-      if (component instanceof ProjectComponent) {
-        myProjectComponents.add((ProjectComponent)component);
-      }
+  protected void notifyAboutInitialization(float percentOfLoad, Object component) {
+    ProgressIndicator indicator = getProgressIndicator();
+    if (indicator != null) {
+      indicator.setText2(getComponentName(component));
     }
-    return super.initializeIfStorableComponent(component, service);
+
+    if (component instanceof ProjectComponent) {
+      myProjectComponents.add((ProjectComponent)component);
+    }
   }
 
   @Override
@@ -219,14 +218,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   public boolean isInitialized() {
     return isOpen() && !isDisposed() && StartupManagerEx.getInstanceEx(this).startupActivityPassed();
-  }
-
-  public void loadProjectComponents() {
-    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
-      loadComponentsConfiguration(plugin.getProjectComponents(), plugin, isDefault());
-    }
   }
 
   @Override
@@ -291,13 +282,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public void init() {
+  public void buildInjector() {
     long start = System.currentTimeMillis();
 //    ProfilingUtil.startCPUProfiling();
-    super.init();
+    super.buildInjector();
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
-    LOG.info(getComponentConfigurations().length + " project components initialized in " + time + " ms");
+    LOG.info(getNotLazyServicesCount() + " project components initialized in " + time + " ms");
     getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).projectComponentsInitialized(this);
 
     myProjectManagerListener = new MyProjectManagerListener();
@@ -397,9 +388,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       myManager.removeProjectManagerListener(this, myProjectManagerListener);
     }
 
-    disposeComponents();
     Extensions.disposeArea(this);
     myManager = null;
+    myName = null;
     myProjectManagerListener = null;
 
     super.dispose();

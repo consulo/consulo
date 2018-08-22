@@ -40,11 +40,4 @@ public interface BaseComponent extends NamedComponent {
   default void initComponent() {
     throw DefaultImplException.INSTANCE;
   }
-
-  /**
-   * @see {@link com.intellij.openapi.Disposable}
-   */
-  @Deprecated
-  default void disposeComponent() {
-  }
 }

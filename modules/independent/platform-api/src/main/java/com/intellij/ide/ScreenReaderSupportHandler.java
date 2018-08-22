@@ -18,12 +18,14 @@ package com.intellij.ide;
 import com.intellij.openapi.Disposable;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.beans.PropertyChangeListener;
 
 /**
  * Keep {@link ScreenReader#isActive} in sync with {@link GeneralSettings#isSupportScreenReaders}
  */
+@Singleton
 public class ScreenReaderSupportHandler implements Disposable {
   private final GeneralSettings mySettings;
   private final PropertyChangeListener myGeneralSettingsListener;

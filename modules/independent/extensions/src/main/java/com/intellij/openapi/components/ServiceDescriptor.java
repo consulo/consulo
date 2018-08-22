@@ -27,6 +27,9 @@ public class ServiceDescriptor implements PluginAware {
   @Attribute("serviceImplementation")
   public String serviceImplementation;
 
+  @Attribute("lazy")
+  public boolean lazy = true;
+
   private PluginDescriptor myPluginDescriptor;
 
   public String getInterface() {
@@ -35,6 +38,10 @@ public class ServiceDescriptor implements PluginAware {
 
   public String getImplementation() {
     return serviceImplementation;
+  }
+
+  public boolean isLazy() {
+    return lazy;
   }
 
   @Override

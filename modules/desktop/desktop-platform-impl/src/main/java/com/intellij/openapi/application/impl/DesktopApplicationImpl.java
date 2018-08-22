@@ -122,7 +122,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myDoNotSave = isHeadless;
     myGatherStatistics = LOG.isDebugEnabled() || isInternal();
 
-    loadApplicationComponents();
+    initPlugins();
 
     if (!isHeadless) {
       Disposer.register(this, Disposer.newDisposable(), "ui");

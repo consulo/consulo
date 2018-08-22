@@ -29,8 +29,6 @@ public interface ProjectEx extends Project {
   @Nonnull
   IProjectStore getStateStore();
 
-  void init();
-
   boolean isOptimiseTestLoadSpeed();
 
   void setOptimiseTestLoadSpeed(boolean optimiseTestLoadSpeed);

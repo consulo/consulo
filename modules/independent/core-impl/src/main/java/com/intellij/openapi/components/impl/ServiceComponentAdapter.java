@@ -105,7 +105,7 @@ public class ServiceComponentAdapter implements AssignableToComponentAdapter {
           Disposer.register(myComponentManager, (Disposable)instance);
         }
 
-        myComponentManager.initializeIfStorableComponent(instance, true);
+        myComponentManager.initializeIfStorableComponent(instance, true, myDescriptor.isLazy());
 
         myInitializedComponentInstance = instance;
         return instance;
@@ -118,7 +118,7 @@ public class ServiceComponentAdapter implements AssignableToComponentAdapter {
   }
 
   @Nonnull
-  private synchronized ComponentAdapter getDelegate() {
+  public synchronized ComponentAdapter getDelegate() {
     if (myDelegate == null) {
       Class<?> implClass;
       try {

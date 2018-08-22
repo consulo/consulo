@@ -450,7 +450,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     finally {
       if (myProject != null) {
         try {
-          PsiDocumentManager documentManager = myProject.getComponent(PsiDocumentManager.class, null);
+          PsiDocumentManager documentManager = myProject.getComponent(PsiDocumentManager.class);
           if (documentManager != null) {
             EditorFactory.getInstance().getEventMulticaster().removeDocumentListener((DocumentListener)documentManager);
           }

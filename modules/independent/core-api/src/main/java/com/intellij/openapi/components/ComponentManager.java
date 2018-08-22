@@ -34,6 +34,13 @@ import javax.annotation.Nonnull;
  * @see Project
  */
 public interface ComponentManager extends UserDataHolder, Disposable {
+  default void buildInjector() {
+  }
+
+  default int getNotLazyServicesCount() {
+    return 0;
+  }
+
   /**
    * Gets the component by its interface class.
    *
@@ -43,22 +50,13 @@ public interface ComponentManager extends UserDataHolder, Disposable {
   <T> T getComponent(@Nonnull Class<T> interfaceClass);
 
   /**
-   * Gets the component by its interface class but returns a specified default implementation
-   * if the actual component doesn't exist in the container.
-   *
-   * @param interfaceClass the interface class of the component
-   * @param defaultImplementationIfAbsent the default implementation
-   * @return component that matches interface class or default if there is no such component
-   */
-  <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementationIfAbsent);
-
-  /**
    * Checks whether there is a component with the specified interface class.
    *
    * @param interfaceClass interface class of component to be checked
    * @return <code>true</code> if there is a component with the specified interface class;
    * <code>false</code> otherwise
    */
+  @Deprecated
   boolean hasComponent(@Nonnull Class interfaceClass);
 
   @Nonnull

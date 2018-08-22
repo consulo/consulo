@@ -45,7 +45,7 @@ public class ServiceManager {
   @Nonnull
   @SuppressWarnings("unchecked")
   public static <T> T getService(@Nonnull ComponentManager manager, @Nonnull Class<T> serviceClass) {
-    return (T)manager.getPicoContainer().getComponentInstance(serviceClass);
+    return (T)manager.getComponent(serviceClass);
   }
 
   /**

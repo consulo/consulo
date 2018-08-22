@@ -25,8 +25,6 @@ public interface ModuleEx extends Module {
   public static final ModuleEx[] EMPTY_ARRAY = new ModuleEx[0];
   public static ArrayFactory<ModuleEx> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new ModuleEx[count];
 
-  void init();
-
   void moduleAdded();
 
   void rename(String newName);

@@ -18,7 +18,6 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
@@ -253,10 +252,8 @@ public abstract class IdeFocusManager implements FocusRequestor {
   public static IdeFocusManager getGlobalInstance() {
     IdeFocusManager fm = null;
 
-    Application app = ApplicationManager.getApplication();
-    if (app != null && app.hasComponent(IdeFocusManager.class)) {
-      fm = app.getComponent(IdeFocusManager.class);
-    }
+    Application app = Application.get();
+    fm = app.getComponent(IdeFocusManager.class);
 
     if (fm == null) {
       // happens when app is semi-initialized (e.g. when IDEA server dialog is shown)

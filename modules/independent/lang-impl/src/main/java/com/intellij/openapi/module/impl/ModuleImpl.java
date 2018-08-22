@@ -16,8 +16,6 @@
 
 package com.intellij.openapi.module.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
@@ -108,7 +106,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Override
   public synchronized void dispose() {
-    disposeComponents();
     Extensions.disposeArea(this);
     super.dispose();
   }
