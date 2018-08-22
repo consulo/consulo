@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.util.xmlb.annotations.Attribute;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -49,7 +50,7 @@ public class VcsEP extends AbstractExtensionPointBean {
   private AbstractVcs myVcs;
   private final Object LOCK = new Object();
 
-  @javax.annotation.Nullable
+  @Nullable
   public AbstractVcs getVcs(@Nonnull Project project) {
     synchronized (LOCK) {
       if (myVcs != null) {
@@ -66,7 +67,7 @@ public class VcsEP extends AbstractExtensionPointBean {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private AbstractVcs getInstance(@Nonnull Project project, @Nonnull String vcsClass) {
     try {
       final Class<? extends AbstractVcs> foundClass = findClass(vcsClass);

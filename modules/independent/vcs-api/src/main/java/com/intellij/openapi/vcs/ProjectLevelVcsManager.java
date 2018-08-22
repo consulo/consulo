@@ -85,10 +85,10 @@ public abstract class ProjectLevelVcsManager {
    * @param name the name of the VCS to find.
    * @return the VCS instance, or null if none is found.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract AbstractVcs findVcsByName(@NonNls String name);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VcsDescriptor getDescriptor(final String name);
 
   /**
@@ -107,7 +107,7 @@ public abstract class ProjectLevelVcsManager {
    * @return the VCS instance, or null if the file does not belong to any module or the module
    * it belongs to is not under version control.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract AbstractVcs getVcsFor(@Nonnull VirtualFile file);
 
   /**
@@ -117,7 +117,7 @@ public abstract class ProjectLevelVcsManager {
    * @return the VCS instance, or null if the file does not belong to any module or the module
    * it belongs to is not under version control.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract AbstractVcs getVcsFor(FilePath file);
 
   /**
@@ -126,8 +126,8 @@ public abstract class ProjectLevelVcsManager {
    * @param file the file for which the root is requested.
    * @return the root, or null if the specified file is not in a VCS-managed directory.
    */
-  @javax.annotation.Nullable
-  public abstract VirtualFile getVcsRootFor(@javax.annotation.Nullable VirtualFile file);
+  @Nullable
+  public abstract VirtualFile getVcsRootFor(@Nullable VirtualFile file);
 
   /**
    * Return the parent directory of the specified file path which is mapped to a VCS.
@@ -135,13 +135,13 @@ public abstract class ProjectLevelVcsManager {
    * @param file the file for which the root is requested.
    * @return the root, or null if the specified file is not in a VCS-managed directory.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VirtualFile getVcsRootFor(FilePath file);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VcsRoot getVcsRootObjectFor(final VirtualFile file);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VcsRoot getVcsRootObjectFor(FilePath file);
 
   /**
@@ -174,7 +174,7 @@ public abstract class ProjectLevelVcsManager {
   @Deprecated
   public abstract void addMessageToConsoleWindow(String message, TextAttributes attributes);
 
-  public abstract void addMessageToConsoleWindow(@javax.annotation.Nullable String message, @Nonnull ConsoleViewContentType contentType);
+  public abstract void addMessageToConsoleWindow(@Nullable String message, @Nonnull ConsoleViewContentType contentType);
 
   @Nonnull
   public abstract VcsShowSettingOption getStandardOption(@Nonnull VcsConfiguration.StandardOption option, @Nonnull AbstractVcs vcs);
@@ -248,7 +248,7 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract List<VcsDirectoryMapping> getDirectoryMappings(AbstractVcs vcs);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract VcsDirectoryMapping getDirectoryMappingFor(FilePath path);
 
   /**
@@ -262,7 +262,7 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator, @Nullable VirtualFileFilter directoryFilter);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract AbstractVcs findVersioningVcs(VirtualFile file);
 
   public abstract CheckoutProvider.Listener getCompositeCheckoutListener();
