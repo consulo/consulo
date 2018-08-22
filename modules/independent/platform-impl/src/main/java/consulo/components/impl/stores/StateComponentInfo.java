@@ -41,7 +41,7 @@ public class StateComponentInfo<T> {
   private static final String OPTION_WORKSPACE = "workspace";
 
   @Nullable
-  public static <K> StateComponentInfo<K> of(@Nonnull Object o, @Nullable Project project) {
+  public static <K> StateComponentInfo<K> build(@Nonnull K o, @Nullable Project project) {
     if (!(o instanceof PersistentStateComponent) && !(o instanceof JDOMExternalizable)) {
       return null;
     }

@@ -239,7 +239,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myComponentsRegistry.getPercentageOfComponentsLoaded();
   }
 
-  public boolean initializeComponent(@Nonnull Object component, boolean service) {
+  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service) {
     return false;
   }
 
@@ -530,7 +530,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
                   Disposer.register(ComponentManagerImpl.this, (com.intellij.openapi.Disposable)componentInstance);
                 }
 
-                boolean isStorableComponent = initializeComponent(componentInstance, false);
+                boolean isStorableComponent = initializeIfStorableComponent(componentInstance, false);
 
                 if (componentInstance instanceof BaseComponent) {
                   if (!isStorableComponent) {

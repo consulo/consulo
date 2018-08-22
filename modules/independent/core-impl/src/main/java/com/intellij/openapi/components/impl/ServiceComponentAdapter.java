@@ -105,7 +105,7 @@ public class ServiceComponentAdapter implements AssignableToComponentAdapter {
           Disposer.register(myComponentManager, (Disposable)instance);
         }
 
-        myComponentManager.initializeComponent(instance, true);
+        myComponentManager.initializeIfStorableComponent(instance, true);
 
         myInitializedComponentInstance = instance;
         return instance;

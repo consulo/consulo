@@ -22,6 +22,8 @@ import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.components.impl.stores.StateComponentInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -106,7 +108,7 @@ public class MockProjectStore implements IProjectStore {
   }
 
   @Override
-  public boolean initComponent(@Nonnull Object component) {
+  public <T> StateComponentInfo<T> loadStateIfStorable(@Nonnull T component) {
     throw new UnsupportedOperationException("Method initComponent is not yet implemented in " + getClass().getName());
   }
 

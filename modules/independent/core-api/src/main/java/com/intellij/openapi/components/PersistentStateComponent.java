@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 /**
  * Every component which would like to persist its state across IDEA restarts
  * should implement this interface.
- *
+ * <p>
  * See <a href="http://confluence.jetbrains.net/display/IDEADEV/Persisting+State+of+Components">JetBrains WIKI</a>
  * for detailed description.
  */
@@ -41,8 +41,15 @@ public interface PersistentStateComponent<T> {
    * This method is called when new component state is loaded. A component should expect this method
    * to be called at any moment of its lifecycle. The method can and will be called several times, if
    * config files were externally changed while IDEA running.
+   *
    * @param state loaded component state
-   * @see com.intellij.util.xmlb.XmlSerializerUtil#copyBean(Object, Object) 
+   * @see com.intellij.util.xmlb.XmlSerializerUtil#copyBean(Object, Object)
    */
   void loadState(T state);
+
+  /**
+   * This method will be called after call #loadState method (even if no state exists)
+   */
+  default void callAfterLoadState() {
+  }
 }

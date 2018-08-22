@@ -503,11 +503,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
   }
 
-  @Override
-  public boolean initializeComponent(@Nonnull Object component, boolean service) {
-    return getStateStore().initComponent(component);
-  }
-
   @Nonnull
   @Override
   public Image getIcon() {

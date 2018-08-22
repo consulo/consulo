@@ -19,6 +19,8 @@ import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.components.impl.stores.StateComponentInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,9 +31,10 @@ import java.util.Set;
 
 public interface IComponentStore {
   /**
-   * Return true if component is storable
+   * Return storable info about component
    */
-  boolean initComponent(@Nonnull Object component);
+  @Nullable
+  <T> StateComponentInfo<T> loadStateIfStorable(@Nonnull T component);
 
   void reinitComponents(@Nonnull Set<String> componentNames, boolean reloadData);
 

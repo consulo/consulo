@@ -18,11 +18,10 @@ package com.intellij.openapi.util;
 import org.jdom.Element;
 
 /**
- *
  * @deprecated Use {@link com.intellij.openapi.components.PersistentStateComponent} instead.
- *
  */
 public interface JDOMExternalizable {
   void readExternal(Element element) throws InvalidDataException;
+
   void writeExternal(Element element) throws WriteExternalException;
 }

@@ -20,7 +20,9 @@ import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.openapi.components.impl.stores.IComponentStore;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.components.impl.stores.StateComponentInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +37,25 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
 
   protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name) {
     super(parent, name);
+  }
+
+  @Override
+  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service) {
+    IComponentStore stateStore = getStateStore();
+    if(stateStore != null) {
+      StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
+      if(info != null) {
+        info.getComponent().callAfterLoadState();
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @Nullable
+  protected IComponentStore getStateStore() {
+    return null;
   }
 
   @Override

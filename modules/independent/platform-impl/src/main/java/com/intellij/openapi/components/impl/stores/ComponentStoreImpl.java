@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
@@ -40,9 +43,9 @@ import consulo.components.impl.stores.StateComponentInfo;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -55,18 +58,18 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
 
   @Override
-  public boolean initComponent(@Nonnull Object component) {
+  public <T> StateComponentInfo<T> loadStateIfStorable(@Nonnull T component) {
     if (component instanceof SettingsSavingComponent) {
       mySettingsSavingComponents.add((SettingsSavingComponent)component);
     }
 
-    StateComponentInfo<?> componentInfo = StateComponentInfo.of(component, getProject());
+    StateComponentInfo<T> componentInfo = StateComponentInfo.build(component, getProject());
     if (componentInfo == null) {
-      return false;
+      return null;
     }
 
     try {
-      AccessRule.read(() -> initComponent(componentInfo, null, false));
+      AccessRule.read(() -> loadState(componentInfo, null, false));
     }
     catch (StateStorageException | ProcessCanceledException e) {
       throw e;
@@ -74,7 +77,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     catch (Exception e) {
       LOG.error(e);
     }
-    return true;
+    return componentInfo;
   }
 
   @Override
@@ -174,8 +177,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   private void doAddComponent(@Nonnull String componentName, @Nonnull StateComponentInfo<?> stateComponentInfo) {
     StateComponentInfo<?> existing = myComponents.get(componentName);
     if (existing != null && !existing.equals(stateComponentInfo)) {
-      LOG.error("Conflicting component name '" + componentName + "': " + existing.getComponent().getClass() + " and " + stateComponentInfo.getComponent()
-              .getClass());
+      LOG.error("Conflicting component name '" + componentName + "': " + existing.getComponent().getClass() + " and " + stateComponentInfo.getComponent().getClass());
     }
     myComponents.put(componentName, stateComponentInfo);
   }
@@ -199,9 +201,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
   }
 
-  private <T> String initComponent(@Nonnull StateComponentInfo<T> componentInfo,
-                                   @Nullable Collection<? extends StateStorage> changedStorages,
-                                   boolean reloadData) {
+  private <T> String loadState(@Nonnull StateComponentInfo<T> componentInfo, @Nullable Collection<? extends StateStorage> changedStorages, boolean reloadData) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
     State stateSpec = componentInfo.getState();
     String name = stateSpec.name();
@@ -220,8 +220,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     Storage[] storageSpecs = getComponentStorageSpecs(component, stateSpec, StateStorageOperation.READ);
     for (Storage storageSpec : storageSpecs) {
       StateStorage stateStorage = getStateStorageManager().getStateStorage(storageSpec);
-      if (stateStorage != null &&
-          (stateStorage.hasState(component, name, stateClass, reloadData) || (changedStorages != null && changedStorages.contains(stateStorage)))) {
+      if (stateStorage != null && (stateStorage.hasState(component, name, stateClass, reloadData) || (changedStorages != null && changedStorages.contains(stateStorage)))) {
         state = stateStorage.getState(component, name, stateClass, state);
         break;
       }
@@ -262,9 +261,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   @Nonnull
-  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent,
-                                                   @Nonnull State stateSpec,
-                                                   @Nonnull StateStorageOperation operation) {
+  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent, @Nonnull State stateSpec, @Nonnull StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;
@@ -348,7 +345,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
 
     boolean changedStoragesEmpty = changedStorages.isEmpty();
-    initComponent(componentInfo, changedStoragesEmpty ? null : changedStorages, changedStoragesEmpty);
+    loadState(componentInfo, changedStoragesEmpty ? null : changedStorages, changedStoragesEmpty);
     return true;
   }
 
@@ -384,9 +381,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   // used in settings repository plugin
-  public void reinitComponents(@Nonnull Set<String> componentNames,
-                               @Nonnull Collection<String> notReloadableComponents,
-                               @Nonnull Collection<? extends StateStorage> changedStorages) {
+  public void reinitComponents(@Nonnull Set<String> componentNames, @Nonnull Collection<String> notReloadableComponents, @Nonnull Collection<? extends StateStorage> changedStorages) {
     MessageBus messageBus = getMessageBus();
     messageBus.syncPublisher(BatchUpdateListener.TOPIC).onBatchUpdateStarted();
     try {
@@ -444,9 +439,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   // used in settings repository plugin
-  public static boolean askToRestart(@Nonnull Reloadable store,
-                                     @Nonnull Collection<String> notReloadableComponents,
-                                     @Nullable Collection<? extends StateStorage> changedStorages) {
+  public static boolean askToRestart(@Nonnull Reloadable store, @Nonnull Collection<String> notReloadableComponents, @Nullable Collection<? extends StateStorage> changedStorages) {
     StringBuilder message = new StringBuilder();
     String storeName = store instanceof IApplicationStore ? "Application" : "Project";
     message.append(storeName).append(' ');
