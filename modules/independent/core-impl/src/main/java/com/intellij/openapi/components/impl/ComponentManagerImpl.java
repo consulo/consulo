@@ -80,7 +80,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public void buildInjector() {
+  public void initNotLazyServices() {
     try {
       if (myComponentsCreated) {
         throw new IllegalArgumentException("Injector already build");

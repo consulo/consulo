@@ -275,7 +275,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       else {
         project.getStateStore().load();
       }
-      project.buildInjector();
+      project.initNotLazyServices();
       succeed = true;
     }
     finally {
@@ -1097,7 +1097,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       else {
         project.getStateStore().load();
       }
-      project.buildInjector();
+      project.initNotLazyServices();
       succeed = true;
     }
     catch (Throwable e) {

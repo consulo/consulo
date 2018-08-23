@@ -41,7 +41,7 @@ public class MockProjectEx  extends MockProject implements ProjectEx {
   }
 
   @Override
-  public void buildInjector() {
+  public void initNotLazyServices() {
   }
 
   @Override

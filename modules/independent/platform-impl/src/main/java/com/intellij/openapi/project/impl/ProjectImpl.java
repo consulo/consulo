@@ -243,10 +243,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public void buildInjector() {
+  public void initNotLazyServices() {
     long start = System.currentTimeMillis();
 //    ProfilingUtil.startCPUProfiling();
-    super.buildInjector();
+    super.initNotLazyServices();
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
     LOG.info(getNotLazyServicesCount() + " project components initialized in " + time + " ms");

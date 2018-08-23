@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * @see Project
  */
 public interface ComponentManager extends UserDataHolder, Disposable {
-  default void buildInjector() {
+  default void initNotLazyServices() {
   }
 
   default int getNotLazyServicesCount() {
