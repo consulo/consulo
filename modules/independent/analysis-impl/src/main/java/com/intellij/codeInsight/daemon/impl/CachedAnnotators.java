@@ -23,6 +23,8 @@ import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Collection;
@@ -39,15 +41,16 @@ public class CachedAnnotators {
     }
   };
 
+  @Inject
   public CachedAnnotators(Project project) {
     ExtensionPointListener<Annotator> listener = new ExtensionPointListener<Annotator>() {
       @Override
-      public void extensionAdded(@Nonnull Annotator extension, @javax.annotation.Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull Annotator extension, @Nullable PluginDescriptor pluginDescriptor) {
         cachedAnnotators.clear();
       }
 
       @Override
-      public void extensionRemoved(@Nonnull Annotator extension, @javax.annotation.Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull Annotator extension, @Nullable PluginDescriptor pluginDescriptor) {
         cachedAnnotators.clear();
       }
     };

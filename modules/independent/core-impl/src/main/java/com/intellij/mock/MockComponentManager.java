@@ -78,9 +78,9 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
   }
 
   @Override
-  public <T> T getComponent(@Nonnull Class<T> interfaceClass) {
-    final Object o = myPicoContainer.getComponentInstance(interfaceClass);
-    return (T)(o != null ? o : myComponents.get(interfaceClass));
+  public <T> T getComponent(@Nonnull Class<T> clazz) {
+    final Object o = myPicoContainer.getComponentInstance(clazz);
+    return (T)(o != null ? o : myComponents.get(clazz));
   }
 
   @Override

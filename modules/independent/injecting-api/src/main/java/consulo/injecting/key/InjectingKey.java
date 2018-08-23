@@ -13,12 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.injecting;
+package consulo.injecting.key;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
-public class InjectingKey {
+public interface InjectingKey<T> {
+  @Nonnull
+  static <K> InjectingKey<K> of(@Nonnull Class<K> clazz) {
+    return new SimpleInjectingKey<>(clazz);
+  }
 
+  @Nonnull
+  static <K> InjectingKey<K> of(@Nonnull String className, @Nonnull ClassLoader classLoader) {
+    return new LazyInjectingKey<>(className, classLoader);
+  }
+
+  @Nonnull
+  String getTargetClassName();
+
+  @Nonnull
+  Class<T> getTargetClass();
+
+  boolean equals(Object o);
+
+  String toString();
+
+  int hashCode();
 }

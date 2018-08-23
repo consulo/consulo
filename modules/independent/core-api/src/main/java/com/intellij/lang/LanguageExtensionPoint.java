@@ -15,11 +15,12 @@
  */
 package com.intellij.lang;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -39,7 +40,7 @@ public class LanguageExtensionPoint<T> extends CustomLoadingExtensionPointBean i
     @Nonnull
     protected T compute() {
       try {
-        return (T)instantiateExtension(implementationClass, ApplicationManager.getApplication().getPicoContainer());
+        return instantiateExtension(implementationClass, Application.get().getInjectingContainer());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

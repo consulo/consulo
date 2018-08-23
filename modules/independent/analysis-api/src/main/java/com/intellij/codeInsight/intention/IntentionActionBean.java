@@ -19,14 +19,14 @@ package com.intellij.codeInsight.intention;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Tag;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ResourceBundle;
 
 public class IntentionActionBean extends CustomLoadingExtensionPointBean {
@@ -72,7 +72,7 @@ public class IntentionActionBean extends CustomLoadingExtensionPointBean {
   }
 
   public IntentionAction instantiate() throws ClassNotFoundException {
-    return (IntentionAction)instantiateExtension(className, ApplicationManager.getApplication().getPicoContainer());
+    return instantiateExtension(className, Application.get().getInjectingContainer());
   }
 
   public ClassLoader getMetadataClassLoader() {

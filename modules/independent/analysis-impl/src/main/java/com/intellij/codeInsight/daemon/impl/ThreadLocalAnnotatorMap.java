@@ -17,6 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
+import consulo.injecting.InjectingContainer;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import org.picocontainer.PicoContainer;
@@ -52,11 +53,10 @@ abstract class ThreadLocalAnnotatorMap<K, V> {
   @Nonnull
   private List<V> cloneTemplates(@Nonnull Collection<V> templates) {
     List<V> result = new ArrayList<>(templates.size());
-    PicoContainer container = ApplicationManager.getApplication().getPicoContainer();
+    InjectingContainer container = ApplicationManager.getApplication().getInjectingContainer();
     for (V template : templates) {
       Class<? extends V> aClass = (Class<? extends V>)template.getClass();
-      V clone = (V)new CachingConstructorInjectionComponentAdapter(aClass.getName(), aClass).getComponentInstance(container);
-      result.add(clone);
+      result.add(container.getUnbindedInstance(aClass));
     }
     return result;
   }

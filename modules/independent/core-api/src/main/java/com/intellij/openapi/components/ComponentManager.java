@@ -22,6 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
+import consulo.injecting.InjectingContainer;
+import consulo.injecting.InjectingContainerOwner;
 import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
@@ -33,23 +35,33 @@ import javax.annotation.Nonnull;
  * @see Application
  * @see Project
  */
-public interface ComponentManager extends UserDataHolder, Disposable {
+public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner {
   default void initNotLazyServices() {
+    throw new UnsupportedOperationException();
   }
 
   default int getNotLazyServicesCount() {
-    return 0;
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @Nonnull
+  default InjectingContainer getInjectingContainer() {
+    throw new UnsupportedOperationException();
   }
 
   /**
    * Gets the component by its interface class.
    *
-   * @param interfaceClass the interface class of the component
+   * @param clazz the interface class of the component
    * @return component that matches interface class or null if there is no such component
    */
-  <T> T getComponent(@Nonnull Class<T> interfaceClass);
+  default <T> T getComponent(@Nonnull Class<T> clazz) {
+    return getInjectingContainer().getInstance(clazz);
+  }
 
   @Nonnull
+  @Deprecated
   PicoContainer getPicoContainer();
 
   @Nonnull

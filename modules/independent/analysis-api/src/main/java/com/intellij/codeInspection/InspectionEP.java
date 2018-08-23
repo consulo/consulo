@@ -20,7 +20,7 @@ import com.intellij.CommonBundle;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.lang.LanguageExtensionPoint;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
@@ -28,9 +28,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ResourceBundle;
 
 /**
@@ -147,7 +147,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   @Nonnull
   public InspectionProfileEntry instantiateTool() {
     try {
-      final InspectionProfileEntry entry = instantiate(implementationClass, ApplicationManager.getApplication().getPicoContainer());
+      final InspectionProfileEntry entry = instantiate(implementationClass, Application.get().getInjectingContainer());
       entry.myNameProvider = this;
       return entry;
     }
