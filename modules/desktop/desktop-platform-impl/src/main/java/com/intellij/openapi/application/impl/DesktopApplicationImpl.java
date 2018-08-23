@@ -79,7 +79,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   private final boolean myHeadlessMode;
   private final boolean myIsInternal;
 
-  private final TransactionGuardImpl myTransactionGuard = new TransactionGuardImpl();
+  private TransactionGuardImpl myTransactionGuardImpl;
 
   private int myInEditorPaintCounter; // EDT only
 
@@ -107,8 +107,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(null, splashRef);
-
-    getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), myTransactionGuard);
 
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
@@ -159,6 +157,20 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myLock = new ReadMostlyRWLock(edt);
 
     NoSwingUnderWriteAction.watchForEvents(this);
+  }
+
+  private TransactionGuardImpl transactionGuard() {
+    if(myTransactionGuardImpl == null) {
+      myTransactionGuardImpl = new TransactionGuardImpl();
+    }
+    return myTransactionGuardImpl;
+  }
+
+  @Override
+  protected void bootstrapPicoContainer(@Nonnull String name) {
+    super.bootstrapPicoContainer(name);
+
+    getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), transactionGuard());
   }
 
   @RequiredDispatchThread
@@ -225,7 +237,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final Condition expired) {
-    myInvokator.invokeLater(myTransactionGuard.wrapLaterInvocation(runnable, state), state, expired);
+    myInvokator.invokeLater(transactionGuard().wrapLaterInvocation(runnable, state), state, expired);
   }
 
   @RequiredDispatchThread
@@ -315,7 +327,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       LOG.error("Calling invokeAndWait from read-action leads to possible deadlock.");
     }
 
-    LaterInvocator.invokeAndWait(myTransactionGuard.wrapLaterInvocation(runnable, modalityState), modalityState);
+    LaterInvocator.invokeAndWait(transactionGuard().wrapLaterInvocation(runnable, modalityState), modalityState);
   }
 
   @Override
@@ -663,7 +675,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return;
     }
 
-    myTransactionGuard.submitTransactionAndWait(() -> {
+    transactionGuard().submitTransactionAndWait(() -> {
       int prevBase = myWriteStackBase;
       myWriteStackBase = myWriteActionsStack.size();
       try (AccessToken ignored = myLock.writeSuspend()) {

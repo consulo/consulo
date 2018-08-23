@@ -49,9 +49,7 @@ import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.*;
-import org.picocontainer.defaults.CachingComponentAdapter;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
+import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,13 +86,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
+
     putUserData(CREATION_TIME, System.nanoTime());
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
     }
-
-    getPicoContainer().registerComponentInstance(Project.class, this);
 
     if (!isDefault()) {
       if (noUIThread) {
@@ -147,55 +144,19 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   protected void bootstrapPicoContainer(@Nonnull String name) {
     Extensions.instantiateArea(ExtensionAreas.PROJECT, this, null);
     super.bootstrapPicoContainer(name);
+
     final MutablePicoContainer picoContainer = getPicoContainer();
-
+    picoContainer.registerComponentInstance(Project.class, this);
     picoContainer.registerComponentImplementation(ProjectPathMacroManager.class);
-    picoContainer.registerComponent(new ComponentAdapter() {
-      ComponentAdapter myDelegate;
 
-      public ComponentAdapter getDelegate() {
-        if (myDelegate == null) {
-
-          final Class storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
-          myDelegate = new CachingComponentAdapter(new ConstructorInjectionComponentAdapter(storeClass, storeClass, null, true));
-        }
-
-        return myDelegate;
-      }
-
-      @Override
-      public Object getComponentKey() {
-        return IComponentStore.class;
-      }
-
-      @Override
-      public Class getComponentImplementation() {
-        return getDelegate().getComponentImplementation();
-      }
-
-      @Override
-      public Object getComponentInstance(final PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
-        return getDelegate().getComponentInstance(container);
-      }
-
-      @Override
-      public void verify(final PicoContainer container) throws PicoIntrospectionException {
-        getDelegate().verify(container);
-      }
-
-      @Override
-      public void accept(final PicoVisitor visitor) {
-        visitor.visitComponentAdapter(this);
-        getDelegate().accept(visitor);
-      }
-    });
-
+    final Class storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
+    picoContainer.registerComponentImplementation(IProjectStore.class, storeClass);
   }
 
   @Nonnull
   @Override
   public IProjectStore getStateStore() {
-    return (IProjectStore)getPicoContainer().getComponentInstance(IComponentStore.class);
+    return getComponent(IProjectStore.class);
   }
 
   @Override

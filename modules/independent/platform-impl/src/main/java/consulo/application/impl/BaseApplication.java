@@ -37,7 +37,6 @@ import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
-import com.intellij.openapi.components.impl.stores.IComponentStore;
 import com.intellij.openapi.components.impl.stores.StoreUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -191,8 +190,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     myStartTime = System.currentTimeMillis();
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
+  }
 
-    getPicoContainer().registerComponentInstance(Application.class, this);
+  @Override
+  protected void bootstrapPicoContainer(@Nonnull String name) {
+    super.bootstrapPicoContainer(name);
+    MutablePicoContainer picoContainer = getPicoContainer();
+
+    picoContainer.registerComponentInstance(Application.class, this);
+    picoContainer.registerComponentImplementation(IApplicationStore.class, ApplicationStoreImpl.class);
+    picoContainer.registerComponentImplementation(ApplicationPathMacroManager.class);
   }
 
   @Nullable
@@ -473,16 +480,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    super.bootstrapPicoContainer(name);
-    getPicoContainer().registerComponentImplementation(IComponentStore.class, ApplicationStoreImpl.class);
-    getPicoContainer().registerComponentImplementation(ApplicationPathMacroManager.class);
-  }
-
-  @Override
   @Nonnull
   public IApplicationStore getStateStore() {
-    return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
+    return getComponent(IApplicationStore.class);
   }
 
   @Nonnull
