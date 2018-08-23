@@ -84,11 +84,6 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
   }
 
   @Override
-  public boolean hasComponent(@Nonnull Class interfaceClass) {
-    return true;
-  }
-
-  @Override
   @Nonnull
   public MutablePicoContainer getPicoContainer() {
     return myPicoContainer;

@@ -89,7 +89,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myTypeAheadCallback = myWrapper.isTypeAheadEnabled() ? new AsyncResult<Void>() : null;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
-    if (application != null && application.hasComponent(WindowManager.class)) {
+    if (application != null) {
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
 
@@ -179,7 +179,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
-    if (application != null && application.hasComponent(WindowManager.class)) {
+    if (application != null) {
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
 
@@ -193,7 +193,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myWrapper = wrapper;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
-    if (application != null && application.hasComponent(WindowManager.class)) {
+    if (application != null) {
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
     createDialog(owner, canBeParent);

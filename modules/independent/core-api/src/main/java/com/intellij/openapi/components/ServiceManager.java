@@ -23,10 +23,6 @@ import com.intellij.util.NotNullFunction;
 
 import javax.annotation.Nonnull;
 
-/**
- * For old-style components, the contract specifies a lifecycle: the component gets created and notified during the project opening process.
- * For services, there's no such contract, so we don't even load the class implementing the service until someone requests it.
- */
 public class ServiceManager {
   private ServiceManager() { }
 
@@ -43,9 +39,8 @@ public class ServiceManager {
   }
 
   @Nonnull
-  @SuppressWarnings("unchecked")
   public static <T> T getService(@Nonnull ComponentManager manager, @Nonnull Class<T> serviceClass) {
-    return (T)manager.getComponent(serviceClass);
+    return manager.getComponent(serviceClass);
   }
 
   /**

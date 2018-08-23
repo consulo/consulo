@@ -74,7 +74,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
-    if (application != null && application.hasComponent(WindowManager.class)) {
+    if (application != null) {
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
 
@@ -119,7 +119,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
     }
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
-    if (application != null && application.hasComponent(WindowManager.class)) {
+    if (application != null) {
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
 

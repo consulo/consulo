@@ -231,11 +231,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public boolean hasComponent(@Nonnull Class interfaceClass) {
-    return true;
-  }
-
-  @Override
   @Nonnull
   public MutablePicoContainer getPicoContainer() {
     MutablePicoContainer container = myPicoContainer;

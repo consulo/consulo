@@ -49,16 +49,6 @@ public interface ComponentManager extends UserDataHolder, Disposable {
    */
   <T> T getComponent(@Nonnull Class<T> interfaceClass);
 
-  /**
-   * Checks whether there is a component with the specified interface class.
-   *
-   * @param interfaceClass interface class of component to be checked
-   * @return <code>true</code> if there is a component with the specified interface class;
-   * <code>false</code> otherwise
-   */
-  @Deprecated
-  boolean hasComponent(@Nonnull Class interfaceClass);
-
   @Nonnull
   PicoContainer getPicoContainer();
 

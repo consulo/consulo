@@ -102,11 +102,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  public boolean hasComponent(@Nonnull Class interfaceClass) {
-    return false;
-  }
-
-  @Override
   @Nonnull
   public PicoContainer getPicoContainer() {
     throw new UnsupportedOperationException("getPicoContainer is not implement in : " + getClass());

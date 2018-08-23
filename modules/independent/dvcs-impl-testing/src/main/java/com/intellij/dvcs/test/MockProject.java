@@ -105,11 +105,6 @@ public class MockProject implements Project {
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public boolean hasComponent(@Nonnull Class interfaceClass) {
-    throw new UnsupportedOperationException();
-  }
-
   @Nonnull
   @Override
   public PicoContainer getPicoContainer() {
