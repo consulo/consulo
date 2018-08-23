@@ -16,8 +16,6 @@
 package com.intellij.openapi.components.impl;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginDescriptor;
@@ -91,13 +89,6 @@ public class ServiceComponentAdapter implements AssignableToComponentAdapter {
       }
 
       ComponentAdapter delegate = getDelegate();
-
-      if (LOGGER.isDebugEnabled() &&
-          ApplicationManager.getApplication().isWriteAccessAllowed() &&
-          !ApplicationManager.getApplication().isUnitTestMode() &&
-          PersistentStateComponent.class.isAssignableFrom(delegate.getComponentImplementation())) {
-        LOGGER.warn(new Throwable("Getting service from write-action leads to possible deadlock. Service implementation " + myDescriptor.getImplementation()));
-      }
 
       return myComponentManager.runServiceInitialize(myDescriptor, () -> {
         Object instance = delegate.getComponentInstance(container);

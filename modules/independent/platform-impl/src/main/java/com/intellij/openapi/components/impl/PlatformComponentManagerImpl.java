@@ -17,10 +17,12 @@ package com.intellij.openapi.components.impl;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.stores.IComponentStore;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.components.impl.stores.StateComponentInfo;
 
@@ -30,6 +32,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
+  private static final Logger LOGGER = Logger.getInstance(PlatformComponentManagerImpl.class);
+
   private boolean myHandlingInitComponentError;
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
@@ -55,12 +59,16 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
     if (stateStore != null) {
       StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
       if (info != null) {
+        if (Application.get().isWriteAccessAllowed()) {
+          LOGGER.warn(new Throwable("Getting service from write-action leads to possible deadlock. Service implementation " + component.getClass().getName()));
+        }
+
         info.getComponent().afterLoadState();
         result = true;
       }
     }
 
-    if(!lazy) {
+    if (!lazy) {
       notifyAboutInitialization(getPercentageOfComponentsLoaded(), component);
     }
 
