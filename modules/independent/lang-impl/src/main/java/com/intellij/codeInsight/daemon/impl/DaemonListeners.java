@@ -82,6 +82,8 @@ import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -92,6 +94,7 @@ import java.util.List;
 /**
  * @author cdr
  */
+@Singleton
 public class DaemonListeners implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.DaemonListeners");
 
@@ -119,6 +122,7 @@ public class DaemonListeners implements Disposable {
     return project.getComponent(DaemonListeners.class);
   }
 
+  @Inject
   public DaemonListeners(@Nonnull final Project project,
                          @Nonnull DaemonCodeAnalyzerImpl daemonCodeAnalyzer,
                          @Nonnull final EditorTracker editorTracker,

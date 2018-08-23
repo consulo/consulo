@@ -38,7 +38,6 @@ import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.xdebugger.XDebugProcess;
@@ -60,6 +59,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -80,6 +80,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
   private final ExecutionPointHighlighter myExecutionPointHighlighter;
   private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<>();
 
+  @Inject
   public XDebuggerManagerImpl(final Project project, final StartupManager startupManager) {
     myProject = project;
     myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager);

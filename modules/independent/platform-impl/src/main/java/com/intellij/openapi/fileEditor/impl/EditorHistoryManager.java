@@ -40,6 +40,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +62,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
    */
   private final List<HistoryEntry> myEntriesList = new ArrayList<>();
 
+  @Inject
   EditorHistoryManager(@Nonnull Project project) {
     myProject = project;
 

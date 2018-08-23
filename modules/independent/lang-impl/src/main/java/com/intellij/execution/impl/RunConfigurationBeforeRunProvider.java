@@ -45,6 +45,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -64,6 +65,7 @@ public class RunConfigurationBeforeRunProvider
 
   private final Project myProject;
 
+  @Inject
   public RunConfigurationBeforeRunProvider(Project project) {
     myProject = project;
   }

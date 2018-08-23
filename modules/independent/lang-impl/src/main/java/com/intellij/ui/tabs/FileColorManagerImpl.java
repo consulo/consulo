@@ -32,6 +32,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.awt.*;
@@ -74,6 +75,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     ourDefaultDarkColors.put("Yellow", new Color(0x494539));
   }
 
+  @Inject
   public FileColorManagerImpl(@Nonnull final Project project) {
     myProject = project;
     myModel = new FileColorsModel(project);

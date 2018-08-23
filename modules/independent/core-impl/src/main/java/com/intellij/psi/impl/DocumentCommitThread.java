@@ -60,6 +60,7 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
@@ -91,8 +92,10 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   public static DocumentCommitThread getInstance() {
     return (DocumentCommitThread)ServiceManager.getService(DocumentCommitProcessor.class);
   }
-  public DocumentCommitThread(final ApplicationEx application) {
-    myApplication = application;
+
+  @Inject
+  public DocumentCommitThread(final Application application) {
+    myApplication = (ApplicationEx)application;
     // install listener in EDT to avoid missing events in case we are inside write action right now
     application.invokeLater(() -> {
       if (application.isDisposed()) return;

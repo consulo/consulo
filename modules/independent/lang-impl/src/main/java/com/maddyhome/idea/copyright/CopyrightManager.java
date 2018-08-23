@@ -49,6 +49,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -80,6 +81,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
 
   private Project myProject;
 
+  @Inject
   public CopyrightManager(@Nonnull Project project,
                           @Nonnull final EditorFactory editorFactory,
                           @Nonnull final Application application,

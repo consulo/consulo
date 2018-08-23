@@ -32,6 +32,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
   @Nonnull
   private final Runnable myDirtReporter;
 
+  @Inject
   public VcsDirtyScopeVfsListener(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager, @Nonnull VcsDirtyScopeManager dirtyScopeManager) {
     myVcsManager = vcsManager;
 

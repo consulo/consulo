@@ -19,10 +19,14 @@ import com.intellij.pom.PomModel;
 import com.intellij.pom.PomModelAspect;
 import com.intellij.pom.event.PomModelEvent;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.Collections;
 
+@Singleton
 public class TreeAspect implements PomModelAspect {
+  @Inject
   public TreeAspect(@Nonnull PomModel model) {
     model.registerAspect(TreeAspect.class, this, Collections.<PomModelAspect>emptySet());
   }

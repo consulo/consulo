@@ -63,6 +63,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.io.*;
@@ -70,6 +72,7 @@ import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+@Singleton
 public class ShelveChangesManager implements ProjectComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager");
   @NonNls
@@ -104,6 +107,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   private boolean myShowRecycled;
   private final Project myProject;
 
+  @Inject
   public ShelveChangesManager(final Project project) {
     myProject = project;
     myPathMacroSubstitutor = PathMacroManager.getInstance(myProject).createTrackingSubstitutor();

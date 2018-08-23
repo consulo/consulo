@@ -57,6 +57,8 @@ import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.File;
 import java.util.Collection;
@@ -65,6 +67,7 @@ import java.util.Set;
 /**
  * ProjectRootManager extended with ability to watch events.
  */
+@Singleton
 public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements ProjectComponent {
   private static final Logger LOG = Logger.getInstance(ProjectRootManagerComponent.class);
 
@@ -76,6 +79,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new THashSet<LocalFileSystem.WatchRequest>();
   private final boolean myDoLogCachesUpdate;
 
+  @Inject
   public ProjectRootManagerComponent(Project project, StartupManager startupManager) {
     super(project);
 

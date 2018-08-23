@@ -26,6 +26,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.EventDispatcher;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.awt.datatransfer.*;
@@ -44,6 +45,7 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
     return (CopyPasteManagerEx)getInstance();
   }
 
+  @Inject
   public CopyPasteManagerEx(ClipboardSynchronizer clipboardSynchronizer) {
     myClipboardSynchronizer = clipboardSynchronizer;
   }

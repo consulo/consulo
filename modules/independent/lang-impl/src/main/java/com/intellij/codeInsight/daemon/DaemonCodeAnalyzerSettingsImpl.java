@@ -31,22 +31,20 @@ import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@State(
-  name="DaemonCodeAnalyzerSettings",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml"
-    )}
-)
+@State(name = "DaemonCodeAnalyzerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml")})
 public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings");
-  @NonNls private static final String ROOT_TAG = "root";
-  @NonNls private static final String PROFILE_ATT = "profile";
+  @NonNls
+  private static final String ROOT_TAG = "root";
+  @NonNls
+  private static final String PROFILE_ATT = "profile";
   private final InspectionProfileManagerImpl myManager;
 
+  @Inject
   public DaemonCodeAnalyzerSettingsImpl(InspectionProfileManager manager) {
     myManager = (InspectionProfileManagerImpl)manager;
   }
@@ -102,9 +100,7 @@ public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings i
 
   private void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
-    myManager.getConverter().storeEditorHighlightingProfile(element,
-                                                            new InspectionProfileImpl(
-                                                              InspectionProfileConvertor.OLD_HIGHTLIGHTING_SETTINGS_PROFILE));
+    myManager.getConverter().storeEditorHighlightingProfile(element, new InspectionProfileImpl(InspectionProfileConvertor.OLD_HIGHTLIGHTING_SETTINGS_PROFILE));
     myManager.setRootProfile(element.getAttributeValue(PROFILE_ATT));
   }
 

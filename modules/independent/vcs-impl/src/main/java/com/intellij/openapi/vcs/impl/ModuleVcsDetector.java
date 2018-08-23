@@ -40,17 +40,21 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author yole
  */
+@Singleton
 public class ModuleVcsDetector implements ProjectComponent, Disposable {
   private final Project myProject;
   private final MessageBus myMessageBus;
   private final ProjectLevelVcsManagerImpl myVcsManager;
   private MessageBusConnection myConnection;
 
+  @Inject
   public ModuleVcsDetector(final Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myMessageBus = project.getMessageBus();

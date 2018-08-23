@@ -59,6 +59,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
@@ -68,6 +70,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.intellij.openapi.vcs.ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED;
 
 @State(name = "ChangeListManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class ChangeListManagerImpl extends ChangeListManagerEx implements ProjectComponent, ChangeListOwner, PersistentStateComponent<Element> {
   static class Scheduler {
     private final AtomicReference<Future> myLastTask = new AtomicReference<>();
@@ -141,6 +144,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     myDirtyScopeManager = dirtyScopeManager;
   }
 
+  @Inject
   public ChangeListManagerImpl(Project project, final VcsConfiguration config) {
     myProject = project;
     myConfig = config;

@@ -60,6 +60,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -117,6 +118,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     return project.getComponent(ChangesViewI.class);
   }
 
+  @Inject
   public ChangesViewManager(@Nonnull Project project, @Nonnull ChangesViewContentManager contentManager) {
     myProject = project;
     myContentManager = contentManager;

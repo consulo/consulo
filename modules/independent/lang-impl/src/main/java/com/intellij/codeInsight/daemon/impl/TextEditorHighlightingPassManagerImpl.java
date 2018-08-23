@@ -30,6 +30,7 @@ import gnu.trove.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +83,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
   private boolean checkedForCycles;
   private final Project myProject;
 
+  @Inject
   public TextEditorHighlightingPassManagerImpl(Project project) {
     myProject = project;
 

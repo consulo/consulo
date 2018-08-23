@@ -37,6 +37,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -60,6 +61,7 @@ public class EditorTracker implements ProjectComponent {
   private Window myActiveWindow;
   private Project myProject;
 
+  @Inject
   public EditorTracker(Project project,
                        WindowManager windowManager,
                        EditorFactory editorFactory) {

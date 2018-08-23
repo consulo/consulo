@@ -27,6 +27,7 @@ import com.intellij.util.messages.MessageBus;
 import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -44,6 +45,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   private final AtomicLong myJavaStructureModificationCount = new AtomicLong(0);
   private final Listener myPublisher;
 
+  @Inject
   public PsiModificationTrackerImpl(Project project) {
     final MessageBus bus = project.getMessageBus();
     myPublisher = bus.syncPublisher(TOPIC);

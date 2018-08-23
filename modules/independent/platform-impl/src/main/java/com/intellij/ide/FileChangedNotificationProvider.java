@@ -38,6 +38,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.List;
 import java.util.Set;
@@ -48,6 +49,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
 
   private final Project myProject;
 
+  @Inject
   public FileChangedNotificationProvider(@Nonnull Project project, @Nonnull FrameStateManager frameStateManager) {
     myProject = project;
 

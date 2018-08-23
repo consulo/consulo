@@ -33,10 +33,11 @@ import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,6 +64,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     ourCustomUnlocker = unlocker;
   }
 
+  @Inject
   public NonProjectFileWritingAccessProvider(@Nonnull Project project) {
     myProject = project;
 

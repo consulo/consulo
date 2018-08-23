@@ -19,10 +19,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 import consulo.roots.ContentFolderTypeProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author VISTALL
@@ -38,11 +40,12 @@ public class CompilerPathsManager {
 
   private final Project myProject;
 
+  @Inject
   public CompilerPathsManager(Project project) {
     myProject = project;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public VirtualFile getCompilerOutput() {
     return CompilerConfiguration.getInstance(myProject).getCompilerOutput();
   }
@@ -56,7 +59,7 @@ public class CompilerPathsManager {
     return CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
   }
 
-  public void setCompilerOutputUrl(@javax.annotation.Nullable String compilerOutputUrl) {
+  public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
     CompilerConfiguration.getInstance(myProject).setCompilerOutputUrl(compilerOutputUrl);
   }
 
@@ -78,7 +81,7 @@ public class CompilerPathsManager {
 
   public void setCompilerOutputUrl(@Nonnull Module module,
                                    @Nonnull ContentFolderTypeProvider contentFolderType,
-                                   @javax.annotation.Nullable String compilerOutputUrl) {
+                                   @Nullable String compilerOutputUrl) {
     ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
   }
 
@@ -86,7 +89,7 @@ public class CompilerPathsManager {
     return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public VirtualFile getCompilerOutput(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
     return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
   }

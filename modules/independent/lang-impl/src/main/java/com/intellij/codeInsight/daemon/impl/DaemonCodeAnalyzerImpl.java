@@ -80,6 +80,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -124,6 +125,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private static final String URL_ATT = "url";
   private final PassExecutorService myPassExecutorService;
 
+  @Inject
   public DaemonCodeAnalyzerImpl(@Nonnull Project project,
                                 @Nonnull DaemonCodeAnalyzerSettings daemonCodeAnalyzerSettings,
                                 @Nonnull EditorTracker editorTracker,

@@ -43,6 +43,7 @@ import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
   public static final String BUILD_ARTIFACTS_ID = "BuildArtifacts";
   public static final Key<BuildArtifactsBeforeRunTask> ID = Key.create(BUILD_ARTIFACTS_ID);
 
+  @Inject
   public BuildArtifactsBeforeRunTaskProvider(Project project) {
     super(project, ID);
   }

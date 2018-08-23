@@ -22,6 +22,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.WeakList;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * @author max
@@ -38,6 +39,7 @@ public class DocumentMarkupModelManager {
 
   private Project myProject;
 
+  @Inject
   public DocumentMarkupModelManager(@Nonnull Project project) {
     myProject = project;
     Disposer.register(project, () -> cleanupProjectMarkups());

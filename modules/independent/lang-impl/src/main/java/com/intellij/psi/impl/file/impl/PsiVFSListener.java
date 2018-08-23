@@ -47,6 +47,7 @@ import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -102,6 +103,7 @@ public class PsiVFSListener implements VirtualFileListener {
     }
   }
 
+  @Inject
   public PsiVFSListener(Project project) {
     installGlobalListener();
 

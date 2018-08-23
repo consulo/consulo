@@ -47,6 +47,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.*;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
@@ -92,6 +93,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private final ArrayList<RunConfiguration> myRecentlyUsedTemporaries = new ArrayList<>();
   private boolean myOrdered = true;
 
+  @Inject
   public RunManagerImpl(@Nonnull Project project, @Nonnull PropertiesComponent propertiesComponent) {
     myConfig = new RunManagerConfig(propertiesComponent);
     myProject = project;

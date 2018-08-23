@@ -22,10 +22,12 @@ import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author nik
@@ -35,6 +37,7 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
 
   private final Project myProject;
 
+  @Inject
   public GeneratedFileEditingNotificationProvider(Project project) {
     myProject = project;
   }

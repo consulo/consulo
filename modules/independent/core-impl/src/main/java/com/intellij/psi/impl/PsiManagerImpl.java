@@ -43,6 +43,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -69,6 +70,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   public static final Topic<AnyPsiChangeListener> ANY_PSI_CHANGE_TOPIC =
           Topic.create("ANY_PSI_CHANGE_TOPIC", AnyPsiChangeListener.class, Topic.BroadcastDirection.TO_PARENT);
 
+  @Inject
   public PsiManagerImpl(Project project,
                         FileDocumentManager fileDocumentManager,
                         PsiBuilderFactory psiBuilderFactory,

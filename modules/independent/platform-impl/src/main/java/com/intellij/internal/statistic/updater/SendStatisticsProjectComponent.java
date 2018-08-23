@@ -27,13 +27,17 @@ import com.intellij.openapi.startup.StartupManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.Time;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class SendStatisticsProjectComponent implements ProjectComponent {
   private static final int DELAY_IN_MIN = 10;
 
   private Project myProject;
   private Alarm myAlarm;
 
+  @Inject
   public SendStatisticsProjectComponent(Project project) {
     myProject = project;
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, myProject);

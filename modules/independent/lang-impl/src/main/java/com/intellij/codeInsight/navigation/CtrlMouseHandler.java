@@ -73,6 +73,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -87,6 +89,7 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Singleton
 public class CtrlMouseHandler  {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.navigation.CtrlMouseHandler");
   private final EditorColorsManager myEditorColorsManager;
@@ -210,6 +213,7 @@ public class CtrlMouseHandler  {
 
   protected Project myProject;
 
+  @Inject
   public CtrlMouseHandler(final Project project,
                           StartupManager startupManager,
                           EditorColorsManager colorsManager,

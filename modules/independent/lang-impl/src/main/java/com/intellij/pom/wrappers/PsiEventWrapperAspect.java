@@ -33,11 +33,15 @@ import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collections;
 
+@Singleton
 public class PsiEventWrapperAspect implements PomModelAspect{
   private final TreeAspect myTreeAspect;
 
+  @Inject
   public PsiEventWrapperAspect(PomModel model, TreeAspect aspect) {
     myTreeAspect = aspect;
     model.registerAspect(PsiEventWrapperAspect.class, this, Collections.singleton((PomModelAspect)aspect));

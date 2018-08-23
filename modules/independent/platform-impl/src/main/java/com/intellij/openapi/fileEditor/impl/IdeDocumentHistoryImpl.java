@@ -39,6 +39,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -94,6 +95,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
   private RecentlyChangedFilesState myRecentlyChangedFiles = new RecentlyChangedFilesState();
 
+  @Inject
   public IdeDocumentHistoryImpl(@Nonnull Project project,
                                 @Nonnull EditorFactory editorFactory,
                                 @Nonnull FileEditorManager editorManager,

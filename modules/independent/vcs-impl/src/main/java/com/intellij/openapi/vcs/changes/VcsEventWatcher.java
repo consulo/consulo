@@ -28,13 +28,17 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.messages.MessageBusConnection;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class VcsEventWatcher implements ProjectComponent {
   private Project myProject;
 
+  @Inject
   public VcsEventWatcher(Project project) {
     myProject = project;
   }

@@ -28,6 +28,7 @@ import com.intellij.openapi.util.Key;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * User: Vassiliy.Kudryashov
@@ -38,6 +39,7 @@ public class CompileStepBeforeRunNoErrorCheck
   @Nonnull
   private final Project myProject;
 
+  @Inject
   public CompileStepBeforeRunNoErrorCheck(@Nonnull Project project) {
     myProject = project;
   }

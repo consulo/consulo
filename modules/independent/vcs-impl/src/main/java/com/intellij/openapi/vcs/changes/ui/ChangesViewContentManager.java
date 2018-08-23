@@ -42,6 +42,8 @@ import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -49,6 +51,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * @author yole
  */
+@Singleton
 public class ChangesViewContentManager implements ChangesViewContentI, ProjectComponent {
   @Deprecated
   @DeprecationInfo(value = "Use ToolWindowId#VCS", until = "2.0")
@@ -72,6 +75,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
   private final CountDownLatch myInitializationWaiter = new CountDownLatch(1);
   private final Project myProject;
 
+  @Inject
   public ChangesViewContentManager(@Nonnull Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;

@@ -53,11 +53,14 @@ import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
+@Singleton
 public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater");
 
@@ -66,6 +69,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   private final FilePropertyPusher[] myFilePushers;
   private final Queue<Runnable> myTasks = new ConcurrentLinkedQueue<>();
 
+  @Inject
   public PushedFilePropertiesUpdaterImpl(final Project project) {
     myProject = project;
     myPushers = Extensions.getExtensions(FilePropertyPusher.EP_NAME);

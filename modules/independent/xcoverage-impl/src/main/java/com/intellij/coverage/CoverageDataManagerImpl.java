@@ -54,6 +54,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -93,6 +94,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
   private final Object ANNOTATORS_LOCK = new Object();
   private final Map<Editor, SrcFileAnnotator> myAnnotators = new HashMap<Editor, SrcFileAnnotator>();
 
+  @Inject
   public CoverageDataManagerImpl(final Project project) {
     myProject = project;
     EditorColorsManager.getInstance().addEditorColorsListener(new EditorColorsAdapter() {

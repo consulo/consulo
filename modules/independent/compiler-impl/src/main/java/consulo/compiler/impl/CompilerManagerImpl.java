@@ -40,16 +40,16 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.graph.InboundSemiGraph;
-import com.intellij.util.messages.MessageBus;
 import consulo.annotations.RequiredReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -90,6 +90,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final Set<FileType> myCompilableFileTypes = new THashSet<>();
   private Compiler[] myAllCompilers;
 
+  @Inject
   public CompilerManagerImpl(final Project project) {
     myProject = project;
 

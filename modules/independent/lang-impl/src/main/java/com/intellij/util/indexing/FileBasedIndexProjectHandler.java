@@ -36,14 +36,18 @@ import com.intellij.openapi.vfs.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 
+@Singleton
 public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.FileBasedIndexProjectHandler");
 
   private final FileBasedIndex myIndex;
   private FileBasedIndexScanRunnableCollector myCollector;
 
+  @Inject
   public FileBasedIndexProjectHandler(FileBasedIndex index,
                                       Project project,
                                       FileBasedIndexScanRunnableCollector collector,

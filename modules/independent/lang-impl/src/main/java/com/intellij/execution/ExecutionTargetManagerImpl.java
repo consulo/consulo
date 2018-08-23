@@ -23,6 +23,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +42,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   @Nullable
   private String mySavedActiveTargetId;
 
+  @Inject
   public ExecutionTargetManagerImpl(@Nonnull Project project) {
     myProject = project;
   }

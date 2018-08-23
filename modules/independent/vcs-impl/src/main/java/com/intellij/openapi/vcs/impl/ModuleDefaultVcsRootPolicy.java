@@ -39,6 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Arrays;
@@ -58,6 +59,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   private final VirtualFile myBaseDir;
   private final ModuleManager myModuleManager;
 
+  @Inject
   public ModuleDefaultVcsRootPolicy(final Project project) {
     myProject = project;
     myBaseDir = project.getBaseDir();

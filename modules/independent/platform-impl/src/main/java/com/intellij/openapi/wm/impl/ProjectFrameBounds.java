@@ -19,6 +19,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
 
@@ -35,6 +36,7 @@ public class ProjectFrameBounds implements PersistentStateComponent<Rectangle> {
   private final Project myProject;
   private Rectangle myBounds;
 
+  @Inject
   public ProjectFrameBounds(Project project) {
     myProject = project;
   }

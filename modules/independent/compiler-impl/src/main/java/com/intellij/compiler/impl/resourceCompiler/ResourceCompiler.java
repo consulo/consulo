@@ -34,6 +34,7 @@ import com.intellij.util.Chunk;
 import com.intellij.util.ExceptionUtil;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,9 +52,10 @@ public class ResourceCompiler implements TranslatingCompiler {
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
   private final ProjectFileIndex myProjectFileIndex;
 
+  @Inject
   public ResourceCompiler(Project project) {
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
-    myProjectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
+    myProjectFileIndex = ProjectFileIndex.getInstance(project);
   }
 
   @Override

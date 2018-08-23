@@ -38,6 +38,7 @@ import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,6 +56,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   private final EditorNotifications myNotifications;
   private final Set<String> myEnabledExtensions = new HashSet<>();
 
+  @Inject
   public PluginAdvertiserEditorNotificationProvider(Project project, final EditorNotifications notifications) {
     myProject = project;
     myNotifications = notifications;

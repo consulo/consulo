@@ -34,6 +34,7 @@ import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialo
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
   private final List<BackgroundTaskByVfsChangeTaskImpl> myTasks = new ArrayList<>();
 
+  @Inject
   public BackgroundTaskByVfsChangeManagerImpl(@Nonnull Project project) {
     myProject = project;
 

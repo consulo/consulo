@@ -25,6 +25,7 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +41,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
   private final RunManagerImpl myManager;
   private List<Element> myUnloadedElements;
 
+  @Inject
   public ProjectRunConfigurationManager(@Nonnull RunManagerImpl manager) {
     myManager = manager;
   }

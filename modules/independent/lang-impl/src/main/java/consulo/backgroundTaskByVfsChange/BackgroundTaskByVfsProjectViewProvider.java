@@ -25,6 +25,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.backgroundTaskByVfsChange.tree.BackgroundTaskPsiFileTreeNode;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.*;
 
@@ -35,6 +36,7 @@ import java.util.*;
 public class BackgroundTaskByVfsProjectViewProvider implements SelectableTreeStructureProvider, DumbAware {
   private final Project myProject;
 
+  @Inject
   public BackgroundTaskByVfsProjectViewProvider(Project project) {
     myProject = project;
   }

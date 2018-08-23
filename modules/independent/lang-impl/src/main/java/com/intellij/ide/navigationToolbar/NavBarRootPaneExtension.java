@@ -34,6 +34,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 
@@ -49,6 +50,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   private final boolean myNavToolbarGroupExist;
   private JScrollPane myScrollPane;
 
+  @Inject
   public NavBarRootPaneExtension(Project project) {
     myProject = project;
 

@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ public class VcsFileListenerContextHelper {
   private final Set<FilePath> myDeletedContext;
   private final Set<VirtualFile> myAddContext;
 
+  @Inject
   VcsFileListenerContextHelper(final Project project) {
     myDeletedContext = new java.util.HashSet<FilePath>();
     myAddContext = new java.util.HashSet<VirtualFile>();

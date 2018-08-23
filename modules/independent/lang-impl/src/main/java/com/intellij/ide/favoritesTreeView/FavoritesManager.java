@@ -51,6 +51,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.*;
 
@@ -144,6 +145,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     return project.getComponent(FavoritesManager.class);
   }
 
+  @Inject
   public FavoritesManager(Project project) {
     myProject = project;
   }

@@ -48,6 +48,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
@@ -66,6 +67,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
     return project.getComponent(CreatePatchCommitExecutor.class);
   }
 
+  @Inject
   public CreatePatchCommitExecutor(final Project project, final ChangeListManager changeListManager) {
     myProject = project;
     myChangeListManager = changeListManager;

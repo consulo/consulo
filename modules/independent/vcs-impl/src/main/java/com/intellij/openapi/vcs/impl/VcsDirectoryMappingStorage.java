@@ -22,13 +22,18 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import org.jdom.Element;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
 @State(name = "VcsDirectoryMappings", storages = @Storage("vcs.xml"))
+@Singleton
 public class VcsDirectoryMappingStorage implements PersistentStateComponent<Element> {
   private final ProjectLevelVcsManager myVcsManager;
 
+  @Inject
   public VcsDirectoryMappingStorage(final ProjectLevelVcsManager vcsManager) {
     myVcsManager = vcsManager;
   }

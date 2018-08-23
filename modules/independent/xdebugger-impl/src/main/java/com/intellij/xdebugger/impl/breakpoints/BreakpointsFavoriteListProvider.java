@@ -38,6 +38,7 @@ import consulo.awt.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -64,6 +65,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
     }
   });
 
+  @Inject
   public BreakpointsFavoriteListProvider(Project project) {
     super(project, "Breakpoints");
     myBreakpointPanelProviders = XBreakpointUtil.collectPanelProviders();

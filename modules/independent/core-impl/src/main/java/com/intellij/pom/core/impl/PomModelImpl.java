@@ -62,6 +62,7 @@ import com.intellij.util.containers.Stack;
 import com.intellij.util.lang.CompoundRuntimeException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.*;
@@ -75,6 +76,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   private final Map<PomModelAspect, List<PomModelAspect>> myInvertedIncidence = new HashMap<>();
   private final Collection<PomModelListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
+  @Inject
   public PomModelImpl(Project project) {
     myProject = project;
   }

@@ -58,6 +58,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -95,6 +96,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
   private Element myLoadedState;
 
+  @Inject
   public DockManagerImpl(Project project) {
     myProject = project;
   }

@@ -45,6 +45,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.awt.*;
 import java.util.*;
@@ -52,6 +53,7 @@ import java.util.*;
 public class HighlightManagerImpl extends HighlightManager implements ProjectComponent {
   private final Project myProject;
 
+  @Inject
   public HighlightManagerImpl(Project project) {
     myProject = project;
   }

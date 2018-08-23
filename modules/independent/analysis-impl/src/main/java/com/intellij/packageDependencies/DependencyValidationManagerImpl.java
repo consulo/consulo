@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,6 +70,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   private final Map<String, PackageSet> myUnnamedScopes = new THashMap<String, PackageSet>();
 
+  @Inject
   public DependencyValidationManagerImpl(final Project project, NamedScopeManager namedScopeManager) {
     super(project);
     myNamedScopeManager = namedScopeManager;

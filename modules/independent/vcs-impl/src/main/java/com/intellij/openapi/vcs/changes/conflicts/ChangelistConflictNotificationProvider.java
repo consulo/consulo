@@ -20,9 +20,11 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * @author Dmitry Avdeev
@@ -33,6 +35,7 @@ public class ChangelistConflictNotificationProvider implements EditorNotificatio
 
   private final ChangelistConflictTracker myConflictTracker;
 
+  @Inject
   public ChangelistConflictNotificationProvider(ChangeListManagerImpl changeListManager) {
     myConflictTracker = changeListManager.getConflictTracker();
   }

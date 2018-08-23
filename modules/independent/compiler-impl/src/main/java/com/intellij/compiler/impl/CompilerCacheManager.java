@@ -20,13 +20,12 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -48,6 +47,7 @@ public class CompilerCacheManager implements Disposable {
   private final File myCachesRoot;
   private final Project myProject;
 
+  @Inject
   public CompilerCacheManager(Project project) {
     myProject = project;
     myCachesRoot = CompilerPaths.getCacheStoreDirectory(project);

@@ -46,6 +46,7 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,6 +69,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
 
   private RunDashboardContent myDashboardContent;
 
+  @Inject
   public RunDashboardManagerImpl(@Nonnull final Project project) {
     myProject = project;
 

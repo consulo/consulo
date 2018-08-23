@@ -32,6 +32,7 @@ import com.intellij.util.messages.Topic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -68,6 +69,7 @@ public class VcsRepositoryManager implements Disposable, VcsListener {
 
   private final Project myProject;
 
+  @Inject
   public VcsRepositoryManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;

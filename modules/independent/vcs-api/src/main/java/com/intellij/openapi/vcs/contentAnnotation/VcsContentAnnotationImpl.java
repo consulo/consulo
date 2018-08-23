@@ -29,6 +29,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 
+import javax.inject.Inject;
 import java.util.Date;
 
 /**
@@ -47,6 +48,7 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
     return ServiceManager.getService(project, VcsContentAnnotation.class);
   }
 
+  @Inject
   public VcsContentAnnotationImpl(Project project, VcsContentAnnotationSettings settings, final ContentAnnotationCache contentAnnotationCache) {
     myProject = project;
     mySettings = settings;

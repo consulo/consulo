@@ -32,6 +32,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -40,6 +42,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-05-09
  */
+@Singleton
 public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
   private static class MyBorder implements Border {
     @Override
@@ -68,6 +71,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   private volatile JPanel myPanels;
   private final Object myInitLock = new Object();
 
+  @Inject
   public DesktopPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, WolfTheProblemSolver problemSolver, DockManager dockManager) {
     super(project, psiManager, problemSolver, dockManager);
   }

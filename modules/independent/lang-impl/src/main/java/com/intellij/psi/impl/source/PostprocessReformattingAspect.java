@@ -56,9 +56,10 @@ import com.intellij.util.text.TextRangeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.*;
 
 public class PostprocessReformattingAspect implements PomModelAspect {
@@ -79,6 +80,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   };
 
+  @Inject
   public PostprocessReformattingAspect(Project project, PsiManager psiManager, TreeAspect treeAspect,final CommandProcessor processor) {
     myProject = project;
     myPsiManager = psiManager;

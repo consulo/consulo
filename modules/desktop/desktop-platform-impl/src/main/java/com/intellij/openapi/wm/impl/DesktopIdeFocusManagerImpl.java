@@ -26,6 +26,7 @@ import com.intellij.openapi.wm.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -33,6 +34,7 @@ import java.awt.event.KeyEvent;
 public class DesktopIdeFocusManagerImpl extends IdeFocusManager {
   private final DesktopToolWindowManagerImpl myToolWindowManager;
 
+  @Inject
   public DesktopIdeFocusManagerImpl(DesktopToolWindowManagerImpl twManager) {
     myToolWindowManager = twManager;
     WeakFocusStackManager.getInstance();

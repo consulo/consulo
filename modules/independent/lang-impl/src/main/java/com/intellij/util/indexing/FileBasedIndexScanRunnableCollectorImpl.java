@@ -31,6 +31,7 @@ import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +44,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
   private final ProjectFileIndex myProjectFileIndex;
   private final FileTypeManager myFileTypeManager;
 
+  @Inject
   public FileBasedIndexScanRunnableCollectorImpl(@Nonnull Project project) {
     this.myProject = project;
     this.myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();

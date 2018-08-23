@@ -34,6 +34,7 @@ import com.intellij.openapi.vcs.changes.ui.PlusMinus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,6 +63,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     return ServiceManager.getService(project, RemoteRevisionsCache.class);
   }
 
+  @Inject
   private RemoteRevisionsCache(final Project project) {
     myProject = project;
     myLock = new Object();

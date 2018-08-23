@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.Immutable;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Collection;
@@ -36,6 +37,7 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
   private final Project myProject;
   private MultiMap<Class<? extends ModuleExtension>, ModuleExtension> myExtensions;
 
+  @Inject
   public ModuleExtensionHelperImpl(Project project) {
     myProject = project;
     project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {

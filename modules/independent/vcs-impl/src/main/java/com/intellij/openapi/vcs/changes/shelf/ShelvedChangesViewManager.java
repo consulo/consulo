@@ -63,6 +63,7 @@ import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -97,6 +98,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     return project.getComponent(ShelvedChangesViewManager.class);
   }
 
+  @Inject
   public ShelvedChangesViewManager(Project project, ChangesViewContentManager contentManager, ShelveChangesManager shelveChangesManager) {
     myProject = project;
     myContentManager = contentManager;

@@ -37,6 +37,8 @@ import org.apache.oro.text.regex.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.ArrayList;
@@ -68,9 +70,9 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   private static class CompiledPattern {
     @Nonnull
     final Pattern fileName;
-    @javax.annotation.Nullable
+    @Nullable
     final Pattern dir;
-    @javax.annotation.Nullable
+    @Nullable
     final Pattern srcRoot;
 
     private CompiledPattern(Pattern fileName, Pattern dir, Pattern srcRoot) {
@@ -90,6 +92,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   private boolean myWildcardPatternsInitialized = false;
   private final Perl5Matcher myPatternMatcher = new Perl5Matcher();
 
+  @Inject
   public ResourceCompilerConfiguration(Project project) {
     myProject = project;
   }
@@ -106,7 +109,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     removeWildcardPatterns();
   }
 
-  private boolean isResourceFile(String name, @javax.annotation.Nullable VirtualFile parent) {
+  private boolean isResourceFile(String name, @Nullable VirtualFile parent) {
     final Ref<String> parentRef = Ref.create(null);
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < myCompiledPatterns.size(); i++) {
@@ -375,7 +378,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     return extensionsString.toString();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Element getState() {
     String[] patterns = getRegexpPatterns();

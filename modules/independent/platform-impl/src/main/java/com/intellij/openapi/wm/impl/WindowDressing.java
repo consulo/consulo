@@ -20,14 +20,18 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author Bas Leijdekkers
  */
+@Singleton
 public class WindowDressing implements ProjectComponent {
 
   private Project myProject;
 
+  @Inject
   public WindowDressing(@Nonnull Project project) {
     myProject = project;
   }

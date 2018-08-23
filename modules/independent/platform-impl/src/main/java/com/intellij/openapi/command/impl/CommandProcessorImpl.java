@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 
 @Singleton
-class CommandProcessorImpl extends CoreCommandProcessor {
+public class CommandProcessorImpl extends CoreCommandProcessor {
   @RequiredDispatchThread
   @Override
   public void finishCommand(final Project project, final Object command, final Throwable throwable) {

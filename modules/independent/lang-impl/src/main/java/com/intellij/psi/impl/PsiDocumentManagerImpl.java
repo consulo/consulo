@@ -52,6 +52,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   private final DocumentCommitProcessor myDocumentCommitThread;
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
+  @Inject
   public PsiDocumentManagerImpl(@Nonnull final Project project,
                                 @Nonnull PsiManager psiManager,
                                 @Nonnull EditorFactory editorFactory,

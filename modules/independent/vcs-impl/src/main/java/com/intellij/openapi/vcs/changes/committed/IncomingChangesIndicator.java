@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -47,6 +48,7 @@ public class IncomingChangesIndicator {
   private final CommittedChangesCache myCache;
   private IndicatorComponent myIndicatorComponent;
 
+  @Inject
   public IncomingChangesIndicator(Project project, CommittedChangesCache cache) {
     myProject = project;
     myCache = cache;

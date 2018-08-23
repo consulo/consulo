@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.util.ArrayUtilRt;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.awt.datatransfer.DataFlavor;
@@ -56,6 +57,7 @@ public class PsiCopyPasteManager {
   private MyData myRecentData;
   private final CopyPasteManagerEx myCopyPasteManager;
 
+  @Inject
   public PsiCopyPasteManager(CopyPasteManager copyPasteManager, ProjectManager projectManager) {
     myCopyPasteManager = (CopyPasteManagerEx) copyPasteManager;
     projectManager.addProjectManagerListener(new ProjectManagerAdapter() {

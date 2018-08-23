@@ -55,6 +55,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -136,6 +137,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     return project.getComponent(CommittedChangesCache.class);
   }
 
+  @Inject
   public CommittedChangesCache(final Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myBus = project.getMessageBus();

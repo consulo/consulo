@@ -38,6 +38,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   private final NamedScopeManager myLocalScopesHolder;
   private NamedScopesHolder.ScopeListener myScopeListener;
 
+  @Inject
   public InspectionProjectProfileManagerImpl(@Nonnull Project project,
                                              @Nonnull InspectionProfileManager inspectionProfileManager,
                                              @Nonnull DependencyValidationManager holder,

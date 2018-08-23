@@ -46,6 +46,8 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,6 +56,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author cdr
  */
+@Singleton
 public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private final Map<VirtualFile, ProblemFileInfo> myProblems = new THashMap<VirtualFile, ProblemFileInfo>(); // guarded by myProblems
   private final Collection<VirtualFile> myCheckingQueue = new THashSet<VirtualFile>(10);
@@ -120,6 +123,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
 
   private final Project myProject;
 
+  @Inject
   public WolfTheProblemSolverImpl(@Nonnull Project project,
                                   @Nonnull PsiManager psiManager,
                                   @Nonnull VirtualFileManager virtualFileManager) {

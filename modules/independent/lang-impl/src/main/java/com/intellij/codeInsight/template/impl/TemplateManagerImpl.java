@@ -42,12 +42,15 @@ import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
+@Singleton
 public class TemplateManagerImpl extends TemplateManager implements Disposable {
   private static final TemplateContextType[] ourContextTypes = Extensions.getExtensions(TemplateContextType.EP_NAME);
   private final Project myProject;
@@ -55,6 +58,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
   private static final Key<TemplateState> TEMPLATE_STATE_KEY = Key.create("TEMPLATE_STATE_KEY");
 
+  @Inject
   public TemplateManagerImpl(Project project) {
     myProject = project;
     final EditorFactoryListener myEditorFactoryListener = new EditorFactoryAdapter() {

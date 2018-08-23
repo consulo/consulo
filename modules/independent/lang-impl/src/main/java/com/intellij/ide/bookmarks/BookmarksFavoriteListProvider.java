@@ -31,6 +31,7 @@ import consulo.awt.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,6 +45,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   private final BookmarkManager myBookmarkManager;
   private final FavoritesManager myFavoritesManager;
 
+  @Inject
   public BookmarksFavoriteListProvider(Project project, BookmarkManager bookmarkManager, FavoritesManager favoritesManager) {
     super(project, "Bookmarks");
     myBookmarkManager = bookmarkManager;

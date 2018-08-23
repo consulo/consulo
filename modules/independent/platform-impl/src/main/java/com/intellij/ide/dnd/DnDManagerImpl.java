@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
@@ -80,6 +81,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
   private WeakReference<Component> myLastDropHandler;
 
+  @Inject
   public DnDManagerImpl(final Application app) {
     myApp = app;
   }

@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author spleaner
@@ -66,6 +67,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
 
   private final Project myProject;
 
+  @Inject
   public CompileStepBeforeRun(@Nonnull final Project project) {
     myProject = project;
   }

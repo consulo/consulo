@@ -24,18 +24,13 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import consulo.ui.image.Image;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@State(
-  name="NamedScopeManager",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "NamedScopeManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class NamedScopeManager extends NamedScopesHolder {
-
+  @Inject
   public NamedScopeManager(final Project project) {
     super(project);
   }

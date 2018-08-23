@@ -43,6 +43,8 @@ import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -50,6 +52,7 @@ import java.util.*;
 import java.util.List;
 
 @State(name = "BookmarkManager", storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)})
+@Singleton
 public class BookmarkManager implements PersistentStateComponent<Element> {
   private static final int MAX_AUTO_DESCRIPTION_SIZE = 50;
 
@@ -63,6 +66,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
 
   private Project myProject;
 
+  @Inject
   public BookmarkManager(Project project, PsiDocumentManager documentManager) {
     myBus = project.getMessageBus();
     myProject = project;
