@@ -1346,6 +1346,7 @@
 
     <applicationService serviceImplementation="consulo.auth.ServiceAuthConfiguration"/>
 
+    <applicationService serviceInterface="com.intellij.ide.RecentProjectsManager" serviceImplementation="com.intellij.ide.RecentDirectoryProjectsManager"/>
 
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>

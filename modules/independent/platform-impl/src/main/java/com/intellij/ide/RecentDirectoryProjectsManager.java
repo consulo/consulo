@@ -18,21 +18,15 @@ package com.intellij.ide;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@State(
-  name = "RecentProjectsManager",
-  storages = {
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true, roamingType = RoamingType.DISABLED),
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/recentProjects.xml", roamingType = RoamingType.DISABLED)
-  }
-)
+@State(name = "RecentProjectsManager", storages = {@Storage(value = "recentProjects.xml", roamingType = RoamingType.DISABLED)})
 public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   public RecentDirectoryProjectsManager(MessageBus messageBus) {
     super(messageBus);

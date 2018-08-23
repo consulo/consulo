@@ -158,11 +158,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.ide.RecentProjectsManager</interface-class>
-      <implementation-class>com.intellij.ide.RecentDirectoryProjectsManager</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.ide.actionMacro.ActionMacroManager</implementation-class>
     </component>
     <component>
