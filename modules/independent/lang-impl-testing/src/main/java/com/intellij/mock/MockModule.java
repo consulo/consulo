@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -20,12 +21,12 @@ public class MockModule extends MockComponentManager implements Module {
     this(null, parentDisposable);
   }
 
-  public MockModule(@javax.annotation.Nullable final Project project, @Nonnull Disposable parentDisposable) {
+  public MockModule(@Nullable final Project project, @Nonnull Disposable parentDisposable) {
     super(project == null ? null : project.getPicoContainer(), parentDisposable);
     myProject = project;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public VirtualFile getModuleDir() {
     throw new UnsupportedOperationException("Method getModuleDir is not yet implemented in " + getClass().getName());

@@ -33,8 +33,9 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.injecting.InjectingContainer;
+import consulo.injecting.pico.PicoInjectingContainer;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -205,7 +206,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Nonnull
   @Override
-  protected MutablePicoContainer createPicoContainer() {
-    return Extensions.getArea(this).getPicoContainer();
+  protected InjectingContainer createInjectingContainer() {
+    return new PicoInjectingContainer(Extensions.getArea(this).getPicoContainer());
   }
 }

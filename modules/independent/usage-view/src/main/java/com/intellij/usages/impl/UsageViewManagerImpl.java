@@ -43,6 +43,7 @@ import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,6 +57,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   private final Project myProject;
   private static final Key<UsageView> USAGE_VIEW_KEY = Key.create("USAGE_VIEW");
 
+  @Inject
   public UsageViewManagerImpl(@Nonnull Project project) {
     myProject = project;
   }

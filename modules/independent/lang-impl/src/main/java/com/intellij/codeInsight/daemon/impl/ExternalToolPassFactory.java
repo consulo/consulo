@@ -32,6 +32,7 @@ import com.intellij.util.ui.update.Update;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -40,6 +41,7 @@ import java.util.List;
 public class ExternalToolPassFactory implements TextEditorHighlightingPassFactory {
   private final MergingUpdateQueue myExternalActivitiesQueue;
 
+  @Inject
   public ExternalToolPassFactory(Project project) {
     myExternalActivitiesQueue = new MergingUpdateQueue("ExternalActivitiesQueue", 300, true, MergingUpdateQueue.ANY_COMPONENT, project, null, false);
     myExternalActivitiesQueue.setPassThrough(ApplicationManager.getApplication().isUnitTestMode());

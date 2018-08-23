@@ -48,6 +48,8 @@ import com.intellij.util.Function;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.injecting.InjectingContainer;
+import consulo.injecting.pico.PicoInjectingContainer;
 import org.jetbrains.annotations.NonNls;
 import org.picocontainer.MutablePicoContainer;
 
@@ -408,8 +410,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Nonnull
   @Override
-  protected MutablePicoContainer createPicoContainer() {
-    return Extensions.getArea(this).getPicoContainer();
+  protected InjectingContainer createInjectingContainer() {
+    return new PicoInjectingContainer(Extensions.getArea(this).getPicoContainer());
   }
 
   @Override

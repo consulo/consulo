@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -31,8 +31,8 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -64,7 +64,7 @@ public class PsiReferenceProviderBean extends AbstractExtensionPointBean impleme
 
   public PsiReferenceProvider instantiate() {
     try {
-      return (PsiReferenceProvider)instantiate(className, ApplicationManager.getApplication().getPicoContainer());
+      return (PsiReferenceProvider)instantiate(className, Application.get().getInjectingContainer());
     }
     catch (ClassNotFoundException e) {
       LOG.error(e);

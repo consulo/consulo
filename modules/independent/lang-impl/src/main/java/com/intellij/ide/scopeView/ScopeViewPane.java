@@ -44,6 +44,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   private final NamedScopeManager myNamedScopeManager;
   private final NamedScopesHolder.ScopeListener myScopeListener;
 
+  @Inject
   public ScopeViewPane(final Project project, ProjectView projectView, DependencyValidationManager dependencyValidationManager, NamedScopeManager namedScopeManager) {
     super(project);
     myProjectView = projectView;

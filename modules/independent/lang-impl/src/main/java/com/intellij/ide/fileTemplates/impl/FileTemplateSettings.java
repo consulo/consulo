@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Locale;
@@ -46,6 +47,7 @@ public class FileTemplateSettings extends FileTemplatesLoader implements Persist
   private static final String ATTRIBUTE_LIVE_TEMPLATE = "live-template-enabled";
   private static final String ATTRIBUTE_ENABLED = "enabled";
 
+  @Inject
   public FileTemplateSettings(@Nonnull FileTypeManagerEx typeManager, @Nullable Project project) {
     super(typeManager, project);
   }

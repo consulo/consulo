@@ -26,11 +26,11 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.IOException;
 
 @Singleton
@@ -47,47 +47,46 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Inject
   public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
     myApplication = application;
-    myStateStorageManager =
-            new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
-              private boolean myConfigDirectoryRefreshed;
+    myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application::getMessageBus) {
+      private boolean myConfigDirectoryRefreshed;
 
-              @Nonnull
-              @Override
-              protected String getConfigurationMacro(boolean directorySpec) {
-                return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
-              }
+      @Nonnull
+      @Override
+      protected String getConfigurationMacro(boolean directorySpec) {
+        return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
+      }
 
-              @Override
-              protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
-                return new StorageData(ROOT_ELEMENT_NAME);
-              }
+      @Override
+      protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
+        return new StorageData(ROOT_ELEMENT_NAME);
+      }
 
-              @Override
-              protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
-                if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
-                return super.getMacroSubstitutor(fileSpec);
-              }
+      @Override
+      protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
+        if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
+        return super.getMacroSubstitutor(fileSpec);
+      }
 
-              @Override
-              protected boolean isUseXmlProlog() {
-                return false;
-              }
+      @Override
+      protected boolean isUseXmlProlog() {
+        return false;
+      }
 
-              @Override
-              protected void beforeFileBasedStorageCreate() {
-                if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
-                  try {
-                    VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
-                    if (configDir != null) {
-                      VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
-                    }
-                  }
-                  finally {
-                    myConfigDirectoryRefreshed = true;
-                  }
-                }
-              }
-            };
+      @Override
+      protected void beforeFileBasedStorageCreate() {
+        if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
+          try {
+            VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
+            if (configDir != null) {
+              VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
+            }
+          }
+          finally {
+            myConfigDirectoryRefreshed = true;
+          }
+        }
+      }
+    };
   }
 
   @Override

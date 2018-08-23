@@ -35,12 +35,14 @@ import com.intellij.psi.PsiDirectory;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.swing.tree.DefaultTreeModel;
 
 public class ProjectViewPane extends AbstractProjectViewPSIPane {
   @NonNls
   public static final String ID = "ProjectPane";
 
+  @Inject
   public ProjectViewPane(Project project) {
     super(project);
   }

@@ -23,6 +23,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.WritingAccessProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +38,7 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
   private final Project myProject;
   private final ChangeListManagerImpl myManager;
 
+  @Inject
   public ChangelistConflictAccessProvider(Project project, ChangeListManagerImpl manager) {
     myProject = project;
     myManager = manager;

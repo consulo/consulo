@@ -40,6 +40,7 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.io.IOException;
@@ -189,6 +190,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   private TemplateKey myLastSelectedTemplate;
 
+  @Inject
   public TemplateSettings(SchemesManagerFactory schemesManagerFactory) {
     mySchemesManager = schemesManagerFactory.createSchemesManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup>() {
       @Override

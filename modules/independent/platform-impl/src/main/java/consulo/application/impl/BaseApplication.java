@@ -62,6 +62,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
+import consulo.injecting.InjectingContainer;
+import consulo.injecting.pico.PicoInjectingContainer;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -475,8 +477,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Nonnull
   @Override
-  protected MutablePicoContainer createPicoContainer() {
-    return Extensions.getRootArea().getPicoContainer();
+  protected InjectingContainer createInjectingContainer() {
+    return new PicoInjectingContainer(Extensions.getRootArea().getPicoContainer());
   }
 
   @Override

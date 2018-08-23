@@ -21,8 +21,9 @@ import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.xmlb.annotations.Attribute;
+
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -77,7 +78,7 @@ public class ChangesViewContentEP implements PluginAware {
     return myInstance;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public NotNullFunction<Project, Boolean> newPredicateInstance(Project project) {
     //noinspection unchecked
     return predicateClassName != null ? (NotNullFunction<Project, Boolean>)newClassInstance(project, predicateClassName) : null;
@@ -87,7 +88,7 @@ public class ChangesViewContentEP implements PluginAware {
     try {
       final Class<?> aClass =
               Class.forName(className, true, myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader());
-      return new CachingConstructorInjectionComponentAdapter(className, aClass).getComponentInstance(project.getPicoContainer());
+      return project.getInjectingContainer().getUnbindedInstance(aClass);
     }
     catch (Exception e) {
       LOG.error(e);

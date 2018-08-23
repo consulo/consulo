@@ -16,12 +16,13 @@
 package com.intellij.psi.impl.source.resolve.reference;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -40,7 +41,7 @@ public class PsiReferenceContributorEP extends CustomLoadingExtensionPointBean i
     @Nonnull
     protected PsiReferenceContributor compute() {
       try {
-        return (PsiReferenceContributor)instantiateExtension(implementationClass, ApplicationManager.getApplication().getPicoContainer());
+        return instantiateExtension(implementationClass, Application.get().getInjectingContainer());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

@@ -40,12 +40,12 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -69,6 +69,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     return (FileTemplateManagerImpl)getInstance(project);
   }
 
+  @Inject
   public FileTemplateManagerImpl(@Nonnull FileTypeManagerEx typeManager, FileTemplateSettings projectSettings, ExportableFileTemplateSettings defaultSettings,
                                  /*need this to ensure disposal of the service _after_ project manager*/
                                  @SuppressWarnings("UnusedParameters") ProjectManager pm, final Project project) {

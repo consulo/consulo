@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
@@ -70,7 +70,7 @@ public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition
   public ToolWindowFactory getToolWindowFactory() {
     if (myFactory == null) {
       try {
-        myFactory = instantiate(getFactoryClass(), ApplicationManager.getApplication().getPicoContainer());
+        myFactory = instantiate(getFactoryClass(), Application.get().getInjectingContainer());
       }
       catch(Exception e) {
         LOG.error(e);
@@ -97,7 +97,7 @@ public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition
   public Condition<Project> getCondition() {
     if (conditionClass != null) {
       try {
-        return instantiate(conditionClass, ApplicationManager.getApplication().getPicoContainer());
+        return instantiate(conditionClass, Application.get().getInjectingContainer());
       }
       catch (Exception e) {
         LOG.error(e);

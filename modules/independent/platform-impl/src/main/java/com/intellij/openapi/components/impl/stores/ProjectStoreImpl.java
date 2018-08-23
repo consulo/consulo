@@ -237,7 +237,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    return new ProjectStateStorageManager(myPathMacroManager.createTrackingSubstitutor(), myProject);
+    return new ProjectStateStorageManager(myProject, myPathMacroManager.createTrackingSubstitutor());
   }
 
   @Nonnull

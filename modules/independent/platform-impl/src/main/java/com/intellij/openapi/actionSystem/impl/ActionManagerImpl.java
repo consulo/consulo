@@ -59,7 +59,6 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -580,7 +579,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
     try {
       Class aClass = Class.forName(className, true, loader);
-      Object obj = new ConstructorInjectionComponentAdapter(className, aClass).getComponentInstance(ApplicationManager.getApplication().getPicoContainer());
+      Object obj = Application.get().getInjectingContainer().getUnbindedInstance(aClass);
 
       if (!(obj instanceof ActionGroup)) {
         reportActionError(pluginId, "class with name \"" + className + "\" should be instance of " + ActionGroup.class.getName());

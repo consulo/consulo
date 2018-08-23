@@ -100,7 +100,7 @@ public class SemServiceImpl extends SemService {
     };
 
     for (SemContributorEP contributor : myProject.getExtensions(SemContributor.EP_NAME)) {
-      contributor.registerSemProviders(myProject.getPicoContainer(), registrar);
+      contributor.registerSemProviders(myProject.getInjectingContainer(), registrar);
     }
 
     return map;

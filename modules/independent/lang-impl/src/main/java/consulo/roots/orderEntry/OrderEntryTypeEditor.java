@@ -39,22 +39,21 @@ import javax.annotation.Nonnull;
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
   ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.orderEntryTypeEditor");
 
-  KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY =
-          new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get().getPicoContainer()) {
-            @Override
-            public OrderEntryTypeEditor getByKey(@Nonnull OrderEntryType key) {
-              // special hack for unknown order entry type
-              if (key instanceof UnknownOrderEntryType) {
-                return new UnknownOrderEntryTypeEditor();
-              }
-              return super.getByKey(key);
-            }
+  KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY = new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get()) {
+    @Override
+    public OrderEntryTypeEditor getByKey(@Nonnull OrderEntryType key) {
+      // special hack for unknown order entry type
+      if (key instanceof UnknownOrderEntryType) {
+        return new UnknownOrderEntryTypeEditor();
+      }
+      return super.getByKey(key);
+    }
 
-            @Override
-            public String getKey(@Nonnull final OrderEntryType key) {
-              return key.getId();
-            }
-          };
+    @Override
+    public String getKey(@Nonnull final OrderEntryType key) {
+      return key.getId();
+    }
+  };
 
   @Nonnull
   default CellAppearanceEx getCellAppearance(@Nonnull T orderEntry) {
@@ -63,7 +62,7 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
 
   @Nonnull
   default ClasspathTableItem<T> createTableItem(@Nonnull T orderEntry, @Nonnull StructureConfigurableContext context) {
-    return new ClasspathTableItem<T>(orderEntry);
+    return new ClasspathTableItem<>(orderEntry);
   }
 
   default void navigate(@Nonnull final T orderEntry) {

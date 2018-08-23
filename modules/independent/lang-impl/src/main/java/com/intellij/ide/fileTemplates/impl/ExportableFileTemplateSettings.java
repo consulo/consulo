@@ -20,6 +20,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 
@@ -35,7 +36,7 @@ import javax.inject.Singleton;
     )}
 )
 public class ExportableFileTemplateSettings extends FileTemplateSettings {
-
+  @Inject
   public ExportableFileTemplateSettings(@Nonnull FileTypeManagerEx typeManager) {
     super(typeManager, null);
   }

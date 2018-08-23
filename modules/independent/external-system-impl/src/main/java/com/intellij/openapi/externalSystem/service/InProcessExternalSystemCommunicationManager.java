@@ -22,6 +22,8 @@ import com.intellij.openapi.externalSystem.service.remote.ExternalSystemProgress
 import com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -34,12 +36,13 @@ public class InProcessExternalSystemCommunicationManager implements ExternalSyst
   @Nonnull
   private final ExternalSystemProgressNotificationManagerImpl myProgressManager;
 
+  @Inject
   public InProcessExternalSystemCommunicationManager(@Nonnull ExternalSystemProgressNotificationManager notificationManager) {
     myProgressManager = (ExternalSystemProgressNotificationManagerImpl)notificationManager;
   }
 
   @SuppressWarnings("unchecked")
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);

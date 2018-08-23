@@ -42,6 +42,7 @@ import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharSequenceSubSequence;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -49,6 +50,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.PsiFileFactoryImpl");
   private final PsiManager myManager;
 
+  @Inject
   public PsiFileFactoryImpl(final PsiManager manager) {
     myManager = manager;
   }

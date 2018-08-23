@@ -47,6 +47,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -60,7 +61,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
   private final AtomicBoolean myToolsAreInitialized = new AtomicBoolean(false);
   private GlobalInspectionContextImpl myGlobalInspectionContext;
 
-
+  @Inject
   public InspectionManagerEx(final Project project) {
     super(project);
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) {

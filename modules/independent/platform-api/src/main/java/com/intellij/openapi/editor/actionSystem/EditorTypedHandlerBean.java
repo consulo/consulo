@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.editor.actionSystem;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.pico.DefaultPicoContainer;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.injecting.InjectingContainer;
+import consulo.injecting.InjectingContainerBuilder;
 
 /**
  * @author yole
@@ -39,9 +40,13 @@ public class EditorTypedHandlerBean extends AbstractExtensionPointBean {
   public TypedActionHandler getHandler(TypedActionHandler originalHandler) {
     if (myHandler == null) {
       try {
-        DefaultPicoContainer container = new DefaultPicoContainer(ApplicationManager.getApplication().getPicoContainer());
-        container.registerComponentInstance(originalHandler);
-        myHandler = instantiate(implementationClass, container);
+        InjectingContainer container = Application.get().getInjectingContainer();
+
+        InjectingContainerBuilder builder = container.childBuilder();
+        // bind original to TypedActionHandler
+        builder.bind(TypedActionHandler.class).to(originalHandler);
+
+        myHandler = instantiate(implementationClass, builder.build());
       }
       catch(Exception e) {
         LOG.error(e);

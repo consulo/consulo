@@ -18,17 +18,17 @@ package com.intellij.openapi.components.impl.stores;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.project.impl.ProjectImpl;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 class ProjectStateStorageManager extends StateStorageManagerImpl {
-  protected final ProjectImpl myProject;
-  @NonNls protected static final String ROOT_TAG_NAME = "project";
+  @NonNls
+  protected static final String ROOT_TAG_NAME = "project";
 
-  public ProjectStateStorageManager(final TrackingPathMacroSubstitutor macroSubstitutor, ProjectImpl project) {
-    super(macroSubstitutor, ROOT_TAG_NAME, project, project.getPicoContainer());
-    myProject = project;
+  public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor) {
+    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus);
   }
 
   @Nonnull
@@ -45,6 +45,6 @@ class ProjectStateStorageManager extends StateStorageManagerImpl {
   @Nonnull
   @Override
   protected StateStorage.Listener createStorageTopicListener() {
-    return myProject.getMessageBus().syncPublisher(StateStorage.PROJECT_STORAGE_TOPIC);
+    return myMessageBusSupplier.get().syncPublisher(StateStorage.PROJECT_STORAGE_TOPIC);
   }
 }

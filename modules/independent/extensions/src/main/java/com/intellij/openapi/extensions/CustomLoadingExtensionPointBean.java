@@ -17,7 +17,7 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.picocontainer.PicoContainer;
+import consulo.injecting.InjectingContainer;
 
 /**
  * @author yole
@@ -29,10 +29,11 @@ public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean 
   @Attribute("factoryArgument")
   public String factoryArgument;
 
-  protected Object instantiateExtension(final String implementationClass, final PicoContainer picoContainer) throws ClassNotFoundException {
+  @SuppressWarnings("unchecked")
+  protected <T> T instantiateExtension(final String implementationClass, final InjectingContainer picoContainer) throws ClassNotFoundException {
     if (factoryClass != null) {
       ExtensionFactory factory = instantiate(factoryClass, picoContainer);
-      return factory.createInstance(factoryArgument, implementationClass);
+      return (T)factory.createInstance(factoryArgument, implementationClass);
     }
     else {
       if (implementationClass == null) {

@@ -19,6 +19,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * @author yole
@@ -37,6 +38,7 @@ public class TodoIndexPatternProvider implements IndexPatternProvider {
     return null;
   }
 
+  @Inject
   public TodoIndexPatternProvider(TodoConfiguration configuration) {
     myConfiguration = configuration;
   }

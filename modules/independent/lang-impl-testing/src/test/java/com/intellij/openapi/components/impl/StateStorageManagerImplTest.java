@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.components.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.impl.stores.StateStorageManagerImpl;
@@ -23,6 +23,7 @@ import com.intellij.openapi.components.impl.stores.StorageData;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
 import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -39,7 +40,7 @@ public abstract class StateStorageManagerImplTest extends LightPlatformLangTestC
   @Override
   public final void setUp() throws Exception {
     super.setUp();
-    myStateStorageManager = new StateStorageManagerImpl(null, "foo", null, ApplicationManager.getApplication().getPicoContainer()) {
+    myStateStorageManager = new StateStorageManagerImpl(null, "foo", null, () -> Application.get().getMessageBus()) {
       @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {

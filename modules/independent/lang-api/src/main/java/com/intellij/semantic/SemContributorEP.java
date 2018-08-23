@@ -3,7 +3,7 @@ package com.intellij.semantic;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.picocontainer.PicoContainer;
+import consulo.injecting.InjectingContainer;
 
 /**
  * @author peter
@@ -14,7 +14,7 @@ public class SemContributorEP extends AbstractExtensionPointBean {
   @Attribute("implementation")
   public String implementation;
 
-  public void registerSemProviders(PicoContainer container, SemRegistrar registrar) {
+  public void registerSemProviders(InjectingContainer container, SemRegistrar registrar) {
     try {
       final SemContributor contributor = instantiate(implementation, container);
       contributor.registerSemProviders(registrar);
@@ -23,5 +23,4 @@ public class SemContributorEP extends AbstractExtensionPointBean {
       LOG.error(e);
     }
   }
-
 }

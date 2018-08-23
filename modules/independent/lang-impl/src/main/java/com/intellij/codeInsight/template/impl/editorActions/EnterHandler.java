@@ -25,10 +25,12 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredWriteAction;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class EnterHandler extends BaseEnterHandler {
   private final EditorActionHandler myOriginalHandler;
 
+  @Inject
   public EnterHandler(EditorActionHandler originalHandler) {
     super(true);
     myOriginalHandler = originalHandler;

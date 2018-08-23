@@ -35,8 +35,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import com.intellij.util.pico.DefaultPicoContainer;
 import consulo.application.ApplicationProperties;
+import consulo.injecting.InjectingContainer;
+import consulo.injecting.pico.PicoInjectingContainer;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
 import org.picocontainer.ComponentAdapter;
@@ -57,7 +58,8 @@ import java.util.function.Supplier;
 public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManager, Disposable {
   private static final Logger LOG = Logger.getInstance(ComponentManagerImpl.class);
 
-  private volatile MutablePicoContainer myPicoContainer;
+  private InjectingContainer myInjectingContainer;
+
   private volatile boolean myDisposed = false;
 
   private MessageBus myMessageBus;
@@ -151,7 +153,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
         ServiceComponentAdapter adapter = new ServiceComponentAdapter(descriptor, pluginDescriptor, this);
         picoContainer.registerComponent(adapter);
 
-        if(!descriptor.isLazy()) {
+        if (!descriptor.isLazy()) {
           // if service is not lazy - add it for init at start
           notLazyServices.add(adapter.getComponentImplementation());
         }
@@ -184,13 +186,12 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getComponent(@Nonnull Class<T> interfaceClass) {
+  public <T> T getComponent(@Nonnull Class<T> clazz) {
     if (myDisposed) {
       ProgressManager.checkCanceled();
       throw new AssertionError("Already disposed: " + this);
     }
-    return (T)getPicoContainer().getComponentInstance(interfaceClass);
+    return getInjectingContainer().getInstance(clazz);
   }
 
   @Nullable
@@ -232,8 +233,20 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   @Nonnull
+  @Deprecated
   public MutablePicoContainer getPicoContainer() {
-    MutablePicoContainer container = myPicoContainer;
+    InjectingContainer container = myInjectingContainer;
+    if (container == null || myDisposed) {
+      ProgressManager.checkCanceled();
+      throw new AssertionError("Already disposed: " + toString());
+    }
+    return ((PicoInjectingContainer)container).getContainer();
+  }
+
+  @Nonnull
+  @Override
+  public InjectingContainer getInjectingContainer() {
+    InjectingContainer container = myInjectingContainer;
     if (container == null || myDisposed) {
       ProgressManager.checkCanceled();
       throw new AssertionError("Already disposed: " + toString());
@@ -242,17 +255,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Nonnull
-  protected MutablePicoContainer createPicoContainer() {
-    MutablePicoContainer result;
-
-    if (myParentComponentManager != null) {
-      result = new DefaultPicoContainer(myParentComponentManager.getPicoContainer());
-    }
-    else {
-      result = new DefaultPicoContainer();
-    }
-
-    return result;
+  protected InjectingContainer createInjectingContainer() {
+    return new PicoInjectingContainer(myParentComponentManager == null ? null : (PicoInjectingContainer)myParentComponentManager.getInjectingContainer());
   }
 
   @Override
@@ -264,8 +268,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       myMessageBus = null;
     }
 
+    myInjectingContainer.dispose();
+    myInjectingContainer = null;
+
     myComponentsRegistry = null;
-    myPicoContainer = null;
     myComponentsCreated = false;
     myNotLazyServicesCount = 0;
     myDisposed = true;
@@ -284,7 +290,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected void bootstrapPicoContainer(@Nonnull String name) {
-    myPicoContainer = createPicoContainer();
+    myInjectingContainer = createInjectingContainer();
 
     myMessageBus = MessageBusFactory.newMessageBus(name, myParentComponentManager == null ? null : myParentComponentManager.getMessageBus());
   }

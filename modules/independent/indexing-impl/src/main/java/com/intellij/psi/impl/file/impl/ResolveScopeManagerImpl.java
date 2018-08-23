@@ -34,6 +34,7 @@ import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.annotations.RequiredReadAction;
 import consulo.roots.OrderEntryWithTracking;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
 
   private final Map<VirtualFile, GlobalSearchScope> myDefaultResolveScopesCache;
 
+  @Inject
   public ResolveScopeManagerImpl(Project project, ProjectRootManager projectRootManager, PsiManager psiManager) {
     myProject = project;
     myProjectRootManager = projectRootManager;

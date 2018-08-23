@@ -54,6 +54,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
@@ -63,6 +64,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   public static final String ID = "PackagesPane";
   private final MyDeletePSIElementProvider myDeletePSIElementProvider = new MyDeletePSIElementProvider();
 
+  @Inject
   public PackageViewPane(Project project) {
     super(project);
   }

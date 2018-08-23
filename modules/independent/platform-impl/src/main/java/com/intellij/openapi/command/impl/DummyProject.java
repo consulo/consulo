@@ -97,7 +97,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  public <T> T getComponent(Class<T> interfaceClass) {
+  public <T> T getComponent(@Nonnull Class<T> clazz) {
     return null;
   }
 
@@ -158,7 +158,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     throw new UnsupportedOperationException("getExtensions()");
   }
 

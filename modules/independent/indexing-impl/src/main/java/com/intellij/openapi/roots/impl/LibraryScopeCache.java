@@ -28,6 +28,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class LibraryScopeCache {
   private final ConcurrentMap<String, GlobalSearchScope> mySdkScopes = ContainerUtil.newConcurrentMap();
   private final LibrariesOnlyScope myLibrariesOnlyScope;
 
-
+  @Inject
   public LibraryScopeCache(Project project) {
     myProject = project;
     myLibrariesOnlyScope = new LibrariesOnlyScope(GlobalSearchScope.allScope(myProject), myProject);

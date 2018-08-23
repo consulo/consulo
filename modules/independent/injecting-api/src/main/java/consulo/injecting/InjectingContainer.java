@@ -16,6 +16,7 @@
 package consulo.injecting;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -26,9 +27,14 @@ public interface InjectingContainer {
     return null;
   }
 
-  @Nonnull
+  @Nullable
   <T> T getInstance(@Nonnull Class<T> clazz);
 
   @Nonnull
-  InjectingContainer create(@Nonnull InjectingContainerBuilder builder);
+  <T> T getUnbindedInstance(@Nonnull Class<T> clazz);
+
+  @Nonnull
+  InjectingContainerBuilder childBuilder();
+
+  void dispose();
 }

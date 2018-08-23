@@ -100,6 +100,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -211,6 +212,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private final Map<String, SelectInTarget> mySelectInTargets = new LinkedHashMap<>();
   private ContentManager myContentManager;
 
+  @Inject
   public ProjectViewImpl(@Nonnull Project project, final FileEditorManager fileEditorManager, final ToolWindowManagerEx toolWindowManager) {
     myProject = project;
 

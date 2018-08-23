@@ -15,6 +15,8 @@
  */
 package consulo.injecting;
 
+import consulo.injecting.key.InjectingKey;
+
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
@@ -23,5 +25,12 @@ import java.util.function.Consumer;
  * @since 2018-08-23
  */
 public interface InjectingPoint<T> {
-  void post(@Nonnull Consumer<T> consumer);
+  @Nonnull
+  InjectingPoint<T> to(@Nonnull T value);
+
+  @Nonnull
+  InjectingPoint<T> to(@Nonnull InjectingKey<T> key);
+
+  @Nonnull
+  InjectingPoint<T> injectListener(@Nonnull Consumer<T> consumer);
 }

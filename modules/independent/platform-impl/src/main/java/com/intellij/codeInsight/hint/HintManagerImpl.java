@@ -46,6 +46,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
@@ -101,6 +102,7 @@ public class HintManagerImpl extends HintManager implements Disposable {
     return (HintManagerImpl)ServiceManager.getService(HintManager.class);
   }
 
+  @Inject
   public HintManagerImpl(ActionManagerEx actionManagerEx, ProjectManager projectManager) {
     myEditorManagerListener = new MyEditorManagerListener();
 

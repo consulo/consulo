@@ -17,9 +17,11 @@ package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
+import consulo.injecting.InjectingContainer;
+import org.picocontainer.PicoContainer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.picocontainer.PicoContainer;
 
 /**
  * @author peter
@@ -73,4 +75,13 @@ public abstract class AbstractExtensionPointBean implements PluginAware {
     return (T)new CachingConstructorInjectionComponentAdapter(aClass.getName(), aClass, null, allowNonPublicClasses).getComponentInstance(container);
   }
 
+  @Nonnull
+  public final <T> T instantiate(final String className, @Nonnull final InjectingContainer container) throws ClassNotFoundException {
+    return instantiate(this.<T>findClass(className), container);
+  }
+
+  @Nonnull
+  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final InjectingContainer container) {
+    return container.getUnbindedInstance(aClass);
+  }
 }

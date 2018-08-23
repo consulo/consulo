@@ -52,14 +52,17 @@ import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.lang.LanguageVersion;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class BlockSupportImpl extends BlockSupport {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.text.BlockSupportImpl");
 
+  @Inject
   public BlockSupportImpl(Project project) {
     project.getMessageBus().connect().subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
       @Override
@@ -100,10 +103,7 @@ public class BlockSupportImpl extends BlockSupport {
    * Returns null if there is no any chance to make incremental parsing.
    */
   @Nullable
-  public Couple<ASTNode> findReparseableRoots(@Nonnull PsiFileImpl file,
-                                              @Nonnull FileASTNode oldFileNode,
-                                              @Nonnull TextRange changedPsiRange,
-                                              @Nonnull CharSequence newFileText) {
+  public Couple<ASTNode> findReparseableRoots(@Nonnull PsiFileImpl file, @Nonnull FileASTNode oldFileNode, @Nonnull TextRange changedPsiRange, @Nonnull CharSequence newFileText) {
     Project project = file.getProject();
     final FileElement fileElement = (FileElement)oldFileNode;
     final CharTable charTable = fileElement.getCharTable();
@@ -142,9 +142,7 @@ public class BlockSupportImpl extends BlockSupport {
               holder.getTreeElement().rawAddChildren((TreeElement)chameleon);
 
               if (holder.getTextLength() != newTextStr.length()) {
-                String details = ApplicationManager.getApplication().isInternal()
-                                 ? "text=" + newTextStr + "; treeText=" + holder.getText() + ";"
-                                 : "";
+                String details = ApplicationManager.getApplication().isInternal() ? "text=" + newTextStr + "; treeText=" + holder.getText() + ";" : "";
                 LOG.error("Inconsistent reparse: " + details + " type=" + elementType);
               }
 
@@ -159,22 +157,15 @@ public class BlockSupportImpl extends BlockSupport {
   }
 
   private static void reportInconsistentLength(PsiFile file, CharSequence newFileText, ASTNode node, int start, int end) {
-    String message = "Index out of bounds: type=" + node.getElementType() +
-                     "; file=" + file +
-                     "; file.class=" + file.getClass() +
-                     "; start=" + start +
-                     "; end=" + end +
-                     "; length=" + node.getTextLength();
+    String message =
+            "Index out of bounds: type=" + node.getElementType() + "; file=" + file + "; file.class=" + file.getClass() + "; start=" + start + "; end=" + end + "; length=" + node.getTextLength();
     String newTextBefore = newFileText.subSequence(0, start).toString();
     String oldTextBefore = file.getText().subSequence(0, start).toString();
     if (oldTextBefore.equals(newTextBefore)) {
       message += "; oldTextBefore==newTextBefore";
     }
-    LOG.error(message,
-              new Attachment(file.getName() + "_oldNodeText.txt", node.getText()),
-              new Attachment(file.getName() + "_oldFileText.txt", file.getText()),
-              new Attachment(file.getName() + "_newFileText.txt", newFileText.toString())
-    );
+    LOG.error(message, new Attachment(file.getName() + "_oldNodeText.txt", node.getText()), new Attachment(file.getName() + "_oldFileText.txt", file.getText()),
+              new Attachment(file.getName() + "_newFileText.txt", newFileText.toString()));
   }
 
   @Nonnull
@@ -197,8 +188,7 @@ public class BlockSupportImpl extends BlockSupport {
       viewProvider.getLanguages();
       FileType fileType = viewProvider.getVirtualFile().getFileType();
       String fileName = fileImpl.getName();
-      final LightVirtualFile lightFile = new LightVirtualFile(fileName, fileType, newFileText, viewProvider.getVirtualFile().getCharset(),
-                                                              fileImpl.getViewProvider().getModificationStamp());
+      final LightVirtualFile lightFile = new LightVirtualFile(fileName, fileType, newFileText, viewProvider.getVirtualFile().getCharset(), fileImpl.getViewProvider().getModificationStamp());
       lightFile.setOriginalFile(viewProvider.getVirtualFile());
 
       FileViewProvider copy = viewProvider.createCopy(lightFile);
@@ -247,13 +237,20 @@ public class BlockSupportImpl extends BlockSupport {
   }
 
   private static String details(FileViewProvider providerCopy, FileViewProvider viewProvider) {
-    return "; languages: " + viewProvider.getLanguages() +
-           "; base: " + viewProvider.getBaseLanguage() +
-           "; copy: " + providerCopy +
-           "; copy.base: " + providerCopy.getBaseLanguage() +
-           "; vFile: " + viewProvider.getVirtualFile() +
-           "; copy.vFile: " + providerCopy.getVirtualFile() +
-           "; fileType: " + viewProvider.getVirtualFile().getFileType() +
+    return "; languages: " +
+           viewProvider.getLanguages() +
+           "; base: " +
+           viewProvider.getBaseLanguage() +
+           "; copy: " +
+           providerCopy +
+           "; copy.base: " +
+           providerCopy.getBaseLanguage() +
+           "; vFile: " +
+           viewProvider.getVirtualFile() +
+           "; copy.vFile: " +
+           providerCopy.getVirtualFile() +
+           "; fileType: " +
+           viewProvider.getVirtualFile().getFileType() +
            "; copy.original(): " +
            (providerCopy.getVirtualFile() instanceof LightVirtualFile ? ((LightVirtualFile)providerCopy.getVirtualFile()).getOriginalFile() : null);
   }
@@ -358,10 +355,7 @@ public class BlockSupportImpl extends BlockSupport {
     manager.beforeChildrenChange(event);
   }
 
-  public static void sendAfterChildrenChangedEvent(@Nonnull PsiManagerImpl manager,
-                                                   @Nonnull PsiFile scope,
-                                                   int oldLength,
-                                                   boolean isGenericChange) {
+  public static void sendAfterChildrenChangedEvent(@Nonnull PsiManagerImpl manager, @Nonnull PsiFile scope, int oldLength, boolean isGenericChange) {
     if (!scope.isPhysical()) {
       manager.afterChange(false);
       return;

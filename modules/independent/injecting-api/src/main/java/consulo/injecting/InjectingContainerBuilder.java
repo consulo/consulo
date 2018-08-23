@@ -15,6 +15,8 @@
  */
 package consulo.injecting;
 
+import consulo.injecting.key.InjectingKey;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -23,5 +25,13 @@ import javax.annotation.Nonnull;
  */
 public interface InjectingContainerBuilder {
   @Nonnull
-  <T> InjectingPoint<T> bind();
+  default <T> InjectingPoint<T> bind(@Nonnull Class<T> key) {
+    return bind(InjectingKey.of(key));
+  }
+
+  @Nonnull
+  <T> InjectingPoint<T> bind(@Nonnull InjectingKey<T> key);
+
+  @Nonnull
+  InjectingContainer build();
 }

@@ -101,7 +101,7 @@ public class MockProject implements Project {
   }
 
   @Override
-  public <T> T getComponent(Class<T> interfaceClass) {
+  public <T> T getComponent(@Nonnull Class<T> clazz) {
     throw new UnsupportedOperationException();
   }
 
@@ -122,7 +122,7 @@ public class MockProject implements Project {
   }
 
   @Override
-  public <T> T[] getExtensions(ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
     throw new UnsupportedOperationException();
   }
 

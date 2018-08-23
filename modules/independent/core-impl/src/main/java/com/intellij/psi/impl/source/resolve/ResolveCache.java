@@ -27,13 +27,12 @@ import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.util.containers.ConcurrentWeakKeySoftValueHashMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
-
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -77,6 +76,7 @@ public class ResolveCache {
   public interface Resolver extends AbstractResolver<PsiReference, PsiElement> {
   }
 
+  @Inject
   public ResolveCache(@Nonnull Project project) {
     for (int i = 0; i < myMaps.length; i++) {
       myMaps[i] = createWeakMap();

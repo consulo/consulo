@@ -72,6 +72,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.FontUIResource;
@@ -122,10 +123,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private PropertyChangeListener myThemeChangeListener = null;
 
-
-  /**
-   * Invoked via reflection.
-   */
+  @Inject
   LafManagerImpl() {
     myListenerList = new EventListenerList();
 

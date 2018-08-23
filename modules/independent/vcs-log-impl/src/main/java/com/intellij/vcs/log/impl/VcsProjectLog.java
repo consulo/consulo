@@ -36,6 +36,7 @@ import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
@@ -56,6 +57,7 @@ public class VcsProjectLog {
   private final LazyVcsLogManager myLogManager = new LazyVcsLogManager();
   private volatile VcsLogUiImpl myUi;
 
+  @Inject
   public VcsProjectLog(@Nonnull Project project, @Nonnull VcsLogTabsProperties uiProperties) {
     myProject = project;
     myMessageBus = project.getMessageBus();

@@ -34,11 +34,11 @@ import gnu.trove.THashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.picocontainer.PicoContainer;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,15 +57,15 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Map<String, StateStorage> myStorages = new THashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
   private final String myRootTagName;
-  private final PicoContainer myPicoContainer;
+  protected final Supplier<MessageBus> myMessageBusSupplier;
 
   private StreamProvider myStreamProvider;
 
   public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
                                  String rootTagName,
                                  @Nullable Disposable parentDisposable,
-                                 PicoContainer picoContainer) {
-    myPicoContainer = picoContainer;
+                                 @Nonnull Supplier<MessageBus> messageBusSupplier) {
+    myMessageBusSupplier = messageBusSupplier;
     myRootTagName = rootTagName;
     myPathMacroSubstitutor = pathMacroSubstitutor;
     if (parentDisposable != null) {
@@ -247,7 +247,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Nullable
   protected StateStorage.Listener createStorageTopicListener() {
-    MessageBus messageBus = (MessageBus)myPicoContainer.getComponentInstanceOfType(MessageBus.class);
+    MessageBus messageBus = myMessageBusSupplier.get();
     return messageBus == null ? null : messageBus.syncPublisher(StateStorage.STORAGE_TOPIC);
   }
 

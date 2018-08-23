@@ -56,9 +56,6 @@ public class ParameterHintsPresentationManager implements Disposable {
     return ServiceManager.getService(ParameterHintsPresentationManager.class);
   }
 
-  private ParameterHintsPresentationManager() {
-  }
-
   public boolean isParameterHint(@Nonnull Inlay inlay) {
     return inlay.getRenderer() instanceof MyRenderer;
   }

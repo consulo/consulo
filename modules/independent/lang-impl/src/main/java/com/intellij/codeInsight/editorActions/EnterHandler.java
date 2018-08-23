@@ -58,6 +58,7 @@ import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 public class EnterHandler extends BaseEnterHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.EnterHandler");
@@ -65,6 +66,7 @@ public class EnterHandler extends BaseEnterHandler {
   private final EditorActionHandler myOriginalHandler;
   private final static Key<Language> CONTEXT_LANGUAGE = Key.create("EnterHandler.Language");
 
+  @Inject
   public EnterHandler(EditorActionHandler originalHandler) {
     super(true);
     myOriginalHandler = originalHandler;

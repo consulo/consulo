@@ -58,6 +58,7 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.io.IOException;
@@ -88,8 +89,9 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     return scope;
   }
 
-  public PsiSearchHelperImpl(@Nonnull PsiManagerEx manager) {
-    myManager = manager;
+  @Inject
+  public PsiSearchHelperImpl(@Nonnull PsiManager manager) {
+    myManager = (PsiManagerEx)manager;
     myDumbService = DumbService.getInstance(myManager.getProject());
   }
 
