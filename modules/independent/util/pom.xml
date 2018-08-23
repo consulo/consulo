@@ -80,9 +80,5 @@
       <artifactId>oro</artifactId>
       <optional>true</optional>
     </dependency>
-    <dependency>
-      <groupId>picocontainer</groupId>
-      <artifactId>picocontainer</artifactId>
-    </dependency>
   </dependencies>
 </project>

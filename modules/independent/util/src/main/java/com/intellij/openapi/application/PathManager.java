@@ -21,7 +21,6 @@ import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
@@ -33,7 +32,6 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.jdom.Document;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -465,7 +463,6 @@ public class PathManager {
             SystemInfoRt.class,           // module 'util-rt'
             Document.class,               // jDOM
             THashSet.class,               // trove4j
-            PicoContainer.class,          // PicoContainer
             TypeMapper.class,             // JNA
             FileUtils.class,              // JNA (jna-platform)
             PatternMatcher.class          // OROMatcher
