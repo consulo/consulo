@@ -67,6 +67,8 @@
     <module>modules/independent/extensions</module>
     <module>modules/independent/graph-api</module>
     <module>modules/independent/graph-impl</module>
+    <module>modules/independent/injecting-api</module>
+    <module>modules/independent/injecting-pico-impl</module>
     <module>modules/independent/indexing-api</module>
     <module>modules/independent/indexing-impl</module>
     <module>modules/independent/platform-api</module>
