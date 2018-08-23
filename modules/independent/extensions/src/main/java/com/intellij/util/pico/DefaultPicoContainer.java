@@ -21,24 +21,24 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.picocontainer.*;
 import org.picocontainer.defaults.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DefaultPicoContainer implements AreaPicoContainer {
   private final PicoContainer parent;
-  private final Set<PicoContainer> children = new THashSet<PicoContainer>();
+  private final Set<PicoContainer> children = new THashSet<>();
 
   private final Map<Object, ComponentAdapter> componentKeyToAdapterCache = ContainerUtil.newConcurrentMap();
-  private final LinkedHashSetWrapper<ComponentAdapter> componentAdapters = new LinkedHashSetWrapper<ComponentAdapter>();
+  private final LinkedHashSetWrapper<ComponentAdapter> componentAdapters = new LinkedHashSetWrapper<>();
   private final Map<String, ComponentAdapter> classNameToAdapter = ContainerUtil.newConcurrentMap();
-  private final AtomicReference<FList<ComponentAdapter>> nonAssignableComponentAdapters = new AtomicReference<FList<ComponentAdapter>>(FList.<ComponentAdapter>emptyList());
+  private final AtomicReference<FList<ComponentAdapter>> nonAssignableComponentAdapters = new AtomicReference<>(FList.<ComponentAdapter>emptyList());
 
-  public DefaultPicoContainer(@javax.annotation.Nullable PicoContainer parent) {
+  public DefaultPicoContainer(@Nullable PicoContainer parent) {
     this.parent = parent == null ? null : ImmutablePicoContainerProxyFactory.newProxyInstance(parent);
   }
 
@@ -52,7 +52,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   private void appendNonAssignableAdaptersOfType(@Nonnull Class componentType, @Nonnull List<ComponentAdapter> result) {
-    List<ComponentAdapter> comp = new ArrayList<ComponentAdapter>();
+    List<ComponentAdapter> comp = new ArrayList<>();
     for (final ComponentAdapter componentAdapter : nonAssignableComponentAdapters.get()) {
       if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
         comp.add(componentAdapter);
@@ -73,7 +73,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     return adapter;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private ComponentAdapter getFromCache(final Object componentKey) {
     ComponentAdapter adapter = componentKeyToAdapterCache.get(componentKey);
     if (adapter != null) {
@@ -88,7 +88,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public ComponentAdapter getComponentAdapterOfType(@Nonnull Class componentType) {
     // See http://jira.codehaus.org/secure/ViewIssue.jspa?key=PICO-115
     ComponentAdapter adapterByKey = getComponentAdapter(componentType);
@@ -117,7 +117,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
       return Collections.emptyList();
     }
 
-    List<ComponentAdapter> result = new SmartList<ComponentAdapter>();
+    List<ComponentAdapter> result = new SmartList<>();
 
     final ComponentAdapter cacheHit = classNameToAdapter.get(componentType.getName());
     if (cacheHit != null) {
@@ -182,12 +182,12 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  public List<Object> getComponentInstancesOfType(@javax.annotation.Nullable Class componentType) {
+  public List<Object> getComponentInstancesOfType(@Nullable Class componentType) {
     if (componentType == null) {
       return Collections.emptyList();
     }
 
-    List<Object> result = new ArrayList<Object>();
+    List<Object> result = new ArrayList<>();
     for (ComponentAdapter componentAdapter : getComponentAdapters()) {
       if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
         // may be null in the case of the "implicit" adapter representing "this".
@@ -198,7 +198,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Object getComponentInstance(Object componentKey) {
     ComponentAdapter adapter = getFromCache(componentKey);
     if (adapter != null) {
@@ -214,13 +214,13 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Object getComponentInstanceOfType(Class componentType) {
     final ComponentAdapter componentAdapter = getComponentAdapterOfType(componentType);
     return componentAdapter == null ? null : getInstance(componentAdapter);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Object getInstance(@Nonnull ComponentAdapter componentAdapter) {
     if (getComponentAdapters().contains(componentAdapter)) {
       return getLocalInstance(componentAdapter);
@@ -255,7 +255,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public ComponentAdapter unregisterComponentByInstance(@Nonnull Object componentInstance) {
     for (ComponentAdapter adapter : getComponentAdapters()) {
       Object o = getInstance(adapter);
@@ -311,7 +311,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     for (ComponentAdapter adapter : getComponentAdapters()) {
       adapter.accept(visitor);
     }
-    for (PicoContainer child : new SmartList<PicoContainer>(children)) {
+    for (PicoContainer child : new SmartList<>(children)) {
       child.accept(visitor);
     }
   }
@@ -354,7 +354,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   private static class LinkedHashSetWrapper<T> {
     private final Object lock = new Object();
     private volatile Set<T> immutableSet;
-    private LinkedHashSet<T> synchronizedSet = new LinkedHashSet<T>();
+    private LinkedHashSet<T> synchronizedSet = new LinkedHashSet<>();
 
     public void add(@Nonnull T element) {
       synchronized (lock) {
@@ -367,12 +367,12 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     private LinkedHashSet<T> copySyncSetIfExposedAsImmutable() {
       if (immutableSet != null) {
         immutableSet = null;
-        synchronizedSet = new LinkedHashSet<T>(synchronizedSet);
+        synchronizedSet = new LinkedHashSet<>(synchronizedSet);
       }
       return synchronizedSet;
     }
 
-    public void remove(@javax.annotation.Nullable T element) {
+    public void remove(@Nullable T element) {
       synchronized (lock) {
         copySyncSetIfExposedAsImmutable().remove(element);
       }
