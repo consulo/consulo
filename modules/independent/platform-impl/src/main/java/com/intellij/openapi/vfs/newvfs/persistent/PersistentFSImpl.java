@@ -44,6 +44,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -69,9 +70,10 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
   private final LowMemoryWatcher myWatcher = LowMemoryWatcher.register(() -> clearIdCache());
   private volatile int myStructureModificationCount;
 
-  public PersistentFSImpl(@Nonnull MessageBus bus) {
-    myEventBus = bus;
-    ShutDownTracker.getInstance().registerShutdownTask(() -> performShutdown());
+  @Inject
+  public PersistentFSImpl(@Nonnull Application application) {
+    myEventBus = application.getMessageBus();
+    ShutDownTracker.getInstance().registerShutdownTask(this::performShutdown);
     FSRecords.connect();
   }
 

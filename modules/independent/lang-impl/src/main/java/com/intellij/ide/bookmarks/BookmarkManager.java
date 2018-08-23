@@ -63,8 +63,8 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
 
   private Project myProject;
 
-  public BookmarkManager(Project project, MessageBus bus, PsiDocumentManager documentManager) {
-    myBus = bus;
+  public BookmarkManager(Project project, PsiDocumentManager documentManager) {
+    myBus = project.getMessageBus();
     myProject = project;
     EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
     multicaster.addDocumentListener(new MyDocumentListener(), myProject);

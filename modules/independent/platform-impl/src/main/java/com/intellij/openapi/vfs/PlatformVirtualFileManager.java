@@ -15,21 +15,24 @@
  */
 package com.intellij.openapi.vfs;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.impl.VirtualFileManagerImpl;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
-import com.intellij.util.messages.MessageBus;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   @Nonnull
   private final ManagingFS myManagingFS;
 
-  public PlatformVirtualFileManager( @Nonnull MessageBus bus, @Nonnull ManagingFS managingFS) {
-    super(bus);
+  @Inject
+  public PlatformVirtualFileManager(@Nonnull Application application, @Nonnull ManagingFS managingFS) {
+    super(application);
     myManagingFS = managingFS;
   }
 

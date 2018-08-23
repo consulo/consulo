@@ -104,10 +104,10 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   private boolean myShowRecycled;
   private final Project myProject;
 
-  public ShelveChangesManager(final Project project, final MessageBus bus) {
+  public ShelveChangesManager(final Project project) {
     myProject = project;
     myPathMacroSubstitutor = PathMacroManager.getInstance(myProject).createTrackingSubstitutor();
-    myBus = bus;
+    myBus = project.getMessageBus();
     mySchemeManager = SchemesManagerFactory.getInstance().createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList>() {
       @Nullable
       @Override

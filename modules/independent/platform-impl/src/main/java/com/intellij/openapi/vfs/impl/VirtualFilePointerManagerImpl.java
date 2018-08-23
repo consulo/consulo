@@ -16,6 +16,7 @@
 package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
@@ -64,10 +65,10 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
   private final MessageBus myBus;
   private static final Comparator<String> URL_COMPARATOR = SystemInfo.isFileSystemCaseSensitive ? String::compareTo : String::compareToIgnoreCase;
 
-  VirtualFilePointerManagerImpl(@Nonnull VirtualFileManager virtualFileManager, @Nonnull MessageBus bus) {
+  VirtualFilePointerManagerImpl(@Nonnull Application application, @Nonnull VirtualFileManager virtualFileManager) {
     myVirtualFileManager = virtualFileManager;
-    myBus = bus;
-    bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
+    myBus = application.getMessageBus();
+    myBus.connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
     TEMP_FILE_SYSTEM = TempFileSystem.get(virtualFileManager);
     LOCAL_FILE_SYSTEM = LocalFileSystem.get(virtualFileManager);
   }

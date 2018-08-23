@@ -81,7 +81,6 @@ import com.intellij.util.indexing.impl.MapReduceIndex;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -91,6 +90,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -171,15 +171,16 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
     return state;
   }
 
-  public FileBasedIndexImpl(@SuppressWarnings("UnusedParameters") VirtualFileManager vfManager,
+  @Inject
+  public FileBasedIndexImpl(VirtualFileManager vfManager,
                             FileDocumentManager fdm,
                             FileTypeManagerImpl fileTypeManager,
-                            @Nonnull MessageBus bus) {
+                            Application application) {
     myFileDocumentManager = fdm;
     myFileTypeManager = fileTypeManager;
-    myIsUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
+    myIsUnitTestMode = application.isUnitTestMode();
 
-    final MessageBusConnection connection = bus.connect();
+    final MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
       @Override
       public void transactionStarted(@Nonnull final Document doc, @Nonnull final PsiFile file) {

@@ -19,6 +19,7 @@ import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
@@ -57,8 +58,8 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   public boolean SHOW_BALLOONS = true;
   public boolean SYSTEM_NOTIFICATIONS = true;
 
-  public NotificationsConfigurationImpl(@Nonnull MessageBus bus) {
-    myMessageBus = bus;
+  public NotificationsConfigurationImpl(@Nonnull Application application) {
+    myMessageBus = application.getMessageBus();
   }
 
   public static NotificationsConfigurationImpl getInstanceImpl() {

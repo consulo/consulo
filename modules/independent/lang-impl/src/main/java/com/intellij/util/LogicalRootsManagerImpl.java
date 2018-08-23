@@ -49,11 +49,11 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   private final ModuleManager myModuleManager;
   private final Project myProject;
 
-  public LogicalRootsManagerImpl(final MessageBus bus, final ModuleManager moduleManager, final Project project) {
+  public LogicalRootsManagerImpl(final ModuleManager moduleManager, final Project project) {
     myModuleManager = moduleManager;
     myProject = project;
 
-    final MessageBusConnection connection = bus.connect();
+    final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(LOGICAL_ROOTS, new LogicalRootListener() {
       @Override
       public void logicalRootsChanged() {
@@ -64,7 +64,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
-        bus.asyncPublisher(LOGICAL_ROOTS).logicalRootsChanged();
+        project.getMessageBus().asyncPublisher(LOGICAL_ROOTS).logicalRootsChanged();
       }
     });
     registerLogicalRootProvider(LogicalRootType.SOURCE_ROOT, new NotNullFunction<Module, List<VirtualFileLogicalRoot>>() {

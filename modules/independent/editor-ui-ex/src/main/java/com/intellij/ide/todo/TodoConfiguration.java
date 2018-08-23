@@ -17,6 +17,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.InvalidDataException;
@@ -28,6 +29,7 @@ import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -51,11 +53,9 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   @NonNls private static final String ELEMENT_FILTER = "filter";
   private final MessageBus myMessageBus;
 
-  /**
-   * public for upsource
-   */
-  public TodoConfiguration(@Nonnull MessageBus messageBus) {
-    myMessageBus = messageBus;
+  @Inject
+  public TodoConfiguration(@Nonnull Application application) {
+    myMessageBus = application.getMessageBus();
     resetToDefaultTodoPatterns();
   }
 

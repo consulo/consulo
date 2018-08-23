@@ -24,6 +24,7 @@ import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
@@ -74,7 +75,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     return (InspectionProfileManagerImpl)ServiceManager.getService(InspectionProfileManager.class);
   }
 
-  public InspectionProfileManagerImpl(@Nonnull InspectionToolRegistrar registrar, @Nonnull SchemesManagerFactory schemesManagerFactory, @Nonnull MessageBus messageBus) {
+  public InspectionProfileManagerImpl(@Nonnull Application application, @Nonnull InspectionToolRegistrar registrar, @Nonnull SchemesManagerFactory schemesManagerFactory) {
     myRegistrar = registrar;
     registerProvidedSeverities();
 
@@ -130,7 +131,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         }
       }
     }, RoamingType.PER_USER);
-    mySeverityRegistrar = new SeverityRegistrar(messageBus);
+    mySeverityRegistrar = new SeverityRegistrar(application.getMessageBus());
   }
 
   @Nonnull

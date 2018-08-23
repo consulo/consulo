@@ -22,6 +22,7 @@ import com.intellij.history.integration.ui.models.EntireFileHistoryDialogModel;
 import com.intellij.history.integration.ui.models.HistoryDialogModel;
 import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -62,8 +63,8 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     return (LocalHistoryImpl)getInstance();
   }
 
-  public LocalHistoryImpl(@Nonnull MessageBus bus) {
-    myBus = bus;
+  public LocalHistoryImpl(@Nonnull Application application) {
+    myBus = application.getMessageBus();
 
     initComponent();
   }

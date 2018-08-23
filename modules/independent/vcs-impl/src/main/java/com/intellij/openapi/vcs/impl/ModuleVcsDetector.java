@@ -51,9 +51,9 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
   private final ProjectLevelVcsManagerImpl myVcsManager;
   private MessageBusConnection myConnection;
 
-  public ModuleVcsDetector(final Project project, final MessageBus messageBus, final ProjectLevelVcsManager vcsManager) {
+  public ModuleVcsDetector(final Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
-    myMessageBus = messageBus;
+    myMessageBus = project.getMessageBus();
     myVcsManager = (ProjectLevelVcsManagerImpl) vcsManager;
   }
 
@@ -74,12 +74,10 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
     manager.registerPostStartupActivity(new Runnable() {
       @Override
       public void run() {
-        if (myMessageBus != null) {
-          myConnection = myMessageBus.connect();
-          final MyModulesListener listener = new MyModulesListener();
-          myConnection.subscribe(ProjectTopics.MODULES, listener);
-          myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, listener);
-        }
+        myConnection = myMessageBus.connect();
+        final MyModulesListener listener = new MyModulesListener();
+        myConnection.subscribe(ProjectTopics.MODULES, listener);
+        myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, listener);
       }
     });
   }

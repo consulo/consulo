@@ -39,11 +39,10 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,11 +73,10 @@ public class PsiManagerImpl extends PsiManagerEx {
                         FileDocumentManager fileDocumentManager,
                         PsiBuilderFactory psiBuilderFactory,
                         FileIndexFacade fileIndex,
-                        MessageBus messageBus,
                         PsiModificationTracker modificationTracker) {
     myProject = project;
     myFileIndex = fileIndex;
-    myMessageBus = messageBus;
+    myMessageBus = project.getMessageBus();
     myModificationTracker = modificationTracker;
 
     //We need to initialize PsiBuilderFactory service so it won't initialize under PsiLock from ChameleonTransform

@@ -41,12 +41,15 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
 import com.intellij.util.messages.MessageBus;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+@Singleton
 public class LookupManagerImpl extends LookupManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.lookup.impl.LookupManagerImpl");
   private final Project myProject;
@@ -54,9 +57,11 @@ public class LookupManagerImpl extends LookupManager {
   private Editor myActiveLookupEditor = null;
   private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
-  public LookupManagerImpl(Project project, MessageBus bus) {
+  @Inject
+  public LookupManagerImpl(Project project) {
     myProject = project;
 
+    MessageBus bus = project.getMessageBus();
     bus.connect().subscribe(EditorHintListener.TOPIC, new EditorHintListener() {
       @Override
       public void hintShown(final Project project, final LightweightHint hint, final int flags) {

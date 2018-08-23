@@ -33,11 +33,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
@@ -50,9 +49,9 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
 
   private volatile Document mySyncDocument;
 
-  PsiToDocumentSynchronizer(PsiDocumentManagerBase psiDocumentManager, MessageBus bus) {
+  PsiToDocumentSynchronizer(PsiDocumentManagerBase psiDocumentManager, Project project) {
     myPsiDocumentManager = psiDocumentManager;
-    myBus = bus;
+    myBus = project.getMessageBus();
   }
 
   @Nullable

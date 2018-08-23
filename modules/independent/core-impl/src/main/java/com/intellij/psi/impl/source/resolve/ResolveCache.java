@@ -74,11 +74,11 @@ public class ResolveCache {
   public interface Resolver extends AbstractResolver<PsiReference, PsiElement> {
   }
 
-  public ResolveCache(@Nonnull MessageBus messageBus) {
+  public ResolveCache(@Nonnull Project project) {
     for (int i = 0; i < myMaps.length; i++) {
       myMaps[i] = createWeakMap();
     }
-    messageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter() {
+    project.getMessageBus().connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
         clearCache(isPhysical);

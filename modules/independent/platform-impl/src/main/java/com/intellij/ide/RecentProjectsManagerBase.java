@@ -18,6 +18,7 @@ package com.intellij.ide;
 import com.intellij.ProjectTopics;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.impl.stores.ProjectStoreImpl;
@@ -37,7 +38,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
@@ -46,9 +46,9 @@ import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.*;
 
@@ -94,8 +94,8 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   private Set<String> myDuplicatesCache = null;
   private boolean isDuplicatesCacheUpdating = false;
 
-  protected RecentProjectsManagerBase(@Nonnull MessageBus messageBus) {
-    MessageBusConnection connection = messageBus.connect();
+  protected RecentProjectsManagerBase(@Nonnull Application application) {
+    MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(AppLifecycleListener.TOPIC, new MyAppLifecycleListener());
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
       connection.subscribe(ProjectManager.TOPIC, new MyProjectListener());

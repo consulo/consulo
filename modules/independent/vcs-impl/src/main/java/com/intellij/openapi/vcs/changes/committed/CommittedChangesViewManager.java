@@ -47,10 +47,10 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
   private final Project myProject;
   private final VcsListener myVcsListener = new MyVcsListener();
 
-  public CommittedChangesViewManager(final Project project, final ProjectLevelVcsManager vcsManager, final MessageBus bus) {
+  public CommittedChangesViewManager(final Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;
-    myBus = bus;
+    myBus = project.getMessageBus();
   }
 
   private void updateChangesContent() {

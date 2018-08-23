@@ -19,19 +19,22 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Function;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Singleton
 public class DesktopIconDeferrerImpl extends IconDeferrer {
   private static final ThreadLocal<Boolean> ourEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
@@ -46,8 +49,9 @@ public class DesktopIconDeferrerImpl extends IconDeferrer {
 
   private long myLastClearTimestamp;
 
-  public DesktopIconDeferrerImpl(MessageBus bus) {
-    final MessageBusConnection connection = bus.connect();
+  @Inject
+  public DesktopIconDeferrerImpl(Application application) {
+    final MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(PsiModificationTracker.TOPIC, this::clear);
     connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
       @Override

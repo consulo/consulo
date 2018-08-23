@@ -57,7 +57,6 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
@@ -98,12 +97,11 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     return project.getComponent(ShelvedChangesViewManager.class);
   }
 
-  public ShelvedChangesViewManager(Project project, ChangesViewContentManager contentManager, ShelveChangesManager shelveChangesManager,
-                                   final MessageBus bus) {
+  public ShelvedChangesViewManager(Project project, ChangesViewContentManager contentManager, ShelveChangesManager shelveChangesManager) {
     myProject = project;
     myContentManager = contentManager;
     myShelveChangesManager = shelveChangesManager;
-    bus.connect().subscribe(ShelveChangesManager.SHELF_TOPIC, new ChangeListener() {
+    myProject.getMessageBus().connect().subscribe(ShelveChangesManager.SHELF_TOPIC, new ChangeListener() {
       @Override
       public void stateChanged(ChangeEvent e) {
         myUpdatePending = true;

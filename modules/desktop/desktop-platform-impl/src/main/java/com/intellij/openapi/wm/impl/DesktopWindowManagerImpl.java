@@ -39,7 +39,6 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -124,14 +123,13 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   /**
    * invoked by reflection
    */
-  public DesktopWindowManagerImpl(DataManager dataManager, ActionManagerEx actionManager, MessageBus bus) {
+  public DesktopWindowManagerImpl(Application application, DataManager dataManager, ActionManagerEx actionManager) {
     myDataManager = dataManager;
     myActionManager = actionManager;
     if (myDataManager instanceof DataManagerImpl) {
       ((DataManagerImpl)myDataManager).setWindowManager(this);
     }
 
-    final Application application = ApplicationManager.getApplication();
     if (!application.isUnitTestMode()) {
       Disposer.register(application, new Disposable() {
         @Override
@@ -160,7 +158,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
       }
     };
 
-    bus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+    application.getMessageBus().connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         // save full screen window states

@@ -60,14 +60,14 @@ public class CoreProjectEnvironment {
     PsiModificationTrackerImpl modificationTracker = new PsiModificationTrackerImpl(myProject);
     myProject.registerService(PsiModificationTracker.class, modificationTracker);
     myProject.registerService(FileIndexFacade.class, myFileIndexFacade);
-    myProject.registerService(ResolveCache.class, new ResolveCache(myMessageBus));
+    myProject.registerService(ResolveCache.class, new ResolveCache(myProject));
 
     registerProjectExtensionPoint(PsiTreeChangePreprocessor.EP_NAME, PsiTreeChangePreprocessor.class);
-    myPsiManager = new PsiManagerImpl(myProject, null, null, myFileIndexFacade, myMessageBus, modificationTracker);
+    myPsiManager = new PsiManagerImpl(myProject, null, null, myFileIndexFacade, modificationTracker);
     ((FileManagerImpl)myPsiManager.getFileManager()).markInitialized();
     registerProjectComponent(PsiManager.class, myPsiManager);
 
-    registerProjectComponent(PsiDocumentManager.class, new CorePsiDocumentManager(myProject, myPsiManager, myMessageBus, new MockDocumentCommitProcessor()));
+    registerProjectComponent(PsiDocumentManager.class, new CorePsiDocumentManager(myProject, myPsiManager, new MockDocumentCommitProcessor()));
 
     myProject.registerService(ResolveScopeManager.class, createResolveScopeManager(myPsiManager));
 

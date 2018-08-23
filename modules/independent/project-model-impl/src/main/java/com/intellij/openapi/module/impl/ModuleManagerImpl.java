@@ -176,9 +176,9 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     myCachedSortedModules = null;
   }
 
-  public ModuleManagerImpl(Project project, MessageBus messageBus) {
+  public ModuleManagerImpl(Project project) {
     myProject = project;
-    myMessageBus = messageBus;
+    myMessageBus = project.getMessageBus();
   }
 
   @Override

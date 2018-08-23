@@ -45,14 +45,13 @@ import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.psi.impl.source.tree.injected.MultiHostRegistrarImpl;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.Processor;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -64,12 +63,11 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   public PsiDocumentManagerImpl(@Nonnull final Project project,
                                 @Nonnull PsiManager psiManager,
                                 @Nonnull EditorFactory editorFactory,
-                                @Nonnull MessageBus bus,
                                 @NonNls @Nonnull final DocumentCommitProcessor documentCommitThread) {
-    super(project, psiManager, bus, documentCommitThread);
+    super(project, psiManager, documentCommitThread);
     myDocumentCommitThread = documentCommitThread;
     editorFactory.getEventMulticaster().addDocumentListener(this, project);
-    MessageBusConnection connection = bus.connect();
+    MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
       public void fileContentLoaded(@Nonnull final VirtualFile virtualFile, @Nonnull Document document) {

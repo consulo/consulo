@@ -72,6 +72,8 @@ import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -80,6 +82,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Singleton
 public class FindManagerImpl extends FindManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.find.impl.FindManagerImpl");
 
@@ -99,9 +102,10 @@ public class FindManagerImpl extends FindManager {
 
   private FindUIHelper myHelper;
 
-  public FindManagerImpl(Project project, FindSettings findSettings, UsageViewManager anotherManager, MessageBus bus) {
+  @Inject
+  public FindManagerImpl(Project project, FindSettings findSettings, UsageViewManager anotherManager) {
     myProject = project;
-    myBus = bus;
+    myBus = project.getMessageBus();
     findSettings.initModelBySetings(myFindInProjectModel);
 
     myFindInFileModel.setCaseSensitive(findSettings.isLocalCaseSensitive());

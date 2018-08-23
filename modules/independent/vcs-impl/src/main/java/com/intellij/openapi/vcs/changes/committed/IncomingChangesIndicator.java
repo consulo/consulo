@@ -27,7 +27,6 @@ import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.wm.*;
 import com.intellij.util.Consumer;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -48,10 +47,10 @@ public class IncomingChangesIndicator {
   private final CommittedChangesCache myCache;
   private IndicatorComponent myIndicatorComponent;
 
-  public IncomingChangesIndicator(Project project, CommittedChangesCache cache, MessageBus bus) {
+  public IncomingChangesIndicator(Project project, CommittedChangesCache cache) {
     myProject = project;
     myCache = cache;
-    final MessageBusConnection connection = bus.connect();
+    final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
       @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {

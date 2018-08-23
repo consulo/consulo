@@ -50,7 +50,6 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import org.jetbrains.annotations.NonNls;
@@ -83,14 +82,13 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   protected PsiDocumentManagerBase(@Nonnull final Project project,
                                    @Nonnull PsiManager psiManager,
-                                   @Nonnull MessageBus bus,
                                    @NonNls @Nonnull final DocumentCommitProcessor documentCommitProcessor) {
     myProject = project;
     myPsiManager = psiManager;
     myDocumentCommitProcessor = documentCommitProcessor;
-    mySynchronizer = new PsiToDocumentSynchronizer(this, bus);
+    mySynchronizer = new PsiToDocumentSynchronizer(this, project);
     myPsiManager.addPsiTreeChangeListener(mySynchronizer);
-    bus.connect().subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
+    project.getMessageBus().connect().subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
       @Override
       public void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file) {
         myUncommittedDocuments.remove(document);

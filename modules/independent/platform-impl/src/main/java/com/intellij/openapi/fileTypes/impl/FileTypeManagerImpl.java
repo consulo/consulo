@@ -65,6 +65,8 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.net.URL;
 import java.nio.channels.FileChannel;
@@ -76,6 +78,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Singleton
 @State(name = "FileTypeManager", storages = @Storage("filetypes.xml"), additionalExportFile = FileTypeManagerImpl.FILE_SPEC)
 public class FileTypeManagerImpl extends FileTypeManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(FileTypeManagerImpl.class);
@@ -168,12 +171,13 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   private final AtomicInteger counterAutoDetect = new AtomicInteger();
   private final AtomicLong elapsedAutoDetect = new AtomicLong();
 
-  public FileTypeManagerImpl(MessageBus bus, SchemesManagerFactory schemesManagerFactory, PropertiesComponent propertiesComponent) {
+  @Inject
+  public FileTypeManagerImpl(Application application, SchemesManagerFactory schemesManagerFactory, PropertiesComponent propertiesComponent) {
     int fileTypeChangedCounter = StringUtilRt.parseInt(propertiesComponent.getValue("fileTypeChangedCounter"), 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);
     autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);
 
-    myMessageBus = bus;
+    myMessageBus = application.getMessageBus();
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<AbstractFileType>() {
       @Nonnull
       @Override
@@ -231,7 +235,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }, ModalityState.NON_MODAL);
       }
     }, RoamingType.PER_USER);
-    bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    myMessageBus.connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         Collection<VirtualFile> files = ContainerUtil.map2Set(events, new Function<VFileEvent, VirtualFile>() {

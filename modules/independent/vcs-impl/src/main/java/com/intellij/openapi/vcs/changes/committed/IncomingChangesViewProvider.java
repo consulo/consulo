@@ -50,9 +50,9 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
   private MessageBusConnection myConnection;
   private Consumer<List<CommittedChangeList>> myListConsumer;
 
-  public IncomingChangesViewProvider(final Project project, final MessageBus bus) {
+  public IncomingChangesViewProvider(final Project project) {
     myProject = project;
-    myBus = bus;
+    myBus = project.getMessageBus();
     myListConsumer = new Consumer<List<CommittedChangeList>>() {
       @Override
       public void consume(final List<CommittedChangeList> lists) {

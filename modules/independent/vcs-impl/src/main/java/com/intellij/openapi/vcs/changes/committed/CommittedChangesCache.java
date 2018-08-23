@@ -51,10 +51,10 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
 import com.intellij.vcs.ProgressManagerQueue;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -136,9 +136,9 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     return project.getComponent(CommittedChangesCache.class);
   }
 
-  public CommittedChangesCache(final Project project, final MessageBus bus, final ProjectLevelVcsManager vcsManager) {
+  public CommittedChangesCache(final Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
-    myBus = bus;
+    myBus = project.getMessageBus();
     myConnection = myBus.connect();
     final VcsListener vcsListener = new VcsListener() {
       @Override

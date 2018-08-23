@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.DocumentCommitProcessor;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
-import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -29,8 +29,7 @@ import javax.annotation.Nonnull;
 class CorePsiDocumentManager extends PsiDocumentManagerBase {
   CorePsiDocumentManager(@Nonnull Project project,
                          @Nonnull PsiManager psiManager,
-                         @Nonnull MessageBus bus,
                          @NonNls @Nonnull DocumentCommitProcessor documentCommitProcessor) {
-    super(project, psiManager, bus, documentCommitProcessor);
+    super(project, psiManager, documentCommitProcessor);
   }
 }

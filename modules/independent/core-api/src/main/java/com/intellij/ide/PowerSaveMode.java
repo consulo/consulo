@@ -16,20 +16,26 @@
 package com.intellij.ide;
 
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class PowerSaveMode {
   private static final String POWER_SAVE_MODE = "power.save.mode";
   private boolean myEnabled = PropertiesComponent.getInstance().getBoolean(POWER_SAVE_MODE, false);
   private final MessageBus myBus;
 
-  public PowerSaveMode(MessageBus bus) {
-    myBus = bus;
+  @Inject
+  public PowerSaveMode(Application application) {
+    myBus = application.getMessageBus();
   }
 
   public static boolean isEnabled() {

@@ -28,7 +28,6 @@ import com.intellij.openapi.vfs.newvfs.CachingVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
 import consulo.vfs.RefreshableFileSystem;
 import gnu.trove.THashMap;
 
@@ -51,11 +50,11 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   private int myRefreshCount = 0;
 
   @Inject
-  public VirtualFileManagerImpl(@Nonnull MessageBus bus) {
-    this(bus, VirtualFileSystem.EP_NAME.getExtensions());
+  public VirtualFileManagerImpl(@Nonnull Application application) {
+    this(application, VirtualFileSystem.EP_NAME.getExtensions());
   }
 
-  public VirtualFileManagerImpl(@Nonnull MessageBus bus, @Nonnull VirtualFileSystem[] fileSystems) {
+  public VirtualFileManagerImpl(@Nonnull Application application, @Nonnull VirtualFileSystem[] fileSystems) {
     for (VirtualFileSystem system : fileSystems) {
       registerFileSystem(system);
     }
@@ -64,7 +63,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
       addVirtualFileListener(new LoggingListener());
     }
 
-    bus.connect().subscribe(VFS_CHANGES, new BulkVirtualFileListenerAdapter(myVirtualFileListenerMulticaster.getMulticaster()));
+    application.getMessageBus().connect().subscribe(VFS_CHANGES, new BulkVirtualFileListenerAdapter(myVirtualFileListenerMulticaster.getMulticaster()));
   }
 
   private void registerFileSystem(@Nonnull VirtualFileSystem fileSystem) {

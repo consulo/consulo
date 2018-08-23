@@ -32,12 +32,12 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.util.Consumer;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.DateFormatUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -53,13 +53,14 @@ public class OutdatedVersionNotifier implements ProjectComponent {
   private static final Key<OutdatedRevisionPanel> PANEL_KEY = Key.create("OutdatedRevisionPanel");
   private volatile boolean myIncomingChangesRequested;
 
+  @Inject
   public OutdatedVersionNotifier(FileEditorManager fileEditorManager,
                                  CommittedChangesCache cache,
-                                 MessageBus messageBus, Project project) {
+                                 Project project) {
     myFileEditorManager = fileEditorManager;
     myCache = cache;
     myProject = project;
-    messageBus.connect().subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
+    project.getMessageBus().connect().subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
       @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
         if (myCache.getCachedIncomingChanges() == null) {

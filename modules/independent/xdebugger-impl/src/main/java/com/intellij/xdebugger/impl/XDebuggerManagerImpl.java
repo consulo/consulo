@@ -80,14 +80,14 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
   private final ExecutionPointHighlighter myExecutionPointHighlighter;
   private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<>();
 
-  public XDebuggerManagerImpl(final Project project, final StartupManager startupManager, MessageBus messageBus) {
+  public XDebuggerManagerImpl(final Project project, final StartupManager startupManager) {
     myProject = project;
     myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager);
     myWatchesManager = new XDebuggerWatchesManager();
     mySessions = new LinkedHashMap<>();
     myExecutionPointHighlighter = new ExecutionPointHighlighter(project);
 
-    MessageBusConnection messageBusConnection = messageBus.connect();
+    MessageBusConnection messageBusConnection = project.getMessageBus().connect();
     messageBusConnection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
       public void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {

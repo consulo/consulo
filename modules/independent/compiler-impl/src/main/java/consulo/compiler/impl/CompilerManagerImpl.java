@@ -88,14 +88,14 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final Set<FileType> myCompilableFileTypes = new THashSet<>();
   private Compiler[] myAllCompilers;
 
-  public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
+  public CompilerManagerImpl(final Project project) {
     myProject = project;
 
     if (myProject.isDefault()) {
       return;
     }
 
-    myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
+    myEventPublisher = project.getMessageBus().syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
     List<TranslatingCompiler> translatingCompilers = new ArrayList<>();
     for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {

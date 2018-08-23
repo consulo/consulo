@@ -287,10 +287,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myPicoContainer = createPicoContainer();
 
     myMessageBus = MessageBusFactory.newMessageBus(name, myParentComponentManager == null ? null : myParentComponentManager.getMessageBus());
-    final MutablePicoContainer picoContainer = getPicoContainer();
-    picoContainer.registerComponentInstance(MessageBus.class, myMessageBus);
   }
-
 
   protected ComponentManager getParentComponentManager() {
     return myParentComponentManager;
