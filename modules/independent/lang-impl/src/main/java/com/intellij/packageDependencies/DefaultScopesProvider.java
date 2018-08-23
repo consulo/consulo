@@ -25,6 +25,7 @@ import com.intellij.psi.search.scope.ProjectFilesScope;
 import com.intellij.psi.search.scope.packageSet.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,7 @@ public class DefaultScopesProvider extends CustomScopesProviderEx {
     return Extensions.findExtension(CUSTOM_SCOPES_PROVIDER, project, DefaultScopesProvider.class);
   }
 
+  @Inject
   public DefaultScopesProvider(Project project) {
     myProject = project;
     final NamedScope projectScope = new ProjectFilesScope();

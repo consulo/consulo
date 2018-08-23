@@ -38,6 +38,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -50,6 +51,7 @@ import java.util.List;
  * User: anna
  * Date: Jan 20, 2005
  */
+@Singleton
 @State(name = "com.intellij.ide.ui.customization.CustomActionsSchema", storages = @Storage("customization.xml"))
 public class CustomActionsSchema implements JDOMExternalizable {
   @NonNls

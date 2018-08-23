@@ -24,6 +24,7 @@ import com.intellij.openapi.vcs.checkin.VcsCheckinHandlerFactory;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import java.util.List;
  *         Date: 1/28/11
  *         Time: 5:21 PM
  */
+@Singleton
 public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
   private final List<BaseCheckinHandlerFactory> myRegisteredBeforeCheckinHandlers;
   private final MultiMap<VcsKey, VcsCheckinHandlerFactory> myVcsMap;

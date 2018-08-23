@@ -53,6 +53,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -72,6 +73,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   private String myOldUTFGuessing;
   private boolean myNative2AsciiForPropertiesFilesWasSpecified;
 
+  @Inject
   public EncodingProjectManagerImpl(Project project, EncodingManager ideEncodingManager, ProjectManager projectManager) {
     myProject = project;
     myIdeEncodingManager = (EncodingManagerImpl)ideEncodingManager;

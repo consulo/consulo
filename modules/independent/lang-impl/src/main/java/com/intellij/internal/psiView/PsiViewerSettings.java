@@ -18,9 +18,12 @@ package com.intellij.internal.psiView;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * @author Konstantin Bulenkov
  */
+@Singleton
 @State(
   name = "PsiViewerSettings",
   storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})

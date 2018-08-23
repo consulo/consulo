@@ -23,6 +23,7 @@ import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -35,6 +36,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
   private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
   private final FileTypeRegistry myFileTypeManager;
 
+  @Inject
   public IdIndexImpl(FileTypeRegistry manager) {
     myFileTypeManager = manager;
   }

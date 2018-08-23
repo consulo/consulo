@@ -21,11 +21,13 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 
+import javax.inject.Singleton;
 import java.awt.*;
 
 /**
  * @author yole
  */
+@Singleton
 public class WolfChangesFileNameDecorator extends ChangesFileNameDecorator {
   private final WolfTheProblemSolver myProblemSolver;
 

@@ -21,7 +21,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class VcsNotifier {
 
   public static final NotificationGroup NOTIFICATION_GROUP_ID = NotificationGroup.toolWindowGroup("Vcs Messages", ChangesViewContentManager.TOOLWINDOW_ID);

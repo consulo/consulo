@@ -30,10 +30,12 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class PsiParserFacadeImpl implements PsiParserFacade {
   protected final PsiManagerEx myManager;
 

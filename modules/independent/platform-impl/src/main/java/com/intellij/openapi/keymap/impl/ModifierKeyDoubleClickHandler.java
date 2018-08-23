@@ -34,6 +34,7 @@ import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -64,6 +65,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   private final ConcurrentMap<String, MyDispatcher> myDispatchers = ContainerUtil.newConcurrentMap();
   private boolean myIsRunningAction;
 
+  @Inject
   private ModifierKeyDoubleClickHandler(ActionManagerEx actionManagerEx) {
     myActionManagerEx = actionManagerEx;
 

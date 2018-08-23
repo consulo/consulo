@@ -31,12 +31,14 @@ import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Map;
 
 /**
  * @author spleaner
  */
+@Singleton
 public class FileInfoManager implements Disposable {
   private final Map<FileType, FileLookupInfoProvider> myFileType2InfoProvider = new HashMap<FileType, FileLookupInfoProvider>();
 

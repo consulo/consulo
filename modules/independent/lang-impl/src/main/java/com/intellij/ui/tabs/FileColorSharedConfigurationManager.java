@@ -16,24 +16,27 @@
 
 package com.intellij.ui.tabs;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.FileColorManager;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author spleaner
  */
-@State(
-  name="SharedFileColors",
-  storages = {
-    @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/fileColors.xml")
-  }
-)
+@Singleton
+@State(name = "SharedFileColors", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/fileColors.xml")})
 public class FileColorSharedConfigurationManager implements PersistentStateComponent<Element> {
   private final Project myProject;
 
+  @Inject
   public FileColorSharedConfigurationManager(@Nonnull final Project project) {
     myProject = project;
   }

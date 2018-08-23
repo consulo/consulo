@@ -28,6 +28,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable,
                                                                                     AnActionListener,
@@ -41,6 +42,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   private Editor myCurrentEditor;
   private Editor myLastEditor;
 
+  @Inject
   EditorLastActionTrackerImpl(ActionManager actionManager, EditorFactory editorFactory) {
     myActionManager = actionManager;
     myEditorEventMulticaster = editorFactory.getEventMulticaster();

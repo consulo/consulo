@@ -30,6 +30,7 @@ import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -42,6 +43,7 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * @author Dmitry Avdeev
  */
+@Singleton
 public class TestStateStorage implements Disposable {
 
   private static final File TEST_HISTORY_PATH = new File(PathManager.getSystemPath(), "testHistory");

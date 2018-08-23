@@ -19,6 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import java.util.Map;
 /**
  * @author Gregory.Shrago
  */
+@Singleton
 public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
   public static final ExtensionPointName<PatternClassBean> PATTERN_CLASS_EP =
     new ExtensionPointName<PatternClassBean>("com.intellij.patterns.patternClass");

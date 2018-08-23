@@ -23,8 +23,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Singleton;
 import java.util.*;
 
+@Singleton
 public class SelectInManager  {
   private final Project myProject;
   private final List<SelectInTarget> myTargets = new ArrayList<SelectInTarget>();

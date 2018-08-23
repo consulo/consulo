@@ -25,11 +25,13 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 @State(
         name = "DiffSettings",
         storages = @Storage(file = DiffUtil.DIFF_CONFIG)

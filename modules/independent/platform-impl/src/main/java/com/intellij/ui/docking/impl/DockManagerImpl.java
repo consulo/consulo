@@ -58,6 +58,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -69,6 +70,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 
+@Singleton
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class DockManagerImpl extends DockManager implements PersistentStateComponent<Element> {
 

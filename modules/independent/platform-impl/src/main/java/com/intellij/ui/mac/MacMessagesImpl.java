@@ -32,6 +32,7 @@ import com.sun.jna.Pointer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -46,6 +47,7 @@ import static com.intellij.ui.mac.foundation.Foundation.*;
 /**
  * @author pegov
  */
+@Singleton
 public class MacMessagesImpl extends MacMessages {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.mac.MacMessages");
 

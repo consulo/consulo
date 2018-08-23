@@ -32,6 +32,7 @@ import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author gregsh
@@ -42,6 +43,7 @@ public final class ScratchRootType extends RootType {
     return findByClass(ScratchRootType.class);
   }
 
+  @Inject
   ScratchRootType() {
     super("scratches", "Scratches");
   }

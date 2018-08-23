@@ -19,11 +19,13 @@ import com.intellij.openapi.keymap.KeymapGroup;
 import com.intellij.openapi.keymap.KeymapGroupFactory;
 import com.intellij.openapi.keymap.impl.ui.Group;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 
 /**
  * @author yole
  */
+@Singleton
 public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
   @Override
   public KeymapGroup createGroup(final String name) {

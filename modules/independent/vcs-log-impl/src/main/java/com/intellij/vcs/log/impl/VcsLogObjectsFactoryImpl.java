@@ -5,10 +5,12 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.*;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.List;
 
+@Singleton
 public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
 
   @Nonnull

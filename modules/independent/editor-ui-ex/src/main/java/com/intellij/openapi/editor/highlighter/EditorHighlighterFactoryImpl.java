@@ -27,10 +27,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.testFramework.LightVirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.highlighter.EditorHighlighterFactoryImpl");
 

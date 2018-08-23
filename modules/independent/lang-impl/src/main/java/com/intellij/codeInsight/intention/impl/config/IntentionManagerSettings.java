@@ -38,11 +38,13 @@ import com.intellij.util.containers.StringInterner;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+@Singleton
 @State(
   name = "IntentionManagerSettings",
   storages = {

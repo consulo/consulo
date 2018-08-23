@@ -37,6 +37,7 @@ import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author max
  */
+@Singleton
 public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   private static final Logger LOG = Logger.getInstance(ShowSettingsUtilImpl.class);
   private AtomicBoolean myShown = new AtomicBoolean(false);

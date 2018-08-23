@@ -17,6 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.Patches;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
@@ -30,6 +31,7 @@ import sun.awt.datatransfer.DataTransferer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
@@ -61,8 +63,9 @@ public class ClipboardSynchronizer implements Disposable {
     return ApplicationManager.getApplication().getComponent(ClipboardSynchronizer.class);
   }
 
-  public ClipboardSynchronizer() {
-    if (ApplicationManager.getApplication().isHeadlessEnvironment() && ApplicationManager.getApplication().isUnitTestMode()) {
+  @Inject
+  public ClipboardSynchronizer(Application application) {
+    if (application.isHeadlessEnvironment() && application.isUnitTestMode()) {
       myClipboardHandler = new HeadlessClipboardHandler();
     }
     else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && SystemInfo.isMac) {

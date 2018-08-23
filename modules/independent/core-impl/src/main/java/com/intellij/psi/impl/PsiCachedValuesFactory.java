@@ -24,15 +24,19 @@ import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.util.*;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author Dmitry Avdeev
  */
+@Singleton
 public class PsiCachedValuesFactory implements CachedValuesFactory {
 
   private final Project myProject;
   private final PsiManager myManager;
 
+  @Inject
   public PsiCachedValuesFactory(PsiManager manager) {
     myManager = manager;
     myProject = manager.getProject();

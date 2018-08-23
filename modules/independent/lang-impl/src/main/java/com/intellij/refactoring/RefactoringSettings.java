@@ -19,9 +19,12 @@ package com.intellij.refactoring;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 @State(
   name = "BaseRefactoringSettings",
   storages = {

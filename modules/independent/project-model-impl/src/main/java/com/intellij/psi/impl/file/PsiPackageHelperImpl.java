@@ -22,10 +22,12 @@ import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.impl.PsiManagerImpl;
 import consulo.psi.PsiPackageManager;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class PsiPackageHelperImpl extends PsiPackageHelper {
   private final PsiManagerImpl myManager;
 

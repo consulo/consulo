@@ -19,11 +19,13 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 
+import javax.inject.Singleton;
 import java.awt.*;
 
 /**
  * @author yole
  */
+@Singleton
 @State(name = "ProjectFrameBounds", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class ProjectFrameBounds implements PersistentStateComponent<Rectangle> {
   public static ProjectFrameBounds getInstance(Project project) {

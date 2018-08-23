@@ -87,6 +87,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -98,6 +99,7 @@ import static com.intellij.openapi.ui.Messages.getQuestionIcon;
 import static com.intellij.util.ui.ConfirmationDialog.requestForConfirmation;
 import static java.text.MessageFormat.format;
 
+@Singleton
 public class AbstractVcsHelperImpl extends AbstractVcsHelper {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.AbstractVcsHelperImpl");
 

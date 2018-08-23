@@ -46,12 +46,14 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 
+@Singleton
 public class SdkListConfigurable extends BaseStructureConfigurable {
   public static final Condition<SdkTypeId> ADD_SDK_FILTER = new Condition<SdkTypeId>() {
     @Override

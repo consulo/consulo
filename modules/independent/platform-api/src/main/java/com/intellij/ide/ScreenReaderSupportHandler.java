@@ -18,6 +18,7 @@ package com.intellij.ide;
 import com.intellij.openapi.Disposable;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.beans.PropertyChangeListener;
@@ -30,6 +31,7 @@ public class ScreenReaderSupportHandler implements Disposable {
   private final GeneralSettings mySettings;
   private final PropertyChangeListener myGeneralSettingsListener;
 
+  @Inject
   public ScreenReaderSupportHandler(@Nonnull GeneralSettings generalSettings) {
     mySettings = generalSettings;
     myGeneralSettingsListener = e -> {

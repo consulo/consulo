@@ -54,7 +54,9 @@ import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.lang.LanguageVersion;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
+@Singleton
 public class BlockSupportImpl extends BlockSupport {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.text.BlockSupportImpl");
 

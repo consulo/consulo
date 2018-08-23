@@ -26,12 +26,14 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.EventDispatcher;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.awt.datatransfer.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwner {
   private final List<Transferable> myData = new ArrayList<Transferable>();
   private final EventDispatcher<ContentChangedListener> myDispatcher = EventDispatcher.create(ContentChangedListener.class);

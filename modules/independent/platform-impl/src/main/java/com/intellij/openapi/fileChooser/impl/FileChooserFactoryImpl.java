@@ -33,12 +33,14 @@ import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+@Singleton
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override

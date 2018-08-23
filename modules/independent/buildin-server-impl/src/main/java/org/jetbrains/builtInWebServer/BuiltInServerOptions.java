@@ -16,6 +16,8 @@ import com.intellij.xdebugger.settings.XDebuggerSettings;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import org.jetbrains.ide.BuiltInServerManager;
 import org.jetbrains.ide.BuiltInServerManagerImpl;
 import org.jetbrains.ide.CustomPortServerManager;
@@ -24,6 +26,7 @@ import org.jetbrains.io.CustomPortServerManagerBase;
 import java.util.Collection;
 import java.util.Collections;
 
+@Singleton
 @State(name = "BuiltInServerOptions", storages = @Storage("other.xml"))
 public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptions>, Getter<BuiltInServerOptions> {
   private static final int DEFAULT_PORT = 63342;

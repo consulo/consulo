@@ -30,6 +30,7 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 
 /**
@@ -37,6 +38,7 @@ import javax.swing.*;
  * @since 20.03.14
  */
 public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
+  @Inject
   protected SandLibraryType() {
     super(new PersistentLibraryKind<DummyLibraryProperties>("sand") {
       @Nonnull

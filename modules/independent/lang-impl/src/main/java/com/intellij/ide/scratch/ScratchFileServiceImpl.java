@@ -63,16 +63,17 @@ import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 
 
-@State(
-        name = "ScratchFileService",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/scratches.xml")})
+@Singleton
+@State(name = "ScratchFileService", storages = {@Storage("scratches.xml")})
 public class ScratchFileServiceImpl extends ScratchFileService implements PersistentStateComponent<Element> {
 
   private static final RootType NULL_TYPE = new RootType("", null) {
@@ -81,6 +82,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   private final LightDirectoryIndex<RootType> myIndex;
   private final MyLanguages myScratchMapping = new MyLanguages();
 
+  @Inject
   protected ScratchFileServiceImpl(Application application) {
     myIndex = new LightDirectoryIndex<>(application, NULL_TYPE, index -> {
       LocalFileSystem fileSystem = LocalFileSystem.getInstance();
@@ -208,9 +210,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       if (rootType == null) return null;
       Language language = rootType.substituteLanguage(project, file);
       Language adjusted = language != null ? language : getLanguageByFileName(file);
-      return adjusted != null && adjusted != ScratchFileType.INSTANCE.getLanguage()
-             ? LanguageSubstitutors.INSTANCE.substituteLanguage(adjusted, file, project)
-             : adjusted;
+      return adjusted != null && adjusted != ScratchFileType.INSTANCE.getLanguage() ? LanguageSubstitutors.INSTANCE.substituteLanguage(adjusted, file, project) : adjusted;
     }
   }
 

@@ -22,10 +22,12 @@ import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 public class ProjectPathMacroManager extends BasePathMacroManager {
   private final Project myProject;
 
+  @Inject
   public ProjectPathMacroManager(PathMacros pathMacros, Project project) {
     super(pathMacros);
     myProject = project;

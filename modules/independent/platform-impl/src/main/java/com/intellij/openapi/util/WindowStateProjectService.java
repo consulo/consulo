@@ -21,12 +21,14 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.impl.ProjectFrameBounds;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
+@Singleton
 @State(
         name = "WindowStateProjectService",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})

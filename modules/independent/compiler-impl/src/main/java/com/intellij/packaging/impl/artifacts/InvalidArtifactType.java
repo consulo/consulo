@@ -24,10 +24,12 @@ import com.intellij.packaging.elements.PackagingElementOutputKind;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author nik
  */
+@Singleton
 public class InvalidArtifactType extends ArtifactType {
 
   public static InvalidArtifactType getInstance() {

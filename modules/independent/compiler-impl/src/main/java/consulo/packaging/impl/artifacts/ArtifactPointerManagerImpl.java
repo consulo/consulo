@@ -21,12 +21,14 @@ import com.intellij.packaging.impl.artifacts.ArtifactPointerImpl;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.List;
 
 /**
  * @author VISTALL
  */
+@Singleton
 public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact> implements ArtifactPointerManager {
   private final Project myProject;
 

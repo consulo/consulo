@@ -15,9 +15,12 @@
  */
 package com.intellij.concurrency;
 
+import javax.inject.Singleton;
+
 /**
  * Author: dmitrylomov
  */
+@Singleton
 public class AsyncFutureFactoryImpl extends AsyncFutureFactory {
   public AsyncFutureFactoryImpl() {
   }

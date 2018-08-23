@@ -21,9 +21,11 @@ import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.DialogWrapperPeerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.awt.*;
 
+@Singleton
 public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
   @Override
   public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {

@@ -17,6 +17,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.Map;
  * User: anna
  * Date: 1/2/12
  */
+@Singleton
 @State(
     name = "CoverageViewManager",
     storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}

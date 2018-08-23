@@ -44,6 +44,7 @@ import com.intellij.util.text.CharArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -461,6 +462,7 @@ public class EventLog {
     private final LogModel myProjectModel;
     private final Project myProject;
 
+    @Inject
     public ProjectTracker(@Nonnull final Project project) {
       myProject = project;
 

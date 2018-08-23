@@ -22,12 +22,14 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
 import com.intellij.util.containers.Convertor;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 
 /**
  * @author yole
  */
+@Singleton
 public class TreeUIHelperImpl extends TreeUIHelper {
   @Override
   public void installToolTipHandler(final JTree tree) {

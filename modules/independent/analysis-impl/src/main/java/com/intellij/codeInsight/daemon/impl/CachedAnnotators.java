@@ -23,10 +23,12 @@ import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.List;
 
+@Singleton
 public class CachedAnnotators {
   private final ThreadLocalAnnotatorMap<String, Annotator> cachedAnnotators = new ThreadLocalAnnotatorMap<String, Annotator>() {
     @Nonnull

@@ -30,6 +30,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.apache.xmlrpc.*;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import org.jetbrains.io.Responses;
 import org.xml.sax.SAXParseException;
@@ -39,6 +40,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Vector;
 
+@Singleton
 public class XmlRpcServerImpl implements XmlRpcServer {
   private static final Logger LOG = Logger.getInstance(XmlRpcServerImpl.class);
 

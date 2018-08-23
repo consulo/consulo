@@ -31,6 +31,7 @@ import com.intellij.util.ui.*;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.*;
@@ -76,6 +77,7 @@ public class IdeTooltipManager implements Disposable, AWTEventListener {
   private Runnable myShowRequest;
   private IdeTooltip myQueuedTooltip;
 
+  @Inject
   public IdeTooltipManager(JBPopupFactory popupFactory) {
     myPopupFactory = popupFactory;
     myIsEnabled = Registry.get("ide.tooltip.callout");

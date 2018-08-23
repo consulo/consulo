@@ -20,6 +20,9 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 
+import javax.inject.Singleton;
+
+@Singleton
 @State(name = "PropertiesComponent", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class ProjectPropertiesComponentImpl extends PropertiesComponentImpl {
 }

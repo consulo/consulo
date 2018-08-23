@@ -57,6 +57,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -97,6 +98,7 @@ public class ActionMacroManager implements JDOMExternalizable {
 
   private String myLastTyping = "";
 
+  @Inject
   public ActionMacroManager(ActionManagerEx actionManagerEx) {
     myActionManager = actionManagerEx;
     myActionManager.addAnActionListener(new AnActionListener() {

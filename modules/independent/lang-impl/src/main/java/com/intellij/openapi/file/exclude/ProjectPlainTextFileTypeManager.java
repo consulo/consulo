@@ -23,13 +23,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * @author Rustam Vishnyakov
  */
+@Singleton
 @State(name = "ProjectPlainTextFileTypeManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ProjectPlainTextFileTypeManager extends PersistentFileSetManager {
   private final ProjectFileIndex myIndex;
 
+  @Inject
   public ProjectPlainTextFileTypeManager(ProjectFileIndex projectFileIndex) {
     myIndex = projectFileIndex;
   }

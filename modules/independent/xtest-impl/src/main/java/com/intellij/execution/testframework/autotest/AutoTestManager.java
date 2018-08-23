@@ -21,10 +21,12 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 @State(
         name = "AutoTestManager",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)}

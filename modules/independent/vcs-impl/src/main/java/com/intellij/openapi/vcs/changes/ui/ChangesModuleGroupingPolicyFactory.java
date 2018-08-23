@@ -18,11 +18,13 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
  * @author yole
  */
+@Singleton
 public class ChangesModuleGroupingPolicyFactory extends ChangesGroupingPolicyFactory {
   private final Project myProject;
 

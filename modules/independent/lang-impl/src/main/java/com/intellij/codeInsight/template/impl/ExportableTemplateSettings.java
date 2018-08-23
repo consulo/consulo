@@ -19,9 +19,11 @@ import com.intellij.openapi.components.*;
 import com.intellij.util.SmartList;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 
+@Singleton
 @SuppressWarnings("deprecation")
 @Deprecated
 @State(

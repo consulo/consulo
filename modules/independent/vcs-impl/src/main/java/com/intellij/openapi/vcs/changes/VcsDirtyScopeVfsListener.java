@@ -32,6 +32,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +41,7 @@ import java.util.List;
 /**
  * Listens to file system events and notifies VcsDirtyScopeManagers responsible for changed files to mark these files dirty.
  */
+@Singleton
 public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
   @Nonnull
   private final ProjectLevelVcsManager myVcsManager;

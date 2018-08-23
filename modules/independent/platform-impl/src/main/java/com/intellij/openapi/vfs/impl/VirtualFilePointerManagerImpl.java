@@ -46,9 +46,12 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
+@Singleton
 public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager implements Disposable, BulkFileListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl");
   private final TempFileSystem TEMP_FILE_SYSTEM;
@@ -65,6 +68,7 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
   private final MessageBus myBus;
   private static final Comparator<String> URL_COMPARATOR = SystemInfo.isFileSystemCaseSensitive ? String::compareTo : String::compareToIgnoreCase;
 
+  @Inject
   VirtualFilePointerManagerImpl(@Nonnull Application application, @Nonnull VirtualFileManager virtualFileManager) {
     myVirtualFileManager = virtualFileManager;
     myBus = application.getMessageBus();

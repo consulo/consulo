@@ -36,10 +36,12 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Singleton
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element> {
   public static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);

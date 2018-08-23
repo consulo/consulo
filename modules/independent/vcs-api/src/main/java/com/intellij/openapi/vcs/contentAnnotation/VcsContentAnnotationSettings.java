@@ -19,10 +19,13 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
+
 /**
  * @author Irina.Chernushina
  * @since 3.08.2011
  */
+@Singleton
 @State(
   name = "VcsContentAnnotationSettings",
   storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)}

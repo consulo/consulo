@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -40,6 +41,7 @@ import java.util.Map;
  * This class represents map between strings and rectangles. It's intended to store
  * sizes of window, dialogs, etc.
  */
+@Singleton
 @State(
         name = "DimensionService",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/dimensions.xml", roamingType = RoamingType.DISABLED),

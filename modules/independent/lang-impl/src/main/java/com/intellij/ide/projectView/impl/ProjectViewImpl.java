@@ -100,6 +100,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -109,6 +110,7 @@ import java.util.*;
 import java.util.List;
 import java.util.function.Supplier;
 
+@Singleton
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.projectView.impl.ProjectViewImpl");

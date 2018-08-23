@@ -26,6 +26,8 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author max
  */
+@Singleton
 public class InspectionToolRegistrar {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.InspectionToolRegistrar");
 

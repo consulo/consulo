@@ -18,6 +18,7 @@ package com.intellij.ide.projectView.impl;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
  *         <p>
  *         from kotlin by @author Konstantin Bulenkov
  */
+@Singleton
 @State(name = "ProjectViewSharedSettings",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/projectView.xml"))
 public class ProjectViewSharedSettings implements PersistentStateComponent<ProjectViewSharedSettings> {

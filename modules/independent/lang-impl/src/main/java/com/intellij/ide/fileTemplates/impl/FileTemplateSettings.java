@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Locale;
 
@@ -32,6 +33,7 @@ import java.util.Locale;
  *
  * @author Rustam Vishnyakov
  */
+@Singleton
 @State(name = "ExportableFileTemplateSettings", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR +
                                                                            "/" +
                                                                            ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE))

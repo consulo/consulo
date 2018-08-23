@@ -22,10 +22,12 @@ import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.search.searches.IndexPatternSearch;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class IndexPatternSearchImpl extends IndexPatternSearch {
   public IndexPatternSearchImpl() {
     registerExecutor(new IndexPatternSearcher());

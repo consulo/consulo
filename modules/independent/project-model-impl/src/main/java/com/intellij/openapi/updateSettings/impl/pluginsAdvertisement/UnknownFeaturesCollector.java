@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +28,7 @@ import java.util.Set;
 /**
  * User: anna
  */
+@Singleton
 @State(
   name = "UnknownFeatures",
   storages = {

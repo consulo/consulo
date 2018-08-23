@@ -23,10 +23,12 @@ import com.intellij.openapi.Disposable;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implements Disposable {
   private static final Map<String, LibraryTable> myLibraryTables = new HashMap<String, LibraryTable>();
 

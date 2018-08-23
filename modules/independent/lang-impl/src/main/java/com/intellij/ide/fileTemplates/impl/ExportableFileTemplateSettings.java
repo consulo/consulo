@@ -20,11 +20,13 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 
 /**
  * @author Dmitry Avdeev
  */
+@Singleton
 @State(
   name="ExportableFileTemplateSettings",
   storages= {

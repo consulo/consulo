@@ -27,11 +27,13 @@ import com.intellij.psi.search.TodoItem;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.psi.search.searches.IndexPatternSearch;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Singleton
 public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   private final PsiManagerEx myManager;
   private static final TodoItem[] EMPTY_TODO_ITEMS = new TodoItem[0];

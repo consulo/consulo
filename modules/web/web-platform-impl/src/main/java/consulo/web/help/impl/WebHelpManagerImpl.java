@@ -18,10 +18,13 @@ package consulo.web.help.impl;
 import com.intellij.openapi.help.HelpManager;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Singleton;
+
 /**
  * @author VISTALL
  * @since 18-Oct-17
  */
+@Singleton
 public class WebHelpManagerImpl extends HelpManager {
   @Override
   public void invokeHelp(@javax.annotation.Nullable @NonNls String id) {

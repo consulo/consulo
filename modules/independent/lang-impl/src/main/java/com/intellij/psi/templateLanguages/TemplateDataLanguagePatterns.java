@@ -27,12 +27,14 @@ import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.List;
 
 /**
  * @author peter
  */
+@Singleton
 @State(
     name = "TemplateDataLanguagePatterns",
     storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/templateLanguages.xml") )

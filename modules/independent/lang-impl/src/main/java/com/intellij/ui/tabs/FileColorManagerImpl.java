@@ -32,6 +32,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.*;
@@ -41,6 +42,7 @@ import java.util.List;
  * @author spleaner
  * @author Konstantin Bulenkov
  */
+@Singleton
 @State(
   name = "FileColors",
   storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)})

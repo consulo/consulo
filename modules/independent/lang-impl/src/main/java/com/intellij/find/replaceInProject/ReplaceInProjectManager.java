@@ -57,9 +57,11 @@ import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 
+@Singleton
 public class ReplaceInProjectManager {
   static final NotificationGroup NOTIFICATION_GROUP = FindInPathAction.NOTIFICATION_GROUP;
 

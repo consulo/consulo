@@ -26,9 +26,11 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.util.pointers.Named;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.List;
 
+@Singleton
 public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements SettingsSavingComponent {
   public static final Logger LOGGER = Logger.getInstance(SchemesManagerFactoryImpl.class);
 

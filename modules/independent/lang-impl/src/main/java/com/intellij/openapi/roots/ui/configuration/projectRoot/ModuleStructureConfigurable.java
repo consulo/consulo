@@ -60,6 +60,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -73,6 +74,7 @@ import java.util.List;
  * User: anna
  * Date: 02-Jun-2006
  */
+@Singleton
 public class ModuleStructureConfigurable extends BaseStructureConfigurable implements Place.Navigator {
   private static final Comparator<MyNode> NODE_COMPARATOR = new Comparator<MyNode>() {
     @Override

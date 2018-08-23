@@ -28,11 +28,13 @@ import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author gregsh
  */
 public class IdeConsoleRootType extends ConsoleRootType {
+  @Inject
   IdeConsoleRootType() {
     super("ide", "IDE Scripting");
   }

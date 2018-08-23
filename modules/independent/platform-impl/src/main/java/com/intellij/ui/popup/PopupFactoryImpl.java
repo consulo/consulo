@@ -62,6 +62,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkListener;
@@ -79,6 +80,7 @@ import java.util.Map;
 import static com.intellij.openapi.actionSystem.Presentation.PROP_HOVERED_ICON;
 import static com.intellij.openapi.actionSystem.Presentation.PROP_ICON;
 
+@Singleton
 public class PopupFactoryImpl extends JBPopupFactory {
 
   /**

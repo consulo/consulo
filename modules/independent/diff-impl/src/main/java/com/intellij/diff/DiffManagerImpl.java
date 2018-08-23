@@ -32,6 +32,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Singleton
 public class DiffManagerImpl extends DiffManagerEx {
   @RequiredDispatchThread
   @Override

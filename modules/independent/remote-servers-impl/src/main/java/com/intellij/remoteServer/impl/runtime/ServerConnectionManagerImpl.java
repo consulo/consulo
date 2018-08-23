@@ -6,6 +6,7 @@ import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * @author nik
  */
+@Singleton
 public class ServerConnectionManagerImpl extends ServerConnectionManager {
   private final Map<RemoteServer<?>, ServerConnection> myConnections = new HashMap<RemoteServer<?>, ServerConnection>();
   private final ServerConnectionEventDispatcher myEventDispatcher = new ServerConnectionEventDispatcher();

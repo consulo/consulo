@@ -26,6 +26,9 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 
+import javax.inject.Singleton;
+
+@Singleton
 @State(
   name="HierarchyBrowserManager",
   storages= {

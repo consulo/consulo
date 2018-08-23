@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.net.URL;
 /**
  * @author Rustam Vishnyakov
  */
+@Singleton
 @State(
         name = "CodeStyleSchemesUIConfiguration",
         storages = {@Storage(

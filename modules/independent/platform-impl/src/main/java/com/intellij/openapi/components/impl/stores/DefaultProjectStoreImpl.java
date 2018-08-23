@@ -25,6 +25,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -35,6 +36,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private final ProjectManagerImpl myProjectManager;
   @NonNls private static final String ROOT_TAG_NAME = "defaultProject";
 
+  @Inject
   public DefaultProjectStoreImpl(@Nonnull ProjectImpl project, @Nonnull ProjectManagerImpl projectManager, @Nonnull PathMacroManager pathMacroManager) {
     super(project, pathMacroManager);
 

@@ -15,17 +15,18 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import consulo.compiler.CompilerConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ModuleRootLayer;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import java.util.List;
 public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy {
   private final Project myProject;
 
+  @Inject
   public ExcludeCompilerOutputPolicy(final Project project) {
     myProject = project;
   }

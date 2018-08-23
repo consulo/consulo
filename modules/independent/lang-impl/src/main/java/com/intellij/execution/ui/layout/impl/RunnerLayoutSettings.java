@@ -19,11 +19,13 @@ package com.intellij.execution.ui.layout.impl;
 import com.intellij.openapi.components.*;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 @State(
   name = "RunnerLayoutSettings",
   storages = {@Storage(

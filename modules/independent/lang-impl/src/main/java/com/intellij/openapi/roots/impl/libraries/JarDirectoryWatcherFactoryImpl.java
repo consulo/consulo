@@ -17,9 +17,12 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class JarDirectoryWatcherFactoryImpl extends JarDirectoryWatcherFactory {
   @Override
   public JarDirectoryWatcher createWatcher(JarDirectories jarDirectories, RootProviderBaseImpl rootProvider) {

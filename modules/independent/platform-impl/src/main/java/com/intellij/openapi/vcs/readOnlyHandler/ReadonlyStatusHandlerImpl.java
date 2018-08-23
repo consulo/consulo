@@ -31,9 +31,11 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 @State(
   name="ReadonlyStatusHandler",
   storages= {

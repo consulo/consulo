@@ -57,16 +57,19 @@ import com.intellij.util.containers.MultiMap;
 import consulo.lang.injection.MultiHostInjectorExtensionPoint;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author cdr
  */
+@Singleton
 public class InjectedLanguageManagerImpl extends InjectedLanguageManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(InjectedLanguageManagerImpl.class);
   @SuppressWarnings("RedundantStringConstructorCall")
@@ -81,6 +84,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     return (InjectedLanguageManagerImpl)InjectedLanguageManager.getInstance(project);
   }
 
+  @Inject
   public InjectedLanguageManagerImpl(final Project project, DumbService dumbService) {
     myProject = project;
     myDumbService = dumbService;

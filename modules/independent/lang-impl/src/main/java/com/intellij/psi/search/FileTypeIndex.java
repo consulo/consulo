@@ -26,6 +26,7 @@ import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -50,6 +51,7 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
 
   private final FileTypeRegistry myFileTypeManager;
 
+  @Inject
   public FileTypeIndex(FileTypeRegistry fileTypeRegistry) {
     myFileTypeManager = fileTypeRegistry;
   }

@@ -22,9 +22,11 @@ import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.options.colors.ColorSettingsPages;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 public class ColorSettingsPagesImpl extends ColorSettingsPages {
   private final List<ColorSettingsPage> myPages = new ArrayList<ColorSettingsPage>();
   private boolean myExtensionsLoaded = false;

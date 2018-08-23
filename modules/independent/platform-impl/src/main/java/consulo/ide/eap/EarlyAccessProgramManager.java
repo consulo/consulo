@@ -25,6 +25,7 @@ import com.intellij.util.containers.hash.LinkedHashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 17:11/15.10.13
  */
+@Singleton
 @State(name = "EarlyAccessProgramManager", storages = @Storage("eap.xml"))
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
   @Nonnull

@@ -30,9 +30,11 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 @State(
         name = "VcsManagerConfiguration",
         storages = {@Storage(

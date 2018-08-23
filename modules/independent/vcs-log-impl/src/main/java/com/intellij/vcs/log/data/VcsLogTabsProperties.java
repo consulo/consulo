@@ -22,9 +22,11 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Map;
 
+@Singleton
 @State(name = "Vcs.Log.Tabs.Properties", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class VcsLogTabsProperties implements PersistentStateComponent<VcsLogTabsProperties.State> {
   public static final String MAIN_LOG_ID = "MAIN";

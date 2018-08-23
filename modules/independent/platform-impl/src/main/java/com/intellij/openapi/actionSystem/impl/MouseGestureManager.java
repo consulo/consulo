@@ -21,10 +21,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Singleton
 public class MouseGestureManager {
   public static MouseGestureManager getInstance() {
     return ServiceManager.getService(MouseGestureManager.class);

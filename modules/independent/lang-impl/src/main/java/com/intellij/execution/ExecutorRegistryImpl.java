@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.*;
 
@@ -60,6 +61,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
   // [Project, ExecutorId, RunnerId]
   private final Set<Trinity<Project, String, String>> myInProgress = Collections.synchronizedSet(new java.util.HashSet<Trinity<Project, String, String>>());
 
+  @Inject
   public ExecutorRegistryImpl(ActionManager actionManager) {
     myActionManager = actionManager;
 

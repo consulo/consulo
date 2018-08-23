@@ -31,6 +31,9 @@ import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Singleton;
+
+@Singleton
 @State(
   name="DaemonCodeAnalyzerSettings",
   storages= {

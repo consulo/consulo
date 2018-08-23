@@ -32,9 +32,11 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 @State(
   name="masterDetails",
   storages= {

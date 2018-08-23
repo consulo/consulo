@@ -28,10 +28,12 @@ import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 @State(
         name = "FindSettings",
         storages = {

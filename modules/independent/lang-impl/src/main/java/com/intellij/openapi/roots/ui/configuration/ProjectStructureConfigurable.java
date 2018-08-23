@@ -46,10 +46,12 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class ProjectStructureConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Place.Navigator {
 
   public static final Key<ProjectStructureConfigurable> KEY = Key.create("ProjectStructureConfiguration");

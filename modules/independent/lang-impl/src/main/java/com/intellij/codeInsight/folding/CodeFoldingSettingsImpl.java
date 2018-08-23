@@ -21,9 +21,12 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 @State(name="CodeFoldingSettings", storages= @Storage("editor.codeinsight.xml"))
 public class CodeFoldingSettingsImpl extends CodeFoldingSettings implements PersistentStateComponent<CodeFoldingSettings> {
 

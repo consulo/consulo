@@ -54,6 +54,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -104,6 +105,7 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     this(null, commandProcessor);
   }
 
+  @Inject
   public UndoManagerImpl(@Nullable ProjectEx project, CommandProcessor commandProcessor) {
     myProject = project;
     myCommandProcessor = commandProcessor;

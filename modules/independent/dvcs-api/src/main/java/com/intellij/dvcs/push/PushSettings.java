@@ -25,10 +25,12 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Set;
 
+@Singleton
 @State(name = "Push.Settings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class PushSettings implements PersistentStateComponent<PushSettings.State> {
 

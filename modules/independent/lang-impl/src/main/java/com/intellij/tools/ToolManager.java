@@ -20,6 +20,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
 
+import javax.inject.Inject;
+
 /**
  * @author traff
  */
@@ -29,6 +31,7 @@ public class ToolManager extends BaseToolManager<Tool> {
     return ApplicationManager.getApplication().getComponent(ToolManager.class);
   }
 
+  @Inject
   public ToolManager(ActionManagerEx actionManagerEx,
                      SchemesManagerFactory factory) {
     super(actionManagerEx, factory);

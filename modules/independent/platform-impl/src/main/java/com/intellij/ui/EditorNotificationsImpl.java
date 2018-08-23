@@ -42,6 +42,7 @@ import consulo.editor.notifications.EditorNotificationProviders;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -64,6 +65,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
     }
   };
 
+  @Inject
   public EditorNotificationsImpl(Project project) {
     myProject = project;
     myUpdateMerger = new MergingUpdateQueue("EditorNotifications update merger", 100, true, null, project);

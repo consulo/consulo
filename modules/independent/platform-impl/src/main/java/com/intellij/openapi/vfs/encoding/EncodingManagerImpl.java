@@ -50,6 +50,8 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -59,9 +61,8 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 
-@State(
-        name = "Encoding",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/encoding.xml")})
+@Singleton
+@State(name = "Encoding", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/encoding.xml")})
 public class EncodingManagerImpl extends EncodingManager implements PersistentStateComponent<EncodingManagerImpl.State>, Disposable {
   private static final Equality<Reference<Document>> REFERENCE_EQUALITY = new Equality<Reference<Document>>() {
     @Override
@@ -84,9 +85,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     }
 
     public void setDefaultCharsetName(@Nonnull String name) {
-      myDefaultEncoding = name.isEmpty()
-                          ? ChooseFileEncodingAction.NO_ENCODING
-                          : ObjectUtils.notNull(CharsetToolkit.forName(name), CharsetToolkit.getDefaultSystemCharset());
+      myDefaultEncoding = name.isEmpty() ? ChooseFileEncodingAction.NO_ENCODING : ObjectUtils.notNull(CharsetToolkit.forName(name), CharsetToolkit.getDefaultSystemCharset());
     }
   }
 
@@ -97,6 +96,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private final BoundedTaskExecutor changedDocumentExecutor =
           new BoundedTaskExecutor("EncodingManagerImpl document pool", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.getJobPoolParallelism(), this);
 
+  @Inject
   public EncodingManagerImpl(@Nonnull EditorFactory editorFactory) {
     editorFactory.getEventMulticaster().addDocumentListener(new DocumentAdapter() {
       @Override
@@ -122,7 +122,8 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     return project != null && !project.isDisposed() && FileEditorManager.getInstance(project).getEditors(virtualFile).length != 0;
   }
 
-  @NonNls public static final String PROP_CACHED_ENCODING_CHANGED = "cachedEncoding";
+  @NonNls
+  public static final String PROP_CACHED_ENCODING_CHANGED = "cachedEncoding";
 
   private static final Key<String> DETECTING_ENCODING_KEY = Key.create("DETECTING_ENCODING_KEY");
 
@@ -150,7 +151,6 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   /**
-   *
    * @param virtualFile
    * @return returns null if charset set cannot be determined from content
    */

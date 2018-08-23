@@ -36,11 +36,13 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 @State(name = "DependencyValidationManager", storages = {
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
 public class DependencyValidationManagerImpl extends DependencyValidationManager {

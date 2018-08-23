@@ -48,12 +48,15 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.LockSupport;
 
+@Singleton
 public class AutoPopupController implements Disposable {
   /**
    * Settings this user data key to the editor with a completion provider

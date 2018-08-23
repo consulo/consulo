@@ -17,10 +17,12 @@ package com.intellij.vcs.log.graph;
 
 import com.intellij.vcs.log.graph.impl.facade.PermanentGraphImpl;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Collections;
 import java.util.List;
 
+@Singleton
 public class PermanentGraphBuilderImpl<CommitId> implements PermanentGraphBuilder<CommitId> {
 
   private final GraphColorManager<CommitId> STUB_COLOR_MANAGER = new GraphColorManager<CommitId>() {

@@ -19,8 +19,10 @@ package com.intellij.psi.codeStyle;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 
+@Singleton
 @State(
         name = "ProjectCodeStyleSettingsManager",
         storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/codeStyleSettings.xml")})

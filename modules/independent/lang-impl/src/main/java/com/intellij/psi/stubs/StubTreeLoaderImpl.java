@@ -35,6 +35,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,6 +43,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@Singleton
 public class StubTreeLoaderImpl extends StubTreeLoader {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.StubTreeLoaderImpl");
   private static volatile boolean ourStubReloadingProhibited = false;

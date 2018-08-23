@@ -28,6 +28,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.Base64;
@@ -36,6 +37,7 @@ import java.util.Base64;
  * @author VISTALL
  * @since 06-Mar-17
  */
+@Singleton
 @State(name = "ServiceAuthConfiguration", storages = @Storage(value = "auth.xml", roamingType = RoamingType.DISABLED))
 public class ServiceAuthConfiguration implements PersistentStateComponent<ServiceAuthConfiguration.State> {
   private static final Logger LOGGER = Logger.getInstance(ServiceAuthConfiguration.class);

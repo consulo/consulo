@@ -36,6 +36,7 @@ import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -58,6 +59,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
   private volatile long myRefreshSessionId;
 
+  @Inject
   public DesktopSaveAndSyncHandlerImpl(@Nonnull GeneralSettings generalSettings,
                                        @Nonnull ProgressManager progressManager,
                                        @Nonnull FrameStateManager frameStateManager,

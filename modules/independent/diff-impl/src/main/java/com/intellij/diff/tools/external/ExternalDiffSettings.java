@@ -27,7 +27,9 @@ import com.intellij.util.config.BooleanProperty;
 import com.intellij.util.config.StringProperty;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
+@Singleton
 @State(
         name = "ExternalDiffSettings",
         storages = @Storage(file = DiffUtil.DIFF_CONFIG)

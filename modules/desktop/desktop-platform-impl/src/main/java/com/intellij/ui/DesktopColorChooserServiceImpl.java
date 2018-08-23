@@ -16,12 +16,14 @@
 package com.intellij.ui;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
  */
+@Singleton
 public class DesktopColorChooserServiceImpl extends ColorChooserService {
   @Override
   public void showDialog(Component parent,

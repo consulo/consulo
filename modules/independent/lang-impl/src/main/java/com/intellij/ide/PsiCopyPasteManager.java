@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.util.ArrayUtilRt;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -44,6 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class PsiCopyPasteManager {
   public static PsiCopyPasteManager getInstance() {
     return ServiceManager.getService(PsiCopyPasteManager.class);

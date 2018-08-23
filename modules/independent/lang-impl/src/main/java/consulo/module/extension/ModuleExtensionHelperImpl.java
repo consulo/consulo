@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.Immutable;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 8:00/12.11.13
  */
+@Singleton
 public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
   private final Project myProject;
   private MultiMap<Class<? extends ModuleExtension>, ModuleExtension> myExtensions;

@@ -33,6 +33,7 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ReflectionUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,6 +44,7 @@ import java.util.HashSet;
  * @author Eugene Belyaev
  */
 
+@Singleton
 @State(
   name="StructureViewFactory",
   storages= {

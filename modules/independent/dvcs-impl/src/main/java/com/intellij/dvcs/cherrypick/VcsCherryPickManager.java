@@ -39,9 +39,11 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLog;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 public class VcsCherryPickManager {
   private static final Logger LOG = Logger.getInstance(VcsCherryPickManager.class);
   @Nonnull

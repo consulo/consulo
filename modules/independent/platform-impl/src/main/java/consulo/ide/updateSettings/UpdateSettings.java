@@ -19,6 +19,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import consulo.application.ApplicationProperties;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.File;
 
@@ -26,6 +27,7 @@ import java.io.File;
  * @author VISTALL
  * @since 02-Sep-16
  */
+@Singleton
 @State(
         name = "UpdateSettings",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)})

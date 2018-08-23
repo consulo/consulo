@@ -29,8 +29,10 @@ import com.intellij.usageView.UsageViewManager;
 import com.intellij.usages.UsageView;
 import javax.annotation.Nonnull;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 
+@Singleton
 public class UsageViewManagerImpl extends UsageViewManager {
   private final Key<Boolean> REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.REUSABLE_CONTENT_KEY");
   private final Key<Boolean> NOT_REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.NOT_REUSABLE_CONTENT_KEY");        //todo[myakovlev] dont use it

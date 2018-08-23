@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.crypto.BadPaddingException;
+import javax.inject.Singleton;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -62,6 +63,7 @@ import static org.apache.http.conn.ssl.SSLConnectionSocketFactory.BROWSER_COMPAT
  * @author Mikhail Golubev
  */
 
+@Singleton
 @State(
   name = "CertificateManager",
   storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")

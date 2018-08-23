@@ -56,6 +56,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
@@ -68,6 +69,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Denis Zhdanov
  * @since 8/9/13 3:37 PM
  */
+@Singleton
 public class RemoteExternalSystemCommunicationManager implements ExternalSystemCommunicationManager {
 
   private static final Logger LOG = Logger.getInstance("#" + RemoteExternalSystemCommunicationManager.class.getName());

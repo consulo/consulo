@@ -21,6 +21,7 @@ import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ import java.util.Map;
  * @author Denis Zhdanov
  * @since 1/17/13 3:55 PM
  */
+@Singleton
 public class ExternalLibraryPathTypeMapperImpl implements ExternalLibraryPathTypeMapper {
 
   private static final Map<LibraryPathType, OrderRootType> MAPPINGS = new EnumMap<LibraryPathType, OrderRootType>(LibraryPathType.class);

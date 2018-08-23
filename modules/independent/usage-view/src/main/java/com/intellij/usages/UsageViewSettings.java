@@ -20,8 +20,10 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Singleton;
 import java.io.File;
 
+@Singleton
 @State(
   name = "UsageViewSettings",
   storages = {

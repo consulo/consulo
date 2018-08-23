@@ -25,6 +25,7 @@ import com.intellij.openapi.vcs.impl.FileStatusProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.awt.*;
 
@@ -43,11 +44,13 @@ public class ChangelistConflictFileStatusProvider implements FileStatusProvider 
   private final ChangelistConflictTracker myConflictTracker;
   private final ChangeListManager myChangeListManager;
 
+  @Inject
   public ChangelistConflictFileStatusProvider(ChangeListManagerImpl changeListManager) {
     myChangeListManager = changeListManager;
     myConflictTracker = changeListManager.getConflictTracker();
   }
 
+  @Override
   @Nullable
   public FileStatus getFileStatus(VirtualFile virtualFile) {
     ChangelistConflictTracker.Options options = myConflictTracker.getOptions();
@@ -69,6 +72,7 @@ public class ChangelistConflictFileStatusProvider implements FileStatusProvider 
     return null;
   }
 
+  @Override
   public void refreshFileStatusFromDocument(VirtualFile file, Document doc) {
 
   }

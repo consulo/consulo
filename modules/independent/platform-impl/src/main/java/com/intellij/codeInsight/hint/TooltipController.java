@@ -25,10 +25,12 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.awt.RelativePoint;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+@Singleton
 public class TooltipController {
   private LightweightHint myCurrentTooltip;
   private TooltipRenderer myCurrentTooltipObject;

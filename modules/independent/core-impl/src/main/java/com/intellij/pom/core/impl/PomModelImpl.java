@@ -62,9 +62,11 @@ import com.intellij.util.containers.Stack;
 import com.intellij.util.lang.CompoundRuntimeException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 public class PomModelImpl extends UserDataHolderBase implements PomModel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.pom.core.impl.PomModelImpl");
   private final Project myProject;

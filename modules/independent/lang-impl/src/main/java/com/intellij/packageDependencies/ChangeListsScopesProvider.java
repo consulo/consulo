@@ -23,6 +23,7 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.*;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +40,7 @@ public class ChangeListsScopesProvider extends CustomScopesProviderEx {
     return Extensions.findExtension(CUSTOM_SCOPES_PROVIDER, project, ChangeListsScopesProvider.class);
   }
 
+  @Inject
   public ChangeListsScopesProvider(Project project) {
     myProject = project;
   }

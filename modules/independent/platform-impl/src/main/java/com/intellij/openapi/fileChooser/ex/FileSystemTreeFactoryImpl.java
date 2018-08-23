@@ -25,7 +25,9 @@ import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class FileSystemTreeFactoryImpl extends FileSystemTreeFactory{
   @Override
   @Nonnull

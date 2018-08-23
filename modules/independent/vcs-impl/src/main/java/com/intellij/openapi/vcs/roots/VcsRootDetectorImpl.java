@@ -24,12 +24,14 @@ import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.VcsRootChecker;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author Nadya Zabrodina
  */
+@Singleton
 public class VcsRootDetectorImpl implements VcsRootDetector {
   private static final int MAXIMUM_SCAN_DEPTH = 2;
 

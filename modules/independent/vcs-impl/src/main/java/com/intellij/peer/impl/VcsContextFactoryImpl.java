@@ -29,9 +29,11 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.File;
 
+@Singleton
 public class VcsContextFactoryImpl implements VcsContextFactory {
   @Override
   @Nonnull

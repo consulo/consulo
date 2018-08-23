@@ -27,9 +27,12 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class DependenciesToolWindow {
   public static DependenciesToolWindow getInstance(Project project) {
     return ServiceManager.getService(project, DependenciesToolWindow.class);

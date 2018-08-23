@@ -42,6 +42,7 @@ import gnu.trove.TIntArrayList;
 import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
@@ -57,6 +58,7 @@ import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Se
  * @author Denis Zhdanov
  * @since 7/20/12 1:56 PM
  */
+@Singleton
 public class ArrangementEngine {
   private boolean myCodeChanged;
 

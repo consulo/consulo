@@ -47,10 +47,12 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
+@Singleton
 public class InspectionManagerEx extends InspectionManagerBase {
   private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
   private final NotNullLazyValue<ContentManager> myContentManager;

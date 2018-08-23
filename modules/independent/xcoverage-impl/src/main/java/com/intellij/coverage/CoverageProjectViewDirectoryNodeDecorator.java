@@ -9,14 +9,18 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.ui.ColoredTreeCellRenderer;
 
+import javax.inject.Inject;
+
 /**
  * @author yole
  */
 public class CoverageProjectViewDirectoryNodeDecorator extends AbstractCoverageProvejctViewNodeDecorator {
+  @Inject
   public CoverageProjectViewDirectoryNodeDecorator(final CoverageDataManager coverageDataManager) {
     super(coverageDataManager);
   }
 
+  @Override
   public void decorate(PackageDependenciesNode node, ColoredTreeCellRenderer cellRenderer) {
     final PsiElement element = node.getPsiElement();
     if (element == null || !element.isValid()) {

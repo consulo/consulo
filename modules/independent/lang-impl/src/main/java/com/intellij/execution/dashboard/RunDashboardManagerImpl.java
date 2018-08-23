@@ -46,6 +46,7 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +56,7 @@ import java.util.stream.Collectors;
 /**
  * @author konstantin.aleev
  */
+@Singleton
 @State(name = "RunDashboard", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class RunDashboardManagerImpl implements RunDashboardManager, PersistentStateComponent<RunDashboardManagerImpl.State> {
   @Nonnull

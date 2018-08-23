@@ -31,6 +31,7 @@ import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
 import consulo.editor.notifications.EditorNotificationProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
   private static final Key<EditorNotificationPanel> KEY = Key.create("BackgroundTaskEditorProvider");
   private final Project myProject;
 
+  @Inject
   public BackgroundTaskEditorNotificationProvider(Project project) {
     myProject = project;
   }

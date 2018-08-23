@@ -34,8 +34,10 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 
+@Singleton
 @State(name = "CodeInsightSettings", storages = @Storage("editor.codeinsight.xml"))
 public class CodeInsightSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance(CodeInsightSettings.class);

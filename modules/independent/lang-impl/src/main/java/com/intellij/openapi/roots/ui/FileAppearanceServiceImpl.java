@@ -26,8 +26,10 @@ import com.intellij.ui.SimpleColoredComponent;
 import consulo.vfs.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.File;
 
+@Singleton
 public class FileAppearanceServiceImpl extends FileAppearanceService {
   private static CellAppearanceEx EMPTY = new CellAppearanceEx() {
     @Override

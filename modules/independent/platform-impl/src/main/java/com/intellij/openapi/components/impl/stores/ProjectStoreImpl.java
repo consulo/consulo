@@ -37,6 +37,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   protected ProjectImpl myProject;
   private String myPresentableUrl;
 
+  @Inject
   ProjectStoreImpl(@Nonnull ProjectImpl project, @Nonnull PathMacroManager pathMacroManager) {
     super(pathMacroManager);
     myProject = project;

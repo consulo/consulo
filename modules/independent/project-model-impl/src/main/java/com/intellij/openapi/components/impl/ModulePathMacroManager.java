@@ -23,9 +23,12 @@ import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.openapi.module.Module;
 
+import javax.inject.Inject;
+
 public class ModulePathMacroManager extends BasePathMacroManager {
   private final Module myModule;
 
+  @Inject
   public ModulePathMacroManager(PathMacros pathMacros, Module module) {
     super(pathMacros);
     myModule = module;

@@ -28,9 +28,12 @@ import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 
+@Singleton
 public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
   private static final Logger LOG = Logger.getInstance(ApplicationStoreImpl.class);
 
@@ -41,8 +44,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
 
   private String myConfigPath;
 
-  // created from PicoContainer
-  @SuppressWarnings({"UnusedDeclaration"})
+  @Inject
   public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
     myApplication = application;
     myStateStorageManager =

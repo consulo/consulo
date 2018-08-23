@@ -50,6 +50,7 @@ import consulo.web.ui.TreeStructureWrappenModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
 import java.util.function.Function;
@@ -58,6 +59,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 23-Oct-17
  */
+@Singleton
 public class WebProjectViewImpl implements ProjectViewEx {
   private final class MyDataProvider implements Function<Key<?>, Object> {
     @Nullable

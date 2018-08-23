@@ -22,9 +22,12 @@ import com.intellij.refactoring.RefactoringFactory;
 import com.intellij.refactoring.RenameRefactoring;
 import com.intellij.refactoring.SafeDeleteRefactoring;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class RefactoringFactoryImpl extends RefactoringFactory {
   private final Project myProject;
 

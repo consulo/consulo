@@ -4,10 +4,13 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
+
 /**
  * User: anna
  * Date: 4/28/11
  */
+@Singleton
 @State(
   name = "CoverageOptionsProvider",
   storages = {

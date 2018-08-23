@@ -25,6 +25,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.LineTokenizer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -36,6 +37,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+@Singleton
 public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   private static final Logger LOG = Logger.getInstance(EditorCopyPasteHelperImpl.class);
 

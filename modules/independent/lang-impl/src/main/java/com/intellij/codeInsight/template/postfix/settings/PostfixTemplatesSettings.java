@@ -28,10 +28,12 @@ import com.intellij.util.xmlb.annotations.MapAnnotation;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Map;
 import java.util.Set;
 
+@Singleton
 @State(name = "PostfixTemplatesSettings", storages = @Storage("postfixTemplates.xml"))
 public class PostfixTemplatesSettings implements PersistentStateComponent<Element> {
 

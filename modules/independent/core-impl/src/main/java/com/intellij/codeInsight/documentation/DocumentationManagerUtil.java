@@ -3,6 +3,9 @@ package com.intellij.codeInsight.documentation;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.psi.PsiElement;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class DocumentationManagerUtil {
   public static DocumentationManagerUtil getInstance() {
     return ServiceManager.getService(DocumentationManagerUtil.class);

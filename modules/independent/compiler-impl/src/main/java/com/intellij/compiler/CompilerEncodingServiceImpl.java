@@ -31,6 +31,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -41,6 +42,7 @@ import java.util.Set;
 /**
  * @author nik
  */
+@Singleton
 public class CompilerEncodingServiceImpl extends CompilerEncodingService {
   @Nonnull
   private final Project myProject;

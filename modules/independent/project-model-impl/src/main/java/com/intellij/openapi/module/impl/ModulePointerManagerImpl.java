@@ -27,6 +27,8 @@ import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@Singleton
 public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> implements ModulePointerManager {
   private final Project myProject;
 

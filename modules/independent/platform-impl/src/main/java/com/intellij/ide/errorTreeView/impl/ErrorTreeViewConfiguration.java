@@ -20,7 +20,10 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
 
+
+@Singleton
 @State(
   name = "ErrorTreeViewConfiguration",
   storages = {

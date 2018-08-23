@@ -27,6 +27,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.MessageView;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.List;
 /**
  * @author Eugene Belyaev
  */
+@Singleton
 public class MessageViewImpl implements MessageView {
   private ToolWindow myToolWindow;
   private final List<Runnable> myPostponedRunnables = new ArrayList<Runnable>();

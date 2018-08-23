@@ -21,10 +21,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.PlatformFrameTitleBuilder;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class IdeaFrameTitleBuilder extends PlatformFrameTitleBuilder {
   @Override
   public String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file) {

@@ -23,7 +23,9 @@ import com.intellij.util.Function;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class DummyIconDeferrer extends IconDeferrer {
   @Override
   public <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f) {

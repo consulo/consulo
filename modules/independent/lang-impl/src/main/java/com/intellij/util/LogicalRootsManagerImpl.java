@@ -34,6 +34,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import consulo.roots.ContentFolderScopes;
 
@@ -42,6 +43,7 @@ import java.util.*;
 /**
  * @author spleaner
  */
+@Singleton
 public class LogicalRootsManagerImpl extends LogicalRootsManager {
   private Map<Module, MultiValuesMap<LogicalRootType, LogicalRoot>> myRoots = null;
   private final MultiValuesMap<LogicalRootType, NotNullFunction> myProviders = new MultiValuesMap<LogicalRootType, NotNullFunction>();

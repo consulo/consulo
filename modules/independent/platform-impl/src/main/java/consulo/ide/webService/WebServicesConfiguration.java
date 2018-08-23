@@ -20,6 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-Nov-16.
  */
+@Singleton
 @State(name = "WebServicesConfiguration", storages = @Storage(value = "webServices.xml", roamingType = RoamingType.DISABLED))
 public class WebServicesConfiguration implements PersistentStateComponent<WebServicesConfiguration.State> {
   @Nonnull

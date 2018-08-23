@@ -51,10 +51,13 @@ import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.function.Consumer;
 
+@Singleton
 public class StartupManagerImpl extends StartupManagerEx {
   private static final Logger LOG = Logger.getInstance(StartupManagerImpl.class);
 
@@ -72,6 +75,7 @@ public class StartupManagerImpl extends StartupManagerEx {
   private final Project myProject;
   private boolean myInitialRefreshScheduled;
 
+  @Inject
   public StartupManagerImpl(Project project) {
     myProject = project;
   }

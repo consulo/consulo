@@ -18,8 +18,10 @@ package com.intellij.openapi.actionSystem.impl;
 import com.intellij.openapi.actionSystem.JBAwtEventQueue;
 import com.intellij.ide.IdeEventQueue;
 
+import javax.inject.Singleton;
 import java.awt.event.MouseEvent;
 
+@Singleton
 public class JBAwtEventQueueImpl extends JBAwtEventQueue {
   public void blockNextEvents(MouseEvent e) {
     IdeEventQueue.getInstance().blockNextEvents(e);

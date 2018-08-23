@@ -20,12 +20,14 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
+@Singleton
 @State(
         name = "WindowStateApplicationService",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/window.state.xml", roamingType = RoamingType.DISABLED)

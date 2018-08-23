@@ -24,12 +24,14 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Collection;
 
 /**
  * @author yole
  */
+@Singleton
 public class PsiPatchBaseDirectoryDetector extends PatchBaseDirectoryDetector {
   private final Project myProject;
 

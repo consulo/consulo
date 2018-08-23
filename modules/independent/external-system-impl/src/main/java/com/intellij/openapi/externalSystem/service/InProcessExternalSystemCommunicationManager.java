@@ -22,11 +22,13 @@ import com.intellij.openapi.externalSystem.service.remote.ExternalSystemProgress
 import com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author Denis Zhdanov
  * @since 8/9/13 4:00 PM
  */
+@Singleton
 public class InProcessExternalSystemCommunicationManager implements ExternalSystemCommunicationManager {
 
   @Nonnull

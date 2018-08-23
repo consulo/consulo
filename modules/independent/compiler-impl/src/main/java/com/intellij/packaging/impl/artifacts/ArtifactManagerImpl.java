@@ -44,11 +44,13 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author nik
  */
+@Singleton
 @State(name = "ArtifactManager", storages = @Storage(value = "artifacts", stateSplitter = ArtifactManagerStateSplitter.class))
 public class ArtifactManagerImpl extends ArtifactManager implements Disposable, PersistentStateComponent<ArtifactManagerState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.artifacts.ArtifactManagerImpl");

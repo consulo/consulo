@@ -18,9 +18,12 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * We don't use roaming type PER_OS - path macros is enough ($USER_HOME$/Dropbox for example)
  */
+@Singleton
 @State(
         name = "VcsApplicationSettings",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/vcs.xml")

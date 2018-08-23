@@ -26,6 +26,7 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAwa
 import com.intellij.util.containers.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +44,7 @@ import java.util.Set;
  * @author Denis Zhdanov
  * @since 9/4/12 11:12 AM
  */
+@Singleton
 public class MemberOrderService {
 
   /**

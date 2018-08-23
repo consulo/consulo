@@ -35,6 +35,7 @@ import com.intellij.openapi.vcs.changes.ui.CommitHelper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
+import javax.inject.Inject;
 import java.util.Map;
 
 public class VetoSavingCommittingDocumentsAdapter {
@@ -42,6 +43,7 @@ public class VetoSavingCommittingDocumentsAdapter {
 
   private final FileDocumentManager myFileDocumentManager;
 
+  @Inject
   public VetoSavingCommittingDocumentsAdapter(final FileDocumentManager fileDocumentManager) {
     myFileDocumentManager = fileDocumentManager;
 

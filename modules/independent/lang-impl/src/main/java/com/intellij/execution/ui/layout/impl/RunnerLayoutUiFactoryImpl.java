@@ -20,7 +20,9 @@ import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class RunnerLayoutUiFactoryImpl extends RunnerLayoutUi.Factory {
   private final Project myProject;
 

@@ -23,12 +23,14 @@ import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author nik
  */
+@Singleton
 public class XDebuggerHistoryManager {
   public static final int MAX_RECENT_EXPRESSIONS = 10;
   private final Map<String, LinkedList<XExpression>> myRecentExpressions = new HashMap<String, LinkedList<XExpression>>();

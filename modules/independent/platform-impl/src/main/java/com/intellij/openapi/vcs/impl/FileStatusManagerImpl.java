@@ -46,6 +46,7 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.awt.*;
 import java.util.Collections;
@@ -96,6 +97,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
     }
   }
 
+  @Inject
   public FileStatusManagerImpl(Project project, StartupManager startupManager, @SuppressWarnings("UnusedParameters") DirectoryIndex makeSureIndexIsInitializedFirst) {
     myProject = project;
 

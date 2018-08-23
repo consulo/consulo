@@ -48,12 +48,14 @@ import gnu.trove.THashSet;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+@Singleton
 @State(name = "CompilerManager", storages = @Storage(value = "compiler.xml"))
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
   private class ListenerNotificator implements CompileStatusNotification {

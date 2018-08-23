@@ -20,9 +20,12 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 
+import javax.inject.Singleton;
+
 /**
  * @author Kirill Likhodedov
  */
+@Singleton
 @State(name = "DiffToolSettings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class DiffToolSettings extends DiffMergeSettings implements PersistentStateComponent<DiffMergeSettings.State> {
 }

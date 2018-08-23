@@ -39,12 +39,14 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class DiffRequestFactoryImpl extends DiffRequestFactory {
   private final DiffContentFactoryEx myContentFactory = DiffContentFactoryEx.getInstanceEx();
 

@@ -33,6 +33,7 @@ import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.indexing.FileBasedIndex;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,6 +44,7 @@ import java.util.Set;
  * @author Eugene Zhuravlev
  *         Date: Jan 16, 2008
  */
+@Singleton
 public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   private final Project myProject;
   private final PsiManager myPsiManager;

@@ -50,6 +50,7 @@ import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -68,6 +69,7 @@ public class SystemHealthMonitor {
 
   private final PropertiesComponent myProperties;
 
+  @Inject
   public SystemHealthMonitor(@Nonnull PropertiesComponent properties) {
     myProperties = properties;
 

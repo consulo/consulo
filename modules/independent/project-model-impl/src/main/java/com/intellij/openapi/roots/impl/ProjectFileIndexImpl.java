@@ -35,8 +35,10 @@ import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.*;
 
+@Singleton
 public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIndex {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.ProjectFileIndexImpl");
   private final Project myProject;

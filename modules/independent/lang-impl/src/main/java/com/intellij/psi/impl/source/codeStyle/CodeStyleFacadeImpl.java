@@ -33,7 +33,9 @@ import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProviderEP;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
+@Singleton
 public class CodeStyleFacadeImpl extends CodeStyleFacade {
   private final Project myProject;
 

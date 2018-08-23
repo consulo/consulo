@@ -27,10 +27,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.AutoScrollToSourceHandler;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * User: anna
  * Date: 28-Feb-2006
  */
+@Singleton
 @State(
   name = "AnalysisUIOptions",
   storages = {

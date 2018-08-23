@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -39,6 +40,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.ref.WeakReference;
 
+@Singleton
 public class DnDManagerImpl extends DnDManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("com.intellij.ide.dnd.DnDManager");
 

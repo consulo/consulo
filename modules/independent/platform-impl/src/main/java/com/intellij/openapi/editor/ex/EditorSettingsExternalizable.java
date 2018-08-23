@@ -25,6 +25,7 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@Singleton
 @State(
         name = "EditorSettings",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml")}

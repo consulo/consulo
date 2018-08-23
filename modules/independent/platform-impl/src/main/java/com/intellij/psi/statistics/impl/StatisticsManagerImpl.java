@@ -31,6 +31,8 @@ import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
@@ -38,6 +40,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+@Singleton
 public class StatisticsManagerImpl extends StatisticsManager {
   private static final int UNIT_COUNT = 997;
   private static final Object LOCK = new Object();

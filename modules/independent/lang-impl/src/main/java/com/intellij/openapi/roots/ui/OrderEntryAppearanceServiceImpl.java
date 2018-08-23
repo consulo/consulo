@@ -46,9 +46,11 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.io.File;
 
+@Singleton
 public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService {
 
   @Nonnull

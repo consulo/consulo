@@ -36,10 +36,12 @@ import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 
+@Singleton
 public class VcsProjectLog {
   public static final Topic<ProjectLogListener> VCS_PROJECT_LOG_CHANGED =
           Topic.create("Project Vcs Log Created or Disposed", ProjectLogListener.class);

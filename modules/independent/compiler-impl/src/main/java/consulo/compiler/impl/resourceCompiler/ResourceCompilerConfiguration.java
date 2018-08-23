@@ -37,6 +37,7 @@ import org.apache.oro.text.regex.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ import java.util.StringTokenizer;
  * @author VISTALL
  * @since 20:16/24.05.13
  */
+@Singleton
 @State(
   name = "ResourceCompilerConfiguration",
   storages = {

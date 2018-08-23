@@ -24,6 +24,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
 /**
  * @author yole
  */
+@Singleton
 @State(name = "IssueNavigationConfiguration", storages = {
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
 public class IssueNavigationConfiguration extends SimpleModificationTracker implements PersistentStateComponent<IssueNavigationConfiguration> {

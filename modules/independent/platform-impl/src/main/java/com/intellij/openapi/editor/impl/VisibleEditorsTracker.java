@@ -22,6 +22,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class VisibleEditorsTracker implements CommandListener {
     return ApplicationManager.getApplication().getComponent(VisibleEditorsTracker.class);
   }
 
-
+  @Inject
   public VisibleEditorsTracker(CommandProcessor commandProcessor) {
     commandProcessor.addCommandListener(this);
   }

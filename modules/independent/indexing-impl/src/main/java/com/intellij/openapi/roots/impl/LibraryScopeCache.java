@@ -28,6 +28,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -35,6 +36,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author yole
  */
+@Singleton
 public class LibraryScopeCache {
   public static LibraryScopeCache getInstance(Project project) {
     return ServiceManager.getService(project, LibraryScopeCache.class);

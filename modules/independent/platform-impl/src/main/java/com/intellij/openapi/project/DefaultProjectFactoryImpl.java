@@ -15,9 +15,12 @@
  */
 package com.intellij.openapi.project;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 public class DefaultProjectFactoryImpl extends DefaultProjectFactory {
   @Override
   public Project getDefaultProject() {

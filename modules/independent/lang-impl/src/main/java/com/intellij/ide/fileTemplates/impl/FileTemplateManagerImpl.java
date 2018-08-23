@@ -42,12 +42,15 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Singleton
 @State(name = "FileTemplateManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileTemplateManagerImpl extends FileTemplateManager implements PersistentStateComponent<FileTemplateManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.FileTemplateManagerImpl");

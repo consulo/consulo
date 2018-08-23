@@ -24,6 +24,9 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class IndentHelperImpl extends IndentHelper {
   //----------------------------------------------------------------------------------------------------
 

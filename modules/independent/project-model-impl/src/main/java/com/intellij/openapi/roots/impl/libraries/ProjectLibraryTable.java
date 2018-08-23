@@ -25,12 +25,14 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Pair;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.List;
 
 /**
  *  @author dsl
  */
+@Singleton
 @State(
   name = "libraryTable",
   storages = {

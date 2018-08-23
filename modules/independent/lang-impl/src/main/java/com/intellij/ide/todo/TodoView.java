@@ -49,6 +49,7 @@ import consulo.application.AccessRule;
 import consulo.psi.PsiPackageSupportProviders;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.beans.PropertyChangeEvent;
@@ -56,6 +57,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 @State(name = "TodoView", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class TodoView implements PersistentStateComponent<TodoView.State>, Disposable {
   private final Project myProject;

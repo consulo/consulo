@@ -28,10 +28,13 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
+import javax.inject.Singleton;
+
 /**
  * User: anna
  * Date: Feb 10, 2005
  */
+@Singleton
 @State(
     name = "DependenciesAnalyzeManager",
     storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}

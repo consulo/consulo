@@ -26,6 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import javax.annotation.Nonnull;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Comparator;
 
@@ -36,6 +37,7 @@ import java.util.Comparator;
  * @author Denis Zhdanov
  * @since Aug 20, 2010 3:21:03 PM
  */
+@Singleton
 public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
 
   /**

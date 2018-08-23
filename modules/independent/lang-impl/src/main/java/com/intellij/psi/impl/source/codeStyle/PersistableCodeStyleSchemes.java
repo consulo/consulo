@@ -23,22 +23,26 @@ import com.intellij.util.xmlb.SerializationFilter;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author Rustam Vishnyakov
  */
-@State(
-        name = "CodeStyleSchemeSettings",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/" + PersistableCodeStyleSchemes.CODE_STYLE_SCHEMES_FILE),
-        additionalExportFile = CodeStyleSchemesImpl.CODE_STYLES_DIR_PATH
-)
+@Singleton
+@State(name = "CodeStyleSchemeSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
+                                                                    "/" +
+                                                                    PersistableCodeStyleSchemes.CODE_STYLE_SCHEMES_FILE), additionalExportFile = CodeStyleSchemesImpl.CODE_STYLES_DIR_PATH)
 public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements PersistentStateComponent<Element> {
-  @NonNls static final String CODE_STYLE_SCHEMES_FILE = "code.style.schemes.xml";
+  @NonNls
+  static final String CODE_STYLE_SCHEMES_FILE = "code.style.schemes.xml";
 
   private boolean isLoaded;
 
+  @Inject
   public PersistableCodeStyleSchemes(SchemesManagerFactory schemesManagerFactory) {
     super(schemesManagerFactory);
   }

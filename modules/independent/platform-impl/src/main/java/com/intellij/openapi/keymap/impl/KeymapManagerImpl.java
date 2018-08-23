@@ -29,16 +29,16 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
-@State(
-        name = "KeymapManager",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/keymap.xml", roamingType = RoamingType.PER_PLATFORM),
-        additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH
-)
+@State(name = "KeymapManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
+                                                          "/keymap.xml", roamingType = RoamingType.PER_PLATFORM), additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH)
+@Singleton
 public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element> {
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
 
@@ -46,12 +46,15 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   private String myActiveKeymapName;
   private final Map<String, String> myBoundShortcuts = new HashMap<String, String>();
 
-  @NonNls private static final String ACTIVE_KEYMAP = "active_keymap";
-  @NonNls private static final String NAME_ATTRIBUTE = "name";
+  @NonNls
+  private static final String ACTIVE_KEYMAP = "active_keymap";
+  @NonNls
+  private static final String NAME_ATTRIBUTE = "name";
   private final SchemesManager<Keymap, KeymapImpl> mySchemesManager;
 
   public static boolean ourKeymapManagerInitialized = false;
 
+  @Inject
   KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemesManagerFactory factory) {
     mySchemesManager = factory.createSchemesManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<KeymapImpl>() {
       @Nonnull

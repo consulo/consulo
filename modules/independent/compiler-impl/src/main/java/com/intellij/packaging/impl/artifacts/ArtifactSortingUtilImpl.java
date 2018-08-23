@@ -30,12 +30,14 @@ import com.intellij.util.graph.GraphGenerator;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * @author nik
  */
+@Singleton
 public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
   private final Project myProject;
   private CachedValue<Map<String, String>> myArtifactToSelfIncludingName;

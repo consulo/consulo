@@ -31,9 +31,11 @@ import javax.annotation.Nullable;
 
 import javax.help.BadIDException;
 import javax.help.HelpSet;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.net.URL;
 
+@Singleton
 public class DesktopHelpManagerImpl extends HelpManager {
   private static final Logger LOG = Logger.getInstance(DesktopHelpManagerImpl.class);
 

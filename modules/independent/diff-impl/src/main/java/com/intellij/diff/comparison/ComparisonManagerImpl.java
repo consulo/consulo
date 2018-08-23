@@ -29,11 +29,13 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.CharSequenceSubSequence;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Singleton
 public class ComparisonManagerImpl extends ComparisonManager {
   public static final Logger LOG = Logger.getInstance(ComparisonManagerImpl.class);
 

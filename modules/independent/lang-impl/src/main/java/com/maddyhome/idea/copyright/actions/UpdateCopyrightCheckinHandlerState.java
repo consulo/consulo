@@ -25,6 +25,9 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
+@Singleton
 @State(
   name = "UpdateCopyrightCheckinHandler",
   storages = {@Storage(

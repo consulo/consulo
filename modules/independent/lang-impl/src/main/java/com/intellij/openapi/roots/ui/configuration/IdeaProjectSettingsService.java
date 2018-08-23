@@ -27,11 +27,14 @@ import com.intellij.packaging.artifacts.Artifact;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import consulo.roots.orderEntry.OrderEntryType;
 
 /**
  * @author yole
  */
+@Singleton
 public class IdeaProjectSettingsService extends ProjectSettingsService implements ArtifactAwareProjectSettingsService {
   private final Project myProject;
 

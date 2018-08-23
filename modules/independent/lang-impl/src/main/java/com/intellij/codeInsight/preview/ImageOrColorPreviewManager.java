@@ -40,6 +40,7 @@ import com.intellij.util.containers.WeakHashMap;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -63,6 +64,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
   @Nullable
   private Collection<PsiElement> myElements;
 
+  @Inject
   public ImageOrColorPreviewManager(EditorFactory editorFactory) {
     // we don't use multicaster because we don't want to serve all editors - only supported
     editorFactory.addEditorFactoryListener(new EditorFactoryListener() {

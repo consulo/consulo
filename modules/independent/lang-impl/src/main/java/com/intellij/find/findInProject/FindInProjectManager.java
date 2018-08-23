@@ -32,7 +32,9 @@ import com.intellij.usageView.UsageViewManager;
 import com.intellij.usages.*;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class FindInProjectManager {
   private final Project myProject;
   private volatile boolean myIsFindInProgress;

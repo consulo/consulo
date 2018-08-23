@@ -22,10 +22,13 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.Tag;
 
+import javax.inject.Singleton;
+
 /**
  * @author lene
  *         Date: 06.08.12
  */
+@Singleton
 @State(
   name = "ToolsProjectConfig",
   storages = {@Storage(file = "$WORKSPACE_FILE$")}

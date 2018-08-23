@@ -26,10 +26,12 @@ import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author peter
  */
+@Singleton
 public class PsiTreeAnchorizer extends TreeAnchorizer {
   @Override
   public Object createAnchor(Object element) {

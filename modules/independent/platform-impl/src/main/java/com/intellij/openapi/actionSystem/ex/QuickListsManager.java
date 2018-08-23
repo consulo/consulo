@@ -32,6 +32,7 @@ import gnu.trove.THashSet;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Set;
 
@@ -47,6 +48,7 @@ public class QuickListsManager {
   private final ActionManager myActionManager;
   private final SchemesManager<QuickList, QuickList> mySchemesManager;
 
+  @Inject
   public QuickListsManager(@Nonnull ActionManager actionManager, @Nonnull SchemesManagerFactory schemesManagerFactory) {
     myActionManager = actionManager;
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<QuickList>() {

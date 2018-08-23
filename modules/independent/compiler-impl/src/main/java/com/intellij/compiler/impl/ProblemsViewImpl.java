@@ -34,6 +34,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -43,6 +44,7 @@ import java.util.concurrent.ExecutorService;
  * @author Eugene Zhuravlev
  *         Date: 9/18/12
  */
+@Singleton
 public class ProblemsViewImpl extends ProblemsView {
   public static final Logger LOGGER = Logger.getInstance(ProblemsViewImpl.class);
 

@@ -18,9 +18,12 @@ package com.intellij.usages.impl;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import javax.inject.Singleton;
+
 /**
  * @author yole
  */
+@Singleton
 @State(
   name = "ImportFilteringUsageViewSetting",
   storages = {

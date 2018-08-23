@@ -33,6 +33,7 @@ import com.intellij.util.containers.SmartHashSet;
 import consulo.annotations.RequiredReadAction;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +104,7 @@ public class ContentEntryFileListener implements Disposable {
     }
   }
 
+  @Inject
   public ContentEntryFileListener(Application application, ProjectManager projectManager) {
     application.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
       @Override

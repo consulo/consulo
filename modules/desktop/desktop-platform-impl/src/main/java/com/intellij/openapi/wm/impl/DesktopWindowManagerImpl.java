@@ -51,6 +51,7 @@ import sun.awt.AWTAccessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -120,9 +121,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   private final DataManager myDataManager;
   private final ActionManagerEx myActionManager;
 
-  /**
-   * invoked by reflection
-   */
+  @Inject
   public DesktopWindowManagerImpl(Application application, DataManager dataManager, ActionManagerEx actionManager) {
     myDataManager = dataManager;
     myActionManager = actionManager;

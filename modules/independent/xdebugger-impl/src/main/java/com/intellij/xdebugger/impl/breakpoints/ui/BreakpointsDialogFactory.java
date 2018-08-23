@@ -21,7 +21,9 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
+@Singleton
 public class BreakpointsDialogFactory {
 
   private Project myProject;

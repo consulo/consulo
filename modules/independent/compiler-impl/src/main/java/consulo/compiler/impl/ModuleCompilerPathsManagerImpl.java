@@ -30,6 +30,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,6 +40,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 18:28/20.10.13
  */
+@Singleton
 public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements PersistentStateComponent<Element>, Disposable {
   public static final Logger LOGGER = Logger.getInstance(ModuleCompilerPathsManagerImpl.class);
 
@@ -63,6 +66,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   private final Map<String, VirtualFilePointer> myVirtualFilePointers = new LinkedHashMap<>();
   private final CompilerConfiguration myCompilerConfiguration;
 
+  @Inject
   public ModuleCompilerPathsManagerImpl(Module module) {
     myModule = module;
     myCompilerConfiguration = CompilerConfiguration.getInstance(module.getProject());

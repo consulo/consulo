@@ -20,11 +20,13 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
 import com.intellij.openapi.vfs.newvfs.RefreshSessionImpl;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2018-05-13
  */
+@Singleton
 public class NewRefreshQueueImpl extends RefreshQueueImpl {
   @Override
   public void execute(@Nonnull RefreshSessionImpl session) {

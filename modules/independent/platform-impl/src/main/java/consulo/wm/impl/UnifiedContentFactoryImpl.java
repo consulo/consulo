@@ -20,11 +20,13 @@ import com.intellij.ui.content.*;
 import consulo.ui.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 14-Oct-17
  */
+@Singleton
 public class UnifiedContentFactoryImpl implements ContentFactory {
   @Nonnull
   @Override

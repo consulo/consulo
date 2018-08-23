@@ -24,10 +24,12 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Set;
 
+@Singleton
 @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
 @State(
     name = "FeatureUsageStatistics",

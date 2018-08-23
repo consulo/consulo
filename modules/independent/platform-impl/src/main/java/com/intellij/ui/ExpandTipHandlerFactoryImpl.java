@@ -15,8 +15,10 @@
  */
 package com.intellij.ui;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 
+@Singleton
 public class ExpandTipHandlerFactoryImpl extends ExpandableItemsHandlerFactory {
   @Override
   public ExpandableItemsHandler<Integer> doInstall(JList list) {

@@ -33,9 +33,11 @@ import com.intellij.psi.util.PsiUtilBase;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 
+@Singleton
 @State(name="HighlightingSettingsPerFile", storages = @Storage( file = StoragePathMacros.WORKSPACE_FILE))
 public class HighlightingSettingsPerFile extends HighlightingLevelManager implements PersistentStateComponent<Element> {
   @NonNls private static final String SETTING_TAG = "setting";

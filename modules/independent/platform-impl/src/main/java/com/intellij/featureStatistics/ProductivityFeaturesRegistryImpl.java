@@ -25,12 +25,15 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+@Singleton
 public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegistry {
   private static final Logger LOG = Logger.getInstance("#com.intellij.featureStatistics.ProductivityFeaturesRegistry");
   private final Map<String, FeatureDescriptor> myFeatures = new HashMap<String, FeatureDescriptor>();

@@ -20,12 +20,15 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 
+import javax.inject.Singleton;
+
 /**
  * The password safe settings
  */
 /**
  * The password database. The internal component for {@link com.intellij.ide.passwordSafe.impl.providers.masterKey.MasterKeyPasswordSafe}.
  */
+@Singleton
 @State(
   name = "PasswordSafe",
   storages = {@Storage(

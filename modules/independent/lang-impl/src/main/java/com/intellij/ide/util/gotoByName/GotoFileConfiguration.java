@@ -23,11 +23,14 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
+
 /**
  * Configuration for file type filtering popup in "Go to | File" action.
  *
  * @author Constantine.Plotnikov
  */
+@Singleton
 @State(
     name = "GotoFileConfiguration",
     storages = {@Storage(

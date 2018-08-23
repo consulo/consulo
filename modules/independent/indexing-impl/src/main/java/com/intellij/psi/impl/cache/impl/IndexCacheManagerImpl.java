@@ -35,6 +35,8 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ import java.util.List;
  * @author Eugene Zhuravlev
  *         Date: Jan 16, 2008
  */
+@Singleton
 public class IndexCacheManagerImpl extends CacheManager{
   private final Project myProject;
   private final PsiManager myPsiManager;

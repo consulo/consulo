@@ -17,16 +17,17 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ex.ApplicationEx2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.List;
 
 public class FrameStateManagerImpl extends FrameStateManager {
@@ -36,9 +37,10 @@ public class FrameStateManagerImpl extends FrameStateManager {
   private final Alarm mySyncAlarm;
 
   private final BusyObject.Impl myActive;
-  private final ApplicationEx2 myApp;
+  private final ApplicationEx myApp;
 
-  public FrameStateManagerImpl(final ApplicationEx2 app) {
+  @Inject
+  public FrameStateManagerImpl(final ApplicationEx app) {
     myApp = app;
     myActive = new BusyObject.Impl() {
       @Override

@@ -30,11 +30,15 @@ import consulo.roots.orderEntry.OrderEntryType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
+@Singleton
 public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileIndex {
   private final Module myModule;
 
+  @Inject
   public ModuleFileIndexImpl(Module module, DirectoryIndex directoryIndex) {
     super(directoryIndex, FileTypeRegistry.getInstance());
     myModule = module;

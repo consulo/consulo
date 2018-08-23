@@ -19,9 +19,12 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Singleton;
+
 /**
  * The default mode for classpath details settings
  */
+@Singleton
 @State(
   name = "AnalyzeDependenciesSettings",
   storages = {@Storage(

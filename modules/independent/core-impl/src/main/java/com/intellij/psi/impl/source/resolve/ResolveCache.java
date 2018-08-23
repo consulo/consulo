@@ -30,12 +30,15 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
+@Singleton
 public class ResolveCache {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.resolve.ResolveCache");
   @SuppressWarnings("unchecked")

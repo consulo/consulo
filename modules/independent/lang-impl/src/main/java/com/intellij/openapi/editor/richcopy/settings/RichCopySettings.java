@@ -21,11 +21,13 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author Denis Zhdanov
  * @since 3/26/13 6:40 PM
  */
+@Singleton
 @State(name = "EditorRichCopySettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")})
 public class RichCopySettings implements PersistentStateComponent<RichCopySettings> {
 

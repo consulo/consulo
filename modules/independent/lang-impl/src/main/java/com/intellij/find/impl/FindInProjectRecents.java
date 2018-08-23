@@ -21,10 +21,12 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 @State(
         name = "FindInProjectRecents",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED)})

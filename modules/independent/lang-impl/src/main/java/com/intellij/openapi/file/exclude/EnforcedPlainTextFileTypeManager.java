@@ -33,6 +33,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.WeakList;
 import com.intellij.util.indexing.FileBasedIndex;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +46,7 @@ import java.util.List;
  *
  * @author Rustam Vishnyakov
  */
+@Singleton
 @State(name = "EnforcedPlainTextFileTypeManager", storages = {@Storage( file = StoragePathMacros.APP_CONFIG + "/plainTextFiles.xml")})
 public class EnforcedPlainTextFileTypeManager extends PersistentFileSetManager implements ProjectManagerListener {
   private Collection<Project> myProcessedProjects = new WeakList<Project>();

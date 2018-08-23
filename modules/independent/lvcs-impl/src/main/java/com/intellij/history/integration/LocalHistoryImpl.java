@@ -41,6 +41,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -63,6 +64,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     return (LocalHistoryImpl)getInstance();
   }
 
+  @Inject
   public LocalHistoryImpl(@Nonnull Application application) {
     myBus = application.getMessageBus();
 

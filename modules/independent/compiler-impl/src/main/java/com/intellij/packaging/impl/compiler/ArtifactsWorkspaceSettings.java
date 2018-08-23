@@ -24,6 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +34,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@Singleton
 @State(name = "ArtifactsWorkspaceSettings",
   storages = {
     @Storage( file = StoragePathMacros.WORKSPACE_FILE)

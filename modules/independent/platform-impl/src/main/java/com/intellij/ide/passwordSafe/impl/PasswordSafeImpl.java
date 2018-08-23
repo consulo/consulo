@@ -25,10 +25,12 @@ import com.intellij.ide.passwordSafe.impl.providers.nil.NilProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * The implementation of password safe service
  */
+@Singleton
 public class PasswordSafeImpl extends PasswordSafe {
   /**
    * The logger instance

@@ -23,7 +23,9 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {
   public ProjectLibrariesConfigurable(final Project project) {
     super(project);

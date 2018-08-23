@@ -51,6 +51,7 @@ import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +59,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Singleton
 public class CodeStyleManagerImpl extends CodeStyleManager implements FormattingModeAwareIndentAdjuster {
   private static final Logger LOG = Logger.getInstance(CodeStyleManagerImpl.class);
   private static final ThreadLocal<ProcessingUnderProgressInfo> SEQUENTIAL_PROCESSING_ALLOWED

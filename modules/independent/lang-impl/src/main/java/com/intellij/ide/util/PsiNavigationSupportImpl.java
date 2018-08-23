@@ -22,10 +22,12 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class PsiNavigationSupportImpl extends PsiNavigationSupport {
   @Nullable
   @Override

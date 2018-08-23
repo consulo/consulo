@@ -36,11 +36,13 @@ import consulo.ide.macro.ModuleTestOutputDirPathMacro;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+@Singleton
 public final class MacroManager {
   private final HashMap<String, Macro> myMacrosMap = new HashMap<String, Macro>();
 

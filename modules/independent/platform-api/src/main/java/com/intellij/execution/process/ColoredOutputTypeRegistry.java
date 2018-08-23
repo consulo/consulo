@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Singleton;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Map;
 /**
  * @author yole
  */
+@Singleton
 public class ColoredOutputTypeRegistry {
   public static ColoredOutputTypeRegistry getInstance() {
     return ServiceManager.getService(ColoredOutputTypeRegistry.class);

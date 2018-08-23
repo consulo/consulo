@@ -40,11 +40,13 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+@Singleton
 @State(
         name = "TemplateSettings",
         storages = {

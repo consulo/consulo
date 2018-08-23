@@ -49,12 +49,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Singleton
 @State(
         name = "InspectionProfileManager",
         storages = {

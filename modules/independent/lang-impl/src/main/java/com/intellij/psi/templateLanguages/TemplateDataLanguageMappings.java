@@ -26,11 +26,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
  * @author peter
  */
+@Singleton
 @State(
     name = "TemplateDataLanguageMappings",
     storages = {

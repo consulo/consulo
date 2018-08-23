@@ -21,9 +21,12 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 
+import javax.inject.Singleton;
+
 /**
  *  @author dsl
  */
+@Singleton
 @State(name = "libraryTable", storages = @Storage(value = "applicationLibraries.xml", roamingType = RoamingType.DISABLED))
 public class ApplicationLibraryTable extends LibraryTableBase {
   private static final LibraryTablePresentation GLOBAL_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {

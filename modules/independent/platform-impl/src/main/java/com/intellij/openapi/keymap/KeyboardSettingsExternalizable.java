@@ -21,6 +21,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.awt.im.InputContext;
@@ -30,6 +31,7 @@ import java.util.Locale;
  * @author Denis Fokin
  */
 
+@Singleton
 @State(
         name = "KeyboardSettings",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/keyboard.xml")}

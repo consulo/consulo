@@ -21,11 +21,13 @@ import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2018-06-28
  */
+@Singleton
 @State(name = "FileOperateDialogSettings", storages = @Storage(value = "ide.general.xml", roamingType = RoamingType.PER_PLATFORM))
 public class FileOperateDialogSettings implements PersistentStateComponent<FileOperateDialogSettings.State> {
   public static class State {

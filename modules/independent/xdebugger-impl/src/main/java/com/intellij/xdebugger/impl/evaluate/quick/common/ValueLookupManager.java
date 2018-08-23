@@ -35,9 +35,11 @@ import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import consulo.annotations.RequiredDispatchThread;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.awt.*;
 
+@Singleton
 public class ValueLookupManager extends EditorMouseAdapter implements EditorMouseMotionListener {
   /**
    * @see XDebuggerUtil#disableValueLookup(Editor)

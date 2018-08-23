@@ -24,6 +24,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.compiler.CompilationType;
 
+import javax.inject.Singleton;
+
+@Singleton
 @State(name = "CompilerWorkspaceConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class CompilerWorkspaceConfiguration implements PersistentStateComponent<CompilerWorkspaceConfiguration> {
   public CompilationType COMPILATION_TYPE = CompilationType.IN_PROGRESS;

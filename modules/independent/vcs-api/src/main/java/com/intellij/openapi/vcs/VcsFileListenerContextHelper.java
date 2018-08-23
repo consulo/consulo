@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import javax.inject.Singleton;
 import java.util.Set;
 
 /**
@@ -27,6 +28,7 @@ import java.util.Set;
  * Date: 10/7/11
  * Time: 6:40 PM
  */
+@Singleton
 public class VcsFileListenerContextHelper {
   // to ignore by listeners
   private final Set<FilePath> myDeletedContext;

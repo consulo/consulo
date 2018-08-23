@@ -40,6 +40,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -87,6 +88,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
     private final Map<String, TreeNode> nodes = new THashMap<>(1, FileUtil.PATH_HASHING_STRATEGY);
   }
 
+  @Inject
   public LocalFileSystemImpl(@Nonnull Application app, @Nonnull ManagingFS managingFS) {
     myManagingFS = managingFS;
     myWatcher = new FileWatcher(myManagingFS);

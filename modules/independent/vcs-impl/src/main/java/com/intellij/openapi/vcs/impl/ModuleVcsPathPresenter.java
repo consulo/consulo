@@ -29,12 +29,14 @@ import com.intellij.openapi.vcs.changes.patch.RelativePathCalculator;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.io.File;
 
 /**
  * @author yole
  */
+@Singleton
 public class ModuleVcsPathPresenter extends VcsPathPresenter {
   private final Project myProject;
 

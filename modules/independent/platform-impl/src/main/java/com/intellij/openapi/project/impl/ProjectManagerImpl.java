@@ -75,6 +75,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -115,6 +116,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return array;
   }
 
+  @Inject
   public ProjectManagerImpl(@Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
     myProgressManager = progressManager;
     Application app = ApplicationManager.getApplication();

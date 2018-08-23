@@ -63,6 +63,7 @@ import consulo.roots.impl.TestContentFolderTypeProvider;
 import gnu.trove.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.io.*;
 import java.util.*;
@@ -188,6 +189,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private boolean myForceCompiling;
 
+  @Inject
   public TranslatingCompilerFilesMonitorImpl(VirtualFileManager vfsManager, ProjectManager projectManager, Application application) {
     myProjectManager = projectManager;
 

@@ -12,6 +12,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @author Denis Zhdanov
  * @since 2/8/12 1:52 PM
  */
+@Singleton
 public class ExternalSystemProcessingManager implements ExternalSystemTaskNotificationListener, Disposable {
 
   /**

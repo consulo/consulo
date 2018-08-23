@@ -24,6 +24,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +38,7 @@ import java.util.TreeSet;
  * <p>
  * A service to hold a state of plugin changes in a current session (i.e. before the changes are applied on restart).
  */
+@Singleton
 public class InstalledPluginsState {
   @Nonnull
   public static InstalledPluginsState getInstance() {

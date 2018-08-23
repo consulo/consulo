@@ -34,11 +34,13 @@ import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.annotations.RequiredReadAction;
 import consulo.roots.OrderEntryWithTracking;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 public class ResolveScopeManagerImpl extends ResolveScopeManager {
   private final Project myProject;
   private final ProjectRootManager myProjectRootManager;

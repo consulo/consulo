@@ -60,6 +60,7 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -73,6 +74,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Singleton
 public class DocumentCommitThread implements Runnable, Disposable, DocumentCommitProcessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.DocumentCommitThread");
   private static final String SYNC_COMMIT_REASON = "Sync commit";

@@ -19,6 +19,9 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.openapi.components.*;
 
+import javax.inject.Singleton;
+
+@Singleton
 @State(
   name = "AppInspectionProfilesVisibleTreeState",
   storages = {

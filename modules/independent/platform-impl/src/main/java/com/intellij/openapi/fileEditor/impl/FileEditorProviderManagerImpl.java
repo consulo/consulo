@@ -41,30 +41,33 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
+@Singleton
 @State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager.xml", roamingType = RoamingType.DISABLED))
 public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerImpl> {
 
   private final List<FileEditorProvider> myProviders = ContainerUtil.createConcurrentList();
 
+  @Inject
   public FileEditorProviderManagerImpl(@Nonnull FileEditorProvider[] providers) {
-    Extensions.getRootArea().getExtensionPoint(FileEditorProvider.EP_FILE_EDITOR_PROVIDER)
-            .addExtensionPointListener(new ExtensionPointListener<FileEditorProvider>() {
-              @Override
-              public void extensionAdded(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
-                registerProvider(extension);
-              }
+    Extensions.getRootArea().getExtensionPoint(FileEditorProvider.EP_FILE_EDITOR_PROVIDER).addExtensionPointListener(new ExtensionPointListener<FileEditorProvider>() {
+      @Override
+      public void extensionAdded(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
+        registerProvider(extension);
+      }
 
-              @Override
-              public void extensionRemoved(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
-                unregisterProvider(extension);
-              }
-            });
+      @Override
+      public void extensionRemoved(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
+        unregisterProvider(extension);
+      }
+    });
 
     for (FileEditorProvider provider : providers) {
       registerProvider(provider);
@@ -81,7 +84,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     List<FileEditorProvider> sharedProviders = new ArrayList<>();
     boolean doNotShowTextEditor = false;
     for (final FileEditorProvider provider : myProviders) {
-      ThrowableComputable<Boolean,RuntimeException> action = () -> {
+      ThrowableComputable<Boolean, RuntimeException> action = () -> {
         if (DumbService.isDumb(project) && !DumbService.isDumbAware(provider)) {
           return false;
         }

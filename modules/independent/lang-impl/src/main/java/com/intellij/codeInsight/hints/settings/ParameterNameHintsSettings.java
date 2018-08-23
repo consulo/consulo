@@ -24,12 +24,14 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 /**
  * from kotlin
  */
+@Singleton
 @State(name = "ParameterNameHintsSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "parameter.hints.xml")})
 public class ParameterNameHintsSettings implements PersistentStateComponent<Element> {
   private static final String BLACKLISTS = "blacklists";

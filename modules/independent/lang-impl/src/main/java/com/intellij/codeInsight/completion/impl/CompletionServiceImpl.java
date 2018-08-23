@@ -32,12 +32,14 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import java.util.ArrayList;
 
 /**
  * @author peter
  */
+@Singleton
 public final class CompletionServiceImpl extends CompletionService {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.impl.CompletionServiceImpl");
   private static volatile CompletionPhase ourPhase = CompletionPhase.NoCompletion;

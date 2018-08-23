@@ -41,11 +41,14 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.net.URL;
 import java.util.*;
 
+@Singleton
 @State(
         name = "EditorColorsManagerImpl",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/colors.scheme.xml"),
