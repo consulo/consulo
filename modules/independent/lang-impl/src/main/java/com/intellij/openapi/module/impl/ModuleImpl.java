@@ -58,9 +58,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project) {
     super(project, "Module " + name);
-
-    getPicoContainer().registerComponentInstance(Module.class, this);
-
     myName = name;
     myProject = project;
     myModuleScopeProvider = new ModuleScopeProviderImpl(this);
@@ -72,6 +69,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     Extensions.instantiateArea(ExtensionAreas.MODULE, this, (AreaInstance)getParentComponentManager());
     super.bootstrapPicoContainer(name);
 
+    getPicoContainer().registerComponentInstance(Module.class, this);
     getPicoContainer().registerComponentImplementation(ModulePathMacroManager.class);
   }
 
