@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.components.impl;
 
-import com.intellij.diagnostic.PluginException;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.ComponentConfig;
@@ -27,14 +26,15 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import org.picocontainer.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 class ComponentConfigComponentAdapter implements ComponentAdapter {
   private static final Logger LOG = Logger.getInstance(ComponentConfigComponentAdapter.class);
 
   private final ComponentManagerImpl myComponentManager;
   private final ComponentConfig myConfig;
   private final ComponentAdapter myDelegate;
-  private boolean myInitialized = false;
-  private boolean myInitializing = false;
+  private AtomicBoolean myInitalizationFlag = new AtomicBoolean();
 
   public ComponentConfigComponentAdapter(ComponentManagerImpl componentManager, final ComponentConfig config, Class<?> implementationClass) {
     myComponentManager = componentManager;
@@ -51,52 +51,34 @@ class ComponentConfigComponentAdapter implements ComponentAdapter {
 
         Object componentInstance = null;
         try {
-          long startTime = myInitialized ? 0 : System.nanoTime();
+          long startTime = myInitalizationFlag.get() ? 0 : System.nanoTime();
 
           componentInstance = super.getComponentInstance(picoContainer);
 
-          if (!myInitialized) {
-            if (myInitializing) {
-              if (myConfig.pluginDescriptor != null) {
-                LOG.error(new PluginException("Cyclic component initialization: " + componentKey, myConfig.pluginDescriptor.getPluginId()));
-              }
-              else {
-                LOG.error(new Throwable("Cyclic component initialization: " + componentKey));
-              }
+          if (myInitalizationFlag.compareAndSet(false, true)) {
+            if (componentInstance instanceof Disposable) {
+              Disposer.register(myComponentManager, (Disposable)componentInstance);
             }
 
-            try {
-              myInitializing = true;
+            boolean isStorableComponent = myComponentManager.initializeIfStorableComponent(componentInstance, false, false);
 
-              if (componentInstance instanceof Disposable) {
-                Disposer.register(myComponentManager, (Disposable)componentInstance);
-              }
+            if (componentInstance instanceof BaseComponent) {
+              try {
+                ((BaseComponent)componentInstance).initComponent();
 
-              boolean isStorableComponent = myComponentManager.initializeIfStorableComponent(componentInstance, false, false);
-
-              if (componentInstance instanceof BaseComponent) {
-                try {
-                  ((BaseComponent)componentInstance).initComponent();
-
-                  if (!isStorableComponent) {
-                    LOG.warn("Not storable component implement initComponent() method, which can moved to constructor, component: " + componentInstance.getClass().getName());
-                  }
-                }
-                catch (BaseComponent.DefaultImplException ignored) {
-                  // skip default impl
+                if (!isStorableComponent) {
+                  LOG.warn("Not storable component implement initComponent() method, which can moved to constructor, component: " + componentInstance.getClass().getName());
                 }
               }
-
-              long ms = (System.nanoTime() - startTime) / 1000000;
-              if (ms > 10 && myComponentManager.logSlowComponents()) {
-                LOG.info(componentInstance.getClass().getName() + " initialized in " + ms + " ms");
+              catch (BaseComponent.DefaultImplException ignored) {
+                // skip default impl
               }
             }
-            finally {
-              myInitializing = false;
-            }
 
-            myInitialized = true;
+            long ms = (System.nanoTime() - startTime) / 1000000;
+            if (ms > 10 && myComponentManager.logSlowComponents()) {
+              LOG.info(componentInstance.getClass().getName() + " initialized in " + ms + " ms");
+            }
           }
         }
         catch (ProcessCanceledException | StateStorageException e) {
