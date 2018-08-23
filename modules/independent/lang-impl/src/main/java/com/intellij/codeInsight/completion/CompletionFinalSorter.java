@@ -16,10 +16,9 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Pair;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -40,20 +39,10 @@ public abstract class CompletionFinalSorter {
   @Nonnull
   public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> elements);
 
-
-  @Deprecated
-  public interface Factory {
-    @Nonnull
-    CompletionFinalSorter newSorter();
-  }
-
   @Nonnull
-  @SuppressWarnings("deprecation")
   public static CompletionFinalSorter newSorter() {
-    Factory factory = ServiceManager.getService(Factory.class);
-    return factory != null ? factory.newSorter() : EMPTY_SORTER;
+    return EMPTY_SORTER;
   }
-
 
   private static final CompletionFinalSorter EMPTY_SORTER = new CompletionFinalSorter() {
     @Nonnull
@@ -68,7 +57,6 @@ public abstract class CompletionFinalSorter {
       return Collections.emptyMap();
     }
   };
-
 }
 
 
