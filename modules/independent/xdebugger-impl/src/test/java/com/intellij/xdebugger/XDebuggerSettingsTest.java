@@ -26,7 +26,7 @@ import org.jdom.Element;
 /**
  * @author nik
  */
-public class XDebuggerSettingsTest extends PlatformLiteFixture {
+public abstract class XDebuggerSettingsTest extends PlatformLiteFixture {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
