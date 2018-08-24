@@ -896,8 +896,8 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
   public static class RawTextSetter implements CopyPastePreProcessor {
     private final TextWithMarkupProcessor myProcessor;
 
-    public RawTextSetter(TextWithMarkupProcessor processor) {
-      myProcessor = processor;
+    public RawTextSetter() {
+      myProcessor = CopyPastePostProcessor.EP_NAME.findExtension(TextWithMarkupProcessor.class);
     }
 
     @Nullable
