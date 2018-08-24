@@ -196,7 +196,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Inject
-  public DesktopToolWindowManagerImpl(final Project project, final WindowManager windowManager, final FileEditorManager fem, final ActionManager actionManager) {
+  public DesktopToolWindowManagerImpl(final Project project, final WindowManager windowManager, final ActionManager actionManager) {
     super(project, windowManager);
 
     if (project.isDefault()) {
