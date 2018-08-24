@@ -20,7 +20,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
@@ -119,10 +119,10 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   private int myFrameExtendedState;
   private final WindowAdapter myActivationListener;
   private final DataManager myDataManager;
-  private final ActionManagerEx myActionManager;
+  private final ActionManager myActionManager;
 
   @Inject
-  public DesktopWindowManagerImpl(Application application, DataManager dataManager, ActionManagerEx actionManager) {
+  public DesktopWindowManagerImpl(Application application, DataManager dataManager, ActionManager actionManager) {
     myDataManager = dataManager;
     myActionManager = actionManager;
     if (myDataManager instanceof DataManagerImpl) {

@@ -30,6 +30,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.impl.stores.StorageUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -70,10 +71,12 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Inject
-  public FileTemplateManagerImpl(@Nonnull FileTypeManagerEx typeManager, FileTemplateSettings projectSettings, ExportableFileTemplateSettings defaultSettings,
-                                 /*need this to ensure disposal of the service _after_ project manager*/
-                                 @SuppressWarnings("UnusedParameters") ProjectManager pm, final Project project) {
-    myTypeManager = typeManager;
+  public FileTemplateManagerImpl(@Nonnull FileTypeManager typeManager,
+                                 FileTemplateSettings projectSettings,
+                                 ExportableFileTemplateSettings defaultSettings,
+                                 ProjectManager pm,
+                                 final Project project) {
+    myTypeManager = (FileTypeManagerEx)typeManager;
     myProjectSettings = projectSettings;
     myDefaultSettings = defaultSettings;
     myProject = project;

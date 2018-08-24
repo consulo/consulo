@@ -149,6 +149,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     final MutablePicoContainer picoContainer = getPicoContainer();
     picoContainer.registerComponentInstance(Project.class, this);
+    picoContainer.registerComponentInstance(ProjectEx.class, this);
     picoContainer.registerComponentImplementation(ProjectPathMacroManager.class);
 
     final Class storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;

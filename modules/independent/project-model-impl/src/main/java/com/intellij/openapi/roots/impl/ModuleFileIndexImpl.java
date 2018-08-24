@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -39,8 +39,8 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
   private final Module myModule;
 
   @Inject
-  public ModuleFileIndexImpl(Module module, DirectoryIndex directoryIndex) {
-    super(directoryIndex, FileTypeRegistry.getInstance());
+  public ModuleFileIndexImpl(Module module, DirectoryIndex directoryIndex, FileTypeManager fileTypeManager) {
+    super(directoryIndex, fileTypeManager);
     myModule = module;
   }
 

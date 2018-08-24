@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.TimerListener;
 import com.intellij.openapi.application.ModalityState;
 
@@ -25,10 +25,10 @@ import java.lang.ref.WeakReference;
  * @author Vladimir Kondratyev
  */
 public class WeakTimerListener implements TimerListener {
-  private final ActionManagerEx myManager;
+  private final ActionManager myManager;
   private final WeakReference<TimerListener> myRef;
 
-  public WeakTimerListener(ActionManagerEx manager, TimerListener delegate) {
+  public WeakTimerListener(ActionManager manager, TimerListener delegate) {
     myManager = manager;
     myRef = new WeakReference<TimerListener>(delegate);
   }

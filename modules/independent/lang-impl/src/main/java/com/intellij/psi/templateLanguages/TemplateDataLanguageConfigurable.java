@@ -27,11 +27,13 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author peter
  */
 public class TemplateDataLanguageConfigurable extends LanguagePerFileConfigurable<Language> {
+  @Inject
   public TemplateDataLanguageConfigurable(@Nonnull Project project) {
     super(project, Language.class, TemplateDataLanguageMappings.getInstance(project),
           LangBundle.message("dialog.template.data.language.caption", ApplicationNamesInfo.getInstance().getFullProductName()),

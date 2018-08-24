@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 
 /**
@@ -33,6 +34,7 @@ import javax.swing.*;
 public class CompilerExcludedConfigurable implements Configurable {
   private ExcludedEntriesConfigurable myConfigurable;
 
+  @Inject
   public CompilerExcludedConfigurable(final Project project) {
     CompilerManager compilerManager = CompilerManager.getInstance(project);
 

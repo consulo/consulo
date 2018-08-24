@@ -103,11 +103,11 @@ public class HintManagerImpl extends HintManager implements Disposable {
   }
 
   @Inject
-  public HintManagerImpl(ActionManagerEx actionManagerEx, ProjectManager projectManager) {
+  public HintManagerImpl(ActionManager actionManager, ProjectManager projectManager) {
     myEditorManagerListener = new MyEditorManagerListener();
 
     myAnActionListener = new MyAnActionListener();
-    actionManagerEx.addAnActionListener(myAnActionListener);
+    actionManager.addAnActionListener(myAnActionListener);
 
     myCaretMoveListener = new CaretAdapter() {
       @Override

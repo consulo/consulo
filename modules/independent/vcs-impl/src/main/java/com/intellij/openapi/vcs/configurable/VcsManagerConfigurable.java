@@ -31,6 +31,7 @@ import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +43,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
   private VcsDirectoryConfigurationPanel myMappings;
   private VcsGeneralConfigurationPanel myGeneralPanel;
 
+  @Inject
   public VcsManagerConfigurable(Project project) {
     myProject = project;
   }

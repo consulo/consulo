@@ -19,9 +19,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.extensions.ExtensionPointListener;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.fileEditor.FileEditorPolicy;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.WeighedFileEditorProvider;
@@ -56,25 +53,10 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   private final List<FileEditorProvider> myProviders = ContainerUtil.createConcurrentList();
 
   @Inject
-  public FileEditorProviderManagerImpl(@Nonnull FileEditorProvider[] providers) {
-    Extensions.getRootArea().getExtensionPoint(FileEditorProvider.EP_FILE_EDITOR_PROVIDER).addExtensionPointListener(new ExtensionPointListener<FileEditorProvider>() {
-      @Override
-      public void extensionAdded(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
-        registerProvider(extension);
-      }
-
-      @Override
-      public void extensionRemoved(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
-        unregisterProvider(extension);
-      }
-    });
-
-    for (FileEditorProvider provider : providers) {
-      registerProvider(provider);
-    }
-  }
-
   public FileEditorProviderManagerImpl() {
+    for (FileEditorProvider fileEditorProvider : FileEditorProvider.EP_FILE_EDITOR_PROVIDER.getExtensions()) {
+      registerProvider(fileEditorProvider);
+    }
   }
 
   @Override

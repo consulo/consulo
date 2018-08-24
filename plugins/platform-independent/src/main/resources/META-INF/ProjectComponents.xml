@@ -26,8 +26,8 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
-      <implementation-class>com.intellij.openapi.command.impl.UndoManagerImpl</implementation-class>
+      <interface-class>consulo.command.undo.ProjectUndoManager</interface-class>
+      <implementation-class>consulo.command.undo.impl.ProjectUndoManagerImpl</implementation-class>
     </component>
 
     <component>

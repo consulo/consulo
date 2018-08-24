@@ -23,6 +23,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.openapi.MnemonicHelper;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -55,10 +56,10 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.status.ModuleLayerWidget;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -91,7 +92,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
   private boolean myRestoreFullScreen;
 
   public IdeFrameImpl(ApplicationInfoEx applicationInfoEx,
-                      ActionManagerEx actionManager,
+                      ActionManager actionManager,
                       DataManager dataManager,
                       Application application) {
     super(FrameTitleUtil.buildTitle());
@@ -183,7 +184,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     }
   }
 
-  protected IdeRootPane createRootPane(ActionManagerEx actionManager,
+  protected IdeRootPane createRootPane(ActionManager actionManager,
                                        DataManager dataManager,
                                        Application application) {
     return new IdeRootPane(actionManager, dataManager, application, this);

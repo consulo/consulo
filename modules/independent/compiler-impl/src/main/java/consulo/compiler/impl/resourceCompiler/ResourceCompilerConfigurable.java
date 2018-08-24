@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 
@@ -42,6 +43,7 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
 
   private CollectionListModel<String> myModel;
 
+  @Inject
   public ResourceCompilerConfigurable(@Nonnull Project project) {
     myProject = project;
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);

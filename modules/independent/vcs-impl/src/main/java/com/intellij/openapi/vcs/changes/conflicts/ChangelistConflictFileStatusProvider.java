@@ -45,9 +45,9 @@ public class ChangelistConflictFileStatusProvider implements FileStatusProvider 
   private final ChangeListManager myChangeListManager;
 
   @Inject
-  public ChangelistConflictFileStatusProvider(ChangeListManagerImpl changeListManager) {
+  public ChangelistConflictFileStatusProvider(ChangeListManager changeListManager) {
     myChangeListManager = changeListManager;
-    myConflictTracker = changeListManager.getConflictTracker();
+    myConflictTracker = ((ChangeListManagerImpl)changeListManager).getConflictTracker();
   }
 
   @Override

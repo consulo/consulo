@@ -42,11 +42,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -95,6 +95,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   private static final String CURRENT_TAB = "FileTemplates.CurrentTab";
   private static final String SELECTED_TEMPLATE = "FileTemplates.SelectedTemplate";
 
+  @Inject
   public AllFileTemplatesConfigurable(Project project) {
     myProject = project;
     myManager = getInstance(project);

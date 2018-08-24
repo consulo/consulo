@@ -34,6 +34,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.ScrollingUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author yole
@@ -142,7 +143,8 @@ public abstract class LookupActionHandler extends EditorActionHandler {
   }
 
   public static class UpHandler extends LookupActionHandler {
-    public UpHandler(EditorActionHandler originalHandler){
+    @Inject
+    public UpHandler(EditorActionHandler originalHandler) {
       super(originalHandler);
     }
 

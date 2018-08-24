@@ -174,10 +174,10 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
   @Inject
   public FileBasedIndexImpl(VirtualFileManager vfManager,
                             FileDocumentManager fdm,
-                            FileTypeManagerImpl fileTypeManager,
+                            FileTypeManager fileTypeManager,
                             Application application) {
     myFileDocumentManager = fdm;
-    myFileTypeManager = fileTypeManager;
+    myFileTypeManager = (FileTypeManagerImpl)fileTypeManager;
     myIsUnitTestMode = application.isUnitTestMode();
 
     final MessageBusConnection connection = application.getMessageBus().connect();

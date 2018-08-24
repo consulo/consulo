@@ -61,13 +61,13 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     KEY_CODE_TO_MODIFIER_MAP.put(KeyEvent.VK_SHIFT, InputEvent.SHIFT_MASK);
   }
 
-  private final ActionManagerEx myActionManagerEx;
+  private final ActionManager myActionManager;
   private final ConcurrentMap<String, MyDispatcher> myDispatchers = ContainerUtil.newConcurrentMap();
   private boolean myIsRunningAction;
 
   @Inject
-  private ModifierKeyDoubleClickHandler(ActionManagerEx actionManagerEx) {
-    myActionManagerEx = actionManagerEx;
+  private ModifierKeyDoubleClickHandler(ActionManager actionManager) {
+    myActionManager = actionManager;
 
     int modifierKeyCode = getMultiCaretActionModifier();
     registerAction(IdeActions.ACTION_EDITOR_CLONE_CARET_ABOVE, modifierKeyCode, KeyEvent.VK_UP);
@@ -107,7 +107,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
     Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher));
-    myActionManagerEx.addAnActionListener(dispatcher, dispatcher);
+    myActionManager.addAnActionListener(dispatcher, dispatcher);
     if (oldDispatcher != null) {
       Disposer.dispose(oldDispatcher);
     }
@@ -249,16 +249,16 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     private boolean run(KeyEvent event) {
       myIsRunningAction = true;
       try {
-        AnAction action = myActionManagerEx.getAction(myActionId);
+        AnAction action = myActionManager.getAction(myActionId);
         if (action == null) return false;
         DataContext context = DataManager.getInstance().getDataContext(IdeFocusManager.findInstance().getFocusOwner());
         AnActionEvent anActionEvent = AnActionEvent.createFromAnAction(action, event, ActionPlaces.MAIN_MENU, context);
         action.update(anActionEvent);
         if (!anActionEvent.getPresentation().isEnabled()) return false;
 
-        myActionManagerEx.fireBeforeActionPerformed(action, anActionEvent.getDataContext(), anActionEvent);
+        ((ActionManagerEx)myActionManager).fireBeforeActionPerformed(action, anActionEvent.getDataContext(), anActionEvent);
         action.actionPerformed(anActionEvent);
-        myActionManagerEx.fireAfterActionPerformed(action, anActionEvent.getDataContext(), anActionEvent);
+        ((ActionManagerEx)myActionManager).fireAfterActionPerformed(action, anActionEvent.getDataContext(), anActionEvent);
         return true;
       }
       finally {

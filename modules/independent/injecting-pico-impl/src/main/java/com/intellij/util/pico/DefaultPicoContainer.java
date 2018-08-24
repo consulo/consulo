@@ -51,18 +51,6 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     return componentAdapters.getImmutableSet();
   }
 
-  private void appendNonAssignableAdaptersOfType(@Nonnull Class componentType, @Nonnull List<ComponentAdapter> result) {
-    List<ComponentAdapter> comp = new ArrayList<>();
-    for (final ComponentAdapter componentAdapter : nonAssignableComponentAdapters.get()) {
-      if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
-        comp.add(componentAdapter);
-      }
-    }
-    for (int i = comp.size() - 1; i >= 0; i--) {
-      result.add(comp.get(i));
-    }
-  }
-
   @Override
   @Nullable
   public final ComponentAdapter getComponentAdapter(Object componentKey) {
@@ -124,7 +112,6 @@ public class DefaultPicoContainer implements AreaPicoContainer {
       result.add(cacheHit);
     }
 
-    appendNonAssignableAdaptersOfType(componentType, result);
     return result;
   }
 

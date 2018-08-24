@@ -200,6 +200,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     MutablePicoContainer picoContainer = getPicoContainer();
 
     picoContainer.registerComponentInstance(Application.class, this);
+    picoContainer.registerComponentInstance(ApplicationEx.class, this);
+    picoContainer.registerComponentInstance(ApplicationEx2.class, this);
+
     picoContainer.registerComponentImplementation(IApplicationStore.class, ApplicationStoreImpl.class);
     picoContainer.registerComponentImplementation(ApplicationPathMacroManager.class);
   }

@@ -19,28 +19,28 @@ package com.intellij.psi.impl.search;
 import com.intellij.ide.todo.TodoIndexPatternProvider;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.PsiManagerEx;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.cache.TodoCacheManager;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.psi.search.searches.IndexPatternSearch;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Singleton
 public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
-  private final PsiManagerEx myManager;
+  private final PsiManager myManager;
   private static final TodoItem[] EMPTY_TODO_ITEMS = new TodoItem[0];
 
   @Inject
-  public PsiTodoSearchHelperImpl(PsiManagerEx manager) {
+  public PsiTodoSearchHelperImpl(PsiManager manager) {
     myManager = manager;
   }
 

@@ -213,7 +213,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private ContentManager myContentManager;
 
   @Inject
-  public ProjectViewImpl(@Nonnull Project project, final FileEditorManager fileEditorManager, final ToolWindowManagerEx toolWindowManager) {
+  public ProjectViewImpl(@Nonnull Project project, final FileEditorManager fileEditorManager, final ToolWindowManager toolWindowManager) {
     myProject = project;
 
     constructUi();
@@ -251,7 +251,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         setAutoscrollToSource(state, myCurrentViewId);
       }
     };
-    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
+    ((ToolWindowManagerEx)toolWindowManager).addToolWindowManagerListener(new ToolWindowManagerListener() {
       private boolean toolWindowVisible;
 
       @Override

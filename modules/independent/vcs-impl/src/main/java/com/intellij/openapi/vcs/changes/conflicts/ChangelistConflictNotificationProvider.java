@@ -18,6 +18,7 @@ package com.intellij.openapi.vcs.changes.conflicts;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
@@ -36,8 +37,8 @@ public class ChangelistConflictNotificationProvider implements EditorNotificatio
   private final ChangelistConflictTracker myConflictTracker;
 
   @Inject
-  public ChangelistConflictNotificationProvider(ChangeListManagerImpl changeListManager) {
-    myConflictTracker = changeListManager.getConflictTracker();
+  public ChangelistConflictNotificationProvider(ChangeListManager changeListManager) {
+    myConflictTracker = ((ChangeListManagerImpl)changeListManager).getConflictTracker();
   }
 
   @Nonnull

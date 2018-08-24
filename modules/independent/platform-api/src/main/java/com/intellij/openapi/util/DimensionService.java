@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
@@ -66,9 +67,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
     return ServiceManager.getService(DimensionService.class);
   }
 
-  /**
-   * Invoked by reflection
-   */
+  @Inject
   private DimensionService() {
     myKey2Location = new LinkedHashMap<String, Point>();
     myKey2Size = new LinkedHashMap<String, Dimension>();

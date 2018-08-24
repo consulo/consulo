@@ -29,6 +29,7 @@ import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,6 +48,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   private boolean myApplyCompleted = false;
   private final Project myProject;
 
+  @Inject
   public CodeStyleSchemesConfigurable(Project project) {
     myProject = project;
   }

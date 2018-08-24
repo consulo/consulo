@@ -92,7 +92,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
   @Nonnull
   private final Project myProject;
   @Nonnull
-  private final ChangesViewContentManager myContentManager;
+  private final ChangesViewContentI myContentManager;
 
   @Nonnull
   private ChangesViewManager.State myState = new ChangesViewManager.State();
@@ -119,7 +119,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
   }
 
   @Inject
-  public ChangesViewManager(@Nonnull Project project, @Nonnull ChangesViewContentManager contentManager) {
+  public ChangesViewManager(@Nonnull Project project, @Nonnull ChangesViewContentI contentManager) {
     myProject = project;
     myContentManager = contentManager;
     myView = new ChangesListView(project);

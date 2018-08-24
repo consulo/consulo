@@ -25,6 +25,7 @@ import com.intellij.ui.FileColorManager;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 
 /**
@@ -34,6 +35,7 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
   private final Project myProject;
   private FileColorsConfigurablePanel myPanel;
 
+  @Inject
   public FileColorsConfigurable(@Nonnull final Project project) {
     myProject = project;
   }

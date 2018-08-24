@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.FileIndex;
@@ -34,16 +34,16 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public abstract class FileIndexBase implements FileIndex {
-  protected final FileTypeRegistry myFileTypeRegistry;
+  protected final FileTypeManager myFileTypeManager;
   protected final DirectoryIndex myDirectoryIndex;
   private final VirtualFileFilter myContentFilter = file -> {
     assert file != null;
     return ObjectUtil.assertNotNull(AccessRule.<Boolean, RuntimeException>read(() -> !isScopeDisposed() && isInContent(file)));
   };
 
-  public FileIndexBase(@Nonnull DirectoryIndex directoryIndex, @Nonnull FileTypeRegistry fileTypeManager) {
+  public FileIndexBase(@Nonnull DirectoryIndex directoryIndex, @Nonnull FileTypeManager fileTypeManager) {
     myDirectoryIndex = directoryIndex;
-    myFileTypeRegistry = fileTypeManager;
+    myFileTypeManager = fileTypeManager;
   }
 
   protected abstract boolean isScopeDisposed();
@@ -78,7 +78,7 @@ public abstract class FileIndexBase implements FileIndex {
 
   @Override
   public boolean isContentSourceFile(@Nonnull VirtualFile file) {
-    return !file.isDirectory() && !myFileTypeRegistry.isFileIgnored(file) && isInSourceContent(file);
+    return !file.isDirectory() && !myFileTypeManager.isFileIgnored(file) && isInSourceContent(file);
   }
 
   @Nonnull

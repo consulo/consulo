@@ -20,6 +20,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -45,7 +46,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
+  public ApplicationStoreImpl(ApplicationEx2 application, ApplicationPathMacroManager pathMacroManager) {
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application::getMessageBus) {
       private boolean myConfigDirectoryRefreshed;

@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.impl;
 
+import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
@@ -24,9 +25,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -42,8 +43,8 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
   private List<Element> myUnloadedElements;
 
   @Inject
-  public ProjectRunConfigurationManager(@Nonnull RunManagerImpl manager) {
-    myManager = manager;
+  public ProjectRunConfigurationManager(@Nonnull RunManager manager) {
+    myManager = (RunManagerImpl)manager;
   }
 
   @Override
@@ -75,7 +76,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
       }
       else if (child.getName().equals(RunManagerImpl.CONFIGURATION)) {
         if (myUnloadedElements == null) {
-          myUnloadedElements = new SmartList<Element>();
+          myUnloadedElements = new SmartList<>();
         }
         iterator.remove();
         myUnloadedElements.add(child);

@@ -47,12 +47,12 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
 
   @Inject
   public VcsFileStatusProvider(final Project project,
-                               final FileStatusManagerImpl fileStatusManager,
+                               final FileStatusManager fileStatusManager,
                                final ProjectLevelVcsManager vcsManager,
                                ChangeListManager changeListManager,
                                VcsDirtyScopeManager dirtyScopeManager, VcsConfiguration configuration) {
     myProject = project;
-    myFileStatusManager = fileStatusManager;
+    myFileStatusManager = (FileStatusManagerImpl)fileStatusManager;
     myVcsManager = vcsManager;
     myChangeListManager = changeListManager;
     myDirtyScopeManager = dirtyScopeManager;

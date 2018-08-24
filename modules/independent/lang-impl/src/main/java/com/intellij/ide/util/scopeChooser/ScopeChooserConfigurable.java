@@ -44,6 +44,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -69,6 +70,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   private final Project myProject;
 
+  @Inject
   public ScopeChooserConfigurable(final Project project) {
     super(new ScopeChooserConfigurableState());
     myLocalScopesManager = NamedScopeManager.getInstance(project);

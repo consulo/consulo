@@ -17,16 +17,18 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import com.intellij.openapi.project.impl.ProjectImpl;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,13 +36,14 @@ import java.util.List;
 
 public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private final ProjectManagerImpl myProjectManager;
-  @NonNls private static final String ROOT_TAG_NAME = "defaultProject";
+  @NonNls
+  private static final String ROOT_TAG_NAME = "defaultProject";
 
   @Inject
-  public DefaultProjectStoreImpl(@Nonnull ProjectImpl project, @Nonnull ProjectManagerImpl projectManager, @Nonnull PathMacroManager pathMacroManager) {
+  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectManager projectManager, @Nonnull ProjectPathMacroManager pathMacroManager) {
     super(project, pathMacroManager);
 
-    myProjectManager = projectManager;
+    myProjectManager = (ProjectManagerImpl)projectManager;
   }
 
   @Nullable
@@ -52,8 +55,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    final XmlElementStorage storage = new XmlElementStorage("", RoamingType.DISABLED, myPathMacroManager.createTrackingSubstitutor(),
-                                                            ROOT_TAG_NAME, null) {
+    final XmlElementStorage storage = new XmlElementStorage("", RoamingType.DISABLED, myPathMacroManager.createTrackingSubstitutor(), ROOT_TAG_NAME, null) {
       @Override
       @Nullable
       protected Element loadLocalData() {

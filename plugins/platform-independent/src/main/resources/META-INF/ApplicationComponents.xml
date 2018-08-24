@@ -75,8 +75,8 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
-      <implementation-class>com.intellij.openapi.command.impl.UndoManagerImpl</implementation-class>
+      <interface-class>consulo.command.undo.ApplicationUndoManager</interface-class>
+      <implementation-class>consulo.command.undo.impl.ApplicationUndoManagerImpl</implementation-class>
     </component>
 
     <component>

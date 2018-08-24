@@ -162,7 +162,8 @@ public class CachingConstructorInjectionComponentAdapter extends InstantiatingCo
     // if we have constructor with Inject annotation - return it, without any dependency check
     for (Constructor sortedMatchingConstructor : sortedMatchingConstructors) {
       if (sortedMatchingConstructor.isAnnotationPresent(Inject.class)) {
-        return sortedMatchingConstructor;
+        sortedMatchingConstructors = Collections.singletonList(sortedMatchingConstructor);
+        break;
       }
     }
 

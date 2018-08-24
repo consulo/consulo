@@ -17,7 +17,7 @@
 
 package com.intellij.tools;
 
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
@@ -32,10 +32,10 @@ import java.util.List;
 
 public abstract class BaseToolManager<T extends Tool> {
 
-  private final ActionManagerEx myActionManager;
+  private final ActionManager myActionManager;
   private final SchemesManager<ToolsGroup<T>, ToolsGroup<T>> mySchemesManager;
 
-  public BaseToolManager(ActionManagerEx actionManagerEx, SchemesManagerFactory factory) {
+  public BaseToolManager(ActionManager actionManagerEx, SchemesManagerFactory factory) {
     myActionManager = actionManagerEx;
 
     mySchemesManager = factory.createSchemesManager(

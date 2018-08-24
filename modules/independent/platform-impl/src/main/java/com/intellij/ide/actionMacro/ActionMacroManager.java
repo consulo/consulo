@@ -83,7 +83,7 @@ public class ActionMacroManager implements JDOMExternalizable {
   private static final String RECORDED = "Recorded: ";
 
   private boolean myIsRecording;
-  private final ActionManagerEx myActionManager;
+  private final ActionManager myActionManager;
   private ActionMacro myLastMacro;
   private ActionMacro myRecordingMacro;
   private ArrayList<ActionMacro> myMacros = new ArrayList<ActionMacro>();
@@ -99,7 +99,7 @@ public class ActionMacroManager implements JDOMExternalizable {
   private String myLastTyping = "";
 
   @Inject
-  public ActionMacroManager(ActionManagerEx actionManagerEx) {
+  public ActionMacroManager(ActionManager actionManagerEx) {
     myActionManager = actionManagerEx;
     myActionManager.addAnActionListener(new AnActionListener() {
       @Override

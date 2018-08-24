@@ -15,7 +15,7 @@
  */
 package com.intellij.tools;
 
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
@@ -32,9 +32,8 @@ public class ToolManager extends BaseToolManager<Tool> {
   }
 
   @Inject
-  public ToolManager(ActionManagerEx actionManagerEx,
-                     SchemesManagerFactory factory) {
-    super(actionManagerEx, factory);
+  public ToolManager(ActionManager actionManager, SchemesManagerFactory factory) {
+    super(actionManager, factory);
   }
 
   @Override

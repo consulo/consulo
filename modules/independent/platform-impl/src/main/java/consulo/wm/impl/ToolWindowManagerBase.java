@@ -234,9 +234,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected final InternalDecoratorListener myInternalDecoratorListener;
   protected final CommandProcessorBase myCommandProcessor;
 
-  protected ToolWindowManagerBase(Project project, WindowManagerEx windowManagerEx) {
+  protected ToolWindowManagerBase(Project project, WindowManager windowManager) {
     myProject = project;
-    myWindowManager = windowManagerEx;
+    myWindowManager = (WindowManagerEx)windowManager;
 
     myCommandProcessor = createCommandProcessor();
     myInternalDecoratorListener = createInternalDecoratorListener();

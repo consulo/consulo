@@ -45,6 +45,7 @@ import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.openapi.vcs.changes.patch.PatchFileType;
 import com.intellij.openapi.vcs.changes.patch.RelativePathCalculator;
+import com.intellij.openapi.vcs.changes.ui.ChangesViewContentI;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
@@ -77,7 +78,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class ShelvedChangesViewManager implements ProjectComponent {
-  private final ChangesViewContentManager myContentManager;
+  private final ChangesViewContentI myContentManager;
   private final ShelveChangesManager myShelveChangesManager;
   private final Project myProject;
   private final Tree myTree;
@@ -99,7 +100,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   }
 
   @Inject
-  public ShelvedChangesViewManager(Project project, ChangesViewContentManager contentManager, ShelveChangesManager shelveChangesManager) {
+  public ShelvedChangesViewManager(Project project, ChangesViewContentI contentManager, ShelveChangesManager shelveChangesManager) {
     myProject = project;
     myContentManager = contentManager;
     myShelveChangesManager = shelveChangesManager;

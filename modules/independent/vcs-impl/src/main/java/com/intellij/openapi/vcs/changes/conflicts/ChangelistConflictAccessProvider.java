@@ -19,16 +19,17 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
+import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
-import com.intellij.openapi.vfs.WritingAccessProvider;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.WritingAccessProvider;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * @author Dmitry Avdeev
@@ -39,9 +40,9 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
   private final ChangeListManagerImpl myManager;
 
   @Inject
-  public ChangelistConflictAccessProvider(Project project, ChangeListManagerImpl manager) {
+  public ChangelistConflictAccessProvider(Project project, ChangeListManager manager) {
     myProject = project;
-    myManager = manager;
+    myManager = (ChangeListManagerImpl)manager;
   }
 
   @Nonnull

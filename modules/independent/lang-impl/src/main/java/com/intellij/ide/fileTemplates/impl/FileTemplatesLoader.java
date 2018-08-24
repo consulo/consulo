@@ -23,14 +23,15 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.impl.stores.StorageUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.UriUtil;
 import com.intellij.util.lang.UrlClassLoader;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -64,12 +65,12 @@ public class FileTemplatesLoader {
   private static final String INCLUDES_DIR = "includes";
   private static final String CODE_TEMPLATES_DIR = "code";
   private static final String J2EE_TEMPLATES_DIR = "j2ee";
-  private final FileTypeManagerEx myTypeManager;
+  private final FileTypeManager myTypeManager;
 
   private URL myDefaultTemplateDescription;
   private URL myDefaultIncludeDescription;
 
-  protected FileTemplatesLoader(@Nonnull FileTypeManagerEx typeManager, @Nullable Project project) {
+  protected FileTemplatesLoader(@Nonnull FileTypeManager typeManager, @Nullable Project project) {
     myTypeManager = typeManager;
     File configDir = project == null || project.isDefault()
                      ? new File(PathManager.getConfigPath(), TEMPLATES_DIR)
@@ -179,7 +180,7 @@ public class FileTemplatesLoader {
         if (matchesPrefix(path, prefix)) {
           if (path.endsWith(FTManager.TEMPLATE_EXTENSION_SUFFIX)) {
             final String filename = path.substring(prefix.length(), path.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
-            final String extension = myTypeManager.getExtension(filename);
+            final String extension = ((FileTypeManagerEx)myTypeManager).getExtension(filename);
             final String templateName = filename.substring(0, filename.length() - extension.length() - 1);
             final URL templateUrl = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
             final String descriptionPath = getDescriptionPath(prefix, templateName, extension, descriptionPaths);

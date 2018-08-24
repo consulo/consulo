@@ -84,7 +84,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
 
   private boolean myFullScreen;
 
-  IdeRootPane(ActionManagerEx actionManager, DataManager dataManager, Application application, final IdeFrame frame) {
+  IdeRootPane(ActionManager actionManager, DataManager dataManager, Application application, final IdeFrame frame) {
     myActionManager = actionManager;
 
     myContentPane.add(myNorthPanel, BorderLayout.NORTH);

@@ -76,7 +76,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   private List<AnAction> myNewVisibleActions;
   private final MenuItemPresentationFactory myPresentationFactory;
   private final DataManager myDataManager;
-  private final ActionManagerEx myActionManager;
+  private final ActionManager myActionManager;
   private final Disposable myDisposable = Disposer.newDisposable();
   private boolean myDisabled = false;
 
@@ -90,7 +90,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   private double myProgress = 0;
   private boolean myActivated = false;
 
-  public IdeMenuBar(ActionManagerEx actionManager, DataManager dataManager) {
+  public IdeMenuBar(ActionManager actionManager, DataManager dataManager) {
     myActionManager = actionManager;
     myTimerListener = new MyTimerListener();
     myVisibleActions = new ArrayList<AnAction>();

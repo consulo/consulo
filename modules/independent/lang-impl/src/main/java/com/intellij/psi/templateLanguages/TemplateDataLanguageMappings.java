@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Langua
     return ServiceManager.getService(project, TemplateDataLanguageMappings.class);
   }
 
+  @Inject
   public TemplateDataLanguageMappings(final Project project) {
     super(project);
   }

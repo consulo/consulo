@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -45,7 +45,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   private final Project myProject;
 
   @Inject
-  public ProjectFileIndexImpl(@Nonnull Project project, @Nonnull DirectoryIndex directoryIndex, @Nonnull FileTypeRegistry fileTypeManager) {
+  public ProjectFileIndexImpl(@Nonnull Project project, @Nonnull DirectoryIndex directoryIndex, @Nonnull FileTypeManager fileTypeManager) {
     super(directoryIndex, fileTypeManager);
     myProject = project;
   }

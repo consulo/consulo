@@ -15,15 +15,29 @@
  */
 package com.intellij.openapi.components;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
+import com.intellij.openapi.components.impl.ModulePathMacroManager;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 
 public abstract class PathMacroManager implements PathMacroSubstitutor {
-  public static PathMacroManager getInstance(@Nonnull ComponentManager componentManager) {
-    final PathMacroManager component = (PathMacroManager)componentManager.getPicoContainer().getComponentInstanceOfType(PathMacroManager.class);
-    assert component != null;
-    return component;
+  public static PathMacroManager getInstance(@Nonnull Application application) {
+    return application.getComponent(ApplicationPathMacroManager.class);
   }
+
+  public static PathMacroManager getInstance(@Nonnull Project project) {
+    return project.getComponent(ProjectPathMacroManager.class);
+  }
+
+  public static PathMacroManager getInstance(@Nonnull Module module) {
+    return module.getComponent(ModulePathMacroManager.class);
+  }
+
 
   @Override
   public abstract void expandPaths(Element element);

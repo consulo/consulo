@@ -21,7 +21,7 @@ import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.util.Comparing;
@@ -52,10 +52,10 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
   @NonNls
   public static final ID<TodoIndexEntry, Integer> NAME = ID.create("TodoIndex");
 
-  private final FileTypeRegistry myFileTypeManager;
+  private final FileTypeManager myFileTypeManager;
 
   @Inject
-  public TodoIndex(Application application, FileTypeRegistry manager) {
+  public TodoIndex(Application application, FileTypeManager manager) {
     myFileTypeManager = manager;
     application.getMessageBus().connect().subscribe(IndexPatternProvider.INDEX_PATTERNS_CHANGED, evt -> FileBasedIndex.getInstance().requestRebuild(NAME));
   }

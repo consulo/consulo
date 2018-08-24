@@ -59,7 +59,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class UndoManagerImpl extends UndoManager implements Disposable {
+public class UndoManagerImpl implements UndoManager, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.command.impl.UndoManagerImpl");
 
   private static final int COMMANDS_TO_KEEP_LIVE_QUEUES = 100;

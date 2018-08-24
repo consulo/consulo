@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.impl.text;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
@@ -46,7 +45,7 @@ import java.util.List;
 public abstract class TextEditorProvider implements FileEditorProvider, DumbAware {
   @Nonnull
   public static TextEditorProvider getInstance() {
-    return ApplicationManager.getApplication().getComponent(TextEditorProvider.class);
+    return EP_FILE_EDITOR_PROVIDER.findExtension(TextEditorProvider.class);
   }
 
   @TestOnly

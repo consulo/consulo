@@ -33,6 +33,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   private final boolean myBatchMode;
   private final CachedAnnotators myCachedAnnotators;
 
-  @SuppressWarnings("UnusedDeclaration")
+  @Inject
   DefaultHighlightVisitor(@Nonnull Project project, @Nonnull CachedAnnotators cachedAnnotators) {
     this(project, true, true, false, cachedAnnotators);
   }

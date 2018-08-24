@@ -27,10 +27,6 @@
       <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
     </component>
 
-    <component>
-      <interface-class>consulo.fileEditor.impl.text.TextEditorProvider</interface-class>
-      <implementation-class>consulo.web.fileEditor.impl.text.WebTextEditorProvider</implementation-class>
-    </component>
   </application-components>
 
   <project-components>
@@ -74,5 +70,7 @@
                         serviceImplementation="consulo.vfs.newvfs.NewRefreshQueueImpl"/>
 
     <fileChooseDialogProvider implementation="consulo.web.fileChooser.impl.WebFileChooseDialogProvider" order="last"/>
+
+    <fileEditorProvider implementation="consulo.web.fileEditor.impl.text.WebTextEditorProvider" />
   </extensions>
 </idea-plugin>

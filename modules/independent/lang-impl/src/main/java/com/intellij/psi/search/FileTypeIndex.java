@@ -17,6 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -49,10 +50,10 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
 
   public static final ID<FileType, Void> NAME = ID.create("filetypes");
 
-  private final FileTypeRegistry myFileTypeManager;
+  private final FileTypeManager myFileTypeManager;
 
   @Inject
-  public FileTypeIndex(FileTypeRegistry fileTypeRegistry) {
+  public FileTypeIndex(FileTypeManager fileTypeRegistry) {
     myFileTypeManager = fileTypeRegistry;
   }
 
