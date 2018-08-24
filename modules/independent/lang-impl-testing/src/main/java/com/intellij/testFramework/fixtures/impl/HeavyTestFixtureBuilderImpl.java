@@ -20,9 +20,6 @@ import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.HeavyIdeaTestFixture;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
-import com.intellij.util.pico.DefaultPicoContainer;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -33,21 +30,14 @@ import java.util.Map;
 class HeavyTestFixtureBuilderImpl implements TestFixtureBuilder<IdeaProjectTestFixture> {
   private final HeavyIdeaTestFixtureImpl myFixture;
   private final Map<Class<? extends ModuleFixtureBuilder>, Class<? extends ModuleFixtureBuilder>> myProviders;
-  private final MutablePicoContainer myContainer;
 
   public HeavyTestFixtureBuilderImpl(HeavyIdeaTestFixtureImpl fixture, final Map<Class<? extends ModuleFixtureBuilder>, Class<? extends ModuleFixtureBuilder>> providers) {
     myFixture = fixture;
     myProviders = providers;
-
-    myContainer = new DefaultPicoContainer();
-    myContainer.registerComponentInstance(this);
   }
 
   private <M extends ModuleFixtureBuilder> M createModuleBuilder(Class<M> key) {
-    Class<? extends ModuleFixtureBuilder> implClass = myProviders.get(key);
-    assert implClass != null: key;
-    final ConstructorInjectionComponentAdapter adapter = new ConstructorInjectionComponentAdapter(implClass, implClass);
-    return (M)adapter.getComponentInstance(myContainer);
+    return null;
   }
 
   @Override

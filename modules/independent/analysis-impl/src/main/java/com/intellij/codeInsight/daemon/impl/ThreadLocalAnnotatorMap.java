@@ -16,12 +16,10 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import consulo.injecting.InjectingContainer;
 import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
-import org.picocontainer.PicoContainer;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
