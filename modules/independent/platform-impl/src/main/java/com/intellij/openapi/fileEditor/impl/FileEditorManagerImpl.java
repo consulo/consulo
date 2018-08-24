@@ -145,6 +145,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     myDockManager = dockManager;
     myListenerList = new MessageListenerList<>(myProject.getMessageBus(), FileEditorManagerListener.FILE_EDITOR_MANAGER);
 
+    if (myProject.isDefault()) {
+      return;
+    }
+
     if (Extensions.getExtensions(FileEditorAssociateFinder.EP_NAME).length > 0) {
       myListenerList.add(new FileEditorManagerListener() {
         @Override
