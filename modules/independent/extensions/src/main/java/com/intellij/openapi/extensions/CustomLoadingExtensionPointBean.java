@@ -30,9 +30,9 @@ public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean 
   public String factoryArgument;
 
   @SuppressWarnings("unchecked")
-  protected <T> T instantiateExtension(final String implementationClass, final InjectingContainer picoContainer) throws ClassNotFoundException {
+  protected <T> T instantiateExtension(final String implementationClass, final InjectingContainer injectingContainer) throws ClassNotFoundException {
     if (factoryClass != null) {
-      ExtensionFactory factory = instantiate(factoryClass, picoContainer);
+      ExtensionFactory factory = instantiate(factoryClass, injectingContainer);
       return (T)factory.createInstance(factoryArgument, implementationClass);
     }
     else {
@@ -43,7 +43,7 @@ public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean 
                                    "Check if 'implementationClass' attribute is specified");
       }
       //noinspection unchecked
-      return instantiate(implementationClass, picoContainer);
+      return instantiate(implementationClass, injectingContainer);
     }
   }
 }

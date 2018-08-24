@@ -33,7 +33,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-injecting-pico-impl</artifactId>
+      <artifactId>consulo-injecting-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <!--internal dependencies-->
@@ -46,10 +46,6 @@
       <artifactId>trove4j</artifactId>
     </dependency>
     <!--external dependencies-->
-    <dependency>
-      <groupId>picocontainer</groupId>
-      <artifactId>picocontainer</artifactId>
-    </dependency>
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>

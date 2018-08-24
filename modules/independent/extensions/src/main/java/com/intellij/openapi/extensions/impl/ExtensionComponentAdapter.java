@@ -20,69 +20,58 @@ import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.util.pico.AssignableToComponentAdapter;
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.injecting.InjectingContainer;
+import consulo.injecting.InjectingProblemException;
 import org.jdom.Element;
-import org.picocontainer.*;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Alexander Kireyev
- * todo: optimize memory print
+ *         todo: optimize memory print
  */
-public class ExtensionComponentAdapter implements LoadingOrder.Orderable, AssignableToComponentAdapter {
+public class ExtensionComponentAdapter implements LoadingOrder.Orderable {
   public static final ExtensionComponentAdapter[] EMPTY_ARRAY = new ExtensionComponentAdapter[0];
 
   private Object myComponentInstance;
   private final String myImplementationClassName;
   private final Element myExtensionElement;
-  private final PicoContainer myContainer;
   private final PluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
-  private ComponentAdapter myDelegate;
   private Class myImplementationClass;
   private boolean myNotificationSent = false;
 
-  public ExtensionComponentAdapter(@Nonnull String implementationClass,
-                                   Element extensionElement,
-                                   PicoContainer container,
-                                   PluginDescriptor pluginDescriptor,
-                                   boolean deserializeInstance) {
+  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
     myImplementationClassName = implementationClass;
     myExtensionElement = extensionElement;
-    myContainer = container;
     myPluginDescriptor = pluginDescriptor;
     myDeserializeInstance = deserializeInstance;
   }
 
-  @Override
   public Object getComponentKey() {
     return "ExtensionComponentAdapter: " + hashCode();
   }
 
-  @Override
   public Class getComponentImplementation() {
     return loadImplementationClass();
   }
 
-  @Override
-  public Object getComponentInstance(final PicoContainer container) throws PicoException, ProcessCanceledException {
+  public Object getComponentInstance(InjectingContainer injectingContainer) {
     if (myComponentInstance == null) {
       try {
         if (Element.class.equals(getComponentImplementation())) {
           myComponentInstance = myExtensionElement;
         }
         else {
-          Object componentInstance = getDelegate().getComponentInstance(container);
+          Object componentInstance = injectingContainer.getUnbindedInstance(loadImplementationClass());
 
           if (myDeserializeInstance) {
             try {
               XmlSerializer.deserializeInto(componentInstance, myExtensionElement);
             }
             catch (Exception e) {
-              throw new PicoInitializationException(e);
+              throw new InjectingProblemException(e);
             }
           }
 
@@ -94,7 +83,7 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Assign
       }
       catch (Throwable t) {
         PluginId pluginId = myPluginDescriptor != null ? myPluginDescriptor.getPluginId() : null;
-        throw new PicoPluginExtensionInitializationException(t.getMessage(), t, pluginId);
+        throw new PluginExtensionInitializationException(t.getMessage(), t, pluginId);
       }
 
       if (myComponentInstance instanceof PluginAware) {
@@ -106,18 +95,8 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Assign
     return myComponentInstance;
   }
 
-  @Override
-  public void verify(PicoContainer container) throws PicoIntrospectionException {
-    throw new UnsupportedOperationException("Method verify is not supported in " + getClass());
-  }
-
-  @Override
-  public void accept(PicoVisitor visitor) {
-    throw new UnsupportedOperationException("Method accept is not supported in " + getClass());
-  }
-
-  public Object getExtension() {
-    return getComponentInstance(myContainer);
+  public Object getExtension(InjectingContainer injectingContainer) {
+    return getComponentInstance(injectingContainer);
   }
 
   @Override
@@ -163,16 +142,6 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Assign
     return myImplementationClass;
   }
 
-  private synchronized ComponentAdapter getDelegate() {
-    if (myDelegate == null) {
-      Class impl = loadImplementationClass();
-      myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), impl, null, true);
-    }
-
-    return myDelegate;
-  }
-
-  @Override
   public String getAssignableToClassName() {
     return myImplementationClassName;
   }

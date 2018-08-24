@@ -17,8 +17,8 @@ package com.intellij.openapi.extensions;
 
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
-import org.picocontainer.PicoContainer;
 
 /**
  * @author AKireyev
@@ -38,21 +38,18 @@ public interface ExtensionsArea  {
 
   @Nonnull
   ExtensionPoint[] getExtensionPoints();
+
   void suspendInteractions();
+
   void resumeInteractions();
 
   void killPendingInteractions();
-
-  void addAvailabilityListener(@Nonnull String extensionPointName, @Nonnull ExtensionPointAvailabilityListener listener);
 
   void registerExtensionPoint(@Nonnull String pluginName, @Nonnull Element extensionPointElement);
   void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement);
   void registerExtension(@Nonnull String pluginName, @Nonnull Element extensionElement);
 
   void registerExtension(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionElement);
-
-  @Nonnull
-  PicoContainer getPluginContainer(@Nonnull String pluginName);
 
   String getAreaClass();
 }

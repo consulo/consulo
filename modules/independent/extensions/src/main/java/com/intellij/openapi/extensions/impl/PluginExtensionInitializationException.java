@@ -16,12 +16,12 @@
 package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.extensions.PluginId;
-import org.picocontainer.PicoInitializationException;
+import consulo.injecting.InjectingProblemException;
 
-public class PicoPluginExtensionInitializationException extends PicoInitializationException {
+public class PluginExtensionInitializationException extends InjectingProblemException {
   private final PluginId myPluginId;
 
-  public PicoPluginExtensionInitializationException(String message, Throwable cause, PluginId id) {
+  public PluginExtensionInitializationException(String message, Throwable cause, PluginId id) {
     super(message, cause);
     myPluginId = id;
   }

@@ -28,7 +28,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.extensions.impl.PicoPluginExtensionInitializationException;
+import com.intellij.openapi.extensions.impl.PluginExtensionInitializationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Comparing;
@@ -228,8 +228,8 @@ public class PluginManager extends PluginManagerCore {
       pluginId = componentClassName == null ? null : getPluginByClassName(componentClassName);
     }
     if (pluginId == null || CORE_PLUGIN.equals(pluginId)) {
-      if (t instanceof PicoPluginExtensionInitializationException) {
-        pluginId = ((PicoPluginExtensionInitializationException)t).getPluginId();
+      if (t instanceof PluginExtensionInitializationException) {
+        pluginId = ((PluginExtensionInitializationException)t).getPluginId();
       }
     }
 

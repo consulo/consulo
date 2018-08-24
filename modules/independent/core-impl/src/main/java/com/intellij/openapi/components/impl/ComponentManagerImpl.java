@@ -302,7 +302,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   protected void bootstrapInjectingContainer(@Nonnull String name) {
     myInjectingContainer = createInjectingContainer();
 
-    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this, getPicoContainer(), new PluginManagerCore.IdeaLogProvider());
+    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this, new PluginManagerCore.IdeaLogProvider());
 
     maybeSetRootArea();
 

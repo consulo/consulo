@@ -15,12 +15,19 @@
  */
 package com.intellij.openapi.extensions;
 
+import consulo.injecting.InjectingContainer;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author akireyev
  */
 public interface AreaInstance {
+  @Nonnull
+  default InjectingContainer getInjectingContainer() {
+    throw new UnsupportedOperationException();
+  }
+
   @Nonnull
   default ExtensionsArea getExtensionsArea() {
     throw new UnsupportedOperationException();
