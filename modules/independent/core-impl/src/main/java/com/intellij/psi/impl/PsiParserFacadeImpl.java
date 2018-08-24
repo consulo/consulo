@@ -30,6 +30,7 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -37,9 +38,10 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class PsiParserFacadeImpl implements PsiParserFacade {
-  protected final PsiManagerEx myManager;
+  protected final PsiManager myManager;
 
-  public PsiParserFacadeImpl(PsiManagerEx manager) {
+  @Inject
+  public PsiParserFacadeImpl(PsiManager manager) {
     myManager = manager;
   }
 
