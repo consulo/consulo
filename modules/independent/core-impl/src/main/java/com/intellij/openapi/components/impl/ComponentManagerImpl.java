@@ -172,7 +172,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     maybeSetRootArea();
 
-    PluginManagerCore.registerExtensionPointsAndExtensions(myExtensionsArea);
+    registerExtensionPointsAndExtensions(myExtensionsArea);
 
     InjectingContainerBuilder builder = myParent == null ? InjectingContainer.root().childBuilder() : myParent.getInjectingContainer().childBuilder();
 
@@ -194,6 +194,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     bootstrapInjectingContainer(builder);
 
     myInjectingContainer = builder.build();
+  }
+
+  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
+    PluginManagerCore.registerExtensionPointsAndExtensions(area);
   }
 
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
@@ -353,6 +357,12 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public ExtensionsArea getExtensionsArea() {
     return myExtensionsArea;
+  }
+
+  @Nonnull
+  @Override
+  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
+    return myExtensionsArea.getExtensionPoint(extensionPointName).getExtensions();
   }
 
   @Override

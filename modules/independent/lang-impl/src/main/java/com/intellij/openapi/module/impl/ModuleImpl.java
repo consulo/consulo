@@ -21,7 +21,6 @@ import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import com.intellij.openapi.project.Project;
@@ -187,11 +186,5 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Override
   public String toString() {
     return "Module: '" + getName() + "'";
-  }
-
-  @Nonnull
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
   }
 }

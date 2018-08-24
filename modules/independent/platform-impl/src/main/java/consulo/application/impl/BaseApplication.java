@@ -352,12 +352,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return myDoNotSave;
   }
 
-  @Nonnull
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
-  }
-
   @Override
   public boolean isLoaded() {
     return myLoaded;

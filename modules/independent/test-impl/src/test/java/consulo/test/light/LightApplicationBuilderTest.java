@@ -1,0 +1,70 @@
+/*
+ * Copyright 2013-2018 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.test.light;
+
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.util.ThrowableRunnable;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.inject.Inject;
+
+/**
+ * @author VISTALL
+ * @since 2018-08-25
+ */
+public class LightApplicationBuilderTest {
+  public static class TextFileParserTest implements ThrowableRunnable<Throwable> {
+
+    private final PsiFileFactory myPsiFileFactory;
+
+    @Inject
+    public TextFileParserTest(PsiFileFactory psiFileFactory) {
+      myPsiFileFactory = psiFileFactory;
+    }
+
+    @Override
+    public void run() throws Throwable {
+      String fileName = "test.txt";
+
+      PsiFile file = myPsiFileFactory.createFileFromText(fileName, PlainTextFileType.INSTANCE, "some test");
+
+      Assert.assertNotNull(file);
+
+      Assert.assertEquals(file.getName(), fileName);
+    }
+  }
+
+  @Test
+  public void testPlaintTextFileParser() throws Throwable {
+    Disposable disposable = Disposer.newDisposable("root");
+
+    LightApplicationBuilder builder = LightApplicationBuilder.create(disposable);
+
+    Application application = builder.build();
+
+    TextFileParserTest parser = application.getInjectingContainer().getUnbindedInstance(TextFileParserTest.class);
+
+    parser.run();
+
+    Disposer.dispose(disposable);
+  }
+}

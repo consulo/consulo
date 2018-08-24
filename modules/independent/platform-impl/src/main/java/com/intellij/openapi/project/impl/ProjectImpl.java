@@ -388,12 +388,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
-  @Nonnull
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
-  }
-
   private class MyProjectManagerListener extends ProjectManagerAdapter {
     @Override
     public void projectOpened(Project project) {

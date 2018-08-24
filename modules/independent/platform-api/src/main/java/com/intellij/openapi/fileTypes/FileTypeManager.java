@@ -19,13 +19,12 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.CachedSingletonsRegistry;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +34,7 @@ import java.util.List;
 
 public abstract class FileTypeManager extends FileTypeRegistry {
   static {
-    FileTypeRegistry.ourInstanceGetter = new Getter<FileTypeRegistry>() {
-      @Override
-      public FileTypeRegistry get() {
-        return FileTypeManager.getInstance();
-      }
-    };
+    FileTypeRegistry.ourInstanceGetter = () -> FileTypeManager.getInstance();
   }
 
   private static FileTypeManager ourInstance = CachedSingletonsRegistry.markCachedField(FileTypeManager.class);
