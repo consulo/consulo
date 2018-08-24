@@ -19,37 +19,33 @@ import com.intellij.openapi.extensions.AreaPicoContainer;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FList;
+import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.picocontainer.*;
-import org.picocontainer.defaults.*;
+import org.picocontainer.defaults.AmbiguousComponentResolutionException;
+import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
+import org.picocontainer.defaults.InstanceComponentAdapter;
+import org.picocontainer.defaults.VerifyingVisitor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class DefaultPicoContainer implements AreaPicoContainer {
   private final PicoContainer parent;
   private final Set<PicoContainer> children = new THashSet<>();
 
-  private final Map<String, ComponentAdapter> componentKeyToAdapterCache = ContainerUtil.newConcurrentMap();
+  private final Map<String, ComponentAdapter> myInterfaceClassToAdapter = new THashMap<>();
 
-  private final LinkedHashSetWrapper<ComponentAdapter> componentAdapters = new LinkedHashSetWrapper<>();
-  private final Map<String, ComponentAdapter> classNameToAdapter = ContainerUtil.newConcurrentMap();
-  private final AtomicReference<FList<ComponentAdapter>> nonAssignableComponentAdapters = new AtomicReference<>(FList.<ComponentAdapter>emptyList());
+  private final LinkedHashSetWrapper<ComponentAdapter> myComponentAdapters = new LinkedHashSetWrapper<>();
 
   public DefaultPicoContainer(@Nullable PicoContainer parent) {
     this.parent = parent == null ? null : parent;
   }
 
-  public DefaultPicoContainer() {
-    this(null);
-  }
-
   @Override
   public Collection<ComponentAdapter> getComponentAdapters() {
-    return componentAdapters.getImmutableSet();
+    return myComponentAdapters.getImmutableSet();
   }
 
   @Override
@@ -65,14 +61,14 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   @Nullable
   private ComponentAdapter findByKey(final Object componentKey) {
     if (componentKey instanceof String) {
-      ComponentAdapter adapter = componentKeyToAdapterCache.get(componentKey);
+      ComponentAdapter adapter = myInterfaceClassToAdapter.get(componentKey);
       if (adapter != null) {
         return adapter;
       }
     }
 
     if (componentKey instanceof Class) {
-      return componentKeyToAdapterCache.get(((Class)componentKey).getName());
+      return myInterfaceClassToAdapter.get(((Class)componentKey).getName());
     }
 
     return null;
@@ -110,7 +106,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
     List<ComponentAdapter> result = new SmartList<>();
 
-    final ComponentAdapter cacheHit = classNameToAdapter.get(componentType.getName());
+    final ComponentAdapter cacheHit = myInterfaceClassToAdapter.get(componentType.getName());
     if (cacheHit != null) {
       result.add(cacheHit);
     }
@@ -119,7 +115,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   private boolean contains(String key) {
-    return componentKeyToAdapterCache.containsKey(key) || parent instanceof DefaultPicoContainer && ((DefaultPicoContainer)parent).contains(key);
+    return myInterfaceClassToAdapter.containsKey(key) || parent instanceof DefaultPicoContainer && ((DefaultPicoContainer)parent).contains(key);
   }
 
   @Override
@@ -130,24 +126,8 @@ public class DefaultPicoContainer implements AreaPicoContainer {
       throw new DuplicateComponentKeyRegistrationException(componentKey);
     }
 
-    if (componentAdapter instanceof AssignableToComponentAdapter) {
-      String classKey = ((AssignableToComponentAdapter)componentAdapter).getAssignableToClassName();
-      classNameToAdapter.put(classKey, componentAdapter);
-    }
-    else {
-      do {
-        FList<ComponentAdapter> oldList = nonAssignableComponentAdapters.get();
-        FList<ComponentAdapter> newList = oldList.prepend(componentAdapter);
-        if (nonAssignableComponentAdapters.compareAndSet(oldList, newList)) {
-          break;
-        }
-      }
-      while (true);
-    }
-
-    componentAdapters.add(componentAdapter);
-
-    componentKeyToAdapterCache.put(toKey(componentKey), componentAdapter);
+    myInterfaceClassToAdapter.put(componentKey, componentAdapter);
+    myComponentAdapters.add(componentAdapter);
     return componentAdapter;
   }
 
@@ -165,22 +145,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
   @Override
   public ComponentAdapter unregisterComponent(@Nonnull Object componentKey) {
-    ComponentAdapter adapter = componentKeyToAdapterCache.remove(toKey(componentKey));
-    componentAdapters.remove(adapter);
-    if (adapter instanceof AssignableToComponentAdapter) {
-      classNameToAdapter.remove(((AssignableToComponentAdapter)adapter).getAssignableToClassName());
-    }
-    else {
-      do {
-        FList<ComponentAdapter> oldList = nonAssignableComponentAdapters.get();
-        FList<ComponentAdapter> newList = oldList.without(adapter);
-        if (nonAssignableComponentAdapters.compareAndSet(oldList, newList)) {
-          break;
-        }
-      }
-      while (true);
-    }
-    return adapter;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -261,13 +226,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   @Override
   @Nullable
   public ComponentAdapter unregisterComponentByInstance(@Nonnull Object componentInstance) {
-    for (ComponentAdapter adapter : getComponentAdapters()) {
-      Object o = getInstance(adapter);
-      if (o != null && o.equals(componentInstance)) {
-        return unregisterComponent(adapter.getComponentKey());
-      }
-    }
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override

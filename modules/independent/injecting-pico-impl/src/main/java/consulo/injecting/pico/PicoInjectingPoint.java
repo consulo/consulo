@@ -19,7 +19,6 @@ import consulo.injecting.InjectingPoint;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import org.picocontainer.ComponentAdapter;
-import org.picocontainer.defaults.InstanceComponentAdapter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
@@ -51,7 +50,7 @@ public class PicoInjectingPoint<T> implements InjectingPoint<T> {
     }
 
     myLocked = true;
-    myAdapter = new InstanceComponentAdapter(myKey.getTargetClassName(), value);
+    myAdapter = new InstanceComponentAdapter<>(myKey, value);
     return this;
   }
 
@@ -63,31 +62,31 @@ public class PicoInjectingPoint<T> implements InjectingPoint<T> {
     }
 
     myLocked = true;
-   requireBase().setImplementationKey(key);
+   base().setImplementationKey(key);
     return this;
   }
 
   @Override
   public InjectingPoint<T> forceSingleton() {
-    requireBase().setForceSingleton();
+    base().setForceSingleton();
     return this;
   }
 
   @Override
   public InjectingPoint<T> factory(@Nonnull Function<Provider<T>, T> remap) {
-    requireBase().setRemap(remap);
+    base().setRemap(remap);
     return this;
   }
 
   @Nonnull
   @Override
   public InjectingPoint<T> injectListener(@Nonnull PostInjectListener<T> consumer) {
-    requireBase().setAfterInjectionListener(consumer);
+    base().setAfterInjectionListener(consumer);
     return this;
   }
 
   @SuppressWarnings("unchecked")
-  private BaseComponentAdapter<T> requireBase() {
+  private BaseComponentAdapter<T> base() {
     if (!(myAdapter instanceof BaseComponentAdapter)) {
       throw new IllegalArgumentException("Wrong instance provider");
     }

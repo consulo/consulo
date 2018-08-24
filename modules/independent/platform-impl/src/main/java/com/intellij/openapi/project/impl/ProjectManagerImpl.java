@@ -431,7 +431,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       return true;
     }
 
-    boolean ok = myProgressManager.runProcessWithProgressSynchronously(process, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
+    boolean ok = myProgressManager.runProcessWithProgressSynchronously(process, "Preparing workspace...", canCancelProjectLoading(), project);
     if (!ok) {
       closeProject(project, false, false, true);
       notifyProjectOpenFailed();
