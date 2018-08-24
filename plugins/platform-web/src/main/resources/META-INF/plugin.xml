@@ -30,11 +30,6 @@
       <implementation-class>consulo.web.fileEditor.impl.WebPsiAwareFileEditorManagerImpl</implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
-      <implementation-class>consulo.web.wm.impl.WebToolWindowManagerImpl</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
       <implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</implementation-class>
       <skipForDefaultProject/>
@@ -66,6 +61,7 @@
 
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
 
+    <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.web.wm.impl.WebToolWindowManagerImpl" lazy="false" />
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebProjectIdeFocusManagerImpl" lazy="false"/>
   </extensions>
 </idea-plugin>

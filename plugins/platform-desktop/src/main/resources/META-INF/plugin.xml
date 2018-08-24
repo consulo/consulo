@@ -53,11 +53,6 @@
       <headless-implementation-class>com.intellij.openapi.fileEditor.impl.TestEditorManagerImpl</headless-implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
-      <implementation-class>com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.wm.impl.ToolWindowHeadlessManagerImpl</headless-implementation-class>
-    </component>
-    <component>
       <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
       <implementation-class>com.intellij.openapi.vcs.changes.ChangesViewManager</implementation-class>
       <headless-implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
@@ -112,6 +107,7 @@
 
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false" />
 
+    <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false" />
   </extensions>
 </idea-plugin>
