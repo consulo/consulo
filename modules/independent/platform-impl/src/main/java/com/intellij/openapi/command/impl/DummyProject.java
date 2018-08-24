@@ -23,7 +23,6 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,12 +98,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   @Override
   public <T> T getComponent(@Nonnull Class<T> clazz) {
     return null;
-  }
-
-  @Override
-  @Nonnull
-  public PicoContainer getPicoContainer() {
-    throw new UnsupportedOperationException("getPicoContainer is not implement in : " + getClass());
   }
 
   @Override

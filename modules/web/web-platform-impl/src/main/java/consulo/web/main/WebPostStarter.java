@@ -49,7 +49,7 @@ public class WebPostStarter extends ApplicationPostStarter {
   @Nonnull
   @Override
   protected Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args) {
-    return new WebApplicationImpl(isHeadlessMode, splashRef);
+    return new WebApplicationImpl(splashRef);
   }
 
   @Override

@@ -13,7 +13,7 @@ import java.util.*;
  *         Date: Sep 27, 2004
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
-public class ChunkGraphTest extends GraphTestCase {
+public abstract class ChunkGraphTest extends GraphTestCase {
 
   public void testGraph1() {
     final Map<String, String> arcs = new HashMap<String, String>();

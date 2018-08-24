@@ -23,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +34,7 @@ public class MockProject extends MockComponentManager implements Project {
   private static final Logger LOG = Logger.getInstance("#com.intellij.mock.MockProject");
   private VirtualFile myBaseDir;
 
-  public MockProject(PicoContainer parent, @Nonnull Disposable parentDisposable) {
+  public MockProject(MockComponentManager parent, @Nonnull Disposable parentDisposable) {
     super(parent, parentDisposable);
   }
 

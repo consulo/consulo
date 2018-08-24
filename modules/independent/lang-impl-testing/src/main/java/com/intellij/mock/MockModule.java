@@ -22,7 +22,7 @@ public class MockModule extends MockComponentManager implements Module {
   }
 
   public MockModule(@Nullable final Project project, @Nonnull Disposable parentDisposable) {
-    super(project == null ? null : project.getPicoContainer(), parentDisposable);
+    super((MockComponentManager)project, parentDisposable);
     myProject = project;
   }
 

@@ -62,10 +62,10 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
+import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.ide.PooledThreadExecutor;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -203,16 +203,15 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  protected void bootstrapInjectingContainer(@Nonnull String name) {
-    super.bootstrapInjectingContainer(name);
-    MutablePicoContainer picoContainer = getPicoContainer();
+  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    super.bootstrapInjectingContainer(builder);
 
-    picoContainer.registerComponentInstance(Application.class, this);
-    picoContainer.registerComponentInstance(ApplicationEx.class, this);
-    picoContainer.registerComponentInstance(ApplicationEx2.class, this);
+    builder.bind(Application.class).to(this);
+    builder.bind(ApplicationEx.class).to(this);
+    builder.bind(ApplicationEx2.class).to(this);
 
-    picoContainer.registerComponentImplementation(IApplicationStore.class, ApplicationStoreImpl.class);
-    picoContainer.registerComponentImplementation(ApplicationPathMacroManager.class);
+    builder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class);
+    builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManager.class);
   }
 
   @Nullable
@@ -459,6 +458,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return true;
   }
 
+  @RequiredDispatchThread
   @Override
   public void dispose() {
     fireApplicationExiting();

@@ -26,7 +26,6 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 
@@ -67,10 +66,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   default <T> T getComponent(@Nonnull Class<T> clazz) {
     return getInjectingContainer().getInstance(clazz);
   }
-
-  @Nonnull
-  @Deprecated
-  PicoContainer getPicoContainer();
 
   @Nonnull
   MessageBus getMessageBus();

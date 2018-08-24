@@ -24,6 +24,7 @@ import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.stores.IComponentStore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.components.impl.stores.StateComponentInfo;
 
 import javax.annotation.Nonnull;
@@ -75,6 +76,7 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
     return ((float)myCreatedNotLazyServicesCount.get()) / getNotLazyServicesCount();
   }
 
+  @RequiredDispatchThread
   @Override
   public synchronized void dispose() {
     myCreatedNotLazyServicesCount.set(0);

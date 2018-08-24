@@ -18,13 +18,14 @@ package com.intellij.util.graph;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.UsefulTestCase;
+import org.junit.Ignore;
 
 import java.util.*;
 
 /**
  * @author nik
  */
-public class KShortestPathsFinderTest extends GraphTestCase {
+public abstract class KShortestPathsFinderTest extends GraphTestCase {
   public void testEmpty() {
     Map<String, String> graph = new HashMap<String, String>();
     graph.put("s", "");

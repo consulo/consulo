@@ -16,30 +16,12 @@
 package consulo.injecting;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
- * @since 2018-08-23
+ * @since 2018-08-24
  */
-public interface InjectingContainer {
-  static <S> InjectingContainer root() {
-    for (RootInjectingContainerFactory factory : ServiceLoader.load(RootInjectingContainerFactory.class, RootInjectingContainerFactory.class.getClassLoader())) {
-      return factory.getRoot();
-    }
-
-    throw new UnsupportedOperationException("RootInjectingContainerFactory not found");
-  }
-
-  @Nullable
-  <T> T getInstance(@Nonnull Class<T> clazz);
-
+public interface RootInjectingContainerFactory {
   @Nonnull
-  <T> T getUnbindedInstance(@Nonnull Class<T> clazz);
-
-  @Nonnull
-  InjectingContainerBuilder childBuilder();
-
-  void dispose();
+  InjectingContainer getRoot();
 }

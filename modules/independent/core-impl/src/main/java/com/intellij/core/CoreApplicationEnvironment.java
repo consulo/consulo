@@ -62,16 +62,15 @@ import com.intellij.psi.stubs.CoreStubTreeLoader;
 import com.intellij.psi.stubs.StubTreeLoader;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
+import consulo.injecting.InjectingContainer;
 import consulo.psi.tree.ASTCompositeFactory;
 import consulo.psi.tree.ASTLazyFactory;
 import consulo.psi.tree.ASTLeafFactory;
 import consulo.psi.tree.impl.DefaultASTCompositeFactory;
 import consulo.psi.tree.impl.DefaultASTLazyFactory;
 import consulo.psi.tree.impl.DefaultASTLeafFactory;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -99,7 +98,7 @@ public class CoreApplicationEnvironment {
     myLocalFileSystem = createLocalFileSystem();
     myJarFileSystem = createJarFileSystem();
 
-    final MutablePicoContainer appContainer = myApplication.getPicoContainer();
+    final InjectingContainer appContainer = myApplication.getInjectingContainer();
     registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(DocumentImpl::new, null));
 
     VirtualFileSystem[] fs = {myLocalFileSystem, myJarFileSystem};
@@ -222,7 +221,6 @@ public class CoreApplicationEnvironment {
   }
 
   public <T> void registerApplicationComponent(@Nonnull Class<T> interfaceClass, @Nonnull T implementation) {
-    registerComponentInstance(myApplication.getPicoContainer(), interfaceClass, implementation);
   }
 
   public void registerFileType(@Nonnull FileType fileType, @Nonnull String extension) {
@@ -233,9 +231,7 @@ public class CoreApplicationEnvironment {
     addExplicitExtension(LanguageParserDefinitions.INSTANCE, definition.getFileNodeType().getLanguage(), definition);
   }
 
-  public static <T> void registerComponentInstance(@Nonnull MutablePicoContainer container, @Nonnull Class<T> key, @Nonnull T implementation) {
-    container.unregisterComponent(key);
-    container.registerComponentInstance(key, implementation);
+  public static <T> void registerComponentInstance(@Nonnull InjectingContainer container, @Nonnull Class<T> key, @Nonnull T implementation) {
   }
 
   public <T> void addExplicitExtension(@Nonnull LanguageExtension<T> instance, @Nonnull Language language, @Nonnull T object) {
@@ -284,10 +280,7 @@ public class CoreApplicationEnvironment {
   }
 
   public static <T> void registerExtensionPoint(@Nonnull ExtensionsArea area, @Nonnull String name, @Nonnull Class<? extends T> aClass) {
-    if (!area.hasExtensionPoint(name)) {
-      ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
-      area.registerExtensionPoint(name, aClass.getName(), kind);
-    }
+
   }
 
   public static <T> void registerApplicationExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<? extends T> aClass) {

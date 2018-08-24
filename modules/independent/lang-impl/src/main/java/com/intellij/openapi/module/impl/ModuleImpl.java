@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.injecting.InjectingContainerBuilder;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -63,11 +64,11 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
   @Override
-  protected void bootstrapInjectingContainer(@Nonnull String name) {
-    super.bootstrapInjectingContainer(name);
+  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    super.bootstrapInjectingContainer(builder);
 
-    getPicoContainer().registerComponentInstance(Module.class, this);
-    getPicoContainer().registerComponentImplementation(ModulePathMacroManager.class);
+    builder.bind(Module.class).to(this);
+    builder.bind(ModulePathMacroManager.class).to(ModulePathMacroManager.class);
   }
 
   @Nullable

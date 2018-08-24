@@ -21,7 +21,6 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 
@@ -102,12 +101,6 @@ public class MockProject implements Project {
 
   @Override
   public <T> T getComponent(@Nonnull Class<T> clazz) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public PicoContainer getPicoContainer() {
     throw new UnsupportedOperationException();
   }
 

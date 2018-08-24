@@ -26,7 +26,7 @@ import java.util.Map;
  * User: anna
  * Date: Feb 11, 2005
  */
-public class ShortestPathTest extends GraphTestCase {
+public abstract class ShortestPathTest extends GraphTestCase {
   public void testEmptyPath() {
     final HashMap<String, String> graph = new HashMap<String, String>();
     graph.put("a", "");

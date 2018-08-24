@@ -15,33 +15,10 @@
  */
 package consulo.injecting;
 
-import consulo.injecting.key.InjectingKey;
-
-import javax.annotation.Nonnull;
-import javax.inject.Provider;
-import java.util.function.Function;
-
 /**
  * @author VISTALL
- * @since 2018-08-23
+ * @since 2018-08-24
  */
-public interface InjectingPoint<T> {
-  @Nonnull
-  InjectingPoint<T> to(@Nonnull T value);
-
-  @Nonnull
-  InjectingPoint<T> to(@Nonnull InjectingKey<? extends T> key);
-
-  @Nonnull
-  default InjectingPoint<T> to(@Nonnull Class<? extends T> key) {
-    return to(InjectingKey.of(key));
-  }
-
-  InjectingPoint<T> forceSingleton();
-
-
-  InjectingPoint<T> factory(@Nonnull Function<Provider<T>, T> remap);
-
-  @Nonnull
-  InjectingPoint<T> injectListener(@Nonnull PostInjectListener<T> consumer);
+public interface PostInjectListener<T> {
+  void afterInject(long time, T object);
 }

@@ -15,6 +15,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
+import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.UIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
@@ -45,15 +46,15 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     }
   };
 
-  public WebApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splash) {
+  public WebApplicationImpl(@Nonnull Ref<? extends StartupProgress> splash) {
     super(splash);
   }
 
   @Override
-  protected void bootstrapInjectingContainer(@Nonnull String name) {
-    super.bootstrapInjectingContainer(name);
+  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    super.bootstrapInjectingContainer(builder);
 
-    getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), new WebTransactionGuardImpl());
+    builder.bind(TransactionGuard.class).to(new WebTransactionGuardImpl());
   }
 
   @Nullable

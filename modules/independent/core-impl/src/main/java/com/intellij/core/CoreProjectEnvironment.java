@@ -50,7 +50,7 @@ public class CoreProjectEnvironment {
   public CoreProjectEnvironment(Disposable parentDisposable, CoreApplicationEnvironment applicationEnvironment) {
     myParentDisposable = parentDisposable;
     myEnvironment = applicationEnvironment;
-    myProject = new MockProject(myEnvironment.getApplication().getPicoContainer(), myParentDisposable);
+    myProject = new MockProject(myEnvironment.getApplication(), myParentDisposable);
 
     preregisterServices();
 
@@ -110,7 +110,7 @@ public class CoreProjectEnvironment {
 
 
   public <T> void registerProjectComponent(final Class<T> interfaceClass, final T implementation) {
-    CoreApplicationEnvironment.registerComponentInstance(myProject.getPicoContainer(), interfaceClass, implementation);
+    CoreApplicationEnvironment.registerComponentInstance(myProject.getInjectingContainer(), interfaceClass, implementation);
   }
 
   public Disposable getParentDisposable() {

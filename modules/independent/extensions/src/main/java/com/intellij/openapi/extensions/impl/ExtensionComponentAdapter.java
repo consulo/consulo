@@ -21,25 +21,25 @@ import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.xmlb.XmlSerializer;
-import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingProblemException;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author Alexander Kireyev
  *         todo: optimize memory print
  */
-public class ExtensionComponentAdapter implements LoadingOrder.Orderable {
+public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
   public static final ExtensionComponentAdapter[] EMPTY_ARRAY = new ExtensionComponentAdapter[0];
 
-  private Object myComponentInstance;
+  private T myComponentInstance;
   private final String myImplementationClassName;
   private final Element myExtensionElement;
   private final PluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
-  private Class myImplementationClass;
+  private Class<T> myImplementationClass;
   private boolean myNotificationSent = false;
 
   public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
@@ -49,22 +49,18 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable {
     myDeserializeInstance = deserializeInstance;
   }
 
-  public Object getComponentKey() {
-    return "ExtensionComponentAdapter: " + hashCode();
-  }
-
   public Class getComponentImplementation() {
     return loadImplementationClass();
   }
 
-  public Object getComponentInstance(InjectingContainer injectingContainer) {
+  public T getComponentInstance(Function<Class<T>, T> getUnbindedInstanceFunc) {
     if (myComponentInstance == null) {
       try {
         if (Element.class.equals(getComponentImplementation())) {
-          myComponentInstance = myExtensionElement;
+          myComponentInstance = (T)myExtensionElement;
         }
         else {
-          Object componentInstance = injectingContainer.getUnbindedInstance(loadImplementationClass());
+          T componentInstance = getUnbindedInstanceFunc.apply(loadImplementationClass());
 
           if (myDeserializeInstance) {
             try {
@@ -95,8 +91,8 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable {
     return myComponentInstance;
   }
 
-  public Object getExtension(InjectingContainer injectingContainer) {
-    return getComponentInstance(injectingContainer);
+  public T getExtension(Function<Class<T>, T> getUnbindedInstanceFunc) {
+    return getComponentInstance(getUnbindedInstanceFunc);
   }
 
   @Override
@@ -126,14 +122,15 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable {
     return myPluginDescriptor;
   }
 
-  private Class loadImplementationClass() {
+  @SuppressWarnings("unchecked")
+  private Class<T> loadImplementationClass() {
     if (myImplementationClass == null) {
       try {
         ClassLoader classLoader = myPluginDescriptor != null ? myPluginDescriptor.getPluginClassLoader() : getClass().getClassLoader();
         if (classLoader == null) {
           classLoader = getClass().getClassLoader();
         }
-        myImplementationClass = Class.forName(myImplementationClassName, false, classLoader);
+        myImplementationClass = (Class<T>)Class.forName(myImplementationClassName, false, classLoader);
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

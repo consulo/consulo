@@ -54,6 +54,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
+import consulo.injecting.InjectingContainerBuilder;
 import consulo.start.CommandLineArgs;
 import consulo.ui.AWTUIAccessImpl;
 import consulo.ui.UIAccess;
@@ -165,10 +166,10 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   }
 
   @Override
-  protected void bootstrapInjectingContainer(@Nonnull String name) {
-    super.bootstrapInjectingContainer(name);
+  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    super.bootstrapInjectingContainer(builder);
 
-    getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), transactionGuard());
+    builder.bind(TransactionGuard.class).to(transactionGuard());
   }
 
   @RequiredDispatchThread

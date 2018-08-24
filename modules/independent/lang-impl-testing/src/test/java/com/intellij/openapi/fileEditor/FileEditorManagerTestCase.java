@@ -1,6 +1,5 @@
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.FileEditorProviderManagerImpl;
@@ -21,12 +20,10 @@ public abstract class FileEditorManagerTestCase extends LightPlatformCodeInsight
   public void setUp() throws Exception {
     super.setUp();
     myManager = new FileEditorManagerImpl(getProject(), DockManager.getInstance(getProject())) {};
-    myOldManager = ((ComponentManagerImpl)getProject()).registerComponentInstance(FileEditorManager.class, myManager);
   }
 
   @Override
   protected void tearDown() throws Exception {
-    ((ComponentManagerImpl)getProject()).registerComponentInstance(FileEditorManager.class, myOldManager);
     myManager.closeAllFiles();
     ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).clearSelectedProviders();
     super.tearDown();

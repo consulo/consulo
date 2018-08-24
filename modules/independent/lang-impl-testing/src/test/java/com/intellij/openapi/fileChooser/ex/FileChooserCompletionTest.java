@@ -3,6 +3,8 @@ package com.intellij.openapi.fileChooser.ex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.FlyIdeaTestCase;
 import com.intellij.util.ArrayUtil;
+import org.junit.Ignore;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -10,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class FileChooserCompletionTest extends FlyIdeaTestCase {
+public abstract class FileChooserCompletionTest extends FlyIdeaTestCase {
 
   private File myParent;
   private LocalFsFinder myFinder;

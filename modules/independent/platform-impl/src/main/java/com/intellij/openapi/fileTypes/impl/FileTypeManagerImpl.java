@@ -106,7 +106,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
   }
 
-  private static boolean RE_DETECT_ASYNC = !ApplicationManager.getApplication().isUnitTestMode();
+  private static boolean RE_DETECT_ASYNC;
   private final Set<FileType> myDefaultTypes = new THashSet<>();
   private FileTypeIdentifiableByVirtualFile[] mySpecialFileTypes = FileTypeIdentifiableByVirtualFile.EMPTY_ARRAY;
 
@@ -177,6 +177,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     int fileTypeChangedCounter = StringUtilRt.parseInt(propertiesComponent.getValue("fileTypeChangedCounter"), 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);
     autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);
+
+    RE_DETECT_ASYNC = !application.isUnitTestMode();
 
     myMessageBus = application.getMessageBus();
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<AbstractFileType>() {

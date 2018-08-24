@@ -17,7 +17,6 @@ package consulo.injecting.pico;
 
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.pico.DefaultPicoContainer;
-import consulo.annotations.DeprecationInfo;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import org.picocontainer.MutablePicoContainer;
@@ -29,17 +28,11 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-08-23
  */
-@Deprecated
-@DeprecationInfo("Hidden impl")
 public class PicoInjectingContainer implements InjectingContainer {
   private MutablePicoContainer myContainer;
 
   public PicoInjectingContainer(@Nullable PicoInjectingContainer parent) {
     myContainer = new DefaultPicoContainer(parent == null ? null : parent.myContainer);
-  }
-
-  public PicoInjectingContainer(@Nonnull MutablePicoContainer container) {
-    myContainer = container;
   }
 
   @Nonnull

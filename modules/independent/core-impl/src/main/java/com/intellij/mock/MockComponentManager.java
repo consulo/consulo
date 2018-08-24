@@ -20,49 +20,26 @@ import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import com.intellij.util.pico.DefaultPicoContainer;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MockComponentManager extends UserDataHolderBase implements ComponentManager {
   private final MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);
-  private final MutablePicoContainer myPicoContainer;
 
   private final Map<Class, Object> myComponents = new HashMap<Class, Object>();
 
-  public MockComponentManager(@Nullable PicoContainer parent, @Nonnull Disposable parentDisposable) {
-    myPicoContainer = new DefaultPicoContainer(parent) {
-      private final Set<Object> myDisposableComponents = ContainerUtil.newConcurrentSet();
+  public MockComponentManager(@Nullable MockComponentManager parent, @Nonnull Disposable parentDisposable) {
 
-      @Override
-      @Nullable
-      public Object getComponentInstance(final Object componentKey) {
-        final Object o = super.getComponentInstance(componentKey);
-        if (o instanceof Disposable && o != MockComponentManager.this) {
-          if (myDisposableComponents.add(o))
-            Disposer.register(MockComponentManager.this, (Disposable)o);
-        }
-        return o;
-      }
-    };
-    myPicoContainer.registerComponentInstance(this);
-    Disposer.register(parentDisposable, this);
   }
 
   public <T> void registerService(@Nonnull Class<T> serviceInterface, @Nonnull Class<? extends T> serviceImplementation) {
-    myPicoContainer.unregisterComponent(serviceInterface.getName());
-    myPicoContainer.registerComponentImplementation(serviceInterface.getName(), serviceImplementation);
+
   }
 
   public <T> void registerService(@Nonnull Class<T> serviceImplementation) {
@@ -70,7 +47,6 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
   }
 
   public <T> void registerService(@Nonnull Class<T> serviceInterface, @Nonnull T serviceImplementation) {
-    myPicoContainer.registerComponentInstance(serviceInterface.getName(), serviceImplementation);
   }
 
   public <T> void addComponent(@Nonnull Class<T> interfaceClass, @Nonnull T instance) {
@@ -79,14 +55,7 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
 
   @Override
   public <T> T getComponent(@Nonnull Class<T> clazz) {
-    final Object o = myPicoContainer.getComponentInstance(clazz);
-    return (T)(o != null ? o : myComponents.get(clazz));
-  }
-
-  @Override
-  @Nonnull
-  public MutablePicoContainer getPicoContainer() {
-    return myPicoContainer;
+    return null;
   }
 
   @Nonnull

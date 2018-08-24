@@ -6,9 +6,11 @@ package com.intellij.util.ui.update;
 
 import com.intellij.testFramework.FlyIdeaTestCase;
 import com.intellij.util.WaitFor;
+import org.junit.Ignore;
+
 import javax.annotation.Nonnull;
 
-public class MergingUpdateQueueTest extends FlyIdeaTestCase {
+public abstract class MergingUpdateQueueTest extends FlyIdeaTestCase {
   public void testOnShowNotify() throws Exception {
     final MyUpdate first = new MyUpdate("first");
     final MyUpdate second = new MyUpdate("second");

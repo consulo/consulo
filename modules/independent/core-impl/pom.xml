@@ -42,12 +42,6 @@
       <version>${project.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-injecting-pico-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <!--external dependencies-->
     <dependency>
       <groupId>com.google.guava</groupId>

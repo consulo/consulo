@@ -39,6 +39,7 @@ public class PicoInjectingContainerBuilder implements InjectingContainerBuilder 
     myContainer = new PicoInjectingContainer(parent);
   }
 
+  @Nonnull
   @Override
   @SuppressWarnings("unchecked")
   public <T> InjectingPoint<T> bind(@Nonnull InjectingKey<T> key) {
@@ -51,7 +52,7 @@ public class PicoInjectingContainerBuilder implements InjectingContainerBuilder 
       throw new IllegalArgumentException("Rebind " + key);
     }
 
-    point = new PicoInjectingPoint<>(key, myContainer);
+    point = new PicoInjectingPoint<>(key);
     myPoints.put(key, point);
     return point;
   }
@@ -60,6 +61,9 @@ public class PicoInjectingContainerBuilder implements InjectingContainerBuilder 
   @Override
   public InjectingContainer build() {
     myLocked = true;
+    for (PicoInjectingPoint point : myPoints.values()) {
+      myContainer.getContainer().registerComponent(point.getAdapter());
+    }
     return myContainer;
   }
 }

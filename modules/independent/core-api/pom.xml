@@ -51,6 +51,11 @@
       <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-injecting-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!--external dependencies-->
     <dependency>
       <groupId>dk.brics.automaton</groupId>
@@ -61,12 +66,6 @@
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
       <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-injecting-pico-impl</artifactId>
-      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

@@ -30,6 +30,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -48,10 +49,9 @@ import com.intellij.util.Function;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.injecting.InjectingContainer;
-import consulo.injecting.pico.PicoInjectingContainer;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.injecting.InjectingContainerBuilder;
 import org.jetbrains.annotations.NonNls;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -143,16 +143,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  protected void bootstrapInjectingContainer(@Nonnull String name) {
-    super.bootstrapInjectingContainer(name);
+  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    super.bootstrapInjectingContainer(builder);
 
-    final MutablePicoContainer picoContainer = getPicoContainer();
-    picoContainer.registerComponentInstance(Project.class, this);
-    picoContainer.registerComponentInstance(ProjectEx.class, this);
-    picoContainer.registerComponentImplementation(ProjectPathMacroManager.class);
+    builder.bind(Project.class).to(this);
+    builder.bind(ProjectEx.class).to(this);
+    builder.bind(ProjectPathMacroManager.class).to(ProjectPathMacroManager.class);
 
-    final Class storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
-    picoContainer.registerComponentImplementation(IProjectStore.class, storeClass);
+    final Class<? extends IProjectStore> storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
+    builder.bind(IProjectStore.class).to(storeClass);
   }
 
   @Nonnull
@@ -163,7 +162,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   protected void notifyAboutInitialization(float percentOfLoad, Object component) {
-    ProgressIndicator indicator = getProgressIndicator();
+    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) {
       indicator.setText2(getComponentName(component));
     }
@@ -338,6 +337,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public synchronized void dispose() {
     ApplicationEx application = ApplicationManagerEx.getApplicationEx();

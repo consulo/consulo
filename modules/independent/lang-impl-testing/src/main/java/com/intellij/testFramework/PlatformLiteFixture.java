@@ -49,14 +49,12 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
   public void initApplication() {
     //if (ApplicationManager.getApplication() instanceof MockApplicationEx) return;
     final MockApplicationEx instance = new MockApplicationEx(getTestRootDisposable());
-    ApplicationManager.setApplication(instance,
-                                      new Getter<FileTypeRegistry>() {
-                                        @Override
-                                        public FileTypeRegistry get() {
-                                          return FileTypeManager.getInstance();
-                                        }
-                                      },
-                                      getTestRootDisposable());
+    ApplicationManager.setApplication(instance, new Getter<FileTypeRegistry>() {
+      @Override
+      public FileTypeRegistry get() {
+        return FileTypeManager.getInstance();
+      }
+    }, getTestRootDisposable());
     getApplication().registerService(EncodingManager.class, EncodingManagerImpl.class);
   }
 
@@ -93,8 +91,7 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
     registerExtensionPoint(Extensions.getRootArea(), extensionPointName, aClass);
   }
 
-  protected <T> void registerExtensionPoint(final ExtensionsArea area, final ExtensionPointName<T> extensionPointName,
-                                            final Class<? extends T> aClass) {
+  protected <T> void registerExtensionPoint(final ExtensionsArea area, final ExtensionPointName<T> extensionPointName, final Class<? extends T> aClass) {
     final String name = extensionPointName.getName();
     if (!area.hasExtensionPoint(name)) {
       ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
@@ -115,7 +112,7 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
   }
 
   public static <T> T registerComponentInstance(final ComponentManager container, final Class<T> key, final T implementation) {
-    return registerComponentInstance((MutablePicoContainer)container.getPicoContainer(), key, implementation);
+    return null;
   }
 
 }

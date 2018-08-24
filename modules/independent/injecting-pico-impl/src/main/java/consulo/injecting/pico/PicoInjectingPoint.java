@@ -16,10 +16,14 @@
 package consulo.injecting.pico;
 
 import consulo.injecting.InjectingPoint;
+import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
+import org.picocontainer.ComponentAdapter;
+import org.picocontainer.defaults.InstanceComponentAdapter;
 
 import javax.annotation.Nonnull;
-import java.util.function.Consumer;
+import javax.inject.Provider;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -27,13 +31,16 @@ import java.util.function.Consumer;
  */
 public class PicoInjectingPoint<T> implements InjectingPoint<T> {
   private final InjectingKey<T> myKey;
-  private final PicoInjectingContainer myContainer;
 
   private boolean myLocked;
 
-  public PicoInjectingPoint(InjectingKey<T> key, PicoInjectingContainer container) {
+  private ComponentAdapter myAdapter;
+
+
+  public PicoInjectingPoint(InjectingKey<T> key) {
     myKey = key;
-    myContainer = container;
+    // map to self
+    myAdapter = new BaseComponentAdapter<>(key);
   }
 
   @Nonnull
@@ -44,25 +51,51 @@ public class PicoInjectingPoint<T> implements InjectingPoint<T> {
     }
 
     myLocked = true;
-    myContainer.getContainer().registerComponentInstance(myKey.getTargetClassName(), value);
+    myAdapter = new InstanceComponentAdapter(myKey.getTargetClassName(), value);
     return this;
   }
 
   @Nonnull
   @Override
-  public InjectingPoint<T> to(@Nonnull InjectingKey<T> key) {
+  public InjectingPoint<T> to(@Nonnull InjectingKey<? extends T> key) {
     if (myLocked) {
       throw new IllegalArgumentException("locked");
     }
 
     myLocked = true;
-    myContainer.getContainer().registerComponent(new LazyComponentAdapter(key));
+   requireBase().setImplementationKey(key);
+    return this;
+  }
+
+  @Override
+  public InjectingPoint<T> forceSingleton() {
+    requireBase().setForceSingleton();
+    return this;
+  }
+
+  @Override
+  public InjectingPoint<T> factory(@Nonnull Function<Provider<T>, T> remap) {
+    requireBase().setRemap(remap);
     return this;
   }
 
   @Nonnull
   @Override
-  public InjectingPoint<T> injectListener(@Nonnull Consumer<T> consumer) {
-    throw new UnsupportedOperationException();
+  public InjectingPoint<T> injectListener(@Nonnull PostInjectListener<T> consumer) {
+    requireBase().setAfterInjectionListener(consumer);
+    return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  private BaseComponentAdapter<T> requireBase() {
+    if (!(myAdapter instanceof BaseComponentAdapter)) {
+      throw new IllegalArgumentException("Wrong instance provider");
+    }
+
+    return (BaseComponentAdapter<T>)myAdapter;
+  }
+
+  public ComponentAdapter getAdapter() {
+    return myAdapter;
   }
 }

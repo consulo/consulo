@@ -35,14 +35,14 @@ import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
-public class PsiBuilderQuickTest extends FlyIdeaTestCase {
+public abstract class PsiBuilderQuickTest extends FlyIdeaTestCase {
   private static final IFileElementType ROOT = new IFileElementType("ROOT", Language.ANY);
 
   private static final IElementType LETTER = new IElementType("LETTER", Language.ANY);

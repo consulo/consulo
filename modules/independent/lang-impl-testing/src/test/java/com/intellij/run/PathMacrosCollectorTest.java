@@ -30,7 +30,7 @@ import java.util.Set;
  * @author Eugene Zhuravlev
  *         Date: Nov 14, 2006
  */
-public class PathMacrosCollectorTest extends TestCase {
+public abstract class PathMacrosCollectorTest extends TestCase {
   public void testCollectMacros() {
     Element root = new Element("root");
     root.addContent(new Text("$MACro1$ some text $macro2$ other text $MACRo3$"));

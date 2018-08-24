@@ -22,7 +22,6 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.StringInterner;
-import consulo.injecting.InjectingContainer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -30,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author AKireyev
@@ -44,14 +44,14 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   private final String myClassName;
   private final Kind myKind;
 
-  private final List<T> myExtensions = new ArrayList<T>();
+  private final List<T> myExtensions = new ArrayList<>();
   private volatile T[] myExtensionsCache;
 
   private final PluginDescriptor myDescriptor;
 
-  private final Set<ExtensionComponentAdapter> myExtensionAdapters = new LinkedHashSet<ExtensionComponentAdapter>();
+  private final Set<ExtensionComponentAdapter> myExtensionAdapters = new LinkedHashSet<>();
   private final List<ExtensionPointListener<T>> myEPListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final List<ExtensionComponentAdapter> myLoadedAdapters = new ArrayList<ExtensionComponentAdapter>();
+  private final List<ExtensionComponentAdapter<T>> myLoadedAdapters = new ArrayList<>();
 
   private Class<T> myExtensionClass;
 
@@ -111,7 +111,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   public synchronized void registerExtension(@Nonnull T extension, @Nonnull LoadingOrder order) {
     assert myExtensions.size() == myLoadedAdapters.size();
 
-    ExtensionComponentAdapter adapter = new ObjectComponentAdapter(extension, order);
+    ExtensionComponentAdapter<T> adapter = new ObjectComponentAdapter<>(extension, order);
 
     if (LoadingOrder.ANY == order) {
       int index = myLoadedAdapters.size();
@@ -125,7 +125,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
     else {
       registerExtensionAdapter(adapter);
-      processAdapters();
+      processAdapters(aClass -> myArea.getInjectingContainer().getUnbindedInstance(aClass));
     }
   }
 
@@ -177,12 +177,16 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   @Override
   @Nonnull
   public T[] getExtensions() {
+    return getExtensions(aClass -> myArea.getInjectingContainer().getUnbindedInstance(aClass));
+  }
+
+  public T[] getExtensions(Function<Class<T>, T> unbindedInstanceFunc) {
     T[] result = myExtensionsCache;
     if (result == null) {
       synchronized (this) {
         result = myExtensionsCache;
         if (result == null) {
-          processAdapters();
+          processAdapters(unbindedInstanceFunc);
 
           Class<T> extensionClass = getExtensionClass();
           @SuppressWarnings("unchecked") T[] a = (T[])Array.newInstance(extensionClass, myExtensions.size());
@@ -231,7 +235,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
   }
 
-  private void processAdapters() {
+  private void processAdapters(Function<Class<T>, T> unbindedInstanceFunc) {
     int totalSize = myExtensionAdapters.size() + myLoadedAdapters.size();
     if (totalSize != 0) {
       List<ExtensionComponentAdapter> adapters = ContainerUtil.newArrayListWithCapacity(totalSize);
@@ -247,7 +251,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
       for (ExtensionComponentAdapter adapter : adapters) {
         try {
-          @SuppressWarnings("unchecked") T extension = (T)adapter.getExtension(myArea.getInjectingContainer());
+          @SuppressWarnings("unchecked") T extension = (T)adapter.getExtension(unbindedInstanceFunc);
           registerExtension(extension, adapter, myExtensions.size(), !loaded.contains(adapter));
           myExtensionAdapters.remove(adapter);
         }
@@ -271,18 +275,13 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   @Override
   public synchronized boolean hasExtension(@Nonnull T extension) {
-    processAdapters();
+    processAdapters(aClass -> myArea.getInjectingContainer().getUnbindedInstance(aClass));
     return myExtensions.contains(extension);
   }
 
   @Override
   public synchronized void unregisterExtension(@Nonnull final T extension) {
-    final int index = getExtensionIndex(extension);
-    final ExtensionComponentAdapter adapter = myLoadedAdapters.get(index);
-
-    Object key = adapter.getComponentKey();
-
-    processAdapters();
+    processAdapters(aClass -> myArea.getInjectingContainer().getUnbindedInstance(aClass));
     unregisterExtension(extension, null);
   }
 
@@ -336,21 +335,16 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     else {
       myEPListeners.add(listener);
     }
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeExtensionPointListener(listener, invokeForLoadedExtensions);
-      }
-    });
+    Disposer.register(parentDisposable, () -> removeExtensionPointListener(listener, invokeForLoadedExtensions));
   }
 
   @Override
   public synchronized void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener) {
-    processAdapters();
+    processAdapters(aClass -> myArea.getInjectingContainer().getUnbindedInstance(aClass));
     if (myEPListeners.add(listener)) {
-      for (ExtensionComponentAdapter componentAdapter : myLoadedAdapters.toArray(new ExtensionComponentAdapter[myLoadedAdapters.size()])) {
+      for (ExtensionComponentAdapter<T> componentAdapter : new ArrayList<>(myLoadedAdapters)) {
         try {
-          @SuppressWarnings("unchecked") T extension = (T)componentAdapter.getExtension(myArea.getInjectingContainer());
+          T extension = componentAdapter.getExtension(aClass -> myArea.getInjectingContainer().getUnbindedInstance(aClass));
           listener.extensionAdded(extension, componentAdapter.getPluginDescriptor());
         }
         catch (Throwable e) {
@@ -365,12 +359,11 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     removeExtensionPointListener(listener, true);
   }
 
-  @SuppressWarnings("unchecked")
   private synchronized void removeExtensionPointListener(@Nonnull ExtensionPointListener<T> listener, boolean invokeForLoadedExtensions) {
     if (myEPListeners.remove(listener) && invokeForLoadedExtensions) {
-      for (ExtensionComponentAdapter componentAdapter : myLoadedAdapters.toArray(new ExtensionComponentAdapter[myLoadedAdapters.size()])) {
+      for (ExtensionComponentAdapter<T> componentAdapter : new ArrayList<>(myLoadedAdapters)) {
         try {
-          T extension = (T)componentAdapter.getExtension(myArea.getInjectingContainer());
+          T extension = componentAdapter.getExtension(aClass -> myArea.getInjectingContainer().getUnbindedInstance(aClass));
           listener.extensionRemoved(extension, componentAdapter.getPluginDescriptor());
         }
         catch (Throwable e) {
@@ -421,18 +414,18 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     myExtensionsCache = null;
   }
 
-  private static class ObjectComponentAdapter extends ExtensionComponentAdapter {
-    private final Object myExtension;
+  private static class ObjectComponentAdapter<K> extends ExtensionComponentAdapter<K> {
+    private final K myExtension;
     private final LoadingOrder myLoadingOrder;
 
-    private ObjectComponentAdapter(@Nonnull Object extension, @Nonnull LoadingOrder loadingOrder) {
+    private ObjectComponentAdapter(@Nonnull K extension, @Nonnull LoadingOrder loadingOrder) {
       super(extension.getClass().getName(), null, null, false);
       myExtension = extension;
       myLoadingOrder = loadingOrder;
     }
 
     @Override
-    public Object getExtension(InjectingContainer injectingContainer) {
+    public K getExtension(Function<Class<K>, K> getUnbindedInstanceFunc) {
       return myExtension;
     }
 
@@ -442,7 +435,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public String getOrderId() {
       return null;
     }

@@ -17,71 +17,274 @@ package com.intellij.openapi.components.impl;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.components.NamedComponent;
-import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ApplicationProperties;
 import consulo.injecting.InjectingContainer;
-import consulo.injecting.pico.PicoInjectingContainer;
+import consulo.injecting.InjectingContainerBuilder;
+import consulo.injecting.InjectingPoint;
+import consulo.injecting.key.InjectingKey;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
-import org.picocontainer.ComponentAdapter;
-import org.picocontainer.Disposable;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
  * @author mike
  */
 public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManager, Disposable {
+  protected class ComponentsRegistry {
+    private final List<ComponentConfig> myComponentConfigs = new ArrayList<>();
+    private final Map<Class, ComponentConfig> myComponentClassToConfig = new THashMap<>();
+
+    private void loadClasses(List<Class> notLazyServices, InjectingContainerBuilder builder) {
+      for (ComponentConfig config : myComponentConfigs) {
+        loadClasses(config, notLazyServices, builder);
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadClasses(@Nonnull ComponentConfig config, List<Class> notLazyServices, InjectingContainerBuilder builder) {
+      ClassLoader loader = config.getClassLoader();
+
+      try {
+        final Class interfaceClass = Class.forName(config.getInterfaceClass(), false, loader);
+        final Class implementationClass = Comparing.equal(config.getInterfaceClass(), config.getImplementationClass()) ? interfaceClass : Class.forName(config.getImplementationClass(), false, loader);
+
+        InjectingPoint<Object> point = builder.bind(interfaceClass);
+
+        // force singleton
+        point.forceSingleton();
+        // to impl class
+        point.to(implementationClass);
+        // post processor
+        point.injectListener((startTime, componentInstance) -> {
+          if (myChecker.containsKey(interfaceClass)) {
+            throw new IllegalArgumentException("Duplicate init of " + interfaceClass);
+          }
+          myChecker.put(interfaceClass, componentInstance);
+
+          if (componentInstance instanceof Disposable) {
+            Disposer.register(ComponentManagerImpl.this, (Disposable)componentInstance);
+          }
+
+          boolean isStorableComponent = initializeIfStorableComponent(componentInstance, false, false);
+
+          if (componentInstance instanceof BaseComponent) {
+            try {
+              ((BaseComponent)componentInstance).initComponent();
+
+              if (!isStorableComponent) {
+                LOG.warn("Not storable component implement initComponent() method, which can moved to constructor, component: " + componentInstance.getClass().getName());
+              }
+            }
+            catch (BaseComponent.DefaultImplException ignored) {
+              // skip default impl
+            }
+          }
+
+          long ms = (System.nanoTime() - startTime) / 1000000;
+          if (ms > 10 && logSlowComponents()) {
+            LOG.info(componentInstance.getClass().getName() + " initialized in " + ms + " ms");
+          }
+        });
+
+        myComponentClassToConfig.put(implementationClass, config);
+
+        notLazyServices.add(interfaceClass);
+      }
+      catch (Throwable t) {
+        handleInitComponentError(t, null, config);
+      }
+    }
+
+    private void addConfig(ComponentConfig config) {
+      myComponentConfigs.add(config);
+    }
+
+    public ComponentConfig getConfig(final Class componentImplementation) {
+      return myComponentClassToConfig.get(componentImplementation);
+    }
+  }
+
   private static final Logger LOG = Logger.getInstance(ComponentManagerImpl.class);
 
   private InjectingContainer myInjectingContainer;
 
   private volatile boolean myDisposed = false;
 
+  protected volatile boolean temporarilyDisposed = false;
+
   private MessageBus myMessageBus;
 
-  private final ComponentManager myParentComponentManager;
+  private final ComponentManager myParent;
 
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final Condition myDisposedCondition = o -> isDisposed();
 
   private boolean myComponentsCreated = false;
-  private int myNotLazyServicesCount;
 
   private ExtensionsAreaImpl myExtensionsArea;
+  @Nonnull
+  private final String myName;
   @Nullable
   private final String myExtensionAreaId;
 
-  protected ComponentManagerImpl(ComponentManager parentComponentManager, @Nonnull String name, @Nullable String extensionAreaId) {
-    myParentComponentManager = parentComponentManager;
+  private List<Class> myNotLazyServices = new ArrayList<>();
+
+  private Map<Class<?>, Object> myChecker = new ConcurrentHashMap<>();
+
+  protected ComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable String extensionAreaId) {
+    myParent = parent;
+    myName = name;
     myExtensionAreaId = extensionAreaId;
-    bootstrapInjectingContainer(name);
+
+    buildInjectingContainer();
+  }
+
+  private void buildInjectingContainer() {
+    myMessageBus = MessageBusFactory.newMessageBus(myName, myParent == null ? null : myParent.getMessageBus());
+
+    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this, new PluginManagerCore.IdeaLogProvider());
+
+    maybeSetRootArea();
+
+    PluginManagerCore.registerExtensionPointsAndExtensions(myExtensionsArea);
+
+    InjectingContainerBuilder builder = myParent == null ? InjectingContainer.root().childBuilder() : myParent.getInjectingContainer().childBuilder();
+
+    IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
+    for (IdeaPluginDescriptor plugin : plugins) {
+      if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
+        ComponentConfig[] componentConfigs = getComponentConfigs(plugin);
+
+        for (ComponentConfig componentConfig : componentConfigs) {
+          registerComponent(isProjectDefault(), componentConfig, plugin, builder);
+        }
+      }
+    }
+
+    myComponentsRegistry.loadClasses(myNotLazyServices, builder);
+
+    loadServices(myNotLazyServices, builder);
+
+    bootstrapInjectingContainer(builder);
+
+    myInjectingContainer = builder.build();
+  }
+
+  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+  }
+
+  protected void maybeSetRootArea() {
+  }
+
+  @Nonnull
+  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
+    return ComponentConfig.EMPTY_ARRAY;
+  }
+
+  private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
+    ExtensionPointName<ServiceDescriptor> ep = getServiceExtensionPointName();
+    if (ep != null) {
+      ExtensionPointImpl<ServiceDescriptor> extensionPoint = (ExtensionPointImpl<ServiceDescriptor>)myExtensionsArea.getExtensionPoint(ep);
+      // there no injector at that level
+      ServiceDescriptor[] descriptors = extensionPoint.getExtensions(aClass -> new ServiceDescriptor());
+      for (ServiceDescriptor descriptor : descriptors) {
+        InjectingKey<Object> key = InjectingKey.of(descriptor.getInterface(), getTargetClassLoader(descriptor.getPluginDescriptor()));
+        InjectingKey<Object> implKey = InjectingKey.of(descriptor.getImplementation(), getTargetClassLoader(descriptor.getPluginDescriptor()));
+
+        InjectingPoint<Object> point = builder.bind(key);
+        // bind to impl class
+        point.to(implKey);
+        // require singleton
+        point.forceSingleton();
+        // remap object initialization
+        point.factory(objectProvider -> runServiceInitialize(descriptor, objectProvider::get));
+
+        point.injectListener((time, instance) -> {
+
+          if (myChecker.containsKey(key.getTargetClass())) {
+            throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
+          }
+          myChecker.put(key.getTargetClass(), instance);
+
+          if (instance instanceof Disposable) {
+            Disposer.register(this, (Disposable)instance);
+          }
+
+          initializeIfStorableComponent(instance, true, descriptor.isLazy());
+        });
+
+        if (!descriptor.isLazy()) {
+          // if service is not lazy - add it for init at start
+          notLazyServices.add(key.getTargetClass());
+        }
+      }
+    }
+  }
+
+  private static ClassLoader getTargetClassLoader(PluginDescriptor pluginDescriptor) {
+    return pluginDescriptor != null ? pluginDescriptor.getPluginClassLoader() : ComponentManagerImpl.class.getClassLoader();
+  }
+
+  protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
+    return runnable.get();
+  }
+
+  @Nullable
+  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+    return null;
+  }
+
+  private void registerComponent(final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor, InjectingContainerBuilder builder) {
+    if (defaultProject && !config.isLoadForDefaultProject()) return;
+
+    registerComponent(config, descriptor);
+  }
+
+  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
+    return false;
+  }
+
+  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
+    LOG.error(ex);
+  }
+
+  public void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
+    if (!config.prepareClasses(false)) {
+      return;
+    }
+
+    config.pluginDescriptor = pluginDescriptor;
+    myComponentsRegistry.addConfig(config);
+  }
+
+  private boolean isProjectDefault() {
+    return this instanceof Project && ((Project)this).isDefault();
   }
 
   @Override
@@ -91,27 +294,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
         throw new IllegalArgumentException("Injector already build");
       }
 
-      List<Class> notLazyServices = new ArrayList<>();
-
-      IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-      for (IdeaPluginDescriptor plugin : plugins) {
-        if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
-          ComponentConfig[] componentConfigs = getComponentConfigs(plugin);
-
-          for (ComponentConfig componentConfig : componentConfigs) {
-            registerComponent(isProjectDefault(), componentConfig, plugin);
-          }
-        }
-      }
-
-      myComponentsRegistry.loadClasses(notLazyServices);
-
-      loadServices(notLazyServices);
-
-      myNotLazyServicesCount = notLazyServices.size();
-
-      for (Class<?> componentInterface : notLazyServices) {
-        ProgressIndicator indicator = getProgressIndicator();
+      for (Class<?> componentInterface : myNotLazyServices) {
+        ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
         if (indicator != null) {
           indicator.checkCanceled();
         }
@@ -125,52 +309,9 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
   }
 
-  private void registerComponent(final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor) {
-    if (defaultProject && !config.isLoadForDefaultProject()) return;
-
-    registerComponent(config, descriptor);
-  }
-
   @Override
   public int getNotLazyServicesCount() {
-    return myNotLazyServicesCount;
-  }
-
-  private boolean isProjectDefault() {
-    return this instanceof Project && ((Project)this).isDefault();
-  }
-
-  @Nonnull
-  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
-    return ComponentConfig.EMPTY_ARRAY;
-  }
-
-  private void loadServices(List<Class> notLazyServices) {
-    ExtensionPointName<ServiceDescriptor> ep = getServiceExtensionPointName();
-    if (ep != null) {
-      MutablePicoContainer picoContainer = getPicoContainer();
-      ServiceDescriptor[] descriptors = this instanceof Application ? ep.getExtensions() : ep.getExtensions((AreaInstance)this);
-      for (ServiceDescriptor descriptor : descriptors) {
-        PluginDescriptor pluginDescriptor = descriptor.getPluginDescriptor();
-
-        ServiceComponentAdapter adapter = new ServiceComponentAdapter(descriptor, pluginDescriptor, this);
-        picoContainer.registerComponent(adapter);
-
-        if (!descriptor.isLazy()) {
-          // if service is not lazy - add it for init at start
-          notLazyServices.add(adapter.getComponentImplementation());
-        }
-      }
-    }
-  }
-
-  protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
-    return runnable.get();
-  }
-
-  @Nullable
-  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
-    return null;
+    return myNotLazyServices.size();
   }
 
   @Nonnull
@@ -197,55 +338,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return getInjectingContainer().getInstance(clazz);
   }
 
-  @Nullable
-  protected static ProgressIndicator getProgressIndicator() {
-    PicoContainer container = Application.get().getPicoContainer();
-    ComponentAdapter adapter = container.getComponentAdapterOfType(ProgressManager.class);
-    if (adapter == null) return null;
-    ProgressManager progressManager = (ProgressManager)adapter.getComponentInstance(container);
-    boolean isProgressManagerInitialized = progressManager != null;
-    return isProgressManagerInitialized ? ProgressIndicatorProvider.getGlobalProgressIndicator() : null;
-  }
-
-  public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
-    return false;
-  }
-
-  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
-    LOG.error(ex);
-  }
-
-  public void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
-    if (!config.prepareClasses(isHeadless())) {
-      return;
-    }
-
-    config.pluginDescriptor = pluginDescriptor;
-    myComponentsRegistry.addConfig(config);
-  }
-
-  @TestOnly
-  @SuppressWarnings("unchecked")
-  public synchronized <T> T registerComponentInstance(@Nonnull Class<T> componentKey, @Nonnull T componentImplementation) {
-    Object componentInstance = getPicoContainer().getComponentInstance(componentKey);
-
-    getPicoContainer().unregisterComponent(componentKey.getName());
-    getPicoContainer().registerComponentInstance(componentKey.getName(), componentImplementation);
-    return (T)componentInstance;
-  }
-
-  @Override
-  @Nonnull
-  @Deprecated
-  public MutablePicoContainer getPicoContainer() {
-    InjectingContainer container = myInjectingContainer;
-    if (container == null || myDisposed) {
-      ProgressManager.checkCanceled();
-      throw new AssertionError("Already disposed: " + toString());
-    }
-    return ((PicoInjectingContainer)container).getContainer();
-  }
-
   @Nonnull
   @Override
   public InjectingContainer getInjectingContainer() {
@@ -263,72 +355,14 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myExtensionsArea;
   }
 
-  @Nonnull
-  protected InjectingContainer createInjectingContainer() {
-    return new PicoInjectingContainer(myParentComponentManager == null ? null : (PicoInjectingContainer)myParentComponentManager.getInjectingContainer());
-  }
-
-  @Override
-  public synchronized void dispose() {
-    Application.get().assertIsDispatchThread();
-
-    if (myMessageBus != null) {
-      myMessageBus.dispose();
-      myMessageBus = null;
-    }
-
-    myExtensionsArea = null;
-    myInjectingContainer.dispose();
-    myInjectingContainer = null;
-
-    myComponentsRegistry = null;
-    myComponentsCreated = false;
-    myNotLazyServicesCount = 0;
-    myDisposed = true;
-  }
-
   @Override
   public boolean isDisposed() {
     return myDisposed || temporarilyDisposed;
   }
 
-  protected volatile boolean temporarilyDisposed = false;
-
   @TestOnly
   public void setTemporarilyDisposed(boolean disposed) {
     temporarilyDisposed = disposed;
-  }
-
-  protected void bootstrapInjectingContainer(@Nonnull String name) {
-    myInjectingContainer = createInjectingContainer();
-
-    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this, new PluginManagerCore.IdeaLogProvider());
-
-    maybeSetRootArea();
-
-    PluginManagerCore.registerExtensionPointsAndExtensions(myExtensionsArea);
-
-    myMessageBus = MessageBusFactory.newMessageBus(name, myParentComponentManager == null ? null : myParentComponentManager.getMessageBus());
-  }
-
-  protected void maybeSetRootArea() {
-  }
-
-  protected ComponentManager getParentComponentManager() {
-    return myParentComponentManager;
-  }
-
-  private static class HeadlessHolder {
-    private static final boolean myHeadless = Application.get().isHeadlessEnvironment();
-  }
-
-  private boolean isHeadless() {
-    return HeadlessHolder.myHeadless;
-  }
-
-  @Nullable
-  public Object getComponent(final ComponentConfig componentConfig) {
-    return getPicoContainer().getComponentInstance(componentConfig.getInterfaceClass());
   }
 
   public ComponentConfig getConfig(Class componentImplementation) {
@@ -355,40 +389,23 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return LOG.isDebugEnabled() || ApplicationProperties.isInSandbox();
   }
 
-  protected class ComponentsRegistry {
-    private final List<ComponentConfig> myComponentConfigs = new ArrayList<>();
-    private final Map<Class, ComponentConfig> myComponentClassToConfig = new THashMap<>();
+  @Override
+  @RequiredDispatchThread
+  public synchronized void dispose() {
+    Application.get().assertIsDispatchThread();
 
-    private void loadClasses(List<Class> initAfter) {
-      for (ComponentConfig config : myComponentConfigs) {
-        loadClasses(config, initAfter);
-      }
+    if (myMessageBus != null) {
+      myMessageBus.dispose();
+      myMessageBus = null;
     }
 
-    private void loadClasses(@Nonnull ComponentConfig config, List<Class> notLazyServices) {
-      ClassLoader loader = config.getClassLoader();
+    myExtensionsArea = null;
+    myInjectingContainer.dispose();
+    myInjectingContainer = null;
 
-      try {
-        final Class<?> interfaceClass = Class.forName(config.getInterfaceClass(), true, loader);
-        final Class<?> implementationClass =
-                Comparing.equal(config.getInterfaceClass(), config.getImplementationClass()) ? interfaceClass : Class.forName(config.getImplementationClass(), true, loader);
-
-        getPicoContainer().registerComponent(new ComponentConfigComponentAdapter(ComponentManagerImpl.this, config, implementationClass));
-        myComponentClassToConfig.put(implementationClass, config);
-
-        notLazyServices.add(interfaceClass);
-      }
-      catch (Throwable t) {
-        handleInitComponentError(t, null, config);
-      }
-    }
-
-    private void addConfig(ComponentConfig config) {
-      myComponentConfigs.add(config);
-    }
-
-    public ComponentConfig getConfig(final Class componentImplementation) {
-      return myComponentClassToConfig.get(componentImplementation);
-    }
+    myComponentsRegistry = null;
+    myComponentsCreated = false;
+    myNotLazyServices.clear();
+    myDisposed = true;
   }
 }

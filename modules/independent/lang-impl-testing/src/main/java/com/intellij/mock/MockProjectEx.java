@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 public class MockProjectEx  extends MockProject implements ProjectEx {
   public MockProjectEx(@Nonnull Disposable parentDisposable) {
-    super(ApplicationManager.getApplication() != null ? ApplicationManager.getApplication().getPicoContainer() : null, parentDisposable);
+    super((MockComponentManager)ApplicationManager.getApplication(), parentDisposable);
   }
 
   @Override
