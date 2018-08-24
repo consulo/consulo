@@ -60,6 +60,7 @@ import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
@@ -945,6 +946,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return application.isUnitTestMode() || application.isCommandLine();
   }
 
+  @Singleton
   public static class ProjectNotificationsComponent {
     @Inject
     public ProjectNotificationsComponent(@Nonnull final Project project) {

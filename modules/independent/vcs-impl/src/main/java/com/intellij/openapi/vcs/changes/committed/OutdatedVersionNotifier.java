@@ -38,12 +38,14 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
  * @author yole
  * todo: use EditorNotifications
  */
+@Singleton
 public class OutdatedVersionNotifier implements ProjectComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier");
 

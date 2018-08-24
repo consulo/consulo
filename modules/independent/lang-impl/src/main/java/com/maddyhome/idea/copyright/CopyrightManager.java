@@ -47,20 +47,18 @@ import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@State(name = "CopyrightManager",
-       storages = {
-               @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/",
-                        stateSplitter = CopyrightManager.CopyrightStateSplitter.class)
-       })
+@State(name = "CopyrightManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/", stateSplitter = CopyrightManager.CopyrightStateSplitter.class)})
+@Singleton
 public class CopyrightManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(CopyrightManager.class.getName());
   @NonNls

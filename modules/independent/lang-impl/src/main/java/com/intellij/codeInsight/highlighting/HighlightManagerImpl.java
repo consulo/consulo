@@ -46,10 +46,12 @@ import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.*;
 
+@Singleton
 public class HighlightManagerImpl extends HighlightManager implements ProjectComponent {
   private final Project myProject;
 

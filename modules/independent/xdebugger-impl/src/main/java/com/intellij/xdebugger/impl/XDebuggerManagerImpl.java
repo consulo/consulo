@@ -60,6 +60,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,6 +71,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author nik
  */
 @State(name = XDebuggerManagerImpl.COMPONENT_NAME, storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class XDebuggerManagerImpl extends XDebuggerManager implements NamedComponent, PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState> {
   @NonNls
   public static final String COMPONENT_NAME = "XDebuggerManager";
@@ -179,25 +181,20 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
 
   @Override
   @Nonnull
-  public XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull XDebugProcessStarter processStarter)
-          throws ExecutionException {
+  public XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull XDebugProcessStarter processStarter) throws ExecutionException {
     return startSession(environment.getContentToReuse(), processStarter, new XDebugSessionImpl(environment, this));
   }
 
   @Override
   @Nonnull
-  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                              @Nullable RunContentDescriptor contentToReuse,
-                                              @Nonnull XDebugProcessStarter starter) throws ExecutionException {
+  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName, @Nullable RunContentDescriptor contentToReuse, @Nonnull XDebugProcessStarter starter) throws ExecutionException {
     return startSessionAndShowTab(sessionName, contentToReuse, false, starter);
   }
 
   @Nonnull
   @Override
-  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                              @Nullable RunContentDescriptor contentToReuse,
-                                              boolean showToolWindowOnSuspendOnly,
-                                              @Nonnull XDebugProcessStarter starter) throws ExecutionException {
+  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName, @Nullable RunContentDescriptor contentToReuse, boolean showToolWindowOnSuspendOnly, @Nonnull XDebugProcessStarter starter)
+          throws ExecutionException {
     return startSessionAndShowTab(sessionName, null, contentToReuse, showToolWindowOnSuspendOnly, starter);
   }
 
@@ -208,8 +205,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
                                               @Nullable RunContentDescriptor contentToReuse,
                                               boolean showToolWindowOnSuspendOnly,
                                               @Nonnull XDebugProcessStarter starter) throws ExecutionException {
-    XDebugSessionImpl session =
-            startSession(contentToReuse, starter, new XDebugSessionImpl(null, this, sessionName, icon, showToolWindowOnSuspendOnly, contentToReuse));
+    XDebugSessionImpl session = startSession(contentToReuse, starter, new XDebugSessionImpl(null, this, sessionName, icon, showToolWindowOnSuspendOnly, contentToReuse));
 
     if (!showToolWindowOnSuspendOnly) {
       session.showSessionTab();
@@ -219,9 +215,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
     return session;
   }
 
-  private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse,
-                                         @Nonnull XDebugProcessStarter processStarter,
-                                         @Nonnull XDebugSessionImpl session) throws ExecutionException {
+  private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse, @Nonnull XDebugProcessStarter processStarter, @Nonnull XDebugSessionImpl session) throws ExecutionException {
     XDebugProcess process = processStarter.start(session);
     myProject.getMessageBus().syncPublisher(TOPIC).processStarted(process);
 
@@ -245,8 +239,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
         !myProject.isDisposed() &&
         !ApplicationManager.getApplication().isUnitTestMode() &&
         XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isHideDebuggerOnProcessTermination()) {
-      ExecutionManager.getInstance(myProject).getContentManager()
-              .hideRunContent(DefaultDebugExecutor.getDebugExecutorInstance(), sessionTab.getRunContentDescriptor());
+      ExecutionManager.getInstance(myProject).getContentManager().hideRunContent(DefaultDebugExecutor.getDebugExecutorInstance(), sessionTab.getRunContentDescriptor());
     }
     if (myActiveSession.compareAndSet(session, null)) {
       onActiveSessionChanged();
@@ -354,8 +347,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
     public XDebuggerState() {
     }
 
-    public XDebuggerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState,
-                          XDebuggerWatchesManager.WatchesManagerState watchesManagerState) {
+    public XDebuggerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState, XDebuggerWatchesManager.WatchesManagerState watchesManagerState) {
       myBreakpointManagerState = breakpointManagerState;
       myWatchesManagerState = watchesManagerState;
     }

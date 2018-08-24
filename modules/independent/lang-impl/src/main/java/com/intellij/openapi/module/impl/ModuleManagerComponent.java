@@ -32,11 +32,13 @@ import com.intellij.util.messages.MessageBusConnection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
 @State(name = "ModuleManager", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml"))
+@Singleton
 public class ModuleManagerComponent extends ModuleManagerImpl {
   public static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
 

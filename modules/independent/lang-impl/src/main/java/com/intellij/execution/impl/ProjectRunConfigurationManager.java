@@ -28,6 +28,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -36,8 +37,9 @@ import java.util.Set;
  * User: anna
  * Date: 28-Mar-2006
  */
-@State(name = "ProjectRunConfigurationManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR +
-                                                                            "/runConfigurations/", stateSplitter = ProjectRunConfigurationManager.RunConfigurationStateSplitter.class)})
+@State(name = "ProjectRunConfigurationManager", storages = {
+        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/runConfigurations/", stateSplitter = ProjectRunConfigurationManager.RunConfigurationStateSplitter.class)})
+@Singleton
 public class ProjectRunConfigurationManager implements PersistentStateComponent<Element> {
   private final RunManagerImpl myManager;
   private List<Element> myUnloadedElements;

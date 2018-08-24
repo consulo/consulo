@@ -34,6 +34,7 @@ import consulo.annotations.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 06.04.2015
  */
+@Singleton
 public class ContentEntryFileListener implements Disposable {
   public static class Listener implements VirtualFileListener {
     private final Project myProject;

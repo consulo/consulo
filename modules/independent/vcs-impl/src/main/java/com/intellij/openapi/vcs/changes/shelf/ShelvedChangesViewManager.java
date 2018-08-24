@@ -65,6 +65,7 @@ import consulo.awt.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -77,6 +78,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@Singleton
 public class ShelvedChangesViewManager implements ProjectComponent {
   private final ChangesViewContentI myContentManager;
   private final ShelveChangesManager myShelveChangesManager;

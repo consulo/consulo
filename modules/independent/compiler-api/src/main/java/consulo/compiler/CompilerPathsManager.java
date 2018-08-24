@@ -25,6 +25,7 @@ import consulo.roots.ContentFolderTypeProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -32,6 +33,7 @@ import javax.inject.Inject;
  */
 @Deprecated
 @DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules", until = "2.0")
+@Singleton
 public class CompilerPathsManager {
   @Nonnull
   public static CompilerPathsManager getInstance(@Nonnull final Project project) {
@@ -79,9 +81,7 @@ public class CompilerPathsManager {
     ModuleCompilerPathsManager.getInstance(module).setExcludeOutput(val);
   }
 
-  public void setCompilerOutputUrl(@Nonnull Module module,
-                                   @Nonnull ContentFolderTypeProvider contentFolderType,
-                                   @Nullable String compilerOutputUrl) {
+  public void setCompilerOutputUrl(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl) {
     ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
   }
 

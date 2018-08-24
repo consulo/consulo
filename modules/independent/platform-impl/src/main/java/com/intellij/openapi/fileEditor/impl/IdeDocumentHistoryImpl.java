@@ -40,6 +40,7 @@ import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -48,6 +49,7 @@ import java.util.*;
     name = "IdeDocumentHistory",
     storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}
 )
+@Singleton
 public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements ProjectComponent, Disposable, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl");
 

@@ -62,6 +62,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.HashSet;
@@ -69,6 +70,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Singleton
 public class ExecutionManagerImpl extends ExecutionManager implements Disposable {
   public static final Key<Object> EXECUTION_SESSION_ID_KEY = Key.create("EXECUTION_SESSION_ID_KEY");
 

@@ -48,10 +48,12 @@ import com.intellij.util.messages.MessageBusConnection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Singleton
 public class PsiVFSListener implements VirtualFileListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.impl.PsiVFSListener");
 

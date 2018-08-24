@@ -45,6 +45,7 @@ import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -456,6 +457,7 @@ public class EventLog {
     }, true);
   }
 
+  @Singleton
   public static class ProjectTracker implements ProjectComponent {
     private final Map<String, EventLogConsole> myCategoryMap = ContainerUtil.newConcurrentMap();
     private final List<Notification> myInitial = ContainerUtil.createLockFreeCopyOnWriteList();

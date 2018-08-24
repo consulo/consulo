@@ -33,6 +33,7 @@ import com.intellij.util.messages.Topic;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -40,6 +41,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * VcsRepositoryManager creates,stores and updates all Repositories information using registered {@link VcsRepositoryCreator}
  * extension point in a thread safe way.
  */
+@Singleton
 public class VcsRepositoryManager implements Disposable, VcsListener {
 
   public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED =

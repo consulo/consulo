@@ -55,6 +55,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -67,6 +68,7 @@ import java.util.Set;
 /**
  * @author ven
  */
+@Singleton
 public class CoverageDataManagerImpl extends CoverageDataManager {
   private static final String REPLACE_ACTIVE_SUITES = "&Replace active suites";
   private static final String ADD_TO_ACTIVE_SUITES = "&Add to active suites";

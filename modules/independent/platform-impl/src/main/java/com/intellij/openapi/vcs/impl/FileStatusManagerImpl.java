@@ -47,6 +47,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.Collections;
@@ -56,6 +57,7 @@ import java.util.Map;
 /**
  * @author mike
  */
+@Singleton
 public class FileStatusManagerImpl extends FileStatusManager implements ProjectComponent, Disposable {
   private final Map<VirtualFile, FileStatus> myCachedStatuses = Collections.synchronizedMap(new HashMap<VirtualFile, FileStatus>());
   private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged =

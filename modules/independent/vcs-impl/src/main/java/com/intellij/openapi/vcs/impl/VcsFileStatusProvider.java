@@ -29,10 +29,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author yole
  */
+@Singleton
 public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContentProvider {
   private final Project myProject;
   private final FileStatusManagerImpl myFileStatusManager;
