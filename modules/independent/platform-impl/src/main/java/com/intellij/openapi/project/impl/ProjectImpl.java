@@ -339,7 +339,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @RequiredDispatchThread
   @Override
-  public synchronized void dispose() {
+  public void dispose() {
     ApplicationEx application = ApplicationManagerEx.getApplicationEx();
     assert application.isWriteAccessAllowed();  // dispose must be under write action
 
@@ -355,11 +355,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myName = null;
     myProjectManagerListener = null;
 
-    super.dispose();
-
     if (!application.isDisposed()) {
       application.getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).afterProjectClosed(this);
     }
+
+    super.dispose();
+
     TimedReference.disposeTimed();
   }
 

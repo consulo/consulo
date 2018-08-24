@@ -182,7 +182,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
         ComponentConfig[] componentConfigs = getComponentConfigs(plugin);
 
         for (ComponentConfig componentConfig : componentConfigs) {
-          registerComponent(isProjectDefault(), componentConfig, plugin, builder);
+          registerComponent(isProjectDefault(), componentConfig, plugin);
         }
       }
     }
@@ -260,7 +260,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return null;
   }
 
-  private void registerComponent(final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor, InjectingContainerBuilder builder) {
+  private void registerComponent(final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor) {
     if (defaultProject && !config.isLoadForDefaultProject()) return;
 
     registerComponent(config, descriptor);
@@ -391,7 +391,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   @RequiredDispatchThread
-  public synchronized void dispose() {
+  public void dispose() {
     Application.get().assertIsDispatchThread();
 
     if (myMessageBus != null) {

@@ -2618,5 +2618,7 @@
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false" />
+
+    <projectService serviceInterface="com.intellij.problems.WolfTheProblemSolver" serviceImplementation="com.intellij.codeInsight.problems.WolfTheProblemSolverImpl" lazy="false" />
   </extensions>
 </idea-plugin>

@@ -115,12 +115,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.problems.WolfTheProblemSolver</interface-class>
-      <implementation-class>com.intellij.codeInsight.problems.WolfTheProblemSolverImpl</implementation-class>
-      <headless-implementation-class>com.intellij.codeInsight.problems.MockWolfTheProblemSolver</headless-implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.pom.tree.TreeAspect</interface-class>
       <implementation-class>com.intellij.pom.tree.TreeAspect</implementation-class>
       <loadForDefaultProject/>
