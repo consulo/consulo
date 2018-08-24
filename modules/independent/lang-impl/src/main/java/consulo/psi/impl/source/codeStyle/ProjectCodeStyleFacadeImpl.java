@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.psi.impl.source.codeStyle;
 
-package com.intellij.psi.codeStyle;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-
+/**
+ * @author VISTALL
+ * @since 2018-08-24
+ */
 @Singleton
-@State(name = "CodeStyleSettingsManager", storages = @Storage("other.xml"))
-public class AppCodeStyleSettingsManager extends CodeStyleSettingsManager {
+public class ProjectCodeStyleFacadeImpl extends CodeStyleFacadeImpl {
+  @Inject
+  public ProjectCodeStyleFacadeImpl(@Nonnull Project project) {
+    super(project);
+  }
 }

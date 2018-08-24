@@ -1834,7 +1834,7 @@
     <applicationService serviceInterface="com.intellij.openapi.roots.impl.libraries.JarDirectoryWatcherFactory"
                         serviceImplementation="com.intellij.openapi.roots.impl.libraries.JarDirectoryWatcherFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.codeStyle.CodeStyleFacade"
-                        serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl"/>
+                        serviceImplementation="consulo.psi.impl.source.codeStyle.ApplicationCodeStyleFacadeImpl"/>
 
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
@@ -1887,7 +1887,7 @@
                     serviceImplementation="com.intellij.codeInsight.AutoPopupController"/>
 
     <projectService serviceInterface="com.intellij.codeStyle.CodeStyleFacade"
-                    serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl"/>
+                    serviceImplementation="consulo.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
 
     <projectService serviceInterface="com.intellij.usages.UsageViewManager"
                     serviceImplementation="com.intellij.usages.impl.UsageViewManagerImpl"/>

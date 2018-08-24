@@ -28,6 +28,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CodeStyleSettingsManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(CodeStyleSettingsManager.class.getName());
@@ -38,7 +39,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   private volatile CodeStyleSettings myTemporarySettings;
   private volatile boolean myIsLoaded = false;
 
-  public static CodeStyleSettingsManager getInstance(@javax.annotation.Nullable Project project) {
+  public static CodeStyleSettingsManager getInstance(@Nullable Project project) {
     if (project == null || project.isDefault()) {
       return getInstance();
     }
@@ -57,7 +58,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   }
 
   @Nonnull
-  public static CodeStyleSettings getSettings(@javax.annotation.Nullable final Project project) {
+  public static CodeStyleSettings getSettings(@Nullable final Project project) {
     return getInstance(project).getCurrentSettings();
   }
 

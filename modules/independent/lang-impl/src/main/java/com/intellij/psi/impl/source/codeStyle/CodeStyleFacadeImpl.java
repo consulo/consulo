@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
 @Singleton
-public class CodeStyleFacadeImpl extends CodeStyleFacade {
+public abstract class CodeStyleFacadeImpl extends CodeStyleFacade {
   private final Project myProject;
 
   public CodeStyleFacadeImpl() {

@@ -41,10 +41,6 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
 
   private final List<JBPopup> myAllPopups = new WeakList<>();
 
-
-  private StackingPopupDispatcherImpl() {
-  }
-
   @Override
   public void onPopupShown(JBPopup popup, boolean inStack) {
     if (inStack) {
