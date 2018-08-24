@@ -116,7 +116,7 @@ public class ContainerUtilTest extends TestCase {
     assertEquals(new TIntArrayList(new int[]{-1, -2, -3, 0, 1, 2, 3, 4, 6}), y1);
   }
 
-  public void testLockFreeSingleThreadPerformance() {
+  public void _testLockFreeSingleThreadPerformance() {
     final List<Object> my = new LockFreeCopyOnWriteArrayList<Object>();
     final List<Object> stock = new CopyOnWriteArrayList<Object>();
 
