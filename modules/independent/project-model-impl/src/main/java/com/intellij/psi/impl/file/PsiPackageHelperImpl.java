@@ -19,9 +19,10 @@ package com.intellij.psi.impl.file;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
-import com.intellij.psi.impl.PsiManagerImpl;
 import consulo.psi.PsiPackageManager;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -29,10 +30,11 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class PsiPackageHelperImpl extends PsiPackageHelper {
-  private final PsiManagerImpl myManager;
+  private final PsiPackageManager myPackageManager;
 
-  public PsiPackageHelperImpl(final PsiManagerImpl manager) {
-    myManager = manager;
+  @Inject
+  public PsiPackageHelperImpl(PsiPackageManager packageManager) {
+    myPackageManager = packageManager;
   }
 
   @Override
@@ -46,11 +48,11 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
 
   @Override
   public PsiDirectoryContainer getDirectoryContainer(@Nonnull PsiDirectory directory) {
-    return PsiPackageManager.getInstance(myManager.getProject()).findAnyPackage(directory);
+    return myPackageManager.findAnyPackage(directory);
   }
 
   @Override
   public boolean isPackage(PsiDirectory directory) {
-    return PsiPackageManager.getInstance(myManager.getProject()).findAnyPackage(directory) != null;
+    return myPackageManager.findAnyPackage(directory) != null;
   }
 }

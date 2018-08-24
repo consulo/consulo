@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -33,7 +34,7 @@ public abstract class PsiPackageHelper {
   @Nonnull
   public abstract String getQualifiedName(@Nonnull PsiDirectory directory, final boolean presentable);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract PsiDirectoryContainer getDirectoryContainer(@Nonnull PsiDirectory directory);
 
   public abstract boolean isPackage(PsiDirectory directory);

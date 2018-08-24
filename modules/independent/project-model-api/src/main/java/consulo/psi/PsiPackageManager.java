@@ -38,11 +38,11 @@ public abstract class PsiPackageManager {
 
   public abstract void dropCache(@Nonnull Class<? extends ModuleExtension> extensionClass);
 
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredReadAction
   public abstract PsiPackage findPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass);
 
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredReadAction
   public abstract PsiPackage findPackage(@Nonnull PsiDirectory directory, @Nonnull Class<? extends ModuleExtension> extensionClass);
 
