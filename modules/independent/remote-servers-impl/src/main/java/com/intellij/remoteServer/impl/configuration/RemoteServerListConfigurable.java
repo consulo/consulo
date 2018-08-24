@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,11 +38,12 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
   @Nullable private final ServerType<?> myServerType;
   private RemoteServer<?> myLastSelectedServer;
 
+  @Inject
   public RemoteServerListConfigurable(@Nonnull RemoteServersManager manager) {
     this(manager, null);
   }
 
-  private RemoteServerListConfigurable(@Nonnull RemoteServersManager manager, @javax.annotation.Nullable ServerType<?> type) {
+  private RemoteServerListConfigurable(@Nonnull RemoteServersManager manager, @Nullable ServerType<?> type) {
     myServersManager = manager;
     myServerType = type;
     initTree();
@@ -179,7 +181,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
 
     @Nonnull
     @Override
-    public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
       ServerType[] serverTypes = ServerType.EP_NAME.getExtensions();
       AnAction[] actions = new AnAction[serverTypes.length];
       for (int i = 0; i < serverTypes.length; i++) {

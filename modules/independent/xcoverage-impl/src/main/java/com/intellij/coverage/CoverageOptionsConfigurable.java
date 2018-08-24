@@ -9,6 +9,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -22,6 +23,7 @@ public class CoverageOptionsConfigurable implements SearchableConfigurable, Conf
   private final CoverageOptionsProvider myManager;
   private Project myProject;
 
+  @Inject
   public CoverageOptionsConfigurable(CoverageOptionsProvider manager, Project project) {
     myManager = manager;
     myProject = project;

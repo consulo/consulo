@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.util.List;
@@ -47,6 +48,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
   protected final PluginManagerUISettings myUISettings;
   protected boolean myAvailable;
 
+  @Inject
   public PluginManagerConfigurable(final PluginManagerUISettings uiSettings) {
     myUISettings = uiSettings;
   }

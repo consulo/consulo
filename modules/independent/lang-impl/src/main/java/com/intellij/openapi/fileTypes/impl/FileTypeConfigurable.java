@@ -38,11 +38,12 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PairConvertor;
 import com.intellij.util.ui.JBUI;
+import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -65,6 +66,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
   private FileTypeAssocTable<Language> myTempTemplateDataLanguages;
   private final Map<UserFileType, UserFileType> myOriginalToEditedMap = new HashMap<UserFileType, UserFileType>();
 
+  @Inject
   public FileTypeConfigurable(FileTypeManager fileTypeManager) {
     myManager = (FileTypeManagerImpl)fileTypeManager;
   }

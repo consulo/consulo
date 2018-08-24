@@ -15,12 +15,20 @@
  */
 package com.intellij.application.options;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.options.ConfigurableEP;
+import consulo.options.ApplicationConfigurableEP;
+
+import javax.inject.Inject;
 
 /**
  * @author Dennis.Ushakov
  */
-public class GeneralCodeStyleOptionsProviderEP extends ConfigurableEP<GeneralCodeStyleOptionsProvider> {
+public class GeneralCodeStyleOptionsProviderEP extends ApplicationConfigurableEP<GeneralCodeStyleOptionsProvider> {
   public static final ExtensionPointName<GeneralCodeStyleOptionsProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.generalCodeStyleOptionsProvider");
+
+  @Inject
+  public GeneralCodeStyleOptionsProviderEP(Application application) {
+    super(application);
+  }
 }

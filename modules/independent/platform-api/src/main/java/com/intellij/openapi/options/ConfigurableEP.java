@@ -17,22 +17,17 @@ package com.intellij.openapi.options;
 
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.NullableFactory;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.injecting.InjectingContainerOwner;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.picocontainer.PicoContainer;
-
 import java.util.ResourceBundle;
 
 /**
@@ -40,7 +35,7 @@ import java.util.ResourceBundle;
  * @see Configurable
  */
 @Tag("configurable")
-public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExtensionPointBean {
+public abstract class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.ConfigurableEP");
 
   @Attribute("displayName")
@@ -59,10 +54,6 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     return displayName = CommonBundle.message(resourceBundle, key);
   }
 
-  @Property(surroundWithTag = false)
-  @AbstractCollection(surroundWithTag = false)
-  public ConfigurableEP[] children;
-
   /**
    * Extension point of ConfigurableEP type to calculate children
    */
@@ -79,25 +70,14 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   @Attribute("parentId")
   public String parentId;
 
-  public ConfigurableEP[] getChildren() {
-    for (ConfigurableEP child : children) {
-      child.myPicoContainer = myPicoContainer;
-      child.myPluginDescriptor = myPluginDescriptor;
-      child.myProject = myProject;
-    }
-    return children;
-  }
+  public abstract ConfigurableEP[] getChildren();
 
   @Attribute("id")
   public String id;
 
 
-  /** Marks project level configurables that do not apply to the default project. */
-  @Attribute("nonDefaultProject")
-  public boolean nonDefaultProject;
-
   public boolean isAvailable() {
-    return !nonDefaultProject || !(myProject != null  && myProject.isDefault());
+    return true;
   }
 
   /**
@@ -111,22 +91,10 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   public String providerClass;
 
   private final AtomicNotNullLazyValue<NullableFactory<T>> myFactory;
-  private PicoContainer myPicoContainer;
-  private Project myProject;
+  protected InjectingContainerOwner myContainerOwner;
 
-  @SuppressWarnings("UnusedDeclaration")
-  public ConfigurableEP() {
-    this(ApplicationManager.getApplication().getPicoContainer(), null);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  public ConfigurableEP(Project project) {
-    this(project.getPicoContainer(), project);
-  }
-
-  protected ConfigurableEP(PicoContainer picoContainer, @Nullable Project project) {
-    myProject = project;
-    myPicoContainer = picoContainer;
+  protected ConfigurableEP(InjectingContainerOwner containerOwner) {
+    myContainerOwner = containerOwner;
     myFactory = new AtomicNotNullLazyValue<NullableFactory<T>>() {
       @Nonnull
       @Override
@@ -150,20 +118,10 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     try {
       return myFactory.getValue().create();
     }
-    catch (LinkageError e) {
-      LOG.error(e);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-    catch (AssertionError e) {
+    catch (LinkageError | AssertionError | Exception e) {
       LOG.error(e);
     }
     return null;
-  }
-
-  public Project getProject() {
-    return myProject;
   }
 
   @Override
@@ -172,6 +130,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   }
 
   private class InstanceFromProviderFactory extends AtomicNotNullLazyValue<ConfigurableProvider> implements NullableFactory<T> {
+    @Override
     public T create() {
       return (T)getValue().createConfigurable();
     }
@@ -180,7 +139,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     @Override
     protected ConfigurableProvider compute() {
       try {
-        return instantiate(providerClass, myPicoContainer);
+        return instantiate(providerClass, myContainerOwner.getInjectingContainer());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);
@@ -189,8 +148,9 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
   }
 
   private class NewInstanceFactory extends NotNullLazyValue<Class<? extends T>> implements NullableFactory<T> {
+    @Override
     public T create() {
-      return instantiate(getValue(), myPicoContainer, true);
+      return instantiate(getValue(), myContainerOwner.getInjectingContainer());
     }
 
     @Nonnull
@@ -216,7 +176,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     protected T compute() {
       try {
         final Class<T> aClass = findClass(implementationClass);
-        return instantiate(aClass, myPicoContainer, true);
+        return instantiate(aClass, myContainerOwner.getInjectingContainer());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

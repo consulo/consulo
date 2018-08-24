@@ -20,10 +20,12 @@ import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.*;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
@@ -98,7 +100,13 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     if (cast(configurable, NonDefaultProjectConfigurable.class) != null) {
       return true;
     }
-    return configurable instanceof ConfigurableWrapper && ((ConfigurableWrapper)configurable).myEp.nonDefaultProject;
+    if (configurable instanceof ConfigurableWrapper) {
+      ConfigurableEP ep = ((ConfigurableWrapper)configurable).myEp;
+      if(ep instanceof ProjectConfigurableEP && ((ProjectConfigurableEP)ep).nonDefaultProject) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private final ConfigurableEP myEp;
@@ -204,11 +212,11 @@ public class ConfigurableWrapper implements SearchableConfigurable {
       if (ep.dynamic) {
         kids = ((Composite)getConfigurable()).getConfigurables();
       }
-      else if (ep.children != null) {
+      else if (ep.getChildren() != null) {
         kids = ContainerUtil.mapNotNull(ep.getChildren(), ep1 -> ep1.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep1) : null, EMPTY_ARRAY);
       }
       if (ep.childrenEPName != null) {
-        ExtensionPoint<Object> childrenEP = Extensions.getArea(ep.getProject()).getExtensionPoint(ep.childrenEPName);
+        ExtensionPoint<Object> childrenEP = Extensions.getArea(getProject(ep)).getExtensionPoint(ep.childrenEPName);
         Object[] extensions = childrenEP.getExtensions();
         if (extensions.length > 0) {
           if (extensions[0] instanceof ConfigurableEP) {
@@ -221,6 +229,13 @@ public class ConfigurableWrapper implements SearchableConfigurable {
         }
       }
       myKids = kids;
+    }
+
+    private Project getProject(ConfigurableEP<?> ep) {
+      if(ep instanceof ProjectConfigurableEP) {
+        return ((ProjectConfigurableEP)ep).getProject();
+      }
+      return null;
     }
 
     @Nonnull

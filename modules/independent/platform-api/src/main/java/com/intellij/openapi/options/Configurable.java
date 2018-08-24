@@ -17,6 +17,8 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.ArrayFactory;
+import consulo.options.ApplicationConfigurableEP;
+import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
@@ -57,9 +59,9 @@ public interface Configurable extends UnnamedConfigurable {
 
   public static ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
 
-  ExtensionPointName<ConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("com.intellij.applicationConfigurable");
+  ExtensionPointName<ApplicationConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("com.intellij.applicationConfigurable");
 
-  ExtensionPointName<ConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("com.intellij.projectConfigurable");
+  ExtensionPointName<ProjectConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("com.intellij.projectConfigurable");
 
   /**
    * Returns the user-visible name of the settings component.

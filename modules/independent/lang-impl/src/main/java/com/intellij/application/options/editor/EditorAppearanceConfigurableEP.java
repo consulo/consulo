@@ -15,8 +15,11 @@
  */
 package com.intellij.application.options.editor;
 
-import com.intellij.openapi.options.ConfigurableEP;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.options.ApplicationConfigurableEP;
+
+import javax.inject.Inject;
 
 /**
  * To provide additional options in Editor | Appearance section register implementation of
@@ -30,5 +33,9 @@ import com.intellij.openapi.options.UnnamedConfigurable;
  *
  * @author nik
  */
-public class EditorAppearanceConfigurableEP extends ConfigurableEP<UnnamedConfigurable> {
+public class EditorAppearanceConfigurableEP extends ApplicationConfigurableEP<UnnamedConfigurable> {
+  @Inject
+  public EditorAppearanceConfigurableEP(Application application) {
+    super(application);
+  }
 }
