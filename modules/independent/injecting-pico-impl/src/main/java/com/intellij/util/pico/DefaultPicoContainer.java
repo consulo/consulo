@@ -33,13 +33,14 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   private final PicoContainer parent;
   private final Set<PicoContainer> children = new THashSet<>();
 
-  private final Map<Object, ComponentAdapter> componentKeyToAdapterCache = ContainerUtil.newConcurrentMap();
+  private final Map<String, ComponentAdapter> componentKeyToAdapterCache = ContainerUtil.newConcurrentMap();
+
   private final LinkedHashSetWrapper<ComponentAdapter> componentAdapters = new LinkedHashSetWrapper<>();
   private final Map<String, ComponentAdapter> classNameToAdapter = ContainerUtil.newConcurrentMap();
   private final AtomicReference<FList<ComponentAdapter>> nonAssignableComponentAdapters = new AtomicReference<>(FList.<ComponentAdapter>emptyList());
 
   public DefaultPicoContainer(@Nullable PicoContainer parent) {
-    this.parent = parent == null ? null : ImmutablePicoContainerProxyFactory.newProxyInstance(parent);
+    this.parent = parent == null ? null : parent;
   }
 
   public DefaultPicoContainer() {
@@ -54,7 +55,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   @Override
   @Nullable
   public final ComponentAdapter getComponentAdapter(Object componentKey) {
-    ComponentAdapter adapter = getFromCache(componentKey);
+    ComponentAdapter adapter = findByKey(componentKey);
     if (adapter == null && parent != null) {
       return parent.getComponentAdapter(componentKey);
     }
@@ -62,10 +63,12 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Nullable
-  private ComponentAdapter getFromCache(final Object componentKey) {
-    ComponentAdapter adapter = componentKeyToAdapterCache.get(componentKey);
-    if (adapter != null) {
-      return adapter;
+  private ComponentAdapter findByKey(final Object componentKey) {
+    if (componentKey instanceof String) {
+      ComponentAdapter adapter = componentKeyToAdapterCache.get(componentKey);
+      if (adapter != null) {
+        return adapter;
+      }
     }
 
     if (componentKey instanceof Class) {
@@ -115,10 +118,15 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     return result;
   }
 
+  private boolean contains(String key) {
+    return componentKeyToAdapterCache.containsKey(key) || parent instanceof DefaultPicoContainer && ((DefaultPicoContainer)parent).contains(key);
+  }
+
   @Override
   public ComponentAdapter registerComponent(@Nonnull ComponentAdapter componentAdapter) {
-    Object componentKey = componentAdapter.getComponentKey();
-    if (componentKeyToAdapterCache.containsKey(componentKey)) {
+    String componentKey = toKey(componentAdapter.getComponentKey());
+
+    if (contains(componentKey)) {
       throw new DuplicateComponentKeyRegistrationException(componentKey);
     }
 
@@ -139,13 +147,25 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
     componentAdapters.add(componentAdapter);
 
-    componentKeyToAdapterCache.put(componentKey, componentAdapter);
+    componentKeyToAdapterCache.put(toKey(componentKey), componentAdapter);
     return componentAdapter;
+  }
+
+  private String toKey(Object value) {
+    if (value instanceof String) {
+      return (String)value;
+    }
+
+    if (value instanceof Class) {
+      return ((Class)value).getName();
+    }
+
+    throw new UnsupportedOperationException("Unknown key type " + value);
   }
 
   @Override
   public ComponentAdapter unregisterComponent(@Nonnull Object componentKey) {
-    ComponentAdapter adapter = componentKeyToAdapterCache.remove(componentKey);
+    ComponentAdapter adapter = componentKeyToAdapterCache.remove(toKey(componentKey));
     componentAdapters.remove(adapter);
     if (adapter instanceof AssignableToComponentAdapter) {
       classNameToAdapter.remove(((AssignableToComponentAdapter)adapter).getAssignableToClassName());
@@ -187,7 +207,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   @Override
   @Nullable
   public Object getComponentInstance(Object componentKey) {
-    ComponentAdapter adapter = getFromCache(componentKey);
+    ComponentAdapter adapter = findByKey(componentKey);
     if (adapter != null) {
       return getLocalInstance(adapter);
     }
@@ -224,10 +244,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     try {
       return componentAdapter.getComponentInstance(this);
     }
-    catch (PicoInitializationException e) {
-      firstLevelException = e;
-    }
-    catch (PicoIntrospectionException e) {
+    catch (PicoInitializationException | PicoIntrospectionException e) {
       firstLevelException = e;
     }
 
@@ -336,6 +353,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
   /**
    * A linked hash set that's copied on write operations.
+   *
    * @param <T>
    */
   private static class LinkedHashSetWrapper<T> {
@@ -384,6 +402,6 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
   @Override
   public String toString() {
-    return "DefaultPicoContainer" + (getParent() == null ? " (root)" : " (parent="+getParent()+")");
+    return "DefaultPicoContainer" + (getParent() == null ? " (root)" : " (parent=" + getParent() + ")");
   }
 }

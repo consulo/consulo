@@ -26,17 +26,20 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
+import consulo.codeStyle.ApplicationCodeStyleFacade;
+import consulo.codeStyle.ProjectCodeStyleFacade;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class CodeStyleFacade {
+public interface CodeStyleFacade {
   public static CodeStyleFacade getInstance() {
-    return ServiceManager.getService(CodeStyleFacade.class);
+    return ServiceManager.getService(ApplicationCodeStyleFacade.class);
   }
 
   public static CodeStyleFacade getInstance(@Nullable Project project) {
     if (project == null) return getInstance();
-    return ServiceManager.getService(project, CodeStyleFacade.class);
+    return ServiceManager.getService(project, ProjectCodeStyleFacade.class);
   }
 
   /**
@@ -63,7 +66,7 @@ public abstract class CodeStyleFacade {
    * @return the indent string (containing of tabs and/or white spaces), or null if it
    *         was not possible to calculate the indent.
    */
-  public String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset) {
+  default String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset) {
     //noinspection deprecation
     return getLineIndent(editor.getDocument(), offset);
   }
@@ -81,7 +84,7 @@ public abstract class CodeStyleFacade {
   public abstract boolean isWrapWhenTypingReachesRightMargin();
 
   @SuppressWarnings("deprecation")
-  public boolean isWrapOnTyping(@Nullable Language language) {
+  default boolean isWrapOnTyping(@Nullable Language language) {
     return isWrapWhenTypingReachesRightMargin();
   }
 

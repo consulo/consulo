@@ -19,31 +19,23 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class PropertiesComponentImpl extends PropertiesComponent implements PersistentStateComponent<Element> {
-  private final Map<String, String> myMap = new LinkedHashMap<String, String>();
+public class BasePropertiesComponentImpl implements PropertiesComponent, PersistentStateComponent<Element> {
+  private final Map<String, String> myMap = new LinkedHashMap<>();
   @NonNls private static final String ELEMENT_PROPERTY = "property";
   @NonNls private static final String ATTRIBUTE_NAME = "name";
   @NonNls private static final String ATTRIBUTE_VALUE = "value";
 
-  @Nonnull
-  public String getComponentName() {
-    return "PropertiesComponent";
-  }
-
-  PropertiesComponentImpl() {
-  }
-
   @TestOnly
   @Deprecated
-  public static PropertiesComponentImpl create() {
-    return new PropertiesComponentImpl();
+  public static BasePropertiesComponentImpl create() {
+    return new BasePropertiesComponentImpl();
   }
 
   @Override

@@ -24,8 +24,9 @@ import com.intellij.util.pico.AssignableToComponentAdapter;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 import org.picocontainer.*;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Alexander Kireyev
@@ -58,7 +59,7 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Assign
 
   @Override
   public Object getComponentKey() {
-    return this;
+    return "ExtensionComponentAdapter: " + hashCode();
   }
 
   @Override

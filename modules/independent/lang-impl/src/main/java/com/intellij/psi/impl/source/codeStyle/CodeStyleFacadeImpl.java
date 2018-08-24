@@ -31,12 +31,11 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProviderEP;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
-@Singleton
-public abstract class CodeStyleFacadeImpl extends CodeStyleFacade {
+public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   private final Project myProject;
 
   public CodeStyleFacadeImpl() {

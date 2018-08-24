@@ -56,6 +56,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.util.ApplicationPropertiesComponent;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -172,7 +173,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   private final AtomicLong elapsedAutoDetect = new AtomicLong();
 
   @Inject
-  public FileTypeManagerImpl(Application application, SchemesManagerFactory schemesManagerFactory, PropertiesComponent propertiesComponent) {
+  public FileTypeManagerImpl(Application application, SchemesManagerFactory schemesManagerFactory, ApplicationPropertiesComponent propertiesComponent) {
     int fileTypeChangedCounter = StringUtilRt.parseInt(propertiesComponent.getValue("fileTypeChangedCounter"), 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);
     autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm.impl;
+package consulo.web.wm.impl;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ModalityState;
@@ -22,27 +22,22 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.*;
-import consulo.wm.ProjectIdeFocusManager;
+import com.intellij.openapi.wm.FocusCommand;
+import com.intellij.openapi.wm.FocusRequestor;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeFrame;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-@Singleton
-public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
-  private final DesktopToolWindowManagerImpl myToolWindowManager;
-
-  @Inject
-  public DesktopIdeFocusManagerImpl(ToolWindowManager twManager) {
-    myToolWindowManager = (DesktopToolWindowManagerImpl)twManager;
-    WeakFocusStackManager.getInstance();
-  }
-
+/**
+ * @author VISTALL
+ * @since 12-Oct-17
+ */
+public class WebProjectIdeFocusManagerImpl implements IdeFocusManager {
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
@@ -56,7 +51,7 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   }
 
   @Override
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @javax.annotation.Nullable Project project) {
+  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
     return IdeFocusManager.getGlobalInstance().requestFocusInProject(c, project);
   }
 
@@ -99,7 +94,7 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   @Nonnull
   @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
-    return myToolWindowManager.requestDefaultFocus(forced);
+    return AsyncResult.resolved(null); // TODO request focus from toolwindow manager?
   }
 
   @Override

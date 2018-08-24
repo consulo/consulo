@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.psi.impl.source.codeStyle;
+package consulo.util;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
-import consulo.codeStyle.ProjectCodeStyleFacade;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import com.intellij.openapi.util.WindowStateService;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
-@Singleton
-public class ProjectCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements ProjectCodeStyleFacade {
-  @Inject
-  public ProjectCodeStyleFacadeImpl(@Nonnull Project project) {
-    super(project);
-  }
+public interface ApplicationWindowStateService extends WindowStateService {
 }

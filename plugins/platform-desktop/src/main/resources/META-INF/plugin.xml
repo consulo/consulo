@@ -33,11 +33,6 @@
       <implementation-class>com.intellij.openapi.wm.impl.DesktopWindowManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.TestWindowManager</headless-implementation-class>
     </component>
-    <component>
-      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
-      <implementation-class>com.intellij.openapi.wm.impl.FocusManagerImpl</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
-    </component>
 
     <component>
       <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
@@ -61,11 +56,6 @@
       <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
       <implementation-class>com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.ToolWindowHeadlessManagerImpl</headless-implementation-class>
-    </component>
-    <component>
-      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
-      <implementation-class>com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
     </component>
     <component>
       <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
@@ -119,5 +109,9 @@
     <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.DesktopPsiAwareTextEditorProvider" />
+
+    <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false" />
+
+    <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false" />
   </extensions>
 </idea-plugin>

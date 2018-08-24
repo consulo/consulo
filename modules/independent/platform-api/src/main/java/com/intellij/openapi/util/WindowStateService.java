@@ -15,21 +15,23 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
+import consulo.util.ApplicationWindowStateService;
+import consulo.util.ProjectWindowStateService;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
-public abstract class WindowStateService {
+public interface WindowStateService {
   /**
    * @return an instance of the service for the application
    */
   public static WindowStateService getInstance() {
-    return ServiceManager.getService(WindowStateService.class);
+    return ServiceManager.getService(ApplicationWindowStateService.class);
   }
 
   /**
@@ -37,7 +39,7 @@ public abstract class WindowStateService {
    * @return an instance of the service for the specified project
    */
   public static WindowStateService getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, WindowStateService.class);
+    return ServiceManager.getService(project, ProjectWindowStateService.class);
   }
 
   /**
@@ -47,7 +49,7 @@ public abstract class WindowStateService {
    * @param component a component which state should be changed
    * @return {@code true} if a state is loaded successfully, {@code false} otherwise
    */
-  public final boolean loadState(@Nonnull String key, @Nonnull Component component) {
+  default boolean loadState(@Nonnull String key, @Nonnull Component component) {
     return loadStateFor(null, key, component);
   }
 
@@ -69,7 +71,7 @@ public abstract class WindowStateService {
    * @param key       an unique string key
    * @param component a component which state should be saved
    */
-  public final void saveState(@Nonnull String key, @Nonnull Component component) {
+  default void saveState(@Nonnull String key, @Nonnull Component component) {
     saveStateFor(null, key, component);
   }
 
@@ -92,7 +94,7 @@ public abstract class WindowStateService {
    * @param key an unique string key
    * @return a corresponding location
    */
-  public final Point getLocation(@Nonnull String key) {
+  default Point getLocation(@Nonnull String key) {
     return getLocationFor(null, key);
   }
 
@@ -113,7 +115,7 @@ public abstract class WindowStateService {
    *
    * @param key an unique string key
    */
-  public final void putLocation(@Nonnull String key, Point location) {
+  default void putLocation(@Nonnull String key, Point location) {
     putLocationFor(null, key, location);
   }
 
@@ -135,7 +137,7 @@ public abstract class WindowStateService {
    * @param key an unique string key
    * @return a corresponding size
    */
-  public final Dimension getSize(@Nonnull String key) {
+  default Dimension getSize(@Nonnull String key) {
     return getSizeFor(null, key);
   }
 
@@ -156,7 +158,7 @@ public abstract class WindowStateService {
    *
    * @param key an unique string key
    */
-  public final void putSize(@Nonnull String key, Dimension size) {
+  default void putSize(@Nonnull String key, Dimension size) {
     putSizeFor(null, key, size);
   }
 
@@ -178,7 +180,7 @@ public abstract class WindowStateService {
    * @param key an unique string key
    * @return a corresponding bounds
    */
-  public final Rectangle getBounds(@Nonnull String key) {
+  default Rectangle getBounds(@Nonnull String key) {
     return getBoundsFor(null, key);
   }
 
@@ -199,7 +201,7 @@ public abstract class WindowStateService {
    *
    * @param key an unique string key
    */
-  public final void putBounds(@Nonnull String key, Rectangle bounds) {
+  default void putBounds(@Nonnull String key, Rectangle bounds) {
     putBoundsFor(null, key, bounds);
   }
 

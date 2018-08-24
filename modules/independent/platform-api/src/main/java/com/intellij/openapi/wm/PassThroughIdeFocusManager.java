@@ -26,7 +26,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class PassThroughIdeFocusManager extends IdeFocusManager {
+public class PassThroughIdeFocusManager implements IdeFocusManager {
 
   private static final PassThroughIdeFocusManager ourInstance = new PassThroughIdeFocusManager();
 

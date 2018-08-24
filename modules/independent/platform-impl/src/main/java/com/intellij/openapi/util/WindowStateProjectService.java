@@ -20,19 +20,18 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.impl.ProjectFrameBounds;
+import consulo.util.ProjectWindowStateService;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
 @Singleton
-@State(
-        name = "WindowStateProjectService",
-        storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-final class WindowStateProjectService extends WindowStateServiceImpl {
+@State(name = "WindowStateProjectService", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
+final class WindowStateProjectService extends WindowStateServiceImpl implements ProjectWindowStateService {
   private final Project myProject;
 
   WindowStateProjectService(Project project) {

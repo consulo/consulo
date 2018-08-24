@@ -22,11 +22,6 @@
       <interface-class>com.intellij.openapi.wm.WindowManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebWindowManagerImpl</implementation-class>
     </component>
-    <component>
-      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
-      <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
-    </component>
-
   </application-components>
 
   <project-components>
@@ -38,14 +33,10 @@
       <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebToolWindowManagerImpl</implementation-class>
     </component>
-    <component>
-      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
-      <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
-    </component>
+
     <component>
       <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
       <implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
       <skipForDefaultProject/>
     </component>
   </project-components>
@@ -72,5 +63,9 @@
     <fileChooseDialogProvider implementation="consulo.web.fileChooser.impl.WebFileChooseDialogProvider" order="last"/>
 
     <fileEditorProvider implementation="consulo.web.fileEditor.impl.text.WebTextEditorProvider" />
+
+    <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
+
+    <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebProjectIdeFocusManagerImpl" lazy="false"/>
   </extensions>
 </idea-plugin>

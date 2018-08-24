@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class ProjectStructureProblemsSettingsBase extends ProjectStructureProblemsSettings implements PersistentStateComponent<ProjectStructureProblemsSettingsBase> {
+public class ProjectStructureProblemsSettingsBase implements StructureProblemsSettings, PersistentStateComponent<ProjectStructureProblemsSettingsBase> {
   @AbstractCollection(surroundWithTag = false, elementTag = "problem", elementValueAttribute = "id")
   @Tag("ignored-problems")
   public List<String> myIgnoredProblems = new SortedList<String>(String.CASE_INSENSITIVE_ORDER);

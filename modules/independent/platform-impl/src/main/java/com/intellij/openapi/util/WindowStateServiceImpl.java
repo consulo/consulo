@@ -33,7 +33,7 @@ import java.util.TreeMap;
 /**
  * @author Sergey.Malenkov
  */
-abstract class WindowStateServiceImpl extends WindowStateService implements PersistentStateComponent<Element> {
+abstract class WindowStateServiceImpl implements WindowStateService, PersistentStateComponent<Element> {
   @NonNls private static final String KEY = "key";
   @NonNls private static final String STATE = "state";
   @NonNls private static final String X = "x";
@@ -44,7 +44,7 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   @NonNls private static final String FULL_SCREEN = "full-screen";
 
   private static final Logger LOG = Logger.getInstance(WindowStateService.class);
-  private final Map<String, WindowState> myStateMap = new TreeMap<String, WindowState>();
+  private final Map<String, WindowState> myStateMap = new TreeMap<>();
 
   abstract Point getDefaultLocationFor(Object object, @Nonnull String key);
 

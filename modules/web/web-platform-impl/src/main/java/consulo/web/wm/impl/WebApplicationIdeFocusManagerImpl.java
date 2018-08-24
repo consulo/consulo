@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusRequestor;
-import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
+import consulo.wm.ApplicationIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -32,9 +32,9 @@ import java.awt.event.KeyEvent;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 2018-08-24
  */
-public class WebIdeFocusManagerImpl extends IdeFocusManager {
+public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {

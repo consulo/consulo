@@ -19,21 +19,27 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.ObjectUtils;
+import consulo.util.ApplicationPropertiesComponent;
+import consulo.util.ProjectPropertiesComponent;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Field;
 
 /**
- * Roaming is disabled for PropertiesComponent, so, use it only and only for temporary non-roamable properties.
- *
- * See http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html "Using PropertiesComponent for Simple non-roamable Persistence"
- *
  * @author max
  * @author Konstantin Bulenkov
  */
-public abstract class PropertiesComponent {
+public interface PropertiesComponent {
+  static PropertiesComponent getInstance(Project project) {
+    return ServiceManager.getService(project, ProjectPropertiesComponent.class);
+  }
+
+  static PropertiesComponent getInstance() {
+    return ServiceManager.getService(ApplicationPropertiesComponent.class);
+  }
+
   public abstract void unsetValue(String name);
 
   public abstract boolean isValueSet(String name);
@@ -64,7 +70,7 @@ public abstract class PropertiesComponent {
   /**
    * Set value or unset if equals to false
    */
-  public final void setValue(@Nonnull String name, boolean value) {
+  default void setValue(@Nonnull String name, boolean value) {
     setValue(name, value, false);
   }
 
@@ -78,28 +84,20 @@ public abstract class PropertiesComponent {
 
   public abstract void setValues(@NonNls String name, String[] values);
 
-  public static PropertiesComponent getInstance(Project project) {
-    return ServiceManager.getService(project, PropertiesComponent.class);
-  }
-
-  public static PropertiesComponent getInstance() {
-    return ServiceManager.getService(PropertiesComponent.class);
-  }
-
-  public final boolean isTrueValue(@NonNls String name) {
+  default boolean isTrueValue(@NonNls String name) {
     return Boolean.valueOf(getValue(name)).booleanValue();
   }
 
-  public final boolean getBoolean(@Nonnull String name, boolean defaultValue) {
+  default boolean getBoolean(@Nonnull String name, boolean defaultValue) {
     return isValueSet(name) ? isTrueValue(name) : defaultValue;
   }
 
-  public final boolean getBoolean(@Nonnull String name) {
+  default boolean getBoolean(@Nonnull String name) {
     return getBoolean(name, false);
   }
 
   @Nonnull
-  public String getValue(@NonNls String name, @Nonnull String defaultValue) {
+  default String getValue(@NonNls String name, @Nonnull String defaultValue) {
     if (!isValueSet(name)) {
       return defaultValue;
     }
@@ -111,16 +109,15 @@ public abstract class PropertiesComponent {
   /**
    * @deprecated Use {@link #getInt(String, int)}
    * Init was never performed and in any case is not recommended.
-   */
-  public final int getOrInitInt(@Nonnull String name, int defaultValue) {
+   */ default int getOrInitInt(@Nonnull String name, int defaultValue) {
     return getInt(name, defaultValue);
   }
 
-  public int getInt(@Nonnull String name, int defaultValue) {
+  default int getInt(@Nonnull String name, int defaultValue) {
     return StringUtilRt.parseInt(getValue(name), defaultValue);
   }
 
-  public final long getOrInitLong(@NonNls String name, long defaultValue) {
+  default long getOrInitLong(@NonNls String name, long defaultValue) {
     try {
       String value = getValue(name);
       return value == null ? defaultValue : Long.parseLong(value);
@@ -133,8 +130,7 @@ public abstract class PropertiesComponent {
   @Deprecated
   /**
    * @deprecated Use {@link #getValue(String, String)}
-   */
-  public String getOrInit(@NonNls String name, String defaultValue) {
+   */ default String getOrInit(@NonNls String name, String defaultValue) {
     if (!isValueSet(name)) {
       setValue(name, defaultValue);
       return defaultValue;
@@ -142,7 +138,7 @@ public abstract class PropertiesComponent {
     return getValue(name);
   }
 
-  public final boolean saveFields(@Nonnull Object object) {
+  default boolean saveFields(@Nonnull Object object) {
     try {
       for (Field field : object.getClass().getDeclaredFields()) {
         field.setAccessible(true);
@@ -159,7 +155,7 @@ public abstract class PropertiesComponent {
     }
   }
 
-  public final boolean loadFields(@Nonnull Object object) {
+  default boolean loadFields(@Nonnull Object object) {
     try {
       for (Field field : object.getClass().getDeclaredFields()) {
         field.setAccessible(true);
@@ -169,27 +165,59 @@ public abstract class PropertiesComponent {
 
           String defaultValue = annotation.defaultValue();
           if (PropertyName.NOT_SET.equals(defaultValue)) {
-            if (type.equals(boolean.class))     {defaultValue = String.valueOf(field.getBoolean(object));}
-            else if (type.equals(long.class))   {defaultValue = String.valueOf(field.getLong(object));}
-            else if (type.equals(int.class))    {defaultValue = String.valueOf(field.getInt(object));}
-            else if (type.equals(short.class))  {defaultValue = String.valueOf(field.getShort(object));}
-            else if (type.equals(byte.class))   {defaultValue = String.valueOf(field.getByte(object));}
-            else if (type.equals(double.class)) {defaultValue = String.valueOf(field.getDouble(object));}
-            else if (type.equals(float.class))  {defaultValue = String.valueOf(field.getFloat(object));}
-            else if (type.equals(String.class)) {defaultValue = String.valueOf(field.get(object));}
+            if (type.equals(boolean.class)) {
+              defaultValue = String.valueOf(field.getBoolean(object));
+            }
+            else if (type.equals(long.class)) {
+              defaultValue = String.valueOf(field.getLong(object));
+            }
+            else if (type.equals(int.class)) {
+              defaultValue = String.valueOf(field.getInt(object));
+            }
+            else if (type.equals(short.class)) {
+              defaultValue = String.valueOf(field.getShort(object));
+            }
+            else if (type.equals(byte.class)) {
+              defaultValue = String.valueOf(field.getByte(object));
+            }
+            else if (type.equals(double.class)) {
+              defaultValue = String.valueOf(field.getDouble(object));
+            }
+            else if (type.equals(float.class)) {
+              defaultValue = String.valueOf(field.getFloat(object));
+            }
+            else if (type.equals(String.class)) {
+              defaultValue = String.valueOf(field.get(object));
+            }
 
           }
           final String stringValue = getValue(annotation.value(), defaultValue);
           Object value = null;
 
-          if (type.equals(boolean.class))     {value = Boolean.valueOf(stringValue);}
-          else if (type.equals(long.class))   {value = Long.parseLong(stringValue);}
-          else if (type.equals(int.class))    {value = Integer.parseInt(stringValue);}
-          else if (type.equals(short.class))  {value = Short.parseShort(stringValue);}
-          else if (type.equals(byte.class))   {value = Byte.parseByte(stringValue);}
-          else if (type.equals(double.class)) {value = Double.parseDouble(stringValue);}
-          else if (type.equals(float.class))  {value = Float.parseFloat(stringValue);}
-          else if (type.equals(String.class)) {value = stringValue;}
+          if (type.equals(boolean.class)) {
+            value = Boolean.valueOf(stringValue);
+          }
+          else if (type.equals(long.class)) {
+            value = Long.parseLong(stringValue);
+          }
+          else if (type.equals(int.class)) {
+            value = Integer.parseInt(stringValue);
+          }
+          else if (type.equals(short.class)) {
+            value = Short.parseShort(stringValue);
+          }
+          else if (type.equals(byte.class)) {
+            value = Byte.parseByte(stringValue);
+          }
+          else if (type.equals(double.class)) {
+            value = Double.parseDouble(stringValue);
+          }
+          else if (type.equals(float.class)) {
+            value = Float.parseFloat(stringValue);
+          }
+          else if (type.equals(String.class)) {
+            value = stringValue;
+          }
 
           if (value != null) {
             field.set(object, value);
@@ -203,12 +231,13 @@ public abstract class PropertiesComponent {
     }
   }
 
-  public float getFloat(String name, float defaultValue) {
+  default float getFloat(String name, float defaultValue) {
     if (isValueSet(name)) {
       try {
         return Float.parseFloat(getValue(name));
       }
-      catch (NumberFormatException ignore) {}
+      catch (NumberFormatException ignore) {
+      }
     }
     return defaultValue;
   }

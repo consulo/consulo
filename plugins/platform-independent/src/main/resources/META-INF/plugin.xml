@@ -1190,7 +1190,7 @@
 
     <applicationService serviceImplementation="com.intellij.ide.GeneralSettings"/>
 
-    <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent"
+    <applicationService serviceInterface="consulo.util.ApplicationPropertiesComponent"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.fileTypes.FileNameMatcherFactory"
@@ -1199,7 +1199,7 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
-    <projectService serviceInterface="com.intellij.ide.util.PropertiesComponent"
+    <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.actionSystem.JBAwtEventQueue"
@@ -1656,9 +1656,10 @@
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
     <roots.watchedRootsProvider implementation="consulo.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
-    <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
+    <projectService serviceInterface="consulo.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
+
+    <applicationService serviceInterface="consulo.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings"
                         serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
 
     <referencesSearch implementation="com.intellij.psi.impl.search.CachesBasedRefSearcher"/>
@@ -1833,7 +1834,8 @@
 
     <applicationService serviceInterface="com.intellij.openapi.roots.impl.libraries.JarDirectoryWatcherFactory"
                         serviceImplementation="com.intellij.openapi.roots.impl.libraries.JarDirectoryWatcherFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.codeStyle.CodeStyleFacade"
+
+    <applicationService serviceInterface="consulo.codeStyle.ApplicationCodeStyleFacade"
                         serviceImplementation="consulo.psi.impl.source.codeStyle.ApplicationCodeStyleFacadeImpl"/>
 
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
@@ -1886,7 +1888,7 @@
     <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController"
                     serviceImplementation="com.intellij.codeInsight.AutoPopupController"/>
 
-    <projectService serviceInterface="com.intellij.codeStyle.CodeStyleFacade"
+    <projectService serviceInterface="consulo.codeStyle.ProjectCodeStyleFacade"
                     serviceImplementation="consulo.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
 
     <projectService serviceInterface="com.intellij.usages.UsageViewManager"
@@ -1967,9 +1969,9 @@
                     serviceImplementation="com.intellij.openapi.roots.impl.LibraryScopeCache"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.util.DimensionService"/>
-    <applicationService serviceInterface="com.intellij.openapi.util.WindowStateService"
+    <applicationService serviceInterface="consulo.util.ApplicationWindowStateService"
                         serviceImplementation="com.intellij.openapi.util.WindowStateApplicationService"/>
-    <projectService serviceInterface="com.intellij.openapi.util.WindowStateService"
+    <projectService serviceInterface="consulo.util.ProjectWindowStateService"
                     serviceImplementation="com.intellij.openapi.util.WindowStateProjectService"/>
 
     <colorSettingsPage implementation="com.intellij.openapi.options.colors.pages.GeneralColorsPage" id="general"/>

@@ -38,13 +38,13 @@ class ProjectConfigurationProblem extends ConfigurationError {
   }
 
   @Nonnull
-  private static ProjectStructureProblemsSettings getSettings(Project project,
-                                                              ProjectStructureProblemDescription.ProblemLevel problemLevel) {
+  private static StructureProblemsSettings getSettings(Project project,
+                                                       ProjectStructureProblemDescription.ProblemLevel problemLevel) {
     if (problemLevel == ProjectStructureProblemDescription.ProblemLevel.PROJECT) {
-      return ProjectStructureProblemsSettings.getProjectInstance(project);
+      return StructureProblemsSettings.getProjectInstance(project);
     }
     else {
-      return ProjectStructureProblemsSettings.getGlobalInstance();
+      return StructureProblemsSettings.getGlobalInstance();
     }
   }
 

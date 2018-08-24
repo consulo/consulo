@@ -25,6 +25,8 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.util.ui.UIUtil;
+import consulo.wm.ApplicationIdeFocusManager;
+import consulo.wm.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,10 +51,9 @@ import java.awt.event.KeyEvent;
  * to use instance <code>IdeFocusManager.getInstance(project)</code>. If no project instance is available, then
  * <code>IdeFocusManager.getGlobalInstance()</code> can be used.
  */
+public interface IdeFocusManager extends FocusRequestor {
 
-public abstract class IdeFocusManager implements FocusRequestor {
-
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
+  default AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
     return requestFocus(c, false);
   }
 
@@ -71,7 +72,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
    */
   public abstract void doWhenFocusSettlesDown(@Nonnull Runnable runnable);
 
-  public void doForceFocusWhenFocusSettlesDown(@Nonnull Component component) {
+  default void doForceFocusWhenFocusSettlesDown(@Nonnull Component component) {
     doWhenFocusSettlesDown(() -> requestFocus(component, true));
   }
 
@@ -101,7 +102,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
   @Deprecated
   // use #typeAheadUntil(ActionCallback, String) instead
-  public void typeAheadUntil(AsyncResult<Void> done) {
+  default void typeAheadUntil(AsyncResult<Void> done) {
     typeAheadUntil(done, "No cause has been provided");
   }
 
@@ -110,7 +111,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
    *
    * @param done action callback
    */
-  public void typeAheadUntil(ActionCallback done, @Nonnull String cause) {
+  default void typeAheadUntil(ActionCallback done, @Nonnull String cause) {
   }
 
   /**
@@ -189,14 +190,14 @@ public abstract class IdeFocusManager implements FocusRequestor {
    */
   public abstract void toFront(JComponent c);
 
-  public boolean isUnforcedRequestAllowed() {
+  default boolean isUnforcedRequestAllowed() {
     return false;
   }
 
   public static IdeFocusManager getInstance(@Nullable Project project) {
     if (project == null || project.isDisposed() || !project.isInitialized()) return getGlobalInstance();
 
-    return project.getComponent(IdeFocusManager.class);
+    return project.getComponent(ProjectIdeFocusManager.class);
   }
 
   @Nonnull
@@ -225,7 +226,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
 
   @Nullable
-  private static IdeFocusManager findByComponent(Component c) {
+  static IdeFocusManager findByComponent(Component c) {
     final Component parent = UIUtil.findUltimateParent(c);
     if (parent instanceof IdeFrame) {
       return getInstanceSafe(((IdeFrame)parent).getProject());
@@ -235,7 +236,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
 
   @Nullable
-  private static IdeFocusManager getInstanceSafe(@Nullable Project project) {
+  static IdeFocusManager getInstanceSafe(@Nullable Project project) {
     if (project != null && !project.isDisposed() && project.isInitialized()) {
       return getInstance(project);
     }
@@ -250,17 +251,6 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
   @Nonnull
   public static IdeFocusManager getGlobalInstance() {
-    IdeFocusManager fm = null;
-
-    Application app = Application.get();
-    fm = app.getComponent(IdeFocusManager.class);
-
-    if (fm == null) {
-      // happens when app is semi-initialized (e.g. when IDEA server dialog is shown)
-      fm = PassThroughIdeFocusManager.getInstance();
-    }
-
-    return fm;
+    return Application.get().getComponent(ApplicationIdeFocusManager.class);
   }
-
 }

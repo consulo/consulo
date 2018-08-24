@@ -30,7 +30,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class IdeFocusManagerHeadless extends IdeFocusManager {
+public class IdeFocusManagerHeadless implements IdeFocusManager {
 
   public static final IdeFocusManagerHeadless INSTANCE = new IdeFocusManagerHeadless();
 

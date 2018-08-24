@@ -38,12 +38,14 @@ import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.wm.ApplicationIdeFocusManager;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -59,7 +61,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class FocusManagerImpl extends IdeFocusManager implements Disposable {
+@Singleton
+public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable {
   private static final Logger LOG = Logger.getInstance(FocusManagerImpl.class);
   private static final UiActivity FOCUS = new UiActivity.Focus("awtFocusRequest");
   private static final UiActivity TYPEAHEAD = new UiActivity.Focus("typeahead");
@@ -430,10 +433,6 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
   public boolean isUnforcedRequestAllowed() {
     if (getLastEffectiveForcedRequest() == null) return true;
     return myModalityStateForLastForcedRequest != getCurrentModalityCount();
-  }
-
-  public static IdeFocusManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(IdeFocusManager.class);
   }
 
   @Override

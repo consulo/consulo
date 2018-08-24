@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
 
 import javax.inject.Singleton;
 
@@ -25,9 +25,6 @@ import javax.inject.Singleton;
  * @author nik
  */
 @Singleton
-@State(
-        name = "ProjectStructureProblems",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/projectStructureProblems.xml")}
-)
-public class GlobalProjectStructureProblemsSettings extends ProjectStructureProblemsSettingsBase {
+@State(name = "ProjectStructureProblems", storages = {@Storage("structureProblems.xml")})
+public class GlobalProjectStructureProblemsSettings extends ProjectStructureProblemsSettingsBase implements ApplicationStructureProblemsSettings {
 }

@@ -20,7 +20,6 @@ import com.intellij.ProjectTopics;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -40,6 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakHashMap;
 import consulo.ui.image.Image;
+import consulo.util.ProjectPropertiesComponent;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -94,7 +94,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private boolean myOrdered = true;
 
   @Inject
-  public RunManagerImpl(@Nonnull Project project, @Nonnull PropertiesComponent propertiesComponent) {
+  public RunManagerImpl(@Nonnull Project project, @Nonnull ProjectPropertiesComponent propertiesComponent) {
     myConfig = new RunManagerConfig(propertiesComponent);
     myProject = project;
 

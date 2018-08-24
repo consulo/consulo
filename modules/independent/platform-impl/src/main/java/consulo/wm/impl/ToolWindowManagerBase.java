@@ -548,7 +548,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   protected void activateToolWindowImpl(final String id, List<FinalizableCommand> commandList, boolean forced, boolean autoFocusContents) {
-    if (!FocusManagerImpl.getInstance().isUnforcedRequestAllowed() && !forced) return;
+    if (!IdeFocusManager.getGlobalInstance().isUnforcedRequestAllowed() && !forced) return;
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: activateToolWindowImpl(" + id + ")");

@@ -19,7 +19,6 @@ import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
@@ -47,6 +46,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
 import consulo.start.CommandLineArgs;
+import consulo.util.ApplicationPropertiesComponent;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
@@ -67,10 +67,10 @@ public class SystemHealthMonitor {
   private static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
   private static final NotificationGroup LOG_GROUP = NotificationGroup.logOnlyGroup("System Health (minor)");
 
-  private final PropertiesComponent myProperties;
+  private final ApplicationPropertiesComponent myProperties;
 
   @Inject
-  public SystemHealthMonitor(@Nonnull PropertiesComponent properties) {
+  public SystemHealthMonitor(@Nonnull ApplicationPropertiesComponent properties) {
     myProperties = properties;
 
     checkRuntime();
