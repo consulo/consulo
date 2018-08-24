@@ -16,16 +16,16 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Project interface class.
  */
-public interface Project extends ComponentManager, AreaInstance {
+public interface Project extends ComponentManager {
   @NonNls String DIRECTORY_STORE_FOLDER = ".consulo";
 
   /**

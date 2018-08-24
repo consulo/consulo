@@ -16,11 +16,15 @@
 package com.intellij.idea.starter;
 
 import com.intellij.ide.StartupProgress;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ApplicationStarter;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Internal
 public abstract class ApplicationPostStarter {
@@ -31,10 +35,22 @@ public abstract class ApplicationPostStarter {
     myApplicationStarter = applicationStarter;
   }
 
-  public abstract void createApplication(boolean isHeadlessMode, CommandLineArgs args);
+  @Nullable
+  public abstract StartupProgress createSplash(CommandLineArgs args);
 
-  public void premain(@Nonnull CommandLineArgs args) {
+  public void initApplication(boolean isHeadlessMode, CommandLineArgs args) {
+    StartupProgress splash = createSplash(args);
+    if (splash != null) {
+      mySplashRef.set(splash);
+    }
+
+    PluginManager.initPlugins(splash, isHeadlessMode);
+
+    createApplication(isHeadlessMode, mySplashRef, args);
   }
+
+  @Nonnull
+  protected abstract Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args);
 
   public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
   }

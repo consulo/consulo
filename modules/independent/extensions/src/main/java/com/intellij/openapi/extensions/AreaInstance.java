@@ -15,8 +15,14 @@
  */
 package com.intellij.openapi.extensions;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author akireyev
  */
 public interface AreaInstance {
+  @Nonnull
+  default ExtensionsArea getExtensionsArea() {
+    throw new UnsupportedOperationException();
+  }
 }

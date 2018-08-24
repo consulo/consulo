@@ -46,11 +46,14 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   };
 
   public WebApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splash) {
-    super(null, splash);
+    super(splash);
+  }
+
+  @Override
+  protected void bootstrapInjectingContainer(@Nonnull String name) {
+    super.bootstrapInjectingContainer(name);
 
     getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), new WebTransactionGuardImpl());
-
-    initPlugins();
   }
 
   @Nullable

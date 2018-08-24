@@ -18,6 +18,7 @@ package consulo.web.main;
 import com.intellij.ide.StartupProgress;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
@@ -25,6 +26,7 @@ import consulo.web.application.impl.WebApplicationImpl;
 import consulo.web.application.impl.WebStartupProgressImpl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Used via reflection
@@ -38,11 +40,16 @@ public class WebPostStarter extends ApplicationPostStarter {
     super(applicationStarter);
   }
 
+  @Nullable
   @Override
-  public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
-    mySplashRef.set(new WebStartupProgressImpl());
+  public StartupProgress createSplash(CommandLineArgs args) {
+    return new WebStartupProgressImpl();
+  }
 
-    new WebApplicationImpl(isHeadlessMode, Ref.create());
+  @Nonnull
+  @Override
+  protected Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args) {
+    return new WebApplicationImpl(isHeadlessMode, splashRef);
   }
 
   @Override

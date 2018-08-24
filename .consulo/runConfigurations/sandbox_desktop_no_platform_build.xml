@@ -8,6 +8,7 @@
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <ConfigurationWrapper RunnerId="Cover" />
+    <ConfigurationWrapper RunnerId="Run" />
     <method>
       <option name="Make" enabled="false" />
     </method>

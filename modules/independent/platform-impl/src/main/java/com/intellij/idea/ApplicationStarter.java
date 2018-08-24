@@ -60,8 +60,8 @@ public class ApplicationStarter {
     patchSystem(headless);
 
     myPostStarter = createPostStarter();
-    myPostStarter.createApplication(headless, args);
-    myPostStarter.premain(args);
+
+    myPostStarter.initApplication(headless, args);
   }
 
   protected void patchSystem(boolean headless) {

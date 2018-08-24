@@ -46,7 +46,7 @@ public class KeyedExtensionCollector<T, KeyT> {
 
   private ExtensionPoint<KeyedLazyInstance<T>> myPoint;
   private final String myEpName;
-  private ExtensionPointAndAreaListener<KeyedLazyInstance<T>> myListener;
+  private ExtensionPointListener<KeyedLazyInstance<T>> myListener;
   private final List<ExtensionPointListener<T>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   public KeyedExtensionCollector(@NonNls @Nonnull String epName) {
@@ -180,7 +180,7 @@ public class KeyedExtensionCollector<T, KeyT> {
     if (point == null && Extensions.getRootArea().hasExtensionPoint(myEpName)) {
       ExtensionPointName<KeyedLazyInstance<T>> typesafe = ExtensionPointName.create(myEpName);
       myPoint = point = Extensions.getRootArea().getExtensionPoint(typesafe);
-      myListener = new ExtensionPointAndAreaListener<KeyedLazyInstance<T>>() {
+      myListener = new ExtensionPointListener<KeyedLazyInstance<T>>() {
         @Override
         public void extensionAdded(@Nonnull final KeyedLazyInstance<T> bean, @Nullable final PluginDescriptor pluginDescriptor) {
           synchronized (lock) {
@@ -207,11 +207,6 @@ public class KeyedExtensionCollector<T, KeyT> {
               listener.extensionRemoved(bean.getInstance(), null);
             }
           }
-        }
-
-        @Override
-        public void areaReplaced(final ExtensionsArea area) {
-          resetAreaListener();
         }
       };
 

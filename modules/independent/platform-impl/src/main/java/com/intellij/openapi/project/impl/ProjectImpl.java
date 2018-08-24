@@ -87,7 +87,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   private final List<ProjectComponent> myProjectComponents = new CopyOnWriteArrayList<>();
 
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
-    super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
+    super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreas.PROJECT);
 
     putUserData(CREATION_TIME, System.nanoTime());
 
@@ -143,9 +143,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    Extensions.instantiateArea(ExtensionAreas.PROJECT, this, null);
-    super.bootstrapPicoContainer(name);
+  protected void bootstrapInjectingContainer(@Nonnull String name) {
+    super.bootstrapInjectingContainer(name);
 
     final MutablePicoContainer picoContainer = getPicoContainer();
     picoContainer.registerComponentInstance(Project.class, this);
@@ -352,7 +351,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       myManager.removeProjectManagerListener(this, myProjectManagerListener);
     }
 
-    Extensions.disposeArea(this);
     myManager = null;
     myName = null;
     myProjectManagerListener = null;
@@ -407,12 +405,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       LOG.assertTrue(project == ProjectImpl.this);
       ProjectImpl.this.projectClosed();
     }
-  }
-
-  @Nonnull
-  @Override
-  protected InjectingContainer createInjectingContainer() {
-    return new PicoInjectingContainer(Extensions.getArea(this).getPicoContainer());
   }
 
   @Override

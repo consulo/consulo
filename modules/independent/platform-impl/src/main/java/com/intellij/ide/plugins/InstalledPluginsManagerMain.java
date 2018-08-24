@@ -124,7 +124,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
   @Nullable
   public static IdeaPluginDescriptorImpl loadDescriptionFromJar(final File file) throws IOException {
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file);
+    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file, false);
     if (descriptor == null) {
       if (file.getName().endsWith(".zip")) {
         final File outputDir = FileUtil.createTempDirectory("plugin", "");
@@ -132,7 +132,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
           ZipUtil.extract(file, outputDir, null);
           final File[] files = outputDir.listFiles();
           if (files != null && files.length == 1) {
-            descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML);
+            descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML, false);
           }
         }
         finally {

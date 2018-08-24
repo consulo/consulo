@@ -20,7 +20,6 @@ import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
@@ -33,8 +32,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
-import consulo.injecting.InjectingContainer;
-import consulo.injecting.pico.PicoInjectingContainer;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -58,7 +55,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   private final VirtualFilePointer myDirVirtualFilePointer;
 
   public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project) {
-    super(project, "Module " + name);
+    super(project, "Module " + name, ExtensionAreas.MODULE);
     myName = name;
     myProject = project;
     myModuleScopeProvider = new ModuleScopeProviderImpl(this);
@@ -66,9 +63,8 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
   @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    Extensions.instantiateArea(ExtensionAreas.MODULE, this, (AreaInstance)getParentComponentManager());
-    super.bootstrapPicoContainer(name);
+  protected void bootstrapInjectingContainer(@Nonnull String name) {
+    super.bootstrapInjectingContainer(name);
 
     getPicoContainer().registerComponentInstance(Module.class, this);
     getPicoContainer().registerComponentImplementation(ModulePathMacroManager.class);
@@ -101,12 +97,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Override
   public String getModuleDirUrl() {
     return myDirVirtualFilePointer == null ? null : myDirVirtualFilePointer.getUrl();
-  }
-
-  @Override
-  public synchronized void dispose() {
-    Extensions.disposeArea(this);
-    super.dispose();
   }
 
   @Override
@@ -202,11 +192,5 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Override
   public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
-  }
-
-  @Nonnull
-  @Override
-  protected InjectingContainer createInjectingContainer() {
-    return new PicoInjectingContainer(Extensions.getArea(this).getPicoContainer());
   }
 }

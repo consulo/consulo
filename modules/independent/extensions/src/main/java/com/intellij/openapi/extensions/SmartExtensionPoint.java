@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author peter
  */
-public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPointAndAreaListener<Extension> {
+public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPointListener<Extension> {
   private final Collection<V> myExplicitExtensions;
   private ExtensionPoint<Extension> myExtensionPoint;
   private List<V> myCache;
@@ -95,8 +95,4 @@ public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPoint
     dropCache();
   }
 
-  @Override
-  public void areaReplaced(final ExtensionsArea area) {
-    dropCache();
-  }
 }

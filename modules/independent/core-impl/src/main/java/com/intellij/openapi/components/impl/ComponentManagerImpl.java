@@ -25,7 +25,9 @@ import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
@@ -65,20 +67,21 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private MessageBus myMessageBus;
 
   private final ComponentManager myParentComponentManager;
+
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final Condition myDisposedCondition = o -> isDisposed();
 
   private boolean myComponentsCreated = false;
   private int myNotLazyServicesCount;
 
-  protected ComponentManagerImpl(ComponentManager parentComponentManager) {
-    myParentComponentManager = parentComponentManager;
-    bootstrapPicoContainer(toString());
-  }
+  private ExtensionsAreaImpl myExtensionsArea;
+  @Nullable
+  private final String myExtensionAreaId;
 
-  protected ComponentManagerImpl(ComponentManager parentComponentManager, @Nonnull String name) {
+  protected ComponentManagerImpl(ComponentManager parentComponentManager, @Nonnull String name, @Nullable String extensionAreaId) {
     myParentComponentManager = parentComponentManager;
-    bootstrapPicoContainer(name);
+    myExtensionAreaId = extensionAreaId;
+    bootstrapInjectingContainer(name);
   }
 
   @Override
@@ -255,6 +258,12 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Nonnull
+  @Override
+  public ExtensionsArea getExtensionsArea() {
+    return myExtensionsArea;
+  }
+
+  @Nonnull
   protected InjectingContainer createInjectingContainer() {
     return new PicoInjectingContainer(myParentComponentManager == null ? null : (PicoInjectingContainer)myParentComponentManager.getInjectingContainer());
   }
@@ -268,6 +277,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       myMessageBus = null;
     }
 
+    myExtensionsArea = null;
     myInjectingContainer.dispose();
     myInjectingContainer = null;
 
@@ -289,10 +299,19 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     temporarilyDisposed = disposed;
   }
 
-  protected void bootstrapPicoContainer(@Nonnull String name) {
+  protected void bootstrapInjectingContainer(@Nonnull String name) {
     myInjectingContainer = createInjectingContainer();
 
+    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this, getPicoContainer(), new PluginManagerCore.IdeaLogProvider());
+
+    maybeSetRootArea();
+
+    PluginManagerCore.registerExtensionPointsAndExtensions(myExtensionsArea);
+
     myMessageBus = MessageBusFactory.newMessageBus(name, myParentComponentManager == null ? null : myParentComponentManager.getMessageBus());
+  }
+
+  protected void maybeSetRootArea() {
   }
 
   protected ComponentManager getParentComponentManager() {

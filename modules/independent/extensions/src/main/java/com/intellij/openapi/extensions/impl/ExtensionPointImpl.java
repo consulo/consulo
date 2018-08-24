@@ -24,10 +24,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.StringInterner;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
-
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -443,14 +442,6 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
   }
 
-  @TestOnly
-  final synchronized void notifyAreaReplaced(final ExtensionsArea area) {
-    for (final ExtensionPointListener<T> listener : myEPListeners) {
-      if (listener instanceof ExtensionPointAndAreaListener) {
-        ((ExtensionPointAndAreaListener)listener).areaReplaced(area);
-      }
-    }
-  }
 
   private static class ObjectComponentAdapter extends ExtensionComponentAdapter {
     private final Object myExtension;

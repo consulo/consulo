@@ -103,15 +103,12 @@ public class ExtensionsComplexTest extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
     myAreasToDispose = new ArrayList<MyAreaInstance>();
-    Extensions.registerAreaClass("area", null);
-    Extensions.registerAreaClass("child_area", "area");
+
   }
 
   @Override
   protected void tearDown() throws Exception {
-    for (MyAreaInstance instance : myAreasToDispose) {
-      Extensions.disposeArea(instance);
-    }
+
     myAreasToDispose = null;
     for (ExtensionPoint extensionPoint : Extensions.getRootArea().getExtensionPoints()) {
       if (extensionPoint.getName().startsWith(PLUGIN_NAME) || extensionPoint.getName().startsWith(PLUGIN_NAME_2)) {
@@ -144,7 +141,6 @@ public class ExtensionsComplexTest extends TestCase {
     assertEquals(1, dependentObjectOne.getTestBeans().length);
 
     AreaInstance areaInstance = new MyAreaInstance();
-    Extensions.instantiateArea("area", areaInstance, null);
 
     initExtensionPoints(
       PLUGIN_NAME,
@@ -181,17 +177,14 @@ public class ExtensionsComplexTest extends TestCase {
     initExtensions(EXTENSIONS_ROOT, null);
 
     AreaInstance areaInstance1 = new MyAreaInstance();
-    Extensions.instantiateArea("area", areaInstance1, null);
 
     initExtensionsInAREA(areaInstance1);
 
     AreaInstance areaInstance2 = new MyAreaInstance();
-    Extensions.instantiateArea("area", areaInstance2, null);
 
     initExtensionsInAREA(areaInstance2);
 
     AreaInstance areaInstance3 = new MyAreaInstance();
-    Extensions.instantiateArea("area", areaInstance3, null);
 
     initExtensionsInAREA(areaInstance3);
 
@@ -200,10 +193,8 @@ public class ExtensionsComplexTest extends TestCase {
     checkAreaInitialized(areaInstance3);
 
     MyAreaInstance childAreaInstance1 = new MyAreaInstance();
-    Extensions.instantiateArea("child_area", childAreaInstance1, areaInstance1);
     initExtensionsInCHILD_AREA(childAreaInstance1);
     MyAreaInstance childAreaInstance2 = new MyAreaInstance();
-    Extensions.instantiateArea("child_area", childAreaInstance2, areaInstance2);
     initExtensionsInCHILD_AREA(childAreaInstance2);
 
     // check initialization through PicoContainer
@@ -215,12 +206,6 @@ public class ExtensionsComplexTest extends TestCase {
     assertSame(dependentObjectOne, dependentObjectThree.getOne());
     assertSame(dependentObjectTwo, dependentObjectThree.getTwo());
     assertTrue(Arrays.asList(dependentObjectThree.getTestBeans()).containsAll(Arrays.asList(dependentObjectOne.getTestBeans())));
-
-    // check PicoContainers
-    assertTrue(Extensions.getRootArea().getPicoContainer().getComponentInstances().contains(dependentObjectOne));
-    assertTrue(Extensions.getArea(areaInstance1).getPicoContainer().getComponentInstances().contains(dependentObjectTwo));
-    assertTrue(Extensions.getArea(areaInstance1).getPicoContainer().getComponentInstances().contains(dependentObjectThree));
-    assertFalse(Extensions.getArea(areaInstance2).getPicoContainer().getComponentInstances().contains(dependentObjectThree));
 
     assertTrue(Extensions.getRootArea().getPluginContainer(PLUGIN_NAME).getComponentInstances().contains(dependentObjectOne));
     assertFalse(Extensions.getRootArea().getPluginContainer(PLUGIN_NAME_2).getComponentInstances().contains(dependentObjectOne));

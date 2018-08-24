@@ -16,7 +16,7 @@ public class PluginDescriptorTest extends Assert {
     URL url = PluginDescriptorTest.class.getResource("/ide/plugins/pluginDescriptor/asp.jar");
     assertNotNull(url);
 
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(Paths.get(url.toURI()).toFile());
+    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(Paths.get(url.toURI()).toFile(), true);
     assertNotNull(descriptor);
   }
 }

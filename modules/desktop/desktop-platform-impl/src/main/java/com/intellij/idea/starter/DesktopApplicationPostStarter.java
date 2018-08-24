@@ -20,12 +20,14 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
@@ -35,9 +37,9 @@ import consulo.annotations.Internal;
 import consulo.application.ApplicationProperties;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -49,18 +51,24 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
     super(applicationStarter);
   }
 
+  @Nullable
   @Override
-  public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
+  public StartupProgress createSplash(CommandLineArgs args) {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
         DesktopSplash splash = new DesktopSplash(false);
-        mySplashRef.set(splash);
         splash.show();
+        return splash;
       }
     }
+    return null;
+  }
 
-    new DesktopApplicationImpl(isHeadlessMode, mySplashRef);
+  @Nonnull
+  @Override
+  protected Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args) {
+    return new DesktopApplicationImpl(isHeadlessMode, splashRef);
   }
 
   @Nullable

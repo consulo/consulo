@@ -37,12 +37,8 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
   private boolean myHandlingInitComponentError;
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
-  protected PlatformComponentManagerImpl(ComponentManager parent) {
-    super(parent);
-  }
-
-  protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name) {
-    super(parent, name);
+  protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name, @Nullable String areaId) {
+    super(parent, name, areaId);
   }
 
   protected void notifyAboutInitialization(float percentOfLoad, Object component) {

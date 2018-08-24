@@ -30,7 +30,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CoreCommandProcessor;
-import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -99,8 +98,6 @@ public class CoreApplicationEnvironment {
                                       myParentDisposable);
     myLocalFileSystem = createLocalFileSystem();
     myJarFileSystem = createJarFileSystem();
-
-    Extensions.registerAreaClass(ExtensionAreas.PROJECT, null);
 
     final MutablePicoContainer appContainer = myApplication.getPicoContainer();
     registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(DocumentImpl::new, null));

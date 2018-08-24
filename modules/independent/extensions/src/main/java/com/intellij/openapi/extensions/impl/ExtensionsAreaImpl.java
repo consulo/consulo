@@ -25,11 +25,11 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
@@ -70,15 +70,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     this(null, null, parentPicoContainer, logger);
   }
 
-  @TestOnly
-  public final void notifyAreaReplaced() {
-    for (final ExtensionPointImpl point : myExtensionPoints.values()) {
-      point.notifyAreaReplaced(this);
-    }
-  }
-
   @Nonnull
-  @Override
   public AreaPicoContainer getPicoContainer() {
     return myPicoContainer;
   }

@@ -106,7 +106,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   }
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
-    super(null, splashRef);
+    super(splashRef);
 
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
@@ -119,8 +119,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
     myDoNotSave = isHeadless;
     myGatherStatistics = LOG.isDebugEnabled() || isInternal();
-
-    initPlugins();
 
     if (!isHeadless) {
       Disposer.register(this, Disposer.newDisposable(), "ui");
@@ -167,8 +165,8 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   }
 
   @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    super.bootstrapPicoContainer(name);
+  protected void bootstrapInjectingContainer(@Nonnull String name) {
+    super.bootstrapInjectingContainer(name);
 
     getPicoContainer().registerComponentInstance(TransactionGuard.class.getName(), transactionGuard());
   }

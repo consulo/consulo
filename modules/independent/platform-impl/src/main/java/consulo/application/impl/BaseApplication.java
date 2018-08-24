@@ -30,7 +30,7 @@ import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -62,8 +62,6 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
-import consulo.injecting.InjectingContainer;
-import consulo.injecting.pico.PicoInjectingContainer;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -186,17 +184,27 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
 
-  public BaseApplication(ComponentManager parent, @Nonnull Ref<? extends StartupProgress> splashRef) {
-    super(parent);
+  public BaseApplication(@Nonnull Ref<? extends StartupProgress> splashRef) {
+    super(null, "Application", ExtensionAreas.APPLICATION);
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
 
+    PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
+
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
+
+    // reset area
+    Disposer.register(myLastDisposable, () -> Extensions.setRootArea(null));
   }
 
   @Override
-  protected void bootstrapPicoContainer(@Nonnull String name) {
-    super.bootstrapPicoContainer(name);
+  protected void maybeSetRootArea() {
+    Extensions.setRootArea(getExtensionsArea());
+  }
+
+  @Override
+  protected void bootstrapInjectingContainer(@Nonnull String name) {
+    super.bootstrapInjectingContainer(name);
     MutablePicoContainer picoContainer = getPicoContainer();
 
     picoContainer.registerComponentInstance(Application.class, this);
@@ -217,11 +225,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getAppComponents();
-  }
-
-  protected void initPlugins() {
-    PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
-    PluginManagerCore.initPlugins(mySplashRef.get());
   }
 
   protected void fireApplicationExiting() {
@@ -476,12 +479,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
       float progress1 = 0.65f + percentOfLoad * 0.35f;
       progress.showProgress("", progress1);
     }
-  }
-
-  @Nonnull
-  @Override
-  protected InjectingContainer createInjectingContainer() {
-    return new PicoInjectingContainer(Extensions.getRootArea().getPicoContainer());
   }
 
   @Override

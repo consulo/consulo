@@ -25,9 +25,9 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
-import javax.annotation.Nonnull;
 import org.picocontainer.MutablePicoContainer;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Modifier;
 
 /**
@@ -39,7 +39,7 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    Extensions.cleanRootArea(getTestRootDisposable());
+    Extensions.setRootArea(null);
   }
 
   public static MockApplicationEx getApplication() {

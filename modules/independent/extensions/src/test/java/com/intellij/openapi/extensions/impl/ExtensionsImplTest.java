@@ -174,34 +174,6 @@ public class ExtensionsImplTest extends TestCase {
     assertEquals(0, MyListener.regcount);
   }
 
-  public void _testPicoContainerDirectRegistration() throws Exception {
-    ExtensionsAreaImpl parentArea = new ExtensionsAreaImpl(new DefaultPicoContainer(), new Extensions.SimpleLogProvider());
-    ExtensionsAreaImpl childArea = new ExtensionsAreaImpl(parentArea.getPicoContainer(), new Extensions.SimpleLogProvider());
-
-
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        throw new UnsupportedOperationException("run is not implemented in : " + getClass());
-      }
-    };
-    parentArea.getPicoContainer().registerComponentInstance(runnable);
-
-    assertSame(runnable, parentArea.getPicoContainer().getComponentInstanceOfType(Runnable.class));
-    assertSame(runnable, childArea.getPicoContainer().getComponentInstanceOfType(Runnable.class));
-
-    final Runnable childRunnable = new Runnable() {
-      @Override
-      public void run() {
-        throw new UnsupportedOperationException("This method is not yet implemented");
-      }
-    };
-    childArea.getPicoContainer().registerComponentInstance(childRunnable);
-    assertEquals(2, childArea.getPicoContainer().getComponentInstancesOfType(Runnable.class).size());
-    final List componentInstances = childArea.getPicoContainer().getComponentInstances();
-    assertTrue("parent instance found", componentInstances.contains(runnable));
-    assertTrue("child instance found", componentInstances.contains(childRunnable));
-  }
 
   public void testTryPicoContainer() {
     DefaultPicoContainer rootContainer = new DefaultPicoContainer();

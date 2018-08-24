@@ -17,13 +17,13 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.DeprecationInfo;
 import consulo.util.pointers.Named;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  *
  * @see ModuleManager#getModules()
  */
-public interface Module extends ComponentManager, AreaInstance, Disposable, Named {
+public interface Module extends ComponentManager, Disposable, Named {
   public static final Module[] EMPTY_ARRAY = new Module[0];
 
   public static ArrayFactory<Module> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Module[count];

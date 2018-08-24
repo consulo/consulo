@@ -17,7 +17,6 @@ package consulo.application.impl;
 
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
-import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
@@ -34,8 +33,8 @@ import javax.annotation.Nonnull;
 public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication implements ApplicationWithOwnWriteThread {
   private final WriteThread myWriteThread;
 
-  public BaseApplicationWithOwnWriteThread(ComponentManager parent, @Nonnull Ref<? extends StartupProgress> splashRef) {
-    super(parent, splashRef);
+  public BaseApplicationWithOwnWriteThread(@Nonnull Ref<? extends StartupProgress> splashRef) {
+    super(splashRef);
 
     myWriteThread = new WriteThread(this);
     myLock = new ReadMostlyRWLock(myWriteThread);

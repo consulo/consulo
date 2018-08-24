@@ -45,8 +45,6 @@ public interface ExtensionsArea  {
 
   void addAvailabilityListener(@Nonnull String extensionPointName, @Nonnull ExtensionPointAvailabilityListener listener);
 
-  @Nonnull
-  AreaPicoContainer getPicoContainer();
   void registerExtensionPoint(@Nonnull String pluginName, @Nonnull Element extensionPointElement);
   void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement);
   void registerExtension(@Nonnull String pluginName, @Nonnull Element extensionElement);
