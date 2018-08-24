@@ -1223,8 +1223,8 @@
 
     <applicationService serviceInterface="com.intellij.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl" />
 
-    <undoProvider implementation="com.intellij.openapi.command.impl.FileUndoProvider"/>
-    <projectUndoProvider implementation="com.intellij.openapi.command.impl.FileUndoProvider"/>
+    <undoProvider implementation="consulo.command.impl.ApplicationFileUndoProvider"/>
+    <projectUndoProvider implementation="consulo.command.impl.ProjectFileUndoProvider"/>
 
     <applicationService serviceInterface="com.intellij.openapi.command.CommandProcessor"
                         serviceImplementation="com.intellij.openapi.command.impl.CommandProcessorImpl"/>

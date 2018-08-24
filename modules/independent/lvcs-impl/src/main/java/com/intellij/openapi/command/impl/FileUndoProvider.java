@@ -18,57 +18,29 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.history.LocalHistory;
 import com.intellij.history.core.LocalHistoryFacade;
-import com.intellij.history.core.changes.Change;
-import com.intellij.history.core.changes.ContentChange;
-import com.intellij.history.core.changes.StructuralChange;
 import com.intellij.history.integration.IdeaGateway;
-import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.openapi.command.undo.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.FileContentUtilCore;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
-public class FileUndoProvider implements UndoProvider, VirtualFileListener {
+public abstract class FileUndoProvider implements UndoProvider, VirtualFileListener {
   public static final Logger LOG = Logger.getInstance(FileUndoProvider.class);
 
   private final Key<DocumentReference> DELETION_WAS_UNDOABLE = Key.create(FileUndoProvider.class.getName() + ".DeletionWasUndoable");
 
-  private final Project myProject;
-  private boolean myIsInsideCommand;
+  protected Project myProject;
+  protected boolean myIsInsideCommand;
 
-  private LocalHistoryFacade myLocalHistory;
-  private IdeaGateway myGateway;
+  protected LocalHistoryFacade myLocalHistory;
+  protected IdeaGateway myGateway;
 
-  private long myLastChangeId;
-
-  @SuppressWarnings("UnusedDeclaration")
-  public FileUndoProvider() {
-    this(null);
-  }
-
-  private FileUndoProvider(Project project) {
-    myProject = project;
-    if (myProject == null) return;
-
-    LocalHistoryImpl localHistory = LocalHistoryImpl.getInstanceImpl();
-    myLocalHistory = localHistory.getFacade();
-    myGateway = localHistory.getGateway();
-    if (myLocalHistory == null || myGateway == null) return; // local history was not initialized (e.g. in headless environment)
-
-    localHistory.addVFSListenerAfterLocalHistoryOne(this, project);
-    myLocalHistory.addListener(new LocalHistoryFacade.Listener() {
-      @Override
-      public void changeAdded(Change c) {
-        if (!(c instanceof StructuralChange) || c instanceof ContentChange) return;
-        myLastChangeId = c.getId();
-      }
-    }, myProject);
-  }
+  protected long myLastChangeId;
 
   @Override
   public void commandStarted(Project p) {
@@ -167,7 +139,7 @@ public class FileUndoProvider implements UndoProvider, VirtualFileListener {
 
   private void invalidateActionsFor(VirtualFileEvent e) {
     if (myProject == null || !myProject.isDisposed()) {
-      getUndoManager().invalidateActionsFor(createDocumentReference(e));
+      ((UndoManagerImpl)getUndoManager()).invalidateActionsFor(createDocumentReference(e));
     }
   }
 
@@ -175,11 +147,11 @@ public class FileUndoProvider implements UndoProvider, VirtualFileListener {
     return DocumentReferenceManager.getInstance().create(e.getFile());
   }
 
-  private UndoManagerImpl getUndoManager() {
+  private UndoManager getUndoManager() {
     if (myProject != null) {
-      return (UndoManagerImpl)UndoManager.getInstance(myProject);
+      return UndoManager.getInstance(myProject);
     }
-    return (UndoManagerImpl)UndoManager.getGlobalInstance();
+    return UndoManager.getGlobalInstance();
   }
 
   private class MyUndoableAction extends GlobalUndoableAction {
