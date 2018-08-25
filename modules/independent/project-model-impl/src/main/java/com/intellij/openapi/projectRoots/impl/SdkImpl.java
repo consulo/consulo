@@ -61,6 +61,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
 
 
   private final SdkRootContainerImpl myRootContainer;
+  private final SdkTable mySdkTable;
   private String myName;
   private String myVersionString;
   private boolean myVersionDefined = false;
@@ -71,15 +72,16 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   private SdkTypeId mySdkType;
   private boolean myPredefined;
 
-  public SdkImpl(String name, SdkTypeId sdkType) {
+  public SdkImpl(SdkTable sdkTable, String name, SdkTypeId sdkType) {
+    mySdkTable = sdkTable;
     mySdkType = sdkType;
     myRootContainer = new SdkRootContainerImpl(true);
     myName = name;
     myRootContainer.addProjectRootContainerListener(myRootProvider);
   }
 
-  public SdkImpl(String name, SdkTypeId sdkType, String homePath, String version) {
-    this(name, sdkType);
+  public SdkImpl(SdkTable sdkTable, String name, SdkTypeId sdkType, String homePath, String version) {
+    this(sdkTable, name, sdkType);
     myHomePath = homePath;
     myVersionString = version;
   }
@@ -88,7 +90,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   @Nonnull
   public SdkTypeId getSdkType() {
     if (mySdkType == null) {
-      mySdkType = SdkTable.getInstance().getDefaultSdkType();
+      mySdkType = mySdkTable.getDefaultSdkType();
     }
     return mySdkType;
   }
@@ -150,7 +152,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     final Element typeChild = element.getChild(ELEMENT_TYPE);
     final String sdkTypeName = typeChild != null ? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
     if (sdkTypeName != null) {
-      mySdkType = SdkTable.getInstance().getSdkTypeByName(sdkTypeName);
+      mySdkType = mySdkTable.getSdkTypeByName(sdkTypeName);
     }
     final Element version = element.getChild(ELEMENT_VERSION);
 
@@ -204,7 +206,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
 
     Element additional = new Element(ELEMENT_ADDITIONAL);
     if (myAdditionalData != null) {
-      SdkImpl.LOGGER.assertTrue(mySdkType != null);
+      LOGGER.assertTrue(mySdkType != null);
       mySdkType.saveAdditionalData(myAdditionalData, additional);
     }
     element.addContent(additional);
@@ -224,7 +226,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   @Override
   @Nonnull
   public Object clone() {
-    SdkImpl newSdk = new SdkImpl("", mySdkType);
+    SdkImpl newSdk = new SdkImpl(mySdkTable, "", mySdkType);
     copyTo(newSdk);
     return newSdk;
   }
@@ -337,7 +339,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
 
   @Override
   public void commitChanges() {
-    SdkImpl.LOGGER.assertTrue(isWritable());
+    LOGGER.assertTrue(isWritable());
     myRootContainer.finishChange();
     copyTo(myOrigin);
     myOrigin = null;

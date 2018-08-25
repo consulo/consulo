@@ -192,7 +192,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @Nonnull
   @Override
   public Sdk createSdk(final String name, final SdkTypeId sdkType) {
-    return new SdkImpl(name, sdkType);
+    return new SdkImpl(this, name, sdkType);
   }
 
   @Override
@@ -202,7 +202,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     List<Element> children = element.getChildren(ELEMENT_SDK);
 
     for (final Element child : children) {
-      final SdkImpl sdk = new SdkImpl(null, null);
+      final SdkImpl sdk = new SdkImpl(this, null, null);
       sdk.loadState(child);
       mySdks.add(sdk);
     }

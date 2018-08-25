@@ -288,7 +288,7 @@ public class ProjectSdksModel implements SdkModel {
         @Override
         public void consume(final String home) {
           String newSdkName = SdkConfigurationUtil.createUniqueSdkName(type, home, getSdks());
-          final SdkImpl newSdk = new SdkImpl(newSdkName, type);
+          final SdkImpl newSdk = new SdkImpl(SdkTable.getInstance(), newSdkName, type);
           newSdk.setHomePath(home);
           setupSdk(newSdk, callback);
         }

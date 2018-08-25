@@ -48,7 +48,7 @@ public class PredefinedBundlesLoader {
     public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
       Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
       String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
-      SdkImpl sdk = new SdkImpl(uniqueSdkName, sdkType);
+      Sdk sdk = mySdkTable.createSdk(uniqueSdkName, sdkType);
       myBundles.add(sdk);
       return sdk;
     }

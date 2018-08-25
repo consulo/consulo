@@ -109,7 +109,7 @@ public class SdkConfigurationUtil {
                   : createUniqueSdkName(customSdkSuggestedName, allSdks);
       }
 
-      sdk = new SdkImpl(sdkName, sdkType);
+      sdk = new SdkImpl(SdkTable.getInstance(), sdkName, sdkType);
       sdk.setPredefined(predefined);
 
       if (additionalData != null) {

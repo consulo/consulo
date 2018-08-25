@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 /**
@@ -48,6 +49,8 @@ public class BaseComponentAdapter<T> implements AssignableToComponentAdapter {
   private volatile T myInstanceIfSingleton;
 
   private boolean myForceSingleton;
+
+  private AtomicBoolean myInitializeProgress = new AtomicBoolean();
 
   public BaseComponentAdapter(InjectingKey<T> interfaceKey) {
     myInterfaceKey = interfaceKey;
@@ -101,6 +104,14 @@ public class BaseComponentAdapter<T> implements AssignableToComponentAdapter {
 
       boolean isSingleton = myForceSingleton || isAnnotationSingleton;
 
+      if (myInitializeProgress.get()) {
+        throw new IllegalAccessError("Cycle initialization");
+      }
+
+      if (isSingleton) {
+        myInitializeProgress.compareAndSet(false, true);
+      }
+
       long l = System.nanoTime();
 
       instance = myRemap.apply(() -> (T)delegate.getComponentInstance(container));
@@ -111,6 +122,7 @@ public class BaseComponentAdapter<T> implements AssignableToComponentAdapter {
 
       if (isSingleton) {
         myInstanceIfSingleton = instance;
+        myInitializeProgress.compareAndSet(true, false);
       }
 
       if (isSingleton && !isAnnotationSingleton) {
