@@ -30,6 +30,7 @@ import java.util.Map;
 /**
  * @author yole
  */
+@Deprecated
 public class CoreJarHandler extends ZipHandler {
   private final CoreJarFileSystem myFileSystem;
   private final VirtualFile myRoot;

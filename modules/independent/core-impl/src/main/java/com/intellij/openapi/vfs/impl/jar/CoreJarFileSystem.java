@@ -29,6 +29,7 @@ import java.util.Map;
 /**
  * @author yole
  */
+@Deprecated
 public class CoreJarFileSystem extends DeprecatedVirtualFileSystem {
   private final Map<String, CoreJarHandler> myHandlers = new ConcurrentFactoryMap<String, CoreJarHandler>() {
     @Nullable

@@ -33,6 +33,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@Deprecated
 public class CoreJarVirtualFile extends VirtualFile {
   private final CoreJarHandler myHandler;
   private final String myName;

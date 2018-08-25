@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Deprecated
 public class CoreVirtualFilePointerManager extends VirtualFilePointerManager {
   @Nonnull
   @Override
