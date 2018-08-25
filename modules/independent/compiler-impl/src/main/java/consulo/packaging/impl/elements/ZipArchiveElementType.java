@@ -72,6 +72,6 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
     final String parentPath = PathUtil.getParentPath(path);
     final String fileName = PathUtil.getFileName(path);
     final PackagingElement<?> element = new ZipArchivePackagingElement(fileName);
-    return (CompositePackagingElement<?>)PackagingElementFactory.getInstance().createParentDirectories(parentPath, element);
+    return (CompositePackagingElement<?>)PackagingElementFactory.getInstance(context.getProject()).createParentDirectories(parentPath, element);
   }
 }

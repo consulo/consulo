@@ -75,7 +75,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
   @Override
   @Nonnull
   public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
-    return PackagingElementFactory.getInstance().createLibraryElements(myLibrary);
+    return PackagingElementFactory.getInstance(context.getProject()).createLibraryElements(myLibrary);
   }
 
   private static class LibrarySourceItemPresentation extends SourceItemPresentation {

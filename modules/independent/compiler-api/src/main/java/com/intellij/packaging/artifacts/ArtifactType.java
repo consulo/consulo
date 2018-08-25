@@ -17,10 +17,7 @@ package com.intellij.packaging.artifacts;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementOutputKind;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
+import com.intellij.packaging.elements.*;
 import com.intellij.packaging.ui.ArtifactProblemsHolder;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import consulo.ui.image.Image;
@@ -61,7 +58,7 @@ public abstract class ArtifactType {
 
   public String getPresentableName() {
     return myTitle;
-  }                                
+  }
 
   @Nonnull
   public abstract Image getIcon();
@@ -83,7 +80,7 @@ public abstract class ArtifactType {
   }
 
   @Nonnull
-  public abstract CompositePackagingElement<?> createRootElement(@Nonnull String artifactName);
+  public abstract CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory, @Nonnull String artifactName);
 
   @Nonnull
   public List<? extends ArtifactTemplate> getNewArtifactTemplates(@Nonnull PackagingElementResolvingContext context) {
@@ -93,9 +90,8 @@ public abstract class ArtifactType {
   public void checkRootElement(@Nonnull CompositePackagingElement<?> rootElement, @Nonnull Artifact artifact, @Nonnull ArtifactProblemsHolder manager) {
   }
 
-  @javax.annotation.Nullable
-  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull Artifact artifact, @Nonnull PackagingElementResolvingContext context,
-                                                             @Nonnull ArtifactType parentType) {
+  @Nullable
+  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull Artifact artifact, @Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType parentType) {
     return null;
   }
 }

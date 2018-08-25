@@ -53,7 +53,7 @@ public class InvalidArtifactType extends ArtifactType {
 
   @Nonnull
   @Override
-  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
-    return PackagingElementFactory.getInstance().createArtifactRootElement();
+  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory, @Nonnull String artifactName) {
+    return packagingElementFactory.createArtifactRootElement();
   }
 }

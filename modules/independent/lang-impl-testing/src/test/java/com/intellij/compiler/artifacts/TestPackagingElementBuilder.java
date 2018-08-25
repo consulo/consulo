@@ -24,11 +24,11 @@ public class TestPackagingElementBuilder {
   }
 
   public static TestPackagingElementBuilder root(Project project) {
-    return new TestPackagingElementBuilder(project, PackagingElementFactory.getInstance().createArtifactRootElement(), null);
+    return new TestPackagingElementBuilder(project, PackagingElementFactory.getInstance(project).createArtifactRootElement(), null);
   }
 
   public static TestPackagingElementBuilder archive(final Project project, String name) {
-    return new TestPackagingElementBuilder(project, PackagingElementFactory.getInstance().createZipArchive(name), null);
+    return new TestPackagingElementBuilder(project, PackagingElementFactory.getInstance(project).createZipArchive(name), null);
   }
 
   public CompositePackagingElement<?> build() {
@@ -49,7 +49,7 @@ public class TestPackagingElementBuilder {
   }
 
   private static PackagingElementFactory getFactory() {
-    return PackagingElementFactory.getInstance();
+    return PackagingElementFactory.getInstance(project);
   }
 
   public TestPackagingElementBuilder dirCopy(VirtualFile dir) {

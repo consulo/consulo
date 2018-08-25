@@ -78,7 +78,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private JPanel myTopPanel;
   private final ActionGroup myShowSpecificContentOptionsGroup;
   private final Project myProject;
-  private final ComplexElementSubstitutionParameters mySubstitutionParameters = new ComplexElementSubstitutionParameters();
+  private final ComplexElementSubstitutionParameters mySubstitutionParameters;
   private final ArtifactEditorContextImpl myContext;
   private final SourceItemsTree mySourceItemsTree;
   private final Artifact myOriginalArtifact;
@@ -94,6 +94,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myContext = createArtifactEditorContext(context);
     myOriginalArtifact = artifact;
     myProject = context.getProject();
+    mySubstitutionParameters = new ComplexElementSubstitutionParameters(myProject);
     mySubstitutionParameters.setTypesToShowContent(settings.getTypesToShowContent());
     mySourceItemsTree = new SourceItemsTree(myContext, this);
     myLayoutTreeComponent = new LayoutTreeComponent(this, mySubstitutionParameters, myContext, myOriginalArtifact, settings.isSortElements());
@@ -125,7 +126,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
   private ActionGroup createShowSpecificContentOptionsGroup() {
     final DefaultActionGroup group = new DefaultActionGroup();
-    for (ComplexPackagingElementType<?> type : PackagingElementFactory.getInstance().getComplexElementTypes()) {
+    for (ComplexPackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getComplexElementTypes()) {
       group.add(new ToggleShowElementContentAction(type, this));
     }
     return group;
@@ -290,7 +291,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   public ArtifactEditorSettings createSettings() {
-    return new ArtifactEditorSettings(myLayoutTreeComponent.isSortElements(), mySubstitutionParameters.getTypesToSubstitute());
+    return new ArtifactEditorSettings(myContext.getProject(), myLayoutTreeComponent.isSortElements(), mySubstitutionParameters.getTypesToSubstitute());
   }
 
   private DefaultActionGroup createToolbarActionGroup() {
@@ -338,7 +339,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private ActionGroup createAddGroup() {
     DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("artifacts.add.copy.action"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
-    for (PackagingElementType<?> type : PackagingElementFactory.getInstance().getAllElementTypes()) {
+    for (PackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getAllElementTypes()) {
       if (type.isAvailableForAdd(getContext(), getArtifact())) {
         group.add(new AddNewPackagingElementAction(type, this));
       }
@@ -468,7 +469,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myPropertiesEditors.addTabs(myTabbedPane);
 
     final CompositePackagingElement<?> oldRootElement = getRootElement();
-    final CompositePackagingElement<?> newRootElement = artifactType.createRootElement(getArtifact().getName());
+    final CompositePackagingElement<?> newRootElement = artifactType.createRootElement(PackagingElementFactory.getInstance(myProject), getArtifact().getName());
     ArtifactUtil.copyChildren(oldRootElement, newRootElement, myProject);
     myLayoutTreeComponent.setRootElement(newRootElement);
   }

@@ -15,13 +15,21 @@
  */
 package com.intellij.packaging.artifacts;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import consulo.util.pointers.NamedPointerManager;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface ArtifactPointerManager extends NamedPointerManager<Artifact> {
+  @Nonnull
+  public static ArtifactPointerManager getInstance(Project project) {
+    return ServiceManager.getService(project, ArtifactPointerManager.class);
+  }
+
   @Nonnull
   @Override
   ArtifactPointer create(@Nonnull String name);

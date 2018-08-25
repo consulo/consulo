@@ -69,7 +69,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
       return;
     }
 
-    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance().getCompositeElementTypes();
+    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getProject()).getCompositeElementTypes();
     final List<PackagingElement<?>> selected = selection.getElements();
     if (types.length == 1) {
       surroundWith(types[0], parent, selected, treeComponent);

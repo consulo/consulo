@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import com.intellij.packaging.artifacts.ArtifactPointerManager;
 import com.intellij.packaging.artifacts.ModifiableArtifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.packaging.elements.CompositePackagingElement;
@@ -31,8 +31,11 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nullable;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.packaging.artifacts.ArtifactPointerUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -48,8 +51,9 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
     return myArtifactEditor.getLayoutTreeComponent().getSelection().getCommonParentElement() != null;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final LayoutTreeComponent treeComponent = myArtifactEditor.getLayoutTreeComponent();
     final LayoutTreeSelection selection = treeComponent.getSelection();
     final CompositePackagingElement<?> parent = selection.getCommonParentElement();
@@ -82,7 +86,8 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
         for (PackagingElement element : selectedElements) {
           parent.removeChild(element);
         }
-        parent.addOrFindChild(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).create(artifact, myArtifactEditor.getContext().getArtifactModel())));
+        ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(project);
+        parent.addOrFindChild(new ArtifactPackagingElement(pointerManager, pointerManager.create(artifact, myArtifactEditor.getContext().getArtifactModel())));
       }
     });
     treeComponent.rebuildTree();

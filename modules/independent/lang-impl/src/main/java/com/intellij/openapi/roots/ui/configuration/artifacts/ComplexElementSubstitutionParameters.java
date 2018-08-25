@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.ComplexPackagingElementNode;
 import com.intellij.packaging.elements.ComplexPackagingElement;
 import com.intellij.packaging.elements.ComplexPackagingElementType;
@@ -30,9 +31,14 @@ import java.util.*;
 public class ComplexElementSubstitutionParameters {
   private final Set<ComplexPackagingElementType<?>> myTypesToSubstitute = new HashSet<ComplexPackagingElementType<?>>();
   private final Set<ComplexPackagingElement<?>> mySubstituted = new HashSet<ComplexPackagingElement<?>>();
+  private final Project myProject;
+
+  public ComplexElementSubstitutionParameters(Project project) {
+    myProject = project;
+  }
 
   public void setSubstituteAll() {
-    ContainerUtil.addAll(myTypesToSubstitute, PackagingElementFactory.getInstance().getComplexElementTypes());
+    ContainerUtil.addAll(myTypesToSubstitute, PackagingElementFactory.getInstance(myProject).getComplexElementTypes());
     mySubstituted.clear();
   }
 
@@ -78,7 +84,7 @@ public class ComplexElementSubstitutionParameters {
   }
 
   public boolean isAllSubstituted() {
-    return myTypesToSubstitute.containsAll(Arrays.asList(PackagingElementFactory.getInstance().getComplexElementTypes()));
+    return myTypesToSubstitute.containsAll(Arrays.asList(PackagingElementFactory.getInstance(myProject).getComplexElementTypes()));
   }
 
   public boolean isNoneSubstituted() {

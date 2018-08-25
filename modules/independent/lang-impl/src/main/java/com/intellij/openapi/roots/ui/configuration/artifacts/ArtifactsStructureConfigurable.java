@@ -39,6 +39,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.ui.MasterDetailsState;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.packaging.artifacts.*;
+import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.InvalidArtifact;
 import com.intellij.packaging.impl.artifacts.PackagingElementPath;
@@ -67,10 +68,11 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   }
 
   private ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
-  private final ArtifactEditorSettings myDefaultSettings = new ArtifactEditorSettings();
+  private final ArtifactEditorSettings myDefaultSettings;
 
   public ArtifactsStructureConfigurable(@Nonnull Project project) {
     super(project, new ArtifactStructureConfigurableState());
+    myDefaultSettings = new ArtifactEditorSettings(project);
   }
 
   @Override
@@ -277,7 +279,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
       @Override
       public NewArtifactConfiguration createArtifact() {
         final String name = "unnamed";
-        return new NewArtifactConfiguration(type.createRootElement(name), name, type);
+        return new NewArtifactConfiguration(type.createRootElement(PackagingElementFactory.getInstance(myProject), name), name, type);
       }
     };
 

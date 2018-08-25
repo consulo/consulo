@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
@@ -30,12 +30,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
+import com.intellij.packaging.artifacts.ArtifactPointerManager;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
 import com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import com.intellij.util.io.URLUtil;
+import consulo.annotations.RequiredReadAction;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.ui.image.Image;
@@ -44,6 +46,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,14 +57,23 @@ import java.util.List;
  */
 @Singleton
 public class PackagingElementFactoryImpl extends PackagingElementFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.elements.PackagingElementFactoryImpl");
+  private static final Logger LOG = Logger.getInstance(PackagingElementFactoryImpl.class);
 
   public static final PackagingElementType<ArtifactRootElement<?>> ARTIFACT_ROOT_ELEMENT_TYPE = new ArtifactRootElementType();
+
+  private final ArtifactPointerManager myArtifactPointerManager;
+  private final ModulePointerManager myModulePointerManager;
+
+  @Inject
+  public PackagingElementFactoryImpl(ArtifactPointerManager artifactPointerManager, ModulePointerManager modulePointerManager) {
+    myArtifactPointerManager = artifactPointerManager;
+    myModulePointerManager = modulePointerManager;
+  }
 
   @Nonnull
   @Override
   public PackagingElementType<?>[] getNonCompositeElementTypes() {
-    final List<PackagingElementType> elementTypes = new ArrayList<PackagingElementType>();
+    final List<PackagingElementType> elementTypes = new ArrayList<>();
     for (PackagingElementType elementType : getAllElementTypes()) {
       if (!(elementType instanceof CompositePackagingElementType)) {
         elementTypes.add(elementType);
@@ -73,7 +85,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @Override
   @Nonnull
   public ComplexPackagingElementType<?>[] getComplexElementTypes() {
-    List<ComplexPackagingElementType<?>> types = new ArrayList<ComplexPackagingElementType<?>>();
+    List<ComplexPackagingElementType<?>> types = new ArrayList<>();
     for (PackagingElementType type : getAllElementTypes()) {
       if (type instanceof ComplexPackagingElementType) {
         types.add((ComplexPackagingElementType)type);
@@ -85,7 +97,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @Nonnull
   @Override
   public CompositePackagingElementType<?>[] getCompositeElementTypes() {
-    final List<CompositePackagingElementType> elementTypes = new ArrayList<CompositePackagingElementType>();
+    final List<CompositePackagingElementType> elementTypes = new ArrayList<>();
     for (PackagingElementType elementType : getAllElementTypes()) {
       if (elementType instanceof CompositePackagingElementType) {
         elementTypes.add((CompositePackagingElementType)elementType);
@@ -116,7 +128,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @Nonnull
   @Override
   public PackagingElement<?> createArtifactElement(@Nonnull Artifact artifact, @Nonnull Project project) {
-    return new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).create(artifact));
+    return new ArtifactPackagingElement(myArtifactPointerManager, myArtifactPointerManager.create(artifact));
   }
 
   @Override
@@ -149,10 +161,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   }
 
   @Override
-  public void addFileCopy(@Nonnull CompositePackagingElement<?> root,
-                          @Nonnull String outputDirectoryPath,
-                          @Nonnull String sourceFilePath,
-                          @javax.annotation.Nullable String outputFileName) {
+  public void addFileCopy(@Nonnull CompositePackagingElement<?> root, @Nonnull String outputDirectoryPath, @Nonnull String sourceFilePath, @Nullable String outputFileName) {
     final String fileName = PathUtil.getFileName(sourceFilePath);
     if (outputFileName != null && outputFileName.equals(fileName)) {
       outputFileName = null;
@@ -161,9 +170,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   }
 
   @Nonnull
-  private CompositePackagingElement<?> getOrCreateDirectoryOrArchive(@Nonnull CompositePackagingElement<?> root,
-                                                                     @Nonnull @NonNls String path,
-                                                                     final boolean directory) {
+  private CompositePackagingElement<?> getOrCreateDirectoryOrArchive(@Nonnull CompositePackagingElement<?> root, @Nonnull @NonNls String path, final boolean directory) {
     path = StringUtil.trimStart(StringUtil.trimEnd(path, "/"), "/");
     if (path.length() == 0) {
       return root;
@@ -179,22 +186,25 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
   @Override
   @Nonnull
+  @RequiredReadAction
   public PackagingElement<?> createModuleOutput(@Nonnull String moduleName, @Nonnull Project project) {
-    final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(project, moduleName);
+    final NamedPointer<Module> pointer = myModulePointerManager.create(moduleName);
     return ProductionModuleOutputElementType.getInstance().createElement(project, pointer);
   }
 
-  @Nonnull
   @Override
+  @Nonnull
+  @RequiredReadAction
   public PackagingElement<?> createModuleOutput(@Nonnull Module module) {
-    final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(module);
+    final NamedPointer<Module> modulePointer = myModulePointerManager.create(module);
     return ProductionModuleOutputElementType.getInstance().createElement(module.getProject(), modulePointer);
   }
 
-  @Nonnull
   @Override
+  @Nonnull
+  @RequiredReadAction
   public PackagingElement<?> createTestModuleOutput(@Nonnull Module module) {
-    NamedPointer<Module> pointer = ModuleUtilCore.createPointer(module);
+    NamedPointer<Module> pointer = myModulePointerManager.create(module);
     return TestModuleOutputElementType.getInstance().createElement(module.getProject(), pointer);
   }
 
@@ -212,11 +222,10 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
         return Collections.singletonList(createLibraryFiles(libraryName, LibraryTableImplUtil.MODULE_LEVEL, module.getName()));
       }
     }
-    final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
+    final List<PackagingElement<?>> elements = new ArrayList<>();
     for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
       final String path = FileUtil.toSystemIndependentName(PathUtil.getLocalPath(file));
-      elements.add(
-        file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(path));
+      elements.add(file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(path));
     }
     return elements;
   }
@@ -224,7 +233,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @Nonnull
   @Override
   public PackagingElement<?> createArtifactElement(@Nonnull ArtifactPointer artifactPointer, @Nonnull Project project) {
-    return new ArtifactPackagingElement(project, artifactPointer);
+    return new ArtifactPackagingElement(myArtifactPointerManager, artifactPointer);
   }
 
   @Nonnull
@@ -251,9 +260,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   }
 
   @Nonnull
-  public static String suggestFileName(@Nonnull CompositePackagingElement<?> parent,
-                                       @NonNls @Nonnull String prefix,
-                                       @NonNls @Nonnull String suffix) {
+  public static String suggestFileName(@Nonnull CompositePackagingElement<?> parent, @NonNls @Nonnull String prefix, @NonNls @Nonnull String suffix) {
     String name = prefix + suffix;
     int i = 2;
     while (findArchiveOrDirectoryByName(parent, name) != null) {
@@ -270,19 +277,16 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
   @Override
   @Nonnull
-  public PackagingElement<?> createExtractedDirectoryWithParentDirectories(@Nonnull String jarPath,
-                                                                           @Nonnull String pathInJar,
-                                                                           @Nonnull String relativeOutputPath) {
+  public PackagingElement<?> createExtractedDirectoryWithParentDirectories(@Nonnull String jarPath, @Nonnull String pathInJar, @Nonnull String relativeOutputPath) {
     return createParentDirectories(relativeOutputPath, new ExtractedDirectoryPackagingElement(jarPath, pathInJar));
   }
 
   @Nonnull
   @Override
   public PackagingElement<?> createExtractedDirectory(@Nonnull VirtualFile jarEntry) {
-    LOG.assertTrue(jarEntry.getFileSystem() instanceof ArchiveFileSystem,
-                   "Expected file from jar but file from " + jarEntry.getFileSystem() + " found");
+    LOG.assertTrue(jarEntry.getFileSystem() instanceof ArchiveFileSystem, "Expected file from jar but file from " + jarEntry.getFileSystem() + " found");
     final String fullPath = jarEntry.getPath();
-    final int jarEnd = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
+    final int jarEnd = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
     return new ExtractedDirectoryPackagingElement(fullPath.substring(0, jarEnd), fullPath.substring(jarEnd + 1));
   }
 
@@ -294,9 +298,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
   @Nonnull
   @Override
-  public PackagingElement<?> createFileCopyWithParentDirectories(@Nonnull String filePath,
-                                                                 @Nonnull String relativeOutputPath,
-                                                                 @javax.annotation.Nullable String outputFileName) {
+  public PackagingElement<?> createFileCopyWithParentDirectories(@Nonnull String filePath, @Nonnull String relativeOutputPath, @Nullable String outputFileName) {
     return createParentDirectories(relativeOutputPath, createFileCopy(filePath, outputFileName));
   }
 
@@ -313,8 +315,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
   @Nonnull
   @Override
-  public List<? extends PackagingElement<?>> createParentDirectories(@Nonnull String relativeOutputPath,
-                                                                     @Nonnull List<? extends PackagingElement<?>> elements) {
+  public List<? extends PackagingElement<?>> createParentDirectories(@Nonnull String relativeOutputPath, @Nonnull List<? extends PackagingElement<?>> elements) {
     relativeOutputPath = StringUtil.trimStart(relativeOutputPath, "/");
     if (relativeOutputPath.length() == 0) {
       return elements;
@@ -347,9 +348,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
     @Override
     @Nonnull
-    public List<? extends ArtifactRootElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context,
-                                                                  @Nonnull Artifact artifact,
-                                                                  @Nonnull CompositePackagingElement<?> parent) {
+    public List<? extends ArtifactRootElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
       throw new UnsupportedOperationException("'create' not implemented in " + getClass().getName());
     }
 

@@ -79,7 +79,7 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     }
 
     List<PackagingElement<?>> result = new ArrayList<PackagingElement<?>>();
-    final PackagingElementFactory factory = PackagingElementFactory.getInstance();
+    final PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
     for (PackagingSourceItem item : items) {
       final String path = artifactType.getDefaultPathFor(item.getKindOfProducedElements());
       if (path != null) {

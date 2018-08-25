@@ -132,7 +132,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
 
     @Override
     public ArtifactEditorSettings getDefaultSettings() {
-      return new ArtifactEditorSettings();
+      return new ArtifactEditorSettings(myProject);
     }
 
     @Override

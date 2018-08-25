@@ -11,7 +11,6 @@ import com.intellij.packaging.elements.PackagingElementFactory;
 import consulo.awt.TargetAWT;
 
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -25,9 +24,12 @@ public class UsageInArtifact extends ProjectStructureElementUsage {
   private final String myParentPath;
   private final PackagingElement<?> myPackagingElement;
 
-  public UsageInArtifact(Artifact originalArtifact, ArtifactsStructureConfigurableContext context, ProjectStructureElement sourceElement,
+  public UsageInArtifact(Artifact originalArtifact,
+                         ArtifactsStructureConfigurableContext context,
+                         ProjectStructureElement sourceElement,
                          ArtifactProjectStructureElement containingElement,
-                         String parentPath, PackagingElement<?> packagingElement) {
+                         String parentPath,
+                         PackagingElement<?> packagingElement) {
     myOriginalArtifact = originalArtifact;
     myContext = context;
     mySourceElement = sourceElement;
@@ -97,9 +99,7 @@ public class UsageInArtifact extends ProjectStructureElementUsage {
   @Override
   public void replaceElement(final ProjectStructureElement newElement) {
     Library library = ((LibraryProjectStructureElement)newElement).getLibrary();
-    PackagingElement<?> newLibraryElement = PackagingElementFactory.getInstance().createLibraryFiles(library.getName(),
-                                                                                                     library.getTable().getTableLevel(),
-                                                                                                     null);
+    PackagingElement<?> newLibraryElement = PackagingElementFactory.getInstance(myContext.getProject()).createLibraryFiles(library.getName(), library.getTable().getTableLevel(), null);
     replaceElement(newLibraryElement);
   }
 }

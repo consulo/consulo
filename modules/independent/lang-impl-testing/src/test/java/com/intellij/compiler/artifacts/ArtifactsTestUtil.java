@@ -98,7 +98,7 @@ public class ArtifactsTestUtil {
   public static void addArtifactToLayout(final Project project, final Artifact parent, final Artifact toAdd) {
     WriteAction.run(() -> {
       final ModifiableArtifactModel model = ArtifactManager.getInstance(project).createModifiableModel();
-      final PackagingElement<?> artifactElement = PackagingElementFactory.getInstance().createArtifactElement(toAdd, project);
+      final PackagingElement<?> artifactElement = PackagingElementFactory.getInstance(project).createArtifactElement(toAdd, project);
       model.getOrCreateModifiableArtifact(parent).getRootElement().addOrFindChild(artifactElement);
       model.commit();
     });

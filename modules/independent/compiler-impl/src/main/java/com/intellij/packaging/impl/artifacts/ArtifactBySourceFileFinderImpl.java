@@ -60,7 +60,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
             MultiValuesMap<VirtualFile, Artifact> result = computeFileToArtifactsMap();
             List<ModificationTracker> trackers = new ArrayList<ModificationTracker>();
             trackers.add(ArtifactManager.getInstance(myProject).getModificationTracker());
-            for (ComplexPackagingElementType<?> type : PackagingElementFactory.getInstance().getComplexElementTypes()) {
+            for (ComplexPackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getComplexElementTypes()) {
               ContainerUtil.addIfNotNull(type.getAllSubstitutionsModificationTracker(myProject), trackers);
             }
             return Result.create(result, trackers.toArray(new ModificationTracker[trackers.size()]));

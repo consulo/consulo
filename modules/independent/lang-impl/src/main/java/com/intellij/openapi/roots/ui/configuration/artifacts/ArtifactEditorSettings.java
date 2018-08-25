@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.project.Project;
 import com.intellij.packaging.elements.ComplexPackagingElementType;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementType;
@@ -30,13 +31,17 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactEditorSettings implements PersistentStateComponent<ArtifactEditorSettings.ArtifactEditorSettingsState> {
+  private final Project myProject;
   private boolean mySortElements = true;
   private final List<ComplexPackagingElementType<?>> myTypesToShowContent = new ArrayList<ComplexPackagingElementType<?>>();
 
-  public ArtifactEditorSettings() {
+  public ArtifactEditorSettings(Project project) {
+    myProject = project;
   }
 
-  public ArtifactEditorSettings(boolean sortElements, Collection<ComplexPackagingElementType<?>> typesToShowContent) {
+  public ArtifactEditorSettings(Project project, boolean sortElements, Collection<ComplexPackagingElementType<?>> typesToShowContent) {
+    this(project);
+
     mySortElements = sortElements;
     myTypesToShowContent.addAll(typesToShowContent);
   }
@@ -56,7 +61,7 @@ public class ArtifactEditorSettings implements PersistentStateComponent<Artifact
     mySortElements = state.mySortElements;
     myTypesToShowContent.clear();
     for (String id : state.myTypesToShowContentIds) {
-      final PackagingElementType<?> type = PackagingElementFactory.getInstance().findElementType(id);
+      final PackagingElementType<?> type = PackagingElementFactory.getInstance(myProject).findElementType(id);
       if (type instanceof ComplexPackagingElementType<?>) {
         myTypesToShowContent.add((ComplexPackagingElementType<?>)type);
       }

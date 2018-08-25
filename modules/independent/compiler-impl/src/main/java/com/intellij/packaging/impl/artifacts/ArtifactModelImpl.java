@@ -17,6 +17,7 @@ package com.intellij.packaging.impl.artifacts;
 
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
+import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.util.EventDispatcher;
 import consulo.annotations.RequiredWriteAction;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
@@ -35,13 +36,13 @@ import java.util.Map;
 public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableArtifactModel {
   private final List<ArtifactImpl> myOriginalArtifacts;
   private final ArtifactManagerImpl myArtifactManager;
-  private final Map<ArtifactImpl, ArtifactImpl> myArtifact2ModifiableCopy = new HashMap<ArtifactImpl, ArtifactImpl>();
-  private final Map<ArtifactImpl, ArtifactImpl> myModifiable2Original = new HashMap<ArtifactImpl, ArtifactImpl>();
+  private final Map<ArtifactImpl, ArtifactImpl> myArtifact2ModifiableCopy = new HashMap<>();
+  private final Map<ArtifactImpl, ArtifactImpl> myModifiable2Original = new HashMap<>();
   private final EventDispatcher<ArtifactListener> myDispatcher = EventDispatcher.create(ArtifactListener.class);
 
   public ArtifactModelImpl(ArtifactManagerImpl artifactManager, List<ArtifactImpl> originalArtifacts) {
     myArtifactManager = artifactManager;
-    myOriginalArtifacts = new ArrayList<ArtifactImpl>(originalArtifacts);
+    myOriginalArtifacts = new ArrayList<>(originalArtifacts);
     addListener(new ArtifactAdapter() {
       @Override
       public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
@@ -52,7 +53,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
 
   @Override
   protected List<? extends Artifact> getArtifactsList() {
-    final List<ArtifactImpl> list = new ArrayList<ArtifactImpl>();
+    final List<ArtifactImpl> list = new ArrayList<>();
     for (ArtifactImpl artifact : myOriginalArtifacts) {
       final ArtifactImpl copy = myArtifact2ModifiableCopy.get(artifact);
       if (copy != null) {
@@ -68,7 +69,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   @Override
   @Nonnull
   public ModifiableArtifact addArtifact(@Nonnull final String name, @Nonnull ArtifactType artifactType) {
-    return addArtifact(name, artifactType, artifactType.createRootElement(name));
+    return addArtifact(name, artifactType, artifactType.createRootElement(PackagingElementFactory.getInstance(myArtifactManager.getProject()), name));
   }
 
   @Override
@@ -170,7 +171,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
 
   @Override
   public void dispose() {
-    List<Artifact> artifacts = new ArrayList<Artifact>();
+    List<Artifact> artifacts = new ArrayList<>();
     for (ArtifactImpl artifact : myModifiable2Original.keySet()) {
       if (myModifiable2Original.get(artifact).equals(artifact)) {
         artifacts.add(artifact);

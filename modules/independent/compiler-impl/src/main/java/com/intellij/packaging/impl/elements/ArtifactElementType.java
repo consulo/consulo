@@ -20,26 +20,27 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
+import com.intellij.packaging.artifacts.ArtifactPointerManager;
 import com.intellij.packaging.elements.ComplexPackagingElementType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.util.Processor;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.*;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPackagingElement> {
   @Nonnull
   public static ArtifactElementType getInstance() {
     return getInstance(ArtifactElementType.class);
   }
 
+  @Inject
   public ArtifactElementType() {
     super("artifact", CompilerBundle.message("element.type.name.artifact"));
   }
@@ -57,47 +58,35 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
 
   @Override
   @Nonnull
-  public List<? extends ArtifactPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
-                                                                  @Nonnull CompositePackagingElement<?> parent) {
-    final Project project = context.getProject();
+  public List<? extends ArtifactPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
     List<Artifact> artifacts = context.chooseArtifacts(getAvailableArtifacts(context, artifact, false), CompilerBundle.message("dialog.title.choose.artifacts"));
-    final List<ArtifactPackagingElement> elements = new ArrayList<ArtifactPackagingElement>();
+    final List<ArtifactPackagingElement> elements = new ArrayList<>();
     for (Artifact selected : artifacts) {
-      elements.add(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).create(selected, context.getArtifactModel())));
+      ArtifactPointerManager pointerManager = ArtifactPointerManager.getInstance(context.getProject());
+      elements.add(new ArtifactPackagingElement(pointerManager, pointerManager.create(selected, context.getArtifactModel())));
     }
     return elements;
   }
 
   @Nonnull
-  public static List<? extends Artifact> getAvailableArtifacts(@Nonnull final ArtifactEditorContext context,
-                                                               @Nonnull final Artifact artifact,
-                                                               final boolean notIncludedOnly) {
-    final Set<Artifact> result = new HashSet<Artifact>(Arrays.asList(context.getArtifactModel().getArtifacts()));
+  public static List<? extends Artifact> getAvailableArtifacts(@Nonnull final ArtifactEditorContext context, @Nonnull final Artifact artifact, final boolean notIncludedOnly) {
+    final Set<Artifact> result = new HashSet<>(Arrays.asList(context.getArtifactModel().getArtifacts()));
     if (notIncludedOnly) {
-      ArtifactUtil.processPackagingElements(artifact, getInstance(), new Processor<ArtifactPackagingElement>() {
-        @Override
-        public boolean process(ArtifactPackagingElement artifactPackagingElement) {
-          result.remove(artifactPackagingElement.findArtifact(context));
-          return true;
-        }
+      ArtifactUtil.processPackagingElements(artifact, getInstance(), artifactPackagingElement -> {
+        result.remove(artifactPackagingElement.findArtifact(context));
+        return true;
       }, context, true);
     }
     result.remove(artifact);
     final Iterator<Artifact> iterator = result.iterator();
     while (iterator.hasNext()) {
       Artifact another = iterator.next();
-      final boolean notContainThis =
-          ArtifactUtil.processPackagingElements(another, getInstance(), new Processor<ArtifactPackagingElement>() {
-            @Override
-            public boolean process(ArtifactPackagingElement element) {
-              return !artifact.getName().equals(element.getArtifactName());
-            }
-          }, context, true);
+      final boolean notContainThis = ArtifactUtil.processPackagingElements(another, getInstance(), element -> !artifact.getName().equals(element.getArtifactName()), context, true);
       if (!notContainThis) {
         iterator.remove();
       }
     }
-    final ArrayList<Artifact> list = new ArrayList<Artifact>(result);
+    final ArrayList<Artifact> list = new ArrayList<>(result);
     Collections.sort(list, ArtifactManager.ARTIFACT_COMPARATOR);
     return list;
   }
@@ -105,7 +94,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
   @Override
   @Nonnull
   public ArtifactPackagingElement createEmpty(@Nonnull Project project) {
-    return new ArtifactPackagingElement(project);
+    return new ArtifactPackagingElement(ArtifactPointerManager.getInstance(project));
   }
 
   @Override

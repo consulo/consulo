@@ -32,9 +32,8 @@ import java.util.List;
  * @author nik
  */
 public abstract class PackagingElementFactory {
-
-  public static PackagingElementFactory getInstance() {
-    return ServiceManager.getService(PackagingElementFactory.class);
+  public static PackagingElementFactory getInstance(@Nonnull Project project) {
+    return ServiceManager.getService(project, PackagingElementFactory.class);
   }
 
   @Nonnull

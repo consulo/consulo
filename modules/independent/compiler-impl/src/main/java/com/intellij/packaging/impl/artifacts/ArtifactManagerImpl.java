@@ -44,6 +44,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
@@ -60,6 +62,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   public static final String TYPE_ID_ATTRIBUTE = "id";
   private final ArtifactManagerModel myModel;
   private final Project myProject;
+  private final PackagingElementFactory myPackagingElementFactory;
   private final DefaultPackagingElementResolvingContext myResolvingContext;
   private boolean myInsideCommit = false;
   private boolean myLoaded;
@@ -72,8 +75,10 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   };
   private final Map<String, LocalFileSystem.WatchRequest> myWatchedOutputs = new HashMap<>();
 
-  public ArtifactManagerImpl(Project project) {
+  @Inject
+  public ArtifactManagerImpl(Project project, PackagingElementFactory packagingElementFactory) {
     myProject = project;
+    myPackagingElementFactory = packagingElementFactory;
     myModel = new ArtifactManagerModel();
     myResolvingContext = new DefaultPackagingElementResolvingContext(myProject);
 
@@ -136,19 +141,14 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
             artifactState.getPropertiesList().add(propertiesState);
           }
         }
-        Collections.sort(artifactState.getPropertiesList(), new Comparator<ArtifactPropertiesState>() {
-          @Override
-          public int compare(ArtifactPropertiesState o1, ArtifactPropertiesState o2) {
-            return o1.getId().compareTo(o2.getId());
-          }
-        });
+        Collections.sort(artifactState.getPropertiesList(), (o1, o2) -> o1.getId().compareTo(o2.getId()));
       }
       state.getArtifacts().add(artifactState);
     }
     return state;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static <S> ArtifactPropertiesState serializeProperties(ArtifactPropertiesProvider provider, ArtifactProperties<S> properties) {
     final ArtifactPropertiesState state = new ArtifactPropertiesState();
     state.setId(provider.getId());
@@ -176,7 +176,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
   private <T> PackagingElement<T> deserializeElement(Element element) throws UnknownPackagingElementTypeException {
     final String id = element.getAttributeValue(TYPE_ID_ATTRIBUTE);
-    PackagingElementType<?> type = PackagingElementFactory.getInstance().findElementType(id);
+    PackagingElementType<?> type = myPackagingElementFactory.findElementType(id);
     if (type == null) {
       throw new UnknownPackagingElementTypeException(id);
     }
@@ -231,7 +231,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       }
     }
     else {
-      rootElement = type.createRootElement(artifactName);
+      rootElement = type.createRootElement(myPackagingElementFactory, artifactName);
     }
 
     final ArtifactImpl artifact = new ArtifactImpl(artifactName, type, state.isBuildOnMake(), rootElement, state.getOutputPath());
@@ -249,7 +249,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   private InvalidArtifact createInvalidArtifact(ArtifactState state, String errorMessage) {
-    final InvalidArtifact artifact = new InvalidArtifact(state, errorMessage);
+    final InvalidArtifact artifact = new InvalidArtifact(myPackagingElementFactory, state, errorMessage);
     ProjectLoadingErrorsNotifier.getInstance(myProject).registerError(new ArtifactLoadingErrorDescription(myProject, artifact));
     return artifact;
   }
@@ -390,7 +390,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   public void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath, @Nonnull Collection<? extends PackagingElement<?>> elements) {
     final ModifiableArtifactModel model = createModifiableModel();
     final CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
-    PackagingElementFactory.getInstance().getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);
+    myPackagingElementFactory.getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);
     WriteAction.run(model::commit);
   }
 

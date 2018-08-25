@@ -76,7 +76,7 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
     final String parentPath = PathUtil.getParentPath(path);
     final String fileName = PathUtil.getFileName(path);
     final PackagingElement<?> element = new DirectoryPackagingElement(fileName);
-    return (CompositePackagingElement<?>)PackagingElementFactoryImpl.getInstance().createParentDirectories(parentPath, element);
+    return (CompositePackagingElement<?>)PackagingElementFactoryImpl.getInstance(context.getProject()).createParentDirectories(parentPath, element);
 
   }
 

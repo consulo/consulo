@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
+import com.intellij.packaging.artifacts.ArtifactPointerManager;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
@@ -58,8 +59,8 @@ public class ArtifactSourceItem extends PackagingSourceItem {
   @Nonnull
   public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
     final Project project = context.getProject();
-    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(project).create(myArtifact, context.getArtifactModel());
-    return Collections.singletonList(PackagingElementFactory.getInstance().createArtifactElement(pointer, project));
+    final ArtifactPointer pointer = ArtifactPointerManager.getInstance(project).create(myArtifact, context.getArtifactModel());
+    return Collections.singletonList(PackagingElementFactory.getInstance(context.getProject()).createArtifactElement(pointer, project));
   }
 
   public boolean equals(Object obj) {

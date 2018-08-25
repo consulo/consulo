@@ -1556,7 +1556,7 @@
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
 
 
-    <applicationService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
+    <projectService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
                         serviceImplementation="com.intellij.packaging.impl.elements.PackagingElementFactoryImpl"/>
 
 

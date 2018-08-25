@@ -21,6 +21,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactPointerImpl;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.List;
@@ -32,6 +33,7 @@ import java.util.List;
 public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact> implements ArtifactPointerManager {
   private final Project myProject;
 
+  @Inject
   public ArtifactPointerManagerImpl(Project project) {
     myProject = project;
     project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactListener() {

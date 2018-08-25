@@ -25,8 +25,8 @@ public class InvalidArtifact extends ArtifactImpl {
   private ArtifactState myState;
   private final String myErrorMessage;
 
-  public InvalidArtifact(ArtifactState state, String errorMessage) {
-    super(state.getName(), InvalidArtifactType.getInstance(), false, PackagingElementFactory.getInstance().createArtifactRootElement(), "");
+  public InvalidArtifact(PackagingElementFactory packagingElementFactory, ArtifactState state, String errorMessage) {
+    super(state.getName(), InvalidArtifactType.getInstance(), false, packagingElementFactory.createArtifactRootElement(), "");
     myState = state;
     myErrorMessage = errorMessage;
   }

@@ -15,7 +15,6 @@
  */
 package consulo.packaging.artifacts;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.ArtifactPointerManager;
 
@@ -24,7 +23,8 @@ import com.intellij.packaging.artifacts.ArtifactPointerManager;
  * @since 16:57/05.07.13
  */
 public class ArtifactPointerUtil {
+  @Deprecated
   public static ArtifactPointerManager getPointerManager(Project project) {
-    return  ServiceManager.getService(project, ArtifactPointerManager.class);
+    return ArtifactPointerManager.getInstance(project);
   }
 }

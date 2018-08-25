@@ -62,7 +62,7 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
     };
     final VirtualFile[] files = FileChooser.chooseFiles(descriptor, context.getProject(), null);
     final List<PackagingElement<?>> list = new ArrayList<PackagingElement<?>>();
-    final PackagingElementFactory factory = PackagingElementFactory.getInstance();
+    final PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
     for (VirtualFile file : files) {
       list.add(factory.createExtractedDirectory(file));
     }

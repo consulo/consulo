@@ -19,7 +19,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,9 +35,10 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
+import consulo.roots.types.BinariesOrderRootType;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -80,7 +80,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
       }
     }
 
-    for (PackagingElementType element : PackagingElementFactory.getInstance().getAllElementTypes()) {
+    for (PackagingElementType element : PackagingElementFactory.getInstance(module.getProject()).getAllElementTypes()) {
       if(element instanceof ModuleOutputElementTypeBase) {
         ModuleOutputElementTypeBase moduleOutputType = (ModuleOutputElementTypeBase)element;
         boolean can = canAddModuleOutputType(editorContext, artifact, moduleOutputType, module);

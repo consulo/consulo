@@ -41,6 +41,7 @@ public abstract class CompositePackagingElementType<E extends CompositePackaging
   @Nullable
   public abstract CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent, @Nullable String baseName, @Nonnull ArtifactEditorContext context);
 
+  @Override
   @Nonnull
   public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
     final PackagingElement<?> composite = createComposite(parent, null, context);

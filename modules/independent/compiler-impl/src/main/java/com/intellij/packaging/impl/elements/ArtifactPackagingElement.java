@@ -16,12 +16,11 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import com.intellij.packaging.artifacts.ArtifactPointerManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;
@@ -30,9 +29,9 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +39,21 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPackagingElement.ArtifactPackagingElementState> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.elements.ArtifactPackagingElement");
-  private final Project myProject;
-  private ArtifactPointer myArtifactPointer;
-  @NonNls public static final String ARTIFACT_NAME_ATTRIBUTE = "artifact-name";
+  private static final Logger LOG = Logger.getInstance(ArtifactPackagingElement.class);
 
-  public ArtifactPackagingElement(@Nonnull Project project) {
+  @NonNls
+  public static final String ARTIFACT_NAME_ATTRIBUTE = "artifact-name";
+
+  private final ArtifactPointerManager myArtifactPointerManager;
+  private ArtifactPointer myArtifactPointer;
+
+  public ArtifactPackagingElement(@Nonnull ArtifactPointerManager artifactPointerManager) {
     super(ArtifactElementType.getInstance());
-    myProject = project;
+    myArtifactPointerManager = artifactPointerManager;
   }
 
-  public ArtifactPackagingElement(@Nonnull Project project, @Nonnull ArtifactPointer artifactPointer) {
-    this(project);
+  public ArtifactPackagingElement(@Nonnull ArtifactPointerManager artifactPointerManager, @Nonnull ArtifactPointer artifactPointer) {
+    this(artifactPointerManager);
     myArtifactPointer = artifactPointer;
   }
 
@@ -136,7 +138,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   @Override
   public void loadState(ArtifactPackagingElementState state) {
     final String name = state.getArtifactName();
-    myArtifactPointer = name != null ? ArtifactPointerUtil.getPointerManager(myProject).create(name) : null;
+    myArtifactPointer = name != null ? myArtifactPointerManager.create(name) : null;
   }
 
   @Override
@@ -150,7 +152,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
            && myArtifactPointer.equals(((ArtifactPackagingElement)element).myArtifactPointer);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Artifact findArtifact(@Nonnull PackagingElementResolvingContext context) {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(context.getArtifactModel()) : null;
   }
@@ -161,7 +163,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @SuppressWarnings("unused")
-  public void setArtifactPointer(@javax.annotation.Nullable ArtifactPointer artifactPointer) {
+  public void setArtifactPointer(@Nullable ArtifactPointer artifactPointer) {
     myArtifactPointer = artifactPointer;
   }
 

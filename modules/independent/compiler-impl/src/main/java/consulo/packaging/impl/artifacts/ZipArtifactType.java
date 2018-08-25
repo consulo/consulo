@@ -18,6 +18,7 @@ package consulo.packaging.impl.artifacts;
 import com.intellij.icons.AllIcons;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
+import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
@@ -47,7 +48,7 @@ public class ZipArtifactType extends ArtifactType {
 
   @Nonnull
   @Override
-  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
+  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory packagingElementFactory, @Nonnull String artifactName) {
     return new ZipArchivePackagingElement(ArtifactUtil.suggestArtifactFileName(artifactName) + ".zip");
   }
 }

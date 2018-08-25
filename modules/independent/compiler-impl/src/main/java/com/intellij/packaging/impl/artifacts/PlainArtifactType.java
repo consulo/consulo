@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
+import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
 import consulo.ui.image.Image;
@@ -54,7 +55,7 @@ public class PlainArtifactType extends ArtifactType {
 
   @Override
   @Nonnull
-  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
+  public CompositePackagingElement<?> createRootElement(PackagingElementFactory elementFactory, @Nonnull String artifactName) {
     return new ArtifactRootElementImpl();
   }
 }

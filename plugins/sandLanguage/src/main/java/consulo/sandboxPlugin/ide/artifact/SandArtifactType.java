@@ -20,6 +20,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
+import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
@@ -63,7 +64,7 @@ public class SandArtifactType extends ArtifactType {
 
   @Override
   @Nonnull
-  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
+  public CompositePackagingElement<?> createRootElement(@Nonnull PackagingElementFactory project, @Nonnull String artifactName) {
     return new ArtifactRootElementImpl();
   }
 }
