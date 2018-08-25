@@ -48,8 +48,8 @@ public class TestPackagingElementBuilder {
     return this;
   }
 
-  private static PackagingElementFactory getFactory() {
-    return PackagingElementFactory.getInstance(project);
+  private PackagingElementFactory getFactory() {
+    return PackagingElementFactory.getInstance(myProject);
   }
 
   public TestPackagingElementBuilder dirCopy(VirtualFile dir) {
