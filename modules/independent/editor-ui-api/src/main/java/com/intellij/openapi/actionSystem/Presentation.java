@@ -143,22 +143,26 @@ public final class Presentation implements Cloneable {
 
       if (mayContainMnemonic) {
         StringBuilder plainText = new StringBuilder();
+        int backShift = 0;
         for (int i = 0; i < text.length(); i++) {
           char ch = text.charAt(i);
-          if (ch == '_' || ch == '&') {
+          if (myMnemonic == 0 && (ch == '_' || ch == '&')) {
             //noinspection AssignmentToForLoopParameter
             i++;
             if (i >= text.length()) break;
             ch = text.charAt(i);
             if (ch != '_' && ch != '&') {
-              if (UISettings.getInstance().DISABLE_MNEMONICS_IN_CONTROLS) {
+              if (UISettings.getInstance().getDisableMnemonicsInControls()) {
                 myMnemonic = 0;
                 myDisplayedMnemonicIndex = -1;
               }
               else {
                 myMnemonic = Character.toUpperCase(ch);  // mnemonics are case insensitive
-                myDisplayedMnemonicIndex = i - 1;
+                myDisplayedMnemonicIndex = i - 1 - backShift;
               }
+            }
+            else {
+              backShift++;
             }
           }
           plainText.append(ch);

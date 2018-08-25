@@ -4,13 +4,12 @@
  */
 package com.intellij.util.ui.update;
 
-import com.intellij.testFramework.FlyIdeaTestCase;
 import com.intellij.util.WaitFor;
-import org.junit.Ignore;
+import consulo.testFramework.MockApplicationTestCase;
 
 import javax.annotation.Nonnull;
 
-public abstract class MergingUpdateQueueTest extends FlyIdeaTestCase {
+public class MergingUpdateQueueTest extends MockApplicationTestCase {
   public void testOnShowNotify() throws Exception {
     final MyUpdate first = new MyUpdate("first");
     final MyUpdate second = new MyUpdate("second");

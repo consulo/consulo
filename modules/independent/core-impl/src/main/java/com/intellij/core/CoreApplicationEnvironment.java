@@ -44,7 +44,6 @@ import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.util.ClassExtension;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.KeyedExtensionCollector;
-import com.intellij.openapi.util.StaticGetter;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
@@ -78,6 +77,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author yole
  */
+@Deprecated
 public class CoreApplicationEnvironment {
   private final CoreFileTypeRegistry myFileTypeRegistry;
   protected final MockApplication myApplication;
@@ -92,9 +92,7 @@ public class CoreApplicationEnvironment {
     myFileTypeRegistry = new CoreFileTypeRegistry();
 
     myApplication = createApplication(myParentDisposable);
-    ApplicationManager.setApplication(myApplication,
-                                      new StaticGetter<>(myFileTypeRegistry),
-                                      myParentDisposable);
+    ApplicationManager.setApplication(myApplication, myParentDisposable);
     myLocalFileSystem = createLocalFileSystem();
     myJarFileSystem = createJarFileSystem();
 

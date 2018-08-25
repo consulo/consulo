@@ -18,14 +18,13 @@ package com.intellij.util;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.testFramework.PlatformTestUtil;
 import consulo.testFramework.MockApplicationTestCase;
-import org.junit.Ignore;
 
 import java.util.Collections;
 import java.util.Random;
 
 import static org.junit.Assume.assumeTrue;
 
-public abstract class StringBuilderSpinAllocatorTest extends MockApplicationTestCase {
+public class StringBuilderSpinAllocatorTest extends MockApplicationTestCase {
 
   public static final int THREADS = 1000;
 

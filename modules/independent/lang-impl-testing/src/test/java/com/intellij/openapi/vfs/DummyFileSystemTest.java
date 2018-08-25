@@ -21,7 +21,7 @@ import consulo.testFramework.MockApplicationTestCase;
 
 import javax.annotation.Nonnull;
 
-public abstract class DummyFileSystemTest extends MockApplicationTestCase {
+public class DummyFileSystemTest extends MockApplicationTestCase {
   private DummyFileSystem fs;
 
   @Override

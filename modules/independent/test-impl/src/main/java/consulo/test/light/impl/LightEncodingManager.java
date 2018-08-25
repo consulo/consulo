@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.core;
+package consulo.test.light.impl;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2018-08-25
  */
-@Deprecated
-public class CoreEncodingRegistry extends CoreEncodingProjectManager {
+public class LightEncodingManager extends LightEncodingProjectManager {
 }

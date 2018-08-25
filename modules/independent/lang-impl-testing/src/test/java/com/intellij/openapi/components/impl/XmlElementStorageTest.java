@@ -39,7 +39,7 @@ import static com.intellij.openapi.util.JDOMBuilder.tag;
 /**
  * @author mike
  */
-public abstract class XmlElementStorageTest extends MockApplicationTestCase {
+public  class XmlElementStorageTest extends MockApplicationTestCase {
   private Disposable myParentDisposable;
 
   @RequiredDispatchThread

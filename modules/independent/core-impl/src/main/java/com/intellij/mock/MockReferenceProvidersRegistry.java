@@ -25,6 +25,7 @@ import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 /**
  * @author yole
  */
+@Deprecated
 public class MockReferenceProvidersRegistry extends ReferenceProvidersRegistry {
   @Override
   public PsiReferenceRegistrar getRegistrar(Language language) {

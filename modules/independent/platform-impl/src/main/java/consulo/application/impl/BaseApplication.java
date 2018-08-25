@@ -42,6 +42,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -212,6 +214,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     builder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class);
     builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManager.class);
+
+    builder.bind(FileTypeRegistry.class).to(FileTypeManager::getInstance);
   }
 
   @Nullable

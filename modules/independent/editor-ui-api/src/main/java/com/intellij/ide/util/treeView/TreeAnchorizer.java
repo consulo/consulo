@@ -26,14 +26,8 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public class TreeAnchorizer {
-  private static final TreeAnchorizer ourInstance;
-  static {
-    TreeAnchorizer implementation = ServiceManager.getService(TreeAnchorizer.class);
-    ourInstance = implementation == null ? new TreeAnchorizer() : implementation;
-  }
-
   public static TreeAnchorizer getService() {
-    return ourInstance;
+    return ServiceManager.getService(TreeAnchorizer.class);
   }
 
   public Object createAnchor(Object element) {

@@ -33,6 +33,9 @@ public interface InjectingPoint<T> {
   InjectingPoint<T> to(@Nonnull InjectingKey<? extends T> key);
 
   @Nonnull
+  InjectingPoint<T> to(@Nonnull Provider<T> provider);
+
+  @Nonnull
   default InjectingPoint<T> to(@Nonnull Class<? extends T> key) {
     return to(InjectingKey.of(key));
   }

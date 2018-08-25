@@ -31,6 +31,7 @@ import javax.swing.*;
 /**
  * @author yole
  */
+@Deprecated
 public class MockDumbService extends DumbService {
   private final Project myProject;
 

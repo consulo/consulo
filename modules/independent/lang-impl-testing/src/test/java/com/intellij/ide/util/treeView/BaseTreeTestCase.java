@@ -15,18 +15,20 @@
  */
 package com.intellij.ide.util.treeView;
 
-import com.intellij.openapi.util.*;
-import com.intellij.testFramework.FlyIdeaTestCase;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.SimpleTimer;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.WaitFor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.MergingUpdateQueue;
+import consulo.testFramework.MockApplicationTestCase;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -37,7 +39,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
+abstract class BaseTreeTestCase<StructureElement> extends MockApplicationTestCase {
 
   private BaseTreeBuilder myBuilder;
   Tree myTree;

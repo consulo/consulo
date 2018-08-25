@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
@@ -29,13 +29,11 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public abstract class FileTypeRegistry {
-  public static Getter<FileTypeRegistry> ourInstanceGetter;
+  public static FileTypeRegistry getInstance() {
+    return ServiceManager.getService(FileTypeRegistry.class);
+  }
 
   public abstract boolean isFileIgnored(@NonNls @Nonnull VirtualFile file);
-
-  public static FileTypeRegistry getInstance() {
-    return ourInstanceGetter.get();
-  }
 
   /**
    * Returns the list of all registered file types.

@@ -1,6 +1,22 @@
-package com.intellij.mock;
+/*
+ * Copyright 2013-2018 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.test.light.impl;
 
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
@@ -8,7 +24,6 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
 import com.intellij.util.containers.WeakFactoryMap;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
@@ -16,26 +31,30 @@ import consulo.annotations.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.ref.Reference;
+import java.util.function.Function;
 
-@Deprecated
-public class MockFileDocumentManagerImpl extends FileDocumentManager {
+/**
+ * @author VISTALL
+ * @since 2018-08-25
+ */
+public class LightFileDocumentManager extends FileDocumentManager {
   private static final Key<VirtualFile> MOCK_VIRTUAL_FILE_KEY = Key.create("MockVirtualFile");
   private final Function<CharSequence, Document> myFactory;
   @Nullable
   private final Key<Reference<Document>> myCachedDocumentKey;
 
-  public MockFileDocumentManagerImpl(Function<CharSequence, Document> factory, @Nullable Key<Reference<Document>> cachedDocumentKey) {
-    myFactory = factory;
-    myCachedDocumentKey = cachedDocumentKey;
+  public LightFileDocumentManager() {
+    myFactory = DocumentImpl::new;
+    myCachedDocumentKey = null;
   }
 
-  private final WeakFactoryMap<VirtualFile,Document> myDocuments = new WeakFactoryMap<VirtualFile, Document>() {
+  private final WeakFactoryMap<VirtualFile, Document> myDocuments = new WeakFactoryMap<VirtualFile, Document>() {
     @Override
     protected Document create(final VirtualFile key) {
       if (key.isDirectory() || isBinaryWithoutDecompiler(key)) return null;
 
       CharSequence text = LoadTextUtil.loadText(key);
-      final Document document = myFactory.fun(text);
+      final Document document = myFactory.apply(text);
       document.putUserData(MOCK_VIRTUAL_FILE_KEY, key);
       return document;
     }

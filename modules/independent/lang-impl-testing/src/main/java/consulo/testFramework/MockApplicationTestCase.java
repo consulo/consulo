@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.testFramework.UsefulTestCase;
-import consulo.testFramework.application.MockApplicationEnvironment;
+import consulo.test.light.LightApplicationBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,8 @@ public class MockApplicationTestCase extends UsefulTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     myRootDisposable = Disposer.newDisposable();
-    new MockApplicationEnvironment(myRootDisposable);
+
+    LightApplicationBuilder.create(myRootDisposable).build();
   }
 
   public File getTempDir() throws IOException {

@@ -26,11 +26,9 @@ import com.intellij.util.WaitFor;
 import com.intellij.util.ui.UIUtil;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestSuite;
-import org.junit.Ignore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -44,7 +42,7 @@ import java.util.Set;
 import static com.intellij.testFramework.PlatformTestUtil.notNull;
 
 @SuppressWarnings("JUnitTestClassNamingConvention")
-public abstract class TreeUiTest extends AbstractTreeBuilderTest {
+public class TreeUiTest extends AbstractTreeBuilderTest {
   public TreeUiTest(boolean passThrough) {
     super(passThrough);
   }
@@ -1969,7 +1967,7 @@ public abstract class TreeUiTest extends AbstractTreeBuilderTest {
   }
 
 
-  public abstract static class BgLoadingSyncUpdate extends TreeUiTest {
+  public static class BgLoadingSyncUpdate extends TreeUiTest {
     public BgLoadingSyncUpdate() {
       super(false, true);
     }
@@ -1995,7 +1993,7 @@ public abstract class TreeUiTest extends AbstractTreeBuilderTest {
     }
   }
 
-  public abstract static class QuickBgLoadingSyncUpdate extends TreeUiTest {
+  public static class QuickBgLoadingSyncUpdate extends TreeUiTest {
     public QuickBgLoadingSyncUpdate() {
       super(false, true);
     }

@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
+@Deprecated
 public class MockCommandProcessor extends CommandProcessor {
   @Override
   public void executeCommand(@Nonnull Runnable runnable, String name, Object groupId) {

@@ -28,7 +28,7 @@ import java.util.Set;
  * User: anna
  * Date: Feb 13, 2005
  */
-public abstract class SearchCyclesTest extends GraphTestCase {
+public class SearchCyclesTest extends GraphTestCase {
   public void test1() throws Exception{
     final HashMap<String, String> graph = new HashMap<String, String>();
     graph.put("a", "bd");

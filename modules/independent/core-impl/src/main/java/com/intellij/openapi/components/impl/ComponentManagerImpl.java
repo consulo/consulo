@@ -176,6 +176,20 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     InjectingContainerBuilder builder = myParent == null ? InjectingContainer.root().childBuilder() : myParent.getInjectingContainer().childBuilder();
 
+    registerServices(builder);
+
+    loadServices(myNotLazyServices, builder);
+
+    bootstrapInjectingContainer(builder);
+
+    myInjectingContainer = builder.build();
+  }
+
+  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
+    PluginManagerCore.registerExtensionPointsAndExtensions(area);
+  }
+
+  protected void registerServices(InjectingContainerBuilder builder) {
     IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
       if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
@@ -188,16 +202,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
 
     myComponentsRegistry.loadClasses(myNotLazyServices, builder);
-
-    loadServices(myNotLazyServices, builder);
-
-    bootstrapInjectingContainer(builder);
-
-    myInjectingContainer = builder.build();
-  }
-
-  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    PluginManagerCore.registerExtensionPointsAndExtensions(area);
   }
 
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
@@ -278,7 +282,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     LOG.error(ex);
   }
 
-  public void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
+  private void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
     if (!config.prepareClasses(false)) {
       return;
     }

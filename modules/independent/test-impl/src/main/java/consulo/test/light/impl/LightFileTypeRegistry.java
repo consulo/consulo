@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.core;
+package consulo.test.light.impl;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -23,22 +23,22 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2018-08-25
  */
-@Deprecated
-public class CoreFileTypeRegistry extends FileTypeRegistry {
-  private final Map<String, FileType> myExtensionsMap = new THashMap<String, FileType>(FileUtil.PATH_HASHING_STRATEGY);
-  private final List<FileType> myAllFileTypes = new ArrayList<FileType>();
+public class LightFileTypeRegistry extends FileTypeRegistry {
+  private final Map<String, FileType> myExtensionsMap = new THashMap<>(FileUtil.PATH_HASHING_STRATEGY);
+  private final List<FileType> myAllFileTypes = new ArrayList<>();
 
-  public CoreFileTypeRegistry() {
+  public LightFileTypeRegistry() {
     myAllFileTypes.add(UnknownFileType.INSTANCE);
   }
 
@@ -89,7 +89,7 @@ public class CoreFileTypeRegistry extends FileTypeRegistry {
   @Override
   public FileType findFileTypeByName(String fileTypeName) {
     for (FileType type : myAllFileTypes) {
-      if (type.getName().equals(fileTypeName)) {
+      if (type.getId().equals(fileTypeName)) {
         return type;
       }
     }

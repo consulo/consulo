@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@Deprecated
 public class MockResolveScopeManager extends ResolveScopeManager {
   private final Project myProject;
 

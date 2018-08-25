@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.core;
+package consulo.test.light;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.DocumentCommitProcessor;
-import com.intellij.psi.impl.PsiDocumentManagerBase;
-import org.jetbrains.annotations.NonNls;
+import consulo.test.light.impl.LightProject;
 
 import javax.annotation.Nonnull;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 2018-08-25
  */
-@Deprecated
-class CorePsiDocumentManager extends PsiDocumentManagerBase {
-  CorePsiDocumentManager(@Nonnull Project project,
-                         @Nonnull PsiManager psiManager,
-                         @NonNls @Nonnull DocumentCommitProcessor documentCommitProcessor) {
-    super(project, psiManager, documentCommitProcessor);
+public class LightProjectBuilder {
+  public static LightProjectBuilder create(@Nonnull Application application) {
+    return new LightProjectBuilder(application);
+  }
+
+  private final Application myApplication;
+
+  private LightProjectBuilder(Application application) {
+    myApplication = application;
+  }
+
+  @Nonnull
+  public Project build() {
+    return new LightProject(myApplication, "LightProjectBuilder:" + hashCode());
   }
 }

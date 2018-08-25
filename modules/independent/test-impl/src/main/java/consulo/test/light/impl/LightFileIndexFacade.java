@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.mock;
+package consulo.test.light.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -21,22 +21,20 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2018-08-25
  */
-@Deprecated
-public class MockFileIndexFacade extends FileIndexFacade {
-  private final Module myModule;
-  private final List<VirtualFile> myLibraryRoots = new ArrayList<VirtualFile>();
+public class LightFileIndexFacade extends FileIndexFacade {
+  private final List<VirtualFile> myLibraryRoots = new ArrayList<>();
 
-  public MockFileIndexFacade(final Project project) {
+  public LightFileIndexFacade(final Project project) {
     super(project);
-    myModule = null;  // TODO
   }
 
   @Nonnull
@@ -87,7 +85,7 @@ public class MockFileIndexFacade extends FileIndexFacade {
 
   @Override
   public Module getModuleForFile(@Nonnull VirtualFile file) {
-    return myModule;
+    return null;
   }
 
   @Override

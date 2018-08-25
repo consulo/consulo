@@ -26,7 +26,6 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.ASTStructure;
 import com.intellij.psi.tree.*;
-import com.intellij.testFramework.FlyIdeaTestCase;
 import com.intellij.util.ThreeState;
 import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
@@ -34,6 +33,7 @@ import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
+import consulo.testFramework.MockApplicationTestCase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -42,7 +42,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
-public abstract class PsiBuilderQuickTest extends FlyIdeaTestCase {
+public class PsiBuilderQuickTest extends MockApplicationTestCase {
   private static final IFileElementType ROOT = new IFileElementType("ROOT", Language.ANY);
 
   private static final IElementType LETTER = new IElementType("LETTER", Language.ANY);

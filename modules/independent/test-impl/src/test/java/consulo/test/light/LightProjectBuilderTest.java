@@ -18,9 +18,11 @@ package consulo.test.light;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.ThrowableRunnable;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,7 +33,7 @@ import javax.inject.Inject;
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightApplicationBuilderTest {
+public class LightProjectBuilderTest {
   public static class TextFileParserTest implements ThrowableRunnable<Throwable> {
 
     private final PsiFileFactory myPsiFileFactory;
@@ -50,6 +52,8 @@ public class LightApplicationBuilderTest {
       Assert.assertNotNull(file);
 
       Assert.assertEquals(file.getName(), fileName);
+
+      Assert.assertNotNull(DebugUtil.psiToString(file, false));
     }
   }
 
@@ -61,7 +65,11 @@ public class LightApplicationBuilderTest {
 
     Application application = builder.build();
 
-    TextFileParserTest parser = application.getInjectingContainer().getUnbindedInstance(TextFileParserTest.class);
+    LightProjectBuilder projectBuilder = LightProjectBuilder.create(application);
+
+    Project project = projectBuilder.build();
+
+    TextFileParserTest parser = project.getInjectingContainer().getUnbindedInstance(TextFileParserTest.class);
 
     parser.run();
 

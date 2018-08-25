@@ -33,10 +33,6 @@ import java.util.List;
  */
 
 public abstract class FileTypeManager extends FileTypeRegistry {
-  static {
-    FileTypeRegistry.ourInstanceGetter = () -> FileTypeManager.getInstance();
-  }
-
   private static FileTypeManager ourInstance = CachedSingletonsRegistry.markCachedField(FileTypeManager.class);
 
   public static final Topic<FileTypeListener> TOPIC = new Topic<FileTypeListener>("File types change", FileTypeListener.class);

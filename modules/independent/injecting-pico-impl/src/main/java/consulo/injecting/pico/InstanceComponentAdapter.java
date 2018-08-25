@@ -23,6 +23,7 @@ import org.picocontainer.PicoIntrospectionException;
 import org.picocontainer.PicoVisitor;
 
 import javax.annotation.Nonnull;
+import javax.inject.Provider;
 
 /**
  * @author VISTALL
@@ -30,9 +31,9 @@ import javax.annotation.Nonnull;
  */
 public class InstanceComponentAdapter<T> implements AssignableToComponentAdapter {
   private final InjectingKey<T> myInterfaceKey;
-  private final T myValue;
+  private final Provider<T> myValue;
 
-  public InstanceComponentAdapter(InjectingKey<T> interfaceKey, T value) {
+  public InstanceComponentAdapter(InjectingKey<T> interfaceKey, Provider<T> value) {
     myInterfaceKey = interfaceKey;
     myValue = value;
   }
@@ -44,13 +45,13 @@ public class InstanceComponentAdapter<T> implements AssignableToComponentAdapter
 
   @Override
   public Class getComponentImplementation() {
-    return myValue.getClass();
+    return myValue.get().getClass();
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public Object getComponentInstance(@Nonnull PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
-    return myValue;
+    return myValue.get();
   }
 
   @Override
@@ -65,7 +66,7 @@ public class InstanceComponentAdapter<T> implements AssignableToComponentAdapter
 
   @Override
   public String getAssignableToClassName() {
-    return myValue.getClass().getName();
+    return myValue.get().getClass().getName();
   }
 
   @Override

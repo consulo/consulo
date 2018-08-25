@@ -50,7 +50,7 @@ public class PicoInjectingPoint<T> implements InjectingPoint<T> {
     }
 
     myLocked = true;
-    myAdapter = new InstanceComponentAdapter<>(myKey, value);
+    myAdapter = new InstanceComponentAdapter<>(myKey, () -> value);
     return this;
   }
 
@@ -62,7 +62,19 @@ public class PicoInjectingPoint<T> implements InjectingPoint<T> {
     }
 
     myLocked = true;
-   base().setImplementationKey(key);
+    base().setImplementationKey(key);
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public InjectingPoint<T> to(@Nonnull Provider<T> provider) {
+    if (myLocked) {
+      throw new IllegalArgumentException("locked");
+    }
+
+    myLocked = true;
+    myAdapter = new InstanceComponentAdapter<>(myKey, provider);
     return this;
   }
 

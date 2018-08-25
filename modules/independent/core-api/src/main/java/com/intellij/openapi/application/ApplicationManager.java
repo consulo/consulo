@@ -16,9 +16,8 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Getter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,30 +44,11 @@ public class ApplicationManager {
 
   public static void setApplication(@Nonnull Application instance, @Nonnull Disposable parent) {
     final Application old = ourApplication;
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        if (old != null) { // to prevent NPEs in threads still running
-          setApplication(old);
-        }
-      }
-    });
-    setApplication(instance);
-  }
-
-  public static void setApplication(@Nonnull Application instance,
-                                    @Nonnull Getter<FileTypeRegistry> fileTypeRegistryGetter,
-                                    @Nonnull Disposable parent) {
-    final Application old = ourApplication;
-    final Getter<FileTypeRegistry> oldFileTypeRegistry = FileTypeRegistry.ourInstanceGetter;
     Disposer.register(parent, () -> {
       if (old != null) { // to prevent NPEs in threads still running
         setApplication(old);
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        FileTypeRegistry.ourInstanceGetter = oldFileTypeRegistry;
       }
     });
     setApplication(instance);
-    FileTypeRegistry.ourInstanceGetter = fileTypeRegistryGetter;
   }
 }

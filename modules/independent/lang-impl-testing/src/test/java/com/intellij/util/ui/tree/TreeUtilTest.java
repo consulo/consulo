@@ -25,7 +25,7 @@ import javax.swing.tree.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public abstract class TreeUtilTest extends MockApplicationTestCase {
+public class TreeUtilTest extends MockApplicationTestCase {
   private final Assertion CHECK = new Assertion();
 
   public void testFindNodeWithObject() {

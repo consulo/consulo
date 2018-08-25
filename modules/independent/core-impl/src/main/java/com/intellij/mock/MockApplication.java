@@ -32,6 +32,7 @@ import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+@Deprecated
 public class MockApplication extends MockComponentManager implements Application {
   private ModalityState MODALITY_STATE_NONE;
 

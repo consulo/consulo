@@ -53,7 +53,7 @@ public abstract class ExpandableItemsHandlerFactory {
 
   protected abstract ExpandableItemsHandler<TableCell> doInstall(JTable table);
 
-  private static final ExpandableItemsHandler NULL = new ExpandableItemsHandler<Object>() {
+  public static final ExpandableItemsHandler NULL = new ExpandableItemsHandler<Object>() {
     @Override
     public void setEnabled(boolean enabled) {
     }

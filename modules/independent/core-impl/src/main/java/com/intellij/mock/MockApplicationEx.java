@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 
+@Deprecated
 public class MockApplicationEx extends MockApplication implements ApplicationEx {
   public MockApplicationEx(@Nonnull Disposable parentDisposable) {
     super(parentDisposable);

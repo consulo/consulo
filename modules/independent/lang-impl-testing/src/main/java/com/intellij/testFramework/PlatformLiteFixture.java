@@ -19,9 +19,6 @@ import com.intellij.mock.MockApplicationEx;
 import com.intellij.mock.MockProjectEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.*;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
 
@@ -47,12 +44,7 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
   public void initApplication() {
     //if (ApplicationManager.getApplication() instanceof MockApplicationEx) return;
     final MockApplicationEx instance = new MockApplicationEx(getTestRootDisposable());
-    ApplicationManager.setApplication(instance, new Getter<FileTypeRegistry>() {
-      @Override
-      public FileTypeRegistry get() {
-        return FileTypeManager.getInstance();
-      }
-    }, getTestRootDisposable());
+    ApplicationManager.setApplication(instance, getTestRootDisposable());
     getApplication().registerService(EncodingManager.class, EncodingManagerImpl.class);
   }
 

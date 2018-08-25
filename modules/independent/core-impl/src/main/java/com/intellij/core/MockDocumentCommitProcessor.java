@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@Deprecated
 class MockDocumentCommitProcessor implements DocumentCommitProcessor {
   @Override
   public void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile) {

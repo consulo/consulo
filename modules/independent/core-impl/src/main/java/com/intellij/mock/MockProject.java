@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Deprecated
 public class MockProject extends MockComponentManager implements Project {
   private static final Logger LOG = Logger.getInstance("#com.intellij.mock.MockProject");
   private VirtualFile myBaseDir;

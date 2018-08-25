@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@Deprecated
 public class CoreProjectScopeBuilder extends ProjectScopeBuilder {
   private final Project myProject;
   private final FileIndexFacade myFileIndexFacade;

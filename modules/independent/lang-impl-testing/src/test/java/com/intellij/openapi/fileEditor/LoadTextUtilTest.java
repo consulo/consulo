@@ -6,7 +6,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.testFramework.LightVirtualFile;
 import consulo.testFramework.MockApplicationTestCase;
 
-public abstract class LoadTextUtilTest extends MockApplicationTestCase {
+public class LoadTextUtilTest extends MockApplicationTestCase {
   private static void doTest(String source, String expected, String expectedSeparator) {
     final LightVirtualFile vFile = new LightVirtualFile("test.txt");
     final CharSequence real = LoadTextUtil.getTextByBinaryPresentation(source.getBytes(CharsetToolkit.US_ASCII_CHARSET), vFile);

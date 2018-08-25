@@ -38,6 +38,7 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.CachedValuesManagerImpl;
 import com.intellij.util.messages.impl.MessageBusImpl;
 
+@Deprecated
 public class CoreProjectEnvironment {
   private final Disposable myParentDisposable;
   private final CoreApplicationEnvironment myEnvironment;
