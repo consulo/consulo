@@ -37,18 +37,13 @@ public class ApplicationManager {
     return ourApplication;
   }
 
-  private static void setApplication(@Nonnull Application instance) {
+  private static void setApplication(@Nullable Application instance) {
     ourApplication = instance;
     CachedSingletonsRegistry.cleanupCachedFields();
   }
 
   public static void setApplication(@Nonnull Application instance, @Nonnull Disposable parent) {
-    final Application old = ourApplication;
-    Disposer.register(parent, () -> {
-      if (old != null) { // to prevent NPEs in threads still running
-        setApplication(old);
-      }
-    });
+    Disposer.register(parent, () -> setApplication(null));
     setApplication(instance);
   }
 }
