@@ -193,8 +193,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
 
-    ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
-
     // reset area
     Disposer.register(myLastDisposable, () -> Extensions.setRootArea(null));
   }

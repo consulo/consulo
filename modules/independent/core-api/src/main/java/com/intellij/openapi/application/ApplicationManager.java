@@ -37,7 +37,7 @@ public class ApplicationManager {
     return ourApplication;
   }
 
-  private static void setApplication(@Nullable Application instance) {
+  public static void setApplication(@Nullable Application instance) {
     ourApplication = instance;
     CachedSingletonsRegistry.cleanupCachedFields();
   }

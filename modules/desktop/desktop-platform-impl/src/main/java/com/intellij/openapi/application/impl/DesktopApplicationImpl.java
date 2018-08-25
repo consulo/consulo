@@ -109,6 +109,8 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(splashRef);
 
+    ApplicationManager.setApplication(this);
+
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
     myIsInternal = ApplicationProperties.isInternal();
