@@ -80,7 +80,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     myProject = project;
     myPackagingElementFactory = packagingElementFactory;
     myModel = new ArtifactManagerModel();
-    myResolvingContext = new DefaultPackagingElementResolvingContext(myProject);
+    myResolvingContext = new DefaultPackagingElementResolvingContext(myProject, this);
 
     VirtualFileManager.getInstance().addVirtualFileListener(new ArtifactVirtualFileListener(myProject, this), myProject);
     updateWatchedRoots();
@@ -185,7 +185,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     T state = packagingElement.getState();
     if (state != null) {
       XmlSerializer.deserializeInto(state, element);
-      packagingElement.loadState(state);
+      packagingElement.loadState(this, state);
     }
     final List children = element.getChildren(PACKAGING_ELEMENT_NAME);
     //noinspection unchecked
@@ -250,7 +250,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
   private InvalidArtifact createInvalidArtifact(ArtifactState state, String errorMessage) {
     final InvalidArtifact artifact = new InvalidArtifact(myPackagingElementFactory, state, errorMessage);
-    ProjectLoadingErrorsNotifier.getInstance(myProject).registerError(new ArtifactLoadingErrorDescription(myProject, artifact));
+    ProjectLoadingErrorsNotifier.getInstance(myProject).registerError(new ArtifactLoadingErrorDescription(this, artifact));
     return artifact;
   }
 

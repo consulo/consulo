@@ -18,16 +18,14 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
-import com.intellij.packaging.artifacts.ArtifactType;
+import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;
 import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -88,8 +86,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
     Artifact artifact = findArtifact(resolvingContext);
     if (artifact == null) return;
 
-    if (StringUtil.isEmpty(artifact.getOutputPath())
-        || artifact.getArtifactType().getSubstitution(artifact, resolvingContext, artifactType) != null) {
+    if (StringUtil.isEmpty(artifact.getOutputPath()) || artifact.getArtifactType().getSubstitution(artifact, resolvingContext, artifactType) != null) {
       super.computeIncrementalCompilerInstructions(creator, resolvingContext, compilerContext, artifactType);
       return;
     }
@@ -136,9 +133,9 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @Override
-  public void loadState(ArtifactPackagingElementState state) {
+  public void loadState(ArtifactManager artifactManager, ArtifactPackagingElementState state) {
     final String name = state.getArtifactName();
-    myArtifactPointer = name != null ? myArtifactPointerManager.create(name) : null;
+    myArtifactPointer = name != null ? ((ArtifactPointerManagerImpl)myArtifactPointerManager).create(artifactManager, name) : null;
   }
 
   @Override
@@ -148,8 +145,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
 
   @Override
   public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
-    return element instanceof ArtifactPackagingElement && myArtifactPointer != null
-           && myArtifactPointer.equals(((ArtifactPackagingElement)element).myArtifactPointer);
+    return element instanceof ArtifactPackagingElement && myArtifactPointer != null && myArtifactPointer.equals(((ArtifactPackagingElement)element).myArtifactPointer);
   }
 
   @Nullable

@@ -16,7 +16,6 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModulePointerManager;
@@ -67,18 +66,13 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   protected void registerPointer(final Module value, final NamedPointerImpl<Module> pointer) {
     super.registerPointer(value, pointer);
 
-    Disposer.register(value, new Disposable() {
-      @Override
-      public void dispose() {
-        unregisterPointer(value);
-      }
-    });
+    Disposer.register(value, () -> unregisterPointer(value));
   }
 
   @Nullable
   @Override
   @RequiredReadAction
-  public Module findByName(@Nonnull String name) {
+  protected Module findByName(@Nonnull String name) {
     return ModuleManager.getInstance(myProject).findModuleByName(name);
   }
 }

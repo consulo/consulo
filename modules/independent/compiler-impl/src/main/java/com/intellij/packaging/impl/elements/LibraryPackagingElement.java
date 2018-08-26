@@ -19,6 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.packaging.artifacts.ArtifactManager;
 import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.Comparing;
@@ -107,7 +108,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   }
 
   @Override
-  public void loadState(LibraryPackagingElement state) {
+  public void loadState(ArtifactManager artifactManager, LibraryPackagingElement state) {
     myLevel = state.getLevel();
     myLibraryName = state.getLibraryName();
     myModuleName = state.getModuleName();

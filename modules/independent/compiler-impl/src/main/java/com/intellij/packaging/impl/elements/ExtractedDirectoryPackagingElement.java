@@ -18,6 +18,7 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packaging.artifacts.ArtifactManager;
 import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
@@ -94,7 +95,7 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
   }
 
   @Override
-  public void loadState(ExtractedDirectoryPackagingElement state) {
+  public void loadState(ArtifactManager artifactManager, ExtractedDirectoryPackagingElement state) {
     myFilePath = state.getFilePath();
     myPathInJar = state.getPathInJar();
   }

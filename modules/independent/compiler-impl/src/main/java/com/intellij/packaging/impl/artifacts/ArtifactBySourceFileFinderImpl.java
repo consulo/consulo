@@ -33,6 +33,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.ArrayList;
@@ -47,9 +48,12 @@ import java.util.List;
 public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
   private CachedValue<MultiValuesMap<VirtualFile, Artifact>> myFile2Artifacts;
   private final Project myProject;
+  private final ArtifactManager myArtifactManager;
 
-  public ArtifactBySourceFileFinderImpl(Project project) {
+  @Inject
+  public ArtifactBySourceFileFinderImpl(Project project, ArtifactManager artifactManager) {
     myProject = project;
+    myArtifactManager = artifactManager;
   }
 
   public CachedValue<MultiValuesMap<VirtualFile, Artifact>> getFileToArtifactsMap() {
@@ -59,9 +63,9 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
           public Result<MultiValuesMap<VirtualFile, Artifact>> compute() {
             MultiValuesMap<VirtualFile, Artifact> result = computeFileToArtifactsMap();
             List<ModificationTracker> trackers = new ArrayList<ModificationTracker>();
-            trackers.add(ArtifactManager.getInstance(myProject).getModificationTracker());
+            trackers.add(myArtifactManager.getModificationTracker());
             for (ComplexPackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getComplexElementTypes()) {
-              ContainerUtil.addIfNotNull(type.getAllSubstitutionsModificationTracker(myProject), trackers);
+              ContainerUtil.addIfNotNull(trackers, type.getAllSubstitutionsModificationTracker(myProject));
             }
             return Result.create(result, trackers.toArray(new ModificationTracker[trackers.size()]));
           }
@@ -72,9 +76,8 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
 
   private MultiValuesMap<VirtualFile, Artifact> computeFileToArtifactsMap() {
     final MultiValuesMap<VirtualFile, Artifact> result = new MultiValuesMap<VirtualFile, Artifact>();
-    final ArtifactManager artifactManager = ArtifactManager.getInstance(myProject);
-    for (final Artifact artifact : artifactManager.getArtifacts()) {
-      final PackagingElementResolvingContext context = artifactManager.getResolvingContext();
+    for (final Artifact artifact : myArtifactManager.getArtifacts()) {
+      final PackagingElementResolvingContext context = myArtifactManager.getResolvingContext();
       ArtifactUtil.processPackagingElements(artifact, null, new PackagingElementProcessor<PackagingElement<?>>() {
         @Override
         public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {

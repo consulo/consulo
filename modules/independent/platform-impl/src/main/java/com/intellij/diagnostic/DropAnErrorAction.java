@@ -18,6 +18,7 @@ package com.intellij.diagnostic;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.packaging.artifacts.ArtifactManager;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,7 +39,8 @@ public class DropAnErrorAction extends DumbAwareAction {
     final StatusBar bar = WindowManager.getInstance().getStatusBar(p);
     bar.fireNotificationPopup(new JLabel("<html><body><br><b>       Notifier      </b><br><br></body></html>"));
     */
-    
+
+    ArtifactManager.getInstance(e.getProject());
     Logger.getInstance("test").error("Test");
   }
 }

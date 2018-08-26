@@ -25,11 +25,9 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
@@ -46,6 +44,7 @@ import com.intellij.packaging.impl.artifacts.PackagingElementPath;
 import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.LibraryElementType;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
@@ -67,11 +66,19 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     return ServiceManager.getService(project, ArtifactsStructureConfigurable.class);
   }
 
+  @Nonnull
+  private final ArtifactManager myArtifactManager;
+  @Nonnull
+  private final ArtifactPointerManager myArtifactPointerManager;
+  @Nonnull
   private ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
+  @Nonnull
   private final ArtifactEditorSettings myDefaultSettings;
 
-  public ArtifactsStructureConfigurable(@Nonnull Project project) {
+  public ArtifactsStructureConfigurable(@Nonnull Project project, @Nonnull ArtifactManager artifactManager, @Nonnull ArtifactPointerManager artifactPointerManager) {
     super(project, new ArtifactStructureConfigurableState());
+    myArtifactManager = artifactManager;
+    myArtifactPointerManager = artifactPointerManager;
     myDefaultSettings = new ArtifactEditorSettings(project);
   }
 
@@ -82,7 +89,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
 
   public void init(StructureConfigurableContext context, ModuleStructureConfigurable moduleStructureConfigurable, ProjectLibrariesConfigurable projectLibrariesConfig) {
     super.init(context);
-    myPackagingEditorContext = new ArtifactsStructureConfigurableContextImpl(myContext, myProject, myDefaultSettings, new ArtifactAdapter() {
+
+    myPackagingEditorContext = new ArtifactsStructureConfigurableContextImpl(myContext, myProject, myArtifactManager, myArtifactPointerManager, myDefaultSettings, new ArtifactListener() {
       @Override
       public void artifactAdded(@Nonnull Artifact artifact) {
         final MyNode node = addArtifactNode(artifact);
@@ -91,12 +99,9 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
       }
     });
 
-    context.getModulesConfigurator().addAllModuleChangeListener(new ModuleEditor.ChangeListener() {
-      @Override
-      public void moduleStateChanged(ModifiableRootModel moduleRootModel) {
-        for (ProjectStructureElement element : getProjectStructureElements()) {
-          myContext.getDaemonAnalyzer().queueUpdate(element);
-        }
+    context.getModulesConfigurator().addAllModuleChangeListener(moduleRootModel -> {
+      for (ProjectStructureElement element : getProjectStructureElements()) {
+        myContext.getDaemonAnalyzer().queueUpdate(element);
       }
     });
 
@@ -333,6 +338,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     reset(); // TODO: fix to not reset on apply!
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     myPackagingEditorContext.saveEditorSettings();

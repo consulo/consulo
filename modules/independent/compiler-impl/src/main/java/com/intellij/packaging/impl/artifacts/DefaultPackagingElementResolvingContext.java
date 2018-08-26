@@ -31,11 +31,19 @@ import javax.annotation.Nullable;
 * @author nik
 */
 public class DefaultPackagingElementResolvingContext implements PackagingElementResolvingContext {
+  @Nullable
+  public static Library findLibrary(Project project, String level, String libraryName) {
+    LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, project);
+    return table != null ? table.getLibraryByName(libraryName) : null;
+  }
+
   private final Project myProject;
+  private final ArtifactManager myArtifactManager;
   private final DefaultModulesProvider myModulesProvider;
 
-  public DefaultPackagingElementResolvingContext(Project project) {
+  public DefaultPackagingElementResolvingContext(Project project, ArtifactManager artifactManager) {
     myProject = project;
+    myArtifactManager = artifactManager;
     myModulesProvider = new DefaultModulesProvider(myProject);
   }
 
@@ -48,7 +56,7 @@ public class DefaultPackagingElementResolvingContext implements PackagingElement
   @Override
   @Nonnull
   public ArtifactModel getArtifactModel() {
-    return ArtifactManager.getInstance(myProject);
+    return myArtifactManager;
   }
 
   @Override
@@ -60,11 +68,5 @@ public class DefaultPackagingElementResolvingContext implements PackagingElement
   @Override
   public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
     return findLibrary(myProject, level, libraryName);
-  }
-
-  @Nullable
-  public static Library findLibrary(Project project, String level, String libraryName) {
-    LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, project);
-    return table != null ? table.getLibraryByName(libraryName) : null;
   }
 }

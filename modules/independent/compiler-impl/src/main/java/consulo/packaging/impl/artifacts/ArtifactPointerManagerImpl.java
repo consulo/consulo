@@ -20,10 +20,12 @@ import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.impl.artifacts.ArtifactPointerImpl;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -31,11 +33,11 @@ import java.util.List;
  */
 @Singleton
 public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact> implements ArtifactPointerManager {
-  private final Project myProject;
+  private final Provider<ArtifactManager> myArtifactManagerProvider;
 
   @Inject
-  public ArtifactPointerManagerImpl(Project project) {
-    myProject = project;
+  public ArtifactPointerManagerImpl(Project project, Provider<ArtifactManager> artifactManagerProvider) {
+    myArtifactManagerProvider = artifactManagerProvider;
     project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactListener() {
       @Override
       public void artifactRemoved(@Nonnull Artifact artifact) {
@@ -71,16 +73,26 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
     return (ArtifactPointer)super.create(name);
   }
 
+  /**
+   * Special method for serialization, while target artifact manager did not provide recursion.
+   *
+   * It will be called from com.intellij.packaging.impl.elements.ArtifactPackagingElement, while ArtifactManager#loadState()
+   */
+  @Nonnull
+  public ArtifactPointer create(@Nonnull ArtifactManager artifactManager, @Nonnull String name) {
+    return (ArtifactPointer)create(name, artifactManager::findArtifact);
+  }
+
   @Nonnull
   @Override
   public ArtifactPointer create(@Nonnull Artifact artifact, @Nonnull ArtifactModel artifactModel) {
     return create(artifactModel.getOriginalArtifact(artifact));
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
-  public Artifact findByName(@Nonnull String name) {
-    return ArtifactManager.getInstance(myProject).findArtifact(name);
+  protected Artifact findByName(@Nonnull String name) {
+    return myArtifactManagerProvider.get().findArtifact(name);
   }
 
   @Override

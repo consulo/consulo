@@ -23,11 +23,14 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 public class ReflectionUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.ReflectionUtil");
@@ -69,8 +72,15 @@ public class ReflectionUtil {
         final TypeVariable typeVariable = (TypeVariable)resolved;
         index = ArrayUtilRt.find(anInterface.getTypeParameters(), typeVariable);
         if (index < 0) {
-          LOG.error("Cannot resolve type variable:\n" + "typeVariable = " + typeVariable + "\n" + "genericDeclaration = " +
-                    declarationToString(typeVariable.getGenericDeclaration()) + "\n" + "searching in " + declarationToString(anInterface));
+          LOG.error("Cannot resolve type variable:\n" +
+                    "typeVariable = " +
+                    typeVariable +
+                    "\n" +
+                    "genericDeclaration = " +
+                    declarationToString(typeVariable.getGenericDeclaration()) +
+                    "\n" +
+                    "searching in " +
+                    declarationToString(anInterface));
         }
         final Type type = i < genericInterfaces.length ? genericInterfaces[i] : aClass.getGenericSuperclass();
         if (type instanceof Class) {
@@ -88,9 +98,7 @@ public class ReflectionUtil {
   @SuppressWarnings("HardCodedStringLiteral")
   @Nonnull
   public static String declarationToString(@Nonnull GenericDeclaration anInterface) {
-    return anInterface.toString()
-           + Arrays.asList(anInterface.getTypeParameters())
-           + " loaded by " + ((Class)anInterface).getClassLoader();
+    return anInterface.toString() + Arrays.asList(anInterface.getTypeParameters()) + " loaded by " + ((Class)anInterface).getClassLoader();
   }
 
   @Nonnull
@@ -183,7 +191,7 @@ public class ReflectionUtil {
     return null;
   }
 
-  public static void resetField(@Nonnull Class clazz, @Nullable Class type, @Nonnull String name)  {
+  public static void resetField(@Nonnull Class clazz, @Nullable Class type, @Nonnull String name) {
     try {
       resetField(null, findField(clazz, type, name));
     }
@@ -192,7 +200,7 @@ public class ReflectionUtil {
     }
   }
 
-  public static void resetField(@Nonnull Object object, @Nullable Class type, @Nonnull String name)  {
+  public static void resetField(@Nonnull Object object, @Nullable Class type, @Nonnull String name) {
     try {
       resetField(object, findField(object.getClass(), type, name));
     }
@@ -351,11 +359,7 @@ public class ReflectionUtil {
   }
 
   // returns true if value was set
-  public static <T> boolean setField(@Nonnull Class objectClass,
-                                     Object object,
-                                     @Nullable Class<T> fieldType,
-                                     @Nonnull @NonNls String fieldName,
-                                     T value) {
+  public static <T> boolean setField(@Nonnull Class objectClass, Object object, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName, T value) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
       field.set(object, value);
@@ -479,14 +483,13 @@ public class ReflectionUtil {
     return valuesChanged;
   }
 
-  public static void copyFieldValue(@Nonnull Object from, @Nonnull Object to, @Nonnull Field field)
-          throws IllegalAccessException {
+  public static void copyFieldValue(@Nonnull Object from, @Nonnull Object to, @Nonnull Field field) throws IllegalAccessException {
     Class<?> fieldType = field.getType();
     if (fieldType.isPrimitive() || fieldType.equals(String.class)) {
       field.set(to, field.get(from));
     }
     else {
-      throw new RuntimeException("Field '" + field.getName()+"' not copied: unsupported type: "+field.getType());
+      throw new RuntimeException("Field '" + field.getName() + "' not copied: unsupported type: " + field.getType());
     }
   }
 
@@ -508,9 +511,19 @@ public class ReflectionUtil {
     }
   }
 
+  @Nullable
+  public static Class findClassOrNull(@Nonnull String fqn, @Nonnull ClassLoader classLoader) {
+    try {
+      return Class.forName(fqn, true, classLoader);
+    }
+    catch (ClassNotFoundException ignored) {
+      return null;
+    }
+  }
 
   private static class MySecurityManager extends SecurityManager {
     private static final MySecurityManager INSTANCE = new MySecurityManager();
+
     public Class[] getStack() {
       return getClassContext();
     }
@@ -518,7 +531,7 @@ public class ReflectionUtil {
 
   /**
    * Returns the class this method was called 'framesToSkip' frames up the caller hierarchy.
-   *
+   * <p/>
    * NOTE:
    * <b>Extremely expensive!
    * Please consider not using it.

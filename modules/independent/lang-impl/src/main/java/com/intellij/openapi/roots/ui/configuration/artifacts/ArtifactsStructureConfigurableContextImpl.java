@@ -24,15 +24,12 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzerListener;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,34 +39,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStructureConfigurableContext {
   private ModifiableArtifactModel myModifiableModel;
-  private final ArtifactAdapter myModifiableModelListener;
+  private final ArtifactListener myModifiableModelListener;
   private final StructureConfigurableContext myContext;
   private final Project myProject;
-  private final Map<Artifact, CompositePackagingElement<?>> myModifiableRoots = new HashMap<Artifact, CompositePackagingElement<?>>();
-  private final Map<Artifact, ArtifactEditorImpl> myArtifactEditors = new HashMap<Artifact, ArtifactEditorImpl>();
-  private final Map<ArtifactPointer, ArtifactEditorSettings> myEditorSettings = new HashMap<ArtifactPointer, ArtifactEditorSettings>();
-  private final Map<Artifact, ArtifactProjectStructureElement> myArtifactElements = new HashMap<Artifact, ArtifactProjectStructureElement>();
+  private final ArtifactManager myArtifactManager;
+  private final ArtifactPointerManager myArtifactPointerManager;
+  private final Map<Artifact, CompositePackagingElement<?>> myModifiableRoots = new HashMap<>();
+  private final Map<Artifact, ArtifactEditorImpl> myArtifactEditors = new HashMap<>();
+  private final Map<ArtifactPointer, ArtifactEditorSettings> myEditorSettings = new HashMap<>();
+  private final Map<Artifact, ArtifactProjectStructureElement> myArtifactElements = new HashMap<>();
   private final ArtifactEditorSettings myDefaultSettings;
 
-  public ArtifactsStructureConfigurableContextImpl(StructureConfigurableContext context, Project project,
-                                                   ArtifactEditorSettings defaultSettings, final ArtifactAdapter modifiableModelListener) {
+  public ArtifactsStructureConfigurableContextImpl(StructureConfigurableContext context,
+                                                   Project project,
+                                                   ArtifactManager artifactManager,
+                                                   ArtifactPointerManager artifactPointerManager,
+                                                   ArtifactEditorSettings defaultSettings,
+                                                   final ArtifactListener modifiableModelListener) {
+    myArtifactPointerManager = artifactPointerManager;
     myDefaultSettings = defaultSettings;
     myModifiableModelListener = modifiableModelListener;
     myContext = context;
     myProject = project;
-    context.getDaemonAnalyzer().addListener(new ProjectStructureDaemonAnalyzerListener() {
-      @Override
-      public void problemsChanged(@Nonnull ProjectStructureElement element) {
-        if (element instanceof ArtifactProjectStructureElement) {
-          final Artifact originalArtifact = ((ArtifactProjectStructureElement)element).getOriginalArtifact();
-          final ArtifactEditorImpl artifactEditor = myArtifactEditors.get(originalArtifact);
-          if (artifactEditor != null) {
-            updateProblems(originalArtifact, artifactEditor);
-          }
+    myArtifactManager = artifactManager;
+    context.getDaemonAnalyzer().addListener(element -> {
+      if (element instanceof ArtifactProjectStructureElement) {
+        final Artifact originalArtifact = ((ArtifactProjectStructureElement)element).getOriginalArtifact();
+        final ArtifactEditorImpl artifactEditor = myArtifactEditors.get(originalArtifact);
+        if (artifactEditor != null) {
+          updateProblems(originalArtifact, artifactEditor);
         }
       }
     });
@@ -92,7 +94,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     if (myModifiableModel != null) {
       return myModifiableModel;
     }
-    return ArtifactManager.getInstance(myProject);
+    return myArtifactManager;
   }
 
   @Override
@@ -148,7 +150,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     myContext.getDaemonAnalyzer().queueUpdate(getOrCreateArtifactElement(originalArtifact));
   }
 
-  @Nullable 
+  @Nullable
   public ArtifactEditorImpl getArtifactEditor(Artifact artifact) {
     return myArtifactEditors.get(getOriginalArtifact(artifact));
   }
@@ -158,7 +160,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     artifact = getOriginalArtifact(artifact);
     ArtifactEditorImpl artifactEditor = myArtifactEditors.get(artifact);
     if (artifactEditor == null) {
-      final ArtifactEditorSettings settings = myEditorSettings.get(ArtifactPointerUtil.getPointerManager(myProject).create(artifact, getArtifactModel()));
+      final ArtifactEditorSettings settings = myEditorSettings.get(myArtifactPointerManager.create(artifact, getArtifactModel()));
       artifactEditor = new ArtifactEditorImpl(this, artifact, settings != null ? settings : myDefaultSettings);
       myArtifactEditors.put(artifact, artifactEditor);
     }
@@ -174,7 +176,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   @Nonnull
   public ModifiableArtifactModel getOrCreateModifiableArtifactModel() {
     if (myModifiableModel == null) {
-      myModifiableModel = ArtifactManager.getInstance(myProject).createModifiableModel();
+      myModifiableModel = myArtifactManager.createModifiableModel();
       myModifiableModel.addListener(myModifiableModelListener);
     }
     return myModifiableModel;
@@ -221,7 +223,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   public void saveEditorSettings() {
     myEditorSettings.clear();
     for (ArtifactEditorImpl artifactEditor : myArtifactEditors.values()) {
-      final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).create(artifactEditor.getArtifact(), getArtifactModel());
+      final ArtifactPointer pointer = myArtifactPointerManager.create(artifactEditor.getArtifact(), getArtifactModel());
       myEditorSettings.put(pointer, artifactEditor.createSettings());
     }
   }

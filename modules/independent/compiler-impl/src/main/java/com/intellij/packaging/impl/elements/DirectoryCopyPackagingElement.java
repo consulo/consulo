@@ -16,6 +16,7 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
@@ -58,7 +59,7 @@ public class DirectoryCopyPackagingElement extends FileOrDirectoryCopyPackagingE
     return this;
   }
 
-  public void loadState(DirectoryCopyPackagingElement state) {
+  public void loadState(ArtifactManager artifactManager, DirectoryCopyPackagingElement state) {
     myFilePath = state.getFilePath();
   }
 

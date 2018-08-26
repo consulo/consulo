@@ -17,10 +17,10 @@ package consulo.util.pointers;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -29,11 +29,11 @@ import java.util.Map;
  * Main idea was get from ModulePointerManagerImpl by <b>nik</b>
  */
 public abstract class NamedPointerManagerImpl<T extends Named> implements NamedPointerManager<T> {
-  private final Map<String, NamedPointerImpl<T>> myUnresolved = new HashMap<String, NamedPointerImpl<T>>();
-  private final Map<T, NamedPointerImpl<T>> myPointers = new HashMap<T, NamedPointerImpl<T>>();
+  private final Map<String, NamedPointerImpl<T>> myUnresolved = new HashMap<>();
+  private final Map<T, NamedPointerImpl<T>> myPointers = new HashMap<>();
 
   @Nullable
-  public abstract T findByName(@Nonnull String name);
+  protected abstract T findByName(@Nonnull String name);
 
   protected void updatePointers(T value) {
     updatePointers(value, value.getName());
@@ -85,7 +85,12 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   @Nonnull
   @Override
   public NamedPointer<T> create(@Nonnull String name) {
-    final T value = findByName(name);
+    return create(name, this::findByName);
+  }
+
+  @Nonnull
+  public NamedPointer<T> create(@Nonnull String name, @Nonnull Function<String, T> findByNameFunc) {
+    final T value = findByNameFunc.apply(name);
     if (value != null) {
       return create(value);
     }
@@ -99,10 +104,10 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   }
 
   public NamedPointerImpl<T> createImpl(String name) {
-    return new NamedPointerImpl<T>(name);
+    return new NamedPointerImpl<>(name);
   }
 
   public NamedPointerImpl<T> createImpl(T t) {
-    return new NamedPointerImpl<T>(t);
+    return new NamedPointerImpl<>(t);
   }
 }

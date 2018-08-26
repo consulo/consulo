@@ -20,6 +20,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.FileCopyPresentation;
@@ -95,7 +96,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   @Override
-  public void loadState(FileCopyPackagingElement state) {
+  public void loadState(ArtifactManager artifactManager, FileCopyPackagingElement state) {
     setFilePath(state.getFilePath());
     setRenamedOutputFileName(state.getRenamedOutputFileName());
   }

@@ -52,7 +52,7 @@ public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implemen
 
   @Nullable
   @Override
-  public Sdk findByName(@Nonnull String name) {
+  protected Sdk findByName(@Nonnull String name) {
     return SdkTable.getInstance().findSdk(name);
   }
 }

@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@Deprecated
 public class ArtifactAdapter implements ArtifactListener {
   public void artifactAdded(@Nonnull Artifact artifact) {
   }

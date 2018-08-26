@@ -118,7 +118,7 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     myChildren.clear();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public CompositePackagingElement<?> findCompositeChild(@Nonnull String name) {
     for (PackagingElement<?> child : myChildren) {
       if (child instanceof CompositePackagingElement && name.equals(((CompositePackagingElement)child).getName())) {

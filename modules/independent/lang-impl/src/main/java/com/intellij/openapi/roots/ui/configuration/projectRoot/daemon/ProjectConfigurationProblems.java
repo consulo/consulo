@@ -16,9 +16,8 @@ import com.intellij.openapi.roots.ui.configuration.ConfigurationError;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationErrors;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.MultiValuesMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,12 +32,7 @@ public class ProjectConfigurationProblems {
   public ProjectConfigurationProblems(ProjectStructureDaemonAnalyzer analyzer, StructureConfigurableContext context) {
     myAnalyzer = analyzer;
     myContext = context;
-    analyzer.addListener(new ProjectStructureDaemonAnalyzerListener() {
-      @Override
-      public void problemsChanged(@Nonnull ProjectStructureElement element) {
-        updateErrors(element);
-      }
-    });
+    analyzer.addListener(element -> updateErrors(element));
   }
 
   public void clearProblems() {

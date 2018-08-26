@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import consulo.compiler.CompilerConfiguration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -37,11 +36,12 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
+import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -79,7 +79,7 @@ public class ArtifactUtil {
   private static <S> PackagingElement<S> copyElement(@Nonnull PackagingElement<S> element, @Nonnull Project project) {
     //noinspection unchecked
     final PackagingElement<S> copy = (PackagingElement<S>)element.getType().createEmpty(project);
-    copy.loadState(element.getState());
+    copy.loadState(ArtifactManager.getInstance(project), element.getState());
     return copy;
   }
 

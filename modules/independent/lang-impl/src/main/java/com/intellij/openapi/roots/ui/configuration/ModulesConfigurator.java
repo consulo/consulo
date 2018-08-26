@@ -48,7 +48,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.annotations.RequiredDispatchThread;
@@ -57,9 +56,9 @@ import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -72,7 +71,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   private static final Logger LOG = Logger.getInstance("#" + ModulesConfigurator.class.getName());
 
   private final Project myProject;
-  private final List<ModuleEditor> myModuleEditors = new ArrayList<ModuleEditor>();
+  private final List<ModuleEditor> myModuleEditors = new ArrayList<>();
   private final Comparator<ModuleEditor> myModuleEditorComparator = new Comparator<ModuleEditor>() {
     @Override
     public int compare(ModuleEditor editor1, ModuleEditor editor2) {
@@ -90,7 +89,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
 
   private StructureConfigurableContext myContext;
-  private final List<ModuleEditor.ChangeListener> myAllModulesChangeListeners = new ArrayList<ModuleEditor.ChangeListener>();
+  private final List<ModuleEditor.ChangeListener> myAllModulesChangeListeners = new ArrayList<>();
 
   public ModulesConfigurator(Project project) {
     myProject = project;
@@ -209,7 +208,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   public GraphGenerator<ModuleRootModel> createGraphGenerator() {
-    final Map<Module, ModuleRootModel> models = new HashMap<Module, ModuleRootModel>();
+    final Map<Module, ModuleRootModel> models = new HashMap<>();
     for (ModuleEditor moduleEditor : myModuleEditors) {
       models.put(moduleEditor.getModule(), moduleEditor.getRootModel());
     }
@@ -219,8 +218,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   @RequiredDispatchThread
   public void apply() throws ConfigurationException {
     // validate content and source roots 
-    final Map<VirtualFile, String> contentRootToModuleNameMap = new HashMap<VirtualFile, String>();
-    final Map<VirtualFile, VirtualFile> srcRootsToContentRootMap = new HashMap<VirtualFile, VirtualFile>();
+    final Map<VirtualFile, String> contentRootToModuleNameMap = new HashMap<>();
+    final Map<VirtualFile, VirtualFile> srcRootsToContentRootMap = new HashMap<>();
     for (final ModuleEditor moduleEditor : myModuleEditors) {
       final ModifiableRootModel rootModel = moduleEditor.getModifiableRootModel();
       final ContentEntry[] contents = rootModel.getContentEntries();
@@ -274,7 +273,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       }
     }
 
-    final List<ModifiableRootModel> models = new ArrayList<ModifiableRootModel>(myModuleEditors.size());
+    final List<ModifiableRootModel> models = new ArrayList<>(myModuleEditors.size());
     for (ModuleEditor moduleEditor : myModuleEditors) {
       moduleEditor.canApply();
     }
@@ -493,7 +492,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     // destroyProcess removed module
     final Module moduleToRemove = selectedEditor.getModule();
     // remove all dependencies on the module that is about to be removed
-    List<ModifiableRootModel> modifiableRootModels = new ArrayList<ModifiableRootModel>();
+    List<ModifiableRootModel> modifiableRootModels = new ArrayList<>();
     for (final ModuleEditor moduleEditor : myModuleEditors) {
       final ModifiableRootModel modifiableRootModel = moduleEditor.getModifiableRootModelProxy();
       modifiableRootModels.add(modifiableRootModel);
@@ -534,31 +533,16 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   public static boolean showArtifactSettings(@Nonnull Project project, @Nullable final Artifact artifact) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable config) {
-        configurable.select(artifact, true);
-      }
-    });
+    return ProjectStructureDialog.show(project, config -> configurable.select(artifact, true));
   }
 
   public static boolean showSdkSettings(@Nonnull Project project, @Nonnull final Sdk sdk) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable config) {
-        configurable.select(sdk, true);
-      }
-    });
+    return ProjectStructureDialog.show(project, config -> configurable.select(sdk, true));
   }
 
   public static boolean showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
-    return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable config) {
-        config.select(moduleToSelect, editorNameToSelect, true);
-      }
-    });
+    return ProjectStructureDialog.show(project, config -> config.select(moduleToSelect, editorNameToSelect, true));
   }
 
   public void moduleRenamed(Module module, final String oldName, final String name) {

@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
+import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.DirectoryElementPresentation;
@@ -88,7 +89,7 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
   }
 
   @Override
-  public void loadState(DirectoryPackagingElement state) {
+  public void loadState(ArtifactManager artifactManager, DirectoryPackagingElement state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

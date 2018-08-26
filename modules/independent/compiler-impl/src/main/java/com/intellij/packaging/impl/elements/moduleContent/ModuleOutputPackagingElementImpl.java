@@ -24,6 +24,7 @@ import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
@@ -137,7 +138,7 @@ public class ModuleOutputPackagingElementImpl
   }
 
   @Override
-  public void loadState(ModuleOutputPackagingElementState state) {
+  public void loadState(ArtifactManager artifactManager, ModuleOutputPackagingElementState state) {
     final String moduleName = state.getModuleName();
     myModulePointer = moduleName != null ? ModuleUtilCore.createPointer(myProject, moduleName) : null;
   }

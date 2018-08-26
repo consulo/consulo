@@ -17,7 +17,12 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.util.NullableLazyValue;
+import com.intellij.util.ReflectionUtil;
+import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The main (and single) purpose of this class is provide lazy initialization
@@ -26,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author Vladimir Kondratyev
  */
 public class ActionStub extends AnAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.actionSystem.ActionStub");
+  private static final Logger LOG = Logger.getInstance(ActionStub.class);
 
   private final String myClassName;
   private final String myId;
@@ -35,12 +40,9 @@ public class ActionStub extends AnAction {
   private final PluginId myPluginId;
   private final String myIconPath;
 
-  public ActionStub(@Nonnull String actionClass,
-                    @Nonnull String id,
-                    @Nonnull String text,
-                    ClassLoader loader,
-                    PluginId pluginId,
-                    String iconPath) {
+  private NullableLazyValue<Class> myClassValue;
+
+  public ActionStub(@Nonnull String actionClass, @Nonnull String id, @Nonnull String text, ClassLoader loader, PluginId pluginId, String iconPath) {
     myLoader = loader;
     myClassName = actionClass;
     LOG.assertTrue(id.length() > 0);
@@ -48,6 +50,13 @@ public class ActionStub extends AnAction {
     myText = text;
     myPluginId = pluginId;
     myIconPath = iconPath;
+
+    myClassValue = NullableLazyValue.of(() -> ReflectionUtil.findClassOrNull(actionClass, loader));
+  }
+
+  @Nullable
+  public Class resolveClass() {
+    return myClassValue.getValue();
   }
 
   public String getClassName() {
@@ -74,8 +83,9 @@ public class ActionStub extends AnAction {
     return myIconPath;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     throw new UnsupportedOperationException();
   }
 

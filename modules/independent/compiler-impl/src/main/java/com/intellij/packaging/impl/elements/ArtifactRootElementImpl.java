@@ -17,6 +17,7 @@ package com.intellij.packaging.impl.elements;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
+import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
 import com.intellij.packaging.elements.ArtifactRootElement;
@@ -63,7 +64,7 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
   }
 
   @Override
-  public void loadState(Object state) {
+  public void loadState(ArtifactManager artifactManager, Object state) {
   }
 
   @Override

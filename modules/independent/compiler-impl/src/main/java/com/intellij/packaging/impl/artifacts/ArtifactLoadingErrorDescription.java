@@ -18,7 +18,6 @@ package com.intellij.packaging.impl.artifacts;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ConfigurationErrorDescription;
 import com.intellij.openapi.module.ConfigurationErrorType;
-import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 
@@ -27,18 +26,19 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
  */
 public class ArtifactLoadingErrorDescription extends ConfigurationErrorDescription {
   private static final ConfigurationErrorType INVALID_ARTIFACT = new ConfigurationErrorType("artifact", false);
-  private final Project myProject;
+
+  private final ArtifactManager myArtifactManager;
   private final InvalidArtifact myArtifact;
 
-  public ArtifactLoadingErrorDescription(Project project, InvalidArtifact artifact) {
+  public ArtifactLoadingErrorDescription(ArtifactManager artifactManager, InvalidArtifact artifact) {
     super(artifact.getName(), artifact.getErrorMessage(), INVALID_ARTIFACT);
-    myProject = project;
+    myArtifactManager = artifactManager;
     myArtifact = artifact;
   }
 
   @Override
   public void ignoreInvalidElement() {
-    final ModifiableArtifactModel model = ArtifactManager.getInstance(myProject).createModifiableModel();
+    final ModifiableArtifactModel model = myArtifactManager.createModifiableModel();
     model.removeArtifact(myArtifact);
     WriteAction.run(model::commit);
   }
@@ -50,6 +50,6 @@ public class ArtifactLoadingErrorDescription extends ConfigurationErrorDescripti
 
   @Override
   public boolean isValid() {
-    return ArtifactManager.getInstance(myProject).getAllArtifactsIncludingInvalid().contains(myArtifact);
+    return myArtifactManager.getAllArtifactsIncludingInvalid().contains(myArtifact);
   }
 }

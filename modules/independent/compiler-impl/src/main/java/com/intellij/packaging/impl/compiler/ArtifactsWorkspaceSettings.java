@@ -16,16 +16,15 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,27 +34,29 @@ import java.util.List;
  * @author nik
  */
 @Singleton
-@State(name = "ArtifactsWorkspaceSettings",
-  storages = {
-    @Storage( file = StoragePathMacros.WORKSPACE_FILE)
-  })
+@State(name = "ArtifactsWorkspaceSettings", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
 public class ArtifactsWorkspaceSettings implements PersistentStateComponent<ArtifactsWorkspaceSettings.ArtifactsWorkspaceSettingsState> {
-  private ArtifactsWorkspaceSettingsState myState = new ArtifactsWorkspaceSettingsState();
-  private final Project myProject;
-
-  public ArtifactsWorkspaceSettings(Project project) {
-    myProject = project;
+  public static class ArtifactsWorkspaceSettingsState {
+    @Tag("artifacts-to-build")
+    @AbstractCollection(surroundWithTag = false, elementTag = "artifact", elementValueAttribute = "name")
+    public List<String> myArtifactsToBuild = new ArrayList<>();
   }
 
   public static ArtifactsWorkspaceSettings getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactsWorkspaceSettings.class);
   }
 
+  private final ArtifactManager myArtifactManager;
+  private ArtifactsWorkspaceSettingsState myState = new ArtifactsWorkspaceSettingsState();
+
+  public ArtifactsWorkspaceSettings(ArtifactManager artifactManager) {
+    myArtifactManager = artifactManager;
+  }
+
   public List<Artifact> getArtifactsToBuild() {
-    final List<Artifact> result = new ArrayList<Artifact>();
-    final ArtifactManager artifactManager = ArtifactManager.getInstance(myProject);
+    final List<Artifact> result = new ArrayList<>();
     for (String name : myState.myArtifactsToBuild) {
-      ContainerUtil.addIfNotNull(artifactManager.findArtifact(name), result);
+      ContainerUtil.addIfNotNull(result, myArtifactManager.findArtifact(name));
     }
     return result;
   }
@@ -68,18 +69,13 @@ public class ArtifactsWorkspaceSettings implements PersistentStateComponent<Arti
     Collections.sort(myState.myArtifactsToBuild);
   }
 
+  @Override
   public ArtifactsWorkspaceSettingsState getState() {
     return myState;
   }
 
+  @Override
   public void loadState(ArtifactsWorkspaceSettingsState state) {
     myState = state;
-  }
-
-  public static class ArtifactsWorkspaceSettingsState {
-    @Tag("artifacts-to-build")
-    @AbstractCollection(surroundWithTag = false, elementTag = "artifact", elementValueAttribute = "name")
-    public List<String> myArtifactsToBuild = new ArrayList<String>();
-
   }
 }

@@ -29,8 +29,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationActivationListener;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
@@ -71,7 +73,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.List;
 
@@ -93,6 +94,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private int myRegisteredActionsCount;
   private final List<AnActionListener> myActionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private String myLastPreformedActionId;
+  private final Application myApplication;
   private final KeymapManager myKeymapManager;
   private final DataManager myDataManager;
   private String myPrevPerformedActionId;
@@ -174,7 +176,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private boolean myTransparentOnlyUpdate;
 
   @Inject
-  ActionManagerImpl(KeymapManager keymapManager, DataManager dataManager) {
+  ActionManagerImpl(Application application, KeymapManager keymapManager, DataManager dataManager) {
+    myApplication = application;
     myKeymapManager = keymapManager;
     myDataManager = dataManager;
 
@@ -210,7 +213,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void _addTimerListener(final TimerListener listener, boolean transparent) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
+    if (myApplication.isUnitTestMode()) return;
     if (myTimer == null) {
       myTimer = new MyTimer();
       myTimer.start();
@@ -220,7 +223,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void _removeTimerListener(TimerListener listener, boolean transparent) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
+    if (myApplication.isUnitTestMode()) return;
     LOG.assertTrue(myTimer != null);
 
     myTimer.removeTimerListener(listener, transparent);
@@ -244,7 +247,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   public ActionToolbar createActionToolbar(final String place, final ActionGroup group, final boolean horizontal, final boolean decorateButtons) {
     return new ActionToolbarImpl(place, group, horizontal, decorateButtons, myDataManager, this, (KeymapManagerEx)myKeymapManager);
   }
-
 
   private void registerPluginActions() {
     final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
@@ -287,22 +289,23 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   /**
    * Converts action's stub to normal action.
    */
+  @SuppressWarnings("unchecked")
   AnAction convertStub(ActionStub stub) {
     Object obj;
     String className = stub.getClassName();
-    try {
-      Constructor<?> constructor = Class.forName(className, true, stub.getLoader()).getDeclaredConstructor();
-      constructor.setAccessible(true);
-      obj = constructor.newInstance();
-    }
-    catch (ClassNotFoundException e) {
+    Class actionClass = stub.resolveClass();
+    if (actionClass == null) {
       PluginId pluginId = stub.getPluginId();
       if (pluginId != null) {
-        throw new PluginException("class with name \"" + className + "\" not found", e, pluginId);
+        throw new PluginException("class with name \"" + className + "\" not found", pluginId);
       }
       else {
         throw new IllegalStateException("class with name \"" + className + "\" not found");
       }
+    }
+
+    try {
+      obj = myApplication.getInjectingContainer().getUnbindedInstance(actionClass);
     }
     catch (UnsupportedClassVersionError e) {
       PluginId pluginId = stub.getPluginId();
@@ -420,7 +423,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     if (id == null || id.length() == 0) {
       id = StringUtil.getShortName(className);
     }
-    if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() && !ApplicationManagerEx.getApplicationEx().isInternal()) {
+    if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() && !myApplication.isInternal()) {
       myNotRegisteredInternalActionIds.add(id);
       return null;
     }
@@ -535,7 +538,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     presentation.setIcon(lazyIcon);
   }
 
-  private static String loadTextValueForElement(final Element element, final ResourceBundle bundle, final String id, String elementType, String type) {
+  private String loadTextValueForElement(final Element element, final ResourceBundle bundle, final String id, String elementType, String type) {
     final String value = element.getAttributeValue(type);
     String key = elementType + "." + id + "." + type;
     String text = CommonBundle.messageOrDefault(bundle, key, value == null ? "" : value);
@@ -543,7 +546,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Nonnull
-  private static String getDefaultInInternalOrNull(@Nonnull String key, @Nonnull String text) {
+  private String getDefaultInInternalOrNull(@Nonnull String key, @Nonnull String text) {
     if (!StringUtil.isEmpty(text)) {
       return text;
     }
@@ -553,7 +556,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       return text;
     }
     if (text.charAt(0) == '!' && text.charAt(text.length() - 1) == '!') {
-      if (ApplicationManager.getApplication().isInternal()) {
+      if (myApplication.isInternal()) {
         return text;
       }
       else {
@@ -598,7 +601,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         reportActionError(pluginId, "ID of the group cannot be an empty string");
         return null;
       }
-      if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() && !ApplicationManagerEx.getApplicationEx().isInternal()) {
+      if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)).booleanValue() && !myApplication.isInternal()) {
         myNotRegisteredInternalActionIds.add(id);
         return null;
       }
@@ -1192,7 +1195,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   public void preloadActions(ProgressIndicator indicator) {
-    final Application application = ApplicationManager.getApplication();
+    final Application application = myApplication;
 
     for (String id : getActionIds()) {
       indicator.checkCanceled();
@@ -1217,7 +1220,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       super(TIMER_DELAY, null);
       addActionListener(this);
       setRepeats(true);
-      final MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
+      final MessageBusConnection connection = myApplication.getMessageBus().connect();
       connection.subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener.Adapter() {
         @Override
         public void applicationActivated(IdeFrame ideFrame) {
@@ -1316,7 +1319,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   @Override
   public ActionCallback tryToExecute(@Nonnull final AnAction action, @Nonnull final InputEvent inputEvent, @Nullable final Component contextComponent, @Nullable final String place, boolean now) {
 
-    final Application app = ApplicationManager.getApplication();
+    final Application app = myApplication;
     assert app.isDispatchThread();
 
     final AsyncResult<Void> result = new AsyncResult<>();

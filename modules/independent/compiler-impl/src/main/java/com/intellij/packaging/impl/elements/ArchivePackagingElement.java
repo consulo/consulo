@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
+import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ArchiveElementPresentation;
@@ -96,7 +97,7 @@ public abstract class ArchivePackagingElement extends CompositePackagingElement<
   }
 
   @Override
-  public void loadState(ArchivePackagingElement state) {
+  public void loadState(ArtifactManager artifactManager, ArchivePackagingElement state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

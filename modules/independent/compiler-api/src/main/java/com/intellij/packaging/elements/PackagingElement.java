@@ -15,16 +15,18 @@
  */
 package com.intellij.packaging.elements;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
-public abstract class PackagingElement<S> implements PersistentStateComponent<S> {
+public abstract class PackagingElement<S> {
   private final PackagingElementType myType;
 
   protected PackagingElement(PackagingElementType type) {
@@ -37,7 +39,8 @@ public abstract class PackagingElement<S> implements PersistentStateComponent<S>
     return myType;
   }
 
-  public abstract void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator, @Nonnull PackagingElementResolvingContext resolvingContext,
+  public abstract void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                              @Nonnull PackagingElementResolvingContext resolvingContext,
                                                               @Nonnull ArtifactIncrementalCompilerContext compilerContext,
                                                               @Nonnull ArtifactType artifactType);
 
@@ -47,4 +50,9 @@ public abstract class PackagingElement<S> implements PersistentStateComponent<S>
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     return PackagingElementOutputKind.OTHER;
   }
+
+  public abstract void loadState(ArtifactManager artifactManager, S state);
+
+  @Nullable
+  public abstract S getState();
 }
