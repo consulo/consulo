@@ -50,14 +50,7 @@ import static com.intellij.openapi.externalSystem.model.ProjectKeys.MODULE;
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class ModuleDependencyDataService extends AbstractDependencyDataService<ModuleDependencyData, ModuleOrderEntry> {
 
-  private static final Logger LOG = Logger.getInstance("#" + ModuleDependencyDataService.class.getName());
-
-  @Nonnull
-  private final ModuleDataService      myModuleDataManager;
-
-  public ModuleDependencyDataService(@Nonnull ModuleDataService manager) {
-    myModuleDataManager = manager;
-  }
+  private static final Logger LOG = Logger.getInstance(ModuleDependencyDataService.class.getName());
 
   @Nonnull
   @Override
@@ -71,7 +64,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> entry : byModule.entrySet()) {
       Module ideModule = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       if (ideModule == null) {
-        myModuleDataManager.importData(Collections.singleton(entry.getKey()), project, true);
+        ModuleDataService.getInstance().importData(Collections.singleton(entry.getKey()), project, true);
         ideModule = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       }
       if (ideModule == null) {
@@ -120,7 +113,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
                   }
                 });
                 if (n != null) {
-                  myModuleDataManager.importData(Collections.singleton(n), module.getProject(), true);
+                  ModuleDataService.getInstance().importData(Collections.singleton(n), module.getProject(), true);
                   ideDependencyModule = ProjectStructureHelper.findIdeModule(moduleName, module.getProject());
                 }
               }

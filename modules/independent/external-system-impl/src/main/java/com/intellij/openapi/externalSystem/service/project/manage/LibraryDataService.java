@@ -17,17 +17,17 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.vfs.util.ArchiveVfsUtil;
-import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import javax.annotation.Nonnull;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.vfs.util.ArchiveVfsUtil;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -40,22 +40,17 @@ import java.util.Set;
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class LibraryDataService implements ProjectDataService<LibraryData, Library> {
+  public static LibraryDataService getInstance() {
+    return EP_NAME.findExtension(LibraryDataService.class);
+  }
 
-  private static final Logger LOG = Logger.getInstance("#" + LibraryDataService.class.getName());
-  @Nonnull
-  public static final NotNullFunction<String, File> PATH_TO_FILE = new NotNullFunction<String, File>() {
-    @Nonnull
-    @Override
-    public File fun(String path) {
-      return new File(path);
-    }
-  };
+  private static final Logger LOG = Logger.getInstance(LibraryDataService.class.getName());
 
   @Nonnull
   private final ExternalLibraryPathTypeMapper myLibraryPathTypeMapper;
 
-  public LibraryDataService(@Nonnull ExternalLibraryPathTypeMapper mapper)
-  {
+  @Inject
+  public LibraryDataService(@Nonnull ExternalLibraryPathTypeMapper mapper) {
     myLibraryPathTypeMapper = mapper;
   }
 
@@ -91,16 +86,12 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       if (paths.isEmpty()) {
         continue;
       }
-      result.put(myLibraryPathTypeMapper.map(pathType), ContainerUtil.map(paths, PATH_TO_FILE));
+      result.put(myLibraryPathTypeMapper.map(pathType), ContainerUtil.map(paths, File::new));
     }
     return result;
   }
 
-  public void importLibrary(@Nonnull final String libraryName,
-                            @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
-                            @Nonnull final Project project,
-                            boolean synchronous)
-  {
+  public void importLibrary(@Nonnull final String libraryName, @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles, @Nonnull final Project project, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
       @RequiredDispatchThread
       @Override
@@ -127,18 +118,13 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  public void registerPaths(@Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
-                            @Nonnull Library.ModifiableModel model,
-                            @Nonnull String libraryName)
-  {
+  public void registerPaths(@Nonnull final Map<OrderRootType, Collection<File>> libraryFiles, @Nonnull Library.ModifiableModel model, @Nonnull String libraryName) {
     for (Map.Entry<OrderRootType, Collection<File>> entry : libraryFiles.entrySet()) {
       for (File file : entry.getValue()) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
         if (virtualFile == null) {
           if (ExternalSystemConstants.VERBOSE_PROCESSING && entry.getKey() == BinariesOrderRootType.getInstance()) {
-            LOG.warn(
-              String.format("Can't find %s of the library '%s' at path '%s'", entry.getKey(), libraryName, file.getAbsolutePath())
-            );
+            LOG.warn(String.format("Can't find %s of the library '%s' at path '%s'", entry.getKey(), libraryName, file.getAbsolutePath()));
           }
           String url = VfsUtil.getUrlForLibraryRoot(file);
           model.addRoot(url, entry.getKey());
@@ -150,9 +136,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         else {
           VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(virtualFile);
           if (archiveRoot == null) {
-            LOG.warn(String.format(
-              "Can't parse contents of the jar file at path '%s' for the library '%s''", file.getAbsolutePath(), libraryName
-            ));
+            LOG.warn(String.format("Can't parse contents of the jar file at path '%s' for the library '%s''", file.getAbsolutePath(), libraryName));
             continue;
           }
           model.addRoot(archiveRoot, entry.getKey());
@@ -228,7 +212,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
           for (Map.Entry<OrderRootType, Set<String>> entry : toAdd.entrySet()) {
             Map<OrderRootType, Collection<File>> roots = ContainerUtilRt.newHashMap();
-            roots.put(entry.getKey(), ContainerUtil.map(entry.getValue(), PATH_TO_FILE));
+            roots.put(entry.getKey(), ContainerUtil.map(entry.getValue(), File::new));
             registerPaths(roots, model, externalLibrary.getInternalName());
           }
         }

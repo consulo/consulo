@@ -27,12 +27,12 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.roots.impl.*;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.*;
 import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +47,7 @@ import java.util.Map;
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class ContentRootDataService implements ProjectDataService<ContentRootData, ContentEntry> {
 
-  private static final Logger LOG = Logger.getInstance("#" + ContentRootDataService.class.getName());
+  private static final Logger LOG = Logger.getInstance(ContentRootDataService.class.getName());
 
   @Nonnull
   @Override

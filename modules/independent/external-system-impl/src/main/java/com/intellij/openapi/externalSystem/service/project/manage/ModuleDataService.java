@@ -43,6 +43,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class ModuleDataService implements ProjectDataService<ModuleData, Module> {
+  public static ModuleDataService getInstance() {
+    return EP_NAME.findExtension(ModuleDataService.class);
+  }
 
   public static final com.intellij.openapi.util.Key<ModuleData> MODULE_DATA_KEY = com.intellij.openapi.util.Key.create("MODULE_DATA_KEY");
 
