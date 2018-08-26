@@ -136,7 +136,7 @@ public class BaseComponentAdapter<T> implements AssignableToComponentAdapter {
   @Nonnull
   public synchronized ComponentAdapter getDelegate() {
     if (myDelegate == null) {
-      myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation(), null, true);
+      myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation());
     }
     return myDelegate;
   }

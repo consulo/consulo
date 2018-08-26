@@ -17,15 +17,17 @@ package com.intellij.util.pico;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ExceptionUtil;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.injecting.pico.ProviderParameter;
 import org.picocontainer.*;
+import org.picocontainer.Parameter;
 import org.picocontainer.defaults.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+import javax.inject.Provider;
+import java.lang.reflect.*;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
@@ -38,30 +40,12 @@ import java.util.*;
 public class CachingConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter {
   private static final Logger LOGGER = Logger.getInstance(CachingConstructorInjectionComponentAdapter.class);
 
-  @SuppressWarnings("SSBasedInspection")
   private static final ThreadLocal<Set<CachingConstructorInjectionComponentAdapter>> ourGuard = new ThreadLocal<>();
+
   private Object myInstance;
 
-  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey,
-                                                     @Nonnull Class componentImplementation,
-                                                     Parameter[] parameters,
-                                                     boolean allowNonPublicClasses,
-                                                     ComponentMonitor monitor,
-                                                     LifecycleStrategy lifecycleStrategy) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
-    super(componentKey, componentImplementation, parameters, allowNonPublicClasses, monitor, lifecycleStrategy);
-  }
-
-  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters, boolean allowNonPublicClasses)
-          throws AssignabilityRegistrationException, NotConcreteRegistrationException {
-    super(componentKey, componentImplementation, parameters, allowNonPublicClasses);
-  }
-
-  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters) {
-    this(componentKey, componentImplementation, parameters, false);
-  }
-
   public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
-    this(componentKey, componentImplementation, null);
+    super(componentKey, componentImplementation, null, true);
   }
 
   @Override
@@ -136,12 +120,43 @@ public class CachingConstructorInjectionComponentAdapter extends InstantiatingCo
   private Object[] getConstructorArguments(PicoContainer container, Constructor ctor) {
     Class[] parameterTypes = ctor.getParameterTypes();
     Object[] result = new Object[parameterTypes.length];
-    Parameter[] currentParameters = parameters != null ? parameters : createDefaultParameters(parameterTypes);
+    Parameter[] currentParameters = createParameters(ctor);
 
     for (int i = 0; i < currentParameters.length; i++) {
       result[i] = currentParameters[i].resolveInstance(container, this, parameterTypes[i]);
     }
     return result;
+  }
+
+  private Parameter[] createParameters(Constructor constructor) {
+    Type[] genericParameterTypes = constructor.getGenericParameterTypes();
+
+    Parameter[] parameters = new Parameter[genericParameterTypes.length];
+    for (int i = 0; i < genericParameterTypes.length; i++) {
+      Type genericParameterType = genericParameterTypes[i];
+
+      if (genericParameterType instanceof ParameterizedType) {
+        Class<?> rawType = ReflectionUtil.getRawType(genericParameterType);
+
+        if (rawType == Provider.class) {
+          Type type = ((ParameterizedType)genericParameterType).getActualTypeArguments()[0];
+
+          if (!(type instanceof Class)) {
+            throw new UnsupportedOperationException("Unknown type " + genericParameterType);
+          }
+
+          parameters[i] = new ProviderParameter((Class<?>)type);
+        }
+        else {
+          parameters[i] = ComponentParameter.DEFAULT;
+        }
+      }
+      else {
+        parameters[i] = ComponentParameter.DEFAULT;
+      }
+    }
+
+    return parameters;
   }
 
   private static boolean isDefaultConstructor(@Nonnull Constructor<?> constructor) {
@@ -175,7 +190,7 @@ public class CachingConstructorInjectionComponentAdapter extends InstantiatingCo
     for (Constructor constructor : sortedMatchingConstructors) {
       boolean failedDependency = false;
       Class[] parameterTypes = constructor.getParameterTypes();
-      Parameter[] currentParameters = parameters != null ? parameters : createDefaultParameters(parameterTypes);
+      Parameter[] currentParameters = createParameters(constructor);
 
       // remember: all constructors with less arguments than the given parameters are filtered out already
       for (int j = 0; j < currentParameters.length; j++) {

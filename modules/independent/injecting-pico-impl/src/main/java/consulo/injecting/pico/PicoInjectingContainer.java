@@ -59,7 +59,7 @@ public class PicoInjectingContainer implements InjectingContainer {
     if(componentInstance != null) {
       return (T)componentInstance;
     }
-    CachingConstructorInjectionComponentAdapter adapter = new CachingConstructorInjectionComponentAdapter(clazz.getName(), clazz, null, true);
+    CachingConstructorInjectionComponentAdapter adapter = new CachingConstructorInjectionComponentAdapter(clazz.getName(), clazz);
     return (T)adapter.getComponentInstance(myContainer);
   }
 

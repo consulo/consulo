@@ -301,8 +301,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
   @Override
   public ComponentAdapter registerComponentImplementation(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters) {
-    ComponentAdapter componentAdapter = new CachingConstructorInjectionComponentAdapter(componentKey, componentImplementation, parameters, true);
-    return registerComponent(componentAdapter);
+    throw new UnsupportedOperationException();
   }
 
   @Override
