@@ -100,7 +100,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   // ProjectId->set of source file paths
   private PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myOutputRootsStorage;
   // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
-  ChangeEditorFontSizeAction$DecreaseEditorFontSize
+
   // Map: projectId -> Map{output path -> [sourceUrl; className]}
   private final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
     @Override
