@@ -553,9 +553,7 @@ public class UIUtil {
     }
     jreHiDPI = false;
     jreHiDPI_earlierVersion = true;
-    if (SystemInfo.isLinux) {
-      return false; // pending support
-    }
+
     try {
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       if (ge instanceof SunGraphicsEnvironment) {
