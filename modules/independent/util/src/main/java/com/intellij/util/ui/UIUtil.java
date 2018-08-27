@@ -554,26 +554,33 @@ public class UIUtil {
     jreHiDPI = false;
     jreHiDPI_earlierVersion = true;
 
-    try {
-      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      if (ge instanceof SunGraphicsEnvironment) {
-        // jetbrains method
-        Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleOn");
-        if(m != null) {
-          jreHiDPI = (Boolean)m.invoke(ge);
-          jreHiDPI_earlierVersion = false;
-        }
+    if (!SystemProperties.getBooleanProperty("consulo.enable.jre.hidpi", true)) {
+      jreHiDPI = false;
+      jreHiDPI_earlierVersion = false;
+    }
+    else {
+      try {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        if (ge instanceof SunGraphicsEnvironment) {
+          // jetbrains method
+          Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleOn");
+          if (m != null) {
+            jreHiDPI = (Boolean)m.invoke(ge);
+            jreHiDPI_earlierVersion = false;
+          }
 
-        // openjdk method
-        m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleEnabled");
-        if(m != null) {
-          jreHiDPI = (Boolean)m.invoke(ge);
-          jreHiDPI_earlierVersion = false;
+          // openjdk method
+          m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleEnabled");
+          if (m != null) {
+            jreHiDPI = (Boolean)m.invoke(ge);
+            jreHiDPI_earlierVersion = false;
+          }
         }
       }
+      catch (Throwable ignore) {
+      }
     }
-    catch (Throwable ignore) {
-    }
+
     if (SystemInfo.isMac) {
       return jreHiDPI = (!SystemInfo.isAppleJvm);
     }
