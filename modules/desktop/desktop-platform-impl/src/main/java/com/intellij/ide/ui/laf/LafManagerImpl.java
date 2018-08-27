@@ -26,7 +26,10 @@ import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
@@ -50,6 +53,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.plaf.beg.BegMenuItemUI;
 import com.intellij.ui.plaf.beg.IdeaMenuUI;
 import com.intellij.util.IJSwingUtilities;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -87,7 +91,6 @@ import javax.swing.plaf.synth.SynthStyleFactory;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -101,7 +104,7 @@ import java.util.Map;
 @State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_PLATFORM))
 @Singleton
 public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
+  private static final Logger LOG = Logger.getInstance(LafManagerImpl.class);
 
   @NonNls
   private static final String ELEMENT_LAF = "laf";
@@ -494,6 +497,11 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   private static void fixGtkPopupStyle() {
     if (!UIUtil.isUnderGTKLookAndFeel()) return;
 
+    // it must be instance of com.sun.java.swing.plaf.gtk.GTKStyleFactory, but class package-local
+    if(SystemInfo.isJavaVersionAtLeast(10, 0, 0)) {
+      return;
+    }
+
     final SynthStyleFactory original = SynthLookAndFeel.getStyleFactory();
 
     SynthLookAndFeel.setStyleFactory(new SynthStyleFactory() {
@@ -501,19 +509,11 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       public SynthStyle getStyle(final JComponent c, final Region id) {
         final SynthStyle style = original.getStyle(c, id);
         if (id == Region.POPUP_MENU) {
-          try {
-            Field f = style.getClass().getDeclaredField("xThickness");
-            f.setAccessible(true);
-            final Object x = f.get(style);
-            if (x instanceof Integer && (Integer)x == 0) {
-              // workaround for Sun bug #6636964
-              f.set(style, 1);
-              f = style.getClass().getDeclaredField("yThickness");
-              f.setAccessible(true);
-              f.set(style, 3);
-            }
-          }
-          catch (Exception ignore) {
+          final Integer x = ReflectionUtil.getField(style.getClass(), style, int.class, "xThickness");
+          if (x != null && x == 0) {
+            // workaround for Sun bug #6636964
+            ReflectionUtil.setField(style.getClass(), style, int.class, "xThickness", 1);
+            ReflectionUtil.setField(style.getClass(), style, int.class, "yThickness", 3);
           }
         }
         return style;
