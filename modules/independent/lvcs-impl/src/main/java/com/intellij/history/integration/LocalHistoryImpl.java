@@ -42,12 +42,14 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.intellij.history.integration.LocalHistoryUtil.findRevisionIndexToRevert;
 
+@Singleton
 public class LocalHistoryImpl extends LocalHistory implements Disposable {
   private final MessageBus myBus;
   private MessageBusConnection myConnection;

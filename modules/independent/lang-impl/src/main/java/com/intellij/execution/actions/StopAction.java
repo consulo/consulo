@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
+public class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
   private WeakReference<JBPopup> myActivePopupRef = null;
 
   private static boolean isPlaceGlobal(AnActionEvent e) {

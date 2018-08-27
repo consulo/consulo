@@ -26,6 +26,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -39,6 +40,7 @@ import java.util.Map;
  * @author Eugene Zhuravlev
  *         Date: May 4, 2008
  */
+@Singleton
 public class CompilerCacheManager implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompilerCacheManager");
   private final Map<Compiler, Object> myCompilerToCacheMap = new HashMap<Compiler, Object>();

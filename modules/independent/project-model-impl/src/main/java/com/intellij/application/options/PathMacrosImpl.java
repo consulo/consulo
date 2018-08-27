@@ -26,6 +26,7 @@ import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -34,6 +35,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author dsl
  */
 @State(name = "PathMacrosImpl", storages = @Storage(value = "path.macros.xml", roamingType = RoamingType.DISABLED))
+@Singleton
 public class PathMacrosImpl extends PathMacros implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.PathMacrosImpl");
   private final Map<String, String> myLegacyMacros = new HashMap<>();
@@ -60,7 +62,8 @@ public class PathMacrosImpl extends PathMacros implements PersistentStateCompone
   public static final String USER_HOME_MACRO_NAME = PathMacroUtil.USER_HOME_NAME;
 
   private static final Set<String> SYSTEM_MACROS = new HashSet<>();
-  @NonNls public static final String EXT_FILE_NAME = "path.macros";
+  @NonNls
+  public static final String EXT_FILE_NAME = "path.macros";
 
   static {
     SYSTEM_MACROS.add(APPLICATION_HOME_MACRO_NAME);

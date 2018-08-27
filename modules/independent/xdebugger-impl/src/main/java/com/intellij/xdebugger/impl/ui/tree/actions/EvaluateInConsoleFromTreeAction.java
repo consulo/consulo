@@ -8,7 +8,7 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
+public class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
   @Override
   protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
     return super.isEnabled(node, e) && getConsoleExecuteAction(e) != null;

@@ -37,6 +37,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.*;
@@ -120,6 +121,7 @@ public class FileIncludeManagerImpl extends FileIncludeManager {
     }
   }
 
+  @Inject
   public FileIncludeManagerImpl(Project project, PsiManager psiManager, PsiFileFactory psiFileFactory,
                                 CachedValuesManager cachedValuesManager) {
     myProject = project;

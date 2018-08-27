@@ -27,7 +27,7 @@ import com.intellij.vcs.log.impl.VcsProjectLog;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 
 public class OpenAnotherLogTabAction extends DumbAwareAction {
-  protected OpenAnotherLogTabAction() {
+  public OpenAnotherLogTabAction() {
     super("Open Another Log Tab", "Open Another Log Tab", AllIcons.General.Add);
   }
 

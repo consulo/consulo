@@ -73,6 +73,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.FontUIResource;
@@ -98,6 +99,7 @@ import java.util.Map;
  * @author Vladimir Kondratyev
  */
 @State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_PLATFORM))
+@Singleton
 public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
@@ -323,8 +325,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       UIManager.setLookAndFeel(laf);
     }
     catch (Exception e) {
-      Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
       return;
     }
     myCurrentLaf = lookAndFeelInfo;
@@ -407,11 +408,11 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       uiDefaults.put("JBEditorTabsUI", UIUtil.isUnderDarkTheme() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
     }
 
-    if(uiDefaults.get("IdeStatusBarUI") == null) {
+    if (uiDefaults.get("IdeStatusBarUI") == null) {
       uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
     }
 
-    if(uiDefaults.get("ActionButtonUI") == null) {
+    if (uiDefaults.get("ActionButtonUI") == null) {
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
     }
 

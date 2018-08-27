@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import javax.annotation.Nullable;
 
 public class UnselectPreviousOccurrenceAction extends EditorAction {
-  protected UnselectPreviousOccurrenceAction() {
+  public UnselectPreviousOccurrenceAction() {
     super(new Handler());
   }
 

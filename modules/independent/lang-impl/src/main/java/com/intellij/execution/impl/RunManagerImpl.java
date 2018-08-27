@@ -48,9 +48,11 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@Singleton
 public class RunManagerImpl extends RunManagerEx implements PersistentStateComponent<Element>, NamedComponent, Disposable {
   private static final Logger LOG = Logger.getInstance(RunManagerImpl.class);
 

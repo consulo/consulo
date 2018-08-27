@@ -24,15 +24,17 @@ import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/*
+/**
  * @author max
  */
+@Singleton
 public class SerializationManagerImpl extends SerializationManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.SerializationManagerImpl");
 

@@ -29,7 +29,7 @@ import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nullable;
 
 public class SelectAllOccurrencesAction extends EditorAction {
-  protected SelectAllOccurrencesAction() {
+  public SelectAllOccurrencesAction() {
     super(new Handler());
   }
 

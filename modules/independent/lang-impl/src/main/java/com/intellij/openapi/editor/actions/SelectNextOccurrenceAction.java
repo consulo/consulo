@@ -28,7 +28,7 @@ import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nullable;
 
 public class SelectNextOccurrenceAction extends EditorAction {
-  protected SelectNextOccurrenceAction() {
+  public SelectNextOccurrenceAction() {
     super(new Handler());
   }
 

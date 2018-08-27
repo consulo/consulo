@@ -35,13 +35,14 @@ import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@State(name = "StatisticsApplicationUsages", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
-                                                                        "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
+@State(name = "StatisticsApplicationUsages", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
+@Singleton
 public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence implements PersistentStateComponent<Element> {
   private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();
 

@@ -56,6 +56,7 @@ import java.util.regex.Pattern;
 /**
  * @author peter
  */
+@Singleton
 public class EventLog {
   public static final String LOG_REQUESTOR = "Internal log requestor";
   public static final String LOG_TOOL_WINDOW_ID = "Event Log";

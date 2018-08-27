@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @since 15:59/18.06.13
  */
 public class ZipArtifactType extends ArtifactType {
-  protected ZipArtifactType() {
+  public ZipArtifactType() {
     super("zip", "Zip");
   }
 

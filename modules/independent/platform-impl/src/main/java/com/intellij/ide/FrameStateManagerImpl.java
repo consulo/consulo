@@ -28,8 +28,10 @@ import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class FrameStateManagerImpl extends FrameStateManager {
   private final List<FrameStateListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 

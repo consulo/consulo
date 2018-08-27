@@ -35,6 +35,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import consulo.annotations.RequiredReadAction;
@@ -51,6 +52,7 @@ public class IndexCacheManagerImpl extends CacheManager{
   private final Project myProject;
   private final PsiManager myPsiManager;
 
+  @Inject
   public IndexCacheManagerImpl(PsiManager psiManager) {
     myPsiManager = psiManager;
     myProject = psiManager.getProject();

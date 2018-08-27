@@ -17,9 +17,12 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.roots.libraries.LibraryType;
 
+import javax.inject.Singleton;
+
 /**
  * @author nik
  */
+@Singleton
 public class LibraryKindLoader {
   public LibraryKindLoader() {
     //todo[nik] this is temporary workaround for IDEA-98118: we need to initialize all library types to ensure that their kinds are created and registered in LibraryKind.ourAllKinds

@@ -21,6 +21,7 @@ import com.intellij.util.text.DateFormatUtil;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 
+import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author yole
  */
+@Singleton
 public class UpdateCheckerComponent implements Disposable {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
 

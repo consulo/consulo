@@ -30,9 +30,11 @@ import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 
+@Singleton
 public class UiActivityMonitorImpl extends UiActivityMonitor implements ModalityStateListener, Disposable {
 
   private final FactoryMap<Project, BusyContainer> myObjects = new FactoryMap<Project, BusyContainer>() {

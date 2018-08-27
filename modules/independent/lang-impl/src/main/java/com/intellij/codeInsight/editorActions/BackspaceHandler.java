@@ -42,11 +42,13 @@ import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.List;
 
 public class BackspaceHandler extends EditorWriteActionHandler {
   protected final EditorActionHandler myOriginalHandler;
 
+  @Inject
   public BackspaceHandler(EditorActionHandler originalHandler) {
     super(true);
     myOriginalHandler = originalHandler;

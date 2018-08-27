@@ -37,6 +37,7 @@ import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -47,6 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
+@Singleton
 public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
   private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
 

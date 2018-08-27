@@ -94,7 +94,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
   }
 
   public static class DownHandler extends LookupActionHandler {
-
+    @Inject
     public DownHandler(EditorActionHandler originalHandler){
       super(originalHandler);
     }
@@ -160,6 +160,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
   }
 
   public static class PageDownHandler extends LookupActionHandler {
+    @Inject
     public PageDownHandler(final EditorActionHandler originalHandler) {
       super(originalHandler);
     }
@@ -172,6 +173,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
   }
 
   public static class PageUpHandler extends LookupActionHandler {
+    @Inject
     public PageUpHandler(EditorActionHandler originalHandler){
       super(originalHandler);
     }
@@ -203,6 +205,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
     }
   }
   public static class RightHandler extends LookupActionHandler {
+    @Inject
     public RightHandler(EditorActionHandler originalHandler) {
       super(originalHandler);
     }

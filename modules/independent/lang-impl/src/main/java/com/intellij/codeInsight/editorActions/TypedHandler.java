@@ -56,6 +56,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +70,7 @@ public class TypedHandler extends TypedActionHandlerBase {
 
   private static final Map<Class<? extends Language>, QuoteHandler> ourBaseLanguageQuoteHandlers = new HashMap<Class<? extends Language>, QuoteHandler>();
 
+  @Inject
   public TypedHandler(TypedActionHandler originalHandler) {
     super(originalHandler);
   }

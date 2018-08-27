@@ -31,9 +31,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredWriteAction;
+import javax.inject.Inject;
 
 /**
  * @author peter
@@ -41,6 +43,7 @@ import consulo.annotations.RequiredWriteAction;
 public class NamedElementDuplicateHandler extends EditorWriteActionHandler {
   private final EditorActionHandler myOriginal;
 
+  @Inject
   public NamedElementDuplicateHandler(EditorActionHandler original) {
     super(true);
     myOriginal = original;

@@ -33,6 +33,7 @@ import consulo.application.ApplicationProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
@@ -55,6 +56,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author yole
  */
+@Singleton
 public class PerformanceWatcher implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.diagnostic.PerformanceWatcher");
   private static final int TOLERABLE_LATENCY = 100;

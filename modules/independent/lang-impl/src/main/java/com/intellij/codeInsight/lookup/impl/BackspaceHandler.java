@@ -24,9 +24,12 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
+import javax.inject.Inject;
+
 public class BackspaceHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;
 
+  @Inject
   public BackspaceHandler(EditorActionHandler originalHandler){
     myOriginalHandler = originalHandler;
   }

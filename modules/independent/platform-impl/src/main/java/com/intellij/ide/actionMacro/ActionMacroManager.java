@@ -58,6 +58,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -72,6 +73,7 @@ import java.util.Set;
  * @author max
  */
 @State(name = "ActionMacroManager", storages = @Storage("macros.xml"))
+@Singleton
 public class ActionMacroManager implements JDOMExternalizable {
   public static ActionMacroManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ActionMacroManager.class);

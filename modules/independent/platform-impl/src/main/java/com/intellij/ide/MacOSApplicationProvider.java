@@ -41,6 +41,7 @@ import com.sun.jna.Callback;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
@@ -53,6 +54,7 @@ import java.io.InputStream;
 /**
  * @author max
  */
+@Singleton
 public class MacOSApplicationProvider {
   private static final Logger LOG = Logger.getInstance(MacOSApplicationProvider.class);
   private static final Callback IMPL = new Callback() {

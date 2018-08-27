@@ -33,9 +33,11 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Set;
 
+@Singleton
 public class QuickListsManager {
   public static QuickListsManager getInstance() {
     return ApplicationManager.getApplication().getComponent(QuickListsManager.class);

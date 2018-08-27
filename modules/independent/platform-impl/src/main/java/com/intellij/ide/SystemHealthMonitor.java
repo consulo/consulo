@@ -51,6 +51,7 @@ import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -61,6 +62,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Singleton
 public class SystemHealthMonitor {
   private static final Logger LOG = Logger.getInstance(SystemHealthMonitor.class);
 

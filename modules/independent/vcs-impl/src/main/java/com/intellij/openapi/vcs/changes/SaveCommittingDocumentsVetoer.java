@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ui.CommitHelper;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.Collections;
 
@@ -30,10 +31,12 @@ import java.util.Collections;
 public class SaveCommittingDocumentsVetoer extends FileDocumentSynchronizationVetoer {
   private final VetoSavingCommittingDocumentsAdapter myAdapter;
 
+  @Inject
   public SaveCommittingDocumentsVetoer(VetoSavingCommittingDocumentsAdapter adapter) {
     myAdapter = adapter;
   }
 
+  @Override
   public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
     final Object beingCommitted = document.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
     if (beingCommitted == VetoSavingCommittingDocumentsAdapter.SAVE_DENIED) {

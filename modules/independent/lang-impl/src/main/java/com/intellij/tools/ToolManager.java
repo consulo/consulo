@@ -21,12 +21,13 @@ import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author traff
  */
+@Singleton
 public class ToolManager extends BaseToolManager<Tool> {
-
   public static ToolManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ToolManager.class);
   }

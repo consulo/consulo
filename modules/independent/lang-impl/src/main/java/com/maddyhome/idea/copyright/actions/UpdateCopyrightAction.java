@@ -30,7 +30,7 @@ import com.maddyhome.idea.copyright.pattern.FileUtil;
 import javax.annotation.Nonnull;
 
 public class UpdateCopyrightAction extends BaseAnalysisAction {
-  protected UpdateCopyrightAction() {
+  public UpdateCopyrightAction() {
     super(UpdateCopyrightProcessor.TITLE, UpdateCopyrightProcessor.TITLE);
   }
 

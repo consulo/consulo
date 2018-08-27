@@ -64,6 +64,7 @@ import gnu.trove.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.*;
 import java.util.*;
@@ -82,6 +83,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 1. corresponding source file has been scheduled for recompilation (see above)
  * 2. corresponding source file has been deleted
  */
+@Singleton
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements Disposable {
   private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
@@ -98,7 +100,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   // ProjectId->set of source file paths
   private PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myOutputRootsStorage;
   // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
-
+  ChangeEditorFontSizeAction$DecreaseEditorFontSize
   // Map: projectId -> Map{output path -> [sourceUrl; className]}
   private final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
     @Override

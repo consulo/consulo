@@ -41,6 +41,7 @@ import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -50,6 +51,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+@Singleton
 public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotionListener {
   private static final Logger LOG = Logger.getInstance(ImageOrColorPreviewManager.class);
 

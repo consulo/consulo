@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -30,9 +33,10 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -44,7 +48,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
 
   private static final String ACTION_ID = "VcsHistory.ShowAllAffected";
 
- // use getInstance()
+  @Inject
   private ShowAllAffectedGenericAction() {
   }
 

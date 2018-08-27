@@ -17,9 +17,12 @@ package com.intellij.openapi.util;
 
 import com.intellij.ui.mac.foundation.Foundation;
 
+import javax.inject.Singleton;
+
 /**
  * User: spLeaner
  */
+@Singleton
 public class FoundationLoader {
   public FoundationLoader() {
     if (SystemInfo.isMac) {

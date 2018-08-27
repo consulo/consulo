@@ -27,6 +27,7 @@ import consulo.bundle.PredefinedBundlesProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 15:05/22.11.13
  */
+@Singleton
 public class PredefinedBundlesLoader {
   private static class ContextImpl implements PredefinedBundlesProvider.Context {
     private final List<Sdk> myBundles = new ArrayList<>();

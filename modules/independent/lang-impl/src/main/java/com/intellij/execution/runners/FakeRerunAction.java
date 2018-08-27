@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
-class FakeRerunAction extends AnAction implements DumbAware {
+public class FakeRerunAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void update(@Nonnull AnActionEvent event) {

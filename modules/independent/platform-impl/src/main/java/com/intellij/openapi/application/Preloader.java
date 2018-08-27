@@ -26,11 +26,13 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 
+import javax.inject.Singleton;
 import java.util.concurrent.Executor;
 
 /**
  * @author peter
  */
+@Singleton
 public class Preloader implements Disposable {
   private static final Logger LOG = Logger.getInstance(Preloader.class);
   private final Executor myExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("com.intellij.openapi.application.Preloader pool");

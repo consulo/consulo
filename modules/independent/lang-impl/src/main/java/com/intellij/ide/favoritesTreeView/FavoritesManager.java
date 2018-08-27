@@ -52,11 +52,13 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.util.*;
 
 import static com.intellij.ide.favoritesTreeView.FavoritesListProvider.EP_NAME;
 
+@Singleton
 public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   private final ArrayList<String> myListOrder = new ArrayList<String>();
   // fav list name -> list of (root: root url, root class)

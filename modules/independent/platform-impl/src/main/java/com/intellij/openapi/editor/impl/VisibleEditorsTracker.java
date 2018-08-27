@@ -23,9 +23,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 
+@Singleton
 public class VisibleEditorsTracker implements CommandListener {
   private final Set<Editor> myEditorsVisibleOnCommandStart = new HashSet<>();
   private long myCurrentCommandStart;

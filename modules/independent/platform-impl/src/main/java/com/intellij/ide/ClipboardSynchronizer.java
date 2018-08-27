@@ -32,6 +32,7 @@ import sun.awt.datatransfer.DataTransferer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
@@ -54,6 +55,7 @@ import java.util.Set;
  *
  * @author nik
  */
+@Singleton
 public class ClipboardSynchronizer implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ClipboardSynchronizer");
 

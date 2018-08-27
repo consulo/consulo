@@ -26,9 +26,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.DataExternalizer;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author peter
  */
+@Singleton
 public class GistManagerImpl extends GistManager {
   private static final Set<String> ourKnownIds = ContainerUtil.newConcurrentSet();
   private static final String ourPropertyName = "file.gist.reindex.count";

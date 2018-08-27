@@ -13,10 +13,12 @@ import com.intellij.util.DocumentUtil;
 import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 public class DeleteInColumnModeHandler extends EditorWriteActionHandler {
   private final EditorActionHandler myOriginalHandler;
 
+  @Inject
   public DeleteInColumnModeHandler(EditorActionHandler handler) {
     myOriginalHandler = handler;
   }

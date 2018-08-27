@@ -20,9 +20,12 @@ import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.remoteServer.ServerType;
 
+import javax.inject.Singleton;
+
 /**
  * @author nik
  */
+@Singleton
 public class DeployToServerConfigurationTypesRegistrar {
   public DeployToServerConfigurationTypesRegistrar() {
     //todo[nik] improve this: configuration types should be loaded lazily

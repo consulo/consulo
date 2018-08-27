@@ -43,7 +43,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
+public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
   @Override
   @Nonnull
   public List<TextRange> getChangedTextRanges(@Nonnull Project project, @Nonnull PsiFile file) throws FilesTooBigForDiffException {

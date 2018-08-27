@@ -29,7 +29,9 @@ import com.intellij.openapi.util.Key;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable,
                                                                                     AnActionListener,
                                                                                     EditorMouseListener {

@@ -42,9 +42,11 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 
+@Singleton
 public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 

@@ -79,6 +79,7 @@ import java.util.List;
 /**
  * @author spleaner
  */
+@Singleton
 public class NotificationsManagerImpl extends NotificationsManager {
   public static final Color FILL_COLOR = new JBColor(Gray._242, new Color(78, 80, 82));
   public static final Color BORDER_COLOR = new JBColor(Gray._178.withAlpha(205), new Color(86, 90, 92, 205));

@@ -30,6 +30,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -39,6 +40,7 @@ import java.util.Map;
  * @author spleaner
  */
 @State(name = "NotificationConfiguration", storages = @Storage("notifications.xml"))
+@Singleton
 public class NotificationsConfigurationImpl extends NotificationsConfiguration implements Disposable, PersistentStateComponent<Element> {
 
   private static final Logger LOG = Logger.getInstance(NotificationsConfiguration.class);

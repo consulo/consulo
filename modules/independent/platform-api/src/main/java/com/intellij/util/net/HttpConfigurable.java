@@ -54,6 +54,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.spec.SecretKeySpec;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -64,6 +65,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @State(name = "HttpConfigurable", storages = @Storage("proxy.settings.xml"))
+@Singleton
 public class HttpConfigurable implements PersistentStateComponent<HttpConfigurable>, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.net.HttpConfigurable");
   private static final File PROXY_CREDENTIALS_FILE = new File(PathManager.getOptionsPath(), "proxy.settings.pwd");
@@ -92,10 +94,9 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
   private transient IdeaWideProxySelector mySelector;
   private transient final Object myLock = new Object();
 
-  private transient final PropertiesEncryptionSupport myEncryptionSupport = new PropertiesEncryptionSupport(new SecretKeySpec(new byte[] {
-          (byte)0x50, (byte)0x72, (byte)0x6f, (byte)0x78, (byte)0x79, (byte)0x20, (byte)0x43, (byte)0x6f,
-          (byte)0x6e, (byte)0x66, (byte)0x69, (byte)0x67, (byte)0x20, (byte)0x53, (byte)0x65, (byte)0x63
-  }, "AES"));
+  private transient final PropertiesEncryptionSupport myEncryptionSupport = new PropertiesEncryptionSupport(new SecretKeySpec(
+          new byte[]{(byte)0x50, (byte)0x72, (byte)0x6f, (byte)0x78, (byte)0x79, (byte)0x20, (byte)0x43, (byte)0x6f, (byte)0x6e, (byte)0x66, (byte)0x69, (byte)0x67, (byte)0x20, (byte)0x53, (byte)0x65,
+                  (byte)0x63}, "AES"));
   private transient final NotNullLazyValue<Properties> myProxyCredentials = NotNullLazyValue.createValue(() -> {
     try {
       return myEncryptionSupport.load(PROXY_CREDENTIALS_FILE);

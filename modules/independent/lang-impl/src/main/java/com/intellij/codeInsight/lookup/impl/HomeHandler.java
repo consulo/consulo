@@ -23,9 +23,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.ui.ScrollingUtil;
 
+import javax.inject.Inject;
+
 public class HomeHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;
 
+  @Inject
   public HomeHandler(EditorActionHandler originalHandler){
     myOriginalHandler = originalHandler;
   }

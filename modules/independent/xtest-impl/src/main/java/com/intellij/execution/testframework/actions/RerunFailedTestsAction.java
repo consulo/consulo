@@ -23,12 +23,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
-class RerunFailedTestsAction extends AnAction {
+public class RerunFailedTestsAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void update(AnActionEvent e) {

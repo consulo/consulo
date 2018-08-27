@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@Singleton
 public class IncomingChangesIndicator {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator");
 

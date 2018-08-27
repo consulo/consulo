@@ -91,6 +91,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -110,6 +111,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Eugene Zhuravlev
  * @since Dec 20, 2007
  */
+@Singleton
 public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
   static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.FileBasedIndexImpl");
   private static final String CORRUPTION_MARKER_NAME = "corruption.marker";

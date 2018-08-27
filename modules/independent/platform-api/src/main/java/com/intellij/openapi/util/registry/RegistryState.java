@@ -20,7 +20,10 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jdom.Element;
 
+import javax.inject.Singleton;
+
 @State(name = "Registry", storages = @Storage("other.xml"))
+@Singleton
 public class RegistryState implements PersistentStateComponent<Element> {
   @Override
   public Element getState() {

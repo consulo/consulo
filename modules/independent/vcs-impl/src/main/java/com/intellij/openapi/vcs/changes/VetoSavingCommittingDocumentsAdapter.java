@@ -36,8 +36,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 
+@Singleton
 public class VetoSavingCommittingDocumentsAdapter {
   static final Object SAVE_DENIED = new Object();
 
