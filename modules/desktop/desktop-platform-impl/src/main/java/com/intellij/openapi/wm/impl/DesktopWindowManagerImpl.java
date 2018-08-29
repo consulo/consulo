@@ -171,7 +171,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
             for (Project project : openProjects) {
               IdeFrameImpl frame = (IdeFrameImpl)wm.getFrame(project);
               if (frame != null) {
-                ((IdeFrameImpl)frame).storeFullScreenStateIfNeeded();
+                frame.storeFullScreenStateIfNeeded();
               }
             }
           }

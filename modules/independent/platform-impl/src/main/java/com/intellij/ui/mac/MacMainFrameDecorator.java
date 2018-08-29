@@ -347,6 +347,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     return myInFullScreen;
   }
 
+  @Nonnull
   @Override
   public ActionCallback toggleFullScreen(final boolean state) {
     if (!SystemInfo.isMacOSLion || myFrame == null || myInFullScreen == state) return ActionCallback.REJECTED;

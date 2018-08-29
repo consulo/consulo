@@ -102,6 +102,8 @@ public class Patches {
    */
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK8 = true;
 
+  public static final boolean USE_REFLECTION_TO_ACCESS_JDK9 = true;
+
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK11 = true;
 
   /**

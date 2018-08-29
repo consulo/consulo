@@ -15,42 +15,35 @@
  */
 package com.intellij.openapi.wm.impl;
 
+import com.intellij.Patches;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public abstract class IdeFrameDecorator implements Disposable {
-  protected IdeFrameImpl myFrame;
-
-  protected IdeFrameDecorator(IdeFrameImpl frame) {
-    myFrame = frame;
-  }
-
-  public abstract boolean isInFullScreen();
-
-  public abstract ActionCallback toggleFullScreen(boolean state);
-
-  @Override
-  public void dispose() {
-    myFrame = null;
-  }
-
   @Nullable
   public static IdeFrameDecorator decorate(@Nonnull IdeFrameImpl frame) {
+    assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
+
+    // we can't use internal api for fullscreen
+    if (SystemInfo.isJavaVersionAtLeast(9, 0, 0)) {
+      return new AWTFrameDecorator(frame);
+    }
+
     if (SystemInfo.isMac) {
       return new MacMainFrameDecorator(frame, false);
     }
     else if (SystemInfo.isWindows) {
-      return new WinMainFrameDecorator(frame);
+      return new AWTFrameDecorator(frame);
     }
     else if (SystemInfo.isXWindow) {
       if (X11UiUtil.isFullScreenSupported()) {
@@ -61,6 +54,22 @@ public abstract class IdeFrameDecorator implements Disposable {
     return null;
   }
 
+  protected IdeFrameImpl myFrame;
+
+  protected IdeFrameDecorator(IdeFrameImpl frame) {
+    myFrame = frame;
+  }
+
+  public abstract boolean isInFullScreen();
+
+  @Nonnull
+  public abstract ActionCallback toggleFullScreen(boolean state);
+
+  @Override
+  public void dispose() {
+    myFrame = null;
+  }
+
   protected void notifyFrameComponents(boolean state) {
     if (myFrame != null) {
       myFrame.getRootPane().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
@@ -69,8 +78,8 @@ public abstract class IdeFrameDecorator implements Disposable {
   }
 
   // AWT-based decorator
-  private static class WinMainFrameDecorator extends IdeFrameDecorator {
-    private WinMainFrameDecorator(@Nonnull IdeFrameImpl frame) {
+  private static class AWTFrameDecorator extends IdeFrameDecorator {
+    private AWTFrameDecorator(@Nonnull IdeFrameImpl frame) {
       super(frame);
     }
 
@@ -83,6 +92,7 @@ public abstract class IdeFrameDecorator implements Disposable {
       return device != null && device.getDefaultConfiguration().getBounds().equals(frameBounds) && myFrame.isUndecorated();
     }
 
+    @Nonnull
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
       if (myFrame == null) return ActionCallback.REJECTED;
@@ -139,6 +149,7 @@ public abstract class IdeFrameDecorator implements Disposable {
       return myFrame != null && X11UiUtil.isInFullScreenMode(myFrame);
     }
 
+    @Nonnull
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
       if (myFrame != null) {

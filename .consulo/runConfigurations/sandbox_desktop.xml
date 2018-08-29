@@ -4,7 +4,7 @@
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo" />
-    <java-sdk name="1.8 (predefined)" />
+    <java-sdk name="&quot;10&quot; 2018-03-20" />
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <ConfigurationWrapper RunnerId="Cover" />
