@@ -2,3 +2,4 @@
 -Xmx1500m
 -XX:ReservedCodeCacheSize=240m
 -XX:+UseCompressedOops
+-XX:SoftRefLRUPolicyMSPerMB=50

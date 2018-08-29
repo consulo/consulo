@@ -249,7 +249,10 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
     } else {
         NSLog(@"No content found at %@ ", vmOptionsFile);
     }
+    // deprecated option
     [options addObject:[NSString stringWithFormat:@"-Djb.vmOptionsFile=%@", [used componentsJoinedByString:@","]]];
+
+    [options addObject:[NSString stringWithFormat:@"-Dconsulo.vm.options.files=%@", [used componentsJoinedByString:@","]]];
 
     return options;
 }
@@ -259,10 +262,14 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
 
     [args_array addObject:[NSString stringWithFormat:@"-Djava.class.path=%@", ourBootclasspath]];
     [args_array addObjectsFromArray:parseVMOptions(myVmOptionsFile)];
-    [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -XX:MaxJavaStackTraceDepth=-1 -Xverify:none -Xbootclasspath/a:$CONSULO_HOME/lib/consulo-desktop-boot.jar" componentsSeparatedByString:@" "]];
+    [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -Xverify:none -Xbootclasspath/a:$CONSULO_HOME/lib/consulo-desktop-boot.jar" componentsSeparatedByString:@" "]];
+    [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.properties.file=%@", myPropertiesFile]];
+    [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.home.path=%@", myWorkingDirectory]];
+    [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.app.home.path=%@/Contents", myAppHome]];
+
+    // deprecated options
     [args_array addObject:[NSString stringWithFormat:@"-Didea.properties.file=%@", myPropertiesFile]];
     [args_array addObject:[NSString stringWithFormat:@"-Didea.home.path=%@", myWorkingDirectory]];
-    [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.app.home.path=%@/Contents", myAppHome]];
 
     JavaVMInitArgs args;
     args.version = JNI_VERSION_1_6;
