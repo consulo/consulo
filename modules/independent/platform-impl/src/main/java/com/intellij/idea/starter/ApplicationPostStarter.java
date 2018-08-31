@@ -19,6 +19,7 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
@@ -52,7 +53,7 @@ public abstract class ApplicationPostStarter {
   @Nonnull
   protected abstract Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args);
 
-  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
   }
 
   public boolean needStartInTransaction() {

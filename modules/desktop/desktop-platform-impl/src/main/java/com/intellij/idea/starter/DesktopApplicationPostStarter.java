@@ -23,7 +23,6 @@ import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -83,7 +82,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
     SystemDock.updateMenu();
 
     // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added
@@ -92,7 +91,6 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
     // Event queue should not be changed during initialization of application components.
     // It also cannot be changed before initialization of application components because IdeEventQueue uses other
     // application components. So it is proper to perform replacement only here.
-    final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
     DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
     IdeEventQueue.getInstance().setWindowManager(windowManager);
 
