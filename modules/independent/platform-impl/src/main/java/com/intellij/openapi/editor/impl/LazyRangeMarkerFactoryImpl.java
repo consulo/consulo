@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.WeakList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
   private final Project myProject;
   private static final Key<WeakList<LazyMarker>> LAZY_MARKERS_KEY = Key.create("LAZY_MARKERS_KEY");
 
+  @Inject
   public LazyRangeMarkerFactoryImpl(@Nonnull Project project, @Nonnull final FileDocumentManager fileDocumentManager) {
     myProject = project;
 

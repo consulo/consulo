@@ -24,6 +24,7 @@ import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.VcsRootChecker;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.*;
@@ -44,6 +45,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   @Nonnull
   private final VcsRootChecker[] myCheckers;
 
+  @Inject
   public VcsRootDetectorImpl(@Nonnull Project project,
                              @Nonnull ProjectRootManager projectRootManager,
                              @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
