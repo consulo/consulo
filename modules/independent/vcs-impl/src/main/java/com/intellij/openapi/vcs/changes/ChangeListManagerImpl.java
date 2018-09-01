@@ -1475,7 +1475,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     return ContainerUtil.exists(IgnoredFileProvider.IGNORE_FILE.getExtensions(), it -> it.isIgnoredFile(myProject, filePath));
   }
 
-  private static class DefaultIgnoredFileProvider implements IgnoredFileProvider {
+  public static class DefaultIgnoredFileProvider implements IgnoredFileProvider {
     @Override
     public boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath) {
       return ((ChangeListManagerImpl)ChangeListManager.getInstance(project)).myIgnoredIdeaLevel.isIgnoredFile(filePath);
