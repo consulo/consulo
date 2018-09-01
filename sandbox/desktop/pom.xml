@@ -67,16 +67,6 @@
   </build>
 
   <dependencies>
-    <!--log4j-->
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-logging-log4j-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
     <!--log4j2-->
     <dependency>
       <groupId>${project.groupId}</groupId>

@@ -53,7 +53,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
 
   @Override
   public int getPriority() {
-    return Boolean.getBoolean("consulo.log4j2.enabled") ? HIGHT_PRIORITY : DISABLE_PRIORITY;
+    return DEFAULT_PRIORITY;
   }
 
   @Override
