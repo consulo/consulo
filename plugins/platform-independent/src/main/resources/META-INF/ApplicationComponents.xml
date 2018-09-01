@@ -16,10 +16,6 @@
 <idea-plugin>
   <application-components>
     <component>
-      <implementation-class>com.intellij.openapi.util.registry.RegistryState</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.openapi.project.ProjectManager</interface-class>
       <implementation-class>com.intellij.openapi.project.impl.ProjectManagerImpl</implementation-class>
     </component>
@@ -147,10 +143,6 @@
     <component>
       <interface-class>com.intellij.ide.FrameStateManager</interface-class>
       <implementation-class>com.intellij.ide.FrameStateManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>com.intellij.ide.MacOSApplicationProvider</implementation-class>
     </component>
 
     <component>

@@ -63,6 +63,11 @@
     </dependency>
     <!-- external dependencies -->
     <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>eawtstub</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>javax.help</groupId>
       <artifactId>javahelp</artifactId>
       <optional>true</optional>

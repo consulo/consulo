@@ -19,6 +19,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.mac.MacDockDelegate;
 import com.intellij.ui.win.WinDockDelegate;
 import consulo.platform.Platform;
+import consulo.ui.taskbar.Java9DockDelegateImpl;
 
 /**
  * @author Denis Fokin
@@ -34,7 +35,12 @@ public class SystemDock {
       };
     }
     else if (SystemInfo.isMac) {
-      delegate = MacDockDelegate.getInstance();
+      if(SystemInfo.isJavaVersionAtLeast(9, 0, 0)) {
+        delegate = new Java9DockDelegateImpl();
+      }
+      else {
+        delegate = MacDockDelegate.getInstance();
+      }
     }
     else if (SystemInfo.isWin7OrNewer) {
       delegate = WinDockDelegate.getInstance();
