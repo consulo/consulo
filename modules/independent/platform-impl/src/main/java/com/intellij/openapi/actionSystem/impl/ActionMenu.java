@@ -49,6 +49,8 @@ public final class ActionMenu extends JMenu {
   private StubItem myStubItem;  // A PATCH!!! Do not remove this code, otherwise you will lose all keyboard navigation in JMenuBar.
   private final boolean myTopLevel;
 
+  private Component[] myMenuComponents;
+
   public ActionMenu(final DataContext context,
                     @Nonnull final String place,
                     final ActionGroup group,
@@ -208,24 +210,59 @@ public final class ActionMenu extends JMenu {
   private class MenuListenerImpl implements MenuListener {
     @Override
     public void menuCanceled(MenuEvent e) {
-      clearItems();
-      addStubItem();
+      if (isTopMenuBar()) {
+        myMenuComponents = new Component[]{myStubItem};
+      }
+      else {
+        clearItems();
+      }
     }
 
     @Override
     public void menuDeselected(MenuEvent e) {
-      clearItems();
-      addStubItem();
+      menuCanceled(e);
     }
 
     @Override
     public void menuSelected(MenuEvent e) {
-      fillMenu();
+      if (isTopMenuBar()) {
+        myMenuComponents = null;
+      }
+      else {
+        fillMenu(ActionMenu.this);
+      }
     }
   }
 
+  @Override
+  public Component[] getMenuComponents() {
+    if (isTopMenuBar()) {
+      if (myMenuComponents == null) {
+        JMenu temp = new JMenu();
+        fillMenu(temp);
+        myMenuComponents = temp.getMenuComponents();
+      }
+      return myMenuComponents;
+    }
+    else {
+      return super.getMenuComponents();
+    }
+  }
+
+  @Override
+  public int getMenuComponentCount() {
+    if(isTopMenuBar()) {
+      return getMenuComponents().length;
+    }
+    return super.getMenuComponentCount();
+  }
+
+  private boolean isTopMenuBar() {
+    return SystemInfo.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
+  }
+
   private void clearItems() {
-    if (SystemInfo.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU) {
+    if (isTopMenuBar()) {
       for (Component menuComponent : getMenuComponents()) {
         if (menuComponent instanceof ActionMenu) {
           ((ActionMenu)menuComponent).clearItems();
@@ -244,7 +281,7 @@ public final class ActionMenu extends JMenu {
     validate();
   }
 
-  private void fillMenu() {
+  private void fillMenu(JMenu menu) {
     DataContext context;
     boolean mayContextBeInvalid;
 
@@ -262,7 +299,7 @@ public final class ActionMenu extends JMenu {
       mayContextBeInvalid = true;
     }
 
-    Utils.fillMenu(myGroup.getAction(), this, myMnemonicEnabled, myPresentationFactory, context, myPlace, true, mayContextBeInvalid, LaterInvocator.isInModalContext());
+    Utils.fillMenu(myGroup.getAction(), menu, myMnemonicEnabled, myPresentationFactory, context, myPlace, true, mayContextBeInvalid, LaterInvocator.isInModalContext());
   }
 
   private class MenuItemSynchronizer implements PropertyChangeListener {
@@ -272,7 +309,7 @@ public final class ActionMenu extends JMenu {
       if (Presentation.PROP_VISIBLE.equals(name)) {
         setVisible(myPresentation.isVisible());
         if (SystemInfo.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
-          validateTree();
+          validate();
         }
       }
       else if (Presentation.PROP_ENABLED.equals(name)) {
