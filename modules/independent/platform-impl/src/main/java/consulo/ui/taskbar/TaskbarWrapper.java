@@ -19,6 +19,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 
 import java.awt.*;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -30,8 +31,12 @@ public class TaskbarWrapper {
   private static Method ourIsTaskbarSupported;
   private static Method ourIsSupported;
   private static Method ourSetMenu;
+  private static Method ourSetProgressValue;
+  private static Method ourRequestUserAttention;
 
   private static Object ourFeature_MENU;
+  private static Object ourFeature_PROGRESS_VALUE;
+  private static Object ourFeature_USER_ATTENTION;
 
   static {
     try {
@@ -41,21 +46,33 @@ public class TaskbarWrapper {
 
       Class<?> featureClass = Class.forName(ourTaskbarClass.getName() + "$Feature");
       ourFeature_MENU = featureClass.getField("MENU").get(null);
+      ourFeature_PROGRESS_VALUE = featureClass.getField("PROGRESS_VALUE").get(null);
+      ourFeature_USER_ATTENTION = featureClass.getField("USER_ATTENTION").get(null);
 
       ourIsSupported = ourTaskbarClass.getDeclaredMethod("isSupported", featureClass);
 
       ourSetMenu = ourTaskbarClass.getDeclaredMethod("setMenu", PopupMenu.class);
+      ourSetProgressValue = ourTaskbarClass.getDeclaredMethod("setProgressValue", int.class);
+      ourRequestUserAttention = ourTaskbarClass.getDeclaredMethod("requestUserAttention", boolean.class, boolean.class);
     }
-    catch (Exception e) {
-      e.printStackTrace();
+    catch (Throwable e) {
+      ourTaskbarClass = null;
     }
   }
 
   public static enum FeatureWrapper {
-    MENU;
+    MENU(() -> ourFeature_MENU),
+    PROGRESS_VALUE(() -> ourFeature_PROGRESS_VALUE),
+    USER_ATTENTION(() -> ourFeature_USER_ATTENTION);
+
+    private Supplier<Object> myValue;
+
+    FeatureWrapper(Supplier<Object> value) {
+      myValue = value;
+    }
 
     Object get() {
-      return ourFeature_MENU;
+      return myValue.get();
     }
   }
 
@@ -85,7 +102,19 @@ public class TaskbarWrapper {
     call(() -> ourSetMenu.invoke(myTaskbarObject, popupMenu), null);
   }
 
+  public void setProgressValue(int value) {
+    call(() -> ourSetProgressValue.invoke(myTaskbarObject, value), null);
+  }
+
+  public void requestUserAttention(boolean enabled, boolean critical) {
+    call(() -> ourSetProgressValue.invoke(myTaskbarObject, enabled, critical), null);
+  }
+
   private static <T> T call(ThrowableComputable<T, Throwable> computable, T defaultValue) {
+    if (ourTaskbarClass == null) {
+      return defaultValue;
+    }
+
     try {
       return computable.compute();
     }

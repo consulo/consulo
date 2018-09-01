@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.Patches;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationActivationListener;
@@ -27,10 +28,11 @@ import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.taskbar.TaskbarWrapper;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.common.BinaryOutputStream;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -52,6 +54,8 @@ public abstract class AppIcon {
 
   @Nonnull
   public static AppIcon getInstance() {
+    assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
+
     if (ourIcon == null) {
       if (SystemInfo.isMac) {
         ourIcon = new MacAppIcon();
@@ -159,6 +163,57 @@ public abstract class AppIcon {
     }
   }
 
+  private static class Java9TaskbarIcon extends BaseIcon {
+    private TaskbarWrapper myTaskbarWrapper;
+    private Desktop myDesktop;
+
+    Java9TaskbarIcon() {
+      myTaskbarWrapper = TaskbarWrapper.getTaskbar();
+    }
+
+    @Override
+    public boolean _setProgress(IdeFrame frame, Object processId, AppIconScheme.Progress scheme, double value, boolean isOk) {
+      if(myTaskbarWrapper.isSupported(TaskbarWrapper.FeatureWrapper.PROGRESS_VALUE)) {
+        myTaskbarWrapper.setProgressValue((int)(value * 100.));
+      }
+      return true;
+    }
+
+    @Override
+    public boolean _hideProgress(IdeFrame frame, Object processId) {
+      if(myTaskbarWrapper.isSupported(TaskbarWrapper.FeatureWrapper.PROGRESS_VALUE)) {
+        myTaskbarWrapper.setProgressValue(-1);
+      }
+      return true;
+    }
+
+    @Override
+    public void _setTextBadge(IdeFrame frame, String text) {
+
+    }
+
+    @Override
+    public void _setOkBadge(IdeFrame frame, boolean visible) {
+
+    }
+
+    @Override
+    public void _requestAttention(IdeFrame frame, boolean critical) {
+      if(myTaskbarWrapper.isSupported(TaskbarWrapper.FeatureWrapper.USER_ATTENTION)) {
+        myTaskbarWrapper.requestUserAttention(true, critical);
+      }
+    }
+
+    @Override
+    protected IdeFrame getIdeFrame(Project project) {
+      return null;
+    }
+
+    @Override
+    public void requestFocus(IdeFrame frame) {
+
+    }
+  }
 
   @SuppressWarnings("UseJBColor")
   private static class MacAppIcon extends BaseIcon {
