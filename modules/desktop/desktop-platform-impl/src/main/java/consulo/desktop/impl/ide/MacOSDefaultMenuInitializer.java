@@ -50,6 +50,7 @@ import java.io.File;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -79,12 +80,6 @@ public class MacOSDefaultMenuInitializer {
             TransactionGuard.submitTransaction(project, () -> showSettingsUtil.showSettingsDialog(project));
           }
           applicationEvent.setHandled(true);
-        }
-
-        @Nonnull
-        private Project getNotNullProject() {
-          Project project = getProject();
-          return project == null ? ProjectManager.getInstance().getDefaultProject() : project;
         }
 
         @Override
@@ -127,12 +122,70 @@ public class MacOSDefaultMenuInitializer {
       ClassLoader classLoader = MacOSDefaultMenuInitializer.class.getClassLoader();
 
       Class<?> aboutHandler = Class.forName("java.awt.desktop.AboutHandler");
+      Class<?> preferencesHandler = Class.forName("java.awt.desktop.PreferencesHandler");
+      Class<?> quitHandler = Class.forName("java.awt.desktop.QuitHandler");
+      Class<?> openFilesHandler = Class.forName("java.awt.desktop.OpenFilesHandler");
 
-      Method setAboutHandler = desktop.getClass().getDeclaredMethod("setAboutHandler", aboutHandler);
+      Class<?> filesEvent = Class.forName("java.awt.desktop.FilesEvent");
+      Method getFiles = filesEvent.getDeclaredMethod("getFiles");
+
+      Class<? extends Desktop> desktopClass = desktop.getClass();
+      Method setAboutHandler = desktopClass.getDeclaredMethod("setAboutHandler", aboutHandler);
       setAboutHandler.invoke(desktop, Proxy.newProxyInstance(classLoader, new Class[]{aboutHandler}, new InvocationHandler() {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
           AboutAction.showAbout();
+          return null;
+        }
+      }));
+
+      Method setPreferencesHandler = desktopClass.getDeclaredMethod("setPreferencesHandler", preferencesHandler);
+      setPreferencesHandler.invoke(desktop, Proxy.newProxyInstance(classLoader, new Class[]{preferencesHandler}, new InvocationHandler() {
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          final Project project = getNotNullProject();
+          final ShowSettingsUtilImpl showSettingsUtil = (ShowSettingsUtilImpl)ShowSettingsUtil.getInstance();
+          if (!showSettingsUtil.isAlreadyShown()) {
+            TransactionGuard.submitTransaction(project, () -> showSettingsUtil.showSettingsDialog(project));
+          }
+          return null;
+        }
+      }));
+
+      Method setQuitHandler = desktopClass.getDeclaredMethod("setQuitHandler", quitHandler);
+      setQuitHandler.invoke(desktop, Proxy.newProxyInstance(classLoader, new Class[]{quitHandler}, new InvocationHandler() {
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+          TransactionGuard.submitTransaction(app, () -> app.exit());
+          return null;
+        }
+      }));
+
+      Method setOpenFileHandler = desktopClass.getDeclaredMethod("setOpenFileHandler", openFilesHandler);
+      setOpenFileHandler.invoke(desktop, Proxy.newProxyInstance(classLoader, new Class[]{openFilesHandler}, new InvocationHandler() {
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          Object eventObject = args[0];
+          try {
+            List files = (List)getFiles.invoke(eventObject);
+            final Project project = getProject();
+
+            if(files != null) {
+              File file = (File)files.get(0);
+              TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
+                if (ProjectUtil.open(file.getAbsolutePath(), project, true) != null) {
+                  ApplicationStarter.getInstance().setPerformProjectLoad(false);
+                  return;
+                }
+                if (project != null && file.exists()) {
+                  OpenFileAction.openFile(file.getPath(), project);
+                }
+              });
+            }
+          }
+          catch (Exception ignored) {
+          }
           return null;
         }
       }));
@@ -165,6 +218,12 @@ public class MacOSDefaultMenuInitializer {
         LOGGER.warn(t);
       }
     }
+  }
+
+  @Nonnull
+  private static Project getNotNullProject() {
+    Project project = getProject();
+    return project == null ? ProjectManager.getInstance().getDefaultProject() : project;
   }
 
   @SuppressWarnings("deprecation")
