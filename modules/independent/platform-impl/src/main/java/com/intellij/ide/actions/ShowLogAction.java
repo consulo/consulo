@@ -20,6 +20,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.DumbAware;
+import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 
 import java.io.File;
@@ -28,14 +30,16 @@ import java.io.File;
  * @author pegov
  */
 public class ShowLogAction extends AnAction implements DumbAware {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final File logFile = new File(PathManager.getLogPath(), "consulo.log");
     ShowFilePathAction.openFile(logFile);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setVisible(ShowFilePathAction.isSupported());
     presentation.setText(getActionName());
