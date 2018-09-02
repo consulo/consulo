@@ -67,7 +67,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     super.bootstrapInjectingContainer(builder);
 
     builder.bind(Module.class).to(this);
-    builder.bind(ModulePathMacroManager.class).to(ModulePathMacroManager.class);
+    builder.bind(ModulePathMacroManager.class).to(ModulePathMacroManager.class).forceSingleton();
   }
 
   @Nullable

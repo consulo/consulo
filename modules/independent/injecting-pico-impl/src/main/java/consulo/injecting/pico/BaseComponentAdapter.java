@@ -16,49 +16,46 @@
 package consulo.injecting.pico;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.pico.AssignableToComponentAdapter;
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
+import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import org.picocontainer.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
-public class BaseComponentAdapter<T> implements AssignableToComponentAdapter {
+public class BaseComponentAdapter<T> implements ComponentAdapter {
   private static final Logger LOGGER = Logger.getInstance(BaseComponentAdapter.class);
 
-  private ComponentAdapter myDelegate;
-
   private final InjectingKey<T> myInterfaceKey;
+
+  private final Object myLock = new Object();
+
   private InjectingKey<? extends T> myImplementationKey;
 
-  @Nullable
-  private PostInjectListener<T> myAfterInjectionListener;
+  @Nonnull
+  private PostInjectListener<T> myAfterInjectionListener = (time, object) -> {};
 
   private Function<Provider<T>, T> myRemap = Provider::get;
 
-  private volatile T myInstanceIfSingleton;
+  private T myInstanceIfSingleton;
 
   private boolean myForceSingleton;
 
-  private AtomicBoolean myInitializeProgress = new AtomicBoolean();
+  private boolean myInitializeProgress;
 
   public BaseComponentAdapter(InjectingKey<T> interfaceKey) {
     myInterfaceKey = interfaceKey;
     myImplementationKey = interfaceKey;
-    myDelegate = null;
   }
 
-  public void setAfterInjectionListener(@Nullable PostInjectListener<T> afterInjectionListener) {
+  public void setAfterInjectionListener(@Nonnull PostInjectListener<T> afterInjectionListener) {
     myAfterInjectionListener = afterInjectionListener;
   }
 
@@ -92,58 +89,49 @@ public class BaseComponentAdapter<T> implements AssignableToComponentAdapter {
       return instance;
     }
 
-    ComponentAdapter delegate = getDelegate();
-    synchronized (this) {
+    boolean isSingleton, isAnnotationSingleton;
+    synchronized (myLock) {
       // double check
       instance = myInstanceIfSingleton;
       if (instance != null) {
         return instance;
       }
 
-      boolean isAnnotationSingleton = myImplementationKey.getTargetClass().isAnnotationPresent(Singleton.class);
+      isAnnotationSingleton = myImplementationKey.getTargetClass().isAnnotationPresent(Singleton.class);
 
-      boolean isSingleton = myForceSingleton || isAnnotationSingleton;
+      isSingleton = myForceSingleton || isAnnotationSingleton;
 
-      if (myInitializeProgress.get()) {
-        throw new IllegalAccessError("Cycle initialization");
+      if (myInitializeProgress) {
+        throw new IllegalArgumentException("Cycle initialization");
       }
 
       if (isSingleton) {
-        myInitializeProgress.compareAndSet(false, true);
+        myInitializeProgress = true;
       }
 
       long l = System.nanoTime();
 
+      ConstructorInjectionComponentAdapter delegate = new ConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation());
       instance = myRemap.apply(() -> (T)delegate.getComponentInstance(container));
 
-      if (myAfterInjectionListener != null) {
-        myAfterInjectionListener.afterInject(l, instance);
-      }
+      myAfterInjectionListener.afterInject(l, instance);
 
       if (isSingleton) {
+        myInitializeProgress = false;
         myInstanceIfSingleton = instance;
-        myInitializeProgress.compareAndSet(true, false);
       }
+    }
 
-      if (isSingleton && !isAnnotationSingleton) {
-        LOGGER.warn("Class " + myImplementationKey.getTargetClass().getName() + " is not annotated by @Singleton");
-      }
+    if (isSingleton && !isAnnotationSingleton) {
+      LOGGER.warn("Class " + myImplementationKey.getTargetClass().getName() + " is not annotated by @Singleton");
     }
 
     return instance;
   }
 
-  @Nonnull
-  public synchronized ComponentAdapter getDelegate() {
-    if (myDelegate == null) {
-      myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation());
-    }
-    return myDelegate;
-  }
-
   @Override
   public void verify(final PicoContainer container) throws PicoIntrospectionException {
-    getDelegate().verify(container);
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -152,12 +140,7 @@ public class BaseComponentAdapter<T> implements AssignableToComponentAdapter {
   }
 
   @Override
-  public String getAssignableToClassName() {
-    return myImplementationKey.getTargetClassName();
-  }
-
-  @Override
   public String toString() {
-    return "LazyComponentAdapter[" + myInterfaceKey.getTargetClassName() + "]";
+    return "BaseComponentAdapter[" + myInterfaceKey.getTargetClassName() + "]";
   }
 }

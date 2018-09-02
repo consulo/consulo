@@ -15,12 +15,10 @@
  */
 package com.intellij.util.pico;
 
-import com.intellij.openapi.extensions.AreaPicoContainer;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import org.picocontainer.*;
 import org.picocontainer.defaults.AmbiguousComponentResolutionException;
 import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
@@ -31,9 +29,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class DefaultPicoContainer implements AreaPicoContainer {
+public class DefaultPicoContainer implements MutablePicoContainer {
   private final PicoContainer parent;
-  private final Set<PicoContainer> children = new THashSet<>();
 
   private final Map<String, ComponentAdapter> myInterfaceClassToAdapter = new THashMap<>();
 
@@ -77,7 +74,6 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   @Override
   @Nullable
   public ComponentAdapter getComponentAdapterOfType(@Nonnull Class componentType) {
-    // See http://jira.codehaus.org/secure/ViewIssue.jspa?key=PICO-115
     ComponentAdapter adapterByKey = getComponentAdapter(componentType);
     if (adapterByKey != null) {
       return adapterByKey;
@@ -259,12 +255,12 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
   @Override
   public boolean addChildContainer(@Nonnull PicoContainer child) {
-    return children.add(child);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean removeChildContainer(@Nonnull PicoContainer child) {
-    return children.remove(child);
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -273,9 +269,6 @@ public class DefaultPicoContainer implements AreaPicoContainer {
 
     for (ComponentAdapter adapter : getComponentAdapters()) {
       adapter.accept(visitor);
-    }
-    for (PicoContainer child : new SmartList<>(children)) {
-      child.accept(visitor);
     }
   }
 

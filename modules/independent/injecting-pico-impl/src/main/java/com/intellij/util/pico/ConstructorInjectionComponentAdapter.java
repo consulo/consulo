@@ -33,32 +33,25 @@ import java.security.PrivilegedAction;
 import java.util.*;
 
 /**
- * A drop-in replacement of {@link ConstructorInjectionComponentAdapter}
+ * A drop-in replacement of {@link org.picocontainer.defaults.ConstructorInjectionComponentAdapter}
  * The same code (generified and cleaned up) but without constructor caching (hence taking up less memory).
- * This class also inlines instance caching (e.g. it doesn't need to be wrapped in a CachingComponentAdapter).
  */
-public class CachingConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter {
-  private static final Logger LOGGER = Logger.getInstance(CachingConstructorInjectionComponentAdapter.class);
+public class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter {
+  private static final Logger LOGGER = Logger.getInstance(ConstructorInjectionComponentAdapter.class);
 
-  private static final ThreadLocal<Set<CachingConstructorInjectionComponentAdapter>> ourGuard = new ThreadLocal<>();
+  private static final ThreadLocal<Set<ConstructorInjectionComponentAdapter>> ourGuard = new ThreadLocal<>();
 
-  private Object myInstance;
-
-  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
+  public ConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
     super(componentKey, componentImplementation, null, true);
   }
 
   @Override
   public Object getComponentInstance(PicoContainer container) throws PicoInitializationException, PicoIntrospectionException, AssignabilityRegistrationException, NotConcreteRegistrationException {
-    Object instance = myInstance;
-    if (instance == null) {
-      myInstance = instance = instantiateGuarded(container, getComponentImplementation());
-    }
-    return instance;
+    return instantiateGuarded(container, getComponentImplementation());
   }
 
   private Object instantiateGuarded(PicoContainer container, Class stackFrame) {
-    Set<CachingConstructorInjectionComponentAdapter> currentStack = ourGuard.get();
+    Set<ConstructorInjectionComponentAdapter> currentStack = ourGuard.get();
     if (currentStack == null) {
       ourGuard.set(currentStack = ContainerUtil.newIdentityTroveSet());
     }

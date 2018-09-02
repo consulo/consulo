@@ -15,9 +15,12 @@
  */
 package com.intellij.openapi.components.impl;
 
+import javax.inject.Singleton;
+
 /**
  * @author mike
  */
+@Singleton
 public class ApplicationPathMacroManager extends BasePathMacroManager {
   public ApplicationPathMacroManager() {
     super(null);

@@ -39,7 +39,6 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import gnu.trove.*;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -1052,12 +1051,6 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
       LOG.error(e);
     }
     return null;
-  }
-
-  @Nonnull
-  @NonNls
-  public String toString() {
-    return "PersistentFS";
   }
 
   private static VirtualFileSystemEntry executeCreateChild(@Nonnull VirtualFile parent, @Nonnull String name) {

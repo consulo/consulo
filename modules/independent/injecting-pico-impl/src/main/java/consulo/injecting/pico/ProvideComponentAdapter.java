@@ -15,12 +15,8 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.util.pico.AssignableToComponentAdapter;
 import consulo.injecting.key.InjectingKey;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.PicoInitializationException;
-import org.picocontainer.PicoIntrospectionException;
-import org.picocontainer.PicoVisitor;
+import org.picocontainer.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
@@ -29,11 +25,11 @@ import javax.inject.Provider;
  * @author VISTALL
  * @since 2018-08-24
  */
-public class InstanceComponentAdapter<T> implements AssignableToComponentAdapter {
+public class ProvideComponentAdapter<T> implements ComponentAdapter {
   private final InjectingKey<T> myInterfaceKey;
   private final Provider<T> myValue;
 
-  public InstanceComponentAdapter(InjectingKey<T> interfaceKey, Provider<T> value) {
+  public ProvideComponentAdapter(InjectingKey<T> interfaceKey, Provider<T> value) {
     myInterfaceKey = interfaceKey;
     myValue = value;
   }
@@ -62,11 +58,6 @@ public class InstanceComponentAdapter<T> implements AssignableToComponentAdapter
   @Override
   public void accept(final PicoVisitor visitor) {
     visitor.visitComponentAdapter(this);
-  }
-
-  @Override
-  public String getAssignableToClassName() {
-    return myValue.get().getClass().getName();
   }
 
   @Override

@@ -210,8 +210,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     builder.bind(ApplicationEx.class).to(this);
     builder.bind(ApplicationEx2.class).to(this);
 
-    builder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class);
-    builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManager.class);
+    builder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class).forceSingleton();
+    builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManager.class).forceSingleton();
 
     builder.bind(FileTypeRegistry.class).to(FileTypeManager::getInstance);
   }

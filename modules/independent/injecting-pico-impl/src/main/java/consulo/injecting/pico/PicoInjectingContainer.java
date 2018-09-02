@@ -15,7 +15,7 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
+import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import com.intellij.util.pico.DefaultPicoContainer;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @since 2018-08-23
  */
 public class PicoInjectingContainer implements InjectingContainer {
-  private MutablePicoContainer myContainer;
+  private final MutablePicoContainer myContainer;
 
   public PicoInjectingContainer(@Nullable PicoInjectingContainer parent) {
     myContainer = new DefaultPicoContainer(parent == null ? null : parent.myContainer);
@@ -59,7 +59,7 @@ public class PicoInjectingContainer implements InjectingContainer {
     if(componentInstance != null) {
       return (T)componentInstance;
     }
-    CachingConstructorInjectionComponentAdapter adapter = new CachingConstructorInjectionComponentAdapter(clazz.getName(), clazz);
+    ConstructorInjectionComponentAdapter adapter = new ConstructorInjectionComponentAdapter(clazz.getName(), clazz);
     return (T)adapter.getComponentInstance(myContainer);
   }
 

@@ -24,7 +24,9 @@ import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.openapi.module.Module;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ModulePathMacroManager extends BasePathMacroManager {
   private final Module myModule;
 

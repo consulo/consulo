@@ -50,7 +50,7 @@ public class PicoInjectingPoint<T> implements InjectingPoint<T> {
     }
 
     myLocked = true;
-    myAdapter = new InstanceComponentAdapter<>(myKey, () -> value);
+    myAdapter = new ProvideComponentAdapter<>(myKey, () -> value);
     return this;
   }
 
@@ -74,7 +74,7 @@ public class PicoInjectingPoint<T> implements InjectingPoint<T> {
     }
 
     myLocked = true;
-    myAdapter = new InstanceComponentAdapter<>(myKey, provider);
+    myAdapter = new ProvideComponentAdapter<>(myKey, provider);
     return this;
   }
 
