@@ -35,8 +35,6 @@ public class ComponentConfig {
 
   protected String headlessImplementationClass;
 
-  protected boolean loadForDefaultProject;
-
   @Property(surroundWithTag = false)
   @MapAnnotation(surroundWithTag = false, entryTagName = "option", keyAttributeName = "name", valueAttributeName = "value")
   public Map<String, String> options = new HashMap<String, String>();
@@ -67,23 +65,10 @@ public class ComponentConfig {
     return headlessImplementationClass;
   }
 
-  public boolean isLoadForDefaultProject() {
-    return loadForDefaultProject;
-  }
-
-  /**
-   * @param headless
-   * @return false if the component should not be loaded in headless mode
-   */
-  public boolean prepareClasses(boolean headless) {
-    if (headless && headlessImplementationClass != null) {
-      if (StringUtil.isEmpty(headlessImplementationClass)) return false;
-      setImplementationClass(headlessImplementationClass);
-    }
+  public void prepareClasses() {
     if (StringUtil.isEmpty(interfaceClass)) {
       setInterfaceClass(implementationClass);
     }
-    return true;
   }
 
   public void setImplementationClass(String implementationClass) {
@@ -97,9 +82,5 @@ public class ComponentConfig {
   public void setHeadlessImplementationClass(String headlessImplementationClass) {
     headlessImplementationClass = headlessImplementationClass == null ? null : headlessImplementationClass.trim();
     this.headlessImplementationClass = headlessImplementationClass == null ? null : StringUtil.isEmpty(headlessImplementationClass) ? "" : headlessImplementationClass;
-  }
-
-  public void setLoadForDefaultProject(boolean loadForDefaultProject) {
-    this.loadForDefaultProject = loadForDefaultProject;
   }
 }

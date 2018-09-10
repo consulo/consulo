@@ -21,12 +21,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
+import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface FileManager extends Disposable {
@@ -39,7 +40,12 @@ public interface FileManager extends Disposable {
   PsiDirectory findDirectory(@Nonnull VirtualFile vFile);
 
   @RequiredWriteAction
-  void reloadFromDisk(@Nonnull PsiFile file); //Q: move to PsiFile(Impl)?
+  default void reloadFromDisk(@Nonnull PsiFile file) {
+    reloadFromDisk(file, false);
+  }
+
+  default void reloadFromDisk(@Nonnull PsiFile file, boolean ignoreDocument) {
+  }
 
   @Nullable
   @RequiredReadAction
@@ -62,4 +68,37 @@ public interface FileManager extends Disposable {
 
   @Nonnull
   FileViewProvider createFileViewProvider(@Nonnull VirtualFile file, boolean physical);
+
+  default void processFileTypesChanged() {
+  }
+
+  default void markInitialized() {
+  }
+
+  default PsiDirectory getCachedDirectory(@Nonnull VirtualFile vFile) {
+    return null;
+  }
+
+  default void removeInvalidFilesAndDirs(boolean useFind) {
+  }
+
+  default PsiFile getCachedPsiFileInner(@Nonnull VirtualFile file) {
+    return null;
+  }
+
+  default void forceReload(@Nonnull VirtualFile vFile) {
+  }
+
+  default void removeFilesAndDirsRecursively(@Nonnull VirtualFile vFile) {
+  }
+
+  default boolean isInitialized() {
+    return true;
+  }
+
+  default void dispatchPendingEvents() {
+  }
+
+  default void firePropertyChangedForUnloadedPsi(@Nonnull PsiTreeChangeEventImpl event, @Nonnull VirtualFile vFile) {
+  }
 }
