@@ -255,7 +255,7 @@
     <!--independent plugin-->
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-platform-independent-plugin</artifactId>
+      <artifactId>consulo-platform-base-plugin</artifactId>
       <version>${project.parent.version}</version>
       <scope>provided</scope>
     </dependency>

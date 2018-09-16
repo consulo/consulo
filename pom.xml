@@ -22,7 +22,7 @@
     <module>sandbox/desktop</module>
     <module>sandbox/web</module>
 
-    <module>plugins/platform-independent</module>
+    <module>plugins/platform-base</module>
     <module>plugins/sandLanguage</module>
 
     <module>modules/desktop/desktop-main</module>
@@ -46,80 +46,80 @@
 
     <module>jre9-stub</module>
 
-    <module>modules/independent/annotations</module>
-    <module>modules/independent/analysis-api</module>
-    <module>modules/independent/analysis-impl</module>
-    <module>modules/independent/buildin-server-impl</module>
-    <module>modules/independent/core-api</module>
-    <module>modules/independent/core-impl</module>
-    <module>modules/independent/compiler-api</module>
-    <module>modules/independent/compiler-impl</module>
-    <module>modules/independent/diff-api</module>
-    <module>modules/independent/diff-impl</module>
-    <module>modules/independent/dvcs-api</module>
-    <module>modules/independent/dvcs-impl</module>
-    <module>modules/independent/dvcs-impl-testing</module>
-    <module>modules/independent/editor-ui-api</module>
-    <module>modules/independent/editor-ui-ex</module>
-    <module>modules/independent/external-storage-impl</module>
-    <module>modules/independent/external-system-api</module>
-    <module>modules/independent/external-system-impl</module>
-    <module>modules/independent/extensions</module>
-    <module>modules/independent/graph-api</module>
-    <module>modules/independent/graph-impl</module>
-    <module>modules/independent/indexing-api</module>
-    <module>modules/independent/indexing-impl</module>
-    <module>modules/independent/platform-api</module>
-    <module>modules/independent/platform-impl</module>
-    <module>modules/independent/platform-resources</module>
-    <module>modules/independent/platform-resources-en</module>
-    <module>modules/independent/project-model-api</module>
-    <module>modules/independent/project-model-impl</module>
-    <module>modules/independent/lang-api</module>
-    <module>modules/independent/lang-impl</module>
-    <module>modules/independent/lang-impl-testing</module>
-    <module>modules/independent/lvcs-api</module>
-    <module>modules/independent/lvcs-impl</module>
-    <module>modules/independent/lvcs-impl-testing</module>
-    <module>modules/independent/localize-api</module>
-    <module>modules/independent/test</module>
-    <module>modules/independent/remote-servers-api</module>
-    <module>modules/independent/remote-servers-agent-rt</module>
-    <module>modules/independent/remote-servers-impl</module>
-    <module>modules/independent/vcs-api</module>
-    <module>modules/independent/vcs-api-core</module>
-    <module>modules/independent/vcs-log-graph-api</module>
-    <module>modules/independent/vcs-log-graph-impl</module>
-    <module>modules/independent/vcs-log-graph-impl-testing</module>
-    <module>modules/independent/vcs-log-api</module>
-    <module>modules/independent/vcs-log-impl</module>
-    <module>modules/independent/vcs-log-impl-testing</module>
-    <module>modules/independent/vcs-impl</module>
-    <module>modules/independent/ui-api</module>
-    <module>modules/independent/ui-api-shared</module>
-    <module>modules/independent/ui-impl</module>
-    <module>modules/independent/vcs-impl-testing</module>
-    <module>modules/independent/usage-view</module>
-    <module>modules/independent/util</module>
-    <module>modules/independent/util-rt</module>
-    <module>modules/independent/util-testing</module>
-    <module>modules/independent/xcoverage-data</module>
-    <module>modules/independent/xcoverage-impl</module>
-    <module>modules/independent/xdebugger-api</module>
-    <module>modules/independent/xdebugger-impl</module>
-    <module>modules/independent/xtest-impl</module>
-    <module>modules/independent/xtest-sm-impl</module>
+    <module>modules/base/annotations</module>
+    <module>modules/base/analysis-api</module>
+    <module>modules/base/analysis-impl</module>
+    <module>modules/base/buildin-server-impl</module>
+    <module>modules/base/core-api</module>
+    <module>modules/base/core-impl</module>
+    <module>modules/base/compiler-api</module>
+    <module>modules/base/compiler-impl</module>
+    <module>modules/base/diff-api</module>
+    <module>modules/base/diff-impl</module>
+    <module>modules/base/dvcs-api</module>
+    <module>modules/base/dvcs-impl</module>
+    <module>modules/base/dvcs-impl-testing</module>
+    <module>modules/base/editor-ui-api</module>
+    <module>modules/base/editor-ui-ex</module>
+    <module>modules/base/external-storage-impl</module>
+    <module>modules/base/external-system-api</module>
+    <module>modules/base/external-system-impl</module>
+    <module>modules/base/extensions</module>
+    <module>modules/base/graph-api</module>
+    <module>modules/base/graph-impl</module>
+    <module>modules/base/indexing-api</module>
+    <module>modules/base/indexing-impl</module>
+    <module>modules/base/platform-api</module>
+    <module>modules/base/platform-impl</module>
+    <module>modules/base/platform-resources</module>
+    <module>modules/base/platform-resources-en</module>
+    <module>modules/base/project-model-api</module>
+    <module>modules/base/project-model-impl</module>
+    <module>modules/base/lang-api</module>
+    <module>modules/base/lang-impl</module>
+    <module>modules/base/lang-impl-testing</module>
+    <module>modules/base/lvcs-api</module>
+    <module>modules/base/lvcs-impl</module>
+    <module>modules/base/lvcs-impl-testing</module>
+    <module>modules/base/localize-api</module>
+    <module>modules/base/test</module>
+    <module>modules/base/remote-servers-api</module>
+    <module>modules/base/remote-servers-agent-rt</module>
+    <module>modules/base/remote-servers-impl</module>
+    <module>modules/base/vcs-api</module>
+    <module>modules/base/vcs-api-core</module>
+    <module>modules/base/vcs-log-graph-api</module>
+    <module>modules/base/vcs-log-graph-impl</module>
+    <module>modules/base/vcs-log-graph-impl-testing</module>
+    <module>modules/base/vcs-log-api</module>
+    <module>modules/base/vcs-log-impl</module>
+    <module>modules/base/vcs-log-impl-testing</module>
+    <module>modules/base/vcs-impl</module>
+    <module>modules/base/ui-api</module>
+    <module>modules/base/ui-api-shared</module>
+    <module>modules/base/ui-impl</module>
+    <module>modules/base/vcs-impl-testing</module>
+    <module>modules/base/usage-view</module>
+    <module>modules/base/util</module>
+    <module>modules/base/util-rt</module>
+    <module>modules/base/util-testing</module>
+    <module>modules/base/xcoverage-data</module>
+    <module>modules/base/xcoverage-impl</module>
+    <module>modules/base/xdebugger-api</module>
+    <module>modules/base/xdebugger-impl</module>
+    <module>modules/base/xtest-impl</module>
+    <module>modules/base/xtest-sm-impl</module>
 
-    <module>modules/independent/injecting-api</module>
-    <module>modules/independent/injecting-pico-impl</module>
+    <module>modules/base/injecting-api</module>
+    <module>modules/base/injecting-pico-impl</module>
 
-    <module>modules/independent/logging-slf4j-binding-impl</module>
-    <module>modules/independent/logging-log4j-impl</module>
-    <module>modules/independent/logging-log4j2-impl</module>
+    <module>modules/base/logging-slf4j-binding-impl</module>
+    <module>modules/base/logging-log4j-impl</module>
+    <module>modules/base/logging-log4j2-impl</module>
 
-    <module>modules/independent/test-impl</module>
+    <module>modules/base/test-impl</module>
 
-    <module>modules/independent/trash-can</module>
+    <module>modules/base/trash-can</module>
   </modules>
 
   <properties>
