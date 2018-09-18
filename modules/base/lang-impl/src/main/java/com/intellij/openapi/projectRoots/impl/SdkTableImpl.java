@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
@@ -28,7 +28,6 @@ import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.*;
-import com.intellij.util.messages.MessageBus;
 import consulo.annotations.RequiredWriteAction;
 import consulo.fileTypes.ArchiveFileType;
 import org.jdom.Element;
@@ -36,6 +35,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,19 +44,20 @@ import java.util.List;
 @Singleton
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element> {
-  public static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);
+  private static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);
 
   @NonNls
-  public static final String ELEMENT_SDK = "sdk";
+  private static final String ELEMENT_SDK = "sdk";
 
   private final List<Sdk> mySdks = new ArrayList<>();
 
-  private final MessageBus myMessageBus;
+  private final Application myApplication;
 
-  public SdkTableImpl() {
-    myMessageBus = ApplicationManager.getApplication().getMessageBus();
+  @Inject
+  public SdkTableImpl(Application application, VirtualFileManager virtualFileManager) {
+    myApplication = application;
     // support external changes to sdk libraries (Endorsed Standards Override)
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+    virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@Nonnull VirtualFileEvent event) {
         updateSdks(event.getFile());
@@ -104,7 +105,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   public List<Sdk> getSdksOfType(final SdkTypeId type) {
-    List<Sdk> result = new ArrayList<Sdk>();
+    List<Sdk> result = new ArrayList<>();
     final Sdk[] sdks = getAllSdks();
     for (Sdk sdk : sdks) {
       if (sdk.getSdkType() == type) {
@@ -135,37 +136,37 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @Override
   @RequiredWriteAction
   public void addSdk(@Nonnull Sdk sdk) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkAdded(sdk);
+    myApplication.assertWriteAccessAllowed();
+    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).beforeSdkAdded(sdk);
     mySdks.add(sdk);
-    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkAdded(sdk);
+    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).sdkAdded(sdk);
   }
 
   @Override
   @RequiredWriteAction
   public void removeSdk(@Nonnull Sdk sdk) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkRemoved(sdk);
+    myApplication.assertWriteAccessAllowed();
+    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).beforeSdkRemoved(sdk);
     mySdks.remove(sdk);
-    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
+    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
   }
 
   @Override
   @RequiredWriteAction
   public void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    myApplication.assertWriteAccessAllowed();
     final String previousName = originalSdk.getName();
     final String newName = modifiedSdk.getName();
 
     boolean nameChanged = !previousName.equals(newName);
     if (nameChanged) {
-      myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkNameChanged(originalSdk, previousName);
+      myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).beforeSdkNameChanged(originalSdk, previousName);
     }
 
     ((SdkImpl)modifiedSdk).copyTo((SdkImpl)originalSdk);
 
     if (nameChanged) {
-      myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalSdk, previousName);
+      myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalSdk, previousName);
     }
   }
 
