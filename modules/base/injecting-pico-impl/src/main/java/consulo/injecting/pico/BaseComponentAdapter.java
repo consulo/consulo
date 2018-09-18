@@ -102,7 +102,7 @@ public class BaseComponentAdapter<T> implements ComponentAdapter {
       isSingleton = myForceSingleton || isAnnotationSingleton;
 
       if (myInitializeProgress) {
-        throw new IllegalArgumentException("Cycle initialization");
+        throw new IllegalArgumentException("Cycle initialization: " + myImplementationKey.getTargetClass().getName());
       }
 
       if (isSingleton) {
