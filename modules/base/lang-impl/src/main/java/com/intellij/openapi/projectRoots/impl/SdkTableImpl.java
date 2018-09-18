@@ -21,7 +21,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -39,13 +38,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Singleton
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element> {
-  private static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);
-
   @NonNls
   private static final String ELEMENT_SDK = "sdk";
 
@@ -198,7 +196,14 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   public void loadState(Element element) {
-    mySdks.clear();
+    Iterator<Sdk> iterator = mySdks.iterator();
+    while (iterator.hasNext()) {
+      Sdk sdk = iterator.next();
+
+      if(!sdk.isPredefined()) {
+        iterator.remove();
+      }
+    }
 
     List<Element> children = element.getChildren(ELEMENT_SDK);
 
