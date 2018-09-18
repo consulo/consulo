@@ -43,13 +43,12 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredReadAction;
 import gnu.trove.THashMap;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -147,6 +146,7 @@ public class FileManagerImpl implements FileManager {
     markInvalidations(originalFileToPsiFileMap);
   }
 
+  @Override
   public void forceReload(@Nonnull VirtualFile vFile) {
     LanguageSubstitutors.cancelReparsing(vFile);
     FileViewProvider viewProvider = findCachedViewProvider(vFile);
@@ -169,7 +169,8 @@ public class FileManagerImpl implements FileManager {
     }
   }
 
-  void firePropertyChangedForUnloadedPsi(@Nonnull PsiTreeChangeEventImpl event, @Nonnull VirtualFile vFile) {
+  @Override
+  public void firePropertyChangedForUnloadedPsi(@Nonnull PsiTreeChangeEventImpl event, @Nonnull VirtualFile vFile) {
     event.setPropertyName(PsiTreeChangeEvent.PROP_UNLOADED_PSI);
     event.setOldValue(vFile);
     event.setNewValue(vFile);
@@ -290,6 +291,7 @@ public class FileManagerImpl implements FileManager {
     return viewProvider == null ? new SingleRootFileViewProvider(myManager, file, eventSystemEnabled, fileType) : viewProvider;
   }
 
+  @Override
   public void markInitialized() {
     LOG.assertTrue(!myInitialized);
     myDisposed = false;
@@ -308,11 +310,13 @@ public class FileManagerImpl implements FileManager {
     });
   }
 
+  @Override
   public boolean isInitialized() {
     return myInitialized;
   }
 
-  void processFileTypesChanged() {
+  @Override
+  public void processFileTypesChanged() {
     handleFileTypesChange(new FileTypesChanged() {
       @Override
       protected void updateMaps() {
@@ -348,7 +352,8 @@ public class FileManagerImpl implements FileManager {
     }
   }
 
-  void dispatchPendingEvents() {
+  @Override
+  public void dispatchPendingEvents() {
     if (!myInitialized) {
       LOG.error("Project is not yet initialized: "+myManager.getProject());
     }
@@ -468,11 +473,13 @@ public class FileManagerImpl implements FileManager {
     return ConcurrencyUtil.cacheOrGet(myVFileToPsiDirMap, vFile, psiDir);
   }
 
+  @Override
   public PsiDirectory getCachedDirectory(@Nonnull VirtualFile vFile) {
     return myVFileToPsiDirMap.get(vFile);
   }
 
-  void removeFilesAndDirsRecursively(@Nonnull VirtualFile vFile) {
+  @Override
+  public void removeFilesAndDirsRecursively(@Nonnull VirtualFile vFile) {
     DebugUtil.startPsiModification("removeFilesAndDirsRecursively");
     try {
       VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
@@ -508,8 +515,9 @@ public class FileManagerImpl implements FileManager {
     virtualFile.putUserData(myPsiHardRefKey, null);
   }
 
+  @Override
   @Nullable
-  PsiFile getCachedPsiFileInner(@Nonnull VirtualFile file) {
+  public PsiFile getCachedPsiFileInner(@Nonnull VirtualFile file) {
     FileViewProvider fileViewProvider = myVFileToViewProviderMap.get(file);
     if (fileViewProvider == null) fileViewProvider = file.getUserData(myPsiHardRefKey);
     return fileViewProvider instanceof SingleRootFileViewProvider
@@ -528,7 +536,8 @@ public class FileManagerImpl implements FileManager {
     return files;
   }
 
-  void removeInvalidFilesAndDirs(boolean useFind) {
+  @Override
+  public void removeInvalidFilesAndDirs(boolean useFind) {
     Map<VirtualFile, PsiDirectory> fileToPsiDirMap = new THashMap<VirtualFile, PsiDirectory>(myVFileToPsiDirMap);
     if (useFind) {
       myVFileToPsiDirMap.clear();
@@ -618,13 +627,8 @@ public class FileManagerImpl implements FileManager {
     }
   }
 
-  @RequiredWriteAction
   @Override
-  public void reloadFromDisk(@Nonnull PsiFile file) {
-    reloadFromDisk(file, false);
-  }
-
-  void reloadFromDisk(@Nonnull PsiFile file, boolean ignoreDocument) {
+  public void reloadFromDisk(@Nonnull PsiFile file, boolean ignoreDocument) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     VirtualFile vFile = file.getVirtualFile();
     assert vFile != null;

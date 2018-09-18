@@ -214,14 +214,20 @@ public class CtrlMouseHandler  {
   protected Project myProject;
 
   @Inject
-  public CtrlMouseHandler(final Project project,
+  public CtrlMouseHandler(Project project,
                           StartupManager startupManager,
                           EditorColorsManager colorsManager,
                           FileEditorManager fileEditorManager,
                           @Nonnull DocumentationManager documentationManager,
-                          @Nonnull final EditorFactory editorFactory) {
+                          @Nonnull EditorFactory editorFactory) {
     myProject = project;
     myEditorColorsManager = colorsManager;
+    myFileEditorManager = fileEditorManager;
+    myDocumentationManager = documentationManager;
+    if(myProject.isDefault()) {
+      return;
+    }
+
     startupManager.registerPostStartupActivity(new DumbAwareRunnable() {
       @Override
       public void run() {
@@ -238,8 +244,6 @@ public class CtrlMouseHandler  {
         }, project);
       }
     });
-    myFileEditorManager = fileEditorManager;
-    myDocumentationManager = documentationManager;
   }
 
   private boolean isMouseOverTooltip(@Nonnull Point mouseLocationOnScreen) {

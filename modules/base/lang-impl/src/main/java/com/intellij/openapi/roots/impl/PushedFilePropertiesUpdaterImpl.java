@@ -20,7 +20,10 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.extensions.Extensions;
@@ -33,7 +36,6 @@ import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
@@ -70,29 +72,23 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   private final Queue<Runnable> myTasks = new ConcurrentLinkedQueue<>();
 
   @Inject
-  public PushedFilePropertiesUpdaterImpl(final Project project) {
+  public PushedFilePropertiesUpdaterImpl(final Project project, StartupManager startupManager) {
     myProject = project;
     myPushers = Extensions.getExtensions(FilePropertyPusher.EP_NAME);
-    myFilePushers = ContainerUtil.findAllAsArray(myPushers, new Condition<FilePropertyPusher>() {
-      @Override
-      public boolean value(FilePropertyPusher pusher) {
-        return !pusher.pushDirectoriesOnly();
-      }
-    });
+    myFilePushers = ContainerUtil.findAllAsArray(myPushers, pusher -> !pusher.pushDirectoriesOnly());
 
-    StartupManager.getInstance(project).registerPreStartupActivity(new Runnable() {
+    if(project.isDefault()) {
+      return;
+    }
+
+    startupManager.registerPreStartupActivity((ui) -> project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override
-      public void run() {
-        project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
-          @Override
-          public void rootsChanged(final ModuleRootEvent event) {
-            for (FilePropertyPusher pusher : myPushers) {
-              pusher.afterRootsChanged(project);
-            }
-          }
-        });
+      public void rootsChanged(final ModuleRootEvent event) {
+        for (FilePropertyPusher pusher : myPushers) {
+          pusher.afterRootsChanged(project);
+        }
       }
-    });
+    }));
   }
 
   public void processAfterVfsChanges(@Nonnull List<? extends VFileEvent> events) {

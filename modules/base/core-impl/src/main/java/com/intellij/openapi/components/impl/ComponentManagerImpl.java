@@ -28,7 +28,6 @@ import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
@@ -196,7 +195,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
         ComponentConfig[] componentConfigs = getComponentConfigs(plugin);
 
         for (ComponentConfig componentConfig : componentConfigs) {
-          registerComponent(isProjectDefault(), componentConfig, plugin);
+          registerComponent(componentConfig, plugin);
         }
       }
     }
@@ -268,12 +267,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return null;
   }
 
-  private void registerComponent(final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor) {
-    if (defaultProject && !config.isLoadForDefaultProject()) return;
-
-    registerComponent(config, descriptor);
-  }
-
   public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
     return false;
   }
@@ -283,16 +276,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   private void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
-    if (!config.prepareClasses(false)) {
-      return;
-    }
+    config.prepareClasses();
 
     config.pluginDescriptor = pluginDescriptor;
     myComponentsRegistry.addConfig(config);
-  }
-
-  private boolean isProjectDefault() {
-    return this instanceof Project && ((Project)this).isDefault();
   }
 
   @Override

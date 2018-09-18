@@ -22,20 +22,10 @@ import com.intellij.util.xmlb.annotations.Tag;
  */
 @Tag("component")
 public class OldComponentConfig extends ComponentConfig {
-
-  @Tag(value = "skipForDefaultProject", textIfEmpty="true")
-  public boolean skipForDefaultProject;
-
   @Tag("headless-implementation-class")
   @Override
   public void setHeadlessImplementationClass(String clazz) {
     super.setHeadlessImplementationClass(clazz);
-  }
-
-  @Tag(value = "loadForDefaultProject", textIfEmpty="true")
-  @Override
-  public void setLoadForDefaultProject(boolean loadForDefaultProject) {
-    super.setLoadForDefaultProject(loadForDefaultProject);
   }
 
   @Tag("interface-class")
@@ -48,10 +38,5 @@ public class OldComponentConfig extends ComponentConfig {
   @Override
   public void setImplementationClass(String implementationClass) {
     super.setImplementationClass(implementationClass);
-  }
-
-  @Override
-  public boolean isLoadForDefaultProject() {
-    return super.isLoadForDefaultProject() && !skipForDefaultProject;
   }
 }

@@ -20,7 +20,6 @@
 package com.intellij.util.indexing;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
@@ -48,17 +47,15 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
   private FileBasedIndexScanRunnableCollector myCollector;
 
   @Inject
-  public FileBasedIndexProjectHandler(FileBasedIndex index,
-                                      Project project,
-                                      FileBasedIndexScanRunnableCollector collector,
-                                      ProjectManager projectManager) {
+  public FileBasedIndexProjectHandler(FileBasedIndex index, Project project, FileBasedIndexScanRunnableCollector collector, ProjectManager projectManager, StartupManager startupManager) {
     myIndex = index;
     myCollector = collector;
 
     if (ApplicationManager.getApplication().isInternal()) {
       project.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
         @Override
-        public void enteredDumbMode() { }
+        public void enteredDumbMode() {
+        }
 
         @Override
         public void exitDumbMode() {
@@ -67,31 +64,33 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
       });
     }
 
-    final StartupManagerEx startupManager = (StartupManagerEx)StartupManager.getInstance(project);
-    if (startupManager != null) {
-      startupManager.registerPreStartupActivity(() -> {
-        PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
-
-        // schedule dumb mode start after the read action we're currently in
-        TransactionGuard.submitTransaction(project, () -> {
-          if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
-            DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
-          }
-        });
-
-        myIndex.registerIndexableSet(this, project);
-        projectManager.addProjectManagerListener(project, new ProjectManagerAdapter() {
-          private boolean removed;
-          @Override
-          public void projectClosing(Project project1) {
-            if (!removed) {
-              removed = true;
-              myIndex.removeIndexableSet(FileBasedIndexProjectHandler.this);
-            }
-          }
-        });
-      });
+    if (project.isDefault()) {
+      return;
     }
+
+    startupManager.registerPreStartupActivity((ui) -> {
+      PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
+
+      // schedule dumb mode start after the read action we're currently in
+      TransactionGuard.submitTransaction(project, () -> {
+        if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
+          DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
+        }
+      });
+
+      myIndex.registerIndexableSet(this, project);
+      projectManager.addProjectManagerListener(project, new ProjectManagerAdapter() {
+        private boolean removed;
+
+        @Override
+        public void projectClosing(Project project1) {
+          if (!removed) {
+            removed = true;
+            myIndex.removeIndexableSet(FileBasedIndexProjectHandler.this);
+          }
+        }
+      });
+    });
   }
 
   @Override
@@ -142,10 +141,7 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
     };
   }
 
-  private static void reindexRefreshedFiles(ProgressIndicator indicator,
-                                            Collection<VirtualFile> files,
-                                            final Project project,
-                                            final FileBasedIndexImpl index) {
+  private static void reindexRefreshedFiles(ProgressIndicator indicator, Collection<VirtualFile> files, final Project project, final FileBasedIndexImpl index) {
     CacheUpdateRunner.processFiles(indicator, true, files, project, content -> index.processRefreshedFile(project, content));
   }
 }
