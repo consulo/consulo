@@ -39,9 +39,6 @@ public class CodeStyleSettingsUtilImpl extends CodeStyleSettingsUtil {
     ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
       @Override
       public void run() {
-        if (pageToSelect != null) {
-          configurable.selectPage(pageToSelect);
-        }
       }
     });
 

@@ -202,9 +202,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       finally {
         myApplyCompleted = true;
       }
-
     }
-
   }
 
   private boolean isSchemeModified(final CodeStyleScheme scheme) {
@@ -340,7 +338,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     @RequiredDispatchThread
     @Override
     public boolean isModified() {
-      boolean someSchemeModified = ensurePanel().isModified();
+      boolean someSchemeModified = myPanel != null && myPanel.isModified();
       if (someSchemeModified) {
         myApplyCompleted = false;
         myRevertCompleted = false;
@@ -379,19 +377,12 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       else {
         revert();
       }
-
-
     }
 
     @Override
     @Nonnull
     public String getId() {
       return "preferences.sourceCode." + getDisplayName();
-    }
-
-    @Override
-    public Runnable enableSearch(final String option) {
-      return null;
     }
 
     @RequiredDispatchThread
@@ -403,15 +394,17 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     }
 
     public boolean isPanelModified(CodeStyleScheme scheme) {
-      return ensurePanel().isModified(scheme);
+      return myPanel != null && myPanel.isModified(scheme);
     }
 
     public boolean isPanelModified() {
-      return ensurePanel().isModified();
+      return myPanel != null && myPanel.isModified();
     }
 
     public void applyPanel() {
-      ensurePanel().apply();
+      if(myPanel != null) {
+        myPanel.apply();
+      }
     }
 
     @Override
