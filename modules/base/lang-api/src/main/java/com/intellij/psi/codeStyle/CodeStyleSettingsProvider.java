@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 public abstract class CodeStyleSettingsProvider {
   public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.codeStyleSettingsProvider");
 
-
   @Nullable
   public CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
     return null;
@@ -42,7 +41,7 @@ public abstract class CodeStyleSettingsProvider {
    * @return the display name of the configurable page.
    * @since 9.0
    */
-  @javax.annotation.Nullable
+  @Nullable
   public String getConfigurableDisplayName() {
     Language lang = getLanguage();
     return lang == null ? null : lang.getDisplayName();
@@ -59,9 +58,8 @@ public abstract class CodeStyleSettingsProvider {
    * 
    * @return null by default.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public Language getLanguage() {
     return null;
   }
-
 }
