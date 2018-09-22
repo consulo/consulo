@@ -62,9 +62,6 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.editor.impl.DocumentMarkupModelManager</implementation-class>
-    </component>
-    <component>
       <implementation-class>com.intellij.openapi.fileEditor.impl.EditorHistoryManager</implementation-class>
     </component>
     <component>
@@ -305,10 +302,6 @@
    <component>
       <interface-class>com.intellij.compiler.impl.CompilerCacheManager</interface-class>
       <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.compiler.CompilerPathsManager</implementation-class>
     </component>
 
     <component>
