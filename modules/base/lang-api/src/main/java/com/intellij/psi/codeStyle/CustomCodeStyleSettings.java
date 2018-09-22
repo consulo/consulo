@@ -23,6 +23,9 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author peter
  */
@@ -39,9 +42,18 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     return myContainer;
   }
 
-  @NonNls @Nonnull
+  @NonNls
+  @Nonnull
   public final String getTagName() {
     return myTagName;
+  }
+
+  /**
+   * in case settings save additional top-level tags, list the list of them to prevent serializer to treat such tag as unknown settings.
+   */
+  @Nonnull
+  public List<String> getKnownTagNames() {
+    return Collections.singletonList(getTagName());
   }
 
   public void readExternal(Element parentElement) throws InvalidDataException {
@@ -69,7 +81,24 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
   /**
    * For compatibility with old code style settings stored in CodeStyleSettings.
    */
-  public void importLegacySettings() {
+  protected void importLegacySettings(@Nonnull CodeStyleSettings rootSettings) {
   }
 
+  /**
+   * Fired before loading.
+   */
+  protected void beforeLoading() {
+  }
+
+
+  /**
+   * Fired when settings just loaded.
+   * <p>
+   * <p>
+   * When the common version (the {@link CodeStyleSettings#myVersion} is not changed, this method is called just after loading.
+   * When the common version is changed, this method called after {@link CustomCodeStyleSettings#importLegacySettings}.
+   * </p>
+   */
+  protected void afterLoaded() {
+  }
 }

@@ -23,8 +23,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -201,5 +201,10 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   @Nonnull
   public Project getProject() {
     return myProject;
+  }
+
+  @Nonnull
+  public final NamedScope createScope(@Nonnull String name, @Nullable PackageSet value) {
+    return new NamedScope(name, value);
   }
 }

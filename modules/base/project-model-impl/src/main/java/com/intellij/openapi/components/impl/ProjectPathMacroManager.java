@@ -23,7 +23,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ProjectPathMacroManager extends BasePathMacroManager {
   private final Project myProject;
 

@@ -1,41 +1,26 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.containers.HashSet;
+import com.intellij.util.containers.ContainerUtil;
+import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Base class and extension point for code style settings shared between multiple languages
+ * Base class and extension point for common code style settings for a specific language.
  */
-public abstract class LanguageCodeStyleSettingsProvider {
+public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
   public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create("com.intellij.langCodeStyleSettingsProvider");
 
   public enum SettingsType {
@@ -47,24 +32,8 @@ public abstract class LanguageCodeStyleSettingsProvider {
     LANGUAGE_SPECIFIC
   }
 
-  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-  private Map<SettingsType, String> myCodeSampleCache = new FactoryMap<SettingsType, String>() {
-    @Nullable
-    @Override
-    protected String create(SettingsType key) {
-      return ObjectUtil.notNull(getCodeSample(key), "");
-    }
-  };
-
-  @Nonnull
-  public abstract Language getLanguage();
-
-  @Nonnull
-  public String getNotNullCodeSample(@Nonnull SettingsType settingsType) {
-    return myCodeSampleCache.get(settingsType);
-  }
-
-  protected abstract String getCodeSample(@Nonnull SettingsType settingsType);
+  @Nullable
+  public abstract String getCodeSample(@Nonnull SettingsType settingsType);
 
   public int getRightMargin(@Nonnull SettingsType settingsType) {
     return settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS ? 30 : -1;
@@ -88,17 +57,21 @@ public abstract class LanguageCodeStyleSettingsProvider {
    *
    * @return The language name to show in preview tab (null by default).
    */
-  @javax.annotation.Nullable
+  @Nullable
   public String getLanguageName() {
     return null;
   }
 
   /**
    * Allows to customize PSI file creation for a language settings preview panel.
+   * <p>
+   * <b>IMPORTANT</b>: The created file must be a non-physical one with PSI events disabled. For more information see
+   * {@link com.intellij.psi.PsiFileFactory#createFileFromText(String, Language, CharSequence, boolean, boolean)} where
+   * {@code eventSystemEnabled} parameter must be {@code false}
    *
    * @param project current project
    * @param text    code sample to demonstrate formatting settings (see {@link #getCodeSample(LanguageCodeStyleSettingsProvider.SettingsType)}
-   * @return a PSI file instance with given text, or null for use
+   * @return a PSI file instance with given text, or null for default implementation using provider's language.
    */
   @Nullable
   public PsiFile createFileFromText(final Project project, final String text) {
@@ -106,15 +79,15 @@ public abstract class LanguageCodeStyleSettingsProvider {
   }
 
   /**
-   * Creates an instance of <code>CommonCodeStyleSettings</code> and sets initial default values for those
+   * Creates an instance of {@code CommonCodeStyleSettings} and sets initial default values for those
    * settings which differ from the original.
    *
-   * @return Created instance of <code>CommonCodeStyleSettings</code> or null if associated language doesn't
+   * @return Created instance of {@code CommonCodeStyleSettings} or null if associated language doesn't
    * use its own language-specific common settings (the settings are shared with other languages).
    */
-  @javax.annotation.Nullable
+  @Nullable
   public CommonCodeStyleSettings getDefaultCommonSettings() {
-    return null;
+    return new CommonCodeStyleSettings(getLanguage());
   }
 
   /**
@@ -128,23 +101,27 @@ public abstract class LanguageCodeStyleSettingsProvider {
 
   @Nonnull
   public static Language[] getLanguagesWithCodeStyleSettings() {
-    final ArrayList<Language> languages = new ArrayList<Language>();
+    final ArrayList<Language> languages = new ArrayList<>();
     for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
       languages.add(provider.getLanguage());
     }
-    return languages.toArray(new Language[languages.size()]);
+    return languages.toArray(new Language[0]);
   }
 
   @Nullable
-  public static String getNotNullCodeSample(Language lang, @Nonnull SettingsType settingsType) {
+  public static String getCodeSample(Language lang, @Nonnull SettingsType settingsType) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
-    return provider != null ? provider.getNotNullCodeSample(settingsType) : "";
+    return provider != null ? provider.getCodeSample(settingsType) : null;
   }
 
   public static int getRightMargin(Language lang, @Nonnull SettingsType settingsType) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     return provider != null ? provider.getRightMargin(settingsType) : -1;
   }
+
+  @Nonnull
+  @Override
+  public abstract Language getLanguage();
 
   @Nullable
   public static Language getLanguage(String langName) {
@@ -164,7 +141,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
     return provider != null ? provider.getDefaultCommonSettings() : null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static String getFileExt(Language lang) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     return provider != null ? provider.getFileExt() : null;
@@ -178,7 +155,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
    * @return Alternative UI name defined by provider.getLanguageName() method or (if the method returns null)
    * language's own display name.
    */
-  @javax.annotation.Nullable
+  @Nonnull
   public static String getLanguageName(Language lang) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     String providerLangName = provider != null ? provider.getLanguageName() : null;
@@ -207,24 +184,29 @@ public abstract class LanguageCodeStyleSettingsProvider {
   }
 
   public Set<String> getSupportedFields() {
-    SupportedFieldCollector fieldCollector = new SupportedFieldCollector();
-    fieldCollector.collectFields();
-    return fieldCollector.getCollectedFields();
+    return new SupportedFieldCollector().collectFields();
   }
 
-  public boolean isIndentBasedLanguageSemantics() {
-    return false;
+  public Set<String> getSupportedFields(SettingsType type) {
+    return new SupportedFieldCollector().collectFields(type);
   }
 
   private final class SupportedFieldCollector implements CodeStyleSettingsCustomizable {
-    private final Set<String> myCollectedFields = new HashSet<String>();
+    private final Set<String> myCollectedFields = new THashSet<>();
     private SettingsType myCurrSettingsType;
 
-    public void collectFields() {
+    public Set<String> collectFields() {
       for (SettingsType settingsType : SettingsType.values()) {
         myCurrSettingsType = settingsType;
-        LanguageCodeStyleSettingsProvider.this.customizeSettings(this, settingsType);
+        customizeSettings(this, settingsType);
       }
+      return myCollectedFields;
+    }
+
+    public Set<String> collectFields(SettingsType type) {
+      myCurrSettingsType = type;
+      customizeSettings(this, type);
+      return myCollectedFields;
     }
 
     @Override
@@ -257,7 +239,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
 
     @Override
     public void showStandardOptions(String... optionNames) {
-      myCollectedFields.addAll(Arrays.asList(optionNames));
+      ContainerUtil.addAll(myCollectedFields, optionNames);
     }
 
     @Override
@@ -271,24 +253,33 @@ public abstract class LanguageCodeStyleSettingsProvider {
                                  String title,
                                  @Nullable String groupName,
                                  @Nullable OptionAnchor anchor,
-                                 @javax.annotation.Nullable String anchorFieldName,
+                                 @Nullable String anchorFieldName,
                                  Object... options) {
       myCollectedFields.add(fieldName);
     }
-
-    @Override
-    public void renameStandardOption(String fieldName, String newTitle) {
-      // Ignore
-    }
-
-    @Override
-    public void moveStandardOption(String fieldName, String newGroup) {
-      // Ignore
-    }
-
-    public Set<String> getCollectedFields() {
-      return myCollectedFields;
-    }
   }
 
+  @Nonnull
+  @Override
+  public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings modelSettings) {
+    throw new RuntimeException(this.getClass().getCanonicalName() + " for language #" + getLanguage().getID() + " doesn't implement createSettingsPage()");
+  }
+
+
+  /**
+   * @return A list of providers implementing {@link #createSettingsPage(CodeStyleSettings, CodeStyleSettings)}
+   */
+  public static List<LanguageCodeStyleSettingsProvider> getSettingsPagesProviders() {
+    List<LanguageCodeStyleSettingsProvider> settingsPagesProviders = ContainerUtil.newArrayList();
+    for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
+      try {
+        provider.getClass().getDeclaredMethod("createSettingsPage", CodeStyleSettings.class, CodeStyleSettings.class);
+        settingsPagesProviders.add(provider);
+      }
+      catch (NoSuchMethodException e) {
+        // Do not add the provider.
+      }
+    }
+    return settingsPagesProviders;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.util;
 
-package com.intellij.application.options;
+import com.intellij.openapi.diagnostic.Logger;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+/**
+ * @author VISTALL
+ * @since 2018-09-22
+ */
+public interface ProtectedRunnable extends Runnable {
+  Logger LOGGER = Logger.getInstance(ProtectedRunnable.class);
 
-public abstract class CodeStyleSettingsUtil {
-  public static CodeStyleSettingsUtil getInstance() {
-    return ServiceManager.getService(CodeStyleSettingsUtil.class);
+  @Override
+  default void run() {
+    try {
+      runUnsafe();
+    }
+    catch (Throwable e) {
+      LOGGER.error(e);
+    }
   }
 
-  /**
-   * @deprecated
-   * use CodeStyleSettingsUtil.showCodeStyleSettings (Project, String) instead
-   */
-  public abstract boolean showCodeStyleSettings(Project project, Class pageToSelect);
+  void runUnsafe();
 }

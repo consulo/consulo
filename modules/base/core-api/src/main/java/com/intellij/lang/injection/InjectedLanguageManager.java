@@ -32,10 +32,10 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class InjectedLanguageManager {
@@ -87,6 +87,8 @@ public abstract class InjectedLanguageManager {
   public abstract List<DocumentWindow> getCachedInjectedDocuments(@Nonnull PsiFile hostPsiFile);
 
   public abstract void startRunInjectors(@Nonnull Document hostDocument, boolean synchronously);
+
+  public abstract List<DocumentWindow> getCachedInjectedDocumentsInRange(@Nonnull PsiFile hostPsiFile, @Nonnull TextRange range);
 
   public abstract void enumerate(@Nonnull PsiElement host, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 

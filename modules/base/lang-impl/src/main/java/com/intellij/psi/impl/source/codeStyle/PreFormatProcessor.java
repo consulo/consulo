@@ -51,4 +51,11 @@ public interface PreFormatProcessor {
    */
   @Nonnull
   TextRange process(@Nonnull ASTNode element, @Nonnull TextRange range);
+
+  /**
+   * Returns true if this preprocessor changes only whitespaces and can run when the canChangeWhiteSpacesOnly flag is passed to the formatter.
+   */
+  default boolean changesWhitespacesOnly() {
+    return false;
+  }
 }

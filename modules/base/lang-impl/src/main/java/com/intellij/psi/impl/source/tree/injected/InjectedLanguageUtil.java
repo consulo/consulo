@@ -41,8 +41,9 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -388,6 +389,13 @@ public class InjectedLanguageUtil {
 
   public static void clearCachedInjectedFragmentsForFile(@Nonnull PsiFile file) {
     file.putUserData(INJECTED_DOCS_KEY, null);
+  }
+
+  @Nonnull
+  static List<DocumentWindow> getCachedInjectedDocumentsInRange(@Nonnull PsiFile hostPsiFile, @Nonnull TextRange range) {
+    List<DocumentWindow> injected = getCachedInjectedDocuments(hostPsiFile);
+
+    return ContainerUtil.filter(injected, inj -> Arrays.stream(inj.getHostRanges()).anyMatch(range::intersects));
   }
 
   public static void clearCaches(@Nonnull PsiFile injected, @Nonnull DocumentWindowImpl documentWindow) {

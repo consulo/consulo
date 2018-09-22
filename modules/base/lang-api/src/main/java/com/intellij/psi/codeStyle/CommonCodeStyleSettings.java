@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.ArrangementSettings;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
+import com.intellij.psi.codeStyle.arrangement.Rearranger;
+import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -30,22 +32,24 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
+import static com.intellij.psi.codeStyle.CodeStyleDefaults.*;
+
 /**
  * Common code style settings can be used by several programming languages. Each language may have its own
- * instance of <code>CommonCodeStyleSettings</code>.
+ * instance of {@code CommonCodeStyleSettings}.
  *
  * @author Rustam Vishnyakov
  */
 public class CommonCodeStyleSettings {
   // Dev. notes:
   // - Do not add language-specific options here, use CustomCodeStyleSettings instead.
-  // - A new options should be added to CodeStyleSettingsCustomizable as well.
+  // - New options should be added to CodeStyleSettingsCustomizable as well.
   // - Covered by CodeStyleConfigurationsTest.
 
   @NonNls
@@ -55,7 +59,9 @@ public class CommonCodeStyleSettings {
 
   private ArrangementSettings myArrangementSettings;
   private CodeStyleSettings myRootSettings;
-  private IndentOptions myIndentOptions;
+  private
+  @Nullable
+  IndentOptions myIndentOptions;
   private final FileType myFileType;
   private boolean myForceArrangeMenuAvailable;
 
@@ -124,7 +130,7 @@ public class CommonCodeStyleSettings {
     CommonCodeStyleSettings commonSettings = new CommonCodeStyleSettings(myLanguage, getFileType());
     copyPublicFields(this, commonSettings);
     commonSettings.setRootSettings(rootSettings);
-    commonSettings.myForceArrangeMenuAvailable = this.myForceArrangeMenuAvailable;
+    commonSettings.myForceArrangeMenuAvailable = myForceArrangeMenuAvailable;
     if (myIndentOptions != null) {
       IndentOptions targetIndentOptions = commonSettings.initIndentOptions();
       targetIndentOptions.copyFrom(myIndentOptions);
@@ -132,24 +138,24 @@ public class CommonCodeStyleSettings {
     if (myArrangementSettings != null) {
       commonSettings.setArrangementSettings(myArrangementSettings.clone());
     }
+    commonSettings.setSoftMargins(getSoftMargins());
     return commonSettings;
   }
 
-  protected static void copyPublicFields(Object from, Object to) {
+  static void copyPublicFields(Object from, Object to) {
     assert from != to;
     ReflectionUtil.copyFields(to.getClass().getFields(), from, to);
   }
 
-  void copyNonDefaultValuesFrom(CommonCodeStyleSettings from) {
-    CommonCodeStyleSettings defaultSettings = new CommonCodeStyleSettings(null);
-    PARENT_SETTINGS_INSTALLED =
-            ReflectionUtil.copyFields(getClass().getFields(), from, this, new SupportedFieldsDiffFilter(from, getSupportedFields(), defaultSettings) {
-              @Override
-              public boolean isAccept(@Nonnull Field field) {
-                if ("RIGHT_MARGIN".equals(field.getName())) return false; // Never copy RIGHT_MARGIN, it is inherited automatically if -1
-                return super.isAccept(field);
-              }
-            });
+  public void copyFrom(@Nonnull CommonCodeStyleSettings source) {
+    copyPublicFields(source, this);
+    if (myIndentOptions != null) {
+      CommonCodeStyleSettings.IndentOptions sourceIndentOptions = source.getIndentOptions();
+      if (sourceIndentOptions != null) {
+        myIndentOptions.copyFrom(sourceIndentOptions);
+      }
+    }
+    setSoftMargins(source.getSoftMargins());
   }
 
   @Nullable
@@ -169,7 +175,6 @@ public class CommonCodeStyleSettings {
     if (arrangementRulesContainer != null) {
       myArrangementSettings = ArrangementUtil.readExternal(arrangementRulesContainer, myLanguage);
     }
-
     mySoftMargins.deserializeFrom(element);
   }
 
@@ -177,8 +182,10 @@ public class CommonCodeStyleSettings {
     CommonCodeStyleSettings defaultSettings = getDefaultSettings();
     Set<String> supportedFields = getSupportedFields();
     if (supportedFields != null) {
-      supportedFields.add("PARENT_SETTINGS_INSTALLED");
       supportedFields.add("FORCE_REARRANGE_MODE");
+    }
+    else {
+      return;
     }
     DefaultJDOMExternalizer.writeExternal(this, element, new SupportedFieldsDiffFilter(this, supportedFields, defaultSettings));
     mySoftMargins.serializeInto(element);
@@ -216,7 +223,7 @@ public class CommonCodeStyleSettings {
 
     @Override
     public boolean isAccept(@Nonnull Field field) {
-      if (mySupportedFieldNames == null || mySupportedFieldNames.contains(field.getName())) {
+      if (mySupportedFieldNames != null && mySupportedFieldNames.contains(field.getName())) {
         return super.isAccept(field);
       }
       return false;
@@ -240,7 +247,6 @@ public class CommonCodeStyleSettings {
    * Controls END_OF_LINE_COMMENT's and C_STYLE_COMMENT's
    */
   public boolean KEEP_FIRST_COLUMN_COMMENT = true;
-  public boolean INSERT_FIRST_SPACE_IN_LINE = true;
 
   /**
    * Keep "if (..) ...;" (also while, for)
@@ -278,6 +284,12 @@ public class CommonCodeStyleSettings {
 
   public int BLANK_LINES_AFTER_CLASS_HEADER = 0;
   public int BLANK_LINES_AFTER_ANONYMOUS_CLASS_HEADER = 0;
+
+  /**
+   * In Java-like languages specifies a number of blank lines before class closing brace '}'.
+   */
+  public int BLANK_LINES_BEFORE_CLASS_END = 0;
+
   //public int BLANK_LINES_BETWEEN_CASE_BLOCKS;
 
 
@@ -332,30 +344,11 @@ public class CommonCodeStyleSettings {
   public int CLASS_BRACE_STYLE = END_OF_LINE;
   @BraceStyleConstant
   public int METHOD_BRACE_STYLE = END_OF_LINE;
+  @BraceStyleConstant
+  public int LAMBDA_BRACE_STYLE = END_OF_LINE;
 
-  /**
-   * Defines if 'flying geese' style should be used for curly braces formatting, e.g. if we want to format code like
-   * <p>
-   * <pre>
-   *     class Test {
-   *         {
-   *             System.out.println();
-   *         }
-   *     }
-   * </pre>
-   * to
-   * <pre>
-   *     class Test { {
-   *         System.out.println();
-   *     } }
-   * </pre>
-   */
+  @Deprecated
   public boolean USE_FLYING_GEESE_BRACES = false;
-
-  /**
-   * Defines number of white spaces between curly braces in case of {@link #USE_FLYING_GEESE_BRACES 'flying geese'} style usage.
-   */
-  public int FLYING_GEESE_BRACES_GAP = 1;
 
   public boolean DO_NOT_INDENT_TOP_LEVEL_CLASS_MEMBERS = false;
 
@@ -401,8 +394,10 @@ public class CommonCodeStyleSettings {
 
   public boolean INDENT_CASE_FROM_SWITCH = true;
 
+  public boolean CASE_STATEMENT_ON_NEW_LINE = true;
+
   /**
-   * Controls "break" position realtive to "case".
+   * Controls "break" position relative to "case".
    * <pre>
    * case 0:
    * <--->break;
@@ -415,9 +410,9 @@ public class CommonCodeStyleSettings {
   /**
    * Indicates if long sequence of chained method calls should be aligned.
    * <p>
-   * E.g. if statement like <code>'foo.bar().bar().bar();'</code> should be reformatted to the one below if,
-   * say, last <code>'bar()'</code> call exceeds right margin. The code looks as follows after reformatting
-   * if this property is <code>true</code>:
+   * E.g. if statement like {@code 'foo.bar().bar().bar();'} should be reformatted to the one below if,
+   * say, last {@code 'bar()'} call exceeds right margin. The code looks as follows after reformatting
+   * if this property is {@code true}:
    * <p>
    * <pre>
    *     foo.bar().bar()
@@ -429,6 +424,8 @@ public class CommonCodeStyleSettings {
   public boolean ALIGN_MULTILINE_PARAMETERS_IN_CALLS = false;
   public boolean ALIGN_MULTILINE_RESOURCES = true;
   public boolean ALIGN_MULTILINE_FOR = true;
+
+  @Deprecated
   public boolean INDENT_WHEN_CASES = true;
 
   public boolean ALIGN_MULTILINE_BINARY_OPERATION = false;
@@ -442,7 +439,7 @@ public class CommonCodeStyleSettings {
   public boolean ALIGN_MULTILINE_PARENTHESIZED_EXPRESSION = false;
   public boolean ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION = false;
 
-  //----------------- Group alignments ---------------
+//----------------- Group alignments ---------------
 
   /**
    * Specifies if subsequent fields/variables declarations and initialisations should be aligned in columns like below:
@@ -452,7 +449,6 @@ public class CommonCodeStyleSettings {
   public boolean ALIGN_GROUP_FIELD_DECLARATIONS = false;
   public boolean ALIGN_CONSECUTIVE_VARIABLE_DECLARATIONS = false;
   public boolean ALIGN_SUBSEQUENT_SIMPLE_METHODS = false;
-
 
 //----------------- SPACES --------------------
 
@@ -809,7 +805,7 @@ public class CommonCodeStyleSettings {
 
   public int CALL_PARAMETERS_WRAP = DO_NOT_WRAP;
   public boolean PREFER_PARAMETERS_WRAP = false;
-  public boolean CALL_PARAMETERS_LPAREN_ON_NEXT_LINE = false;
+  public boolean CALL_PARAMETERS_LPAREN_ON_NEXT_LINE = false; // misnamed, actually means: wrap AFTER lparen
   public boolean CALL_PARAMETERS_RPAREN_ON_NEXT_LINE = false;
 
   public int METHOD_PARAMETERS_WRAP = DO_NOT_WRAP;
@@ -842,8 +838,8 @@ public class CommonCodeStyleSettings {
 
   public boolean KEEP_SIMPLE_BLOCKS_IN_ONE_LINE = false;
   public boolean KEEP_SIMPLE_METHODS_IN_ONE_LINE = false;
-  public boolean KEEP_SIMPLE_CLASSES_IN_ONE_LINE = false;
   public boolean KEEP_SIMPLE_LAMBDAS_IN_ONE_LINE = false;
+  public boolean KEEP_SIMPLE_CLASSES_IN_ONE_LINE = false;
   public boolean KEEP_MULTIPLE_EXPRESSIONS_IN_ONE_LINE = false;
 
   public int FOR_STATEMENT_WRAP = DO_NOT_WRAP;
@@ -857,6 +853,7 @@ public class CommonCodeStyleSettings {
   public int ASSIGNMENT_WRAP = DO_NOT_WRAP;
   public boolean PLACE_ASSIGNMENT_SIGN_ON_NEXT_LINE = false;
 
+  @Deprecated
   public int LABELED_STATEMENT_WRAP = WRAP_ALWAYS;
 
   public boolean WRAP_COMMENTS = false;
@@ -893,16 +890,10 @@ public class CommonCodeStyleSettings {
   //-------------------------Enums----------------------------------------------------------
   public int ENUM_CONSTANTS_WRAP = DO_NOT_WRAP;
 
-  //
-  // The flag telling that original default settings were overwritten with non-default
-  // values from shared code style settings (happens upon the very first initialization).
-  //
-  public boolean PARENT_SETTINGS_INSTALLED = false;
-
   //-------------------------Force rearrange settings---------------------------------------
-  public static int REARRANGE_ACCORDIND_TO_DIALOG = 0;
-  public static int REARRANGE_ALWAYS = 1;
-  public static int REARRANGE_NEVER = 2;
+  public static final int REARRANGE_ACCORDIND_TO_DIALOG = 0;
+  public static final int REARRANGE_ALWAYS = 1;
+  public static final int REARRANGE_NEVER = 2;
 
   public int FORCE_REARRANGE_MODE = REARRANGE_ACCORDIND_TO_DIALOG;
 
@@ -914,7 +905,7 @@ public class CommonCodeStyleSettings {
     public int intValue;
 
     WrapOnTyping(int i) {
-      this.intValue = i;
+      intValue = i;
     }
   }
 
@@ -925,10 +916,12 @@ public class CommonCodeStyleSettings {
   public int WRAP_ON_TYPING = WrapOnTyping.DEFAULT.intValue;
 
   //-------------------------Indent options-------------------------------------------------
-  public static class IndentOptions implements JDOMExternalizable, Cloneable {
-    public int INDENT_SIZE = 4;
-    public int CONTINUATION_INDENT_SIZE = 8;
-    public int TAB_SIZE = 4;
+  public static class IndentOptions implements Cloneable, JDOMExternalizable {
+    public static final IndentOptions DEFAULT_INDENT_OPTIONS = new IndentOptions();
+
+    public int INDENT_SIZE = DEFAULT_INDENT_SIZE;
+    public int CONTINUATION_INDENT_SIZE = DEFAULT_CONTINUATION_INDENT_SIZE;
+    public int TAB_SIZE = DEFAULT_TAB_SIZE;
     public boolean USE_TAB_CHARACTER = false;
     public boolean SMART_TABS = false;
     public int LABEL_INDENT_SIZE = 0;
@@ -936,27 +929,26 @@ public class CommonCodeStyleSettings {
     public boolean USE_RELATIVE_INDENTS = false;
     public boolean KEEP_INDENTS_ON_EMPTY_LINES = false;
 
+    // region More continuations (reserved for versions 2018.x)
+    public int DECLARATION_PARAMETER_INDENT = -1;
+    public int GENERIC_TYPE_PARAMETER_INDENT = -1;
+    public int CALL_PARAMETER_INDENT = -1;
+    public int CHAINED_CALL_INDENT = -1;
+    public int ARRAY_ELEMENT_INDENT = -1; // array declarations
+    // endregion
+
     private FileIndentOptionsProvider myFileIndentOptionsProvider;
     private static final Key<CommonCodeStyleSettings.IndentOptions> INDENT_OPTIONS_KEY = Key.create("INDENT_OPTIONS_KEY");
-    private boolean myInaccurate;
     private boolean myOverrideLanguageOptions;
 
     @Override
     public void readExternal(Element element) throws InvalidDataException {
-      DefaultJDOMExternalizer.readExternal(this, element);
+      deserialize(element);
     }
 
     @Override
     public void writeExternal(Element element) throws WriteExternalException {
-      DefaultJDOMExternalizer.writeExternal(this, element, new DefaultJDOMExternalizer.JDOMFilter() {
-        @Override
-        public boolean isAccept(@Nonnull Field field) {
-          if ("KEEP_INDENTS_ON_EMPTY_LINES".equals(field.getName())) {
-            return KEEP_INDENTS_ON_EMPTY_LINES;
-          }
-          return true;
-        }
-      });
+      serialize(element, DEFAULT_INDENT_OPTIONS);
     }
 
     public void serialize(Element indentOptionsElement, final IndentOptions defaultOptions) {
@@ -988,7 +980,7 @@ public class CommonCodeStyleSettings {
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (!(o instanceof IndentOptions)) return false;
 
       IndentOptions that = (IndentOptions)o;
 
@@ -1000,6 +992,12 @@ public class CommonCodeStyleSettings {
       if (SMART_TABS != that.SMART_TABS) return false;
       if (TAB_SIZE != that.TAB_SIZE) return false;
       if (USE_TAB_CHARACTER != that.USE_TAB_CHARACTER) return false;
+
+      if (DECLARATION_PARAMETER_INDENT != that.DECLARATION_PARAMETER_INDENT) return false;
+      if (GENERIC_TYPE_PARAMETER_INDENT != that.GENERIC_TYPE_PARAMETER_INDENT) return false;
+      if (CALL_PARAMETER_INDENT != that.CALL_PARAMETER_INDENT) return false;
+      if (CHAINED_CALL_INDENT != that.CHAINED_CALL_INDENT) return false;
+      if (ARRAY_ELEMENT_INDENT != that.ARRAY_ELEMENT_INDENT) return false;
 
       return true;
     }
@@ -1022,7 +1020,7 @@ public class CommonCodeStyleSettings {
     }
 
     @Nullable
-    FileIndentOptionsProvider getFileIndentOptionsProvider() {
+    public FileIndentOptionsProvider getFileIndentOptionsProvider() {
       return myFileIndentOptionsProvider;
     }
 
@@ -1030,12 +1028,12 @@ public class CommonCodeStyleSettings {
       myFileIndentOptionsProvider = provider;
     }
 
-    void associateWithDocument(@Nonnull Document document) {
+    public void associateWithDocument(@Nonnull Document document) {
       document.putUserData(INDENT_OPTIONS_KEY, this);
     }
 
     @Nullable
-    static IndentOptions retrieveFromAssociatedDocument(@Nonnull PsiFile file) {
+    public static IndentOptions retrieveFromAssociatedDocument(@Nonnull PsiFile file) {
       Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
       return document != null ? document.getUserData(INDENT_OPTIONS_KEY) : null;
     }
@@ -1058,14 +1056,31 @@ public class CommonCodeStyleSettings {
     public void setOverrideLanguageOptions(boolean overrideLanguageOptions) {
       myOverrideLanguageOptions = overrideLanguageOptions;
     }
+  }
 
-    boolean isRecalculateForCommittedDocument() {
-      return myInaccurate;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof CommonCodeStyleSettings) {
+      if (ReflectionUtil.comparePublicNonFinalFields(this, obj) &&
+          mySoftMargins.equals(((CommonCodeStyleSettings)obj).mySoftMargins) &&
+          Comparing.equal(myIndentOptions, ((CommonCodeStyleSettings)obj).getIndentOptions()) &&
+          arrangementSettingsEqual((CommonCodeStyleSettings)obj)) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    void setRecalculateForCommittedDocument(boolean value) {
-      myInaccurate = value;
+  protected boolean arrangementSettingsEqual(CommonCodeStyleSettings obj) {
+    ArrangementSettings theseSettings = myArrangementSettings;
+    ArrangementSettings otherSettings = obj.getArrangementSettings();
+    if (theseSettings == null && otherSettings != null) {
+      Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(myLanguage);
+      if (rearranger instanceof ArrangementStandardSettingsAware) {
+        theseSettings = ((ArrangementStandardSettingsAware)rearranger).getDefaultSettings();
+      }
     }
+    return Comparing.equal(theseSettings, obj.getArrangementSettings());
   }
 
   @Nonnull

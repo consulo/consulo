@@ -59,6 +59,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ApplicationProperties;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.SwingUIDecorator;
+import consulo.util.ProtectedRunnable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -790,7 +791,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       myConfigurable2LoadCallback.put(configurable, result);
       myLoadingDecorator.startLoading(false);
       final Application app = ApplicationManager.getApplication();
-      Runnable action = () -> UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+      Runnable action = () -> UIUtil.invokeAndWaitIfNeeded((ProtectedRunnable)() -> {
         if (myProject.isDisposed()) {
           result.setRejected();
         }

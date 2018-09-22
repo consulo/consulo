@@ -1713,9 +1713,6 @@
     <applicationService serviceInterface="com.intellij.navigation.ChooseByNameRegistry"
                         serviceImplementation="com.intellij.navigation.ChooseByNameRegistry"/>
 
-    <applicationService serviceInterface="com.intellij.application.options.CodeStyleSettingsUtil"
-                        serviceImplementation="com.intellij.application.options.CodeStyleSettingsUtilImpl"/>
-
     <applicationService serviceInterface="com.intellij.ide.PsiActionSupportFactory"
                         serviceImplementation="com.intellij.ide.PsiActionSupportFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.codeInspection.ex.InspectionToolRegistrar"
@@ -2622,5 +2619,7 @@
     <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false" />
 
     <projectService serviceInterface="com.intellij.problems.WolfTheProblemSolver" serviceImplementation="com.intellij.codeInsight.problems.WolfTheProblemSolverImpl" lazy="false" />
+
+    <lang.formatter.restriction implementation="com.intellij.formatting.ExcludedFileFormattingRestriction" />
   </extensions>
 </idea-plugin>

@@ -23,10 +23,12 @@ import com.intellij.util.containers.WeakList;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author max
  */
+@Singleton
 public class DocumentMarkupModelManager {
   private static final Logger LOG = Logger.getInstance(DocumentMarkupModelManager.class);
 

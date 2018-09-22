@@ -119,6 +119,10 @@ public class CodeStyleSchemesModel {
     return myUsePerProjectSettings;
   }
 
+  public Project getProject() {
+    return myProject;
+  }
+
   public void setUsePerProjectSettings(final boolean usePerProjectSettings) {
     setUsePerProjectSettings(usePerProjectSettings, false);
   }

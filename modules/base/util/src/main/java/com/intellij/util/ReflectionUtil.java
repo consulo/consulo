@@ -17,14 +17,15 @@
 package com.intellij.util;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.DifferenceFilter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.Arrays;
@@ -485,7 +486,7 @@ public class ReflectionUtil {
 
   public static void copyFieldValue(@Nonnull Object from, @Nonnull Object to, @Nonnull Field field) throws IllegalAccessException {
     Class<?> fieldType = field.getType();
-    if (fieldType.isPrimitive() || fieldType.equals(String.class)) {
+    if (fieldType.isPrimitive() || fieldType.equals(String.class) || fieldType.isEnum()) {
       field.set(to, field.get(from));
     }
     else {
@@ -565,4 +566,23 @@ public class ReflectionUtil {
       return JBIterable.of(aClass.getSuperclass()).append(aClass.getInterfaces());
     }
   };
+
+  public static boolean comparePublicNonFinalFields(@Nonnull Object first, @Nonnull Object second) {
+    Set<Field> firstFields = ContainerUtil.newHashSet(first.getClass().getFields());
+    for (Field field : second.getClass().getFields()) {
+      if (firstFields.contains(field)) {
+        if (isPublic(field) && !isFinal(field)) {
+          try {
+            if (!Comparing.equal(field.get(first), field.get(second))) {
+              return false;
+            }
+          }
+          catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      }
+    }
+    return true;
+  }
 }

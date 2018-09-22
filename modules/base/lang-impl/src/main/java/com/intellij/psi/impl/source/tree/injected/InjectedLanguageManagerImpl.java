@@ -57,9 +57,9 @@ import com.intellij.util.containers.MultiMap;
 import consulo.lang.injection.MultiHostInjectorExtensionPoint;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -195,6 +195,12 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     else {
       JobLauncher.getInstance().submitToJobThread(() -> ApplicationManagerEx.getApplicationEx().tryRunReadAction(commitInjectionsRunnable), null);
     }
+  }
+
+  @Nonnull
+  @Override
+  public List<DocumentWindow> getCachedInjectedDocumentsInRange(@Nonnull PsiFile hostPsiFile, @Nonnull TextRange range) {
+    return InjectedLanguageUtil.getCachedInjectedDocumentsInRange(hostPsiFile, range);
   }
 
   public void psiManagerInjectorsChanged() {

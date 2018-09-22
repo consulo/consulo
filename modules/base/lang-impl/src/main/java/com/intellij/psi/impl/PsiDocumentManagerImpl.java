@@ -53,10 +53,12 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 
 //todo listen & notifyListeners readonly events?
+@Singleton
 public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements SettingsSavingComponent {
   private final DocumentCommitProcessor myDocumentCommitThread;
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
@@ -73,7 +75,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
       public void fileContentLoaded(@Nonnull final VirtualFile virtualFile, @Nonnull Document document) {
-        ThrowableComputable<PsiFile,RuntimeException> action = () -> myProject.isDisposed() || !virtualFile.isValid() ? null : getCachedPsiFile(virtualFile);
+        ThrowableComputable<PsiFile, RuntimeException> action = () -> myProject.isDisposed() || !virtualFile.isValid() ? null : getCachedPsiFile(virtualFile);
         PsiFile psiFile = AccessRule.read(action);
         fireDocumentCreated(document, psiFile);
       }
@@ -96,9 +98,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
       if (virtualFile != null && virtualFile.isValid()) {
         Collection<Project> projects = ProjectLocator.getInstance().getProjectsForFile(virtualFile);
         if (!projects.isEmpty() && !projects.contains(myProject)) {
-          LOG.error("Trying to get PSI for an alien project. VirtualFile=" + virtualFile +
-                    ";\n myProject=" + myProject +
-                    ";\n projects returned: " + projects);
+          LOG.error("Trying to get PSI for an alien project. VirtualFile=" + virtualFile + ";\n myProject=" + myProject + ";\n projects returned: " + projects);
         }
       }
     }
@@ -113,9 +113,15 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
       if (myUnitTestMode) {
         myStopTrackingDocuments = true;
         try {
-          LOG.error("Too many uncommitted documents for " + myProject + "(" +myUncommittedDocuments.size()+")"+
-                    ":\n" + StringUtil.join(myUncommittedDocuments, "\n") +
-                    "\n\n Project creation trace: " + myProject.getUserData(ProjectImpl.CREATION_TRACE));
+          LOG.error("Too many uncommitted documents for " +
+                    myProject +
+                    "(" +
+                    myUncommittedDocuments.size() +
+                    ")" +
+                    ":\n" +
+                    StringUtil.join(myUncommittedDocuments, "\n") +
+                    "\n\n Project creation trace: " +
+                    myProject.getUserData(ProjectImpl.CREATION_TRACE));
         }
         finally {
           //noinspection TestOnlyProblems
@@ -136,9 +142,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   }
 
   @Override
-  protected boolean finishCommitInWriteAction(@Nonnull Document document,
-                                              @Nonnull List<Processor<Document>> finishProcessors,
-                                              boolean synchronously) {
+  protected boolean finishCommitInWriteAction(@Nonnull Document document, @Nonnull List<Processor<Document>> finishProcessors, boolean synchronously) {
     if (ApplicationManager.getApplication().isWriteAccessAllowed()) { // can be false for non-physical PSI
       EditorWindowImpl.disposeInvalidEditors();
     }

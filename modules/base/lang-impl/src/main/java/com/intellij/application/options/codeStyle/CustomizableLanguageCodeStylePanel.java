@@ -80,13 +80,9 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
   @Override
   protected String getPreviewText() {
     if (getDefaultLanguage() == null) return "";
-    return LanguageCodeStyleSettingsProvider.getNotNullCodeSample(getDefaultLanguage(), getSettingsType());
-  }
-
-  @Override
-  protected PsiFile createFileFromText(final Project project, final String text) {
-    final PsiFile file = LanguageCodeStyleSettingsProvider.createFileFromText(getDefaultLanguage(), project, text);
-    return file != null ? file : super.createFileFromText(project, text);
+    String sample = LanguageCodeStyleSettingsProvider.getCodeSample(getDefaultLanguage(), getSettingsType());
+    if (sample == null) return "";
+    return sample;
   }
 
   @Override
@@ -118,8 +114,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
   @Nullable
   protected EditorHighlighter createHighlighter(final EditorColorsScheme scheme) {
     FileType fileType = getFileType();
-    return FileTypeEditorHighlighterProviders.INSTANCE.forFileType(fileType).getEditorHighlighter(
-            ProjectUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
+    return FileTypeEditorHighlighterProviders.INSTANCE.forFileType(fileType).getEditorHighlighter(ProjectUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
   }
 
 
@@ -128,24 +123,18 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     final String text = psiFile.getText();
     final PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
     final Document doc = manager.getDocument(psiFile);
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            doc.replaceString(0, doc.getTextLength(), text);
-            manager.commitDocument(doc);
-            try {
-              CodeStyleManager.getInstance(project).reformat(psiFile);
-            }
-            catch (IncorrectOperationException e) {
-              LOG.error(e);
-            }
-          }
-        });
+    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
+      if (doc != null) {
+        doc.replaceString(0, doc.getTextLength(), text);
+        manager.commitDocument(doc);
       }
-    }, "", "");
+      try {
+        CodeStyleManager.getInstance(project).reformat(psiFile);
+      }
+      catch (IncorrectOperationException e) {
+        LOG.error(e);
+      }
+    }), "", "");
     if (doc != null) {
       manager.commitDocument(doc);
     }
@@ -161,17 +150,12 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     throw new UnsupportedOperationException();
   }
 
-  protected <T extends OrderedOption>List<T> sortOptions(Collection<T> options) {
-    Set<String> names = new THashSet<String>(ContainerUtil.map(options, new Function<OrderedOption, String>() {
-      @Override
-      public String fun(OrderedOption option) {
-        return option.getOptionName();
-      }
-    }));
+  protected <T extends OrderedOption> List<T> sortOptions(Collection<T> options) {
+    Set<String> names = new THashSet<>(ContainerUtil.map(options, (Function<OrderedOption, String>)option -> option.getOptionName()));
 
-    List<T> order = new ArrayList<T>(options.size());
-    MultiMap<String, T> afters = new MultiMap<String, T>();
-    MultiMap<String, T> befores = new MultiMap<String, T>();
+    List<T> order = new ArrayList<>(options.size());
+    MultiMap<String, T> afters = new MultiMap<>();
+    MultiMap<String, T> befores = new MultiMap<>();
 
     for (T each : options) {
       String anchorOptionName = each.getAnchorOptionName();
@@ -188,7 +172,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
       order.add(each);
     }
 
-    List<T> result = new ArrayList<T>(options.size());
+    List<T> result = new ArrayList<>(options.size());
     for (T each : order) {
       result.addAll(befores.get(each.getOptionName()));
       result.add(each);
@@ -202,12 +186,12 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
   protected abstract static class OrderedOption {
     @Nonnull
     private final String optionName;
-    @Nullable private final OptionAnchor anchor;
-    @Nullable private final String anchorOptionName;
+    @Nullable
+    private final OptionAnchor anchor;
+    @Nullable
+    private final String anchorOptionName;
 
-    protected OrderedOption(@Nonnull String optionName,
-                            OptionAnchor anchor,
-                            String anchorOptionName) {
+    protected OrderedOption(@Nonnull String optionName, @Nullable OptionAnchor anchor, @Nullable String anchorOptionName) {
       this.optionName = optionName;
       this.anchor = anchor;
       this.anchorOptionName = anchorOptionName;
