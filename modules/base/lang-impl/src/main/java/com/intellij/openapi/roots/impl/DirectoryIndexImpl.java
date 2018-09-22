@@ -142,7 +142,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
         myInfoCache.put(((NewVirtualFile)dir).getId(), info);
       }
 
-      @Override ApplicationUndoManagerImpl
+      @Override
       public DirectoryInfo getCachedInfo(@Nonnull VirtualFile dir) {
         return myInfoCache.get(((NewVirtualFile)dir).getId());
       }
