@@ -25,6 +25,7 @@ import java.util.concurrent.Future;
 /**
  * @author nik
  */
+@Deprecated
 public abstract class JdkVersionDetector {
   @Nonnull
   public static JdkVersionDetector getInstance() {
