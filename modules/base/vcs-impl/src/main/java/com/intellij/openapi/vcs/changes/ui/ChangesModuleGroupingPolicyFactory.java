@@ -18,6 +18,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.project.Project;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -28,7 +29,8 @@ import javax.swing.tree.DefaultTreeModel;
 public class ChangesModuleGroupingPolicyFactory extends ChangesGroupingPolicyFactory {
   private final Project myProject;
 
-  public ChangesModuleGroupingPolicyFactory(final Project project) {
+  @Inject
+  public ChangesModuleGroupingPolicyFactory(Project project) {
     myProject = project;
   }
 
