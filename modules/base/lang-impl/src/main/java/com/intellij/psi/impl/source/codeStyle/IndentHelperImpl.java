@@ -22,14 +22,13 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import javax.annotation.Nonnull;
+import consulo.consulo.psi.impl.source.codeStyle.IndentHelperExtension;
 
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 
 @Singleton
-public class IndentHelperImpl extends IndentHelper {
+public final class IndentHelperImpl extends IndentHelper {
   //----------------------------------------------------------------------------------------------------
 
   public static final int INDENT_FACTOR = 10000; // "indent" is indent_level * INDENT_FACTOR + spaces
@@ -41,58 +40,12 @@ public class IndentHelperImpl extends IndentHelper {
 
   @Override
   public int getIndent(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace) {
-    return getIndentInner(file, element, includeNonSpace, 0);
-  }
-
-  public static final int TOO_BIG_WALK_THRESHOLD = 450;
-
-  protected int getIndentInner(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace, int recursionLevel) {
-    if (recursionLevel > TOO_BIG_WALK_THRESHOLD) return 0;
-
-    if (element.getTreePrev() != null) {
-      ASTNode prev = element.getTreePrev();
-      ASTNode lastCompositePrev;
-      while (prev instanceof CompositeElement && !TreeUtil.isStrongWhitespaceHolder(prev.getElementType())) {
-        lastCompositePrev = prev;
-        prev = prev.getLastChildNode();
-        if (prev == null) { // element.prev is "empty composite"
-          return getIndentInner(file, lastCompositePrev, includeNonSpace, recursionLevel + 1);
-        }
-      }
-
-      String text = prev.getText();
-      int index = Math.max(text.lastIndexOf('\n'), text.lastIndexOf('\r'));
-
-      if (index >= 0) {
-        return getIndent(file, text.substring(index + 1), includeNonSpace);
-      }
-
-      if (includeNonSpace) {
-        return getIndentInner(file, prev, includeNonSpace, recursionLevel + 1) + getIndent(file, text, includeNonSpace);
-      }
-
-
-      ASTNode parent = prev.getTreeParent();
-      ASTNode child = prev;
-      while (parent != null) {
-        if (child.getTreePrev() != null) break;
-        child = parent;
-        parent = parent.getTreeParent();
-      }
-
-      if (parent == null) {
-        return getIndent(file, text, includeNonSpace);
-      }
-      else {
-        return getIndentInner(file, prev, includeNonSpace, recursionLevel + 1);
+    for (IndentHelperExtension extension : IndentHelperExtension.EP_NAME.getExtensions()) {
+      if (extension.isAvaliable(file)) {
+        return extension.getIndentInner(this, file, element, includeNonSpace, 0);
       }
     }
-    else {
-      if (element.getTreeParent() == null) {
-        return 0;
-      }
-      return getIndentInner(file, element.getTreeParent(), includeNonSpace, recursionLevel + 1);
-    }
+    return 0;
   }
 
   /**
