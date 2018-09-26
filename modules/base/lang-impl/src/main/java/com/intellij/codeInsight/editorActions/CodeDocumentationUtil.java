@@ -22,7 +22,8 @@ import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.psi.codeStyle.DocCommentSettings;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
@@ -36,8 +37,23 @@ public class CodeDocumentationUtil {
   private CodeDocumentationUtil() {
   }
 
+  /**
+   * @deprecated Use createDocCommentLine(lineData,file,commenter) instead.
+   */
+  @SuppressWarnings("unused")
+  @Deprecated
   public static String createDocCommentLine(String lineData, Project project, CodeDocumentationAwareCommenter commenter) {
-    if (!CodeStyleSettingsManager.getSettings(project).JD_LEADING_ASTERISKS_ARE_ENABLED) {
+    return createLine(lineData, commenter, DocCommentSettings.DEFAULTS);
+  }
+
+  public static String createDocCommentLine(String lineData, PsiFile file, CodeDocumentationAwareCommenter commenter) {
+    DocCommentSettings settings = CodeStyleManager.getInstance(file.getProject()).getDocCommentSettings(file);
+    return createLine(lineData, commenter, settings);
+  }
+
+  @Nonnull
+  private static String createLine(String lineData, CodeDocumentationAwareCommenter commenter, DocCommentSettings settings) {
+    if (!settings.isLeadingAsteriskEnabled()) {
       return " " + lineData + " ";
     }
     else {
@@ -58,10 +74,10 @@ public class CodeDocumentationUtil {
    *   <li>Checks if target document line that contains given offset starts with '*';</li>
    *   <li>Returns document text located between the '*' and first non-white space symbols after it if the check above is successful;</li>
    * </ol>
-   </pre>
+   * </pre>
    *
-   * @param document    target document
-   * @param offset      target offset that identifies line to check and max offset to use during scanning
+   * @param document target document
+   * @param offset   target offset that identifies line to check and max offset to use during scanning
    * @return
    */
   @Nullable
@@ -87,12 +103,12 @@ public class CodeDocumentationUtil {
   /**
    * Analyzes position at the given offset at the given text and returns information about comments presence and kind there if any.
    *
-   * @param file              target file being edited (necessary for language recognition at target offset. Language is necessary
-   *                          to get information about specific comment syntax)
-   * @param chars             target text
-   * @param offset            target offset at the given text
-   * @param lineStartOffset   start offset of the line that contains given offset
-   * @return                  object that encapsulates information about comments at the given offset at the given text
+   * @param file            target file being edited (necessary for language recognition at target offset. Language is necessary
+   *                        to get information about specific comment syntax)
+   * @param chars           target text
+   * @param offset          target offset at the given text
+   * @param lineStartOffset start offset of the line that contains given offset
+   * @return object that encapsulates information about comments at the given offset at the given text
    */
   @Nonnull
   public static CommentContext tryParseCommentContext(@Nonnull PsiFile file, @Nonnull CharSequence chars, int offset, int lineStartOffset) {
@@ -100,10 +116,7 @@ public class CodeDocumentationUtil {
     return tryParseCommentContext(langCommenter, chars, offset, lineStartOffset);
   }
 
-  static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter,
-                                               @Nonnull CharSequence chars,
-                                               int offset,
-                                               int lineStartOffset) {
+  static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter, @Nonnull CharSequence chars, int offset, int lineStartOffset) {
     final boolean isInsideCommentLikeCode = langCommenter instanceof CodeDocumentationAwareCommenter;
     if (!isInsideCommentLikeCode) {
       return new CommentContext();
@@ -111,16 +124,14 @@ public class CodeDocumentationUtil {
     final CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)langCommenter;
     int commentStartOffset = CharArrayUtil.shiftForward(chars, lineStartOffset, " \t");
 
-    boolean docStart = commenter.getDocumentationCommentPrefix() != null
-                       && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getDocumentationCommentPrefix());
-    boolean cStyleStart = commenter.getBlockCommentPrefix() != null
-                          && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getBlockCommentPrefix());
-    boolean docAsterisk = commenter.getDocumentationCommentLinePrefix() != null
-                          && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getDocumentationCommentLinePrefix());
+    boolean docStart = commenter.getDocumentationCommentPrefix() != null && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getDocumentationCommentPrefix());
+    boolean cStyleStart = commenter.getBlockCommentPrefix() != null && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getBlockCommentPrefix());
+    boolean docAsterisk = commenter.getDocumentationCommentLinePrefix() != null && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getDocumentationCommentLinePrefix());
     final int firstNonSpaceInLine = CharArrayUtil.shiftForward(chars, offset, " \t");
-    boolean slashSlash = commenter.getLineCommentPrefix() != null
-                         && CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getLineCommentPrefix())
-                         && firstNonSpaceInLine < chars.length() && chars.charAt(firstNonSpaceInLine) != '\n';
+    boolean slashSlash = commenter.getLineCommentPrefix() != null &&
+                         CharArrayUtil.regionMatches(chars, commentStartOffset, commenter.getLineCommentPrefix()) &&
+                         firstNonSpaceInLine < chars.length() &&
+                         chars.charAt(firstNonSpaceInLine) != '\n';
     return new CommentContext(commenter, docStart, cStyleStart, docAsterisk, slashSlash, commentStartOffset);
   }
 
@@ -130,18 +141,26 @@ public class CodeDocumentationUtil {
   public static class CommentContext {
 
     public final CodeDocumentationAwareCommenter commenter;
-    public final int                             lineStart;
+    public final int lineStart;
 
-    /** Indicates position at the line that starts from {@code '/**'} (in java language). */
+    /**
+     * Indicates position at the line that starts from {@code '/**'} (in java language).
+     */
     public boolean docStart;
 
-    /** Indicates position at the line that starts from {@code '/*'} (in java language). */
+    /**
+     * Indicates position at the line that starts from {@code '/*'} (in java language).
+     */
     public boolean cStyleStart;
 
-    /** Indicates position at the line that starts from {@code '*'} (non-first and non-last javadoc line in java language). */
+    /**
+     * Indicates position at the line that starts from {@code '*'} (non-first and non-last javadoc line in java language).
+     */
     public boolean docAsterisk;
 
-    /** Indicates position at the line that starts from {@code '//'} (in java language). */
+    /**
+     * Indicates position at the line that starts from {@code '//'} (in java language).
+     */
     public boolean slashSlash;
 
     public CommentContext() {
@@ -149,9 +168,7 @@ public class CodeDocumentationUtil {
       lineStart = 0;
     }
 
-    public CommentContext(CodeDocumentationAwareCommenter commenter, boolean docStart, boolean cStyleStart, boolean docAsterisk,
-                          boolean slashSlash, int lineStart)
-    {
+    public CommentContext(CodeDocumentationAwareCommenter commenter, boolean docStart, boolean cStyleStart, boolean docAsterisk, boolean slashSlash, int lineStart) {
       this.docStart = docStart;
       this.cStyleStart = cStyleStart;
       this.docAsterisk = docAsterisk;

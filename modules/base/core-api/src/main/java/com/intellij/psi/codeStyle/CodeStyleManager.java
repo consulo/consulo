@@ -39,7 +39,7 @@ import java.util.List;
  * Service for reformatting code fragments, getting names for elements
  * according to the user's code style and working with import statements and full-qualified names.
  */
-public abstract class CodeStyleManager  {
+public abstract class CodeStyleManager {
   /**
    * Returns the code style manager for the specified project.
    *
@@ -75,7 +75,7 @@ public abstract class CodeStyleManager  {
    *
    * @param element the element to reformat.
    * @return the element in the PSI tree after the reformat operation corresponding to the
-   *         original element.
+   * original element.
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
@@ -90,7 +90,7 @@ public abstract class CodeStyleManager  {
    * @param canChangeWhiteSpacesOnly if true, only reformatting is performed; if false,
    *                                 braces and import statements also can be modified if necessary.
    * @return the element in the PSI tree after the reformat operation corresponding to the
-   *         original element.
+   * original element.
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
@@ -105,7 +105,7 @@ public abstract class CodeStyleManager  {
    * @param startOffset the start offset in the document of the text range to reformat.
    * @param endOffset   the end offset in the document of the text range to reformat.
    * @return the element in the PSI tree after the reformat operation corresponding to the
-   *         original element.
+   * original element.
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
@@ -121,19 +121,16 @@ public abstract class CodeStyleManager  {
    * @param canChangeWhiteSpacesOnly if true, only reformatting is performed; if false,
    *                                 braces and import statements also can be modified if necessary.
    * @return the element in the PSI tree after the reformat operation corresponding to the
-   *         original element.
+   * original element.
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
-  public abstract PsiElement reformatRange(@Nonnull PsiElement element,
-                                           int startOffset,
-                                           int endOffset,
-                                           boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException;
+  public abstract PsiElement reformatRange(@Nonnull PsiElement element, int startOffset, int endOffset, boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException;
 
   /**
    * Delegates to the {@link #reformatText(PsiFile, Collection)} with the single range defined by the given offsets.
    *
-   * @param file     the file to reformat.
+   * @param file        the file to reformat.
    * @param startOffset the start of the text range to reformat.
    * @param endOffset   the end of the text range to reformat.
    * @throws IncorrectOperationException if the file to reformat is read-only.
@@ -145,9 +142,9 @@ public abstract class CodeStyleManager  {
    * {@link #reformatRange(PsiElement, int, int)} but invalidates the
    * PSI structure for the file.
    *
-   * @param file  the file to reformat
-   * @param ranges   ranges to process
-   * @throws IncorrectOperationException  if the file to reformat is read-only.
+   * @param file   the file to reformat
+   * @param ranges ranges to process
+   * @throws IncorrectOperationException if the file to reformat is read-only.
    */
   public abstract void reformatText(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges) throws IncorrectOperationException;
 
@@ -182,8 +179,8 @@ public abstract class CodeStyleManager  {
    * Reformats the line at the specified offset in the specified file, modifying only the line indent
    * and leaving all other whitespace intact.
    *
-   * @param document   the document to reformat.
-   * @param offset the offset the line at which should be reformatted.
+   * @param document the document to reformat.
+   * @param offset   the offset the line at which should be reformatted.
    * @throws IncorrectOperationException if the file is read-only.
    */
   public abstract int adjustLineIndent(@Nonnull Document document, int offset);
@@ -191,6 +188,7 @@ public abstract class CodeStyleManager  {
   /**
    * @deprecated this method is not intended to be used by plugins.
    */
+  @Deprecated
   public abstract boolean isLineToBeIndented(@Nonnull PsiFile file, int offset);
 
   /**
@@ -200,10 +198,26 @@ public abstract class CodeStyleManager  {
    * @param file   the file for which the indent should be calculated.
    * @param offset the offset for the line at which the indent should be calculated.
    * @return the indent string (containing of tabs and/or whitespaces), or null if it
-   *         was not possible to calculate the indent.
+   * was not possible to calculate the indent.
    */
   @Nullable
   public abstract String getLineIndent(@Nonnull PsiFile file, int offset);
+
+  /**
+   * Calculates the indent that should be used for the specified line in
+   * the specified file with the given formatting mode. Default implementation falls back to
+   * {@link #getLineIndent(PsiFile, int)}
+   *
+   * @param file   the file for which the indent should be calculated.
+   * @param offset the offset for the line at which the indent should be calculated.
+   * @param mode   the formatting mode {@link FormattingMode}
+   * @return the indent string (containing of tabs and/or whitespaces), or null if it
+   * was not possible to calculate the indent.
+   */
+  @Nullable
+  public String getLineIndent(@Nonnull PsiFile file, int offset, FormattingMode mode) {
+    return getLineIndent(file, offset);
+  }
 
   /**
    * Calculates the indent that should be used for the current line in the specified
@@ -211,7 +225,7 @@ public abstract class CodeStyleManager  {
    *
    * @param document for which the indent should be calculated.
    * @return the indent string (containing of tabs and/or whitespaces), or null if it
-   *         was not possible to calculate the indent.
+   * was not possible to calculate the indent.
    */
   @Nullable
   public abstract String getLineIndent(@Nonnull Document document, int offset);
@@ -219,21 +233,25 @@ public abstract class CodeStyleManager  {
   /**
    * @deprecated
    */
+  @Deprecated
   public abstract Indent getIndent(String text, FileType fileType);
 
   /**
    * @deprecated
    */
+  @Deprecated
   public abstract String fillIndent(Indent indent, FileType fileType);
 
   /**
    * @deprecated
    */
+  @Deprecated
   public abstract Indent zeroIndent();
 
   /**
    * Reformats line indents inside new element and reformats white spaces around it
-   * @param block - added element parent
+   *
+   * @param block        - added element parent
    * @param addedElement - new element
    * @throws IncorrectOperationException if the operation fails for some reason (for example,
    *                                     the file is read-only).
@@ -244,15 +262,15 @@ public abstract class CodeStyleManager  {
    * Formatting may be executed sequentially, i.e. the whole (re)formatting task is split into a number of smaller sub-tasks
    * that are executed sequentially. That is done primarily for ability to show progress dialog during formatting (formatting
    * is always performed from EDT, hence, the GUI freezes if we perform formatting as a single big iteration).
-   * <p/>
+   * <p>
    * However, there are situation when we don't want to use such an approach - for example, IntelliJ IDEA sometimes inserts dummy
    * text into file in order to calculate formatting-specific data and removes it after that. We don't want to allow Swing events
    * dispatching during that in order to not show that dummy text to the end-user.
-   * <p/>
+   * <p>
    * It's possible to configure that (implementation details are insignificant here) and current method serves as a read-only
    * facade for obtaining information if 'sequential' processing is allowed at the moment.
    *
-   * @return      {@code true} if 'sequential' formatting is allowed now; {@code false} otherwise
+   * @return {@code true} if 'sequential' formatting is allowed now; {@code false} otherwise
    */
   public abstract boolean isSequentialProcessingAllowed();
 
@@ -274,7 +292,7 @@ public abstract class CodeStyleManager  {
   /**
    * Calculates minimum spacing, allowed by formatting model (in columns) for a block starting at given offset,
    * relative to its previous sibling block.
-   * Returns <code>-1</code>, if required block cannot be found at provided offset,
+   * Returns {@code -1}, if required block cannot be found at provided offset,
    * or spacing cannot be calculated due to some other reason.
    */
   public int getSpacing(@Nonnull PsiFile file, int offset) {
@@ -283,7 +301,7 @@ public abstract class CodeStyleManager  {
 
   /**
    * Calculates minimum number of line feeds that should precede block starting at given offset, as dictated by formatting model.
-   * Returns <code>-1</code>, if required block cannot be found at provided offset,
+   * Returns {@code -1}, if required block cannot be found at provided offset,
    * or spacing cannot be calculated due to some other reason.
    */
   public int getMinLineFeeds(@Nonnull PsiFile file, int offset) {
@@ -305,5 +323,20 @@ public abstract class CodeStyleManager  {
       }
     }
     return FormattingMode.REFORMAT;
+  }
+
+  /**
+   * Run the given runnable disabling doc comment formatting.
+   *
+   * @param file     The file for which doc comment formatting should be temporarily disabled.
+   * @param runnable The runnable to run.
+   */
+  public void runWithDocCommentFormattingDisabled(@Nonnull PsiFile file, @Nonnull Runnable runnable) {
+    runnable.run();
+  }
+
+  @Nonnull
+  public DocCommentSettings getDocCommentSettings(@Nonnull PsiFile file) {
+    return DocCommentSettings.DEFAULTS;
   }
 }

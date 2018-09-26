@@ -1,16 +1,4 @@
-// Copyright 2000-2017 JetBrains s.r.o.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.application.options;
 
 import com.intellij.lang.Language;
@@ -19,12 +7,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
+import com.intellij.psi.codeStyle.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -47,6 +33,7 @@ public class CodeStyle {
   /**
    * Returns root code style settings for the given project. For configurable language settings use {@link #getLanguageSettings(PsiFile)} or
    * {@link #getLanguageSettings(PsiFile, Language)}.
+   *
    * @param project The project to get code style settings for.
    * @return The current root code style settings associated with the project.
    */
@@ -70,6 +57,7 @@ public class CodeStyle {
   /**
    * Returns root code style settings for the given PSI file. For configurable language settings use {@link #getLanguageSettings(PsiFile)} or
    * {@link #getLanguageSettings(PsiFile, Language)}.
+   *
    * @param file The file to get code style settings for.
    * @return The current root code style settings associated with the file or default settings if the file is invalid.
    */
@@ -117,9 +105,10 @@ public class CodeStyle {
 
   /**
    * Returns custom settings for the given PSI file.
-   * @param file The file.
+   *
+   * @param file                The file.
    * @param customSettingsClass The class of a settings object to be returned.
-   * @param <T> Settings class type.
+   * @param <T>                 Settings class type.
    * @return The current custom settings associated with the PSI file.
    */
   @Nonnull
@@ -130,6 +119,7 @@ public class CodeStyle {
 
   /**
    * Returns language settings for the given PSI file. The language is taken from the file itself.
+   *
    * @param file The file to retrieve language settings for.
    * @return The associated language settings.
    */
@@ -142,6 +132,7 @@ public class CodeStyle {
   /**
    * Returns language settings for the given PSI file and language. This method may be useful when PSI file contains elements for multiple
    * languages and language settings should be taken from a specific language context.
+   *
    * @param file The file to retrieve language settings for.
    * @return The associated language settings.
    */
@@ -152,12 +143,13 @@ public class CodeStyle {
   }
 
   /**
-   * Returns indent options for the given PSI file. The method attempts to use {@link com.intellij.psi.codeStyle.FileIndentOptionsProvider}
+   * Returns indent options for the given PSI file. The method attempts to use {@link FileIndentOptionsProvider}
    * if applicable to the file. If there are no suitable indent options providers, it takes configurable language indent options or
    * retrieves indent options by file type.
+   *
    * @param file The file to get indent options for.
    * @return The file indent options.
-   * @see com.intellij.psi.codeStyle.FileIndentOptionsProvider
+   * @see FileIndentOptionsProvider
    */
   @Nonnull
   public static CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull PsiFile file) {
@@ -167,6 +159,7 @@ public class CodeStyle {
 
   /**
    * Explicitly retrieves indent options by file type.
+   *
    * @param file The file to get indent options for.
    * @return The indent options associated with the file type.
    */
@@ -177,7 +170,8 @@ public class CodeStyle {
 
   /**
    * Returns indent options for the given project and document.
-   * @param project The current project.
+   *
+   * @param project  The current project.
    * @param document The document to get indent options for.
    * @return The indent options associated with document's PSI file if the file is available or other indent options otherwise.
    */
@@ -192,6 +186,7 @@ public class CodeStyle {
 
   /**
    * Returns indent size for the given PSI file.
+   *
    * @param file The file to get indent size for.
    * @return The indent size to be used with the PSI file.
    */
@@ -203,11 +198,11 @@ public class CodeStyle {
    * Set temporary settings for the project. Temporary settings will override any user settings until {@link #dropTemporarySettings(Project)}
    * is called.
    * <p>
-   *   <b>Note</b>
+   * <b>Note</b>
    * The method is supposed to be used in test's {@code setUp()} method. In production code use
    * {@link #doWithTemporarySettings(Project, CodeStyleSettings, Runnable)}.
    *
-   * @param project The project.
+   * @param project  The project.
    * @param settings The settings to use temporarily with the project.
    */
   @TestOnly
@@ -220,7 +215,7 @@ public class CodeStyle {
   /**
    * Drop temporary settings.
    * <p>
-   *   <b>Note</b>
+   * <b>Note</b>
    * The method is supposed to be used in test's {@code tearDown()} method. In production code use
    * {@link #doWithTemporarySettings(Project, CodeStyleSettings, Runnable)}.
    *
@@ -237,21 +232,87 @@ public class CodeStyle {
    * Execute the specified runnable with the given temporary code style settings and restore the old settings even if the runnable fails
    * with an exception.
    *
-   * @param project       The current project.
-   * @param tempSettings  The temporary code style settings.
-   * @param runnable      The runnable to execute with the temporary settings.
+   * @param project      The current project.
+   * @param tempSettings The temporary code style settings.
+   * @param runnable     The runnable to execute with the temporary settings.
    */
   @SuppressWarnings("TestOnlyProblems")
-  public static void doWithTemporarySettings(@Nonnull Project project,
-                                             @Nonnull CodeStyleSettings tempSettings,
-                                             @Nonnull Runnable runnable) {
+  public static void doWithTemporarySettings(@Nonnull Project project, @Nonnull CodeStyleSettings tempSettings, @Nonnull Runnable runnable) {
+    CodeStyleSettings tempSettingsBefore = CodeStyleSettingsManager.getInstance(project).getTemporarySettings();
     try {
       setTemporarySettings(project, tempSettings);
       runnable.run();
     }
     finally {
-      dropTemporarySettings(project);
+      if (tempSettingsBefore != null) {
+        setTemporarySettings(project, tempSettingsBefore);
+      }
+      else {
+        dropTemporarySettings(project);
+      }
     }
   }
 
+  /**
+   * @param project The project to check.
+   * @return {@code true} if the project uses its own project code style, {@code false} if global (application-level) code style settings
+   * are used.
+   */
+  public static boolean usesOwnSettings(@Nonnull Project project) {
+    //noinspection deprecation
+    return CodeStyleSettingsManager.getInstance(project).USE_PER_PROJECT_SETTINGS;
+  }
+
+  /**
+   * Updates document's indent options from indent options providers.
+   * <p><b>Note:</b> Calling this method directly when there is an editor associated with the document may cause the editor work
+   * incorrectly. To keep consistency with the editor call {@code EditorEx.reinitSettings()} instead.
+   *
+   * @param project  The project of the document.
+   * @param document The document to update indent options for.
+   */
+  public static void updateDocumentIndentOptions(@Nonnull Project project, @Nonnull Document document) {
+    if (!project.isDisposed()) {
+      PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+      if (documentManager != null) {
+        PsiFile file = documentManager.getPsiFile(document);
+        if (file != null) {
+          CommonCodeStyleSettings.IndentOptions indentOptions = getSettings(file).getIndentOptionsByFile(file, null, true, null);
+          indentOptions.associateWithDocument(document);
+        }
+      }
+    }
+  }
+
+  /**
+   * Assign main project-wide code style settings and force the project to use its own code style instead of a global (application) one.
+   *
+   * @param project  The project to assign the settings to.
+   * @param settings The settings to use with the project.
+   */
+  //public static void setMainProjectSettings(@NotNull Project project, @NotNull CodeStyleSettings settings) {
+  //  @SuppressWarnings("deprecation") CodeStyleSettingsManager codeStyleSettingsManager = CodeStyleSettingsManager.getInstance(project);
+  //  codeStyleSettingsManager.setMainProjectCodeStyle(settings);
+  //  codeStyleSettingsManager.USE_PER_PROJECT_SETTINGS = true;
+  //}
+
+  @Nonnull
+  public static CodeStyleBean getBean(@Nonnull Project project, @Nonnull Language language) {
+    LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.forLanguage(language);
+    CodeStyleBean codeStyleBean = null;
+    if (provider != null) {
+      codeStyleBean = provider.createBean();
+    }
+    if (codeStyleBean == null) {
+      codeStyleBean = new CodeStyleBean() {
+        @Nonnull
+        @Override
+        protected Language getLanguage() {
+          return language;
+        }
+      };
+    }
+    codeStyleBean.setRootSettings(getSettings(project));
+    return codeStyleBean;
+  }
 }

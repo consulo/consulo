@@ -16,6 +16,7 @@
 
 package com.intellij.ide.ui.search;
 
+import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
@@ -40,8 +41,8 @@ import gnu.trove.THashSet;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.event.DocumentEvent;
@@ -376,7 +377,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   @Override
   public Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, final Project project) {
     loadHugeFilesIfNecessary();
-    final boolean perProject = CodeStyleFacade.getInstance(project).projectUsesOwnSettings();
+    final boolean perProject = CodeStyle.usesOwnSettings(project);
     final Map<String, Set<String>> result = new THashMap<>();
     int count = 0;
     final Set<String> prefixes = getProcessedWordsWithoutStemming(prefix);

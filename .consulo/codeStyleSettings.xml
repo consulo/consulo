@@ -2,17 +2,12 @@
 <project>
   <component name="ProjectCodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
-      <value>
+      <value version="173">
         <option name="OTHER_INDENT_OPTIONS">
           <value>
             <option name="INDENT_SIZE" value="2" />
             <option name="CONTINUATION_INDENT_SIZE" value="4" />
             <option name="TAB_SIZE" value="8" />
-            <option name="USE_TAB_CHARACTER" value="false" />
-            <option name="SMART_TABS" value="false" />
-            <option name="LABEL_INDENT_SIZE" value="0" />
-            <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-            <option name="USE_RELATIVE_INDENTS" value="false" />
           </value>
         </option>
         <option name="LINE_SEPARATOR" value="&#10;" />
@@ -53,6 +48,10 @@
         <option name="WHILE_BRACE_FORCE" value="1" />
         <option name="FOR_BRACE_FORCE" value="1" />
         <option name="FIELD_ANNOTATION_WRAP" value="0" />
+        <JavaCodeStyleSettings>
+          <option name="FIELD_NAME_PREFIX" value="my" />
+          <option name="STATIC_FIELD_NAME_PREFIX" value="our" />
+        </JavaCodeStyleSettings>
         <ADDITIONAL_INDENT_OPTIONS fileType="gsp">
           <option name="INDENT_SIZE" value="2" />
         </ADDITIONAL_INDENT_OPTIONS>
@@ -99,7 +98,6 @@
           <option name="BINARY_OPERATION_WRAP" value="5" />
           <option name="TERNARY_OPERATION_WRAP" value="5" />
           <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
-          <option name="PARENT_SETTINGS_INSTALLED" value="true" />
         </codeStyleSettings>
         <codeStyleSettings language="Dart">
           <option name="ELSE_ON_NEW_LINE" value="true" />
@@ -142,7 +140,6 @@
           <option name="WHILE_BRACE_FORCE" value="1" />
           <option name="FOR_BRACE_FORCE" value="1" />
           <option name="FIELD_ANNOTATION_WRAP" value="0" />
-          <option name="PARENT_SETTINGS_INSTALLED" value="true" />
           <indentOptions>
             <option name="INDENT_SIZE" value="2" />
           </indentOptions>
@@ -188,7 +185,6 @@
           <option name="WHILE_BRACE_FORCE" value="1" />
           <option name="FOR_BRACE_FORCE" value="1" />
           <option name="ENUM_CONSTANTS_WRAP" value="2" />
-          <option name="PARENT_SETTINGS_INSTALLED" value="true" />
           <indentOptions>
             <option name="INDENT_SIZE" value="2" />
           </indentOptions>
@@ -205,7 +201,6 @@
           <option name="BINARY_OPERATION_WRAP" value="5" />
           <option name="TERNARY_OPERATION_WRAP" value="5" />
           <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
-          <option name="PARENT_SETTINGS_INSTALLED" value="true" />
         </codeStyleSettings>
         <codeStyleSettings language="Lua">
           <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />

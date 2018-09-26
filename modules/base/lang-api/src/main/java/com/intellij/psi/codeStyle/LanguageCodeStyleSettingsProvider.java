@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
+import com.intellij.application.options.CodeStyleBean;
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -257,6 +258,23 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
                                  Object... options) {
       myCollectedFields.add(fieldName);
     }
+  }
+
+  /**
+   * Returns a wrapper around language's own code documentation comment settings from the given {@code rootSettings}.
+   *
+   * @param rootSettings Root code style setting to retrieve doc comment settings from.
+   * @return {@code DocCommentSettings} wrapper object object which allows to retrieve and modify language's own
+   * settings related to doc comment. The object is used then by common platform doc comment handling algorithms.
+   */
+  @Nonnull
+  public DocCommentSettings getDocCommentSettings(@Nonnull CodeStyleSettings rootSettings) {
+    return DocCommentSettings.DEFAULTS;
+  }
+
+  @Nullable
+  public CodeStyleBean createBean() {
+    return null;
   }
 
   @Nonnull

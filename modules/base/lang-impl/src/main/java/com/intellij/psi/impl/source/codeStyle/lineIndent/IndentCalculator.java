@@ -15,7 +15,9 @@
  */
 package com.intellij.psi.impl.source.codeStyle.lineIndent;
 
+import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.Indent;
+import com.intellij.formatting.IndentImpl;
 import com.intellij.formatting.IndentInfo;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
@@ -23,36 +25,34 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.formatting.Indent.Type.CONTINUATION;
-import static com.intellij.formatting.Indent.Type.NORMAL;
+import static com.intellij.formatting.Indent.Type.*;
 
 public class IndentCalculator {
 
-  private @Nonnull
+  private
+  @Nonnull
   final Project myProject;
-  private @Nonnull
+  private
+  @Nonnull
   final Editor myEditor;
-  private @Nonnull
-  BaseLineOffsetCalculator myBaseLineOffsetCalculator;
-  private @Nonnull
-  final Indent.Type myIndentType;
+  private
+  @Nonnull
+  final BaseLineOffsetCalculator myBaseLineOffsetCalculator;
+  private
+  @Nonnull
+  final Indent myIndent;
 
-  public IndentCalculator(@Nonnull Project project,
-                          @Nonnull Editor editor,
-                          @Nonnull BaseLineOffsetCalculator baseLineOffsetCalculator,
-                          @Nonnull Indent.Type type) {
+  public IndentCalculator(@Nonnull Project project, @Nonnull Editor editor, @Nonnull BaseLineOffsetCalculator baseLineOffsetCalculator, @Nonnull Indent indent) {
     myProject = project;
     myEditor = editor;
     myBaseLineOffsetCalculator = baseLineOffsetCalculator;
-    myIndentType = type;
+    myIndent = indent;
   }
 
   public final static BaseLineOffsetCalculator LINE_BEFORE = new BaseLineOffsetCalculator() {
@@ -75,20 +75,19 @@ public class IndentCalculator {
     Document document = myEditor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
     if (file != null) {
-      CodeStyleSettings codeStyleSettings = CodeStyleSettingsManager.getSettings(myProject);
+      CommonCodeStyleSettings.IndentOptions fileOptions = CodeStyle.getIndentOptions(file);
       CommonCodeStyleSettings.IndentOptions options =
-              language != null && !(language.is(file.getLanguage()) || language.is(Language.ANY)) ?
-              codeStyleSettings.getCommonSettings(language).getIndentOptions() :
-              codeStyleSettings.getIndentOptionsByFile(file);
-      return
-              baseIndent + new IndentInfo(0, indentTypeToSize(myIndentType, options), 0, false).generateNewWhiteSpace(options);
+              !fileOptions.isOverrideLanguageOptions() && language != null && !(language.is(file.getLanguage()) || language.is(Language.ANY)) ? CodeStyle.getLanguageSettings(file, language)
+                      .getIndentOptions() : fileOptions;
+      if (options != null) {
+        return baseIndent + new IndentInfo(0, indentToSize(myIndent, options), 0, false).generateNewWhiteSpace(options);
+      }
     }
     return null;
   }
 
-
   @Nonnull
-  private String getBaseIndent(@Nonnull SemanticEditorPosition currPosition) {
+  protected String getBaseIndent(@Nonnull SemanticEditorPosition currPosition) {
     CharSequence docChars = myEditor.getDocument().getCharsSequence();
     int offset = currPosition.getStartOffset();
     if (offset > 0) {
@@ -106,18 +105,21 @@ public class IndentCalculator {
     return "";
   }
 
-  private static int indentTypeToSize(@Nonnull Indent.Type indentType, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
-    if (indentType == NORMAL) {
+  private static int indentToSize(@Nonnull Indent indent, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
+    if (indent.getType() == NORMAL) {
       return options.INDENT_SIZE;
     }
-    else if (indentType == CONTINUATION) {
+    else if (indent.getType() == CONTINUATION) {
       return options.CONTINUATION_INDENT_SIZE;
+    }
+    else if (indent.getType() == SPACES && indent instanceof IndentImpl) {
+      return ((IndentImpl)indent).getSpaces();
     }
     return 0;
   }
 
 
-  public interface BaseLineOffsetCalculator  {
+  public interface BaseLineOffsetCalculator {
     int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition position);
   }
 }

@@ -1,31 +1,18 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.editorActions;
 
+import com.intellij.application.options.CodeStyle;
+import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.documentation.DocCommentFixer;
 import com.intellij.lang.*;
 import com.intellij.lang.documentation.CodeDocumentationProvider;
 import com.intellij.lang.documentation.CompositeDocumentationProvider;
 import com.intellij.lang.documentation.DocumentationProvider;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
@@ -33,15 +20,18 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.DocCommentSettings;
+import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Creates documentation comment for the current context if it's not created yet (e.g. the caret is inside a method which
  * doesn't have a doc comment).
- * <p/>
+ * <p>
  * Updates existing documentation comment if necessary if the one exists. E.g. we've changed method signature and want to remove all
  * outdated parameters and create stubs for the new ones.
  *
@@ -51,36 +41,48 @@ import javax.annotation.Nonnull;
 public class FixDocCommentAction extends EditorAction {
 
   @Nonnull
-  @NonNls public static final String ACTION_ID = "FixDocComment";
+  @NonNls
+  public static final String ACTION_ID = "FixDocComment";
 
   public FixDocCommentAction() {
     super(new MyHandler());
   }
 
   private static final class MyHandler extends EditorActionHandler {
+
     @Override
-    public void execute(Editor editor, DataContext dataContext) {
+    public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
       Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) {
         return;
       }
 
-      PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
+      PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
       if (psiFile == null) {
         return;
       }
 
-      process(psiFile, editor, project, editor.getCaretModel().getOffset()); 
+      process(psiFile, editor, project, editor.getCaretModel().getOffset());
     }
-  } 
-  
+  }
+
   private static void process(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Project project, int offset) {
     PsiElement elementAtOffset = file.findElementAt(offset);
-    if (elementAtOffset == null) {
+    if (elementAtOffset == null || !FileModificationService.getInstance().preparePsiElementForWrite(elementAtOffset)) {
       return;
     }
+    generateOrFixComment(elementAtOffset, project, editor);
+  }
 
-    Language language = PsiUtilCore.getLanguageAtOffset(file, offset);
+  /**
+   * Generates comment if it's not exist or try to fix if exists
+   *
+   * @param element target element for which a comment should be generated
+   * @param project current project
+   * @param editor  target editor
+   */
+  public static void generateOrFixComment(@Nonnull final PsiElement element, @Nonnull final Project project, @Nonnull final Editor editor) {
+    Language language = element.getLanguage();
     final CodeDocumentationProvider docProvider;
     final DocumentationProvider langDocumentationProvider = LanguageDocumentation.INSTANCE.forLanguage(language);
     if (langDocumentationProvider instanceof CompositeDocumentationProvider) {
@@ -96,7 +98,7 @@ public class FixDocCommentAction extends EditorAction {
       return;
     }
 
-    final Pair<PsiElement, PsiComment> pair = docProvider.parseContext(elementAtOffset);
+    final Pair<PsiElement, PsiComment> pair = docProvider.parseContext(element);
     if (pair == null) {
       return;
     }
@@ -108,12 +110,7 @@ public class FixDocCommentAction extends EditorAction {
     final CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)c;
     final Runnable task;
     if (pair.second == null || pair.second.getTextRange().isEmpty()) {
-      task = new Runnable() {
-        @Override
-        public void run() {
-          generateComment(pair.first, editor, docProvider, commenter, project); 
-        }
-      };
+      task = () -> generateComment(pair.first, editor, docProvider, commenter, project);
     }
     else {
       final DocCommentFixer fixer = DocCommentFixer.EXTENSION.forLanguage(language);
@@ -121,41 +118,30 @@ public class FixDocCommentAction extends EditorAction {
         return;
       }
       else {
-        task = new Runnable() {
-          @Override
-          public void run() {
-            fixer.fixComment(project, editor, pair.second);
-          }
-        };
+        task = () -> fixer.fixComment(project, editor, pair.second);
       }
     }
-    final Runnable command = new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(task);
-      }
-    };
+    final Runnable command = () -> ApplicationManager.getApplication().runWriteAction(task);
     CommandProcessor.getInstance().executeCommand(project, command, "Fix documentation", null);
-    
+
   }
 
   /**
    * Generates a comment if possible.
-   * <p/>
+   * <p>
    * It's assumed that this method {@link PsiDocumentManager#commitDocument(Document) syncs} all PSI-document
    * changes during the processing.
-   * 
-   * @param anchor      target element for which a comment should be generated
-   * @param editor      target editor
-   * @param commenter   commenter to use
-   * @param project     current project
+   *
+   * @param anchor    target element for which a comment should be generated
+   * @param editor    target editor
+   * @param commenter commenter to use
+   * @param project   current project
    */
   private static void generateComment(@Nonnull PsiElement anchor,
                                       @Nonnull Editor editor,
                                       @Nonnull CodeDocumentationProvider documentationProvider,
                                       @Nonnull CodeDocumentationAwareCommenter commenter,
-                                      @Nonnull Project project)
-  {
+                                      @Nonnull Project project) {
     Document document = editor.getDocument();
     int commentStartOffset = anchor.getTextRange().getStartOffset();
     int lineStartOffset = document.getLineStartOffset(document.getLineNumber(commentStartOffset));
@@ -170,7 +156,7 @@ public class FixDocCommentAction extends EditorAction {
       int nonWhiteSpaceOffset = CharArrayUtil.shiftBackward(document.getCharsSequence(), commentStartOffset - 1, " \t");
       commentStartOffset = Math.max(nonWhiteSpaceOffset, lineStartOffset);
     }
-  
+
     int commentBodyRelativeOffset = 0;
     int caretOffsetToSet = -1;
     StringBuilder buffer = new StringBuilder();
@@ -179,7 +165,7 @@ public class FixDocCommentAction extends EditorAction {
       buffer.append(commentPrefix).append("\n");
       commentBodyRelativeOffset += commentPrefix.length() + 1;
     }
-  
+
     String linePrefix = commenter.getDocumentationCommentLinePrefix();
     if (linePrefix != null) {
       buffer.append(linePrefix);
@@ -188,16 +174,16 @@ public class FixDocCommentAction extends EditorAction {
     }
     buffer.append("\n");
     commentBodyRelativeOffset++;
-  
+
     String commentSuffix = commenter.getDocumentationCommentSuffix();
     if (commentSuffix != null) {
       buffer.append(commentSuffix).append("\n");
     }
-  
+
     if (buffer.length() <= 0) {
       return;
     }
-  
+
     document.insertString(commentStartOffset, buffer);
     PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);
     docManager.commitDocument(document);
@@ -206,20 +192,11 @@ public class FixDocCommentAction extends EditorAction {
     if (pair == null || pair.second == null) {
       return;
     }
-  
+
     String stub = documentationProvider.generateDocumentationContentStub(pair.second);
     CaretModel caretModel = editor.getCaretModel();
     if (stub != null) {
       int insertionOffset = commentStartOffset + commentBodyRelativeOffset;
-      //if (CodeStyleSettingsManager.getSettings(project).JD_ADD_BLANK_AFTER_DESCRIPTION) {
-      //  buffer.setLength(0);
-      //  if (linePrefix != null) {
-      //    buffer.append(linePrefix);
-      //  }
-      //  buffer.append("\n");
-      //  buffer.append(stub);
-      //  stub = buffer.toString();
-      //}
       document.insertString(insertionOffset, stub);
       docManager.commitDocument(document);
       pair = documentationProvider.parseContext(anchor);
@@ -227,17 +204,18 @@ public class FixDocCommentAction extends EditorAction {
 
     if (caretOffsetToSet >= 0) {
       caretModel.moveToOffset(caretOffsetToSet);
+      editor.getSelectionModel().removeSelection();
     }
 
     if (pair == null || pair.second == null) {
       return;
     }
-    
+
     int start = Math.min(calcStartReformatOffset(pair.first), calcStartReformatOffset(pair.second));
     int end = pair.second.getTextRange().getEndOffset();
 
-    CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
-    codeStyleManager.reformatText(anchor.getContainingFile(), start, end);
+    reformatCommentKeepingEmptyTags(anchor.getContainingFile(), project, start, end);
+    editor.getCaretModel().moveToOffset(document.getLineEndOffset(document.getLineNumber(editor.getCaretModel().getOffset())));
 
     int caretOffset = caretModel.getOffset();
     if (caretOffset > 0 && caretOffset <= document.getTextLength()) {
@@ -247,6 +225,17 @@ public class FixDocCommentAction extends EditorAction {
         caretModel.moveToOffset(caretOffset + 1);
       }
     }
+  }
+
+  private static void reformatCommentKeepingEmptyTags(@Nonnull PsiFile file, @Nonnull Project project, int start, int end) {
+    CodeStyleSettings tempSettings = CodeStyle.getSettings(file).clone();
+    LanguageCodeStyleSettingsProvider langProvider = LanguageCodeStyleSettingsProvider.forLanguage(file.getLanguage());
+    if (langProvider != null) {
+      DocCommentSettings docCommentSettings = langProvider.getDocCommentSettings(tempSettings);
+      docCommentSettings.setRemoveEmptyTags(false);
+    }
+    CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
+    CodeStyle.doWithTemporarySettings(project, tempSettings, () -> codeStyleManager.reformatText(file, start, end));
   }
 
   private static int calcStartReformatOffset(@Nonnull PsiElement element) {
