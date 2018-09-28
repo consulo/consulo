@@ -46,6 +46,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -56,6 +57,7 @@ import java.util.List;
 public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   private IdeFrameEx myFrame;
 
+  @Inject
   public WebToolWindowManagerImpl(Project project, WindowManagerEx windowManager) {
     super(project, windowManager);
 

@@ -27,6 +27,7 @@ import com.intellij.vcs.log.VcsUserRegistry;
 import com.intellij.vcs.log.impl.VcsUserImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.io.DataInput;
@@ -52,6 +53,7 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
   @Nonnull
   private final Interner<VcsUser> myInterner;
 
+  @Inject
   VcsUserRegistryImpl(@Nonnull Project project) {
     final File mapFile = new File(USER_CACHE_APP_DIR, project.getLocationHash() + "." + STORAGE_VERSION);
     myPersistentEnumerator = initEnumerator(mapFile);

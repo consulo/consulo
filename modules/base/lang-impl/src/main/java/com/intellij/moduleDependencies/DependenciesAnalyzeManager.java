@@ -28,6 +28,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -49,9 +50,10 @@ public class DependenciesAnalyzeManager implements PersistentStateComponent<Depe
 
   private State myState;
 
-  public DependenciesAnalyzeManager(final Project project) {
+  @Inject
+  public DependenciesAnalyzeManager(final Project project, StartupManager startupManager) {
     myProject = project;
-    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new Runnable() {
+    startupManager.runWhenProjectIsInitialized(new Runnable() {
       @Override
       public void run() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);

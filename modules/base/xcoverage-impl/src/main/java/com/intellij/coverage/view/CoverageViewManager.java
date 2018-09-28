@@ -17,6 +17,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.HashMap;
@@ -41,6 +42,7 @@ public class CoverageViewManager implements PersistentStateComponent<CoverageVie
   private Map<String, CoverageView> myViews = new HashMap<String, CoverageView>();
   private boolean myReady;
 
+  @Inject
   public CoverageViewManager(Project project, ToolWindowManager toolWindowManager, CoverageDataManager dataManager) {
     myProject = project;
     myDataManager = dataManager;

@@ -31,6 +31,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.nio.charset.Charset;
@@ -48,6 +49,7 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
   private final Project myProject;
   private final CachedValue<Map<Module, Set<Charset>>> myModuleFileEncodings;
 
+  @Inject
   public CompilerEncodingServiceImpl(@Nonnull Project project) {
     myProject = project;
     myModuleFileEncodings = CachedValuesManager.getManager(project).createCachedValue(new CachedValueProvider<Map<Module, Set<Charset>>>() {

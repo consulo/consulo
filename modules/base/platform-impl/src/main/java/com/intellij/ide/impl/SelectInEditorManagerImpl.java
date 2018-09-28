@@ -38,6 +38,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.event.FocusEvent;
@@ -53,6 +54,7 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
   private RangeHighlighter mySegmentHighlighter;
   private Editor myEditor;
 
+  @Inject
   public SelectInEditorManagerImpl(Project project){
     myProject = project;
   }

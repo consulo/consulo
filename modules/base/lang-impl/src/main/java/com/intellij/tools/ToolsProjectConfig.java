@@ -40,9 +40,6 @@ public class ToolsProjectConfig implements PersistentStateComponent<ToolsProject
     return ServiceManager.getService(project, ToolsProjectConfig.class);
   }
 
-  protected ToolsProjectConfig() {
-  }
-
   public String getAfterCommitToolsId() {
     return myAfterCommitToolsId;
   }

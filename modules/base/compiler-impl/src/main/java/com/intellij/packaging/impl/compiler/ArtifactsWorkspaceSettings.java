@@ -24,6 +24,7 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,6 +50,7 @@ public class ArtifactsWorkspaceSettings implements PersistentStateComponent<Arti
   private final ArtifactManager myArtifactManager;
   private ArtifactsWorkspaceSettingsState myState = new ArtifactsWorkspaceSettingsState();
 
+  @Inject
   public ArtifactsWorkspaceSettings(ArtifactManager artifactManager) {
     myArtifactManager = artifactManager;
   }

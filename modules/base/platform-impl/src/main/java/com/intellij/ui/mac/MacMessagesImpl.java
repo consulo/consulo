@@ -212,8 +212,6 @@ public class MacMessagesImpl extends MacMessages {
                   buttonsNumber - 1), "setKeyEquivalent:",  nsString("\033"));
   }
 
-  private MacMessagesImpl() {}
-
   private static final Callback windowDidBecomeMainCallback = new Callback() {
     @SuppressWarnings("UnusedDeclaration") // this is a native up-call
     public void callback(ID self,

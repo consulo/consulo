@@ -7,6 +7,7 @@ import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ui.RemoteServersView;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -17,6 +18,7 @@ public class RemoteServersViewImpl extends RemoteServersView {
   @Nonnull
   private final Project myProject;
 
+  @Inject
   public RemoteServersViewImpl(@Nonnull Project project) {
     myProject = project;
   }

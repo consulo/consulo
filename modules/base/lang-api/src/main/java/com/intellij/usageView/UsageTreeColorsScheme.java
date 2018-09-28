@@ -16,7 +16,6 @@
 package com.intellij.usageView;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.util.ui.UIUtil;
@@ -25,13 +24,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class UsageTreeColorsScheme {
-
-  /**
-   * @noinspection UnusedParameters
-   */
-  public UsageTreeColorsScheme(EditorColorsManager editorColorsManager) {
-  }
-
   public static UsageTreeColorsScheme getInstance() {
     return ServiceManager.getService(UsageTreeColorsScheme.class);
   }

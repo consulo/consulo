@@ -60,6 +60,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -104,6 +105,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
   private final ModuleManager myModuleManager;
 
+  @Inject
   public ModuleStructureConfigurable(Project project, ModuleManager manager) {
     super(project);
     myModuleManager = manager;

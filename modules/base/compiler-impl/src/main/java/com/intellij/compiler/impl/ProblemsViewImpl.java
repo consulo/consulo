@@ -34,6 +34,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.List;
@@ -54,19 +55,19 @@ public class ProblemsViewImpl extends ProblemsView {
     final String[] text;
     @Nullable
     final String groupName;
-    @javax.annotation.Nullable
+    @Nullable
     final Navigatable navigatable;
-    @javax.annotation.Nullable
+    @Nullable
     final String exportTextPrefix;
-    @javax.annotation.Nullable
+    @Nullable
     final String rendererTextPrefix;
 
     private TempMessage(int type,
                         @Nonnull String[] text,
-                        @javax.annotation.Nullable String groupName,
+                        @Nullable String groupName,
                         @Nullable Navigatable navigatable,
-                        @javax.annotation.Nullable String exportTextPrefix,
-                        @javax.annotation.Nullable String rendererTextPrefix) {
+                        @Nullable String exportTextPrefix,
+                        @Nullable String rendererTextPrefix) {
       this.type = type;
       this.text = text;
       this.groupName = groupName;
@@ -80,11 +81,12 @@ public class ProblemsViewImpl extends ProblemsView {
 
   private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<TempMessage>();
 
-  @javax.annotation.Nullable
+  @Nullable
   private ProblemsViewPanel myPanel;
 
   private final ExecutorService myViewUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ProblemsView pool");
 
+  @Inject
   public ProblemsViewImpl(final Project project) {
     super(project);
   }
@@ -108,9 +110,9 @@ public class ProblemsViewImpl extends ProblemsView {
   @Override
   public void addMessage(final int type,
                          @Nonnull final String[] text,
-                         @javax.annotation.Nullable final String groupName,
-                         @javax.annotation.Nullable final Navigatable navigatable,
-                         @javax.annotation.Nullable final String exportTextPrefix,
+                         @Nullable final String groupName,
+                         @Nullable final Navigatable navigatable,
+                         @Nullable final String exportTextPrefix,
                          @Nullable final String rendererTextPrefix) {
     final TempMessage message = new TempMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix);
 

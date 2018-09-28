@@ -29,6 +29,7 @@ import com.intellij.openapi.vcs.changes.patch.RelativePathCalculator;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.io.File;
@@ -40,6 +41,7 @@ import java.io.File;
 public class ModuleVcsPathPresenter extends VcsPathPresenter {
   private final Project myProject;
 
+  @Inject
   public ModuleVcsPathPresenter(final Project project) {
     myProject = project;
   }

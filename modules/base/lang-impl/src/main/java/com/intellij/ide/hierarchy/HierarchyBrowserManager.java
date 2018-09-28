@@ -26,6 +26,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -48,6 +49,7 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
 
   private final ContentManager myContentManager;
 
+  @Inject
   public HierarchyBrowserManager(final Project project) {
     final ToolWindowManager toolWindowManager=ToolWindowManager.getInstance(project);
     final ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);

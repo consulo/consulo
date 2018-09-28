@@ -29,15 +29,14 @@ import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.roots.ContentFolderScopes;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import consulo.roots.ContentFolderScopes;
-
 import java.util.*;
 
 /**
@@ -51,6 +50,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   private final ModuleManager myModuleManager;
   private final Project myProject;
 
+  @Inject
   public LogicalRootsManagerImpl(final ModuleManager moduleManager, final Project project) {
     myModuleManager = moduleManager;
     myProject = project;

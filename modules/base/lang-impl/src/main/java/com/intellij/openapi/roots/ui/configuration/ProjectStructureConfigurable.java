@@ -46,6 +46,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
 
   private ProjectStructureDialog myProjectStructureDialog;
 
+  @Inject
   public ProjectStructureConfigurable(final Project project,
                                       final ProjectLibrariesConfigurable projectLibrariesConfigurable,
                                       final ModuleStructureConfigurable moduleStructureConfigurable,

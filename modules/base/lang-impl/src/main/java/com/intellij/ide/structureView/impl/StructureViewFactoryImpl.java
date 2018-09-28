@@ -33,6 +33,7 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ReflectionUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Arrays;
@@ -80,6 +81,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   };
   private final MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> myImplExtensions = new MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>();
 
+  @Inject
   public StructureViewFactoryImpl(Project project) {
     myProject = project;
   }

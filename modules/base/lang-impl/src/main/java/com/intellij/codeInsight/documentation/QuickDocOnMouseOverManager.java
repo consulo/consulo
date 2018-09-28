@@ -40,6 +40,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.WeakHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.awt.*;
@@ -85,6 +86,7 @@ public class QuickDocOnMouseOverManager {
 
   private MyShowQuickDocRequest myCurrentRequest; // accessed only in EDT
 
+  @Inject
   public QuickDocOnMouseOverManager(@Nonnull Application application) {
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, application);
 

@@ -12,6 +12,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Map;
@@ -56,6 +57,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
   @Nonnull
   private final ExternalSystemProgressNotificationManager myProgressNotificationManager;
 
+  @Inject
   public ExternalSystemProcessingManager(@Nonnull ExternalSystemFacadeManager facadeManager,
                                          @Nonnull ExternalSystemProgressNotificationManager notificationManager)
   {

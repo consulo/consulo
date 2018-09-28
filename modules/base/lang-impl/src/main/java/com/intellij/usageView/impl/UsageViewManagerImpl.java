@@ -29,6 +29,7 @@ import com.intellij.usageView.UsageViewManager;
 import com.intellij.usages.UsageView;
 import javax.annotation.Nonnull;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 
@@ -39,6 +40,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   private final Key<UsageView> NEW_USAGE_VIEW_KEY = Key.create("NEW_USAGE_VIEW_KEY");
   private final ContentManager myFindContentManager;
 
+  @Inject
   public UsageViewManagerImpl(final Project project, final ToolWindowManager toolWindowManager) {
     ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.FIND, true, ToolWindowAnchor.BOTTOM, project, true);
     toolWindow.setToHideOnEmptyContent(true);

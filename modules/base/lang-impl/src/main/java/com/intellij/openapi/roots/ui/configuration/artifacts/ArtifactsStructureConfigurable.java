@@ -51,6 +51,7 @@ import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,6 +76,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   @Nonnull
   private final ArtifactEditorSettings myDefaultSettings;
 
+  @Inject
   public ArtifactsStructureConfigurable(@Nonnull Project project, @Nonnull ArtifactManager artifactManager, @Nonnull ArtifactPointerManager artifactPointerManager) {
     super(project, new ArtifactStructureConfigurableState());
     myArtifactManager = artifactManager;

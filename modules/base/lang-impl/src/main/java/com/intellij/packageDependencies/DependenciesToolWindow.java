@@ -27,6 +27,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -41,9 +42,10 @@ public class DependenciesToolWindow {
   private final Project myProject;
   private ContentManager myContentManager;
 
-  public DependenciesToolWindow(final Project project) {
+  @Inject
+  public DependenciesToolWindow(final Project project, StartupManager startupManager) {
     myProject = project;
-    StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
+    startupManager.runWhenProjectIsInitialized(new Runnable() {
       @Override
       public void run() {
         final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);

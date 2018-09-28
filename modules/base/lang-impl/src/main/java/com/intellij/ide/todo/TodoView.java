@@ -49,6 +49,7 @@ import consulo.application.AccessRule;
 import consulo.psi.PsiPackageSupportProviders;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -73,7 +74,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
   private final MyVcsListener myVcsListener = new MyVcsListener();
 
-  @RequiredReadAction
+  @Inject
   public TodoView(@Nonnull Project project) {
     myProject = project;
 

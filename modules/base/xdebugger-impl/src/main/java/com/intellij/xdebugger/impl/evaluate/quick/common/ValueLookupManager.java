@@ -35,6 +35,7 @@ import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import consulo.annotations.RequiredDispatchThread;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.awt.*;
@@ -52,6 +53,7 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
   private final DebuggerSupport[] mySupports;
   private boolean myListening;
 
+  @Inject
   public ValueLookupManager(@Nonnull Project project) {
     myProject = project;
     mySupports = DebuggerSupport.getDebuggerSupports();

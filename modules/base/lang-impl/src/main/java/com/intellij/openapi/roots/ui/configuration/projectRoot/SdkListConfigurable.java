@@ -46,6 +46,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -138,6 +139,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     }
   }
 
+  @Inject
   public SdkListConfigurable(final Project project, ProjectStructureConfigurable root) {
     super(project);
     mySdksTreeModel = root.getProjectSdksModel();

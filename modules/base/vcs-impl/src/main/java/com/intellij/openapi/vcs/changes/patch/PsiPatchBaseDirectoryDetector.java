@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Collection;
@@ -35,6 +36,7 @@ import java.util.Collection;
 public class PsiPatchBaseDirectoryDetector extends PatchBaseDirectoryDetector {
   private final Project myProject;
 
+  @Inject
   public PsiPatchBaseDirectoryDetector(final Project project) {
     myProject = project;
   }

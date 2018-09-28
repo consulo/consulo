@@ -30,6 +30,7 @@ import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.io.DataInput;
@@ -77,6 +78,7 @@ public class TestStateStorage implements Disposable {
     return ServiceManager.getService(project, TestStateStorage.class);
   }
 
+  @Inject
   public TestStateStorage(Project project) {
     String directoryPath = getTestHistoryRoot(project).getPath();
 

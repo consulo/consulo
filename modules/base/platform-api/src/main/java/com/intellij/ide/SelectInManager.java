@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
@@ -39,6 +40,7 @@ public class SelectInManager  {
   @NonNls public static final String NAV_BAR = IdeBundle.message("select.in.nav.bar");
   @NonNls public static final String SCOPE = IdeBundle.message("select.in.scope");
 
+  @Inject
   public SelectInManager(final Project project) {
     myProject = project;
   }

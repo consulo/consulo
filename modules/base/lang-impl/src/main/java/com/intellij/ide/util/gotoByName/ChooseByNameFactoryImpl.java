@@ -19,6 +19,7 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -29,6 +30,7 @@ import javax.inject.Singleton;
 public class ChooseByNameFactoryImpl extends ChooseByNameFactory {
   private final Project myProject;
 
+  @Inject
   public ChooseByNameFactoryImpl(final Project project) {
     myProject = project;
   }

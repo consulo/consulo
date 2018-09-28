@@ -30,7 +30,7 @@ import java.util.List;
         name = "ExportableTemplateSettings",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/template.settings.xml", roamingType = RoamingType.DISABLED)
 )
-final class ExportableTemplateSettings implements PersistentStateComponent<ExportableTemplateSettings> {
+public final class ExportableTemplateSettings implements PersistentStateComponent<ExportableTemplateSettings> {
   public Collection<TemplateSettings.TemplateKey> deletedKeys = new SmartList<TemplateSettings.TemplateKey>();
 
   @Nullable

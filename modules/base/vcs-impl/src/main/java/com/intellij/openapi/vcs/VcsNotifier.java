@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -32,14 +33,14 @@ public class VcsNotifier {
   public static final NotificationGroup STANDARD_NOTIFICATION = new NotificationGroup("Vcs Notifications", NotificationDisplayType.BALLOON, true);
   public static final NotificationGroup SILENT_NOTIFICATION = new NotificationGroup("Vcs Silent Notifications", NotificationDisplayType.NONE, true);
 
-  private final @Nonnull
-  Project myProject;
-
+  @Nonnull
+  private final Project myProject;
 
   public static VcsNotifier getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, VcsNotifier.class);
   }
 
+  @Inject
   public VcsNotifier(@Nonnull Project project) {
     myProject = project;
   }

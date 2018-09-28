@@ -30,7 +30,7 @@ import java.util.List;
 @State(
         name = "FindInProjectRecents",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED)})
-final class FindInProjectRecents extends FindInProjectSettingsBase implements FindInProjectSettings {
+public final class FindInProjectRecents extends FindInProjectSettingsBase implements FindInProjectSettings {
   public static FindInProjectSettings getInstance(Project project) {
     return ServiceManager.getService(project, FindInProjectSettings.class);
   }

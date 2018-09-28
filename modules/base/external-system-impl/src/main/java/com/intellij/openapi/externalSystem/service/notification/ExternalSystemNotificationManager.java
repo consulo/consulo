@@ -37,6 +37,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.util.Iterator;
@@ -72,6 +73,7 @@ public class ExternalSystemNotificationManager {
   @Nonnull
   private final MessageCounter myMessageCounter;
 
+  @Inject
   public ExternalSystemNotificationManager(@Nonnull final Project project) {
     myProject = project;
     myNotifications = ContainerUtil.newArrayList();

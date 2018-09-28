@@ -33,6 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
@@ -48,6 +49,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
   private final Object myLock = new Object();
   private final Project myProject;
 
+  @Inject
   public ProjectLoadingErrorsNotifierImpl(Project project) {
     myProject = project;
   }

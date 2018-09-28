@@ -42,9 +42,6 @@ import java.util.Set;
 
 @Singleton
 public class CodeInsightUtilBase extends CodeInsightUtilCore {
-  private CodeInsightUtilBase() {
-  }
-
   @Override
   public boolean prepareFileForWrite(@Nullable final PsiFile psiFile) {
     if (psiFile == null) return false;

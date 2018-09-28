@@ -23,6 +23,7 @@ import com.intellij.openapi.wm.impl.ProjectFrameBounds;
 import consulo.util.ProjectWindowStateService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
 
@@ -34,6 +35,7 @@ import java.awt.*;
 final class WindowStateProjectService extends WindowStateServiceImpl implements ProjectWindowStateService {
   private final Project myProject;
 
+  @Inject
   WindowStateProjectService(Project project) {
     myProject = project;
   }

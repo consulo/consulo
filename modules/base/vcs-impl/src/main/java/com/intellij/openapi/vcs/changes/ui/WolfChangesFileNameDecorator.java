@@ -21,6 +21,7 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
 
@@ -31,6 +32,7 @@ import java.awt.*;
 public class WolfChangesFileNameDecorator extends ChangesFileNameDecorator {
   private final WolfTheProblemSolver myProblemSolver;
 
+  @Inject
   public WolfChangesFileNameDecorator(final WolfTheProblemSolver problemSolver) {
     myProblemSolver = problemSolver;
   }
