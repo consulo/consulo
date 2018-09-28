@@ -57,10 +57,11 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -425,7 +426,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     final AnCancelAction anCancelAction = new AnCancelAction();
     final JRootPane rootPane = getRootPane();
-    UIUtil.resetRootPaneAppearance(rootPane);
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
     anCancelAction.registerCustomShortcutSet(CommonShortcuts.ESCAPE, rootPane);
     myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
 

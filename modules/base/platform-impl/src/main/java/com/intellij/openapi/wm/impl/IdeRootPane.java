@@ -24,7 +24,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
@@ -47,9 +46,10 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.ex.ToolWindowPanel;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseMotionAdapter;
@@ -111,7 +111,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(this, true);
     setGlassPane(glassPane);
     myGlassPaneInitialized = true;
-    UIUtil.resetRootPaneAppearance(this);
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, this);
     glassPane.setVisible(false);
   }
 
@@ -291,7 +291,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
 
   @Override
   public void uiSettingsChanged(UISettings uiSettings) {
-    UIUtil.resetRootPaneAppearance(this);
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, this);
     setMemoryIndicatorVisible(uiSettings.getShowMemoryIndicator());
     updateToolbarVisibility();
     updateStatusBarVisibility();

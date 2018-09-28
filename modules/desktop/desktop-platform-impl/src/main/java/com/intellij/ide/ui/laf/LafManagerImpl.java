@@ -70,7 +70,7 @@ import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.ui.GTKPlusUIUtil;
 import consulo.ui.laf.UIModificationTracker;
-import consulo.util.ui.BuildInLookAndFeel;
+import consulo.ui.style.StyleManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -82,8 +82,6 @@ import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.synth.Region;
 import javax.swing.plaf.synth.SynthLookAndFeel;
 import javax.swing.plaf.synth.SynthStyle;
@@ -305,9 +303,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     return null;
   }
 
-  /**
-   * Sets current LAF. The method doesn't update component hierarchy.
-   */
   @Override
   public void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
     if (findLaf(lookAndFeelInfo.getClassName()) == null) {
@@ -315,17 +310,15 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       return;
     }
     try {
-      LookAndFeel laf = ((LookAndFeel)Class.forName(lookAndFeelInfo.getClassName()).newInstance());
-      if (laf instanceof MetalLookAndFeel) {
-        MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-      }
+      JBColor.resetDark();
 
-      boolean dark = laf instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)laf).isDark();
-      JBColor.setDark(dark);
+      IconLoader.resetDark();
+
       UIModificationTracker.getInstance().incModificationCount();
-      IconLoader.setUseDarkIcons(dark);
+
+      UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
+
       fireUpdate();
-      UIManager.setLookAndFeel(laf);
     }
     catch (Exception e) {
       Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
@@ -408,7 +401,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
 
     if (uiDefaults.get("JBEditorTabsUI") == null) {
-      uiDefaults.put("JBEditorTabsUI", UIUtil.isUnderDarkTheme() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
+      uiDefaults.put("JBEditorTabsUI", StyleManager.get().getCurrentStyle().isDark() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
     }
 
     if (uiDefaults.get("IdeStatusBarUI") == null) {

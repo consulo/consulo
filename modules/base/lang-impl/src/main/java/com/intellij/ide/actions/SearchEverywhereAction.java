@@ -110,17 +110,18 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ide.actions.QualifiedNameProviders;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -982,7 +983,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       super(false);
       getTextEditor().setOpaque(false);
       getTextEditor().putClientProperty("JTextField.Search.noBorderRing", Boolean.TRUE);
-      if (UIUtil.isUnderDarkTheme()) {
+      if (StyleManager.get().getCurrentStyle().isDark()) {
         getTextEditor().setBackground(Gray._45);
         getTextEditor().setForeground(Gray._240);
       }

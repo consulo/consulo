@@ -65,7 +65,6 @@ import static com.intellij.util.ui.JBUI.ScaleType.*;
  * @author VISTALL
  * @since 2018-05-07
  */
-@SuppressWarnings("deprecation")
 public class AWTIconLoaderFacade implements IconLoaderFacade {
   private static final Logger LOG = Logger.getInstance(AWTIconLoaderFacade.class);
 
@@ -75,7 +74,13 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
    */
   private final Map<Icon, Icon> myIcon2DisabledIcon = new WeakHashMap<Icon, Icon>(200);
 
-  private static boolean USE_DARK_ICONS = UIUtil.isUnderDarcula();
+  private static ClearableLazyValue<Boolean> ourDarkValue = new ClearableLazyValue<Boolean>() {
+    @Nonnull
+    @Override
+    protected Boolean compute() {
+      return UIUtil.isUnderDarkTheme();
+    }
+  };
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
     @NonNls
@@ -87,8 +92,8 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   private static boolean ourIsActivated = false;
 
   @Override
-  public void setUseDarkIcons(boolean useDarkIcons) {
-    USE_DARK_ICONS = useDarkIcons;
+  public void resetDark() {
+    ourDarkValue.drop();
     clearCache();
   }
 
@@ -275,7 +280,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
     Icon disabledIcon = myIcon2DisabledIcon.get(icon);
     if (disabledIcon == null) {
-      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(USE_DARK_ICONS), null);
+      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(ourDarkValue.getValue()), null);
       myIcon2DisabledIcon.put(icon, disabledIcon);
     }
     return disabledIcon;
@@ -444,7 +449,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
     public CachedImageIcon(@Nonnull URL url, boolean useCacheOnLoad) {
       myUrl = url;
-      dark = USE_DARK_ICONS;
+      dark = ourDarkValue.getValue();
       svg = url.toString().endsWith("svg");
       this.useCacheOnLoad = useCacheOnLoad;
     }
@@ -469,7 +474,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       if (!isValid()) {
         if (isLoaderDisabled()) return EMPTY_ICON;
         myRealIcon = null;
-        dark = USE_DARK_ICONS;
+        dark = ourDarkValue.getValue();
         myScaledIconsCache.clear();
       }
 
@@ -489,7 +494,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
 
     private boolean isValid() {
-      return dark == USE_DARK_ICONS;
+      return dark == ourDarkValue.getValue();
     }
 
     @Override
@@ -537,7 +542,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       icon.myFilters = new Supplier[]{new Supplier() {
         @Override
         public Object get() {
-          return UIUtil.getGrayFilter(USE_DARK_ICONS);
+          return UIUtil.getGrayFilter(ourDarkValue.getValue());
         }
       }};
       return icon;
@@ -629,7 +634,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   public abstract static class LazyIcon extends JBUI.RasterJBIcon {
     private boolean myWasComputed;
     private Icon myIcon;
-    private boolean isDarkVariant = USE_DARK_ICONS;
+    private boolean isDarkVariant = ourDarkValue.getValue();
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -655,8 +660,8 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
 
     protected final synchronized Icon getOrComputeIcon() {
-      if (!myWasComputed || isDarkVariant != USE_DARK_ICONS || myIcon == null) {
-        isDarkVariant = USE_DARK_ICONS;
+      if (!myWasComputed || isDarkVariant != ourDarkValue.getValue() || myIcon == null) {
+        isDarkVariant = ourDarkValue.getValue();
         myWasComputed = true;
         myIcon = compute();
       }

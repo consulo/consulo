@@ -18,8 +18,11 @@ package consulo.ui.internal;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.GTKPlusUIUtil;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.impl.style.StyleManagerImpl;
+import consulo.ui.laf.MorphValue;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
@@ -35,6 +38,14 @@ import java.util.List;
  * @since 06-Nov-17
  */
 public class DesktopStyleManagerImpl extends StyleManagerImpl {
+  private final MorphValue<Boolean> myDarkValue = MorphValue.of(() -> {
+    if (UIUtil.isUnderGTKLookAndFeel()) {
+      return GTKPlusUIUtil.isDarkTheme();
+    }
+
+    return SwingUIDecorator.get(SwingUIDecorator::isDark);
+  });
+
   public DesktopStyleManagerImpl() {
     setCurrentStyle(new StyleImpl() {
       @Nonnull
@@ -74,6 +85,11 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
           return TargetAWT.from(JBColor.WHITE);
         }
         throw new UnsupportedOperationException(colorKey.toString());
+      }
+
+      @Override
+      public boolean isDark() {
+        return myDarkValue.getValue();
       }
     });
   }

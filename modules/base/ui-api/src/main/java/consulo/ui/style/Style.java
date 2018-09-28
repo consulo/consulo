@@ -28,4 +28,6 @@ public interface Style {
 
   @Nonnull
   ColorValue getColor(@Nonnull ColorKey colorKey);
+
+  boolean isDark();
 }

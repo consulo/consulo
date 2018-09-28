@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
@@ -31,7 +32,13 @@ import java.awt.image.ColorModel;
 @SuppressWarnings("UseJBColor")
 public class JBColor extends Color {
 
-  private static volatile boolean DARK = UIUtil.isUnderDarkTheme();
+  private static ClearableLazyValue<Boolean> ourDarkValue = new ClearableLazyValue<Boolean>() {
+    @Nonnull
+    @Override
+    protected Boolean compute() {
+      return UIUtil.isUnderDarkTheme();
+    }
+  };
 
   private final Color darkColor;
   private final NotNullProducer<Color> func;
@@ -43,8 +50,6 @@ public class JBColor extends Color {
   public JBColor(Color regular, Color dark) {
     super(regular.getRGB(), regular.getAlpha() != 255);
     darkColor = dark;
-    //noinspection AssignmentToStaticFieldFromInstanceMethod
-    DARK = UIUtil.isUnderDarkTheme(); //Double check. Sometimes DARK != isDarcula() after dialogs appear on splash screen
     func = null;
   }
 
@@ -54,12 +59,8 @@ public class JBColor extends Color {
     func = function;
   }
 
-  public static void setDark(boolean dark) {
-    DARK = dark;
-  }
-
-  public static boolean isBright() {
-    return !DARK;
+  public static void resetDark() {
+    ourDarkValue.drop();
   }
 
   Color getDarkVariant() {
@@ -71,7 +72,7 @@ public class JBColor extends Color {
       return func.produce();
     }
     else {
-      return DARK ? getDarkVariant() : this;
+      return ourDarkValue.getValue() ? getDarkVariant() : this;
     }
   }
 

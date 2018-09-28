@@ -33,7 +33,6 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.impl.FrameTitleUtil;
@@ -42,16 +41,17 @@ import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.*;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
+import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -82,7 +82,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
     setContentPane(myScreen);
     setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
-    UIUtil.resetRootPaneAppearance(rootPane);
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
     setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
     Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrame.DIMENSION_KEY);
@@ -196,7 +196,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   @Override
   public void uiSettingsChanged(UISettings source) {
-    UIUtil.resetRootPaneAppearance(getRootPane());
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, getRootPane());
   }
 
   // region Migration staff

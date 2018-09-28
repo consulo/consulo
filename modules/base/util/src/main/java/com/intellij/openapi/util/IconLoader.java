@@ -50,8 +50,8 @@ public final class IconLoader {
     return new JBImageIcon(image);
   }
 
-  public static void setUseDarkIcons(boolean useDarkIcons) {
-    ourIconLoaderFacade.setUseDarkIcons(useDarkIcons);
+  public static void resetDark() {
+    ourIconLoaderFacade.resetDark();
   }
 
   @Nonnull
@@ -209,7 +209,7 @@ public final class IconLoader {
 
   /**
    * Gets a snapshot of the icon, immune to changes made by these calls:
-   * {@link {@link IconLoader#setUseDarkIcons(boolean)}
+   * {@link {@link IconLoader#resetDark()}
    *
    * @param icon the source icon
    * @return the icon snapshot

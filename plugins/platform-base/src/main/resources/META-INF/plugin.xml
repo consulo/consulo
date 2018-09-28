@@ -1174,7 +1174,6 @@
 
     <extensionPoint name="fileChooseDialogProvider" interface="consulo.ui.fileOperateDialog.FileChooseDialogProvider"/>
     <extensionPoint name="fileSaveDialogProvider" interface="consulo.ui.fileOperateDialog.FileSaveDialogProvider"/>
-    <extensionPoint name="uiDecorator" interface="consulo.ui.UIDecorator"/>
 
     <extensionPoint name="textEditorHighlightingPassFactory" area="PROJECT" interface="com.intellij.codeHighlighting.TextEditorHighlightingPassFactory"/>
   </extensionPoints>

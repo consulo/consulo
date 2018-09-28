@@ -16,8 +16,9 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.style.StyleManager;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -35,7 +36,7 @@ public final class Grayer extends Graphics2DDelegate {
   public void setColor(Color color) {
     if (color != null && !myBackground.equals(color)) {
       //noinspection UseJBColor
-      color = new Color(UIUtil.getGrayFilter().filterRGB(0, 0, color.getRGB()));
+      color = new Color(UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark()).filterRGB(0, 0, color.getRGB()));
     }
     super.setColor(color);
   }

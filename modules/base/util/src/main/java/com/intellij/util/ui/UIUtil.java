@@ -34,8 +34,8 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.GTKPlusUIUtil;
 import consulo.ui.laf.MorphColor;
+import consulo.ui.style.StyleManager;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
@@ -45,8 +45,8 @@ import sun.java2d.SunGraphicsEnvironment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -82,8 +82,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Pattern;
@@ -1407,7 +1407,7 @@ public class UIUtil {
 
   public static Icon getTreeSelectedCollapsedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedCollapsedIcon");
-    if(icon != null) {
+    if (icon != null) {
       return icon;
     }
     return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_right_arrow : getTreeCollapsedIcon();
@@ -1511,24 +1511,26 @@ public class UIUtil {
     return UIManager.getLookAndFeel().getName().contains("GTK");
   }
 
-  public static boolean isUnderDarkTheme() {
-    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-    if (lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark()) {
-      return true;
-    }
-    if (isUnderGTKLookAndFeel()) {
-      return GTKPlusUIUtil.isDarkTheme();
-    }
-    return false;
-  }
+  private static StyleManager ourStyleManager;
 
-  /**
-   * Enable & disable macOS dark title decoration. Works only on JetBrains JRE
-   * <p/>
-   * https://github.com/JetBrains/jdk8u_jdk/commit/83e6b1c2e67a192558f8882f663718d4bea0c8b0
-   */
-  public static void resetRootPaneAppearance(JRootPane rootPane) {
-    rootPane.putClientProperty("jetbrains.awt.windowDarkAppearance", isUnderDarkTheme());
+  @Deprecated
+  @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark()")
+  public static boolean isUnderDarkTheme() {
+    if (ourStyleManager == null) {
+      // hack due this module compiled via 1.6 bytecode, which can't call default methods
+      Method getMethod = ReflectionUtil.getDeclaredMethod(StyleManager.class, "get");
+      try {
+        ourStyleManager = (StyleManager)getMethod.invoke(null);
+      }
+      catch (IllegalAccessException e) {
+        throw new Error(e);
+      }
+      catch (InvocationTargetException e) {
+        throw new Error(e);
+      }
+    }
+
+    return ourStyleManager.getCurrentStyle().isDark();
   }
 
   public static final Color GTK_AMBIANCE_TEXT_COLOR = new Color(223, 219, 210);

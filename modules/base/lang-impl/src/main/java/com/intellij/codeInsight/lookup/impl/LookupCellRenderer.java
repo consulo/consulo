@@ -72,8 +72,8 @@ public class LookupCellRenderer implements ListCellRenderer {
   private static final Color GRAYED_FOREGROUND_COLOR = new JBColor(Gray._160, Gray._110);
   private static final Color SELECTED_BACKGROUND_COLOR = new Color(0, 82, 164);
   public static final Color SELECTED_NON_FOCUSED_BACKGROUND_COLOR = new JBColor(0x6e8ea2, 0x55585a);
-  public static final Color SELECTED_FOREGROUND_COLOR = new JBColor(() -> (JBColor.isBright() ? JBColor.WHITE : JBColor.foreground()));
-  private static final Color SELECTED_GRAYED_FOREGROUND_COLOR = new JBColor(() -> (JBColor.isBright() ? JBColor.WHITE: JBColor.foreground()));
+  public static final Color SELECTED_FOREGROUND_COLOR = MorphColor.of(() -> (UIUtil.isUnderDarkTheme() ? JBColor.foreground() : JBColor.WHITE));
+  private static final Color SELECTED_GRAYED_FOREGROUND_COLOR = MorphColor.of((() -> (UIUtil.isUnderDarkTheme()) ? JBColor.foreground() : JBColor.WHITE));
 
   static final Color PREFIX_FOREGROUND_COLOR = new JBColor(0xb000b0, 0xd17ad6);
   private static final Color SELECTED_PREFIX_FOREGROUND_COLOR = new JBColor(0xf9eccc, 0xd17ad6);
@@ -117,13 +117,9 @@ public class LookupCellRenderer implements ListCellRenderer {
   }
 
   private boolean myIsSelected = false;
+
   @Override
-  public Component getListCellRendererComponent(
-          final JList list,
-          Object value,
-          int index,
-          boolean isSelected,
-          boolean hasFocus) {
+  public Component getListCellRendererComponent(final JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
 
 
     boolean nonFocusedSelection = isSelected && myLookup.getFocusDegree() == LookupImpl.FocusDegree.SEMI_FOCUSED;
@@ -134,15 +130,13 @@ public class LookupCellRenderer implements ListCellRenderer {
     myIsSelected = isSelected;
     final LookupElement item = (LookupElement)value;
     final Color foreground = getForegroundColor(isSelected);
-    final Color background = nonFocusedSelection ? SELECTED_NON_FOCUSED_BACKGROUND_COLOR :
-                             isSelected ? SELECTED_BACKGROUND_COLOR : BACKGROUND_COLOR;
+    final Color background = nonFocusedSelection ? SELECTED_NON_FOCUSED_BACKGROUND_COLOR : isSelected ? SELECTED_BACKGROUND_COLOR : BACKGROUND_COLOR;
 
     int allowedWidth = list.getWidth() - calcSpacing(myNameComponent, myEmptyIcon) - calcSpacing(myTailComponent, null) - calcSpacing(myTypeLabel, null);
 
     FontMetrics normalMetrics = getRealFontMetrics(item, false);
     FontMetrics boldMetrics = getRealFontMetrics(item, true);
-    final LookupElementPresentation presentation = new RealLookupElementPresentation(isSelected ? getMaxWidth() : allowedWidth,
-                                                                                     normalMetrics, boldMetrics, myLookup);
+    final LookupElementPresentation presentation = new RealLookupElementPresentation(isSelected ? getMaxWidth() : allowedWidth, normalMetrics, boldMetrics, myLookup);
     AccessRule.read(() -> {
       if (item.isValid()) {
         try {
@@ -156,7 +150,8 @@ public class LookupCellRenderer implements ListCellRenderer {
         catch (Exception | Error e) {
           LOG.error(e);
         }
-      } else {
+      }
+      else {
         presentation.setItemTextForeground(JBColor.RED);
         presentation.setItemText("Invalid");
       }
@@ -164,7 +159,8 @@ public class LookupCellRenderer implements ListCellRenderer {
 
     myNameComponent.clear();
     myNameComponent.setBackground(background);
-    allowedWidth -= setItemTextLabel(item, new JBColor(isSelected ? SELECTED_FOREGROUND_COLOR : presentation.getItemTextForeground(), presentation.getItemTextForeground()), isSelected, presentation, allowedWidth);
+    allowedWidth -= setItemTextLabel(item, new JBColor(isSelected ? SELECTED_FOREGROUND_COLOR : presentation.getItemTextForeground(), presentation.getItemTextForeground()), isSelected, presentation,
+                                     allowedWidth);
 
     Font font = myLookup.getCustomFont(item, false);
     if (font == null) {
@@ -183,8 +179,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     myTailComponent.clear();
     myTailComponent.setBackground(background);
     if (isSelected || allowedWidth >= 0) {
-      setTailTextLabel(isSelected, presentation, foreground, isSelected ? getMaxWidth() : allowedWidth, nonFocusedSelection,
-                       normalMetrics);
+      setTailTextLabel(isSelected, presentation, foreground, isSelected ? getMaxWidth() : allowedWidth, nonFocusedSelection, normalMetrics);
     }
 
     if (mySelected.containsKey(index)) {
@@ -194,9 +189,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
     mySelected.put(index, isSelected);
 
-    final double w = myNameComponent.getPreferredSize().getWidth() +
-                     myTailComponent.getPreferredSize().getWidth() +
-                     myTypeLabel.getPreferredSize().getWidth();
+    final double w = myNameComponent.getPreferredSize().getWidth() + myTailComponent.getPreferredSize().getWidth() + myTypeLabel.getPreferredSize().getWidth();
 
     boolean useBoxLayout = isSelected && w > list.getWidth() && ((JBList)list).getExpandableItemsHandler().isEnabled();
     if (useBoxLayout != myPanel.getLayout() instanceof BoxLayout) {
@@ -206,7 +199,8 @@ public class LookupCellRenderer implements ListCellRenderer {
         myPanel.add(myNameComponent);
         myPanel.add(myTailComponent);
         myPanel.add(myTypeLabel);
-      } else {
+      }
+      else {
         myPanel.setLayout(new BorderLayout());
         myPanel.add(myNameComponent, BorderLayout.WEST);
         myPanel.add(myTailComponent, BorderLayout.CENTER);
@@ -250,11 +244,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     return myMaxWidth;
   }
 
-  private void setTailTextLabel(boolean isSelected,
-                                LookupElementPresentation presentation,
-                                Color foreground,
-                                int allowedWidth,
-                                boolean nonFocusedSelection, FontMetrics fontMetrics) {
+  private void setTailTextLabel(boolean isSelected, LookupElementPresentation presentation, Color foreground, int allowedWidth, boolean nonFocusedSelection, FontMetrics fontMetrics) {
     int style = getStyle(false, presentation.isStrikeout(), false);
 
     for (LookupElementPresentation.TextFragment fragment : presentation.getTailFragments()) {
@@ -291,7 +281,8 @@ public class LookupCellRenderer implements ListCellRenderer {
       final int width = RealLookupElementPresentation.getStringWidth(candidate, metrics);
       if (width <= maxWidth) {
         i = mid;
-      } else {
+      }
+      else {
         j = mid;
       }
     }
@@ -366,20 +357,14 @@ public class LookupCellRenderer implements ListCellRenderer {
     return style;
   }
 
-  private void renderItemName(LookupElement item,
-                              Color foreground,
-                              boolean selected,
-                              @SimpleTextAttributes.StyleAttributeConstant int style,
-                              String name,
-                              final SimpleColoredComponent nameComponent) {
+  private void renderItemName(LookupElement item, Color foreground, boolean selected, @SimpleTextAttributes.StyleAttributeConstant int style, String name, final SimpleColoredComponent nameComponent) {
     final SimpleTextAttributes base = new SimpleTextAttributes(style, foreground);
 
     final String prefix = item instanceof EmptyLookupItem ? "" : myLookup.itemPattern(item);
     if (prefix.length() > 0) {
       Iterable<TextRange> ranges = getMatchingFragments(prefix, name);
       if (ranges != null) {
-        SimpleTextAttributes highlighted =
-                new SimpleTextAttributes(style, selected ? SELECTED_PREFIX_FOREGROUND_COLOR : PREFIX_FOREGROUND_COLOR);
+        SimpleTextAttributes highlighted = new SimpleTextAttributes(style, selected ? SELECTED_PREFIX_FOREGROUND_COLOR : PREFIX_FOREGROUND_COLOR);
         SpeedSearchUtil.appendColoredFragments(nameComponent, name, ranges, base, highlighted);
         return;
       }
@@ -396,7 +381,9 @@ public class LookupCellRenderer implements ListCellRenderer {
                                Color foreground,
                                final LookupElementPresentation presentation,
                                int allowedWidth,
-                               boolean selected, boolean nonFocusedSelection, FontMetrics normalMetrics) {
+                               boolean selected,
+                               boolean nonFocusedSelection,
+                               FontMetrics normalMetrics) {
     final String givenText = presentation.getTypeText();
     final String labelText = trimLabelText(StringUtil.isEmpty(givenText) ? "" : " " + givenText, allowedWidth, normalMetrics);
 
@@ -420,7 +407,8 @@ public class LookupCellRenderer implements ListCellRenderer {
       }
       myTypeLabel.append("  ");
       used += normalMetrics.stringWidth("WW");
-    } else {
+    }
+    else {
       myTypeLabel.append(labelText);
     }
 
@@ -459,7 +447,8 @@ public class LookupCellRenderer implements ListCellRenderer {
       fonts.add(ComplementaryFontsRegistry.getFontAbleToDisplay(sampleString.charAt(i), Font.PLAIN, fontPreferences, null).getFont());
     }
 
-    eachFont: for (Font font : fonts) {
+    eachFont:
+    for (Font font : fonts) {
       if (font.equals(myNormalFont)) continue;
 
       for (int i = 0; i < sampleString.length(); i++) {
@@ -479,8 +468,7 @@ public class LookupCellRenderer implements ListCellRenderer {
       myEmptyIcon = EmptyIcon.create(Math.max(icon.getIconWidth(), myEmptyIcon.getIconWidth()), Math.max(icon.getIconHeight(), myEmptyIcon.getIconHeight()));
     }
 
-    return RealLookupElementPresentation.calculateWidth(p, getRealFontMetrics(item, false), getRealFontMetrics(item, true)) +
-           calcSpacing(myTailComponent, null) + calcSpacing(myTypeLabel, null);
+    return RealLookupElementPresentation.calculateWidth(p, getRealFontMetrics(item, false), getRealFontMetrics(item, true)) + calcSpacing(myTailComponent, null) + calcSpacing(myTypeLabel, null);
   }
 
   public int getTextIndent() {
@@ -500,6 +488,7 @@ public class LookupCellRenderer implements ListCellRenderer {
 
   private class LookupPanel extends JPanel {
     boolean myUpdateExtender;
+
     public LookupPanel() {
       super(new BorderLayout());
     }
@@ -509,7 +498,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
       super.paint(g);
       if (!myLookup.isFocused() && myLookup.isCompletion()) {
         g = g.create();

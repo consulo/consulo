@@ -20,6 +20,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -115,7 +116,7 @@ public final class DesktopStripeButtonUI extends MetalToggleButtonUI {
     final int off = JBUI.scale(1);
     if (model.isArmed() && model.isPressed() || model.isSelected() || model.isRollover()) {
       if (anchor.isHorizontal()) g2.translate(0, -off);
-      final boolean dark = UIUtil.isUnderDarkBuildInLaf();
+      final boolean dark = UIUtil.isUnderDarkTheme();
       g2.setColor(dark
                   ? Gray._15.withAlpha(model.isSelected() ? 85 : 40)
                   : Gray._85.withAlpha(model.isSelected() ? 85 : 40));
@@ -166,7 +167,7 @@ public final class DesktopStripeButtonUI extends MetalToggleButtonUI {
       /* Draw the Text */
       if (model.isEnabled()) {
         /*** paint the text normally */
-        g2.setColor(UIUtil.isUnderDarkTheme() && model.isSelected()
+        g2.setColor(StyleManager.get().getCurrentStyle().isDark() && model.isSelected()
                     ? button.getForeground().brighter()
                     : button.getForeground());
         BasicGraphicsUtils

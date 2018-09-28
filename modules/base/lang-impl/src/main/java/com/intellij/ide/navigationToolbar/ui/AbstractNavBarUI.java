@@ -26,9 +26,10 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.style.StyleManager;
 import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -134,8 +135,8 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
     BufferedImage result = UIUtil.createImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-    Color defaultBg = UIUtil.isUnderDarkTheme() ? Gray._100 : Color.WHITE;
-    final Paint bg = floating ? defaultBg : null;/*UIUtil.getGradientPaint(0, 0, new Color(255, 255, 255, 30), 0, h, new Color(255, 255, 255, 10));*/
+    Color defaultBg = StyleManager.get().getCurrentStyle().isDark() ? Gray._100 : Color.WHITE;
+    final Paint bg = floating ? defaultBg : null;
     final Color selection = UIUtil.getListSelectionBackground();
 
     Graphics2D g2 = result.createGraphics();
@@ -223,12 +224,12 @@ public abstract class AbstractNavBarUI implements NavBarUI {
     if (!floating || !item.isLastElement()) {
       if (toolbarVisible || floating) {
         if (!selected && (!navbar.hasFocus() | !item.isNextSelected())) {
-          Color hl = UIUtil.isUnderDarkBuildInLaf()? Gray._128.withAlpha(100) : Gray._205;
+          Color hl = UIUtil.isUnderDarkTheme()? Gray._128.withAlpha(100) : Gray._205;
           drawArrow(g2, new Color(0, 0, 0, 70), hl, off, h, !selected && !floating, false);
         }
       } else {
         if (!selected && (!navbar.hasFocus() | !item.isNextSelected())) {
-          Color hl = UIUtil.isUnderDarkBuildInLaf() ? Gray._128.withAlpha(100) : Gray._255.withAlpha(200);
+          Color hl = UIUtil.isUnderDarkTheme() ? Gray._128.withAlpha(100) : Gray._255.withAlpha(200);
           drawArrow(g2, new Color(0, 0, 0, 150), hl, off, h, !selected && !floating, true);
         }
       }

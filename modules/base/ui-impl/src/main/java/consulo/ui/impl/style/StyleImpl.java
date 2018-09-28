@@ -36,4 +36,9 @@ public class StyleImpl implements Style {
   public ColorValue getColor(@Nonnull ColorKey colorKey) {
     return null;
   }
+
+  @Override
+  public boolean isDark() {
+    return false;
+  }
 }

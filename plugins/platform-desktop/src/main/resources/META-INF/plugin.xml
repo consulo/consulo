@@ -89,10 +89,6 @@
     <fileSaveDialogProvider implementation="consulo.fileChooser.impl.system.MacFileSaveDialogProvider"/>
     <fileSaveDialogProvider implementation="consulo.fileChooser.impl.DesktopFileSaveDialogProvider" order="last"/>
 
-    <uiDecorator implementation="consulo.ide.ui.impl.mac.MacAquaUIDecorator" id="macAqua"/>
-
-    <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
-
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.DesktopPsiAwareTextEditorProvider" />
 
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false" />

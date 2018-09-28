@@ -15,10 +15,15 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ObjectUtil;
+import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ServiceLoader;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
@@ -27,8 +32,15 @@ import java.util.function.Function;
  * @since 2018-07-23
  */
 public interface UIDecorator {
+  NotNullLazyValue<List<UIDecorator>> ourDecorators = NotNullLazyValue.createValue(() -> {
+    List<UIDecorator> list = new ArrayList<>();
+    ContainerUtil.addAll(list, ServiceLoader.load(UIDecorator.class, UIDecorator.class.getClassLoader()));
+    ContainerUtil.weightSort(list, UIDecorator::getWeight);
+    return Collections.unmodifiableList(list);
+  });
+
   static <ARG, U extends UIDecorator> void apply(BiPredicate<U, ARG> predicate, ARG arg, Class<U> clazz) {
-    for (UIDecorator decorator : EP_NAME.getExtensions()) {
+    for (UIDecorator decorator : ourDecorators.getValue()) {
       if (!decorator.isAvaliable()) {
         continue;
       }
@@ -46,7 +58,7 @@ public interface UIDecorator {
 
   @Nonnull
   static <R, U extends UIDecorator> R get(Function<U, R> supplier, Class<U> clazz) {
-    for (UIDecorator decorator : EP_NAME.getExtensions()) {
+    for (UIDecorator decorator : ourDecorators.getValue()) {
       if (!decorator.isAvaliable()) {
         continue;
       }
@@ -57,14 +69,20 @@ public interface UIDecorator {
       }
 
       R fun = supplier.apply(u);
-      if(fun != null) {
+      if (fun != null) {
         return fun;
       }
     }
     throw new IllegalArgumentException("Null value");
   }
 
-  public static final ExtensionPointName<UIDecorator> EP_NAME = new ExtensionPointName<>("com.intellij.uiDecorator");
-
   boolean isAvaliable();
+
+  default boolean isDark() {
+    return false;
+  }
+
+  default int getWeight() {
+    return 0;
+  }
 }

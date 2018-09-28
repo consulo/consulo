@@ -18,9 +18,10 @@ package consulo.ide.ui.impl;
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.laf.MorphColor;
+import consulo.ui.style.StyleManager;
+import consulo.util.ui.BuildInLookAndFeel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,10 +41,21 @@ public class DefaultUIDecorator implements SwingUIDecorator {
     return true;
   }
 
+  @Override
+  public int getWeight() {
+    return -1;
+  }
+
   @Nullable
   @Override
   public Color getSidebarColor() {
     return MorphColor.of(this::calcSidebarColor);
+  }
+
+  @Override
+  public boolean isDark() {
+    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+    return lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark();
   }
 
   @Nonnull
@@ -52,7 +64,7 @@ public class DefaultUIDecorator implements SwingUIDecorator {
     if (color == null) {
       color = DarculaUIUtil.MAC_REGULAR_COLOR;
     }
-    return UIUtil.isUnderDarkTheme() ? ColorUtil.darker(color, 10) : ColorUtil.desaturate(color, 18);
+    return StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.darker(color, 10) : ColorUtil.desaturate(color, 18);
   }
 
   @Override

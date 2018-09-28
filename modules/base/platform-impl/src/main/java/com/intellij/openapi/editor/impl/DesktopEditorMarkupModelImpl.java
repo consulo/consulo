@@ -631,7 +631,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
               GraphicsUtil.setupAAPainting(g2);
               g2.setClip(new RoundRectangle2D.Double(0, 0, size.width - .5, size.height - .5, 2, 2));
               UIUtil.drawImage(g2, myCacheLevel1, 0, 0, this);
-              if (UIUtil.isUnderDarkBuildInLaf()) {
+              if (UIUtil.isUnderDarkTheme()) {
                 //Add glass effect
                 Shape s = new Rectangle(0, 0, size.width, size.height);
                 double cx = size.width / 2;

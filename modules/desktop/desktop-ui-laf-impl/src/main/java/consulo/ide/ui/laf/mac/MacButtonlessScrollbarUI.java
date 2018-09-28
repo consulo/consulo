@@ -250,8 +250,8 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI {
     if (!myMouseIsOverThumb) {
       return c;
     }
-    final int sign = UIUtil.isUnderDarkBuildInLaf() ? -1 : 1;
-    int shift = UIUtil.isUnderDarkBuildInLaf() ? 20 : 40;
+    final int sign = UIUtil.isUnderDarkTheme() ? -1 : 1;
+    int shift = UIUtil.isUnderDarkTheme() ? 20 : 40;
     return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * shift)));
   }
 

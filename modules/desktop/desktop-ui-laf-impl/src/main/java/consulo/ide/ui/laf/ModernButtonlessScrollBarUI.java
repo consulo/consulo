@@ -256,7 +256,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI {
 
   protected Color adjustColor(Color c) {
     if (!myMouseIsOverThumb) return c;
-    final int sign = UIUtil.isUnderDarkBuildInLaf() ? -1 : 1;
+    final int sign = UIUtil.isUnderDarkTheme() ? -1 : 1;
     return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * 20)));
   }
 

@@ -44,11 +44,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import consulo.ui.shared.Rectangle2D;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -137,7 +138,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       ((JDialog)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    UIUtil.resetRootPaneAppearance(((RootPaneContainer)frame).getRootPane());
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, ((RootPaneContainer)frame).getRootPane());
 
     final WindowAdapter focusListener = new WindowAdapter() {
       @Override

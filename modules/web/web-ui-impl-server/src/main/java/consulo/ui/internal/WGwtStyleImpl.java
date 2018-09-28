@@ -56,4 +56,9 @@ public class WGwtStyleImpl implements Style {
   public ColorValue getColor(@Nonnull ColorKey colorKey) {
     return myColors.get(colorKey);
   }
+
+  @Override
+  public boolean isDark() {
+    return false;
+  }
 }

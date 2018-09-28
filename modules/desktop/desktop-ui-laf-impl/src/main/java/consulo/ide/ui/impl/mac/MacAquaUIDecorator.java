@@ -18,9 +18,9 @@ package consulo.ide.ui.impl.mac;
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.ui.UIUtil;
-import consulo.ui.SwingUIDecorator;
 import consulo.ide.ui.impl.DefaultUIDecorator;
+import consulo.ui.SwingUIDecorator;
+import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +38,17 @@ public class MacAquaUIDecorator implements SwingUIDecorator {
     return true;
   }
 
+  /**
+   * Enable & disable macOS dark title decoration. Works only on JetBrains JRE
+   * <p/>
+   * https://github.com/JetBrains/jdk8u_jdk/commit/83e6b1c2e67a192558f8882f663718d4bea0c8b0
+   */
+  @Override
+  public boolean decorateWindowTitle(@Nonnull JRootPane rootPane) {
+    rootPane.putClientProperty("jetbrains.awt.windowDarkAppearance", StyleManager.get().getCurrentStyle().isDark());
+    return true;
+  }
+
   @Nullable
   @Override
   public Color getSidebarColor() {
@@ -48,6 +59,7 @@ public class MacAquaUIDecorator implements SwingUIDecorator {
 
   @Override
   public boolean isAvaliable() {
-    return UIUtil.isUnderAquaLookAndFeel();
+    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+    return "com.apple.laf.AquaLookAndFeel".equals(lookAndFeel.getClass().getName());
   }
 }

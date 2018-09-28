@@ -32,7 +32,7 @@ import java.net.URL;
 public interface IconLoaderFacade {
   void activate();
 
-  void setUseDarkIcons(boolean useDarkIcons);
+  void resetDark();
 
   Icon getDisabledIcon(@Nullable Icon icon);
 

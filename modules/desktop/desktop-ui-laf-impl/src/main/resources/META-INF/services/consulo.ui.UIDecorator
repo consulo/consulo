@@ -1,0 +1,2 @@
+consulo.ide.ui.impl.DefaultUIDecorator
+consulo.ide.ui.impl.mac.MacAquaUIDecorator

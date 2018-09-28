@@ -38,7 +38,7 @@ public class VaadinIconLoaderFacade implements IconLoaderFacade {
   }
 
   @Override
-  public void setUseDarkIcons(boolean useDarkIcons) {
+  public void resetDark() {
 
   }
 
