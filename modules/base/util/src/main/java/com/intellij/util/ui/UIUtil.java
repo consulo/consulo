@@ -1511,26 +1511,28 @@ public class UIUtil {
     return UIManager.getLookAndFeel().getName().contains("GTK");
   }
 
-  private static StyleManager ourStyleManager;
+  private static NullableLazyValue<StyleManager> ourStyleManagerValue = NullableLazyValue.of(new Factory<StyleManager>() {
+    @Override
+    public StyleManager create() {
+      try {
+        // hack due this module compiled via 1.6 bytecode, which can't call default methods
+        Method getMethod = ReflectionUtil.getDeclaredMethod(StyleManager.class, "get");
+        return (StyleManager)getMethod.invoke(null);
+      }
+      catch (Throwable ignored) {
+        return null;
+      }
+    }
+  });
 
   @Deprecated
   @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark()")
   public static boolean isUnderDarkTheme() {
-    if (ourStyleManager == null) {
-      // hack due this module compiled via 1.6 bytecode, which can't call default methods
-      Method getMethod = ReflectionUtil.getDeclaredMethod(StyleManager.class, "get");
-      try {
-        ourStyleManager = (StyleManager)getMethod.invoke(null);
-      }
-      catch (IllegalAccessException e) {
-        throw new Error(e);
-      }
-      catch (InvocationTargetException e) {
-        throw new Error(e);
-      }
+    StyleManager value = ourStyleManagerValue.getValue();
+    if(value == null) {
+      return false;
     }
-
-    return ourStyleManager.getCurrentStyle().isDark();
+    return value.getCurrentStyle().isDark();
   }
 
   public static final Color GTK_AMBIANCE_TEXT_COLOR = new Color(223, 219, 210);
