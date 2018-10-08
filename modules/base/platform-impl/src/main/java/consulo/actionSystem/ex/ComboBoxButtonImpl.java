@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
@@ -50,6 +51,15 @@ import java.lang.reflect.Field;
  */
 public final class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxButton {
   private class HackComboBoxPopup implements ComboPopup {
+    private JList<?> myDummyList = new JList<>();
+
+    HackComboBoxPopup() {
+      // some ui register listeners to JList of popup
+      // just return dummy instance
+      // also override default UI since, some ui like Aqua can just skip list if is not aqua list ui
+      myDummyList.setUI(new BasicListUI());
+    }
+
     @Override
     public void show() {
       showPopup0();
@@ -67,7 +77,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
     @Override
     public JList getList() {
-      return null;
+      return myDummyList;
     }
 
     @Override
