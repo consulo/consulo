@@ -142,9 +142,7 @@ public final class ActionMenu extends JMenu {
   }
 
   private void init() {
-    boolean macSystemMenu = SystemInfo.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
-
-    myStubItem = macSystemMenu ? null : new StubItem();
+    myStubItem = isTopMenuBar() ? null : new StubItem();
     addStubItem();
     addMenuListener(new MenuListenerImpl());
     setBorderPainted(false);
@@ -210,7 +208,7 @@ public final class ActionMenu extends JMenu {
   private class MenuListenerImpl implements MenuListener {
     @Override
     public void menuCanceled(MenuEvent e) {
-      if (isTopMenuBar()) {
+      if (isTopMenuBarAfterJava10()) {
         myMenuComponents = new Component[]{myStubItem};
       }
       else {
@@ -225,7 +223,7 @@ public final class ActionMenu extends JMenu {
 
     @Override
     public void menuSelected(MenuEvent e) {
-      if (isTopMenuBar()) {
+      if (isTopMenuBarAfterJava10()) {
         myMenuComponents = null;
       }
       else {
@@ -236,7 +234,7 @@ public final class ActionMenu extends JMenu {
 
   @Override
   public Component[] getMenuComponents() {
-    if (isTopMenuBar()) {
+    if (isTopMenuBarAfterJava10()) {
       if (myMenuComponents == null) {
         JMenu temp = new JMenu();
         fillMenu(temp);
@@ -251,7 +249,7 @@ public final class ActionMenu extends JMenu {
 
   @Override
   public int getMenuComponentCount() {
-    if(isTopMenuBar()) {
+    if(isTopMenuBarAfterJava10()) {
       return getMenuComponents().length;
     }
     return super.getMenuComponentCount();
@@ -259,6 +257,11 @@ public final class ActionMenu extends JMenu {
 
   private boolean isTopMenuBar() {
     return SystemInfo.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
+  }
+
+  private boolean isTopMenuBarAfterJava10() {
+    // jdk 10 have changes in screen menu
+    return isTopMenuBar() && SystemInfo.isJavaVersionAtLeast(10, 0, 0);
   }
 
   private void clearItems() {
@@ -278,6 +281,8 @@ public final class ActionMenu extends JMenu {
     }
 
     removeAll();
+    addStubItem();
+
     validate();
   }
 
