@@ -40,6 +40,8 @@ public class SystemInfo extends SystemInfoRt {
   public static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
   public static final String SUN_DESKTOP = System.getProperty("sun.desktop", "");
 
+  @DeprecationInfo("Platform.current().info().isWindows()")
+  @Deprecated
   public static final boolean isWindows = SystemInfoRt.isWindows;
   public static final boolean isMac = SystemInfoRt.isMac;
   public static final boolean isOS2 = SystemInfoRt.isOS2;

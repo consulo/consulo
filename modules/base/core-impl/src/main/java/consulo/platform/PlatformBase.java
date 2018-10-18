@@ -16,6 +16,8 @@
 package consulo.platform;
 
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.util.SystemInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,10 +26,24 @@ import javax.annotation.Nullable;
  * @since 15-Sep-17
  */
 public abstract class PlatformBase implements Platform {
+  static class InfoImpl implements Info {
+    @Override
+    public boolean isWindows() {
+      return SystemInfo.isWindows;
+    }
+  }
+
   private final PluginId myPluginId;
+  private final InfoImpl myInfo = new InfoImpl();
 
   protected PlatformBase(@Nonnull String pluginId) {
     myPluginId = PluginId.getId(pluginId);
+  }
+
+  @Nonnull
+  @Override
+  public Info info() {
+    return myInfo;
   }
 
   @Nullable

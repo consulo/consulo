@@ -26,9 +26,10 @@ import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
@@ -3275,6 +3276,17 @@ public class StringUtil extends StringUtilRt {
     return false;
   }
 
+  @Contract(pure = true)
+  @NotNull
+  public static byte[] parseHexString(@NotNull String str) {
+    int len = str.length();
+    if (len % 2 != 0) throw new IllegalArgumentException("Non-even-length: " + str);
+    byte[] bytes = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+      bytes[i / 2] = (byte)((Character.digit(str.charAt(i), 16) << 4) + Character.digit(str.charAt(i + 1), 16));
+    }
+    return bytes;
+  }
 
   private static final Pattern UNICODE_CHAR = Pattern.compile("\\\\u[0-9a-eA-E]{4}");
 

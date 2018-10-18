@@ -54,6 +54,8 @@
     <module>modules/base/core-impl</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/compiler-impl</module>
+    <module>modules/base/credential-store-api</module>
+    <module>modules/base/credential-store-impl</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/dvcs-api</module>

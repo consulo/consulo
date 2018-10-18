@@ -35,11 +35,11 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.net.URL;
@@ -358,6 +358,11 @@ public class JDOMUtil {
   @Nonnull
   public static Element load(@Nonnull File file) throws JDOMException, IOException {
     return load(new BufferedInputStream(new FileInputStream(file)));
+  }
+
+  @Nonnull
+  public static Element load(@Nonnull CharSequence charSequence) throws JDOMException, IOException {
+    return load(new CharSequenceReader(charSequence));
   }
 
   @Nonnull
