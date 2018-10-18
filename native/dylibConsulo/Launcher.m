@@ -16,7 +16,7 @@ typedef jint (JNICALL* fun_ptr_t_CreateJavaVM)(JavaVM** pvm, void** env, void* a
 
 NSBundle* vm;
 NSString* minRequiredJavaVersion = @"1.8";
-NSString* ourRequiredJavaVersions = @"1.8+,1.8*";
+
 NSString* ourBootclasspath = @"$CONSULO_HOME/lib/consulo-desktop-bootstrap.jar:$CONSULO_HOME/lib/consulo-extensions.jar:$CONSULO_HOME/lib/consulo-util.jar:$CONSULO_HOME/lib/consulo-util-rt.jar:$CONSULO_HOME/lib/jdom.jar:$CONSULO_HOME/lib/trove4j.jar:$CONSULO_HOME/lib/jna.jar:$CONSULO_HOME/lib/jna-platform.jar";
 
 @interface NSString (CustomReplacements)
@@ -121,16 +121,13 @@ BOOL appendJvmBundlesAt(NSString* path, NSMutableArray* sink) {
 NSArray* allVms(NSString* workingDirectory) {
     NSMutableArray* jvmBundlePaths = [NSMutableArray array];
 
-    NSString* required = ourRequiredJavaVersions;
-    NSLog(@"allVms required %@", required);
-
     if (!jvmBundlePaths.count > 0) {
         NSString* appDir = workingDirectory;
 
         if (!appendJvmBundlesAt([appDir stringByAppendingPathComponent:@"/jre"], jvmBundlePaths)) {
             appendBundle([appDir stringByAppendingPathComponent:@"/jdk"], jvmBundlePaths);
         }
-        if ((jvmBundlePaths.count > 0) && (satisfies(jvmVersion(jvmBundlePaths[jvmBundlePaths.count - 1]), required))) return jvmBundlePaths;
+        if (jvmBundlePaths.count > 0) return jvmBundlePaths;
 
         appendJvmBundlesAt([NSHomeDirectory() stringByAppendingPathComponent:@"Library/Java/JavaVirtualMachines"], jvmBundlePaths);
         appendJvmBundlesAt(@"/Library/Java/JavaVirtualMachines", jvmBundlePaths);
@@ -150,20 +147,13 @@ BOOL meetMinRequirements(NSString* vmVersion) {
     return [minRequiredJavaVersion compare:vmVersion options:NSNumericSearch] <= 0;
 }
 
-BOOL satisfies(NSString* vmVersion, NSString* requiredVersion) {
+BOOL satisfies(NSString* vmVersion) {
     BOOL meetRequirement = meetMinRequirements(vmVersion);
     if (!meetRequirement) {
         return meetRequirement;
     }
 
-    if ([requiredVersion hasSuffix:@"+"]) {
-        requiredVersion = [requiredVersion substringToIndex:[requiredVersion length] - 1];
-        return [requiredVersion compare:vmVersion options:NSNumericSearch] <= 0;
-    }
-    if ([requiredVersion hasSuffix:@"*"]) {
-        requiredVersion = [requiredVersion substringToIndex:[requiredVersion length] - 1];
-    }
-    return [vmVersion hasPrefix:requiredVersion];
+    return true;
 }
 
 NSComparisonResult compareVMVersions(id vm1, id vm2, void* context) {
@@ -189,7 +179,7 @@ NSBundle* getJDKBundle(NSString* jdkVersion, NSString* source) {
 NSBundle* findMatchingVm(NSString* workingDirectory) {
     //the environment variable.
     NSString* variable = @"CONSULO_JRE";
-    // The explicitly set JDK to use.
+    // The explicitly set JRE to use.
     NSString* explicit = [[NSProcessInfo processInfo] environment][variable];
     if (explicit != nil) {
         NSLog(@"Value of %@: %@", variable, explicit);
@@ -208,17 +198,11 @@ NSBundle* findMatchingVm(NSString* workingDirectory) {
         }
     }
 
-    NSString* requiredList = ourRequiredJavaVersions;
-    debugLog([NSString stringWithFormat:@"Required VMs: %@", requiredList]);
-
-    NSArray* array = [requiredList componentsSeparatedByString:@","];
-    for (NSString* required in array) {
-        for (NSBundle* vm in vmBundles) {
-            if (satisfies(jvmVersion(vm), required)) {
-                debugLog(@"Chosen VM:");
-                debugLog([vm bundlePath]);
-                return vm;
-            }
+    for (NSBundle* vm in vmBundles) {
+        if (satisfies(jvmVersion(vm))) {
+            debugLog(@"Chosen VM:");
+            debugLog([vm bundlePath]);
+            return vm;
         }
     }
 
