@@ -167,7 +167,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private void buildInjectingContainer() {
     myMessageBus = MessageBusFactory.newMessageBus(myName, myParent == null ? null : myParent.getMessageBus());
 
-    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this, new PluginManagerCore.IdeaLogProvider());
+    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this);
 
     maybeSetRootArea();
 

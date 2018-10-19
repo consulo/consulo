@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
@@ -29,14 +30,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ExtensionsAreaImpl implements ExtensionsArea {
-  private final LogProvider myLogger;
+  private static final Logger LOGGER = Logger.getInstance(ExtensionsAreaImpl.class);
+
   public static final String ATTRIBUTE_AREA = "area";
 
   private static final boolean DEBUG_REGISTRATION = false;
 
   private final Throwable myCreationTrace;
   private final Map<String, ExtensionPointImpl> myExtensionPoints = ContainerUtil.newConcurrentMap();
-  private final Map<String,Throwable> myEPTraces = DEBUG_REGISTRATION ? new THashMap<>() : null;
+  private final Map<String, Throwable> myEPTraces = DEBUG_REGISTRATION ? new THashMap<>() : null;
 
   private final List<Runnable> mySuspendedListenerActions = new ArrayList<>();
   private boolean myAvailabilityNotificationsActive = true;
@@ -44,11 +46,10 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
   private final AreaInstance myAreaInstance;
   private final String myAreaClass;
 
-  public ExtensionsAreaImpl(String areaClass, AreaInstance areaInstance, @Nonnull LogProvider logger) {
+  public ExtensionsAreaImpl(String areaClass, AreaInstance areaInstance) {
     myCreationTrace = DEBUG_REGISTRATION ? new Throwable("Area creation trace") : null;
     myAreaClass = areaClass;
     myAreaInstance = areaInstance;
-    myLogger = logger;
   }
 
   @Override
@@ -140,11 +141,12 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
 
     if (epName == null) {
       final Element parentElement = extensionElement.getParentElement();
-      final String ns = parentElement != null ? parentElement.getAttributeValue("defaultExtensionNs"):null;
+      final String ns = parentElement != null ? parentElement.getAttributeValue("defaultExtensionNs") : null;
 
       if (ns != null) {
         epName = ns + '.' + extensionElement.getName();
-      } else {
+      }
+      else {
         Namespace namespace = extensionElement.getNamespace();
         epName = namespace.getURI() + '.' + extensionElement.getName();
       }
@@ -171,21 +173,17 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     registerExtensionPoint(extensionPointName, extensionPointBeanClass, descriptor, ExtensionPoint.Kind.INTERFACE);
   }
 
-  private void registerExtensionPoint(@Nonnull String extensionPointName,
-                                      @Nonnull String extensionPointBeanClass,
-                                      @Nonnull PluginDescriptor descriptor,
-                                      @Nonnull ExtensionPoint.Kind kind) {
+  private void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
     if (hasExtensionPoint(extensionPointName)) {
       if (DEBUG_REGISTRATION) {
         final ExtensionPointImpl oldEP = getExtensionPoint(extensionPointName);
-        myLogger.error("Duplicate registration for EP: " + extensionPointName + ": original plugin " + oldEP.getDescriptor().getPluginId() +
-                       ", new plugin " + descriptor.getPluginId(),
+        LOGGER.error("Duplicate registration for EP: " + extensionPointName + ": original plugin " + oldEP.getDescriptor().getPluginId() + ", new plugin " + descriptor.getPluginId(),
                        myEPTraces.get(extensionPointName));
       }
       throw new RuntimeException("Duplicate registration for EP: " + extensionPointName);
     }
 
-    registerExtensionPoint(new ExtensionPointImpl(extensionPointName, extensionPointBeanClass, kind, myAreaInstance, myLogger, descriptor));
+    registerExtensionPoint(new ExtensionPointImpl(extensionPointName, extensionPointBeanClass, kind, myAreaInstance, descriptor));
   }
 
   public void registerExtensionPoint(@Nonnull ExtensionPointImpl extensionPoint) {
@@ -262,7 +260,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
         action.run();
       }
       catch (Exception e) {
-        myLogger.error(e);
+        LOGGER.error(e);
       }
     }
     mySuspendedListenerActions.clear();

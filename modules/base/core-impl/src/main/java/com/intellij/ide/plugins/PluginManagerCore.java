@@ -26,7 +26,6 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionsArea;
-import com.intellij.openapi.extensions.LogProvider;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -1005,37 +1004,5 @@ public class PluginManagerCore {
 
   private static class LoggerHolder {
     private static final Logger ourLogger = Logger.getInstance("#com.intellij.ide.plugins.PluginManager");
-  }
-
-  public static class IdeaLogProvider implements LogProvider {
-    @Override
-    public void error(String message) {
-      getLogger().error(message);
-    }
-
-    @Override
-    public void error(String message, Throwable t) {
-      getLogger().error(message, t);
-    }
-
-    @Override
-    public void error(Throwable t) {
-      getLogger().error(t);
-    }
-
-    @Override
-    public void warn(String message) {
-      getLogger().info(message);
-    }
-
-    @Override
-    public void warn(String message, Throwable t) {
-      getLogger().info(message, t);
-    }
-
-    @Override
-    public void warn(Throwable t) {
-      getLogger().info(t);
-    }
   }
 }
