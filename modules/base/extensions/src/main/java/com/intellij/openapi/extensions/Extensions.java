@@ -88,39 +88,4 @@ public class Extensions {
     }
     throw new IllegalArgumentException("could not find extension implementation " + extClass);
   }
-
-  @SuppressWarnings("CallToPrintStackTrace")
-  public static class SimpleLogProvider implements LogProvider {
-    @Override
-    public void error(String message) {
-      new Throwable(message).printStackTrace();
-    }
-
-    @Override
-    public void error(String message, @Nonnull Throwable t) {
-      System.err.println(message);
-      t.printStackTrace();
-    }
-
-    @Override
-    public void error(@Nonnull Throwable t) {
-      t.printStackTrace();
-    }
-
-    @Override
-    public void warn(String message) {
-      System.err.println(message);
-    }
-
-    @Override
-    public void warn(String message, @Nonnull Throwable t) {
-      System.err.println(message);
-      t.printStackTrace();
-    }
-
-    @Override
-    public void warn(@Nonnull Throwable t) {
-      t.printStackTrace();
-    }
-  }
 }
