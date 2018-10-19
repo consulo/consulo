@@ -281,12 +281,7 @@ abstract class BaseTreeTestCase<StructureElement> extends MockApplicationTestCas
   }
 
   static AbstractTreeUpdater _createUpdater(AbstractTreeBuilder builder) {
-    final AbstractTreeUpdater updater = new AbstractTreeUpdater(builder) {
-      @Override
-      protected boolean isEdt() {
-        return SwingUtilities.isEventDispatchThread();
-      }
-    };
+    final AbstractTreeUpdater updater = new AbstractTreeUpdater(builder);
     updater.setModalityStateComponent(MergingUpdateQueue.ANY_COMPONENT);
     return updater;
   }
