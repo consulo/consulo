@@ -34,16 +34,16 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.problems.WolfTheProblemSolver;
+import com.intellij.problems.ProblemListener;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -75,7 +75,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     FileStatusManager.getInstance(project).addFileStatusListener(new MyFileStatusListener(), this);
     CopyPasteManager.getInstance().addContentChangedListener(new CopyPasteUtil.DefaultCopyPasteListener(getUpdater()), this);
 
-    WolfTheProblemSolver.getInstance(project).addProblemListener(new MyProblemListener(), this);
+    connection.subscribe(ProblemListener.TOPIC, new MyProblemListener());
 
     setCanYieldUpdate(true);
 
@@ -156,7 +156,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     return vFile.isDirectory() ? psiManager.findDirectory(vFile) : psiManager.findFile(vFile);
   }
 
-  private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
+  private class MyProblemListener implements ProblemListener {
     private final Alarm myUpdateProblemAlarm = new Alarm();
     private final Collection<VirtualFile> myFilesToRefresh = new THashSet<>();
 

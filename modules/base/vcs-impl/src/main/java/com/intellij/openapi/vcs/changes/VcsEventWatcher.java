@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.problems.WolfTheProblemSolver;
+import com.intellij.problems.ProblemListener;
 import com.intellij.util.messages.MessageBusConnection;
 
 import javax.annotation.Nonnull;
@@ -58,11 +58,10 @@ public class VcsEventWatcher implements ProjectComponent {
         }, ModalityState.NON_MODAL);
       }
     });
-    final WolfTheProblemSolver.ProblemListener myProblemListener = new MyProblemListener();
-    WolfTheProblemSolver.getInstance(myProject).addProblemListener(myProblemListener, myProject);
+    connection.subscribe(ProblemListener.TOPIC, new MyProblemListener());
   }
 
-  private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
+  private class MyProblemListener implements ProblemListener {
     @Override
     public void problemsAppeared(@Nonnull final VirtualFile file) {
       ChangesViewManager.getInstance(myProject).refreshChangesViewNodeAsync(file);

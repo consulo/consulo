@@ -31,12 +31,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.problems.ProblemListener;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -52,7 +54,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
    * Updates icons for open files when project roots change
    */
   private final MyPsiTreeChangeListener myPsiTreeChangeListener;
-  private final WolfTheProblemSolver.ProblemListener myProblemListener;
+  private final ProblemListener myProblemListener;
 
   public PsiAwareFileEditorManagerImpl(final Project project,
                                        final PsiManager psiManager,
@@ -85,7 +87,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     super.projectOpened(connection);
 
     myPsiManager.addPsiTreeChangeListener(myPsiTreeChangeListener);
-    myProblemSolver.addProblemListener(myProblemListener);
+    connection.subscribe(ProblemListener.TOPIC, myProblemListener);
   }
 
   @Override
@@ -176,7 +178,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     }
   }
 
-  private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
+  private class MyProblemListener implements ProblemListener {
     @Override
     public void problemsAppeared(@Nonnull final VirtualFile file) {
       updateFile(file);

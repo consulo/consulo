@@ -64,22 +64,8 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public void addProblemListener(@Nonnull ProblemListener listener) {
-    if (myDelegate != null) myDelegate.addProblemListener(listener);
-  }
-
-  @Override
   public void addProblemListener(@Nonnull ProblemListener listener, @Nonnull Disposable parentDisposable) {
     if (myDelegate != null) myDelegate.addProblemListener(listener, parentDisposable);
-  }
-
-  @Override
-  public void removeProblemListener(@Nonnull ProblemListener listener) {
-    if (myDelegate != null) myDelegate.removeProblemListener(listener);
-  }
-
-  @Override
-  public void registerFileHighlightFilter(@Nonnull Condition<VirtualFile> filter, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
