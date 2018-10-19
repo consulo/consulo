@@ -47,7 +47,7 @@ public abstract class FileStructureTestBase extends CodeInsightFixtureTestCase {
             TextEditorProvider.getInstance().getTextEditor(myFixture.getEditor()));
     assert myPopup != null;
     myPopup.createCenterPanel();
-    getBuilder().getUi().getUpdater().setPassThroughMode(true);
+    //getBuilder().getUi().getUpdater().setPassThroughMode(true);
     update();
   }
 
