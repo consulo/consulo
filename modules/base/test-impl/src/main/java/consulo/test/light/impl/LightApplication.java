@@ -31,6 +31,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
+import com.intellij.openapi.extensions.impl.UndefinedPluginDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Computable;
@@ -106,7 +107,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   private void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<?> name, Class<?> aClass) {
     ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
-    area.registerExtensionPoint(name.getName(), aClass.getName(), kind);
+    area.registerExtensionPoint(name.getName(), aClass.getName(), new UndefinedPluginDescriptor(), kind);
   }
 
   @Override

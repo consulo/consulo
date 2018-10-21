@@ -29,7 +29,6 @@ import java.util.function.Function;
 
 /**
  * @author Alexander Kireyev
- *         todo: optimize memory print
  */
 public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
   public static final ExtensionComponentAdapter[] EMPTY_ARRAY = new ExtensionComponentAdapter[0];
@@ -53,6 +52,7 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
     return loadImplementationClass();
   }
 
+  @SuppressWarnings("unchecked")
   public T getComponentInstance(Function<Class<T>, T> getUnbindedInstanceFunc) {
     if (myComponentInstance == null) {
       try {
@@ -137,10 +137,6 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
       }
     }
     return myImplementationClass;
-  }
-
-  public String getAssignableToClassName() {
-    return myImplementationClassName;
   }
 
   public boolean isNotificationSent() {

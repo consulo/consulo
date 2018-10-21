@@ -23,7 +23,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.InvalidDataException;
@@ -41,21 +40,14 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author mike
@@ -296,15 +288,15 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return epName;
   }
 
-  public void registerExtensionPoints(@Nonnull ExtensionsArea area) {
+  public void registerExtensionPoints(String areaId, @Nonnull ExtensionsAreaImpl area) {
     if (myExtensionsPoints != null) {
-      for (Element element : myExtensionsPoints.get(StringUtil.notNullize(area.getAreaClass()))) {
+      for (Element element : myExtensionsPoints.get(StringUtil.notNullize(areaId))) {
         area.registerExtensionPoint(this, element);
       }
     }
   }
 
-  void registerExtensions(@Nonnull ExtensionsArea area, @Nonnull String epName) {
+  void registerExtensions(@Nonnull ExtensionsAreaImpl area, @Nonnull String epName) {
     if (myExtensions != null) {
       for (Element element : myExtensions.get(epName)) {
         area.registerExtension(this, element);

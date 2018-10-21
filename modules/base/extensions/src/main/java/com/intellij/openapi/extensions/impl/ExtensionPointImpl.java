@@ -55,6 +55,9 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   private static final StringInterner INTERNER = new StringInterner();
 
+  // TODO [VISTALL] support locking
+  private boolean myLocked;
+
   public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, AreaInstance area, @Nonnull PluginDescriptor descriptor) {
     synchronized (INTERNER) {
       myName = INTERNER.intern(name);
@@ -63,6 +66,10 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     myKind = kind;
     myArea = area;
     myDescriptor = descriptor;
+  }
+
+  public void setLocked() {
+    myLocked = true;
   }
 
   @Nonnull
@@ -74,12 +81,6 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   @Override
   public AreaInstance getArea() {
     return myArea;
-  }
-
-  @Nonnull
-  @Override
-  public String getBeanClassName() {
-    return myClassName;
   }
 
   @Nonnull
@@ -145,15 +146,6 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       clearCache();
 
       if (!adapter.isNotificationSent()) {
-        if (extension instanceof Extension) {
-          try {
-            ((Extension)extension).extensionAdded(this);
-          }
-          catch (Throwable e) {
-            LOG.error(e);
-          }
-        }
-
         notifyListenersOnAdd(extension, adapter.getPluginDescriptor());
         adapter.setNotificationSent(true);
       }
@@ -298,15 +290,6 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     clearCache();
 
     notifyListenersOnRemove(extension, pluginDescriptor);
-
-    if (extension instanceof Extension) {
-      try {
-        ((Extension)extension).extensionRemoved(this);
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    }
   }
 
   private void notifyListenersOnRemove(@Nonnull T extensionObject, PluginDescriptor pluginDescriptor) {
@@ -367,14 +350,6 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
           LOG.error(e);
         }
       }
-    }
-  }
-
-  @Override
-  public synchronized void reset() {
-    myExtensionAdapters.clear();
-    for (T extension : getExtensions()) {
-      unregisterExtension(extension);
     }
   }
 

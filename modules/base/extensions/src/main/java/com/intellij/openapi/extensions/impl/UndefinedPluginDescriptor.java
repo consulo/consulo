@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.PluginId;
 /**
  * @author Alexander Kireyev
  */
-class UndefinedPluginDescriptor implements PluginDescriptor {
+public class UndefinedPluginDescriptor implements PluginDescriptor {
   @Override
   public PluginId getPluginId() {
     throw new UnsupportedOperationException("This method should not be called on this object");

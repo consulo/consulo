@@ -75,7 +75,7 @@ public class PsiTestExtensionUtil {
       ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0
                                  ? ExtensionPoint.Kind.INTERFACE
                                  : ExtensionPoint.Kind.BEAN_CLASS;
-      area.registerExtensionPoint(name, aClass.getName(), kind);
+      //area.registerExtensionPoint(name, aClass.getName(), kind);
     }
   }
 }

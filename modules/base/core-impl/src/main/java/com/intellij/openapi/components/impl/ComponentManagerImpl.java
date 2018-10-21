@@ -167,11 +167,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private void buildInjectingContainer() {
     myMessageBus = MessageBusFactory.newMessageBus(myName, myParent == null ? null : myParent.getMessageBus());
 
-    myExtensionsArea = new ExtensionsAreaImpl(myExtensionAreaId, this);
+    myExtensionsArea = new ExtensionsAreaImpl(this);
 
     maybeSetRootArea();
 
     registerExtensionPointsAndExtensions(myExtensionsArea);
+
+    myExtensionsArea.setLocked();
 
     InjectingContainerBuilder builder = myParent == null ? InjectingContainer.root().childBuilder() : myParent.getInjectingContainer().childBuilder();
 
@@ -185,7 +187,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    PluginManagerCore.registerExtensionPointsAndExtensions(area);
+    PluginManagerCore.registerExtensionPointsAndExtensions(myExtensionAreaId, area);
   }
 
   protected void registerServices(InjectingContainerBuilder builder) {

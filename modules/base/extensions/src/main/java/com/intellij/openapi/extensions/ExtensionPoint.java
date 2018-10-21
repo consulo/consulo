@@ -28,12 +28,6 @@ public interface ExtensionPoint<T> {
   String getName();
   AreaInstance getArea();
 
-  /**
-   * @deprecated use {@link #getClassName()} instead
-   */
-  @Nonnull
-  String getBeanClassName();
-
   void registerExtension(@Nonnull T extension);
   void registerExtension(@Nonnull T extension, @Nonnull LoadingOrder order);
 
@@ -50,8 +44,6 @@ public interface ExtensionPoint<T> {
   void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener, @Nonnull Disposable parentDisposable);
   void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener);
   void removeExtensionPointListener(@Nonnull ExtensionPointListener<T> extensionPointListener);
-
-  void reset();
 
   @Nonnull
   Class<T> getExtensionClass();

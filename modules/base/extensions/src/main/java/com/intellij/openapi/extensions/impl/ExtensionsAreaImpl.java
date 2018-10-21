@@ -17,16 +17,12 @@ package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
-import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ExtensionsAreaImpl implements ExtensionsArea {
@@ -37,32 +33,20 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
   private static final boolean DEBUG_REGISTRATION = false;
 
   private final Throwable myCreationTrace;
-  private final Map<String, ExtensionPointImpl> myExtensionPoints = ContainerUtil.newConcurrentMap();
+
   private final Map<String, Throwable> myEPTraces = DEBUG_REGISTRATION ? new THashMap<>() : null;
 
-  private final List<Runnable> mySuspendedListenerActions = new ArrayList<>();
-  private boolean myAvailabilityNotificationsActive = true;
+  private final Map<String, ExtensionPointImpl> myExtensionPoints = new THashMap<>();
 
   private final AreaInstance myAreaInstance;
-  private final String myAreaClass;
 
-  public ExtensionsAreaImpl(String areaClass, AreaInstance areaInstance) {
+  private boolean myLocked;
+
+  public ExtensionsAreaImpl(AreaInstance areaInstance) {
     myCreationTrace = DEBUG_REGISTRATION ? new Throwable("Area creation trace") : null;
-    myAreaClass = areaClass;
     myAreaInstance = areaInstance;
   }
 
-  @Override
-  public String getAreaClass() {
-    return myAreaClass;
-  }
-
-  @Override
-  public void registerExtensionPoint(@Nonnull String pluginName, @Nonnull Element extensionPointElement) {
-    registerExtensionPoint(new DefaultPluginDescriptor(PluginId.getId(pluginName)), extensionPointElement);
-  }
-
-  @Override
   public void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement) {
     assert pluginDescriptor.getPluginId() != null;
     final String pluginId = pluginDescriptor.getPluginId().getIdString();
@@ -97,12 +81,6 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     registerExtensionPoint(epName, className, pluginDescriptor, kind);
   }
 
-  @Override
-  public void registerExtension(@Nonnull final String pluginName, @Nonnull final Element extensionElement) {
-    registerExtension(new DefaultPluginDescriptor(PluginId.getId(pluginName)), extensionElement);
-  }
-
-  @Override
   public void registerExtension(@Nonnull final PluginDescriptor pluginDescriptor, @Nonnull final Element extensionElement) {
     final PluginId pluginId = pluginDescriptor.getPluginId();
 
@@ -158,27 +136,12 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     return myCreationTrace;
   }
 
-  @Override
-  public void registerExtensionPoint(@Nonnull final String extensionPointName, @Nonnull String extensionPointBeanClass) {
-    registerExtensionPoint(extensionPointName, extensionPointBeanClass, ExtensionPoint.Kind.INTERFACE);
-  }
-
-  @Override
-  public void registerExtensionPoint(@Nonnull @NonNls String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull ExtensionPoint.Kind kind) {
-    registerExtensionPoint(extensionPointName, extensionPointBeanClass, new UndefinedPluginDescriptor(), kind);
-  }
-
-  @Override
-  public void registerExtensionPoint(@Nonnull final String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor) {
-    registerExtensionPoint(extensionPointName, extensionPointBeanClass, descriptor, ExtensionPoint.Kind.INTERFACE);
-  }
-
-  private void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
+  public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
     if (hasExtensionPoint(extensionPointName)) {
       if (DEBUG_REGISTRATION) {
         final ExtensionPointImpl oldEP = getExtensionPoint(extensionPointName);
         LOGGER.error("Duplicate registration for EP: " + extensionPointName + ": original plugin " + oldEP.getDescriptor().getPluginId() + ", new plugin " + descriptor.getPluginId(),
-                       myEPTraces.get(extensionPointName));
+                     myEPTraces.get(extensionPointName));
       }
       throw new RuntimeException("Duplicate registration for EP: " + extensionPointName);
     }
@@ -187,6 +150,10 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
   }
 
   public void registerExtensionPoint(@Nonnull ExtensionPointImpl extensionPoint) {
+    if(myLocked) {
+      throw new IllegalArgumentException("locked");
+    }
+
     String name = extensionPoint.getName();
     myExtensionPoints.put(name, extensionPoint);
 
@@ -196,12 +163,11 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     }
   }
 
-  private void queueNotificationAction(final Runnable action) {
-    if (myAvailabilityNotificationsActive) {
-      action.run();
-    }
-    else {
-      mySuspendedListenerActions.add(action);
+  public void setLocked() {
+    myLocked = true;
+
+    for (ExtensionPointImpl extensionPoint : myExtensionPoints.values()) {
+      extensionPoint.setLocked();
     }
   }
 
@@ -230,44 +196,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
   }
 
   @Override
-  public void unregisterExtensionPoint(@Nonnull final String extensionPointName) {
-    ExtensionPoint extensionPoint = myExtensionPoints.get(extensionPointName);
-    if (extensionPoint != null) {
-      extensionPoint.reset();
-      myExtensionPoints.remove(extensionPointName);
-    }
-  }
-
-  @Override
   public boolean hasExtensionPoint(@Nonnull String extensionPointName) {
     return myExtensionPoints.containsKey(extensionPointName);
-  }
-
-  @Override
-  public void suspendInteractions() {
-    myAvailabilityNotificationsActive = false;
-  }
-
-  @Override
-  public void resumeInteractions() {
-    myAvailabilityNotificationsActive = true;
-    ExtensionPoint[] extensionPoints = getExtensionPoints();
-    for (ExtensionPoint extensionPoint : extensionPoints) {
-      extensionPoint.getExtensions(); // creates extensions from ComponentAdapters
-    }
-    for (Runnable action : mySuspendedListenerActions) {
-      try {
-        action.run();
-      }
-      catch (Exception e) {
-        LOGGER.error(e);
-      }
-    }
-    mySuspendedListenerActions.clear();
-  }
-
-  @Override
-  public void killPendingInteractions() {
-    mySuspendedListenerActions.clear();
   }
 }
