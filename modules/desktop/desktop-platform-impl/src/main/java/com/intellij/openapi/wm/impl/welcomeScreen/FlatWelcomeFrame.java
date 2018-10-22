@@ -19,8 +19,8 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
@@ -113,7 +113,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
         frame.dispose();
 
         if (ProjectManager.getInstance().getOpenProjects().length == 0) {
-          ApplicationManagerEx.getApplicationEx().exit();
+          Application.get().exit();
         }
       }
     });

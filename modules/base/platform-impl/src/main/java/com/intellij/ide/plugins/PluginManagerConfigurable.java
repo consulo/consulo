@@ -16,9 +16,9 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -26,9 +26,9 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -140,7 +140,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
     }
 
     if (myPluginManagerMain.isRequireShutdown()) {
-      final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+      final ApplicationEx app = (ApplicationEx)Application.get();
 
       int response = app.isRestartCapable() ? showRestartIDEADialog() : showShutDownIDEADialog();
       if (response == Messages.YES) {
@@ -182,7 +182,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
   }
 
   public static void shutdownOrRestartApp(String title) {
-    final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+    final ApplicationEx app = (ApplicationEx)Application.get();
     int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);
     if (response == Messages.YES) app.restart(true);
   }

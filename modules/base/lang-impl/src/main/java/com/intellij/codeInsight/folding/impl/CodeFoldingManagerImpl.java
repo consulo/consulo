@@ -20,8 +20,8 @@ import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
@@ -43,9 +43,9 @@ import com.intellij.util.containers.WeakList;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -172,7 +172,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   @RequiredDispatchThread
   @Override
   public void releaseFoldings(@Nonnull Editor editor) {
-    ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     final Project project = editor.getProject();
     if (project != null && (!project.equals(myProject) || !project.isOpen())) return;
 
@@ -226,7 +226,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     final FoldingUpdate.FoldingMap foldingMap = FoldingUpdate.getFoldingsFor(file, document, true);
 
     return editor -> {
-      ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
+      Application.get().assertIsDispatchThread();
       if (myProject.isDisposed() || editor.isDisposed()) return;
       final FoldingModelEx foldingModel = (FoldingModelEx)editor.getFoldingModel();
       if (!foldingModel.isFoldingEnabled()) return;

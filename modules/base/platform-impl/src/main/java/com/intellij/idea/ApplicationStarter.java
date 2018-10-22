@@ -16,10 +16,10 @@
 package com.intellij.idea;
 
 import com.intellij.idea.starter.ApplicationPostStarter;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
 import consulo.application.TransactionGuardEx;
@@ -81,7 +81,7 @@ public class ApplicationStarter {
 
   public void run(boolean newConfigFolder) {
     try {
-      ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+      ApplicationEx app = (ApplicationEx)Application.get();
       app.load(PathManager.getOptionsPath());
 
       if (myPostStarter.needStartInTransaction()) {

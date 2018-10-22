@@ -29,7 +29,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.ex.*;
@@ -67,8 +66,8 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
@@ -357,7 +356,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   @RequiredDispatchThread
   private static void assertIsDispatchThread() {
-    ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
   }
 
   @Override
