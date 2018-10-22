@@ -32,6 +32,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ import java.util.List;
 public class CutHandler extends EditorWriteActionHandler {
   private final EditorActionHandler myOriginalHandler;
 
+  @Inject
   public CutHandler(EditorActionHandler originalHandler) {
     myOriginalHandler = originalHandler;
   }
