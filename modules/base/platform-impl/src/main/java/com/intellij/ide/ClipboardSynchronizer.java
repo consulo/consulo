@@ -1,30 +1,17 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide;
 
 import com.intellij.Patches;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ClipboardUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
+import com.intellij.util.Consumer;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.FutureResult;
 import com.sun.jna.IntegerType;
@@ -34,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
@@ -43,28 +31,30 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 /**
- * <p>This class is used to workaround the problem with getting clipboard contents (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4818143).
- * Although this bug is marked as fixed actually Sun just set 10 seconds timeout for {@link java.awt.datatransfer.Clipboard#getContents(Object)}
+ * This class is used to workaround the problem with getting clipboard contents (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4818143).
+ * Although this bug is marked as fixed actually Sun just set 10 seconds timeout for {@link Clipboard#getContents(Object)}
  * method which may cause unacceptably long UI freezes. So we worked around this as follows:
  * <ul>
  * <li>for Macs we perform synchronization with system clipboard on a separate thread and schedule it when IDEA frame is activated
  * or Copy/Cut action in Swing component is invoked, and use native method calls to access system clipboard lock-free (?);</li>
  * <li>for X Window we temporary set short timeout and check for available formats (which should be fast if a clipboard owner is alive).</li>
  * </ul>
- * </p>
  *
  * @author nik
  */
 @Singleton
 public class ClipboardSynchronizer implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ClipboardSynchronizer");
+  private static final Logger LOG = Logger.getInstance(ClipboardSynchronizer.class);
 
   private final ClipboardHandler myClipboardHandler;
 
+  @Nonnull
   public static ClipboardSynchronizer getInstance() {
-    return ApplicationManager.getApplication().getComponent(ClipboardSynchronizer.class);
+    return Application.get().getComponent(ClipboardSynchronizer.class);
   }
 
   @Inject
@@ -81,7 +71,6 @@ public class ClipboardSynchronizer implements Disposable {
     else {
       myClipboardHandler = new ClipboardHandler();
     }
-
     myClipboardHandler.init();
   }
 
@@ -90,25 +79,72 @@ public class ClipboardSynchronizer implements Disposable {
     myClipboardHandler.dispose();
   }
 
+  public void areDataFlavorsAvailableAsync(@Nonnull Consumer<? super Boolean> callback, @Nonnull DataFlavor... flavors) {
+    final Supplier<Boolean> availabilitySupplier = () -> ClipboardUtil.handleClipboardSafely(() -> myClipboardHandler.areDataFlavorsAvailable(flavors), () -> false);
+
+    Boolean available = availabilitySupplier.get();
+    if (available) {
+      callback.consume(available);
+    }
+    else {
+      AtomicInteger counter = new AtomicInteger();
+
+      Timer timer = new Timer(50, event -> {
+      });
+      timer.addActionListener(event -> {
+        Boolean a = availabilitySupplier.get();
+        if (counter.incrementAndGet() > 3 || a) {
+          timer.stop();
+        }
+        callback.consume(a);
+      });
+      timer.start();
+    }
+  }
+
+  public void getContentsAsync(@Nonnull Consumer<? super Transferable> callback) {
+    final Supplier<Transferable> transferableSupplier = () -> ClipboardUtil.handleClipboardSafely(myClipboardHandler::getContents, () -> null);
+
+    Transferable transferable = transferableSupplier.get();
+    if (transferable != null) {
+      callback.consume(transferable);
+    }
+    else {
+      AtomicInteger counter = new AtomicInteger();
+
+      Timer timer = new Timer(50, event -> {
+      });
+      timer.addActionListener(event -> {
+        Transferable t = transferableSupplier.get();
+        if (counter.incrementAndGet() > 3) {
+          timer.stop();
+        }
+        callback.consume(t);
+      });
+      timer.start();
+    }
+  }
+
   public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
-    try {
-      return myClipboardHandler.areDataFlavorsAvailable(flavors);
-    }
-    catch (IllegalStateException e) {
-      LOG.info(e);
-      return false;
-    }
+    return ClipboardUtil.handleClipboardSafely(() -> myClipboardHandler.areDataFlavorsAvailable(flavors), () -> false);
   }
 
   @Nullable
   public Transferable getContents() {
-    try {
-      return myClipboardHandler.getContents();
-    }
-    catch (IllegalStateException e) {
-      LOG.info(e);
-      return null;
-    }
+    return ClipboardUtil.handleClipboardSafely(myClipboardHandler::getContents, () -> null);
+  }
+
+  @Nullable
+  public Object getData(@Nonnull DataFlavor dataFlavor) {
+    return ClipboardUtil.handleClipboardSafely(() -> {
+      try {
+        return myClipboardHandler.getData(dataFlavor);
+      }
+      catch (IOException | UnsupportedFlavorException e) {
+        LOG.debug(e);
+        return null;
+      }
+    }, () -> null);
   }
 
   public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
@@ -118,7 +154,6 @@ public class ClipboardSynchronizer implements Disposable {
   public void resetContent() {
     myClipboardHandler.resetContent();
   }
-
 
   @Nullable
   private static Clipboard getClipboard() {
@@ -153,6 +188,7 @@ public class ClipboardSynchronizer implements Disposable {
       }
       return false;
     }
+
 
     @Nullable
     public Transferable getContents() {
@@ -429,6 +465,12 @@ public class ClipboardSynchronizer implements Disposable {
     @Override
     public Transferable getContents() throws IllegalStateException {
       return myContent;
+    }
+
+    @Override
+    @Nullable
+    public Object getData(@Nonnull DataFlavor dataFlavor) throws IOException, UnsupportedFlavorException {
+      return myContent.getTransferData(dataFlavor);
     }
 
     @Override
