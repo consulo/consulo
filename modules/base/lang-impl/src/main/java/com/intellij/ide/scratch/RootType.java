@@ -55,7 +55,7 @@ public abstract class RootType {
 
   @Nonnull
   public static <T extends RootType> T findByClass(Class<T> aClass) {
-    return Extensions.findExtension(ROOT_EP, aClass);
+    return ROOT_EP.findExtension(aClass);
   }
 
   private final String myId;
