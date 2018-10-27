@@ -22,8 +22,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
-
 import javax.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -53,19 +53,22 @@ public abstract class WolfTheProblemSolver {
 
   public abstract boolean hasSyntaxErrors(final VirtualFile file);
 
-  public abstract static class ProblemListener {
-    public void problemsAppeared(@Nonnull VirtualFile file) {}
-    public void problemsChanged(@Nonnull VirtualFile file) {}
-    public void problemsDisappeared(@Nonnull VirtualFile file) {}
+  @Deprecated
+  public abstract static class ProblemListener implements com.intellij.problems.ProblemListener {
+    @Override
+    public void problemsAppeared(@Nonnull VirtualFile file) {
+    }
+
+    @Override
+    public void problemsDisappeared(@Nonnull VirtualFile file) {
+    }
   }
 
-  public abstract void addProblemListener(@Nonnull ProblemListener listener);
-  public abstract void addProblemListener(@Nonnull ProblemListener listener, @Nonnull Disposable parentDisposable);
-  public abstract void removeProblemListener(@Nonnull ProblemListener listener);
-
   /**
-   * @deprecated register extensions to {@link #FILTER_EP_NAME} instead
+   * @deprecated Use message bus {@link com.intellij.problems.ProblemListener#TOPIC} instead.
    */
-  public abstract void registerFileHighlightFilter(@Nonnull Condition<VirtualFile> filter, @Nonnull Disposable parentDisposable);
+  @Deprecated
+  public abstract void addProblemListener(@Nonnull ProblemListener listener, @Nonnull Disposable parentDisposable);
+
   public abstract void queue(VirtualFile suspiciousFile);
 }

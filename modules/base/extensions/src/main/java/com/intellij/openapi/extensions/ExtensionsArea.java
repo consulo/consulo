@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.extensions;
 
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -24,12 +23,8 @@ import javax.annotation.Nonnull;
  * @author AKireyev
  */
 public interface ExtensionsArea  {
-  void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass);
-  void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull ExtensionPoint.Kind kind);
-  void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor);
-  void unregisterExtensionPoint(@NonNls @Nonnull String extensionPointName);
-
   boolean hasExtensionPoint(@NonNls @Nonnull String extensionPointName);
+
   @Nonnull
   <T> ExtensionPoint<T> getExtensionPoint(@NonNls @Nonnull String extensionPointName);
 
@@ -38,18 +33,4 @@ public interface ExtensionsArea  {
 
   @Nonnull
   ExtensionPoint[] getExtensionPoints();
-
-  void suspendInteractions();
-
-  void resumeInteractions();
-
-  void killPendingInteractions();
-
-  void registerExtensionPoint(@Nonnull String pluginName, @Nonnull Element extensionPointElement);
-  void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement);
-  void registerExtension(@Nonnull String pluginName, @Nonnull Element extensionElement);
-
-  void registerExtension(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionElement);
-
-  String getAreaClass();
 }

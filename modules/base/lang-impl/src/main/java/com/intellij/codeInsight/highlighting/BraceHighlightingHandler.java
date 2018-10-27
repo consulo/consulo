@@ -28,9 +28,10 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.Language;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -67,9 +68,9 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.text.CharArrayUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,7 +114,8 @@ public class BraceHighlightingHandler {
   static void lookForInjectedAndMatchBracesInOtherThread(@Nonnull final Editor editor,
                                                          @Nonnull final Alarm alarm,
                                                          @Nonnull final Processor<BraceHighlightingHandler> processor) {
-    ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
+    ApplicationEx application = (ApplicationEx)Application.get();
+    application.assertIsDispatchThread();
     if (!isValidEditor(editor)) return;
     if (!PROCESSED_EDITORS.add(editor)) {
       // Skip processing if that is not really necessary.
@@ -124,8 +126,8 @@ public class BraceHighlightingHandler {
     final Project project = editor.getProject();
     final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
     if (!isValidFile(psiFile)) return;
-    ApplicationManager.getApplication().executeOnPooledThread(() -> {
-      if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(() -> {
+    application.executeOnPooledThread(() -> {
+      if (!application.tryRunReadAction(() -> {
         final PsiFile injected;
         try {
           if (psiFile instanceof PsiBinaryFile || !isValidEditor(editor) || !isValidFile(psiFile)) {
@@ -137,7 +139,7 @@ public class BraceHighlightingHandler {
         }
         catch (RuntimeException e) {
           // Reset processing flag in case of unexpected exception.
-          ApplicationManager.getApplication().invokeLater(new DumbAwareRunnable() {
+          application.invokeLater(new DumbAwareRunnable() {
             @Override
             public void run() {
               PROCESSED_EDITORS.remove(editor);
@@ -145,7 +147,7 @@ public class BraceHighlightingHandler {
           });
           throw e;
         }
-        ApplicationManager.getApplication().invokeLater(new DumbAwareRunnable() {
+        application.invokeLater(new DumbAwareRunnable() {
           @Override
           public void run() {
             try {
@@ -162,7 +164,7 @@ public class BraceHighlightingHandler {
         }, ModalityState.stateForComponent(editor.getComponent()));
       })) {
         // write action is queued in AWT. restart after it's finished
-        ApplicationManager.getApplication().invokeLater(() -> {
+        application.invokeLater(() -> {
           PROCESSED_EDITORS.remove(editor);
           lookForInjectedAndMatchBracesInOtherThread(editor, alarm, processor);
         }, ModalityState.stateForComponent(editor.getComponent()));

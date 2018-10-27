@@ -23,9 +23,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.TextRange;
 
+import javax.inject.Inject;
+
 public class SelectAllHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;
 
+  @Inject
   public SelectAllHandler(final EditorActionHandler originalHandler) {
     myOriginalHandler = originalHandler;
   }

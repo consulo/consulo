@@ -26,10 +26,10 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.notification.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
@@ -48,9 +48,9 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.*;
@@ -60,8 +60,8 @@ import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 
@@ -538,7 +538,7 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   public static void notifyPluginsWereUpdated(final String title, final Project project) {
-    final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+    final ApplicationEx app = (ApplicationEx)Application.get();
     final boolean restartCapable = app.isRestartCapable();
     String message = restartCapable
                      ? IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName())

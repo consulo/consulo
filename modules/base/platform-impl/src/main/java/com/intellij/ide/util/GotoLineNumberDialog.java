@@ -16,7 +16,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
@@ -98,7 +98,7 @@ public class GotoLineNumberDialog extends DialogWrapper {
   }
 
   private static boolean isInternal() {
-    return ApplicationManagerEx.getApplicationEx().isInternal();
+    return Application.get().isInternal();
   }
 
   @Override

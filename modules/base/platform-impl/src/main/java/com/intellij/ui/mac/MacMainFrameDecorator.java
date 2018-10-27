@@ -278,13 +278,13 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
         Foundation.addMethod(ownToolbar, Foundation.createSelector("setVisible:"), SET_VISIBLE_CALLBACK, "v*");
         Foundation.addMethod(ownToolbar, Foundation.createSelector("isVisible"), IS_VISIBLE, "B*");
 
-        Foundation.executeOnMainThread(new Runnable() {
+        Foundation.executeOnMainThread(true, true, new Runnable() {
           @Override
           public void run() {
             invoke(window, "setToolbar:", toolbar);
             invoke(window, "setShowsToolbarButton:", 1);
           }
-        }, true, true);
+        });
       }
     }
     finally {

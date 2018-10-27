@@ -24,7 +24,6 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.DocumentAdapter;
@@ -37,9 +36,11 @@ import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;
+import consulo.awt.TargetAWT;
+import consulo.ui.style.StandardColors;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -100,7 +101,10 @@ public class FontOptions extends JPanel implements OptionsPanel{
     primaryFontPanel.add(LabeledComponent.left(myEditorFontSizeField, ApplicationBundle.message("editbox.font.size")));
     primaryFontPanel.add(LabeledComponent.left(myLineSpacingField, ApplicationBundle.message("editbox.line.spacing")));
 
-    add(new JLabel(ApplicationBundle.message("label.fallback.fonts.list.description"), MessageType.INFO.getDefaultIcon(), SwingConstants.LEFT));
+    JLabel infoLabel = new JLabel(ApplicationBundle.message("label.fallback.fonts.list.description"));
+    infoLabel.setFont(JBUI.Fonts.smallFont());
+    infoLabel.setForeground(TargetAWT.to(StandardColors.GRAY));
+    add(infoLabel);
 
     JPanel secondFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     add(secondFontPanel);

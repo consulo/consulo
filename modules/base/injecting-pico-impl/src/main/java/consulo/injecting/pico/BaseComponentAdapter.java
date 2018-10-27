@@ -16,6 +16,7 @@
 package consulo.injecting.pico;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
@@ -48,7 +49,7 @@ public class BaseComponentAdapter<T> implements ComponentAdapter {
 
   private boolean myForceSingleton;
 
-  private boolean myInitializeProgress;
+  private volatile String myCreationTrace;
 
   public BaseComponentAdapter(InjectingKey<T> interfaceKey) {
     myInterfaceKey = interfaceKey;
@@ -101,12 +102,14 @@ public class BaseComponentAdapter<T> implements ComponentAdapter {
 
       isSingleton = myForceSingleton || isAnnotationSingleton;
 
-      if (myInitializeProgress) {
-        throw new IllegalArgumentException("Cycle initialization: " + myImplementationKey.getTargetClass().getName());
+      String creationTrace = myCreationTrace;
+      if (creationTrace != null) {
+        String currentTrace = exceptionText("current trace");
+        LOGGER.error("Cycle initialization: " + myImplementationKey.getTargetClass().getName() + "\n" + currentTrace + ",\n\n" + creationTrace);
       }
 
       if (isSingleton) {
-        myInitializeProgress = true;
+        myCreationTrace = exceptionText("creation trace");
       }
 
       long l = System.nanoTime();
@@ -117,7 +120,7 @@ public class BaseComponentAdapter<T> implements ComponentAdapter {
       myAfterInjectionListener.afterInject(l, instance);
 
       if (isSingleton) {
-        myInitializeProgress = false;
+        myCreationTrace = null;
         myInstanceIfSingleton = instance;
       }
     }
@@ -127,6 +130,11 @@ public class BaseComponentAdapter<T> implements ComponentAdapter {
     }
 
     return instance;
+  }
+
+  private static String exceptionText(String id) {
+    Thread thread = Thread.currentThread();
+    return ExceptionUtil.getThrowableText(new Exception(id + ". Thread: " + thread));
   }
 
   @Override

@@ -23,7 +23,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -56,8 +55,8 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -78,7 +77,7 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
 
   private FocusCommand myFocusCommandOnAppActivation;
   private ActionCallback myCallbackOnActivation;
-  private final boolean isInternalMode = ApplicationManagerEx.getApplicationEx().isInternal();
+  private final boolean isInternalMode = Application.get().isInternal();
   private final LinkedList<FocusRequestInfo> myRequests = new LinkedList<>();
 
   private final IdeEventQueue myQueue;

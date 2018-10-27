@@ -18,9 +18,9 @@ package com.intellij.openapi.project.impl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
@@ -339,7 +339,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @RequiredDispatchThread
   @Override
   public void dispose() {
-    ApplicationEx application = ApplicationManagerEx.getApplicationEx();
+    Application application = Application.get();
     assert application.isWriteAccessAllowed();  // dispose must be under write action
 
     // can call dispose only via com.intellij.ide.impl.ProjectUtil.closeAndDispose()
@@ -411,15 +411,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     final IProjectStore stateStore = getStateStore();
 
     final TrackingPathMacroSubstitutor[] substitutors = stateStore.getSubstitutors();
-    final Set<String> unknownMacros = new HashSet<String>();
+    final Set<String> unknownMacros = new HashSet<>();
     for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
       unknownMacros.addAll(substitutor.getUnknownMacros(null));
     }
 
     if (!unknownMacros.isEmpty()) {
-      if (!showDialog || ProjectMacrosUtil.checkMacros(this, new HashSet<String>(unknownMacros))) {
+      if (!showDialog || ProjectMacrosUtil.checkMacros(this, new HashSet<>(unknownMacros))) {
         final PathMacros pathMacros = PathMacros.getInstance();
-        final Set<String> macros2invalidate = new HashSet<String>(unknownMacros);
+        final Set<String> macros2invalidate = new HashSet<>(unknownMacros);
         for (Iterator it = macros2invalidate.iterator(); it.hasNext(); ) {
           final String macro = (String)it.next();
           final String value = pathMacros.getValue(macro);
@@ -429,7 +429,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
 
         if (!macros2invalidate.isEmpty()) {
-          final Set<String> components = new HashSet<String>();
+          final Set<String> components = new HashSet<>();
           for (TrackingPathMacroSubstitutor substitutor : substitutors) {
             components.addAll(substitutor.getComponents(macros2invalidate));
           }

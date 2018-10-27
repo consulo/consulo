@@ -2,8 +2,8 @@ package com.intellij.internal;
 
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.util.Pass;
@@ -14,9 +14,9 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.IntroduceTargetChooser;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -128,7 +128,7 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
   @Override
   public final void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    boolean enabled = ApplicationManagerEx.getApplicationEx().isInternal() && getEditor(e) != null && myFileClass.isInstance(getPsiFile(e));
+    boolean enabled = Application.get().isInternal() && getEditor(e) != null && myFileClass.isInstance(getPsiFile(e));
     presentation.setVisible(enabled);
     presentation.setEnabled(enabled);
   }

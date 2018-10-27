@@ -40,9 +40,10 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -76,9 +77,9 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -395,7 +396,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
       @Override
       public boolean process(final PsiFile file) {
         ProgressManager.checkCanceled();
-        if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(new Runnable() {
+        if (!((ApplicationEx)Application.get()).tryRunReadAction(new Runnable() {
           @Override
           public void run() {
             if (!file.isValid()) {

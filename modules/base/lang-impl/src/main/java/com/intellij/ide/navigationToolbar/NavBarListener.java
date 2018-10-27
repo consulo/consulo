@@ -37,6 +37,7 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.problems.ProblemListener;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiTreeChangeEvent;
@@ -55,8 +56,8 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class NavBarListener extends WolfTheProblemSolver.ProblemListener
-  implements ActionListener, FocusListener, FileStatusListener, AnActionListener, FileEditorManagerListener,
+public class NavBarListener
+  implements ActionListener, ProblemListener, FocusListener, FileStatusListener, AnActionListener, FileEditorManagerListener,
              PsiTreeChangeListener, ModuleRootListener, NavBarModelListener, PropertyChangeListener, KeyListener, WindowFocusListener {
   private static final String LISTENER = "NavBarListener";
   private static final String BUS = "NavBarMessageBus";
@@ -74,10 +75,10 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(listener);
     FileStatusManager.getInstance(project).addFileStatusListener(listener);
     PsiManager.getInstance(project).addPsiTreeChangeListener(listener);
-    WolfTheProblemSolver.getInstance(project).addProblemListener(listener);
     ActionManager.getInstance().addAnActionListener(listener);
 
     final MessageBusConnection connection = project.getMessageBus().connect();
+    connection.subscribe(ProblemListener.TOPIC, listener);
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, listener);
     connection.subscribe(NavBarModelListener.NAV_BAR, listener);
     connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener);
@@ -100,7 +101,6 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
       KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(listener);
       FileStatusManager.getInstance(project).removeFileStatusListener(listener);
       PsiManager.getInstance(project).removePsiTreeChangeListener(listener);
-      WolfTheProblemSolver.getInstance(project).removeProblemListener(listener);
       ActionManager.getInstance().removeAnActionListener(listener);
       final MessageBusConnection connection = (MessageBusConnection)panel.getClientProperty(BUS);
       panel.putClientProperty(BUS, null);

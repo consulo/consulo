@@ -44,23 +44,27 @@ public class Extensions {
   }
 
   @Nonnull
+  @Deprecated
   public static Object[] getExtensions(@NonNls String extensionPointName) {
     return getExtensions(extensionPointName, null);
   }
 
   @Nonnull
   @SuppressWarnings({"unchecked"})
+  @Deprecated
   public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
     return (T[])getExtensions(extensionPointName.getName(), null);
   }
 
   @Nonnull
   @SuppressWarnings({"unchecked"})
+  @Deprecated
   public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance) {
     return Extensions.<T>getExtensions(extensionPointName.getName(), areaInstance);
   }
 
   @Nonnull
+  @Deprecated
   public static <T> T[] getExtensions(String extensionPointName, @Nullable AreaInstance areaInstance) {
     ExtensionsArea area = getArea(areaInstance);
     ExtensionPoint<T> extensionPoint = area.getExtensionPoint(extensionPointName);
@@ -68,6 +72,7 @@ public class Extensions {
   }
 
   @Nonnull
+  @Deprecated
   public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<U> extClass) {
     for (T t : getExtensions(extensionPointName)) {
       if (extClass.isInstance(t)) {
@@ -79,6 +84,7 @@ public class Extensions {
   }
 
   @Nonnull
+  @Deprecated
   public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance, @Nonnull Class<U> extClass) {
     for (T t : getExtensions(extensionPointName, areaInstance)) {
       if (extClass.isInstance(t)) {
@@ -87,40 +93,5 @@ public class Extensions {
       }
     }
     throw new IllegalArgumentException("could not find extension implementation " + extClass);
-  }
-
-  @SuppressWarnings("CallToPrintStackTrace")
-  public static class SimpleLogProvider implements LogProvider {
-    @Override
-    public void error(String message) {
-      new Throwable(message).printStackTrace();
-    }
-
-    @Override
-    public void error(String message, @Nonnull Throwable t) {
-      System.err.println(message);
-      t.printStackTrace();
-    }
-
-    @Override
-    public void error(@Nonnull Throwable t) {
-      t.printStackTrace();
-    }
-
-    @Override
-    public void warn(String message) {
-      System.err.println(message);
-    }
-
-    @Override
-    public void warn(String message, @Nonnull Throwable t) {
-      System.err.println(message);
-      t.printStackTrace();
-    }
-
-    @Override
-    public void warn(@Nonnull Throwable t) {
-      t.printStackTrace();
-    }
   }
 }

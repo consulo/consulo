@@ -15,8 +15,8 @@
  */
 package com.intellij.concurrency;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -27,10 +27,10 @@ import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -121,7 +121,7 @@ public class JobLauncherImpl extends JobLauncher {
         }
       }, progress);
       if (runInReadAction) {
-        ApplicationManagerEx.getApplicationEx().runReadAction(runnable);
+        Application.get().runReadAction(runnable);
       }
       else {
         runnable.run();

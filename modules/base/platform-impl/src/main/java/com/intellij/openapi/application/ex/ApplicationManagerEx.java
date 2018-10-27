@@ -20,8 +20,10 @@ import com.intellij.openapi.application.ApplicationManager;
 /**
  * @author max
  */
+@Deprecated
 public class ApplicationManagerEx extends ApplicationManager {
+  @Deprecated
   public static ApplicationEx getApplicationEx() {
-    return (ApplicationEx) ourApplication;
+    return (ApplicationEx)ourApplication;
   }
 }

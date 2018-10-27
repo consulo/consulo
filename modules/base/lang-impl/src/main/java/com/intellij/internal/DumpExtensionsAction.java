@@ -17,15 +17,17 @@ package com.intellij.internal;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,34 +36,35 @@ import java.util.List;
  * @author nik
  */
 public class DumpExtensionsAction extends DumbAwareAction {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    List<ExtensionsArea> areas = new ArrayList<ExtensionsArea>();
-    areas.add(Extensions.getRootArea());
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    List<AreaInstance> areas = new ArrayList<>();
+    areas.add(Application.get());
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
-      areas.add(Extensions.getArea(project));
+      areas.add(project);
       final Module[] modules = ModuleManager.getInstance(project).getModules();
       if (modules.length > 0) {
-        areas.add(Extensions.getArea(modules[0]));
+        areas.add(modules[0]);
       }
     }
     System.out.print(areas.size() + " extension areas: ");
-    for (ExtensionsArea area : areas) {
-      System.out.print(area.getAreaClass() + " ");
+    for (AreaInstance area : areas) {
+      System.out.print(area + " ");
     }
     System.out.println("\n");
 
-    List<ExtensionPoint> points = new ArrayList<ExtensionPoint>();
-    for (ExtensionsArea area : areas) {
-      points.addAll(Arrays.asList(area.getExtensionPoints()));
+    List<ExtensionPoint> points = new ArrayList<>();
+    for (AreaInstance area : areas) {
+      points.addAll(Arrays.asList(area.getExtensionsArea().getExtensionPoints()));
     }
     System.out.println(points.size() + " extension points: ");
     for (ExtensionPoint point : points) {
       System.out.println(" " + point.getName());
     }
 
-    List<Object> extensions = new ArrayList<Object>();
+    List<Object> extensions = new ArrayList<>();
     for (ExtensionPoint point : points) {
       extensions.addAll(Arrays.asList(point.getExtensions()));
     }

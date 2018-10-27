@@ -29,8 +29,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -84,8 +82,8 @@ public class MacOSDefaultMenuInitializer {
 
         @Override
         public void handleQuit(ApplicationEvent applicationEvent) {
-          final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-          TransactionGuard.submitTransaction(app, () -> app.exit());
+          final com.intellij.openapi.application.Application app = com.intellij.openapi.application.Application.get();
+          TransactionGuard.submitTransaction(app, app::exit);
         }
 
         @Override
@@ -156,8 +154,8 @@ public class MacOSDefaultMenuInitializer {
       setQuitHandler.invoke(desktop, Proxy.newProxyInstance(classLoader, new Class[]{quitHandler}, new InvocationHandler() {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-          TransactionGuard.submitTransaction(app, () -> app.exit());
+          final com.intellij.openapi.application.Application app = com.intellij.openapi.application.Application.get();
+          TransactionGuard.submitTransaction(app, app::exit);
           return null;
         }
       }));

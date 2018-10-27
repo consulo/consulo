@@ -21,8 +21,8 @@ import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.lang.folding.LanguageFolding;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -41,8 +41,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
@@ -116,7 +116,7 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
 
   @RequiredDispatchThread
   private static void assertDispatchThread() {
-    ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
   }
 
   @RequiredDispatchThread

@@ -23,8 +23,9 @@ import com.intellij.concurrency.Job;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
@@ -429,7 +430,7 @@ class PassExecutorService implements Disposable {
       }
 
       ProgressManager.getInstance().executeProcessUnderProgress(() -> {
-        boolean success = ApplicationManagerEx.getApplicationEx().tryRunReadAction(() -> {
+        boolean success = ((ApplicationEx)Application.get()).tryRunReadAction(() -> {
           try {
             if (DumbService.getInstance(myProject).isDumb() && !DumbService.isDumbAware(myPass)) {
               return;

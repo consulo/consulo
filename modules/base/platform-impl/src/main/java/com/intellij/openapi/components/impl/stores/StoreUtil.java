@@ -19,9 +19,9 @@ import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -29,6 +29,7 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import consulo.application.ApplicationProperties;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -55,7 +56,7 @@ public final class StoreUtil {
       }
 
       String messagePostfix = " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" +
-                              (ApplicationManagerEx.getApplicationEx().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
+                              (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
       PluginId pluginId = IdeErrorsDialog.findPluginId(e);
       if (pluginId == null) {
@@ -95,7 +96,7 @@ public final class StoreUtil {
       }
 
       String messagePostfix = " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" +
-                              (ApplicationManagerEx.getApplicationEx().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
+                              (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
       PluginId pluginId = IdeErrorsDialog.findPluginId(e);
       if (pluginId == null) {

@@ -142,9 +142,7 @@ public final class ActionMenu extends JMenu {
   }
 
   private void init() {
-    boolean macSystemMenu = SystemInfo.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
-
-    myStubItem = macSystemMenu ? null : new StubItem();
+    myStubItem = isTopMenuBar() ? null : new StubItem();
     addStubItem();
     addMenuListener(new MenuListenerImpl());
     setBorderPainted(false);
@@ -210,7 +208,7 @@ public final class ActionMenu extends JMenu {
   private class MenuListenerImpl implements MenuListener {
     @Override
     public void menuCanceled(MenuEvent e) {
-      if (isTopMenuBar()) {
+      if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
         myMenuComponents = new Component[]{myStubItem};
       }
       else {
@@ -225,7 +223,7 @@ public final class ActionMenu extends JMenu {
 
     @Override
     public void menuSelected(MenuEvent e) {
-      if (isTopMenuBar()) {
+      if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
         myMenuComponents = null;
       }
       else {
@@ -236,7 +234,7 @@ public final class ActionMenu extends JMenu {
 
   @Override
   public Component[] getMenuComponents() {
-    if (isTopMenuBar()) {
+    if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
       if (myMenuComponents == null) {
         JMenu temp = new JMenu();
         fillMenu(temp);
@@ -251,7 +249,7 @@ public final class ActionMenu extends JMenu {
 
   @Override
   public int getMenuComponentCount() {
-    if(isTopMenuBar()) {
+    if(isTopMenuBarAfterOpenJDKMemLeakFix()) {
       return getMenuComponents().length;
     }
     return super.getMenuComponentCount();
@@ -259,6 +257,22 @@ public final class ActionMenu extends JMenu {
 
   private boolean isTopMenuBar() {
     return SystemInfo.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
+  }
+
+  private boolean isTopMenuBarAfterOpenJDKMemLeakFix() {
+    if(isTopMenuBar()) {
+      // looks like openjdk backport fix from jdk 10
+      // 181 - when bug from jdk 10 reported. maybe build lower
+      if(SystemInfo.isJavaVersionAtLeast(8, 0, 181)) {
+        return true;
+      }
+
+      // jdk 10 have initial change in screen menu
+      if(SystemInfo.isJavaVersionAtLeast(10, 0, 0)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void clearItems() {
@@ -278,6 +292,8 @@ public final class ActionMenu extends JMenu {
     }
 
     removeAll();
+    addStubItem();
+
     validate();
   }
 
