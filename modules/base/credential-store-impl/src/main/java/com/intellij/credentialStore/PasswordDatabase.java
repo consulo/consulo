@@ -7,8 +7,8 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ class PasswordDatabase implements PersistentStateComponent<PasswordDatabase.Stat
   }
 
   @Override
-  public void loadState(@NotNull State state) {
+  public void loadState(@Nonnull State state) {
     String[][] db = state.PASSWORDS;
     String pi = state.MASTER_PASSWORD_INFO;
     try {

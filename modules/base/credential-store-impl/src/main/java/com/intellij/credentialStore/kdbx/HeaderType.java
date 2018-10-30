@@ -17,20 +17,18 @@ package com.intellij.credentialStore.kdbx;
 
 /**
  * @author VISTALL
- * @since 2018-10-14
+ * @since 2018-10-27
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
-  }
-
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
-
-  public boolean isFileMissed() {
-    return isFileMissed;
-  }
+interface HeaderType {
+  int END = 0;
+  int COMMENT = 1;
+  int CIPHER_ID = 2;
+  int COMPRESSION_FLAGS = 3;
+  int MASTER_SEED = 4;
+  int TRANSFORM_SEED = 5;
+  int TRANSFORM_ROUNDS = 6;
+  int ENCRYPTION_IV = 7;
+  int PROTECTED_STREAM_KEY = 8;
+  int STREAM_START_BYTES = 9;
+  int INNER_RANDOM_STREAM_ID = 10;
 }

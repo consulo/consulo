@@ -13,24 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.credentialStore.kdbx;
+package com.intellij.credentialStore;
 
 /**
- * @author VISTALL
- * @since 2018-10-14
+ * from kotlin
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
-  }
-
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
-
-  public boolean isFileMissed() {
-    return isFileMissed;
-  }
+public class NativeCredentialStoreWrapper {
 }

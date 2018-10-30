@@ -57,6 +57,11 @@ public class Credentials {
   }
 
   @Nullable
+  public OneTimeString getPassword() {
+    return password;
+  }
+
+  @Nullable
   public String getPasswordAsString() {
     return password == null ? null : password.toString();
   }

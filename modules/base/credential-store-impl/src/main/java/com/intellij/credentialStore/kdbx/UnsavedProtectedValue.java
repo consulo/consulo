@@ -15,22 +15,31 @@
  */
 package com.intellij.credentialStore.kdbx;
 
+import com.intellij.credentialStore.OneTimeString;
+import org.jdom.Text;
+
 /**
  * @author VISTALL
- * @since 2018-10-14
+ * @since 2018-10-27
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
+public class UnsavedProtectedValue extends Text implements SecureString {
+  private final StringProtectedByStreamCipher secureString;
 
-  public IncorrectMasterPasswordException() {
-    this(false);
+  public UnsavedProtectedValue(StringProtectedByStreamCipher secureString) {
+    this.secureString = secureString;
   }
 
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
+  public StringProtectedByStreamCipher getSecureString() {
+    return secureString;
   }
 
-  public boolean isFileMissed() {
-    return isFileMissed;
+  @Override
+  public OneTimeString get(boolean clearable) {
+    return secureString.get(clearable);
+  }
+
+  @Override
+  public String getText() {
+    throw new IllegalStateException("Must be converted to ProtectedValue for serialization");
   }
 }

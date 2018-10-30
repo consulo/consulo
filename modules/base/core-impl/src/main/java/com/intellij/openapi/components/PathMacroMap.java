@@ -19,6 +19,7 @@ import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jdom.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -35,8 +36,8 @@ public abstract class PathMacroMap {
     substitute(e, caseSensitive, false);
   }
 
-  public final void substitute(@Nonnull Element e, boolean caseSensitive, boolean recursively, @Nullable PathMacroFilter filter) {
-    for (Content child : e.getContent()) {
+  public final void substitute(@Nonnull Element element, boolean caseSensitive, boolean recursively, @Nullable PathMacroFilter filter) {
+    for (Content child : element.getContent()) {
       if (child instanceof Element) {
         substitute((Element)child, caseSensitive, recursively, filter);
       }
@@ -57,16 +58,24 @@ public abstract class PathMacroMap {
       }
     }
 
-    for (Attribute attribute : e.getAttributes()) {
+    for (Attribute attribute : element.getAttributes()) {
       if (filter == null || !filter.skipPathMacros(attribute)) {
-        String oldValue = attribute.getValue();
-        String newValue = (recursively || (filter != null && filter.recursePathMacros(attribute)))
-                          ? substituteRecursively(oldValue, caseSensitive)
-                          : substitute(oldValue, caseSensitive);
-        if (oldValue != newValue) {
+        String newValue = getAttributeValue(attribute, filter, caseSensitive, recursively);
+        if (attribute.getValue() != newValue) {
+          // it is faster to call 'setValue' right away than perform additional 'equals' check
           attribute.setValue(newValue);
         }
       }
+    }
+  }
+
+  public String getAttributeValue(@Nonnull Attribute attribute, @Nullable PathMacroFilter filter, boolean caseSensitive, boolean recursively) {
+    String oldValue = attribute.getValue();
+    if (recursively || (filter != null && filter.recursePathMacros(attribute))) {
+      return substituteRecursively(oldValue, caseSensitive);
+    }
+    else {
+      return substitute(oldValue, caseSensitive);
     }
   }
 

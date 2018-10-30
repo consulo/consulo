@@ -212,6 +212,11 @@ class ImmutableElement extends Element {
   }
 
   @Override
+  public boolean hasAttributes() {
+    return !myAttributes.isEmpty();
+  }
+
+  @Override
   public Attribute getAttribute(String name, Namespace ns) {
     if (myAttributes instanceof ImmutableSameTypeAttributeList) {
       return ((ImmutableSameTypeAttributeList)myAttributes).get(name, ns);

@@ -15,7 +15,7 @@
  */
 package com.intellij.credentialStore.kdbx;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
@@ -67,7 +67,7 @@ final class HashedBlockOutputStream extends OutputStream {
   }
 
   @Override
-  public void write(@NotNull byte[] b, int offset, int count) throws IOException {
+  public void write(@Nonnull byte[] b, int offset, int count) throws IOException {
     put(b, offset, count);
   }
 

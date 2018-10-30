@@ -1,10 +1,10 @@
 package com.intellij.credentialStore;
 
 import com.intellij.ide.passwordSafe.impl.ProviderType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface PasswordSafeSettingsListener {
-  default void typeChanged(@NotNull ProviderType oldValue, @NotNull ProviderType newValue) {
+  default void typeChanged(@Nonnull ProviderType oldValue, @Nonnull ProviderType newValue) {
   }
 
   default void credentialStoreCleared() {

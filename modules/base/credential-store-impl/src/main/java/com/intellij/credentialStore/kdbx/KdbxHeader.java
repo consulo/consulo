@@ -16,21 +16,14 @@
 package com.intellij.credentialStore.kdbx;
 
 /**
- * @author VISTALL
- * @since 2018-10-14
+ * This class represents the header portion of a KeePass KDBX file or stream. The header is received in
+ * plain text and describes the encryption and compression of the remainder of the file.
+ * It is a factory for encryption and decryption streams and contains a hash of its own serialization.
+ * While KDBX streams are Little-Endian, data is passed to and from this class in standard Java byte order.
+ *
+ * @author jo
+ *
+ * from kotlin
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
-  }
-
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
-
-  public boolean isFileMissed() {
-    return isFileMissed;
-  }
+public class KdbxHeader {
 }

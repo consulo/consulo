@@ -6,7 +6,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.components.ComponentsKt;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.function.Function;
@@ -30,10 +30,10 @@ class EnterPasswordComponent {
     return myPasswordField;
   }
 
-  @NotNull
+  @Nonnull
   private final Function<? super String, Boolean> myPasswordConsumer;
 
-  EnterPasswordComponent(@NotNull Function<? super String, Boolean> passwordConsumer) {
+  EnterPasswordComponent(@Nonnull Function<? super String, Boolean> passwordConsumer) {
     myPasswordConsumer = passwordConsumer;
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {

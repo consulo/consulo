@@ -13,13 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.credentialStore.keePass;
+package com.intellij.credentialStore;
+
+import com.intellij.credentialStore.gpg.Pgp;
 
 /**
  * @author VISTALL
- * @since 2018-10-13
+ * @since 2018-10-28
  */
-public enum EncryptionType {
-  BUILT_IN,
-  CRYPT_32
+public class PgpKeyEncryptionSupport implements EncryptionSupport {
+  private EncryptionSpec myEncryptionSpec;
+
+  public PgpKeyEncryptionSupport(EncryptionSpec encryptionSpec) {
+    myEncryptionSpec = encryptionSpec;
+  }
+
+  @Override
+  public byte[] encypt(byte[] data) {
+    return new Pgp().encrypt(data, myEncryptionSpec.getPgpKeyId());
+  }
+
+  @Override
+  public byte[] decrypt(byte[] data) {
+    return new Pgp().decrypt(data);
+  }
 }

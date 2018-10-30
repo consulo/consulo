@@ -2950,5 +2950,19 @@ public class ContainerUtil extends ContainerUtilRt {
       }
     });
   }
+
+  @Nullable
+  public static <T> T getOrNull(List<T> list, int index) {
+    if (index >= 0 && index <= lastIndex(list)) {
+      return list.get(index);
+    }
+    else {
+      return null;
+    }
+  }
+
+  private static int lastIndex(List<?> list) {
+    return list.size() - 1;
+  }
 }
 

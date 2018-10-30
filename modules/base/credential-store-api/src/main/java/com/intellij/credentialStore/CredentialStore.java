@@ -15,25 +15,25 @@
  */
 package com.intellij.credentialStore;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * <a href="https://github.com/JetBrains/intellij-community/blob/master/platform/credential-store/readme.md">See documentation</a>
  */
 public interface CredentialStore {
   @Nullable
-  Credentials get(@NotNull CredentialAttributes attributes);
+  Credentials get(@Nonnull CredentialAttributes attributes);
 
   @Nullable
-  default String getPassword(@NotNull CredentialAttributes attributes) {
+  default String getPassword(@Nonnull CredentialAttributes attributes) {
     Credentials credentials = get(attributes);
     return credentials == null ? null : credentials.getPasswordAsString();
   }
 
-  void set(@NotNull CredentialAttributes attributes, @Nullable Credentials credentials);
+  void set(@Nonnull CredentialAttributes attributes, @Nullable Credentials credentials);
 
-  default void setPassword(@NotNull CredentialAttributes attributes, @Nullable String password) {
+  default void setPassword(@Nonnull CredentialAttributes attributes, @Nullable String password) {
     set(attributes, password == null ? null : new Credentials(attributes.getUserName(), password));
   }
 }

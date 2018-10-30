@@ -19,8 +19,8 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -31,7 +31,7 @@ public class MasterPasswordDialog extends DialogWrapper {
   private final EnterPasswordComponent myComponent;
   private int myRetriesCount;
 
-  public MasterPasswordDialog(@NotNull EnterPasswordComponent component) {
+  public MasterPasswordDialog(@Nonnull EnterPasswordComponent component) {
     super(false);
     myComponent = component;
 

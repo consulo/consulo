@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.credentialStore.kdbx;
+package com.intellij.credentialStore.keePass;
+
+import com.intellij.credentialStore.CredentialAttributes;
+import com.intellij.credentialStore.CredentialStore;
+import com.intellij.credentialStore.Credentials;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2018-10-14
+ * @since 2018-10-28
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
+public class BaseKeePassCredentialStore implements CredentialStore {
+  @Nullable
+  @Override
+  public Credentials get(@Nonnull CredentialAttributes attributes) {
+    return null;
   }
 
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
+  @Override
+  public void set(@Nonnull CredentialAttributes attributes, @Nullable Credentials credentials) {
 
-  public boolean isFileMissed() {
-    return isFileMissed;
   }
 }

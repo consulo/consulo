@@ -38,7 +38,6 @@ public abstract class PathMacroManager implements PathMacroSubstitutor {
     return module.getComponent(ModulePathMacroManager.class);
   }
 
-
   @Override
   public abstract void expandPaths(Element element);
 

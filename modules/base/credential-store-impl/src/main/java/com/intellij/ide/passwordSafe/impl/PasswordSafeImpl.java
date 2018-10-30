@@ -21,10 +21,9 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.NotNullLazyValue;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.file.Path;
@@ -98,12 +97,12 @@ public class PasswordSafeImpl implements PasswordSafe, SettingsSavingComponent {
 
   @Nullable
   @Override
-  public Credentials get(@NotNull CredentialAttributes attributes) {
+  public Credentials get(@Nonnull CredentialAttributes attributes) {
     return null;
   }
 
   @Override
-  public void set(@NotNull CredentialAttributes attributes, @Nullable Credentials credentials) {
+  public void set(@Nonnull CredentialAttributes attributes, @Nullable Credentials credentials) {
 
   }
 

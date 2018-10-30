@@ -15,7 +15,7 @@
  */
 package com.intellij.credentialStore.kdbx;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -57,12 +57,12 @@ final class HashedBlockInputStream extends InputStream {
 
   private final MessageDigest md = KdbxKt.sha256MessageDigest();
 
-  HashedBlockInputStream(@NotNull InputStream inputStream) {
+  HashedBlockInputStream(@Nonnull InputStream inputStream) {
     this.inputStream = inputStream;
   }
 
   @Override
-  public int read(@NotNull byte[] b, int offset, int length) throws IOException {
+  public int read(@Nonnull byte[] b, int offset, int length) throws IOException {
     return get(b, offset, length);
   }
 

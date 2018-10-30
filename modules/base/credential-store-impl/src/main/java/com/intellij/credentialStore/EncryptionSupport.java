@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.credentialStore.kdbx;
+package com.intellij.credentialStore;
 
 /**
  * @author VISTALL
- * @since 2018-10-14
+ * @since 2018-10-28
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
+public interface EncryptionSupport {
+  byte[] encypt(byte[] data);
 
-  public IncorrectMasterPasswordException() {
-    this(false);
-  }
-
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
-
-  public boolean isFileMissed() {
-    return isFileMissed;
-  }
+  byte[] decrypt(byte[] data);
 }

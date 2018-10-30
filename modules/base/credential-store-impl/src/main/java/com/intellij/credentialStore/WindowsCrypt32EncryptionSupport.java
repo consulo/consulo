@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.credentialStore.kdbx;
+package com.intellij.credentialStore;
+
+import com.intellij.credentialStore.windows.WindowsCryptUtils;
+
+import java.security.Key;
 
 /**
  * @author VISTALL
- * @since 2018-10-14
+ * @since 2018-10-28
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
+public class WindowsCrypt32EncryptionSupport extends AesEncryptionSupport {
+  public WindowsCrypt32EncryptionSupport(Key key) {
+    super(key);
   }
 
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
+  @Override
+  public byte[] encypt(byte[] message) {
+    return WindowsCryptUtils.protect(super.encypt(message));
   }
 
-  public boolean isFileMissed() {
-    return isFileMissed;
+  @Override
+  public byte[] decrypt(byte[] data) {
+    return super.decrypt(WindowsCryptUtils.unprotect(data));
   }
 }

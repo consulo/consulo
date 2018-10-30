@@ -16,21 +16,9 @@
 package com.intellij.credentialStore.kdbx;
 
 /**
- * @author VISTALL
- * @since 2018-10-14
+ * from kotlin
+ *
+ * https://gist.github.com/lgg/e6ccc6e212d18dd2ecd8a8c116fb1e45
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
-  }
-
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
-
-  public boolean isFileMissed() {
-    return isFileMissed;
-  }
+public class KdbxKt {
 }

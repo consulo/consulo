@@ -26,9 +26,8 @@ import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
@@ -2148,12 +2147,26 @@ public class StringUtil extends StringUtilRt {
     return buf.toString();
   }
 
-  private static void escapeChar(@Nonnull final StringBuilder buf, final char character) {
+  public static void escapeChar(@Nonnull final StringBuilder buf, final char character) {
     int idx = 0;
     while ((idx = indexOf(buf, character, idx)) >= 0) {
       buf.insert(idx, "\\");
       idx += 2;
     }
+  }
+
+  @Nullable
+  public static Character getOrNull(CharSequence sequence, int index) {
+    if (index >= 0 && index <= lastIndex(sequence)) {
+      return sequence.charAt(index);
+    }
+    else {
+      return null;
+    }
+  }
+
+  private static int lastIndex(CharSequence sequence) {
+    return sequence.length() - 1;
   }
 
   @Nonnull
@@ -3277,8 +3290,8 @@ public class StringUtil extends StringUtilRt {
   }
 
   @Contract(pure = true)
-  @NotNull
-  public static byte[] parseHexString(@NotNull String str) {
+  @Nonnull
+  public static byte[] parseHexString(@Nonnull String str) {
     int len = str.length();
     if (len % 2 != 0) throw new IllegalArgumentException("Non-even-length: " + str);
     byte[] bytes = new byte[len / 2];

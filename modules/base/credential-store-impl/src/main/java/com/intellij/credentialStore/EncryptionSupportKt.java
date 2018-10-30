@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.credentialStore.kdbx;
+package com.intellij.credentialStore;
+
+import consulo.platform.Platform;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-10-14
+ * @since 2018-10-28
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
-  }
-
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
-
-  public boolean isFileMissed() {
-    return isFileMissed;
+public class EncryptionSupportKt {
+  @Nonnull
+  public static EncryptionType getDefaultEncryptionType() {
+    if (Platform.current().info().isWindows()) {
+      return EncryptionType.CRYPT_32;
+    }
+    return EncryptionType.BUILT_IN;
   }
 }

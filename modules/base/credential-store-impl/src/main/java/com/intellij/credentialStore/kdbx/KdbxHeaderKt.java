@@ -15,22 +15,23 @@
  */
 package com.intellij.credentialStore.kdbx;
 
+import java.util.UUID;
+
 /**
- * @author VISTALL
- * @since 2018-10-14
+ * from kotlin
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
+public class KdbxHeaderKt {
 
-  public IncorrectMasterPasswordException() {
-    this(false);
-  }
+  /**
+   * This UUID denotes that AES Cipher is in use. No other values are known.
+   */
+  private static final UUID AES_CIPHER = UUID.fromString("31C1F2E6-BF71-4350-BE58-05216AFC5AFF");
 
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
+  private static final int FILE_VERSION_CRITICAL_MASK = 0xFFFF0000;
 
-  public boolean isFileMissed() {
-    return isFileMissed;
-  }
+  private static final int SIG1 = 0x9AA2D903;
+
+  private static final int SIG2 = 0xB54BFB67;
+
+  private static final int FILE_VERSION_32 = 0x00030001;
 }

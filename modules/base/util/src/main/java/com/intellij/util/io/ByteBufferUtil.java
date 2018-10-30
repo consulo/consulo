@@ -19,8 +19,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
- * @author VISTALL
- * @since 2018-10-11
+ * from kotlin
  */
 public class ByteBufferUtil {
   public static byte[] toByteArray(ByteBuffer byteBuffer) {

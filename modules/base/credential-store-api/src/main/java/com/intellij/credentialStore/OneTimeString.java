@@ -46,6 +46,10 @@ public class OneTimeString extends CharArrayCharSequence {
     return from(value, 0, value.length, false);
   }
 
+  public static OneTimeString from(byte[] value, boolean clearable) throws CharacterCodingException {
+    return from(value, 0, value.length, clearable);
+  }
+
   public static OneTimeString from(byte[] value, int offset, boolean clearable) throws CharacterCodingException {
     return from(value, offset, value.length - offset, clearable);
   }

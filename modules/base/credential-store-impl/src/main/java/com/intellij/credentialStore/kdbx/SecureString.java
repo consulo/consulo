@@ -15,22 +15,15 @@
  */
 package com.intellij.credentialStore.kdbx;
 
+import com.intellij.credentialStore.OneTimeString;
+
 /**
- * @author VISTALL
- * @since 2018-10-14
+ * from kotlin
  */
-public class IncorrectMasterPasswordException extends RuntimeException {
-  private boolean isFileMissed;
-
-  public IncorrectMasterPasswordException() {
-    this(false);
+public interface SecureString {
+  default OneTimeString get() {
+    return get(true);
   }
 
-  public IncorrectMasterPasswordException(boolean isFileMissed) {
-    this.isFileMissed = isFileMissed;
-  }
-
-  public boolean isFileMissed() {
-    return isFileMissed;
-  }
+  OneTimeString get(boolean clearable);
 }

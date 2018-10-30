@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.credentialStore;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -19,7 +19,7 @@ public class ByteArrayWrapper implements Comparable<ByteArrayWrapper> {
    *
    * @param data the data element
    */
-  public ByteArrayWrapper(@NotNull byte[] data) {
+  public ByteArrayWrapper(@Nonnull byte[] data) {
     myData = data;
   }
 

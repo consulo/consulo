@@ -4,8 +4,8 @@ package com.intellij.ide.passwordSafe;
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.Credentials;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface PasswordStorage {
   /**
@@ -13,7 +13,7 @@ public interface PasswordStorage {
    */
   @SuppressWarnings("unused")
   @Deprecated
-  default void removePassword(@SuppressWarnings("UnusedParameters") @Nullable Project project, @NotNull Class requestor, String key) {
+  default void removePassword(@SuppressWarnings("UnusedParameters") @Nullable Project project, @Nonnull Class requestor, String key) {
     set(new CredentialAttributes(requestor, key), null);
   }
 
@@ -21,19 +21,19 @@ public interface PasswordStorage {
    * @deprecated Please use {@link #setPassword}
    */
   @Deprecated
-  default void storePassword(@SuppressWarnings("UnusedParameters") @Nullable Project project, @NotNull Class requestor, @NotNull String key, @Nullable String value) {
+  default void storePassword(@SuppressWarnings("UnusedParameters") @Nullable Project project, @Nonnull Class requestor, @Nonnull String key, @Nullable String value) {
     set(new CredentialAttributes(requestor, key), value == null ? null : new Credentials(key, value));
   }
 
   @Deprecated
   @Nullable
-  default String getPassword(@SuppressWarnings("UnusedParameters") @Nullable Project project, @NotNull Class requestor, @NotNull String key) {
+  default String getPassword(@SuppressWarnings("UnusedParameters") @Nullable Project project, @Nonnull Class requestor, @Nonnull String key) {
     Credentials credentials = get(new CredentialAttributes(requestor, key));
     return credentials == null ? null : credentials.getPasswordAsString();
   }
 
   @Nullable
-  Credentials get(@NotNull CredentialAttributes attributes);
+  Credentials get(@Nonnull CredentialAttributes attributes);
 
-  void set(@NotNull CredentialAttributes attributes, @Nullable Credentials credentials);
+  void set(@Nonnull CredentialAttributes attributes, @Nullable Credentials credentials);
 }
