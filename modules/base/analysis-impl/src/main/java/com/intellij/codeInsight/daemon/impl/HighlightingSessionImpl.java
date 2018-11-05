@@ -15,7 +15,9 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
@@ -31,9 +33,9 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
@@ -60,10 +62,15 @@ public class HighlightingSessionImpl implements HighlightingSession {
     myEditorColorsScheme = editorColorsScheme;
     myProject = psiFile.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(psiFile);
-    myEDTQueue = new TransferToEDTQueue<>("Apply highlighting results", runnable -> {
+    myEDTQueue = new TransferToEDTQueue<Runnable>("Apply highlighting results", runnable -> {
       runnable.run();
       return true;
-    }, o -> myProject.isDisposed() || getProgressIndicator().isCanceled(), 200);
+    }, o -> myProject.isDisposed() || getProgressIndicator().isCanceled()) {
+      @Override
+      protected void schedule(@Nonnull Runnable updateRunnable) {
+        Application.get().invokeLater(updateRunnable, ModalityState.any());
+      }
+    };
   }
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
@@ -163,5 +170,9 @@ public class HighlightingSessionImpl implements HighlightingSession {
   void waitForHighlightInfosApplied() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myEDTQueue.drain();
+  }
+
+  static void clearProgressIndicator(@Nonnull DaemonProgressIndicator indicator) {
+    indicator.putUserData(HIGHLIGHTING_SESSION, null);
   }
 }
