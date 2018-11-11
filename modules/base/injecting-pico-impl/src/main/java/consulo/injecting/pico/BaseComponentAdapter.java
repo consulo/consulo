@@ -114,14 +114,25 @@ public class BaseComponentAdapter<T> implements ComponentAdapter {
 
       long l = System.nanoTime();
 
-      ConstructorInjectionComponentAdapter delegate = new ConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation());
-      instance = myRemap.apply(() -> (T)delegate.getComponentInstance(container));
+      try {
+        ConstructorInjectionComponentAdapter delegate = new ConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation());
+        instance = myRemap.apply(() -> (T)delegate.getComponentInstance(container));
 
-      myAfterInjectionListener.afterInject(l, instance);
-
-      if (isSingleton) {
-        myCreationTrace = null;
-        myInstanceIfSingleton = instance;
+        try {
+          myAfterInjectionListener.afterInject(l, instance);
+        }
+        catch (Throwable t) {
+          LOGGER.error("Problem with after inject: " + myImplementationKey.getTargetClass().getName(), t);
+        }
+      }
+      catch (Throwable t) {
+        LOGGER.error("Problem with initializing: " + myImplementationKey.getTargetClass().getName(), t);
+      }
+      finally {
+        if (isSingleton) {
+          myCreationTrace = null;
+          myInstanceIfSingleton = instance;
+        }
       }
     }
 
