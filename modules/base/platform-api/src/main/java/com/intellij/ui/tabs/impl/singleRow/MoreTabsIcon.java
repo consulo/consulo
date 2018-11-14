@@ -16,23 +16,24 @@
 package com.intellij.ui.tabs.impl.singleRow;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author pegov
  */
 public abstract class MoreTabsIcon {
+  private final Icon icon = AllIcons.General.MoreTabs;
   private int myCounter;
 
   public void paintIcon(final Component c, Graphics graphics) {
-    if (myCounter <= 0)
-      return;
+    if (myCounter <= 0) return;
     final Rectangle moreRect = getIconRec();
 
     if (moreRect == null) return;
@@ -43,26 +44,31 @@ public abstract class MoreTabsIcon {
     int width = graphics.getFontMetrics().stringWidth(String.valueOf(myCounter));
     iconX -= width / 2 + 1;
 
-    AllIcons.General.MoreTabs.paintIcon(c, graphics, iconX, iconY);
+    icon.paintIcon(c, graphics, iconX, iconY);
     Graphics g = graphics.create();
     try {
-      GraphicsUtil.setupAntialiasing(g, true, true);
-      UIUtil.drawStringWithHighlighting(g, String.valueOf(myCounter),
-                                        iconX + AllIcons.General.MoreTabs.getIconWidth() + 2,
-                                        iconY + AllIcons.General.MoreTabs.getIconHeight() - 5,
-                                        JBColor.BLACK,
-                                        ColorUtil.withAlpha(JBColor.WHITE, .9));
-    } finally {
+      UISettings.setupAntialiasing(g);
+      UIUtil.drawStringWithHighlighting(g, String.valueOf(myCounter), iconX + getIconWidth() + 2, iconY + getIconHeight() - 5, JBColor.BLACK, ColorUtil.withPreAlpha(JBColor.WHITE, .9));
+    }
+    finally {
       g.dispose();
     }
   }
-  
+
+  public int getIconWidth() {
+    return icon.getIconWidth();
+  }
+
+  public int getIconHeight() {
+    return icon.getIconHeight();
+  }
+
   protected int getIconX(final Rectangle iconRec) {
-    return iconRec.x + iconRec.width / 2 - (AllIcons.General.MoreTabs.getIconWidth()) / 2;
+    return iconRec.x + iconRec.width / 2 - (getIconWidth()) / 2;
   }
 
   protected int getIconY(final Rectangle iconRec) {
-    return iconRec.y + iconRec.height / 2 - AllIcons.General.MoreTabs.getIconHeight() / 2;
+    return iconRec.y + iconRec.height / 2 - getIconHeight() / 2;
   }
 
   @Nullable

@@ -19,14 +19,12 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.ui.UIUtil;
-
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author max
  */
+@Deprecated
 public class EngravedLabel extends JLabel {
   public EngravedLabel(String text) {
     super(text);
@@ -35,10 +33,5 @@ public class EngravedLabel extends JLabel {
 
   public EngravedLabel() {
     this("");
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(UIUtil.isUnderDarcula() ? g : new EngravedTextGraphics((Graphics2D)g));
   }
 }

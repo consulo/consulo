@@ -1,99 +1,54 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.content;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Pair;
-import com.intellij.ui.ClickListener;
-import com.intellij.ui.components.JBList;
+import com.intellij.reference.SoftReference;
 import com.intellij.ui.content.TabbedContent;
-import com.intellij.util.NotNullFunction;
-import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class TabbedContentTabLabel extends ContentTabLabel implements Disposable {
-  private final ComboIcon myComboIcon = new ComboIcon() {
-    @Override
-    public Rectangle getIconRec() {
-      return new Rectangle(getWidth() - getIconWidth() - 3, 0, getIconWidth(), getHeight());
-    }
+public class TabbedContentTabLabel extends ContentTabLabel {
 
-    @Override
-    public boolean isActive() {
-      return true;
-    }
-  };
   private final TabbedContent myContent;
+  private Reference<JBPopup> myPopupReference = null;
 
-  public TabbedContentTabLabel(TabbedContent content, TabContentLayout layout) {
+  public TabbedContentTabLabel(@Nonnull TabbedContent content, @Nonnull TabContentLayout layout) {
     super(content, layout);
     myContent = content;
-    new ClickListener() {
-      @Override
-      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-        showPopup();
-        return true;
-      }
-    }.installOn(this);
   }
 
-  private void showPopup() {
+  private boolean isPopupShown() {
+    return (myPopupReference != null && myPopupReference.get() != null && myPopupReference.get().isVisible());
+  }
+
+  @Override
+  protected void selectContent() {
     IdeEventQueue.getInstance().getPopupManager().closeAllPopups();
-    ArrayList<String> names = new ArrayList<String>();
-    for (Pair<String, JComponent> tab : myContent.getTabs()) {
-      names.add(tab.first);
+    super.selectContent();
+
+    if (hasMultipleTabs()) {
+      final SelectContentTabStep step = new SelectContentTabStep(getContent());
+      final ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
+      myPopupReference = new WeakReference<>(popup);
+      popup.showUnderneathOf(this);
+      popup.addListener(new JBPopupAdapter() {
+        @Override
+        public void onClosed(@Nonnull LightweightWindowEvent event) {
+          repaint();
+        }
+      });
     }
-    final JBList list = new JBList(names);
-    list.installCellRenderer(new NotNullFunction<Object, JComponent>() {
-      final JLabel label = new JLabel();
-      {
-        label.setBorder(new EmptyBorder(UIUtil.getListCellPadding()));
-      }
-      @Nonnull
-      @Override
-      public JComponent fun(Object dom) {
-        label.setText(dom.toString());
-        return label;
-      }
-    });
-    final JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list)
-            .setItemChoosenCallback(new Runnable() {
-              @Override
-              public void run() {
-                int index = list.getSelectedIndex();
-                if (index != -1) {
-                  myContent.selectContent(index);
-                }
-              }
-            }).createPopup();
-    Disposer.register(this, popup);
-    popup.showUnderneathOf(this);
   }
 
   @Override
@@ -102,28 +57,53 @@ public class TabbedContentTabLabel extends ContentTabLabel implements Disposable
     if (myContent != null) {
       setText(myContent.getTabName());
     }
-    setHorizontalAlignment(LEFT);
   }
 
   @Override
-  public Dimension getPreferredSize() {
-    final Dimension size = super.getPreferredSize();
-    return new Dimension(size.width + 12, size.height);
-  }
+  protected void fillIcons(List<AdditionalIcon> icons) {
+    icons.add(new AdditionalIcon(new ActiveIcon(AllIcons.General.ArrowDown, AllIcons.General.ArrowDown)) {
+      @Nonnull
+      @Override
+      public Rectangle getRectangle() {
+        return new Rectangle(getX(), 0, getIconWidth(), getHeight());
+      }
 
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    myComboIcon.paintIcon(this, g);
-  }
+      @Override
+      public boolean getActive() {
+        return mouseOverIcon(this) || isPopupShown();
+      }
 
-  @Override
-  public void dispose() {
+      @Override
+      public boolean getAvailable() {
+        return hasMultipleTabs();
+      }
+
+      @Nullable
+      @Override
+      public Runnable getAction() {
+        return () -> selectContent();
+      }
+    });
+    super.fillIcons(icons);
   }
 
   @Override
   public void removeNotify() {
     super.removeNotify();
-    Disposer.dispose(this);
+    JBPopup popup = SoftReference.dereference(myPopupReference);
+    if (popup != null) {
+      Disposer.dispose(popup);
+      myPopupReference = null;
+    }
+  }
+
+  @Nonnull
+  @Override
+  public TabbedContent getContent() {
+    return myContent;
+  }
+
+  private boolean hasMultipleTabs() {
+    return myContent != null && myContent.hasMultipleTabs();
   }
 }

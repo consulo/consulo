@@ -16,8 +16,6 @@
 package com.intellij.openapi.wm.impl.content;
 
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.EngravedTextGraphics;
-import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
@@ -43,7 +41,7 @@ public class BaseLabel extends JLabel {
   @Override
   public void updateUI() {
     setActiveFg(JBColor.foreground());
-    setPassiveFg(new JBColor(Gray._75, UIUtil.getLabelDisabledForeground()));
+    setPassiveFg(JBColor.foreground());
     super.updateUI();
   }
 
@@ -73,12 +71,6 @@ public class BaseLabel extends JLabel {
   }
 
   protected Graphics _getGraphics(Graphics2D g) {
-    if (!allowEngravement()) return g;
-    Color foreground = getForeground();
-    if (Color.BLACK.equals(foreground)) {
-      return new EngravedTextGraphics(g);
-    }
-
     return g;
   }
 
