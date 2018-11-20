@@ -21,9 +21,9 @@ import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.core.revisions.Difference;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.actions.diff.ShowDiffAction;
@@ -35,9 +35,10 @@ import com.intellij.openapi.vcs.changes.ui.TreeModelBuilder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
@@ -187,7 +188,7 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
 
   private class ShowDifferenceAction extends ActionOnSelection {
     public ShowDifferenceAction() {
-      super(message("action.show.difference"), "/actions/diff.png");
+      super(message("action.show.difference"), AllIcons.Actions.Diff);
     }
 
     @Override
@@ -216,7 +217,7 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
 
   private class RevertSelectionAction extends ActionOnSelection {
     public RevertSelectionAction() {
-      super(message("action.revert.selection"), "/actions/rollback.png");
+      super(message("action.revert.selection"), AllIcons.Actions.Rollback);
     }
 
     @Override
@@ -235,8 +236,8 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
   }
 
   private abstract class ActionOnSelection extends MyAction {
-    public ActionOnSelection(String name, String iconName) {
-      super(name, null, IconLoader.getIcon(iconName));
+    public ActionOnSelection(String name, Image icon) {
+      super(name, null, icon);
     }
 
     @Override
