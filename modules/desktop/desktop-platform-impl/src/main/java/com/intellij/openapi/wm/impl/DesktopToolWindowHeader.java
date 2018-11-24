@@ -139,7 +139,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     westPanel.add(toolWindow.getContentUI().getTabComponent());
 
-    DesktopToolWindowContentUi.initMouseListeners(westPanel, toolWindow.getContentUI());
+    DesktopToolWindowContentUi.initMouseListeners(westPanel, toolWindow.getContentUI(), true);
 
     myToolbar = ActionManager.getInstance().createActionToolbar("ToolwindowHeader", new DefaultActionGroup(myAdditionalActionGroup, new GearAction(gearProducer), new HideAction()), true);
     myToolbar.setTargetComponent(this);

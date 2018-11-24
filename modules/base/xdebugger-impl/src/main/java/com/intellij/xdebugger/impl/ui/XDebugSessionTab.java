@@ -24,13 +24,11 @@ import com.intellij.execution.runners.RunContentBuilder;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.execution.ui.layout.PlaceInGrid;
 import com.intellij.execution.ui.layout.impl.RunnerContentUi;
 import com.intellij.execution.ui.layout.impl.ViewImpl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
@@ -60,7 +58,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.List;
 
@@ -292,8 +289,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     leftToolbar.addSeparator();
 
     leftToolbar.add(PinToolwindowTabAction.getPinAction());
-    leftToolbar.add(new CloseAction(myEnvironment != null ? myEnvironment.getExecutor() : debugExecutor, myRunContentDescriptor, myProject));
-    leftToolbar.add(new ContextHelpAction(debugExecutor.getHelpId()));
 
     DefaultActionGroup topToolbar = new DefaultActionGroup();
     topToolbar.addAll(getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP));

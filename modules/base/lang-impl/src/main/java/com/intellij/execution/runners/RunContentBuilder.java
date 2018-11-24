@@ -15,7 +15,6 @@
  */
 package com.intellij.execution.runners;
 
-import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
@@ -24,10 +23,8 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.SearchScopeProvider;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.*;
-import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.execution.ui.layout.PlaceInGrid;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -37,9 +34,9 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -187,9 +184,6 @@ public class RunContentBuilder extends RunTab {
     }
 
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_STOP_PROGRAM));
-    if (myExecutionResult instanceof DefaultExecutionResult) {
-      actionGroup.addAll(((DefaultExecutionResult)myExecutionResult).getAdditionalStopActions());
-    }
 
     actionGroup.addAll(myExecutionResult.getActions());
 
@@ -206,9 +200,6 @@ public class RunContentBuilder extends RunTab {
     actionGroup.add(myUi.getOptions().getLayoutActions());
     actionGroup.addSeparator();
     actionGroup.add(PinToolwindowTabAction.getPinAction());
-    actionGroup.add(new CloseAction(myEnvironment.getExecutor(), contentDescriptor, myProject));
-    final String helpId = contentDescriptor.getHelpId();
-    actionGroup.add(new ContextHelpAction(helpId != null ? helpId : myEnvironment.getExecutor().getHelpId()));
     return actionGroup;
   }
 

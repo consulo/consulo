@@ -22,8 +22,8 @@ package com.intellij.ui;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.lang.annotation.Annotation;
 
@@ -102,6 +102,14 @@ public class ColorUtil {
 
   public static Color withAlpha(Color c, double a) {
     return toAlpha(c, (int)(255 * a));
+  }
+
+  @Nonnull
+  public static Color withPreAlpha(@Nonnull Color c, double a) {
+    float[] rgba = new float[4];
+
+    rgba = withAlpha(c, a).getRGBComponents(rgba);
+    return new Color(rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3], 1.0f);
   }
 
   public static Color toAlpha(Color color, int a) {

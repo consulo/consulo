@@ -24,12 +24,14 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.ToolWindowContentUiType;
+import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
+import com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.content.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
@@ -41,18 +43,18 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, DataProvider {
   public static final String POPUP_PLACE = ToolWindowContentUI.POPUP_PLACE;
@@ -75,6 +77,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
   private ToolWindowContentUiType myType = ToolWindowContentUiType.TABBED;
   private boolean myShouldNotShowPopup;
+  public Predicate<Point> isResizableArea = p -> true;
 
   public DesktopToolWindowContentUi(DesktopToolWindowImpl window) {
     myWindow = window;
@@ -99,6 +102,27 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       getCurrentLayout().init();
       rebuild();
     }
+  }
+
+  private boolean isResizeable() {
+    if (myWindow.getType() == ToolWindowType.FLOATING || myWindow.getType() == ToolWindowType.WINDOWED) return false;
+    if (myWindow.getAnchor() == ToolWindowAnchor.BOTTOM) return true;
+    if (myWindow.getAnchor() == ToolWindowAnchor.TOP) return false;
+    if (!myWindow.isSplitMode()) return false;
+    DesktopToolWindowManagerImpl manager = (DesktopToolWindowManagerImpl)myWindow.getToolWindowManager();
+    List<String> ids = manager.getIdsOn(myWindow.getAnchor());
+    for (String id : ids) {
+      if (id.equals(myWindow.getId())) continue;
+      ToolWindow window = manager.getToolWindow(id);
+      if (window != null && window.isVisible() && (window.getType() == ToolWindowType.DOCKED || window.getType() == ToolWindowType.SLIDING)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean isResizeable(@Nonnull Point point) {
+    return isResizableArea.test(point);
   }
 
   private ContentLayout getCurrentLayout() {
@@ -156,7 +180,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
     });
 
-    initMouseListeners(this, this);
+    initMouseListeners(this, this, true);
 
     rebuild();
 
@@ -292,36 +316,66 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     return getCurrentLayout().getNextContentActionName();
   }
 
-  public static void initMouseListeners(final JComponent c, final DesktopToolWindowContentUi ui) {
+  public static void initMouseListeners(final JComponent c, final DesktopToolWindowContentUi ui, final boolean allowResize) {
     if (c.getClientProperty(ui) != null) return;
 
+    MouseAdapter mouseAdapter = new MouseAdapter() {
+      final Ref<Point> myLastPoint = Ref.create();
+      final Ref<Point> myPressPoint = Ref.create();
+      final Ref<Integer> myInitialHeight = Ref.create(0);
+      final Ref<Boolean> myIsLastComponent = Ref.create();
 
-    final Point[] myLastPoint = new Point[1];
 
-    c.addMouseMotionListener(new MouseMotionAdapter() {
-      @Override
-      public void mouseDragged(final MouseEvent e) {
-        if (myLastPoint[0] == null) return;
+      private Component getActualSplitter() {
+        if (!allowResize || !ui.isResizeable()) return null;
 
-        final Window window = SwingUtilities.windowForComponent(c);
+        Component component = c;
+        Component parent = component.getParent();
+        while (parent != null) {
 
-        if (window instanceof IdeFrame) return;
-
-        final Point windowLocation = window.getLocationOnScreen();
-        final Point newPoint = MouseInfo.getPointerInfo().getLocation();
-        Point p = myLastPoint[0];
-        windowLocation.translate(newPoint.x - p.x, newPoint.y - p.y);
-        window.setLocation(windowLocation);
-        myLastPoint[0] = newPoint;
+          if (parent instanceof ThreeComponentsSplitter && ((ThreeComponentsSplitter)parent).getOrientation()) {
+            if (component != ((ThreeComponentsSplitter)parent).getFirstComponent()) {
+              return parent;
+            }
+          }
+          if (parent instanceof Splitter && ((Splitter)parent).isVertical() && ((Splitter)parent).getSecondComponent() == component && ((Splitter)parent).getFirstComponent() != null) {
+            return parent;
+          }
+          component = parent;
+          parent = parent.getParent();
+        }
+        return null;
       }
-    });
 
-    c.addMouseListener(new MouseAdapter() {
+      private void arm(Component c) {
+        Component component = c != null ? getActualSplitter() : null;
+        if (component instanceof ThreeComponentsSplitter) {
+          ThreeComponentsSplitter splitter = (ThreeComponentsSplitter)component;
+          myIsLastComponent.set(SwingUtilities.isDescendingFrom(c, splitter.getLastComponent()));
+          myInitialHeight.set(myIsLastComponent.get() ? splitter.getLastSize() : splitter.getFirstSize());
+          return;
+        }
+        if (component instanceof Splitter) {
+          Splitter splitter = (Splitter)component;
+          myIsLastComponent.set(true);
+          myInitialHeight.set(splitter.getSecondComponent().getHeight());
+          return;
+        }
+        myIsLastComponent.set(null);
+        myInitialHeight.set(null);
+        myPressPoint.set(null);
+      }
+
       @Override
-      public void mousePressed(final MouseEvent e) {
-        myLastPoint[0] = MouseInfo.getPointerInfo().getLocation();
+      public void mousePressed(MouseEvent e) {
+        PointerInfo info = MouseInfo.getPointerInfo();
         if (!e.isPopupTrigger()) {
           if (!UIUtil.isCloseClick(e)) {
+            myLastPoint.set(info != null ? info.getLocation() : e.getLocationOnScreen());
+            if (allowResize && ui.isResizeable()) {
+              myPressPoint.set(myLastPoint.get());
+              arm(c.getComponentAt(e.getPoint()) == c && ui.isResizeable(e.getPoint()) ? c : null);
+            }
             ui.myWindow.fireActivated();
           }
         }
@@ -333,9 +387,53 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
           if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
             ui.processHide(e);
           }
+          arm(null);
         }
       }
-    });
+
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        c.setCursor(allowResize && ui.isResizeable() && getActualSplitter() != null && c.getComponentAt(e.getPoint()) == c && ui.isResizeable(e.getPoint())
+                    ? Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR)
+                    : Cursor.getDefaultCursor());
+      }
+
+      @Override
+      public void mouseDragged(MouseEvent e) {
+        if (myLastPoint.isNull() || myPressPoint.isNull()) return;
+
+        PointerInfo info = MouseInfo.getPointerInfo();
+        if (info == null) return;
+        final Point newPoint = info.getLocation();
+        Point p = myLastPoint.get();
+
+        final Window window = SwingUtilities.windowForComponent(c);
+        if (!(window instanceof IdeFrame)) {
+          final Point windowLocation = window.getLocationOnScreen();
+          windowLocation.translate(newPoint.x - p.x, newPoint.y - p.y);
+          window.setLocation(windowLocation);
+        }
+
+        myLastPoint.set(newPoint);
+        Component component = getActualSplitter();
+        if (component instanceof ThreeComponentsSplitter) {
+          ThreeComponentsSplitter splitter = (ThreeComponentsSplitter)component;
+          if (myIsLastComponent.get() == Boolean.TRUE) {
+            splitter.setLastSize(myInitialHeight.get() + myPressPoint.get().y - myLastPoint.get().y);
+          }
+          else {
+            splitter.setFirstSize(myInitialHeight.get() + myLastPoint.get().y - myPressPoint.get().y);
+          }
+        }
+        if (component instanceof Splitter) {
+          Splitter splitter = (Splitter)component;
+          splitter.setProportion(Math.max(0, Math.min(1, 1f - (float)(myInitialHeight.get() + myPressPoint.get().y - myLastPoint.get().y) / splitter.getHeight())));
+        }
+      }
+    };
+
+    c.addMouseMotionListener(mouseAdapter);
+    c.addMouseListener(mouseAdapter);
 
 
     c.addMouseListener(new PopupHandler() {

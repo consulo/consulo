@@ -69,10 +69,10 @@ import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -83,8 +83,8 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -772,7 +772,7 @@ public class UsageViewImpl implements UsageView {
     return new AnAction[] {
             canShowSettings() ? showSettings() : null,
             ActionManager.getInstance().getAction("UsageView.Rerun"),
-            new CloseAction(),
+            //new CloseAction(),
             ActionManager.getInstance().getAction(IdeActions.ACTION_PIN_ACTIVE_TAB),
             createRecentFindUsagesAction(),
             expandAllAction,
@@ -780,8 +780,7 @@ public class UsageViewImpl implements UsageView {
             actionsManager.createPrevOccurenceAction(myRootPanel),
             actionsManager.createNextOccurenceAction(myRootPanel),
             actionsManager.installAutoscrollToSourceHandler(myProject, myTree, new MyAutoScrollToSourceOptionProvider()),
-            actionsManager.createExportToTextFileAction(myTextFileExporter),
-            actionsManager.createHelpAction(HELP_ID)
+            actionsManager.createExportToTextFileAction(myTextFileExporter)
     };
   }
 

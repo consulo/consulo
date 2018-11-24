@@ -113,47 +113,45 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     setRenderer(new ColoredListCellRendererWrapper<SdkComboBoxItem>() {
       @Override
       public void doCustomize(JList list, SdkComboBoxItem value, int index, boolean selected, boolean hasFocus) {
-        if (SdkComboBox.this.isEnabled()) {
-          setIcon(EmptyIcon.ICON_16);    // to fix vertical size
-          if (value instanceof InvalidSdkComboBoxItem) {
-            setIcon(AllIcons.Toolbar.Unknown);
-            append(value.getSdkName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
-          }
-          else if(value instanceof CustomSdkComboBoxItem) {
-            setIcon(((CustomSdkComboBoxItem)value).getIcon());
-            append(((CustomSdkComboBoxItem)value).getPresentableName());
-          }
-          else if (value instanceof ModuleExtensionSdkComboBoxItem) {
-            ModuleExtensionSdkComboBoxItem extensionSdkComboBoxItem = (ModuleExtensionSdkComboBoxItem)value;
-            setIcon(AllIcons.Nodes.Module);
-            append(extensionSdkComboBoxItem.getModule().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+        setIcon(EmptyIcon.ICON_16);    // to fix vertical size
+        if (value instanceof InvalidSdkComboBoxItem) {
+          setIcon(AllIcons.Toolbar.Unknown);
+          append(value.getSdkName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
+        }
+        else if (value instanceof CustomSdkComboBoxItem) {
+          setIcon(((CustomSdkComboBoxItem)value).getIcon());
+          append(((CustomSdkComboBoxItem)value).getPresentableName());
+        }
+        else if (value instanceof ModuleExtensionSdkComboBoxItem) {
+          ModuleExtensionSdkComboBoxItem extensionSdkComboBoxItem = (ModuleExtensionSdkComboBoxItem)value;
+          setIcon(AllIcons.Nodes.Module);
+          append(extensionSdkComboBoxItem.getModule().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
 
-            final String sdkName = extensionSdkComboBoxItem.getSdkName();
-            if (sdkName != null) {
-              append(" (" + extensionSdkComboBoxItem.getSdkName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-            }
+          final String sdkName = extensionSdkComboBoxItem.getSdkName();
+          if (sdkName != null) {
+            append(" (" + extensionSdkComboBoxItem.getSdkName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
           }
-          else if (value instanceof InvalidModuleComboBoxItem) {
-            setIcon(AllIcons.Nodes.Module);
-            append(((InvalidModuleComboBoxItem)value).getModuleName(), SimpleTextAttributes.ERROR_BOLD_ATTRIBUTES);
-          }
-          else if (value == null || value instanceof NullSdkComboBoxItem) {
-            setIcon(ObjectUtil.notNull(nullIcon, AllIcons.Ide.EmptyFatalError));
-            String name = ObjectUtil.notNull(nullItemName, ProjectBundle.message("sdk.combo.box.item"));
-            append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-          }
-          else {
-            Sdk sdk = value.getSdk();
-            String sdkName = value.getSdkName();
-            assert sdkName != null;
-            setIcon(sdk == null ? AllIcons.Toolbar.Unknown : TargetAWT.to(SdkUtil.getIcon(sdk)));
-            append(sdkName, sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
-            String version = sdk == null ? null : sdk.getVersionString();
-            if(version != null) {
-              append(" (", SimpleTextAttributes.GRAY_ATTRIBUTES);
-              append(version, SimpleTextAttributes.GRAY_ATTRIBUTES);
-              append(")", SimpleTextAttributes.GRAY_ATTRIBUTES);
-            }
+        }
+        else if (value instanceof InvalidModuleComboBoxItem) {
+          setIcon(AllIcons.Nodes.Module);
+          append(((InvalidModuleComboBoxItem)value).getModuleName(), SimpleTextAttributes.ERROR_BOLD_ATTRIBUTES);
+        }
+        else if (value == null || value instanceof NullSdkComboBoxItem) {
+          setIcon(ObjectUtil.notNull(nullIcon, AllIcons.Ide.EmptyFatalError));
+          String name = ObjectUtil.notNull(nullItemName, ProjectBundle.message("sdk.combo.box.item"));
+          append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        }
+        else {
+          Sdk sdk = value.getSdk();
+          String sdkName = value.getSdkName();
+          assert sdkName != null;
+          setIcon(sdk == null ? AllIcons.Toolbar.Unknown : TargetAWT.to(SdkUtil.getIcon(sdk)));
+          append(sdkName, sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+          String version = sdk == null ? null : sdk.getVersionString();
+          if (version != null) {
+            append(" (", SimpleTextAttributes.GRAY_ATTRIBUTES);
+            append(version, SimpleTextAttributes.GRAY_ATTRIBUTES);
+            append(")", SimpleTextAttributes.GRAY_ATTRIBUTES);
           }
         }
       }

@@ -152,6 +152,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean CLOSE_NON_MODIFIED_FILES_FIRST = false;
   public boolean ACTIVATE_MRU_EDITOR_ON_CLOSE = false;
   public boolean ACTIVATE_RIGHT_EDITOR_ON_CLOSE = false;
+  public boolean CLOSE_TAB_BUTTON_ON_THE_RIGHT = true;
 
   public AntialiasingType IDE_AA_TYPE = AntialiasingType.SUBPIXEL;
   public AntialiasingType EDITOR_AA_TYPE = AntialiasingType.SUBPIXEL;
@@ -484,6 +485,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public AntialiasingType getIdeAAType() {
     return IDE_AA_TYPE;
+  }
+
+  public boolean getCloseTabButtonOnTheRight() {
+    return CLOSE_TAB_BUTTON_ON_THE_RIGHT;
   }
 
   /**

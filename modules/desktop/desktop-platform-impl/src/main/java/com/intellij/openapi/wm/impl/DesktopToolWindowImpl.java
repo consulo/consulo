@@ -102,6 +102,11 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     return result;
   }
 
+  // to avoid ensureContentInitialized call - myContentManager can report canCloseContents without full initialization
+  public boolean canCloseContents() {
+    return myContentManager.canCloseContents();
+  }
+
   /**
    * @return <code>true</code> if the component passed into constructor is not instance of
    * <code>ContentManager</code> class. Otherwise it delegates the functionality to the

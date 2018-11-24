@@ -39,7 +39,7 @@ import java.util.List;
 
 public abstract class TextEditorHighlightingPass implements HighlightingPass {
   public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
-  @javax.annotation.Nullable
+  @Nullable
   protected final Document myDocument;
   @Nonnull
   protected final Project myProject;
@@ -59,7 +59,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     myInitialDocStamp = document == null ? 0 : document.getModificationStamp();
     myInitialPsiStamp = PsiModificationTracker.SERVICE.getInstance(myProject).getModificationCount();
   }
-  protected TextEditorHighlightingPass(@Nonnull final Project project, @javax.annotation.Nullable final Document document) {
+  protected TextEditorHighlightingPass(@Nonnull final Project project, @Nullable final Document document) {
     this(project, document, true);
   }
 

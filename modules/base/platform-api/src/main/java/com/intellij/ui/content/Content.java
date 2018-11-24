@@ -45,6 +45,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
   String PROP_DESCRIPTION = "description";
   @NonNls
   String PROP_COMPONENT = "component";
+  String IS_CLOSABLE = "isClosable";
 
   Key<Boolean> TABBED_CONTENT_KEY = Key.create("tabbedContent");
   Key<String> TAB_GROUP_NAME_KEY = Key.create("tabbedGroupName");

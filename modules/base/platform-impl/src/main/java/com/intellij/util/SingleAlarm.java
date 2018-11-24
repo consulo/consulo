@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2013 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
 import com.intellij.openapi.Disposable;
@@ -20,24 +6,36 @@ import com.intellij.openapi.application.ModalityState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SingleAlarm extends Alarm {
+public final class SingleAlarm extends Alarm {
   private final Runnable task;
   private final int delay;
+  private final ModalityState myModalityState;
 
   public SingleAlarm(@Nonnull Runnable task, int delay) {
-    this.task = task;
-    this.delay = delay;
+    this(task, delay, ThreadToUse.SWING_THREAD, ModalityState.NON_MODAL, null);
   }
 
   public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull Disposable parentDisposable) {
     this(task, delay, Alarm.ThreadToUse.SWING_THREAD, parentDisposable);
   }
 
-  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, @Nullable Disposable parentDisposable) {
+  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ModalityState modalityState, @Nonnull Disposable parentDisposable) {
+    this(task, delay, Alarm.ThreadToUse.SWING_THREAD, modalityState, parentDisposable);
+  }
+
+  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, @Nonnull Disposable parentDisposable) {
+    this(task, delay, threadToUse, threadToUse == ThreadToUse.SWING_THREAD ? ModalityState.NON_MODAL : null, parentDisposable);
+  }
+
+  private SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, ModalityState modalityState, @Nullable Disposable parentDisposable) {
     super(threadToUse, parentDisposable);
 
     this.task = task;
     this.delay = delay;
+    if (threadToUse == ThreadToUse.SWING_THREAD && modalityState == null) {
+      throw new IllegalArgumentException("modalityState must be not null if threadToUse == ThreadToUse.SWING_THREAD");
+    }
+    myModalityState = modalityState;
   }
 
   public void request() {
@@ -45,7 +43,7 @@ public class SingleAlarm extends Alarm {
   }
 
   public void request(boolean forceRun) {
-    if (isEmpty()) {
+    if (isEmpty() && !isDisposed()) {
       addRequest(forceRun ? 0 : delay);
     }
   }
@@ -62,6 +60,6 @@ public class SingleAlarm extends Alarm {
   }
 
   private void addRequest(int delay) {
-    _addRequest(task, delay, myThreadToUse == ThreadToUse.SWING_THREAD ? ModalityState.NON_MODAL : null);
+    _addRequest(task, delay, myModalityState);
   }
 }

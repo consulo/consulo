@@ -18,10 +18,8 @@ package com.intellij.execution;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.actionSystem.AnAction;
-import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * @author dyoma
@@ -31,7 +29,6 @@ public class DefaultExecutionResult implements ExecutionResult {
   private final ProcessHandler myProcessHandler;
   private AnAction[] myActions;
   private AnAction[] myRestartActions;
-  private final List<AnAction> myStopActions = new ArrayList<AnAction>();
 
   public DefaultExecutionResult() {
     myConsole = null;
@@ -69,15 +66,6 @@ public class DefaultExecutionResult implements ExecutionResult {
 
   public void setRestartActions(AnAction... restartActions) {
     myRestartActions = restartActions;
-  }
-
-  public void addStopAction(AnAction action) {
-    myStopActions.add(action);
-  }
-
-  @Nonnull
-  public AnAction[] getAdditionalStopActions() {
-    return myStopActions.toArray(new AnAction[myStopActions.size()]);
   }
 
   @Override

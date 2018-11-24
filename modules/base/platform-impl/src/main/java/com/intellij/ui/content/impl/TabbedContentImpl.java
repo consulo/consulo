@@ -65,6 +65,15 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
   }
 
   @Override
+  public int getSelectedIndex() {
+    JComponent selected = getComponent();
+    for (int i = 0; i < myTabs.size(); i++) {
+      if (myTabs.get(i).second == selected) return i;
+    }
+    return -1;
+  }
+
+  @Override
   public void removeContent(@Nonnull JComponent content) {
     Pair<String, JComponent> toRemove = null;
     for (Pair<String, JComponent> tab : myTabs) {

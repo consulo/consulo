@@ -50,6 +50,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.editor.impl.DesktopEditorErrorPanel;
 import gnu.trove.THashSet;
@@ -70,6 +71,9 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Deprecated
+@DeprecationInfo("Desktop only implementation")
+@SuppressWarnings("deprecation")
 public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements EditorMarkupModel {
   private static final int myPreviewLines = 5;// Actually preview has myPreviewLines * 2 + 1 lines (above + below + current one)
   private static final int myCachePreviewLines = 100;// Actually cache image has myCachePreviewLines * 2 + 1 lines (above + below + current one)
@@ -108,7 +112,9 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   void recalcEditorDimensions() {
-    myErrorPanel.recalcEditorDimensions();
+    if(myErrorPanel != null) {
+      myErrorPanel.recalcEditorDimensions();
+    }
   }
 
   public void repaintTrafficLightIcon() {
@@ -380,7 +386,9 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   // startOffset == -1 || endOffset == -1 means whole document
   void repaint(int startOffset, int endOffset) {
-    myErrorPanel.repaint(startOffset, endOffset);
+    if(myErrorPanel != null) {
+      myErrorPanel.repaint(startOffset, endOffset);
+    }
   }
 
   private boolean isMirrored() {
