@@ -17,9 +17,7 @@ package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.execution.rmi.RemoteUtil;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
@@ -38,23 +36,27 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.*;
+import com.intellij.util.BooleanFunction;
+import com.intellij.util.NullableFunction;
+import com.intellij.util.PathUtil;
+import com.intellij.util.PathsList;
+import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.ui.UIUtil;
 import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
 import consulo.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -71,7 +73,7 @@ import java.util.regex.Pattern;
  */
 public class ExternalSystemApiUtil {
 
-  private static final Logger LOG = Logger.getInstance("#" + ExternalSystemApiUtil.class.getName());
+  private static final Logger LOG = Logger.getInstance(ExternalSystemApiUtil.class.getName());
   private static final String LAST_USED_PROJECT_PATH_PREFIX = "LAST_EXTERNAL_PROJECT_PATH_";
 
   @Nonnull
@@ -126,16 +128,6 @@ public class ExternalSystemApiUtil {
       return ((Comparable)o1).compareTo(o2);
     }
   };
-
-  @Nonnull
-  private static final TransferToEDTQueue<Runnable> TRANSFER_TO_EDT_QUEUE =
-          new TransferToEDTQueue<Runnable>("External System queue", new Processor<Runnable>() {
-            @Override
-            public boolean process(Runnable runnable) {
-              runnable.run();
-              return true;
-            }
-          }, Condition.FALSE, 300);
 
   private ExternalSystemApiUtil() {
   }
@@ -365,30 +357,38 @@ public class ExternalSystemApiUtil {
   }
 
   public static void executeProjectChangeAction(boolean synchronous, @Nonnull final DisposeAwareProjectChange task) {
-    executeOnEdt(synchronous, new Runnable() {
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            task.run();
-          }
-        });
-      }
-    });
+    TransactionGuard.getInstance().assertWriteSafeContext(ModalityState.defaultModalityState());
+    executeOnEdt(synchronous, () -> ApplicationManager.getApplication().runWriteAction(task));
   }
 
   public static void executeOnEdt(boolean synchronous, @Nonnull Runnable task) {
+    final Application app = ApplicationManager.getApplication();
+    if (app.isDispatchThread()) {
+      task.run();
+      return;
+    }
+
     if (synchronous) {
-      if (ApplicationManager.getApplication().isDispatchThread()) {
-        task.run();
-      }
-      else {
-        UIUtil.invokeAndWaitIfNeeded(task);
-      }
+      app.invokeAndWait(task);
     }
     else {
-      UIUtil.invokeLaterIfNeeded(task);
+      app.invokeLater(task);
     }
+  }
+
+  public static <T> T executeOnEdt(@Nonnull final Computable<T> task) {
+    final Application app = ApplicationManager.getApplication();
+    final Ref<T> result = Ref.create();
+    app.invokeAndWait(() -> result.set(task.compute()));
+    return result.get();
+  }
+
+  public static <T> T doWriteAction(@Nonnull final Computable<T> task) {
+    return executeOnEdt(() -> ApplicationManager.getApplication().runWriteAction(task));
+  }
+
+  public static void doWriteAction(@Nonnull final Runnable task) {
+    executeOnEdt(true, () -> ApplicationManager.getApplication().runWriteAction(task));
   }
 
   /**
@@ -407,7 +407,7 @@ public class ExternalSystemApiUtil {
       runnable.run();
     }
     else {
-      TRANSFER_TO_EDT_QUEUE.offer(runnable);
+      EdtExecutorService.getInstance().execute(runnable);
     }
   }
 

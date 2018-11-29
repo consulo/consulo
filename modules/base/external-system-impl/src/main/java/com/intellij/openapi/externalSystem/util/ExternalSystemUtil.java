@@ -30,6 +30,8 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
@@ -77,6 +79,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowEP;
@@ -96,13 +99,13 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.wm.impl.ToolWindowBase;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Denis Zhdanov
@@ -110,7 +113,7 @@ import java.util.List;
  */
 public class ExternalSystemUtil {
 
-  private static final Logger LOG = Logger.getInstance("#" + ExternalSystemUtil.class.getName());
+  private static final Logger LOG = Logger.getInstance(ExternalSystemUtil.class);
 
   @Nonnull
   private static final Map<String, String> RUNNER_IDS = ContainerUtilRt.newHashMap();
@@ -121,6 +124,33 @@ public class ExternalSystemUtil {
   }
 
   private ExternalSystemUtil() {
+  }
+
+  @Nullable
+  public static VirtualFile refreshAndFindFileByIoFile(@Nonnull final File file) {
+    final Application app = Application.get();
+    if (!app.isDispatchThread()) {
+      assert !((ApplicationEx)app).holdsReadLock();
+    }
+    return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+  }
+
+  @Nullable
+  public static VirtualFile findLocalFileByPath(String path) {
+    VirtualFile result = StandardFileSystems.local().findFileByPath(path);
+    if (result != null) return result;
+
+    return !Application.get().isReadAccessAllowed() ? findLocalFileByPathUnderWriteAction(path) : findLocalFileByPathUnderReadAction(path);
+  }
+
+  @Nullable
+  private static VirtualFile findLocalFileByPathUnderWriteAction(final String path) {
+    return ExternalSystemApiUtil.doWriteAction(() -> StandardFileSystems.local().refreshAndFindFileByPath(path));
+  }
+
+  @Nullable
+  private static VirtualFile findLocalFileByPathUnderReadAction(final String path) {
+    return ReadAction.compute(() -> StandardFileSystems.local().findFileByPath(path));
   }
 
   public static void ensureToolWindowInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
