@@ -33,14 +33,14 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.containers.TransferToEDTQueue;
+import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -72,7 +72,6 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   private static final Executor ourIconsCalculatingExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("ourIconsCalculating pool", 1);
 
   private final IconListener<T> myEvalListener;
-  private static final TransferToEDTQueue<Runnable> ourLaterInvocator = TransferToEDTQueue.createRunnableMerger("Deferred icon later invocator", 200);
 
   private DesktopDeferredIconImpl(@Nonnull DesktopDeferredIconImpl<T> icon) {
     super(icon);
@@ -205,7 +204,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
       final boolean shouldRevalidate = Registry.is("ide.tree.deferred.icon.invalidates.cache") && myScaledDelegateIcon.getWidth() != oldWidth;
 
-      ourLaterInvocator.offer(() -> {
+      EdtExecutorService.getInstance().execute(() -> {
         setDone(result);
 
         Component actualTarget = target;

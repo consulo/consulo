@@ -21,9 +21,9 @@ import com.intellij.util.Processor;
 import com.intellij.util.concurrency.Semaphore;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,7 +33,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Processes elements in batches, no longer than 200ms (or maxUnitOfWorkThresholdMs constructor parameter) per batch,
  * and reschedules processing later for longer batches.
  * Usage: {@link TransferToEDTQueue#offer(Object)} } : schedules element for processing in EDT (via invokeLater)
+ *
+ * @deprecated use {@link com.intellij.util.concurrency.EdtExecutorService} instead
  */
+@Deprecated
 public class TransferToEDTQueue<T> {
   /**
    * This is a default threshold used to join units of work.

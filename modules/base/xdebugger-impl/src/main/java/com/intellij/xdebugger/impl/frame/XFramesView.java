@@ -16,7 +16,10 @@
 package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.ide.CommonActionsManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -27,8 +30,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.panels.Wrapper;
+import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
@@ -36,9 +39,9 @@ import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import gnu.trove.TObjectIntHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -50,8 +53,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author nik
@@ -72,7 +75,6 @@ public class XFramesView extends XDebugView {
   private final ActionToolbarImpl myToolbar;
   private final Wrapper myThreadsPanel;
   private boolean myThreadsCalculated = false;
-  private final TransferToEDTQueue<Runnable> myLaterInvocator = TransferToEDTQueue.createRunnableMerger("XFramesView later invocator", 50);
   private boolean myRefresh = false;
 
   public XFramesView(@Nonnull Project project) {
@@ -181,9 +183,7 @@ public class XFramesView extends XDebugView {
   public void selectFrame(XExecutionStack stack, XStackFrame frame) {
     myThreadComboBox.setSelectedItem(stack);
 
-    myLaterInvocator.offer(() ->
-                                   myFramesList.setSelectedValue(frame, true)
-    );
+    EdtExecutorService.getInstance().execute(() -> myFramesList.setSelectedValue(frame, true));
   }
 
   private ActionToolbarImpl createToolbar() {
@@ -229,7 +229,7 @@ public class XFramesView extends XDebugView {
       return;
     }
 
-    myLaterInvocator.offer(() -> {
+    EdtExecutorService.getInstance().execute(() -> {
       if (event != SessionEvent.SETTINGS_CHANGED) {
         mySelectedFrameIndex = 0;
         mySelectedStack = null;
@@ -356,7 +356,7 @@ public class XFramesView extends XDebugView {
     @Override
     public void addStackFrames(@Nonnull final List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, final boolean last) {
       if (isObsolete()) return;
-      myLaterInvocator.offer(() -> {
+      EdtExecutorService.getInstance().execute(() -> {
         if (isObsolete()) return;
         myStackFrames.addAll(stackFrames);
         addFrameListElements(stackFrames, last);
@@ -383,7 +383,7 @@ public class XFramesView extends XDebugView {
     @Override
     public void errorOccurred(@Nonnull final String errorMessage) {
       if (isObsolete()) return;
-      myLaterInvocator.offer(() -> {
+      EdtExecutorService.getInstance().execute(() -> {
         if (isObsolete()) return;
         if (myErrorMessage == null) {
           myErrorMessage = errorMessage;

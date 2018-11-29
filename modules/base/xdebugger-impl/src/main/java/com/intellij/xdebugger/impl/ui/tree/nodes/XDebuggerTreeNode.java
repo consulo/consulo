@@ -19,12 +19,13 @@ import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.enumeration.EmptyEnumeration;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -190,6 +191,6 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
   }
 
   public void invokeNodeUpdate(Runnable runnable) {
-    myTree.getLaterInvocator().offer(runnable);
+    EdtExecutorService.getInstance().execute(runnable);
   }
 }
