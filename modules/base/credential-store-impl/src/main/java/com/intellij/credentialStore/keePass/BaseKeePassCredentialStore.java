@@ -18,18 +18,20 @@ package com.intellij.credentialStore.keePass;
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.CredentialStore;
 import com.intellij.credentialStore.Credentials;
+import com.intellij.credentialStore.kdbx.KeePassDatabase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 2018-10-28
+ * from kotlin
  */
-public class BaseKeePassCredentialStore implements CredentialStore {
+public abstract class BaseKeePassCredentialStore implements CredentialStore {
+
   @Nullable
   @Override
   public Credentials get(@Nonnull CredentialAttributes attributes) {
+    getDb().
     return null;
   }
 
@@ -37,4 +39,9 @@ public class BaseKeePassCredentialStore implements CredentialStore {
   public void set(@Nonnull CredentialAttributes attributes, @Nullable Credentials credentials) {
 
   }
+
+  @Nonnull
+  protected abstract KeePassDatabase getDb();
+
+  protected abstract void markDirtry();
 }

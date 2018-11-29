@@ -15,14 +15,13 @@
  */
 package com.intellij.credentialStore.kdbx;
 
+import com.intellij.credentialStore.CredentialStoreKt;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.NotNullLazyValue;
+import org.bouncycastle.crypto.SkippingStreamCipher;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import javax.annotation.Nonnull;
 
 /**
  * from kotlin
@@ -30,64 +29,39 @@ import java.time.format.DateTimeFormatter;
 // we should on each save change protectedStreamKey for security reasons (as KeeWeb also does)
 // so, this requirement (is it really required?) can force us to re-encrypt all passwords on save
 public class KeePassDatabase {
-  private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-  public static String formattedNow() {
-    return LocalDateTime.now(ZoneOffset.UTC).format(dateFormatter);
-  }
-
   private Element rootElement;
 
+  private NotNullLazyValue<SkippingStreamCipher> secureStringCipher =
+          NotNullLazyValue.createValue(() -> KeePassDatabaseKt.createRandomlyInitializedChaCha7539Engine(CredentialStoreKt.createSecureRandom()));
+
+  private volatile boolean isDirty;
+
   public KeePassDatabase() {
-    this(createEmptyDatabase());
+    this(KeePassDatabaseKt.createEmptyDatabase());
   }
 
-  public KeePassDatabase(Element rootElement) {
-     this.rootElement = rootElement;
+  public StringProtectedByStreamCipher protectValue(@Nonnull String value) {
+    return new StringProtectedByStreamCipher(value, secureStringCipher.getValue());
   }
 
-  private static Element createEmptyDatabase() {
-    String creationDate = formattedNow();
-    try {
-      return JDOMUtil.load("<KeePassFile>\n" +
-                           "    <Meta>\n" +
-                           "      <Generator>IJ</Generator>\n" +
-                           "      <HeaderHash></HeaderHash>\n" +
-                           "      <DatabaseName>New Database</DatabaseName>\n" +
-                           "      <DatabaseNameChanged>" + creationDate + "</DatabaseNameChanged>\n" +
-                           "      <DatabaseDescription>Empty Database</DatabaseDescription>\n" +
-                           "      <DatabaseDescriptionChanged>" + creationDate + "</DatabaseDescriptionChanged>\n" +
-                           "      <DefaultUserName/>\n" +
-                           "      <DefaultUserNameChanged>" + creationDate + "</DefaultUserNameChanged>\n" +
-                           "      <MaintenanceHistoryDays>365</MaintenanceHistoryDays>\n" +
-                           "      <Color/>\n" +
-                           "      <MasterKeyChanged>" + creationDate + "</MasterKeyChanged>\n" +
-                           "      <MasterKeyChangeRec>-1</MasterKeyChangeRec>\n" +
-                           "      <MasterKeyChangeForce>-1</MasterKeyChangeForce>\n" +
-                           "      <MemoryProtection>\n" +
-                           "          <ProtectTitle>False</ProtectTitle>\n" +
-                           "          <ProtectUserName>False</ProtectUserName>\n" +
-                           "          <ProtectPassword>True</ProtectPassword>\n" +
-                           "          <ProtectURL>False</ProtectURL>\n" +
-                           "          <ProtectNotes>False</ProtectNotes>\n" +
-                           "      </MemoryProtection>\n" +
-                           "      <CustomIcons/>\n" +
-                           "      <RecycleBinEnabled>True</RecycleBinEnabled>\n" +
-                           "      <RecycleBinUUID>AAAAAAAAAAAAAAAAAAAAAA==</RecycleBinUUID>\n" +
-                           "      <RecycleBinChanged>" + creationDate + "</RecycleBinChanged>\n" +
-                           "      <EntryTemplatesGroup>AAAAAAAAAAAAAAAAAAAAAA==</EntryTemplatesGroup>\n" +
-                           "      <EntryTemplatesGroupChanged>" + creationDate + "</EntryTemplatesGroupChanged>\n" +
-                           "      <LastSelectedGroup>AAAAAAAAAAAAAAAAAAAAAA==</LastSelectedGroup>\n" +
-                           "      <LastTopVisibleGroup>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleGroup>\n" +
-                           "      <HistoryMaxItems>10</HistoryMaxItems>\n" +
-                           "      <HistoryMaxSize>6291456</HistoryMaxSize>\n" +
-                           "      <Binaries/>\n" +
-                           "      <CustomData/>\n" +
-                           "    </Meta>\n" +
-                           "  </KeePassFile>");
+  public KeePassDatabase(Element p) {
+    this.rootElement = p;
+
+    Element rootElement = JDOMUtil.getOrCreate(this.rootElement, KdbxDbElementNames.root);
+    Element groupElement = rootElement.getChild(KdbxDbElementNames.group);
+    if(groupElement == null) {
+      roo
     }
-    catch (JDOMException | IOException e) {
-      throw new RuntimeException(e);
-    }
+  }
+
+  public void setDirty(boolean dirty) {
+  }
+
+  public KdbxEntry createEntry(String title) {
+
+  }
+
+  public KdbxGroup getRootGroup() {
+
   }
 }

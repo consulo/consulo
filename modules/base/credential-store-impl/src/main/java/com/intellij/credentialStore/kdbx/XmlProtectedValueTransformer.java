@@ -52,7 +52,7 @@ public class XmlProtectedValueTransformer {
             continue;
           }
 
-          if (isValueProtected(valueElement)) {
+          if (ProtectedValueKt.isValueProtected(valueElement)) {
             byte[] value = Base64.getDecoder().decode(valueElement.getText());
             valueElement.setContent(new ProtectedValue(value, position, streamCipher));
             position += value.length;
@@ -60,9 +60,5 @@ public class XmlProtectedValueTransformer {
         }
       }
     }
-  }
-
-  public static boolean isValueProtected(Element valueElement) {
-    return StringUtil.equalsIgnoreCase(valueElement.getAttributeValue(KdbxAttributeNames._protected), "true");
   }
 }

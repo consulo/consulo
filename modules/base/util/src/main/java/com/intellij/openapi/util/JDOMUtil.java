@@ -35,10 +35,10 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.ref.SoftReference;
@@ -863,5 +863,15 @@ public class JDOMUtil {
   @Nonnull
   public static Element internElement(@Nonnull Element element) {
     return ourJDOMInterner.internElement(element);
+  }
+
+  @Nonnull
+  public static Element getOrCreate(@Nonnull Element element, @Nonnull String name) {
+    Element child = element.getChild(name);
+    if(child == null) {
+      child = new Element(name);
+      element.addContent(child);
+    }
+    return child;
   }
 }
