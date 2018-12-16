@@ -44,6 +44,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.TransactionGuardEx;
 import consulo.platform.Platform;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
@@ -71,7 +72,7 @@ import static java.awt.event.MouseEvent.MOUSE_PRESSED;
  */
 public class IdeEventQueue extends EventQueue {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.IdeEventQueue");
-  private static TransactionGuardImpl ourTransactionGuard;
+  private static TransactionGuardEx ourTransactionGuard;
 
   /**
    * Adding/Removing of "idle" listeners should be thread safe.
@@ -417,7 +418,7 @@ public class IdeEventQueue extends EventQueue {
   static AccessToken startActivity(@Nonnull AWTEvent e) {
     if (ourTransactionGuard == null && appIsLoaded()) {
       if (ApplicationManager.getApplication() != null && !ApplicationManager.getApplication().isDisposed()) {
-        ourTransactionGuard = (TransactionGuardImpl)TransactionGuard.getInstance();
+        ourTransactionGuard = (TransactionGuardEx)TransactionGuard.getInstance();
       }
     }
     return ourTransactionGuard == null

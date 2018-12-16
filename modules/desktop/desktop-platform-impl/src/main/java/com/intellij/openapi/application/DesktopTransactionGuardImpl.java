@@ -37,8 +37,8 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author peter
  */
-public class TransactionGuardImpl extends TransactionGuardEx {
-  private static final Logger LOG = Logger.getInstance(TransactionGuardImpl.class);
+public class DesktopTransactionGuardImpl extends TransactionGuardEx {
+  private static final Logger LOG = Logger.getInstance(DesktopTransactionGuardImpl.class);
   private final Queue<Transaction> myQueue = new LinkedBlockingQueue<>();
   private final Map<ModalityState, TransactionIdImpl> myModality2Transaction = ContainerUtil.createConcurrentWeakMap();
 
@@ -52,7 +52,7 @@ public class TransactionGuardImpl extends TransactionGuardEx {
   private boolean myErrorReported;
   private static boolean ourTestingTransactions;
 
-  public TransactionGuardImpl() {
+  public DesktopTransactionGuardImpl() {
     myWriteSafeModalities.put(ModalityState.NON_MODAL, true);
   }
 
@@ -202,6 +202,7 @@ public class TransactionGuardImpl extends TransactionGuardEx {
   /**
    * An absolutely guru method, only intended to be used from Swing event processing. Please consult Peter if you think you need to invoke this.
    */
+  @Override
   @Nonnull
   public AccessToken startActivity(boolean userActivity) {
     myErrorReported = false;
@@ -221,6 +222,7 @@ public class TransactionGuardImpl extends TransactionGuardEx {
     };
   }
 
+  @Override
   public boolean isWriteSafeModality(ModalityState state) {
     return Boolean.TRUE.equals(myWriteSafeModalities.get(state));
   }
@@ -300,6 +302,7 @@ public class TransactionGuardImpl extends TransactionGuardEx {
     myWriteSafeModalities.put(modality, myWritingAllowed);
   }
 
+  @Override
   @Nullable
   public TransactionIdImpl getModalityTransaction(@Nonnull ModalityState modalityState) {
     return myModality2Transaction.get(modalityState);

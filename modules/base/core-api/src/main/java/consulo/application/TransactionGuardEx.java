@@ -15,6 +15,7 @@
  */
 package consulo.application;
 
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.TransactionId;
@@ -35,6 +36,11 @@ public abstract class TransactionGuardEx extends TransactionGuard {
 
   public void performUserActivity(Runnable activity) {
     activity.run();
+  }
+
+  @Nonnull
+  public AccessToken startActivity(boolean userActivity) {
+    return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   public boolean isWriteSafeModality(ModalityState state) {

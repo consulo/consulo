@@ -80,7 +80,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   private final boolean myHeadlessMode;
   private final boolean myIsInternal;
 
-  private TransactionGuardImpl myTransactionGuardImpl;
+  private DesktopTransactionGuardImpl myTransactionGuardImpl;
 
   private int myInEditorPaintCounter; // EDT only
 
@@ -160,9 +160,9 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     NoSwingUnderWriteAction.watchForEvents(this);
   }
 
-  private TransactionGuardImpl transactionGuard() {
+  private DesktopTransactionGuardImpl transactionGuard() {
     if(myTransactionGuardImpl == null) {
-      myTransactionGuardImpl = new TransactionGuardImpl();
+      myTransactionGuardImpl = new DesktopTransactionGuardImpl();
     }
     return myTransactionGuardImpl;
   }
