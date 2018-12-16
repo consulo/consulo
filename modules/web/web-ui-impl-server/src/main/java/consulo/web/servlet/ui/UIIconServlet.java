@@ -66,7 +66,14 @@ public class UIIconServlet extends HttpServlet {
 
     assert bytes != null;
 
-    resp.setContentType("image/png");
+    String urlText = url.toString();
+    if (urlText.endsWith(".svg")) {
+      resp.setContentType("image/svg+xml");
+    }
+    else {
+      resp.setContentType("image/png");
+    }
+
     resp.setContentLength(bytes.length);
 
     ServletOutputStream outputStream = resp.getOutputStream();

@@ -15,6 +15,9 @@
  */
 package consulo.ui.internal.image;
 
+import ar.com.hjg.pngj.PngReader;
+import com.kitfox.svg.SVGCache;
+import com.kitfox.svg.SVGDiagram;
 import consulo.ui.image.Image;
 import consulo.ui.internal.WGwtUIThreadLocal;
 import consulo.ui.migration.SwingImageRef;
@@ -23,9 +26,8 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.servlet.ui.UIServlet;
 
 import javax.annotation.Nonnull;
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
+import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,9 +37,9 @@ import java.net.URL;
  * @since 13-Jun-16
  */
 public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
-  private int myURLHash;
-  private java.awt.Image myImage;
+  private int myURLHash, myHeight, myWidth;
 
+  @SuppressWarnings("unchecked")
   public WGwtImageImpl(@Nonnull URL url) {
     myURLHash = WGwtImageUrlCache.hashCode(url);
 
@@ -53,7 +55,7 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
       }
     }
 
-    try(InputStream ignored = scaledImageUrl.openStream()) {
+    try (InputStream ignored = scaledImageUrl.openStream()) {
       // if scaled image resolved - map it for better quality
       myURLHash = WGwtImageUrlCache.hashCode(scaledImageUrl);
     }
@@ -61,21 +63,39 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
     }
 
     try {
-      myImage = ImageIO.read(url);
+      if (urlText.endsWith(".svg")) {
+        SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(url.toURI());
+        Rectangle2D viewRect = diagram.getViewRect();
+        myWidth = (int)viewRect.getWidth();
+        myHeight = (int)viewRect.getHeight();
+      }
+      else {
+        PngReader reader = null;
+        try (InputStream stream = url.openStream()) {
+          reader = new PngReader(stream);
+          myWidth = reader.imgInfo.cols;
+          myHeight = reader.imgInfo.rows;
+        }
+        finally {
+          if (reader != null) {
+            reader.close();
+          }
+        }
+      }
     }
-    catch (IOException e) {
+    catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
   public int getHeight() {
-    return myImage.getHeight(null);
+    return myHeight;
   }
 
   @Override
   public int getWidth() {
-    return myImage.getWidth(null);
+    return myWidth;
   }
 
   @Override

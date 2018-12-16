@@ -52,6 +52,7 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.platform.Platform;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -575,7 +576,12 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       whenAllCommitted.run();
     }
     else {
-      UIUtil.invokeLaterIfNeeded(() -> performWhenAllCommitted(whenAllCommitted));
+      if(Platform.current().isDesktop()) {
+        UIUtil.invokeLaterIfNeeded(() -> performWhenAllCommitted(whenAllCommitted));
+      }
+      else {
+        Application.get().invokeLater(() -> performWhenAllCommitted(whenAllCommitted));
+      }
     }
   }
 

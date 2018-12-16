@@ -18,7 +18,6 @@ package com.intellij.psi.impl;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -30,6 +29,7 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.messages.MessageBus;
+import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,7 +89,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   }
 
   private void fireEvent() {
-    ((TransactionGuardImpl)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
     myPublisher.modificationCountChanged();
   }
 

@@ -1,6 +1,7 @@
 package consulo.web.application.impl;
 
 import com.intellij.ide.StartupProgress;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -48,6 +49,8 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   public WebApplicationImpl(@Nonnull Ref<? extends StartupProgress> splash) {
     super(splash);
+
+    ApplicationManager.setApplication(this);
   }
 
   @Override

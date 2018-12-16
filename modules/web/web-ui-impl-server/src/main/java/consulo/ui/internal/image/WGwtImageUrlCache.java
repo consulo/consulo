@@ -5,14 +5,14 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 18-Jan-17
  */
 public class WGwtImageUrlCache {
-  public static final ConcurrentMap<Integer, URL> ourURLCache = ContainerUtil.newConcurrentMap();
+  public static final Map<Integer, URL> ourURLCache = ContainerUtil.newConcurrentMap();
 
   public static WGwtImageWithState map(Image other) {
     return (WGwtImageWithState)other;
