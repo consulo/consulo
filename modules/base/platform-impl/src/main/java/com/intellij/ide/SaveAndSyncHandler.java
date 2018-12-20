@@ -16,6 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.annotations.RequiredWriteAction;
 
 /**
  * @author Kirill Likhodedov
@@ -25,6 +26,7 @@ public abstract class SaveAndSyncHandler {
     return ApplicationManager.getApplication().getComponent(SaveAndSyncHandler.class);
   }
 
+  @RequiredWriteAction
   public abstract void saveProjectsAndDocuments();
   public abstract void scheduleRefresh();
   public abstract void refreshOpenFiles();

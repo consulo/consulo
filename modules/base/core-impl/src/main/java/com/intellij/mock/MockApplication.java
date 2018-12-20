@@ -277,6 +277,7 @@ public class MockApplication extends MockComponentManager implements Application
   public void saveAll() {
   }
 
+  @RequiredWriteAction
   @Override
   public void saveSettings() {
   }

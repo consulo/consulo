@@ -16,11 +16,12 @@
 package consulo.application.impl;
 
 import com.intellij.ide.StartupProgress;
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.openapi.util.*;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
 import consulo.application.ApplicationWithOwnWriteThread;
 import consulo.ui.UIAccess;
 
@@ -40,6 +41,41 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     myLock = new ReadMostlyRWLock(myWriteThread);
 
     Disposer.register(myLastDisposable, myWriteThread);
+  }
+
+  /**
+   * Returns lock used for write operations, should be closed in finally block
+   */
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use runWriteAction(Runnable)")
+  @RequiredDispatchThread
+  public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  @Nonnull
+  public AccessToken acquireWriteActionLockInternal(@Nonnull Class clazz) {
+    return new WriteAccessToken(clazz);
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
+    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void runWriteAction(@Nonnull Runnable action) {
+    AccessRule.writeAsync(action::run).getResultSync(-1);
   }
 
   @Override

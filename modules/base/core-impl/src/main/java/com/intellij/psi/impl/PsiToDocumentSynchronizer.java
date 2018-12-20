@@ -17,6 +17,7 @@
 package com.intellij.psi.impl;
 
 import com.intellij.injected.editor.DocumentWindow;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -33,6 +34,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
+import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -45,7 +47,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
 
   private final PsiDocumentManagerBase myPsiDocumentManager;
   private final MessageBus myBus;
-  private final Map<Document, Pair<DocumentChangeTransaction, Integer>> myTransactionsMap = new HashMap<Document, Pair<DocumentChangeTransaction, Integer>>();
+  private final Map<Document, Pair<DocumentChangeTransaction, Integer>> myTransactionsMap = new HashMap<>();
 
   private volatile Document mySyncDocument;
 
@@ -239,17 +241,18 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(doc);
     if (pair == null) {
       final PsiFile psiFile = scope.getContainingFile();
-      pair = new Pair<DocumentChangeTransaction, Integer>(new DocumentChangeTransaction(doc, psiFile), 0);
+      pair = Pair.create(new DocumentChangeTransaction(doc, psiFile), 0);
       myBus.syncPublisher(PsiDocumentTransactionListener.TOPIC).transactionStarted(doc, psiFile);
     }
     else {
-      pair = new Pair<DocumentChangeTransaction, Integer>(pair.getFirst(), pair.getSecond().intValue() + 1);
+      pair = Pair.create(pair.getFirst(), pair.getSecond().intValue() + 1);
     }
     myTransactionsMap.put(doc, pair);
   }
 
+  @RequiredWriteAction
   public boolean commitTransaction(final Document document){
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertWriteAccessAllowed();
     final DocumentChangeTransaction documentChangeTransaction = removeTransaction(document);
     if(documentChangeTransaction == null) return false;
     final PsiElement changeScope = documentChangeTransaction.myChangeScope;
@@ -311,7 +314,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   public static class DocumentChangeTransaction{
-    private final TreeMap<TextRange, CharSequence> myAffectedFragments = new TreeMap<TextRange, CharSequence>(new Comparator<TextRange>() {
+    private final TreeMap<TextRange, CharSequence> myAffectedFragments = new TreeMap<>(new Comparator<TextRange>() {
       @Override
       public int compare(TextRange o1, TextRange o2) {
         return o1.getStartOffset() - o2.getStartOffset();

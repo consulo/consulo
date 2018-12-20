@@ -18,6 +18,7 @@ package com.intellij.idea.starter;
 import com.intellij.Patches;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeRepaintManager;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.IconLoader;
@@ -27,6 +28,7 @@ import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author VISTALL
@@ -43,24 +45,33 @@ public class DesktopApplicationStarter extends ApplicationStarter {
   protected void patchSystem(boolean headless) {
     System.setProperty("sun.awt.noerasebackground", "true");
 
-    IdeEventQueue.getInstance(); // replace system event queue
+    try {
+      SwingUtilities.invokeAndWait(() -> {
+        PluginManager.installExceptionHandler();
 
-    if (headless) return;
+        IdeEventQueue.getInstance(); // replace system event queue
 
-    if (Patches.SUN_BUG_ID_6209673) {
-      RepaintManager.setCurrentManager(new IdeRepaintManager());
+        if (headless) return;
+
+        if (Patches.SUN_BUG_ID_6209673) {
+          RepaintManager.setCurrentManager(new IdeRepaintManager());
+        }
+
+        if (SystemInfo.isXWindow) {
+          String wmName = X11UiUtil.getWmName();
+          LOG.info("WM detected: " + wmName);
+          if (wmName != null) {
+            X11UiUtil.patchDetectedWm(wmName);
+          }
+        }
+
+        IconLoader.activate();
+
+        new JFrame().pack(); // this peer will prevent shutting down our application
+      });
     }
-
-    if (SystemInfo.isXWindow) {
-      String wmName = X11UiUtil.getWmName();
-      LOG.info("WM detected: " + wmName);
-      if (wmName != null) {
-        X11UiUtil.patchDetectedWm(wmName);
-      }
+    catch (InterruptedException | InvocationTargetException e) {
+      throw new RuntimeException(e);
     }
-
-    IconLoader.activate();
-
-    new JFrame().pack(); // this peer will prevent shutting down our application
   }
 }

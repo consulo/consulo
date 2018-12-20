@@ -118,7 +118,4 @@ public interface ApplicationEx extends Application {
    * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
    */
   boolean tryRunReadAction(@Nonnull Runnable action);
-
-  @Nonnull
-  UIAccess getLastUIAccess();
 }

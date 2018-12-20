@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.EditorComboBox;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,6 +100,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     setOKButtonText(DvcsBundle.message("clone.button"));
 
     FrameStateManager.getInstance().addListener(new FrameStateListener.Adapter() {
+      @RequiredUIAccess
       @Override
       public void onFrameActivated() {
         updateButtons();

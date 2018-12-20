@@ -18,11 +18,9 @@ package com.intellij.idea;
 import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
-import consulo.application.TransactionGuardEx;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
@@ -84,12 +82,7 @@ public class ApplicationStarter {
       ApplicationEx app = (ApplicationEx)Application.get();
       app.load(PathManager.getOptionsPath());
 
-      if (myPostStarter.needStartInTransaction()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(app, newConfigFolder, myArgs));
-      }
-      else {
-        myPostStarter.main(app, newConfigFolder, myArgs);
-      }
+      myPostStarter.main(app, newConfigFolder, myArgs);
 
       myPostStarter = null;
 

@@ -8,13 +8,11 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import consulo.application.AccessRule;
+import consulo.application.DummyTransactionGuard;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.UIAccess;
@@ -57,30 +55,12 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
     super.bootstrapInjectingContainer(builder);
 
-    builder.bind(TransactionGuard.class).to(new WebTransactionGuardImpl());
+    builder.bind(TransactionGuard.class).to(new DummyTransactionGuard());
   }
 
   @Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void runWriteAction(@Nonnull Runnable action) {
-    AccessRule.writeAsync(action::run).getResultSync(-1);
   }
 
   @Override
@@ -112,7 +92,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable) {
-
+    getCurrentSession().getAccess().give(runnable);
   }
 
   @Override

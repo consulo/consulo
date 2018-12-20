@@ -72,9 +72,4 @@ public class WebPostStarter extends ApplicationPostStarter {
       SwingUtilities.invokeLater(() -> application.saveSettings());
     }, 1, 5, TimeUnit.MINUTES); */
   }
-
-  @Override
-  public boolean needStartInTransaction() {
-    return false;
-  }
 }

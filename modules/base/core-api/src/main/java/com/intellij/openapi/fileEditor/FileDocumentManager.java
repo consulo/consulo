@@ -20,10 +20,12 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.SavingRequestor;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class FileDocumentManager implements SavingRequestor {
   public static FileDocumentManager getInstance() {
@@ -40,9 +42,10 @@ public abstract class FileDocumentManager implements SavingRequestor {
   @Nullable
   public abstract VirtualFile getFile(@Nonnull Document document);
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   public abstract void saveAllDocuments();
-  @RequiredDispatchThread
+
+  @RequiredWriteAction
   public abstract void saveDocument(@Nonnull Document document);
 
   /**

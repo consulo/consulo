@@ -95,11 +95,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  private class WriteAccessToken extends AccessToken {
+  protected class WriteAccessToken extends AccessToken {
     @Nonnull
     private final Class clazz;
 
-    public WriteAccessToken(@Nonnull Class clazz) {
+    protected WriteAccessToken(@Nonnull Class clazz) {
       this.clazz = clazz;
       startWrite(clazz);
       markThreadNameInStackTrace();
@@ -297,6 +297,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
+  @RequiredWriteAction
   @Override
   public void saveSettings() {
     if (myDoNotSave) return;
@@ -304,10 +305,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   // public for testing purposes
+  @RequiredWriteAction
   public void _saveSettings() {
     if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
-      HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
       try {
         StoreUtil.save(getStateStore(), null);
       }
@@ -317,7 +317,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   @Override
   public void saveAll() {
     if (myDoNotSave) return;

@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -54,6 +55,13 @@ public interface UIAccess {
   void give(@RequiredUIAccess @Nonnull Runnable runnable);
 
   void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable);
+
+  @SuppressWarnings("unchecked")
+  default <T> T giveAndWait(@RequiredUIAccess @Nonnull Supplier<T> supplier) {
+    Object[] value = new Object[1];
+    giveAndWaitIfNeed(() -> value[0] = supplier.get());
+    return (T)value;
+  }
 
   default void giveIfNeed(@RequiredUIAccess @Nonnull Runnable runnable) {
     if (isUIThread()) {

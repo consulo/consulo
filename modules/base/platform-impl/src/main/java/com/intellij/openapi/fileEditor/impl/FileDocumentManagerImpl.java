@@ -20,6 +20,7 @@ import com.intellij.CommonBundle;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
@@ -60,6 +61,9 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.TransactionGuardEx;
 import org.jetbrains.annotations.TestOnly;
 
@@ -185,6 +189,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public Document getDocument(@Nonnull final VirtualFile file) {
@@ -292,6 +297,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     });
   }
 
+  @RequiredWriteAction
   @Override
   public void saveAllDocuments() {
     saveAllDocuments(true);
@@ -300,8 +306,9 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   /**
    * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
    */
+  @RequiredWriteAction
   public void saveAllDocuments(boolean isExplicit) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertWriteAccessAllowed();
     ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     myMultiCaster.beforeAllDocumentsSaving();
@@ -336,6 +343,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
+  @RequiredWriteAction
   @Override
   public void saveDocument(@Nonnull final Document document) {
     saveDocument(document, true);
@@ -357,6 +365,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void saveDocumentAsIs(@Nonnull Document document) {
     VirtualFile file = getFile(document);
@@ -506,6 +515,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void reloadFiles(@Nonnull final VirtualFile... files) {
     for (VirtualFile file : files) {
@@ -595,6 +605,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void reloadFromDisk(@Nonnull final Document document) {
     ApplicationManager.getApplication().assertIsDispatchThread();

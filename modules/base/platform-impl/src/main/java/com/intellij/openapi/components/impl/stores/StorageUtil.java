@@ -17,8 +17,6 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
@@ -32,6 +30,7 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -130,49 +129,62 @@ public class StorageUtil {
   }
 
   @Nonnull
-  public static VirtualFile writeFile(@Nullable File file,
-                                      @Nonnull Object requestor,
-                                      @Nullable VirtualFile virtualFile,
-                                      @Nonnull BufferExposingByteArrayOutputStream content,
-                                      @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
-    try {
-      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-        virtualFile = getOrCreateVirtualFile(requestor, file);
-      }
-      assert virtualFile != null;
-      OutputStream out = virtualFile.getOutputStream(requestor);
+  public static VirtualFile writeFile(@Nullable final File file,
+                                      @Nonnull final Object requestor,
+                                      @Nullable final VirtualFile originalVirtualFile,
+                                      @Nonnull final BufferExposingByteArrayOutputStream content,
+                                      @Nullable final LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
+    Ref<Exception> exceptionRef = Ref.create();
+
+    VirtualFile resultFile = AccessRule.writeAsync(() -> {
+      VirtualFile virtualFile = originalVirtualFile;
       try {
-        if (lineSeparatorIfPrependXmlProlog != null) {
-          out.write(XML_PROLOG);
-          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
+        if (file != null && (virtualFile == null || !virtualFile.isValid())) {
+          virtualFile = getOrCreateVirtualFile(requestor, file);
         }
-        content.writeTo(out);
+
+        assert virtualFile != null;
+
+        try (OutputStream out = virtualFile.getOutputStream(requestor)) {
+          if (lineSeparatorIfPrependXmlProlog != null) {
+            out.write(XML_PROLOG);
+            out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
+          }
+          content.writeTo(out);
+        }
+        return virtualFile;
       }
-      finally {
-        out.close();
+      catch (FileNotFoundException e) {
+        if (virtualFile == null) {
+          exceptionRef.set(e);
+        }
+        else {
+          exceptionRef.set(new ReadOnlyModificationException(virtualFile));
+        }
       }
-      return virtualFile;
+
+      return null;
+    }).getResultSync(-1);
+
+    Exception exception = exceptionRef.get();
+    if (exception instanceof IOException) {
+      throw (IOException)exception;
     }
-    catch (FileNotFoundException e) {
-      if (virtualFile == null) {
-        throw e;
-      }
-      else {
-        throw new ReadOnlyModificationException(virtualFile);
-      }
+
+    if (exception != null) {
+      throw new RuntimeException(exception);
     }
-    finally {
-      token.finish();
-    }
+
+    assert resultFile != null;
+    return resultFile;
   }
 
   @Nonnull
   public static AsyncResult<VirtualFile> writeFileAsync(@Nullable File file,
-                                           @Nonnull Object requestor,
-                                           @Nullable final VirtualFile fileRef,
-                                           @Nonnull BufferExposingByteArrayOutputStream content,
-                                           @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
+                                                        @Nonnull Object requestor,
+                                                        @Nullable final VirtualFile fileRef,
+                                                        @Nonnull BufferExposingByteArrayOutputStream content,
+                                                        @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
     return AccessRule.writeAsync(() -> {
       VirtualFile virtualFile = fileRef;
 
@@ -207,15 +219,19 @@ public class StorageUtil {
   }
 
   public static void deleteFile(@Nonnull Object requestor, @Nonnull VirtualFile virtualFile) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
-    try {
-      virtualFile.delete(requestor);
-    }
-    catch (FileNotFoundException e) {
+    Ref<FileNotFoundException> exceptionRef = Ref.create();
+    AccessRule.writeAsync(() -> {
+      try {
+        virtualFile.delete(requestor);
+      }
+      catch (FileNotFoundException e) {
+        exceptionRef.set(e);
+      }
+    }).getResultSync(-1);
+
+    FileNotFoundException exception = exceptionRef.get();
+    if(exception != null) {
       throw new ReadOnlyModificationException(virtualFile);
-    }
-    finally {
-      token.finish();
     }
   }
 

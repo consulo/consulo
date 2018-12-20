@@ -89,6 +89,7 @@ import javax.swing.plaf.synth.SynthStyleFactory;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -189,7 +190,14 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       }
     }
 
-    updateUI();
+    try {
+      SwingUtilities.invokeAndWait(() -> {
+        updateUI();
+      });
+    }
+    catch (InterruptedException | InvocationTargetException e) {
+      throw new RuntimeException(e);
+    }
 
     if (SystemInfo.isXWindow) {
       myThemeChangeListener = new PropertyChangeListener() {

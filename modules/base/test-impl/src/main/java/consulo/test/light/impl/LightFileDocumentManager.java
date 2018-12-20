@@ -27,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.WeakFactoryMap;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,6 +91,7 @@ public class LightFileDocumentManager extends FileDocumentManager {
   public void saveAllDocuments() {
   }
 
+  @RequiredWriteAction
   @RequiredDispatchThread
   @Override
   public void saveDocument(@Nonnull Document document) {

@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.application.impl;
+package consulo.application;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionId;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2018-05-12
+ * @since 2018-12-20
  */
-public class WebTransactionGuardImpl extends TransactionGuardEx {
+public class DummyTransactionGuard extends TransactionGuardEx {
   @Override
   public void assertWriteSafeContext(@Nonnull ModalityState modality) {
 
@@ -47,7 +45,7 @@ public class WebTransactionGuardImpl extends TransactionGuardEx {
 
   @Override
   public void submitTransaction(@Nonnull Disposable parentDisposable, @Nullable TransactionId expectedContext, @Nonnull Runnable transaction) {
-    Application.get().invokeLater(transaction);
+    transaction.run();
   }
 
   @Override

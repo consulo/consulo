@@ -198,6 +198,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   }
 
+  @RequiredWriteAction
   @Override
   public void saveSettings() {
 

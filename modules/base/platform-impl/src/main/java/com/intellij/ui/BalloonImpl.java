@@ -29,6 +29,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -868,6 +869,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     mySmartFadeout = true;
     mySmartFadeoutDelay = delay;
     FrameStateManager.getInstance().addListener(new FrameStateListener() {
+      @RequiredUIAccess
       @Override
       public void onFrameDeactivated() {
         if (myFadeoutAlarm.getActiveRequestCount() > 0) {

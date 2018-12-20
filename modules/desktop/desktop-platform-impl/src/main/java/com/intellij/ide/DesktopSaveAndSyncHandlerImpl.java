@@ -17,7 +17,6 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.LaterInvocator;
@@ -35,11 +34,14 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,6 +56,8 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   private final Runnable myIdleListener;
   private final PropertyChangeListener myGeneralSettingsListener;
+  @Nonnull
+  private final Application myApplication;
   private final GeneralSettings mySettings;
   private final ProgressManager myProgressManager;
   private final SingleAlarm myRefreshDelayAlarm = new SingleAlarm(this::doScheduledRefresh, 300, this);
@@ -62,48 +66,53 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
   private volatile long myRefreshSessionId;
 
   @Inject
-  public DesktopSaveAndSyncHandlerImpl(@Nonnull GeneralSettings generalSettings,
+  public DesktopSaveAndSyncHandlerImpl(@Nonnull Application application,
+                                       @Nonnull GeneralSettings generalSettings,
                                        @Nonnull ProgressManager progressManager,
                                        @Nonnull FrameStateManager frameStateManager,
                                        @Nonnull FileDocumentManager fileDocumentManager) {
+    myApplication = application;
     mySettings = generalSettings;
     myProgressManager = progressManager;
 
     myIdleListener = () -> {
-      if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
+      UIAccess uiAccess = UIAccess.get();
+      if (mySettings.isAutoSaveIfInactive() && canSyncOrSave(uiAccess)) {
+        TransactionGuard.submitTransaction(myApplication, () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
       }
     };
     IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
 
-    myGeneralSettingsListener = new PropertyChangeListener() {
-      @Override
-      public void propertyChange(@Nonnull PropertyChangeEvent e) {
-        if (GeneralSettings.PROP_INACTIVE_TIMEOUT.equals(e.getPropertyName())) {
-          IdeEventQueue eventQueue = IdeEventQueue.getInstance();
-          eventQueue.removeIdleListener(myIdleListener);
-          Integer timeout = (Integer)e.getNewValue();
-          eventQueue.addIdleListener(myIdleListener, timeout.intValue() * 1000);
-        }
+    myGeneralSettingsListener = e -> {
+      if (GeneralSettings.PROP_INACTIVE_TIMEOUT.equals(e.getPropertyName())) {
+        IdeEventQueue eventQueue = IdeEventQueue.getInstance();
+        eventQueue.removeIdleListener(myIdleListener);
+        Integer timeout = (Integer)e.getNewValue();
+        eventQueue.addIdleListener(myIdleListener, timeout * 1000);
       }
     };
+
     mySettings.addPropertyChangeListener(myGeneralSettingsListener);
 
     frameStateManager.addListener(new FrameStateListener() {
+      @RequiredUIAccess
       @Override
       public void onFrameDeactivated() {
+        UIAccess uiAccess = UIAccess.get();
+
         LOG.debug("save(): enter");
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
-          if (canSyncOrSave()) {
+        AccessRule.writeAsync(() -> {
+          if (canSyncOrSave(uiAccess)) {
             saveProjectsAndDocuments();
           }
           LOG.debug("save(): exit");
         });
       }
 
+      @RequiredUIAccess
       @Override
       public void onFrameActivated() {
-        if (!ApplicationManager.getApplication().isDisposed() && mySettings.isSyncOnFrameActivation()) {
+        if (!application.isDisposed() && mySettings.isSyncOnFrameActivation()) {
           scheduleRefresh();
         }
       }
@@ -117,17 +126,11 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
     IdeEventQueue.getInstance().removeIdleListener(myIdleListener);
   }
 
-  private boolean canSyncOrSave() {
-    return !LaterInvocator.isInModalContext() && !myProgressManager.hasModalProgressIndicator();
-  }
-
   @Override
+  @RequiredWriteAction
   public void saveProjectsAndDocuments() {
-    Application app = ApplicationManager.getApplication();
-    if (!app.isDisposed() &&
-        mySettings.isSaveOnFrameDeactivation() &&
-        myBlockSaveOnFrameDeactivationCount.get() == 0) {
-      app.saveAll();
+    if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
+      myApplication.saveAll();
     }
   }
 
@@ -136,8 +139,13 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
     myRefreshDelayAlarm.cancelAndRequest();
   }
 
+  private boolean canSyncOrSave(UIAccess uiAccess) {
+    return !LaterInvocator.isInModalContext(uiAccess) && !myProgressManager.hasModalProgressIndicator();
+  }
+
   private void doScheduledRefresh() {
-    if (canSyncOrSave()) {
+    UIAccess lastUIAccess = myApplication.getLastUIAccess();
+    if (canSyncOrSave(lastUIAccess)) {
       refreshOpenFiles();
     }
     maybeRefresh(ModalityState.NON_MODAL);
@@ -155,8 +163,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       LOG.debug("vfs refreshed");
     }
     else if (LOG.isDebugEnabled()) {
-      LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0)
-                + ", isSyncOnFrameActivation: " + mySettings.isSyncOnFrameActivation());
+      LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0) + ", isSyncOnFrameActivation: " + mySettings.isSyncOnFrameActivation());
     }
   }
 

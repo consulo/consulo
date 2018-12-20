@@ -308,6 +308,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
     return myModality2Transaction.get(modalityState);
   }
 
+  @Override
   @Nonnull
   public Runnable wrapLaterInvocation(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
     if (isWriteSafeModality(modalityState)) {

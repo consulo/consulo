@@ -53,10 +53,6 @@ public abstract class ApplicationPostStarter {
   @Nonnull
   protected abstract Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args);
 
-  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
-  }
-
-  public boolean needStartInTransaction() {
-    return true;
+  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) throws Exception {
   }
 }

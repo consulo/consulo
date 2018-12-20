@@ -36,6 +36,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -54,6 +56,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     myProject = project;
 
     frameStateManager.addListener(new FrameStateListener.Adapter() {
+      @RequiredUIAccess
       @Override
       public void onFrameActivated() {
         if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {

@@ -20,50 +20,31 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
+import consulo.annotations.DeprecationInfo;
+import consulo.application.AccessRule;
 import consulo.application.ApplicationWithOwnWriteThread;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use consulo.application.AccessRule")
 public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.WriteAction");
 
   @Nonnull
   @Override
   public RunResult<T> execute() {
-    final RunResult<T> result = new RunResult<>(this);
+    return AccessRule.writeAsync(() -> {
+      RunResult<T> runResult = new RunResult<>();
 
-    final Application application = ApplicationManager.getApplication();
-    boolean dispatchThread = application.isDispatchThread();
-    if (dispatchThread) {
-      AccessToken token = start(getClass());
-      try {
-        result.run();
-      }
-      finally {
-        token.finish();
-      }
-      return result;
-    }
+      run(runResult);
 
-    if (application.isReadAccessAllowed()) {
-      LOG.error("Must not start write action from within read action in the other thread - deadlock is coming");
-    }
-
-    TransactionGuard.getInstance().submitTransactionAndWait(() -> {
-      AccessToken token = start(WriteAction.this.getClass());
-      try {
-        result.run();
-      }
-      finally {
-        token.finish();
-      }
-    });
-
-    result.throwException();
-    return result;
+      return runResult;
+    }).getResultSync(-1);
   }
 
   @Nonnull
+  @Deprecated
   public static AccessToken start() {
     // get useful information about the write action
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
@@ -72,42 +53,15 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
 
   @Nonnull
   public static AccessToken start(@Nonnull Class clazz) {
-    return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
+    ApplicationWithOwnWriteThread application = (ApplicationWithOwnWriteThread)Application.get();
+    return application.acquireWriteActionLockInternal(clazz);
   }
 
   public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
-    Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread) {
-      //noinspection RequiredXAction
-      application.<Void, E>runWriteAction(() -> {
-        action.run();
-        return null;
-      });
-      return;
-    }
-
-    AccessToken token = start();
-    try {
-      action.run();
-    }
-    finally {
-      token.finish();
-    }
+    AccessRule.writeAsync(action::run).getResultSync(-1);
   }
 
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
-    Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread) {
-      //noinspection RequiredXAction
-      return application.runWriteAction(action);
-    }
-
-    AccessToken token = start();
-    try {
-      return action.compute();
-    }
-    finally {
-      token.finish();
-    }
+    return AccessRule.writeAsync(action::compute).getResultSync(-1);
   }
 }

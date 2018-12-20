@@ -82,7 +82,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) throws Exception {
     SystemDock.updateMenu();
 
     // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added

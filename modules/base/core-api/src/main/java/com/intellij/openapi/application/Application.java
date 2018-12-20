@@ -25,6 +25,8 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -166,12 +168,13 @@ public interface Application extends ComponentManager {
   /**
    * Saves all open documents and projects.
    */
-  @RequiredDispatchThread
+  @RequiredWriteAction
   void saveAll();
 
   /**
    * Saves all application settings.
    */
+  @RequiredWriteAction
   void saveSettings();
 
   /**
@@ -370,7 +373,7 @@ public interface Application extends ComponentManager {
    *
    * @return true if IDE is running in command line  mode, false otherwise
    */
- default boolean isCommandLine() {
+  default boolean isCommandLine() {
     return false;
   }
 
@@ -427,16 +430,27 @@ public interface Application extends ComponentManager {
    * @return Application icon. In sandbox icon maybe different
    */
   @Nonnull
-  consulo.ui.image.Image getIcon();
+  Image getIcon();
+
+  /**
+   * @return last ui access for application
+   */
+  @Nonnull
+  default UIAccess getLastUIAccess() {
+    return UIAccess.get();
+  }
 
   // region Deprecated stuff
+
   /**
    * Returns lock used for read operations, should be closed in finally block
    */
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use runReadAction(Runnable)")
-  AccessToken acquireReadActionLock();
+  default AccessToken acquireReadActionLock() {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Returns lock used for write operations, should be closed in finally block
@@ -445,7 +459,9 @@ public interface Application extends ComponentManager {
   @Deprecated
   @DeprecationInfo("Use runWriteAction(Runnable)")
   @RequiredDispatchThread
-  AccessToken acquireWriteActionLock(@Nonnull Class marker);
+  default AccessToken acquireWriteActionLock(@Nonnull Class marker) {
+    throw new UnsupportedOperationException();
+  }
 
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

@@ -51,4 +51,9 @@ public abstract class TransactionGuardEx extends TransactionGuard {
   public TransactionId getModalityTransaction(@Nonnull ModalityState modalityState) {
     return null;
   }
+
+  @Nonnull
+  public Runnable wrapLaterInvocation(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
+    return runnable;
+  }
 }

@@ -20,6 +20,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.ui.UIAccess;
 import io.netty.util.internal.SystemPropertyUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -354,6 +355,10 @@ public class LaterInvocator {
 
   public static boolean isInModalContext() {
     return isInModalContextForProject(null);
+  }
+
+  public static boolean isInModalContext(UIAccess uiAccess) {
+    return uiAccess.giveAndWait(() -> isInModalContextForProject(null));
   }
 
   private static boolean isDispatchThread() {

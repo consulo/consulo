@@ -52,8 +52,10 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;
+import consulo.application.DummyTransactionGuard;
+import consulo.application.TransactionGuardEx;
 import consulo.application.ex.ApplicationEx2;
-import consulo.application.impl.BaseApplication;
+import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.start.CommandLineArgs;
 import consulo.ui.AWTUIAccessImpl;
@@ -72,7 +74,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2 {
+public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread implements ApplicationEx2 {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
   private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
@@ -80,7 +82,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   private final boolean myHeadlessMode;
   private final boolean myIsInternal;
 
-  private DesktopTransactionGuardImpl myTransactionGuardImpl;
+  private TransactionGuardEx myTransactionGuardImpl;
 
   private int myInEditorPaintCounter; // EDT only
 
@@ -144,7 +146,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       };
     }
 
-    Thread edt = UIUtil.invokeAndWaitIfNeeded(() -> {
+    UIUtil.invokeAndWaitIfNeeded(() -> {
       // instantiate AppDelayQueue which starts "Periodic task thread" which we'll mark busy to prevent this EDT to die
       // that thread was chosen because we know for sure it's running
       AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
@@ -155,14 +157,13 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       });
       return Thread.currentThread();
     });
-    myLock = new ReadMostlyRWLock(edt);
 
     NoSwingUnderWriteAction.watchForEvents(this);
   }
 
-  private DesktopTransactionGuardImpl transactionGuard() {
+  private TransactionGuardEx transactionGuard() {
     if(myTransactionGuardImpl == null) {
-      myTransactionGuardImpl = new DesktopTransactionGuardImpl();
+      myTransactionGuardImpl = new DummyTransactionGuard();
     }
     return myTransactionGuardImpl;
   }
@@ -209,11 +210,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   public boolean isHeadlessEnvironment() {
     return myHeadlessMode;
-  }
-
-  @Override
-  public boolean isDispatchThread() {
-    return myLock.isWriteThread();
   }
 
   @Nonnull
@@ -581,14 +577,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     return AWTAccessor.getEventQueueAccessor().getDispatchThread(eventQueue);
   }
 
-  @Override
-  public boolean isReadAccessAllowed() {
-    if (isDispatchThread()) {
-      return myWriteActionThread == null; // no reading from EDT during background write action
-    }
-    return myLock.isReadLockedByThisThread() || myWriteActionThread == Thread.currentThread();
-  }
-
   @RequiredDispatchThread
   @Override
   public void assertIsDispatchThread() {
@@ -661,11 +649,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     }
 
     return ApplicationActivationStateManager.getState().isActive();
-  }
-
-  @Override
-  public boolean isWriteAccessAllowed() {
-    return isDispatchThread() && myLock.isWriteLocked() || myWriteActionThread == Thread.currentThread();
   }
 
   @Override

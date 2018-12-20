@@ -88,7 +88,7 @@ public class WriteThread extends Thread implements Disposable {
     try {
       Object compute;
       //noinspection RequiredXAction
-      try(AccessToken ignored = myApplication.acquireWriteActionLock(caller)) {
+      try(AccessToken ignored = myApplication.acquireWriteActionLockInternal(caller)) {
         compute = computable.compute();
       }
 
