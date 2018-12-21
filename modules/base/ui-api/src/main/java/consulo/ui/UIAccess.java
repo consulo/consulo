@@ -30,6 +30,13 @@ public interface UIAccess {
     return UIInternal.get()._UIAccess_isUIThread();
   }
 
+  @RequiredUIAccess
+  @Nonnull
+  @Deprecated
+  static UIAccess get() {
+    return current();
+  }
+
   /**
    * If we inside ui thread, we can get ui access
    *
@@ -37,7 +44,7 @@ public interface UIAccess {
    */
   @RequiredUIAccess
   @Nonnull
-  static UIAccess get() {
+  static UIAccess current() {
     assertIsUIThread();
 
     return UIInternal.get()._UIAccess_get();
@@ -60,7 +67,7 @@ public interface UIAccess {
   default <T> T giveAndWait(@RequiredUIAccess @Nonnull Supplier<T> supplier) {
     Object[] value = new Object[1];
     giveAndWaitIfNeed(() -> value[0] = supplier.get());
-    return (T)value;
+    return (T)value[0];
   }
 
   default void giveIfNeed(@RequiredUIAccess @Nonnull Runnable runnable) {

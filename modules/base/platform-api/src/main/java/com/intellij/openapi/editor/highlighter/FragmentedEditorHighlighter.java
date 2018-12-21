@@ -19,11 +19,12 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.tree.IElementType;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,6 +41,7 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
   private final int myAdditionalOffset;
   private TextAttributes myUsualAttributes;
   private final boolean myMergeByTextAttributes;
+  private final DocumentListener myDocumentListener = new DocumentListener() {};
 
   public FragmentedEditorHighlighter(HighlighterIterator sourceIterator, List<TextRange> ranges) {
     this(sourceIterator, ranges, 0, false);
@@ -90,6 +92,7 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
     }
   }
 
+  @Nonnull
   @Override
   public HighlighterIterator createIterator(int startOffset) {
     Map.Entry<Integer, Element> entry = myPieces.ceilingEntry(startOffset);
@@ -97,23 +100,21 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
   }
 
   @Override
-  public void setText(CharSequence text) {
+  public void setText(@Nonnull CharSequence text) {
   }
 
   @Override
-  public void setEditor(HighlighterClient editor) {
+  public void setEditor(@Nonnull HighlighterClient editor) {
   }
 
   @Override
-  public void setColorScheme(EditorColorsScheme scheme) {
+  public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
   }
 
+  @Nonnull
   @Override
-  public void beforeDocumentChange(DocumentEvent event) {
-  }
-
-  @Override
-  public void documentChanged(DocumentEvent event) {
+  public DocumentListener getDocumentListener() {
+    return myDocumentListener;
   }
 
   private class ProxyIterator implements HighlighterIterator {

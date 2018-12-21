@@ -119,12 +119,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Inject
-  public ProjectManagerImpl(@Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
+  public ProjectManagerImpl(@Nonnull Application application, @Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
     myProgressManager = progressManager;
-    Application app = ApplicationManager.getApplication();
-    MessageBus messageBus = app.getMessageBus();
+    MessageBus messageBus = application.getMessageBus();
 
-    messageBus.connect(app).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, null));
+    messageBus.connect(application).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, null));
 
     final ProjectManagerListener busPublisher = messageBus.syncPublisher(TOPIC);
     addProjectManagerListener(new ProjectManagerListener() {

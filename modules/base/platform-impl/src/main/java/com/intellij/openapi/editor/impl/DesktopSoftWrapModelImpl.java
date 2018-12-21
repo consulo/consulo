@@ -32,6 +32,7 @@ import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManage
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.DocumentUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -55,12 +56,14 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since Jun 8, 2010 12:47:32 PM
  */
-public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
+@Deprecated
+@DeprecationInfo("Desktop only")
+public class DesktopSoftWrapModelImpl extends InlayModel.SimpleAdapter
         implements SoftWrapModelEx, PrioritizedInternalDocumentListener, FoldingListener,
                    PropertyChangeListener, Dumpable, Disposable
 {
 
-  private static final Logger LOG = Logger.getInstance("#" + SoftWrapModelImpl.class.getName());
+  private static final Logger LOG = Logger.getInstance("#" + DesktopSoftWrapModelImpl.class.getName());
 
   private final List<SoftWrapChangeListener>  mySoftWrapListeners = new ArrayList<>();
 
@@ -113,7 +116,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
 
   private boolean myForceAdditionalColumns;
 
-  public SoftWrapModelImpl(@Nonnull DesktopEditorImpl editor) {
+  public DesktopSoftWrapModelImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
     myStorage = new SoftWrapsStorage();
     myPainter = new CompositeSoftWrapPainter(editor);
@@ -416,12 +419,15 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
     if (myBulkUpdateInProgress) {
       return;
     }
-    myUpdateInProgress = true;
-    if (!isSoftWrappingEnabled()) {
-      myDirty = true;
-      return;
-    }
-    myApplianceManager.beforeDocumentChange(event);
+
+    myEditor.getUIAccess().give(() -> {
+      myUpdateInProgress = true;
+      if (!isSoftWrappingEnabled()) {
+        myDirty = true;
+        return;
+      }
+      myApplianceManager.beforeDocumentChange(event);
+    });
   }
 
   @Override
@@ -429,11 +435,14 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
     if (myBulkUpdateInProgress) {
       return;
     }
-    myUpdateInProgress = false;
-    if (!isSoftWrappingEnabled()) {
-      return;
-    }
-    myApplianceManager.documentChanged(event);
+
+    myEditor.getUIAccess().give(() -> {
+      myUpdateInProgress = false;
+      if (!isSoftWrappingEnabled()) {
+        return;
+      }
+      myApplianceManager.documentChanged(event);
+    });
   }
 
   @Override

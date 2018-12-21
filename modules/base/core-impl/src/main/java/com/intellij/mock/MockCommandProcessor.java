@@ -12,6 +12,7 @@ import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Deprecated
@@ -139,6 +140,11 @@ public class MockCommandProcessor extends CommandProcessor {
 
   @Override
   public void runUndoTransparentAction(@Nonnull Runnable action) {
+  }
+
+  @Override
+  public void runUndoTransparentAction(@Nonnull Consumer<AsyncResult<Void>> consumer) {
+
   }
 
   @Override

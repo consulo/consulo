@@ -31,8 +31,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.VisualPosition;
-import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.ScrollingModelEx;
@@ -43,6 +43,7 @@ import com.intellij.ui.components.Interpolable;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.Animator;
+import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +54,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollingModelImpl implements ScrollingModelEx {
+@Deprecated
+@DeprecationInfo("Desktop only")
+public class DesktopScrollingModelImpl implements ScrollingModelEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.ScrollingModelImpl");
 
   private final DesktopEditorImpl myEditor;
@@ -67,12 +70,14 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   private boolean myAccumulateViewportChanges;
   private boolean myViewportPositioned;
 
-  private final DocumentAdapter myDocumentListener = new DocumentAdapter() {
+  private final DocumentListener myDocumentListener = new DocumentListener() {
     @Override
     public void beforeDocumentChange(DocumentEvent e) {
-      if (!myEditor.getDocument().isInBulkUpdate()) {
-        cancelAnimatedScrolling(true);
-      }
+      myEditor.invoke(() -> {
+        if (!myEditor.getDocument().isInBulkUpdate()) {
+          cancelAnimatedScrolling(true);
+        }
+      });
     }
   };
 
@@ -96,7 +101,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     }
   };
 
-  public ScrollingModelImpl(DesktopEditorImpl editor) {
+  public DesktopScrollingModelImpl(DesktopEditorImpl editor) {
     myEditor = editor;
     myEditor.getScrollPane().getViewport().addChangeListener(myViewportChangeListener);
     myEditor.getDocument().addDocumentListener(myDocumentListener);
@@ -201,9 +206,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
 
   private Point calcOffsetsToScroll(Point targetLocation, ScrollType scrollType, Rectangle viewRect) {
     if (myEditor.getSettings().isRefrainFromScrolling() && viewRect.contains(targetLocation)) {
-      if (scrollType == ScrollType.CENTER ||
-          scrollType == ScrollType.CENTER_DOWN ||
-          scrollType == ScrollType.CENTER_UP) {
+      if (scrollType == ScrollType.CENTER || scrollType == ScrollType.CENTER_DOWN || scrollType == ScrollType.CENTER_UP) {
         scrollType = ScrollType.RELATIVE;
       }
     }
@@ -211,9 +214,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     int spaceWidth = EditorUtil.getSpaceWidth(Font.PLAIN, myEditor);
     int xInsets = myEditor.getSettings().getAdditionalColumnsCount() * spaceWidth;
 
-    int hOffset = scrollType == ScrollType.CENTER ||
-                  scrollType == ScrollType.CENTER_DOWN ||
-                  scrollType == ScrollType.CENTER_UP ? 0 : viewRect.x;
+    int hOffset = scrollType == ScrollType.CENTER || scrollType == ScrollType.CENTER_DOWN || scrollType == ScrollType.CENTER_UP ? 0 : viewRect.x;
     if (targetLocation.x < hOffset) {
       int inset = 4 * spaceWidth;
       if (scrollType == ScrollType.MAKE_VISIBLE && targetLocation.x < viewRect.width - inset) {
@@ -233,8 +234,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     int lineHeight = myEditor.getLineHeight();
     // to avoid 'hysteresis', minAcceptableY should be always less or equal to maxAcceptableY
     int minAcceptableY = viewRect.y + Math.max(0, Math.min(lineHeight, viewRect.height - 3 * lineHeight));
-    int maxAcceptableY = viewRect.y + (viewRect.height <= lineHeight ? 0 :
-                                       (viewRect.height - (viewRect.height <= 2 * lineHeight ? lineHeight : 2 * lineHeight)));
+    int maxAcceptableY = viewRect.y + (viewRect.height <= lineHeight ? 0 : (viewRect.height - (viewRect.height <= 2 * lineHeight ? lineHeight : 2 * lineHeight)));
     int scrollUpBy = minAcceptableY - targetLocation.y;
     int scrollDownBy = targetLocation.y - maxAcceptableY;
     int centerPosition = targetLocation.y - viewRect.height / 3;
@@ -300,8 +300,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   }
 
   private static int getOffset(JScrollBar scrollBar) {
-    return scrollBar == null ? 0 :
-           scrollBar instanceof Interpolable ? ((Interpolable)scrollBar).getTargetValue() : scrollBar.getValue();
+    return scrollBar == null ? 0 : scrollBar instanceof Interpolable ? ((Interpolable)scrollBar).getTargetValue() : scrollBar.getValue();
   }
 
   private static int getExtent(JScrollBar scrollBar) {
@@ -351,11 +350,10 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     if (!myEditor.getSettings().isAnimatedScrolling() || myAnimationDisabled || RemoteDesktopService.isRemoteSession()) {
       useAnimation = false;
     }
-    else if (CommandProcessor.getInstance().getCurrentCommand() == null) {
+    else if (!CommandProcessor.getInstance().hasCurrentCommand()) {
       useAnimation = myEditor.getComponent().isShowing();
     }
-    else if (editorsTracker.getCurrentCommandStart() - editorsTracker.getLastCommandFinish() <
-             AnimatedScrollingRunnable.SCROLL_DURATION) {
+    else if (editorsTracker.getCurrentCommandStart() - editorsTracker.getLastCommandFinish() < AnimatedScrollingRunnable.SCROLL_DURATION) {
       useAnimation = false;
     }
     else {
@@ -469,10 +467,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     private final double myPow;
     private final Animator myAnimator;
 
-    public AnimatedScrollingRunnable(int startHOffset,
-                                     int startVOffset,
-                                     int endHOffset,
-                                     int endVOffset) throws NoAnimationRequiredException {
+    public AnimatedScrollingRunnable(int startHOffset, int startVOffset, int endHOffset, int endVOffset) throws NoAnimationRequiredException {
       myStartHOffset = startHOffset;
       myStartVOffset = startVOffset;
       myEndHOffset = endHOffset;

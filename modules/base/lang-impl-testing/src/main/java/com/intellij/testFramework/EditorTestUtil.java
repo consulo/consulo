@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DefaultEditorTextRepresentationHelper;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
@@ -171,7 +171,7 @@ public class EditorTestUtil {
    */
   public static boolean configureSoftWraps(Editor editor, final int visibleWidth, final int charWidthInPixels) {
     editor.getSettings().setUseSoftWraps(true);
-    SoftWrapModelImpl model = (SoftWrapModelImpl)editor.getSoftWrapModel();
+    DesktopSoftWrapModelImpl model = (DesktopSoftWrapModelImpl)editor.getSoftWrapModel();
     model.setSoftWrapPainter(new SoftWrapPainter() {
       @Override
       public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {

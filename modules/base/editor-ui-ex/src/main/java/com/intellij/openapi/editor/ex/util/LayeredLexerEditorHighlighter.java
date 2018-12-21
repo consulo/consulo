@@ -353,7 +353,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
       highlighter = new LexerEditorHighlighter(mySyntaxHighlighter, getScheme());
       mySeparator = descriptor.getTokenSeparator();
       highlighter.setEditor(this);
-      doc.addDocumentListener(highlighter);
+      doc.addDocumentListener(highlighter.getDocumentListener());
     }
 
     public TextAttributes getAttributes(IElementType tokenType) {
@@ -384,6 +384,11 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     @Override
     public Document getDocument() {
       return LayeredLexerEditorHighlighter.this.getDocument();
+    }
+
+    @Override
+    public void invoke(Runnable runnable) {
+      runnable.run();
     }
 
     public void resetCachedTextAttributes() {

@@ -823,7 +823,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         };
 
         if (!button.isValid()) {
-          SwingUtilities.invokeLater(() -> show.run());
+          SwingUtilities.invokeLater(show::run);
         }
         else {
           show.run();

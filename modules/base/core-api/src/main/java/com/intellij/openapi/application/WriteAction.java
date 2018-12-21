@@ -40,7 +40,7 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
       run(runResult);
 
       return runResult;
-    }).getResultSync(-1);
+    }).getResultSync();
   }
 
   @Nonnull
@@ -58,10 +58,10 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   }
 
   public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
-    AccessRule.writeAsync(action::run).getResultSync(-1);
+    AccessRule.writeAsync(action::run).getResultSync();
   }
 
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
-    return AccessRule.writeAsync(action::compute).getResultSync(-1);
+    return AccessRule.writeAsync(action::compute).getResultSync();
   }
 }

@@ -226,7 +226,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
     myDoNotCollapseCaret |= dontCollapseCaret;
     boolean oldBatchFlag = myIsBatchFoldingProcessing;
     if (!oldBatchFlag) {
-      ((ScrollingModelImpl)myEditor.getScrollingModel()).finishAnimation();
+      ((DesktopScrollingModelImpl)myEditor.getScrollingModel()).finishAnimation();
       mySavedCaretShift = myEditor.visibleLineToY(myEditor.getCaretModel().getVisualPosition().line) - myEditor.getScrollingModel().getVerticalScrollOffset();
     }
 

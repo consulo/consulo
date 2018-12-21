@@ -242,7 +242,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     myContext.reset();
     myOffset2fontType.clear();
     myOffset2widthInPixels.clear();
-    EditorTextRepresentationHelper editorTextRepresentationHelper = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor);
+    EditorTextRepresentationHelper editorTextRepresentationHelper = DesktopSoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor);
     if (editorTextRepresentationHelper instanceof DefaultEditorTextRepresentationHelper) {
       ((DefaultEditorTextRepresentationHelper)editorTextRepresentationHelper).updateContext();
     }
@@ -355,7 +355,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     for (int i = 0; i < placeholder.length(); i++) {
       char c = placeholder.charAt(i);
       if (c == '\n') c = ' '; // we display \n as space (see com.intellij.openapi.editor.impl.view.EditorView.getFoldRegionLayout)
-      placeholderWidthInPixels += SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor)
+      placeholderWidthInPixels += DesktopSoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor)
               .charWidth(c, myContext.fontType);
     }
 
@@ -610,7 +610,7 @@ public class SoftWrapApplianceManager implements Dumpable {
       return new int[] {xEnd + myContext.getInlaysSuffixWidth(), xEnd - xStart};
     }
     else {
-      int width = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).charWidth(c, myContext.fontType);
+      int width = DesktopSoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).charWidth(c, myContext.fontType);
       return new int[] {myContext.currentPosition.x + width + myContext.getInlaysWidth(), width};
     }
   }

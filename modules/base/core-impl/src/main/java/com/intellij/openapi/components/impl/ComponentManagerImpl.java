@@ -395,7 +395,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   @RequiredDispatchThread
   public void dispose() {
-    Application.get().assertIsDispatchThread();
+    Application.get().assertWriteAccessAllowed();
 
     if (myMessageBus != null) {
       myMessageBus.dispose();

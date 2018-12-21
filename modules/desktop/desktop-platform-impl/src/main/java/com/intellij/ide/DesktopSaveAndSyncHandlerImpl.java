@@ -76,7 +76,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
     myProgressManager = progressManager;
 
     myIdleListener = () -> {
-      UIAccess uiAccess = UIAccess.get();
+      UIAccess uiAccess = UIAccess.current();
       if (mySettings.isAutoSaveIfInactive() && canSyncOrSave(uiAccess)) {
         TransactionGuard.submitTransaction(myApplication, () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
       }
@@ -98,7 +98,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       @RequiredUIAccess
       @Override
       public void onFrameDeactivated() {
-        UIAccess uiAccess = UIAccess.get();
+        UIAccess uiAccess = UIAccess.current();
 
         LOG.debug("save(): enter");
         AccessRule.writeAsync(() -> {

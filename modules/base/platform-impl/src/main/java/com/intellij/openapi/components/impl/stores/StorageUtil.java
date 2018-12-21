@@ -164,7 +164,7 @@ public class StorageUtil {
       }
 
       return null;
-    }).getResultSync(-1);
+    }).getResultSync();
 
     Exception exception = exceptionRef.get();
     if (exception instanceof IOException) {
@@ -227,7 +227,7 @@ public class StorageUtil {
       catch (FileNotFoundException e) {
         exceptionRef.set(e);
       }
-    }).getResultSync(-1);
+    }).getResultSync();
 
     FileNotFoundException exception = exceptionRef.get();
     if(exception != null) {

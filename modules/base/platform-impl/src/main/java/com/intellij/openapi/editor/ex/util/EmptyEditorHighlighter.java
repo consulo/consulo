@@ -27,12 +27,29 @@ import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.tree.IElementType;
 
-public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDocumentListener {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.ex.util.EmptyEditorHighlighter");
+import javax.annotation.Nonnull;
+
+public class EmptyEditorHighlighter implements EditorHighlighter {
+  private static final Logger LOG = Logger.getInstance(EmptyEditorHighlighter.class);
 
   private TextAttributes myAttributes;
   private int myTextLength = 0;
   private HighlighterClient myEditor;
+  private PrioritizedDocumentListener myDocumentListener = new PrioritizedDocumentListener() {
+    @Override
+    public void documentChanged(DocumentEvent e) {
+      myTextLength += e.getNewLength() - e.getOldLength();
+    }
+
+    @Override
+    public void beforeDocumentChange(DocumentEvent event) {
+    }
+
+    @Override
+    public int getPriority() {
+      return 2;
+    }
+  };
 
   public EmptyEditorHighlighter(TextAttributes attributes) {
     myAttributes = attributes;
@@ -43,34 +60,28 @@ public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDoc
   }
 
   @Override
-  public void setText(CharSequence text) {
+  public void setText(@Nonnull CharSequence text) {
     myTextLength = text.length();
   }
 
   @Override
-  public void setEditor(HighlighterClient editor) {
+  public void setEditor(@Nonnull HighlighterClient editor) {
     LOG.assertTrue(myEditor == null, "Highlighters cannot be reused with different editors");
     myEditor = editor;
   }
 
   @Override
-  public void setColorScheme(EditorColorsScheme scheme) {
+  public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
     setAttributes(scheme.getAttributes(HighlighterColors.TEXT));
   }
 
+  @Nonnull
   @Override
-  public void documentChanged(DocumentEvent e) {
-    myTextLength += e.getNewLength() - e.getOldLength();
+  public PrioritizedDocumentListener getDocumentListener() {
+    return myDocumentListener;
   }
 
-  @Override
-  public void beforeDocumentChange(DocumentEvent event) {}
-
-  @Override
-  public int getPriority() {
-    return 2;
-  }
-
+  @Nonnull
   @Override
   public HighlighterIterator createIterator(int startOffset) {
     return new HighlighterIterator(){

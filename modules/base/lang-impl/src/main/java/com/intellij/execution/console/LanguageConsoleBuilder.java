@@ -32,7 +32,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import com.intellij.openapi.editor.markup.CustomHighlighterRenderer;
@@ -250,7 +250,7 @@ public final class LanguageConsoleBuilder {
       final ConsoleGutterComponent lineEndGutter = new ConsoleGutterComponent(editor, gutterContentProvider, false);
 
       editor.getSoftWrapModel().forceAdditionalColumnsUsage();
-      ((SoftWrapModelImpl)editor.getSoftWrapModel()).getApplianceManager().setWidthProvider(new SoftWrapApplianceManager.VisibleAreaWidthProvider() {
+      ((DesktopSoftWrapModelImpl)editor.getSoftWrapModel()).getApplianceManager().setWidthProvider(new SoftWrapApplianceManager.VisibleAreaWidthProvider() {
         @Override
         public int getVisibleAreaWidth() {
           int guttersWidth = lineEndGutter.getPreferredWidth() + lineStartGutter.getPreferredWidth();

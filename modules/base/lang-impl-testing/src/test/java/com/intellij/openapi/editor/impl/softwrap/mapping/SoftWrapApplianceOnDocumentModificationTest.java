@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.AbstractEditorTest;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSoftWrapModelImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.testFramework.EditorTestUtil;
@@ -806,7 +806,7 @@ public abstract class SoftWrapApplianceOnDocumentModificationTest extends Abstra
     getEditor().getSettings().setCustomSoftWrapIndent(0);
     getEditor().getSettings().setUseCustomSoftWrapIndent(true);
     //Trigger soft wraps recalculation.
-    ((SoftWrapModelImpl)myEditor.getSoftWrapModel()).prepareToMapping();
+    ((DesktopSoftWrapModelImpl)myEditor.getSoftWrapModel()).prepareToMapping();
 
     // Don't expect soft wraps to be registered as there is no point in wrapping at the first non-white space symbol position
     // in all cases when soft wrap is located at the left screen edge.
@@ -1045,7 +1045,7 @@ public abstract class SoftWrapApplianceOnDocumentModificationTest extends Abstra
     verifySoftWrapPositions(6, 12, 18, 24);
 
     final IncrementalCacheUpdateEvent[] event = new IncrementalCacheUpdateEvent[1];
-    ((SoftWrapModelImpl)myEditor.getSoftWrapModel()).getApplianceManager().addListener(new SoftWrapAwareDocumentParsingListenerAdapter() {
+    ((DesktopSoftWrapModelImpl)myEditor.getSoftWrapModel()).getApplianceManager().addListener(new SoftWrapAwareDocumentParsingListenerAdapter() {
       @Override
       public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent e) {
         assertNull(event[0]);
@@ -1140,7 +1140,7 @@ public abstract class SoftWrapApplianceOnDocumentModificationTest extends Abstra
     }
   }
 
-  private static SoftWrapModelImpl getSoftWrapModel() {
-    return (SoftWrapModelImpl)myEditor.getSoftWrapModel();
+  private static DesktopSoftWrapModelImpl getSoftWrapModel() {
+    return (DesktopSoftWrapModelImpl)myEditor.getSoftWrapModel();
   }
 }

@@ -51,6 +51,7 @@ import com.intellij.util.*;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.TransactionGuardEx;
 import consulo.platform.Platform;
 import org.jetbrains.annotations.NonNls;
@@ -227,9 +228,10 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return FileDocumentManager.getInstance().getCachedDocument(vFile);
   }
 
+  @RequiredWriteAction
   @Override
   public void commitAllDocuments() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     if (myUncommittedDocuments.isEmpty()) return;

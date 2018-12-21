@@ -19,7 +19,6 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
@@ -29,9 +28,13 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.RangeBlinker;
+import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -39,9 +42,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-class IntentionUsagePanel extends JPanel{
+class IntentionUsagePanel extends JPanel {
   private final EditorEx myEditor;
-  @NonNls private static final String SPOT_MARKER = "spot";
+  @NonNls
+  private static final String SPOT_MARKER = "spot";
   private final RangeBlinker myRangeBlinker;
 
   public IntentionUsagePanel() {
@@ -53,59 +57,65 @@ class IntentionUsagePanel extends JPanel{
   }
 
   public void reset(final String usageText, final FileType fileType) {
-    reinitViews();
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myEditor.isDisposed()) return;
-        CommandProcessor.getInstance().runUndoTransparentAction(new Runnable() {
-          @Override
-          public void run() {
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              @Override
-              public void run() {
-                configureByText(usageText, fileType);
-              }
-            });
-          }
-        });
-      }
+    SwingUtilities.invokeLater(() -> {
+      reinitViews();
+
+      if (myEditor.isDisposed()) return;
+
+      CommandProcessor.getInstance().runUndoTransparentAction((result) -> configureByText(usageText, fileType, result));
     });
   }
 
-  private void configureByText(final String usageText, FileType fileType) {
+  @RequiredUIAccess
+  private void configureByText(final String usageText, FileType fileType, AsyncResult<Void> result) {
     Document document = myEditor.getDocument();
     String text = StringUtil.convertLineSeparators(usageText);
-    document.replaceString(0, document.getTextLength(), text);
-    final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    myEditor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(fileType, scheme, null));
-    setupSpots(document);
+
+    UIAccess access = UIAccess.current();
+
+    AccessRule.writeAsync(() -> {
+      document.replaceString(0, document.getTextLength(), text);
+
+      access.give(() -> {
+        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        myEditor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(fileType, scheme, null));
+
+        setupSpots(document);
+
+        result.setDone();
+      });
+    });
   }
 
   private void setupSpots(Document document) {
-    List<Segment> markers = new ArrayList<Segment>();
-    while (true) {
-      String text = document.getText();
-      final int spotStart = text.indexOf("<" + SPOT_MARKER + ">");
-      if (spotStart < 0) break;
-      final int spotEnd = text.indexOf("</" + SPOT_MARKER + ">", spotStart);
-      if (spotEnd < 0) break;
+    List<Segment> markers = new ArrayList<>();
+    AccessRule.writeAsync(() -> {
+      while (true) {
+        String text = document.getText();
+        final int spotStart = text.indexOf("<" + SPOT_MARKER + ">");
+        if (spotStart < 0) break;
+        final int spotEnd = text.indexOf("</" + SPOT_MARKER + ">", spotStart);
+        if (spotEnd < 0) break;
 
-      document.deleteString(spotEnd, spotEnd + SPOT_MARKER.length() + 3);
-      document.deleteString(spotStart, spotStart + SPOT_MARKER.length() + 2);
-      Segment spotMarker = new Segment() {
-        @Override
-        public int getStartOffset() {
-          return spotStart;
-        }
+        document.deleteString(spotEnd, spotEnd + SPOT_MARKER.length() + 3);
+        document.deleteString(spotStart, spotStart + SPOT_MARKER.length() + 2);
+        Segment spotMarker = new Segment() {
+          @Override
+          public int getStartOffset() {
+            return spotStart;
+          }
 
-        @Override
-        public int getEndOffset() {
-          return spotEnd - SPOT_MARKER.length() - 2;
-        }
-      };
-      markers.add(spotMarker);
-    }
+          @Override
+          public int getEndOffset() {
+            return spotEnd - SPOT_MARKER.length() - 2;
+          }
+        };
+        markers.add(spotMarker);
+      }
+
+      return null;
+    }).getResultSync();
+
     myRangeBlinker.resetMarkers(markers);
     if (!markers.isEmpty()) {
       myRangeBlinker.startBlinking();
@@ -142,8 +152,7 @@ class IntentionUsagePanel extends JPanel{
     LogicalPosition pos = new LogicalPosition(line, column);
     editor.getCaretModel().moveToLogicalPosition(pos);
     if (selectedLine >= 0) {
-      editor.getSelectionModel().setSelection(editorDocument.getLineStartOffset(selectedLine),
-                                              editorDocument.getLineEndOffset(selectedLine));
+      editor.getSelectionModel().setSelection(editorDocument.getLineStartOffset(selectedLine), editorDocument.getLineEndOffset(selectedLine));
     }
 
     return editor;

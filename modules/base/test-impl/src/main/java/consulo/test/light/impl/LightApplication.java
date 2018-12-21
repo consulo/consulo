@@ -220,7 +220,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  public boolean isWriteThread() {
+  public boolean isWriteAccessAllowed() {
     throw new UnsupportedOperationException();
   }
 

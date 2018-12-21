@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSoftWrapModelImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,7 +70,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
     DesktopEditorImpl editor = view.getEditor();
     int visualLineStartOffset = EditorUtil.getNotFoldedLineStartOffset(editor, offset);
 
-    SoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
+    DesktopSoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
     List<? extends SoftWrap> softWraps = softWrapModel.getRegisteredSoftWraps();
     int currentOrPrevWrapIndex = softWrapModel.getSoftWrapIndex(offset);
     if (currentOrPrevWrapIndex < 0) {
@@ -122,7 +122,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
     FoldingModelEx foldingModel = editor.getFoldingModel();
     FoldRegion[] regions = foldingModel.fetchTopLevel();
     myRegions = regions == null ? FoldRegion.EMPTY_ARRAY : regions;
-    SoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
+    DesktopSoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
     List<? extends SoftWrap> softWraps = softWrapModel.getRegisteredSoftWraps();
     SoftWrap currentOrPrevWrap = currentOrPrevWrapIndex < 0 || currentOrPrevWrapIndex >= softWraps.size() ? null :
                                  softWraps.get(currentOrPrevWrapIndex);

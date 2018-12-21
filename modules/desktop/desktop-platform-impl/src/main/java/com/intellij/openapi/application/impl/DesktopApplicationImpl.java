@@ -51,6 +51,7 @@ import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.application.ApplicationProperties;
 import consulo.application.DummyTransactionGuard;
 import consulo.application.TransactionGuardEx;
@@ -418,14 +419,19 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
         @RequiredDispatchThread
         public void run() {
           if (!force && !confirmExitIfNeeded(exitConfirmed)) {
-            saveAll();
+            AccessRule.writeAsync(() -> saveAll());
             return;
           }
 
           getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).appClosing();
           myDisposeInProgress = true;
-          doExit(allowListenersToCancel, restart);
-          myDisposeInProgress = false;
+
+          try {
+            doExit(allowListenersToCancel, restart);
+          }
+          finally {
+            myDisposeInProgress = false;
+          }
         }
       };
 

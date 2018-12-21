@@ -1253,6 +1253,12 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     @Override
     public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
     }
+
+    @Nonnull
+    @Override
+    public DocumentListener getDocumentListener() {
+      return this;
+    }
   }
 
   private static class MyTypedHandler extends TypedActionHandlerBase {

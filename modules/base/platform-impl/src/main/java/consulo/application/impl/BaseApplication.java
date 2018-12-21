@@ -721,11 +721,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return false;
   }
 
-  @Override
-  public boolean isWriteThread() {
-    return myLock.isWriteThread();
-  }
-
   @NonNls
   @Override
   public String toString() {

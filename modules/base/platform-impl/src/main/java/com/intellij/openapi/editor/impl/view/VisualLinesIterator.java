@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSoftWrapModelImpl;
 import javax.annotation.Nonnull;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class VisualLinesIterator {
 
   public VisualLinesIterator(@Nonnull DesktopEditorImpl editor, int startVisualLine) {
     myEditor = editor;
-    SoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
+    DesktopSoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
     myDocument = myEditor.getDocument();
     FoldRegion[] regions = myEditor.getFoldingModel().fetchTopLevel();
     myFoldRegions = regions == null ? FoldRegion.EMPTY_ARRAY : regions;

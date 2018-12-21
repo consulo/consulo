@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSoftWrapModelImpl;
 import javax.annotation.Nonnull;
 
 /**
@@ -99,7 +99,7 @@ public class IncrementalCacheUpdateEvent {
 
     int startOffset = EditorUtil.getNotFoldedLineStartOffset(editor, offset);
 
-    SoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
+    DesktopSoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
     int wrapIndex = softWrapModel.getSoftWrapIndex(offset);
     int prevSoftWrapIndex = wrapIndex < 0 ? (- wrapIndex - 2) : wrapIndex - (beforeSoftWrap ? 1 : 0);
     SoftWrap prevSoftWrap = prevSoftWrapIndex < 0 ? null : softWrapModel.getRegisteredSoftWraps().get(prevSoftWrapIndex);

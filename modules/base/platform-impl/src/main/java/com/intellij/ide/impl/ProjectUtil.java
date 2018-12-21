@@ -37,7 +37,6 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.application.AccessRule;
 import consulo.application.DefaultPaths;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
@@ -233,7 +232,7 @@ public class ProjectUtil {
         });
       });
 
-      AccessRule.writeAsync(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess));
+      provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess);
       return result;
     }
     return AsyncResult.rejected("provider for file path is not find");

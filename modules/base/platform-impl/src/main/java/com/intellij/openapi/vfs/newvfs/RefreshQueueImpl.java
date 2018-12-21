@@ -24,13 +24,15 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.VfsBundle;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.AccessRule;
 import consulo.application.TransactionGuardEx;
+import consulo.ui.UIAccess;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
@@ -46,24 +48,32 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
   private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
+  private final Application myApplication;
+
+  @Inject
+  public RefreshQueueImpl(Application application) {
+    myApplication = application;
+  }
 
   public void execute(@Nonnull RefreshSessionImpl session) {
     if (session.isAsynchronous()) {
       queueSession(session, session.getTransaction());
     }
     else {
-      Application app = ApplicationManager.getApplication();
-      if (app.isDispatchThread()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+      if (myApplication.isWriteAccessAllowed()) {
         doScan(session);
         session.fireEvents();
       }
       else {
-        if (((ApplicationEx)app).holdsReadLock()) {
-          LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " +
-                    "this will cause a deadlock if there are any events to fire.");
+        if (((ApplicationEx)myApplication).holdsReadLock()) {
+          LOG.error("Do not call synchronous refresh under read lock (except from WriteThread) - this will cause a deadlock if there are any events to fire.");
           return;
         }
+
+        if(UIAccess.isUIThread()) {
+          LOG.warn(new Exception("Do not call synchronous refresh under UI thread - this may freeze UI thread"));
+        }
+
         queueSession(session, TransactionGuard.getInstance().getContextTransaction());
         session.waitFor();
       }
@@ -72,7 +82,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   @Nonnull
   protected AccessToken createHeavyLatch(String id) {
-    return HeavyProcessLatch.INSTANCE.processStarted(id);
+    return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   protected void queueSession(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
@@ -83,7 +93,8 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       }
       finally {
         myRefreshIndicator.stop();
-        TransactionGuard.getInstance().submitTransaction(ApplicationManager.getApplication(), transaction, session::fireEvents);
+
+        AccessRule.writeAsync(session::fireEvents);
       }
     });
     myEventCounter.eventHappened(session);
@@ -127,12 +138,12 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   @Nonnull
   @Override
   public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
-    return new RefreshSessionImpl(async, recursively, finishRunnable, ((TransactionGuardEx)TransactionGuard.getInstance()).getModalityTransaction(state));
+    return new RefreshSessionImpl(myApplication, async, recursively, finishRunnable, ((TransactionGuardEx)TransactionGuard.getInstance()).getModalityTransaction(state));
   }
 
   @Override
   public void processSingleEvent(@Nonnull VFileEvent event) {
-    new RefreshSessionImpl(Collections.singletonList(event)).launch();
+    new RefreshSessionImpl(myApplication, Collections.singletonList(event)).launch();
   }
 
   public static boolean isRefreshInProgress() {
@@ -143,5 +154,6 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   }
 
   @Override
-  public void dispose() { }
+  public void dispose() {
+  }
 }

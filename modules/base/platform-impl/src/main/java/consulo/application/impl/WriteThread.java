@@ -61,8 +61,8 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   public <T> void push(ThrowableComputable<T, Throwable> computable, AsyncResult<T> result, Class caller) {
-    if(myApplication.isWriteThread()) {
-      runImpl(caller, computable, result);
+    if(myApplication.isWriteAccessAllowed()) {
+      runImpl(caller, computable, result, ExceptionUtil.getThrowableText(new Exception()));
       return;
     }
     myQueue.addLast(new CallInfo(computable, result, caller));
@@ -74,7 +74,7 @@ public class WriteThread extends Thread implements Disposable {
       try {
         CallInfo first = myQueue.pollFirst();
         if (first != null) {
-          runImpl(first.myCallClass, first.myComputable, first.myResult);
+          runImpl(first.myCallClass, first.myComputable, first.myResult, first.myCreateTrace);
         }
       }
       finally {
@@ -84,7 +84,7 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   @SuppressWarnings("unchecked")
-  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult) {
+  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult, @Nonnull String creationTrace) {
     try {
       Object compute;
       //noinspection RequiredXAction
@@ -95,7 +95,11 @@ public class WriteThread extends Thread implements Disposable {
       asyncResult.setDone(compute);
     }
     catch (Throwable throwable) {
-      throwable.printStackTrace();
+      String throwableText = ExceptionUtil.getThrowableText(throwable);
+
+      System.err.println("Exception trace: " + throwableText);
+      System.err.println("Call trace: " + creationTrace);
+
       asyncResult.rejectWithThrowable(throwable);
     }
   }

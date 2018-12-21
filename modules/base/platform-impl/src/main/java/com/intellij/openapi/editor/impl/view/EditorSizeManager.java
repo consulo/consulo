@@ -19,6 +19,7 @@ import com.intellij.openapi.util.TextRange;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 
 import org.jetbrains.annotations.TestOnly;
 
@@ -100,8 +101,11 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   public void documentChanged(DocumentEvent event) {
     myDuringDocumentUpdate = false;
     if (myDocument.isInBulkUpdate()) return;
-    doInvalidateRange(myDocumentChangeStartOffset, myDocumentChangeEndOffset);
-    assertValidState();
+
+    SwingUtilities.invokeLater(() -> {
+      doInvalidateRange(myDocumentChangeStartOffset, myDocumentChangeEndOffset);
+      assertValidState();
+    });
   }
 
   @Override

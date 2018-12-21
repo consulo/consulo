@@ -15,10 +15,8 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
@@ -32,6 +30,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.ContainerUtil;
@@ -405,19 +404,23 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
 
   @Nonnull
   public static ReloadComponentStoreStatus reloadStore(@Nonnull Collection<StateStorage> changedStorages, @Nonnull IComponentStore.Reloadable store) {
-    Collection<String> notReloadableComponents;
     boolean willBeReloaded = false;
     try {
-      AccessToken token = WriteAction.start();
-      try {
-        notReloadableComponents = store.reload(changedStorages);
-      }
-      catch (Throwable e) {
+      Ref<Throwable> exceptionRef = Ref.create();
+      Collection<String> notReloadableComponents = AccessRule.writeAsync(() -> {
+        try {
+          return store.reload(changedStorages);
+        }
+        catch (Throwable e) {
+          exceptionRef.set(e);
+          return null;
+        }
+      }).getResultSync();
+
+      Throwable e = exceptionRef.get();
+      if(e != null) {
         Messages.showWarningDialog(ProjectBundle.message("project.reload.failed", e.getMessage()), ProjectBundle.message("project.reload.failed.title"));
         return ReloadComponentStoreStatus.ERROR;
-      }
-      finally {
-        token.finish();
       }
 
       if (ContainerUtil.isEmpty(notReloadableComponents)) {

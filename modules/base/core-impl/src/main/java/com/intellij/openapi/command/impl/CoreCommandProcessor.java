@@ -38,6 +38,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
@@ -189,7 +190,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
       UIAccess uiAccess = UIAccess.get();
 
       CommandDescriptor descriptor = new CommandDescriptor(command, project, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, document);
-      
+
       myCurrentCommand = descriptor;
 
       fireCommandStarted();
@@ -207,9 +208,10 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   private static void call(UIAccess uiAccess, @RequiredUIAccess Runnable runnable) {
-    if(UIAccess.isUIThread()) {
+    if (UIAccess.isUIThread()) {
       runnable.run();
-    } else {
+    }
+    else {
       uiAccess.giveAndWait(runnable);
     }
   }
@@ -377,6 +379,21 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     finally {
       if (--myUndoTransparentCount == 0) fireUndoTransparentFinished();
     }
+  }
+
+  @Override
+  public void runUndoTransparentAction(@Nonnull Consumer<AsyncResult<Void>> consumer) {
+    if (myUndoTransparentCount++ == 0) fireUndoTransparentStarted();
+
+    AsyncResult<Void> result = new AsyncResult<>();
+
+    consumer.accept(result);
+
+    result.doWhenProcessed(() -> {
+      if (--myUndoTransparentCount == 0) {
+        fireUndoTransparentFinished();
+      }
+    });
   }
 
   @Override

@@ -16,10 +16,9 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.codeInsight.daemon.impl.FileStatusMap;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionId;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,9 +29,10 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -58,7 +58,10 @@ public class RefreshSessionImpl extends RefreshSession {
   private volatile boolean myCancelled;
   private final TransactionId myTransaction;
 
-  RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nullable TransactionId context) {
+  private final Application myApplication;
+
+  RefreshSessionImpl(Application application, boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nullable TransactionId context) {
+    myApplication = application;
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;
@@ -68,15 +71,14 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   private Throwable rememberStartTrace() {
-    if (ApplicationManager.getApplication().isUnitTestMode() &&
-        (myIsAsync || !ApplicationManager.getApplication().isDispatchThread())) {
+    if (myApplication.isUnitTestMode() && (myIsAsync || !myApplication.isDispatchThread())) {
       return new Throwable();
     }
     return null;
   }
 
-  RefreshSessionImpl(@Nonnull List<VFileEvent> events) {
-    this(false, false, null, null);
+  RefreshSessionImpl(@Nonnull Application application, @Nonnull List<VFileEvent> events) {
+    this(application, false, false, null, null);
     myEvents.addAll(events);
   }
 
@@ -131,7 +133,8 @@ public class RefreshSessionImpl extends RefreshSession {
       }
 
       int count = 0;
-      refresh: do {
+      refresh:
+      do {
         if (LOG.isTraceEnabled()) LOG.trace("try=" + count);
 
         for (VirtualFile file : workQueue) {
@@ -172,15 +175,18 @@ public class RefreshSessionImpl extends RefreshSession {
     }
   }
 
+  @RequiredWriteAction
   public void fireEvents() {
-    if (!myHaveEventsToFire || ApplicationManager.getApplication().isDisposed()) {
+    myApplication.assertWriteAccessAllowed();
+
+    if (!myHaveEventsToFire || myApplication.isDisposed()) {
       mySemaphore.up();
       return;
     }
+    if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + myEvents);
 
     try {
-      if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + myEvents);
-      WriteAction.run(this::fireEventsInWriteAction);
+      fireEventsInWriteAction();
     }
     finally {
       mySemaphore.up();

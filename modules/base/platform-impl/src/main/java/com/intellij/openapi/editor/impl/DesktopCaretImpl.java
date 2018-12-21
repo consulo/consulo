@@ -1465,7 +1465,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   }
 
   private void invalidateRangeMarkerVisualPositions(RangeMarker marker) {
-    SoftWrapModelImpl model = myEditor.getSoftWrapModel();
+    DesktopSoftWrapModelImpl model = myEditor.getSoftWrapModel();
     InlayModelImpl inlayModel = myEditor.getInlayModel();
     int startOffset = marker.getStartOffset();
     int endOffset = marker.getEndOffset();

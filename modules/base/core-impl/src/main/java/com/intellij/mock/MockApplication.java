@@ -16,7 +16,10 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationListener;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
@@ -50,11 +53,6 @@ public class MockApplication extends MockComponentManager implements Application
 
   @Override
   public boolean isDispatchThread() {
-    return true;
-  }
-
-  @Override
-  public boolean isWriteThread() {
     return true;
   }
 

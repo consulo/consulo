@@ -76,14 +76,9 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
       @Override
       protected void beforeFileBasedStorageCreate() {
         if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
-          try {
-            VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
-            if (configDir != null) {
-              VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
-            }
-          }
-          finally {
-            myConfigDirectoryRefreshed = true;
+          VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
+          if (configDir != null) {
+            VfsUtil.markDirtyAndRefreshAsync(true, true, configDir).doWhenProcessed(() -> myConfigDirectoryRefreshed = true);
           }
         }
       }

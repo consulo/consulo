@@ -25,6 +25,7 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
@@ -85,27 +86,28 @@ public interface Application extends ComponentManager {
   <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
 
   /**
-   * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
-   * immediately if no read actions are currently running, or blocked until all read actions complete.
+   * Runs the specified write action.
+   * The action is executed immediately if no read actions are currently running, or blocked until all read actions complete.
    *
    * @param action the action to run
    */
-  @RequiredDispatchThread
-  void runWriteAction(@Nonnull Runnable action);
+  default void runWriteAction(@Nonnull Runnable action) {
+    AccessRule.writeAsync(action::run).getResultSync();
+  }
 
   /**
-   * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
+   * Runs the specified computation in a write action.
    * The action is executed immediately if no read actions or write actions are currently running,
    * or blocked until all read actions and write actions complete.
    *
    * @param computation the computation to run
    * @return the result returned by the computation.
    */
-  @RequiredDispatchThread
-  <T> T runWriteAction(@Nonnull Computable<T> computation);
-
+  default <T> T runWriteAction(@Nonnull Computable<T> computation) {
+    return AccessRule.<T>writeAsync(computation::compute).getResultSync();
+  }
   /**
-   * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
+   * Runs the specified computation in a write action.
    * The action is executed immediately if no read actions or write actions are currently running,
    * or blocked until all read actions and write actions complete.
    *
@@ -113,8 +115,9 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @throws E re-frown from ThrowableComputable
    */
-  @RequiredDispatchThread
-  <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
+  default <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+    return AccessRule.<T>writeAsync(computation::compute).getResultSync();
+  }
 
   /**
    * Returns true if there is currently executing write action of the specified class.
@@ -189,9 +192,7 @@ public interface Application extends ComponentManager {
    * @see #assertWriteAccessAllowed()
    * @see #runWriteAction(Runnable)
    */
-  default boolean isWriteAccessAllowed() {
-    return isWriteThread();
-  }
+  boolean isWriteAccessAllowed();
 
   /**
    * Checks if the read access is currently allowed.
@@ -205,18 +206,11 @@ public interface Application extends ComponentManager {
   /**
    * Checks if the current thread is the Swing dispatch thread.
    * <p>
-   * Dispatch thread not always is "write thread". For checking if current thread is "write thread" use {@link #isWriteThread()}
+   * Dispatch thread not always is "write thread". For checking if current thread is "write thread" use {@link #isWriteAccessAllowed()}
    *
    * @return true if the current thread is the Swing dispatch thread, false otherwise.
    */
   boolean isDispatchThread();
-
-  /**
-   * Checks if the current thread is "write thread".
-   *
-   * @return true if the current thread is the "write thread", false otherwise.
-   */
-  boolean isWriteThread();
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the

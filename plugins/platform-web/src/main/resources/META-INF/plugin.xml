@@ -42,7 +42,7 @@
                         serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
-                        serviceImplementation="consulo.vfs.newvfs.NewRefreshQueueImpl"/>
+                        serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"/>
 
     <fileChooseDialogProvider implementation="consulo.web.fileChooser.impl.WebFileChooseDialogProvider" order="last"/>
 

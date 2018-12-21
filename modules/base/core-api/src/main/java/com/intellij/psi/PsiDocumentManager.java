@@ -22,6 +22,8 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -94,7 +96,7 @@ public abstract class PsiDocumentManager {
    * Before a modified document is committed, accessing its PSI may return elements
    * corresponding to original (unmodified) state of the document.
    */
-  @RequiredDispatchThread
+  @RequiredWriteAction
   public abstract void commitAllDocuments();
 
   /**

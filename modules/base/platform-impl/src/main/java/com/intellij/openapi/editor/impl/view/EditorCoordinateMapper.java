@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.FoldingModelImpl;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.DesktopSoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.util.DocumentUtil;
 import javax.annotation.Nonnull;
@@ -216,7 +216,7 @@ class EditorCoordinateMapper {
     offset = DocumentUtil.alignToCodePointBoundary(myDocument, offset);
     int result = EditorUtil.getNotFoldedLineStartOffset(editor, offset);
 
-    SoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
+    DesktopSoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
     List<? extends SoftWrap> softWraps = softWrapModel.getRegisteredSoftWraps();
     int currentOrPrevWrapIndex = softWrapModel.getSoftWrapIndex(offset);
     SoftWrap currentOrPrevWrap;

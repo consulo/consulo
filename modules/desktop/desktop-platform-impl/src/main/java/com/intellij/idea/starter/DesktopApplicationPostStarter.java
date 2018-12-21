@@ -99,31 +99,29 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
     LOG.info("App initialization took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
     PluginManagerCore.dumpPluginClassStatistics();
 
-    app.invokeAndWait(() -> {
+    app.invokeLater(() -> {
       StartupProgress desktopSplash = mySplashRef.get();
       if (desktopSplash != null) {
         desktopSplash.dispose();
         mySplashRef.set(null);  // Allow GC collect the splash window
       }
-    }, ModalityState.NON_MODAL);
 
-    if (newConfigFolder && !ApplicationProperties.isInSandbox()) {
-      FirstStartCustomizeUtil.show(true);
-    }
+      if (newConfigFolder && !ApplicationProperties.isInSandbox()) {
+        FirstStartCustomizeUtil.show(true);
+      }
 
-    boolean willOpenProject = recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects();
+      boolean willOpenProject = recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects();
 
-    AppLifecycleListener lifecyclePublisher = app.getMessageBus().syncPublisher(AppLifecycleListener.TOPIC);
-    lifecyclePublisher.appFrameCreated(args, willOpenProject);
+      AppLifecycleListener lifecyclePublisher = app.getMessageBus().syncPublisher(AppLifecycleListener.TOPIC);
+      lifecyclePublisher.appFrameCreated(args, willOpenProject);
 
-    if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
-      windowManager.showFrame();
-    }
-    else {
-      WelcomeFrame.showNow();
-    }
+      if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
+        windowManager.showFrame();
+      }
+      else {
+        WelcomeFrame.showNow();
+      }
 
-    app.invokeLater(() -> {
       if (!args.isNoRecentProjects()) {
         Project projectFromCommandLine = null;
         if (myApplicationStarter.isPerformProjectLoad()) {

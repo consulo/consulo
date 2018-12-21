@@ -18,10 +18,12 @@ package consulo.application.impl;
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.application.AccessRule;
 import consulo.application.ApplicationWithOwnWriteThread;
 import consulo.ui.UIAccess;
 
@@ -60,24 +62,6 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     return new WriteAccessToken(clazz);
   }
 
-  @RequiredDispatchThread
-  @Override
-  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void runWriteAction(@Nonnull Runnable action) {
-    AccessRule.writeAsync(action::run).getResultSync(-1);
-  }
-
   @Override
   @Nonnull
   public <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable) {
@@ -91,7 +75,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     if (isDispatchThread()) {
       return myWriteActionThread == null; // no reading from EDT during background write action
     }
-    return isWriteThread() || myLock.isReadLockedByThisThread();
+    return isWriteAccessAllowed() || myLock.isReadLockedByThisThread();
   }
 
   @Override
@@ -100,7 +84,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
   }
 
   @Override
-  public boolean isWriteThread() {
+  public boolean isWriteAccessAllowed() {
     return Thread.currentThread() == myWriteThread;
   }
 }

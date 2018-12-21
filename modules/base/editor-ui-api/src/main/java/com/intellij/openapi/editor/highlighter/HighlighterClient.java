@@ -28,4 +28,6 @@ public interface HighlighterClient {
   void repaint(int start, int end);
 
   Document getDocument();
+
+  void invoke(Runnable runnable);
 }

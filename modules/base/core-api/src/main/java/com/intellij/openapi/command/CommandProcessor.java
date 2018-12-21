@@ -27,6 +27,7 @@ import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class CommandProcessor {
@@ -122,6 +123,8 @@ public abstract class CommandProcessor {
   public abstract Project getCurrentCommandProject();
 
   public abstract void runUndoTransparentAction(@Nonnull Runnable action);
+
+  public abstract void runUndoTransparentAction(@Nonnull Consumer<AsyncResult<Void>> consumer);
 
   public abstract boolean isUndoTransparentActionInProgress();
 

@@ -46,4 +46,9 @@ public class LightHighlighterClient implements HighlighterClient {
   public Document getDocument() {
     return myDocument;
   }
+
+  @Override
+  public void invoke(Runnable runnable) {
+    runnable.run();
+  }
 }

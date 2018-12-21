@@ -19,6 +19,7 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
@@ -607,6 +608,25 @@ public class VfsUtil extends VfsUtilCore {
     List<VirtualFile> list = markDirty(recursive, reloadChildren, files);
     if (list.isEmpty()) return;
     LocalFileSystem.getInstance().refreshFiles(list, async, recursive, null);
+  }
+
+  /**
+   * Refreshes the VFS information of the given files from the local file system.
+   * <p>
+   * This refresh is performed without help of the FileWatcher,
+   * which means that all given files will be refreshed even if the FileWatcher didn't report any changes in them.
+   * This method is slower, but more reliable, and should be preferred
+   * when it is essential to make sure all the given VirtualFiles are actually refreshed from disk.
+   *
+   * @see VirtualFile#refresh(boolean, boolean)
+   */
+  @Nonnull
+  public static AsyncResult<Void> markDirtyAndRefreshAsync(boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
+    List<VirtualFile> list = markDirty(recursive, reloadChildren, files);
+    if (list.isEmpty()) return AsyncResult.resolved();
+    AsyncResult<Void> result = new AsyncResult<>();
+    LocalFileSystem.getInstance().refreshFiles(list, true, recursive, result::setDone);
+    return result;
   }
 
   @Nonnull

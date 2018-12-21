@@ -418,7 +418,7 @@ public class EditorPainter implements TextDrawingCallback {
         @Override
         public void paintBeforeLineStart(Graphics2D g, TextAttributes attributes, boolean hasSoftWrap, int columnEnd, float xEnd, int y) {
           if (paintSoftWraps && hasSoftWrap) {
-            SoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
+            DesktopSoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
             int symbolWidth = softWrapModel.getMinDrawingWidthInPixels(SoftWrapDrawingType.AFTER_SOFT_WRAP);
             softWrapModel.doPaint(g, SoftWrapDrawingType.AFTER_SOFT_WRAP, (int)xEnd - symbolWidth, y - myView.getAscent(), myView.getLineHeight());
           }
@@ -456,7 +456,7 @@ public class EditorPainter implements TextDrawingCallback {
         @Override
         public void paintAfterLineEnd(Graphics2D g, Rectangle clip, IterationState iterationState, int columnStart, float x, int y) {
           int offset = iterationState.getEndOffset();
-          SoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
+          DesktopSoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
           if (softWrapModel.getSoftWrap(offset) == null) {
             int logicalLine = myDocument.getLineNumber(offset);
             paintLineExtensions(g, logicalLine, x, y);

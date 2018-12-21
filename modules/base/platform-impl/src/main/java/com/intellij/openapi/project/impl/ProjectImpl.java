@@ -21,7 +21,7 @@ import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
@@ -47,8 +47,8 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.Function;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 import consulo.injecting.InjectingContainerBuilder;
 import org.jetbrains.annotations.NonNls;
 
@@ -257,8 +257,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
+  @RequiredWriteAction
   public void save() {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+    if (((ApplicationEx)Application.get()).isDoNotSave()) {
       // no need to save
       return;
     }
@@ -266,8 +267,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     if (!mySavingInProgress.compareAndSet(false, true)) {
       return;
     }
-
-    HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
 
     try {
       if (!isDefault()) {
@@ -299,7 +298,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void saveAsync() {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+    if (((ApplicationEx)Application.get()).isDoNotSave()) {
       // no need to save
       return;
     }

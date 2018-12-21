@@ -91,16 +91,18 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.TransactionGuardEx;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.migration.AWTComponentProviderUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.ScrollPaneUI;
@@ -126,8 +128,8 @@ import java.lang.reflect.Field;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -135,6 +137,7 @@ import java.util.function.IntFunction;
 
 @Deprecated
 @DeprecationInfo("Desktop only implementation")
+@SuppressWarnings("deprecation")
 public final class DesktopEditorImpl extends UserDataHolderBase implements EditorEx, HighlighterClient, Queryable, Dumpable {
   public static final int TEXT_ALIGNMENT_LEFT = 0;
   public static final int TEXT_ALIGNMENT_RIGHT = 1;
@@ -234,11 +237,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Nonnull
   private final FoldingModelImpl myFoldingModel;
   @Nonnull
-  private final ScrollingModelImpl myScrollingModel;
+  private final DesktopScrollingModelImpl myScrollingModel;
   @Nonnull
   private final DesktopCaretModelImpl myCaretModel;
   @Nonnull
-  private final SoftWrapModelImpl mySoftWrapModel;
+  private final DesktopSoftWrapModelImpl mySoftWrapModel;
   @Nonnull
   private final InlayModelImpl myInlayModel;
 
@@ -367,8 +370,14 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   private boolean myBackgroundImageSet;
 
+  private UIAccess myUIAccess;
+
+  @RequiredUIAccess
   DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project) {
     assertIsDispatchThread();
+
+    myUIAccess = UIAccess.current();
+
     myProject = project;
     myDocument = (DocumentEx)document;
     myScheme = createBoundColorSchemeDelegate(null);
@@ -388,10 +397,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myFoldingModel = new FoldingModelImpl(this);
     myCaretModel = new DesktopCaretModelImpl(this);
     myCaretModel.initCarets();
-    myScrollingModel = new ScrollingModelImpl(this);
+    myScrollingModel = new DesktopScrollingModelImpl(this);
     myInlayModel = new InlayModelImpl(this);
     Disposer.register(myCaretModel, myInlayModel);
-    mySoftWrapModel = new SoftWrapModelImpl(this);
+    mySoftWrapModel = new DesktopSoftWrapModelImpl(this);
 
     myCommandProcessor = CommandProcessor.getInstance();
 
@@ -473,7 +482,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myDocument.addDocumentListener(myFoldingModel, myCaretModel);
     myDocument.addDocumentListener(myCaretModel, myCaretModel);
 
-    myDocument.addDocumentListener(new EditorDocumentAdapter(), myCaretModel);
+    myDocument.addDocumentListener(new EditorDocumentAdapter(myUIAccess), myCaretModel);
     myDocument.addDocumentListener(mySoftWrapModel, myCaretModel);
 
     myFoldingModel.addListener(mySoftWrapModel, myCaretModel);
@@ -610,12 +619,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Nonnull
-  static Color adjustThumbColor(@Nonnull Color base, boolean dark) {
-    return dark ? ColorUtil.withAlpha(ColorUtil.shift(base, 1.35), 0.5) : ColorUtil.withAlpha(ColorUtil.shift(base, 0.68), 0.4);
-  }
-
-  boolean isDarkEnough() {
-    return ColorUtil.isDark(getBackgroundColor());
+  public UIAccess getUIAccess() {
+    return myUIAccess;
   }
 
   private void repaintCaretRegion(CaretEvent e) {
@@ -785,7 +790,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   @Nonnull
-  public SoftWrapModelImpl getSoftWrapModel() {
+  public DesktopSoftWrapModelImpl getSoftWrapModel() {
     return mySoftWrapModel;
   }
 
@@ -1183,9 +1188,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     final Document document = getDocument();
     Disposer.dispose(myHighlighterDisposable);
 
-    document.addDocumentListener(highlighter);
+    document.addDocumentListener(highlighter.getDocumentListener());
     myHighlighter = highlighter;
-    myHighlighterDisposable = () -> document.removeDocumentListener(highlighter);
+    myHighlighterDisposable = () -> document.removeDocumentListener(highlighter.getDocumentListener());
     Disposer.register(myDisposable, myHighlighterDisposable);
     highlighter.setEditor(this);
     highlighter.setText(document.getImmutableCharSequence());
@@ -1619,6 +1624,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Nonnull
   public DocumentEx getDocument() {
     return myDocument;
+  }
+
+  @Override
+  public void invoke(Runnable runnable) {
+    myUIAccess.give(runnable);
   }
 
   @Override
@@ -4346,14 +4356,20 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private class EditorDocumentAdapter implements PrioritizedDocumentListener {
+    private final UIAccess myUiAccess;
+
+    public EditorDocumentAdapter(UIAccess uiAccess) {
+      myUiAccess = uiAccess;
+    }
+
     @Override
     public void beforeDocumentChange(@Nonnull DocumentEvent e) {
-      beforeChangedUpdate();
+      myUiAccess.give(() -> beforeChangedUpdate());
     }
 
     @Override
     public void documentChanged(@Nonnull DocumentEvent e) {
-      changedUpdate(e);
+      myUiAccess.give(() -> changedUpdate(e));
     }
 
     @Override

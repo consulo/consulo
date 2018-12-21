@@ -31,7 +31,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
@@ -56,8 +55,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class UndoManagerImpl implements UndoManager, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.command.impl.UndoManagerImpl");
@@ -84,7 +83,13 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   private int myCommandTimestamp = 1;
 
   private int myCommandLevel;
-  private enum OperationState { NONE, UNDO, REDO }
+
+  private enum OperationState {
+    NONE,
+    UNDO,
+    REDO
+  }
+
   private OperationState myCurrentOperationState = OperationState.NONE;
 
   private DocumentReference myOriginatorReference;
@@ -164,9 +169,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
     Disposer.register(this, new DocumentUndoProvider(myProject));
 
-    myUndoProviders = myProject == null
-                      ? Extensions.getExtensions(UndoProvider.EP_NAME)
-                      : Extensions.getExtensions(UndoProvider.PROJECT_EP_NAME, myProject);
+    myUndoProviders = myProject == null ? UndoProvider.EP_NAME.getExtensions() : UndoProvider.PROJECT_EP_NAME.getExtensions(myProject);
     for (UndoProvider undoProvider : myUndoProviders) {
       if (undoProvider instanceof Disposable) {
         Disposer.register(this, (Disposable)undoProvider);
@@ -283,21 +286,20 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Override
   public void nonundoableActionPerformed(@Nonnull final DocumentReference ref, final boolean isGlobal) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (myProject != null && myProject.isDisposed()) return;
     undoableActionPerformed(new NonUndoableAction(ref, isGlobal));
   }
 
   @Override
   public void undoableActionPerformed(@Nonnull UndoableAction action) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (myProject != null && myProject.isDisposed()) return;
 
     if (myCurrentOperationState != OperationState.NONE) return;
 
     if (myCommandLevel == 0) {
-      LOG.assertTrue(action instanceof NonUndoableAction,
-                     "Undoable actions allowed inside commands only (see com.intellij.openapi.command.CommandProcessor.executeCommand())");
+      LOG.assertTrue(action instanceof NonUndoableAction, "Undoable actions allowed inside commands only (see com.intellij.openapi.command.CommandProcessor.executeCommand())");
       commandStarted(UndoConfirmationPolicy.DEFAULT, false);
       myCurrentMerger.addAction(action);
       commandFinished("", null);
@@ -342,7 +344,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   public void invalidateActionsFor(@Nonnull DocumentReference ref) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     myMerger.invalidateActionsFor(ref);
     if (myCurrentMerger != null) myCurrentMerger.invalidateActionsFor(ref);
     myUndoStacksHolder.invalidateActionsFor(ref);
@@ -351,14 +353,14 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Override
   public void undo(@Nullable FileEditor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     LOG.assertTrue(isUndoAvailable(editor));
     undoOrRedo(editor, true);
   }
 
   @Override
   public void redo(@Nullable FileEditor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     LOG.assertTrue(isRedoAvailable(editor));
     undoOrRedo(editor, false);
   }
@@ -384,8 +386,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     };
 
     String name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
-    CommandProcessor.getInstance()
-            .executeCommand(myProject, executeUndoOrRedoAction, name, null, myMerger.getUndoConfirmationPolicy());
+    CommandProcessor.getInstance().executeCommand(myProject, executeUndoOrRedoAction, name, null, myMerger.getUndoConfirmationPolicy());
     if (exception[0] != null) throw exception[0];
   }
 
@@ -483,15 +484,11 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     String shortActionName = StringUtil.first(desc, 30, true);
 
     if (desc.isEmpty()) {
-      desc = undo
-             ? ActionsBundle.message("action.undo.description.empty")
-             : ActionsBundle.message("action.redo.description.empty");
+      desc = undo ? ActionsBundle.message("action.undo.description.empty") : ActionsBundle.message("action.redo.description.empty");
     }
 
-    return Pair.create((undo ? ActionsBundle.message("action.undo.text", shortActionName)
-                             : ActionsBundle.message("action.redo.text", shortActionName)).trim(),
-                       (undo ? ActionsBundle.message("action.undo.description", desc)
-                             : ActionsBundle.message("action.redo.description", desc)).trim());
+    return Pair.create((undo ? ActionsBundle.message("action.undo.text", shortActionName) : ActionsBundle.message("action.redo.text", shortActionName)).trim(),
+                       (undo ? ActionsBundle.message("action.undo.description", desc) : ActionsBundle.message("action.redo.description", desc)).trim());
   }
 
   @Nullable
