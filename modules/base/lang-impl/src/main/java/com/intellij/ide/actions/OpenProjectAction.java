@@ -31,7 +31,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 
@@ -54,7 +53,7 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     FileChooser.chooseFiles(descriptor, project, userHomeDir, files -> {
       if (files.size() == 1) {
-        Platform.hacky(() -> ProjectUtil.open(files.get(0).getPath(), project, false), () -> ProjectUtil.openAsync(files.get(0).getPath(), project, false, UIAccess.get()));
+        ProjectUtil.openAsync(files.get(0).getPath(), project, false, UIAccess.current());
       }
     });
   }
