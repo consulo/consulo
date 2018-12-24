@@ -192,8 +192,6 @@ public class StartupManagerImpl extends StartupManagerEx {
     dumbService.runWhenSmart(new Runnable() {
       @Override
       public void run() {
-        app.assertIsDispatchThread();
-
         // myDumbAwarePostStartupActivities might be non-empty if new activities were registered during dumb mode
         runActivities(myDumbAwarePostStartupActivities, uiAccess);
 

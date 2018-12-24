@@ -28,6 +28,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,15 +76,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
   protected void fireModulesAdded() {
     Runnable runnableWithProgress = () -> {
       for (final Module module : myModuleModel.getModules()) {
-        final Application app = ApplicationManager.getApplication();
-        final Runnable swingRunnable = () -> fireModuleAddedInWriteAction(module);
-        if (app.isDispatchThread() || app.isHeadlessEnvironment()) {
-          swingRunnable.run();
-        }
-        else {
-          ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
-          app.invokeAndWait(swingRunnable, pi.getModalityState());
-        }
+        AccessRule.writeAsync(() -> fireModuleAddedInWriteAction(module)).getResultSync();
       }
     };
 

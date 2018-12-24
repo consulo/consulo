@@ -57,6 +57,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.AccessRule;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
@@ -129,7 +130,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     else {
       if (!isHeadless()) {
         owner = JOptionPane.getRootFrame();
-      } else {
+      }
+      else {
         owner = null;
       }
     }
@@ -189,8 +191,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     });
   }
 
-  public DialogWrapperPeerImpl(@Nonnull final DialogWrapper wrapper, final Window owner, final boolean canBeParent,
-                               final DialogWrapper.IdeModalityType ideModalityType ) {
+  public DialogWrapperPeerImpl(@Nonnull final DialogWrapper wrapper, final Window owner, final boolean canBeParent, final DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
@@ -208,7 +209,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
   }
 
-  /** @see DialogWrapper#DialogWrapper(boolean, boolean)
+  /**
+   * @see DialogWrapper#DialogWrapper(boolean, boolean)
    */
   @Deprecated
   public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
@@ -421,7 +423,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
     if (myTypeAheadCallback != null) {
       IdeFocusManager.getInstance(myProject).typeAheadUntil(myTypeAheadCallback);
-    }                         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
+    }
+    LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
     final ActionCallback result = new ActionCallback();
 
     final AnCancelAction anCancelAction = new AnCancelAction();
@@ -434,19 +437,19 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       myWindowManager.doNotSuggestAsParent(myDialog.getWindow());
     }
 
-    final CommandProcessorEx commandProcessor =
-            ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+    final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
     final boolean appStarted = commandProcessor != null;
 
-    boolean changeModalityState = appStarted && myDialog.isModal()
-                                  && !isProgressDialog(); // ProgressWindow starts a modality state itself
+    boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog(); // ProgressWindow starts a modality state itself
     Project project = myProject;
 
     if (changeModalityState) {
-      commandProcessor.enterModal();
+      AccessRule.writeAsync(commandProcessor::enterModal).getResultSync();
+
       if (ModalityPerProjectEAPDescriptor.is()) {
         LaterInvocator.enterModal(project, myDialog.getWindow());
-      } else {
+      }
+      else {
         LaterInvocator.enterModal(myDialog);
       }
     }
@@ -460,10 +463,12 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
     finally {
       if (changeModalityState) {
-        commandProcessor.leaveModal();
+        AccessRule.writeAsync(() -> commandProcessor.leaveModal()).getResultSync();
+
         if (ModalityPerProjectEAPDescriptor.is()) {
           LaterInvocator.leaveModal(project, myDialog.getWindow());
-        } else {
+        }
+        else {
           LaterInvocator.leaveModal(myDialog);
         }
       }
@@ -549,12 +554,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     private final ActionCallback myTypeAheadDone;
     private final ActionCallback myTypeAheadCallback;
 
-    public MyDialog(Window owner,
-                    DialogWrapper dialogWrapper,
-                    Project project,
-                    @Nonnull ActionCallback focused,
-                    @Nonnull ActionCallback typeAheadDone,
-                    ActionCallback typeAheadCallback) {
+    public MyDialog(Window owner, DialogWrapper dialogWrapper, Project project, @Nonnull ActionCallback focused, @Nonnull ActionCallback typeAheadDone, ActionCallback typeAheadCallback) {
       super(owner);
       myDialogWrapper = new WeakReference<>(dialogWrapper);
       myProject = project != null ? new WeakReference<>(project) : null;
@@ -780,7 +780,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myFocusTrackback.setWillBeScheduledForRestore();
         IdeFocusManager mgr = getFocusManager();
         Runnable r = () -> {
-          if (myFocusTrackback != null)  myFocusTrackback.restoreFocus();
+          if (myFocusTrackback != null) myFocusTrackback.restoreFocus();
           myFocusTrackback = null;
         };
         mgr.doWhenFocusSettlesDown(r);
@@ -869,9 +869,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       }
 
       public void saveSize() {
-        if (myDimensionServiceKey != null &&
-            myInitialSize != null &&
-            myOpened) { // myInitialSize can be null only if dialog is disposed before first showing
+        if (myDimensionServiceKey != null && myInitialSize != null && myOpened) { // myInitialSize can be null only if dialog is disposed before first showing
           final Project projectGuess = DataManager.getInstance().getDataContext(MyDialog.this).getData(CommonDataKeys.PROJECT);
 
           // Save location
@@ -953,7 +951,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
               getFocusManager().requestFocus(toFocus, true);
               notifyFocused(wrapper);
             }
-          } else {
+          }
+          else {
             if (isShowing()) {
               notifyFocused(wrapper);
             }
@@ -1018,7 +1017,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       @Override
       protected JLayeredPane createLayeredPane() {
         JLayeredPane p = new JBLayeredPane();
-        p.setName(this.getName()+".layeredPane");
+        p.setName(this.getName() + ".layeredPane");
         return p;
       }
 
@@ -1059,7 +1058,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       public void setContentPane(Container contentPane) {
         super.setContentPane(contentPane);
         if (contentPane != null) {
-          contentPane.addMouseMotionListener(new MouseMotionAdapter() {}); // listen to mouse motino events for a11y
+          contentPane.addMouseMotionListener(new MouseMotionAdapter() {
+          }); // listen to mouse motino events for a11y
         }
       }
 

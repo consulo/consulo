@@ -127,12 +127,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     final ProjectManagerListener busPublisher = messageBus.syncPublisher(TOPIC);
     addProjectManagerListener(new ProjectManagerListener() {
       @Override
-      public void projectOpened(final Project project) {
+      public void projectOpened(final Project project, UIAccess uiAccess) {
         project.getMessageBus().connect(project).subscribe(StateStorage.PROJECT_STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, project));
 
-        busPublisher.projectOpened(project);
+        busPublisher.projectOpened(project, uiAccess);
         for (ProjectManagerListener listener : getListeners(project)) {
-          listener.projectOpened(project);
+          listener.projectOpened(project, uiAccess);
         }
       }
 
@@ -367,153 +367,87 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   @Override
   public boolean openProject(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-    if (isLight(project)) {
-      ((ProjectImpl)project).setTemporarilyDisposed(false);
-      boolean isInitialized = StartupManagerEx.getInstanceEx(project).startupActivityPassed();
-      if (isInitialized) {
-        addToOpened(project);
-        // events already fired
-        return true;
-      }
-    }
-
-    for (Project p : getOpenProjects()) {
-      if (ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
-        GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), ModalityState.NON_MODAL);
-        return false;
-      }
-    }
-
-    if (!addToOpened(project)) {
-      return false;
-    }
-
-    Runnable process = () -> {
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> fireProjectOpened(project));
-
-      final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-      startupManager.runStartupActivities(uiAccess);
-
-      // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
-      // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
-      // Post-startup activities should not ever see unindexed and at the same time non-dumb state
-      TransactionGuard.getInstance().submitTransactionAndWait(startupManager::startCacheUpdate);
-
-      startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
-
-      GuiUtils.invokeLaterIfNeeded(() -> {
-        if (!project.isDisposed()) {
-          startupManager.runPostStartupActivities(uiAccess);
-
-
-          Application application = ApplicationManager.getApplication();
-          if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
-            final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
-            if (macroSubstitutor != null) {
-              StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
-            }
-          }
-
-          if (ApplicationManager.getApplication().isActive()) {
-            JFrame projectFrame = WindowManager.getInstance().getFrame(project);
-            if (projectFrame != null) {
-              IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
-            }
-          }
-        }
-      }, ModalityState.NON_MODAL);
-    };
-
-    ProgressIndicator indicator = myProgressManager.getProgressIndicator();
-    if (indicator != null) {
-      indicator.setText("Preparing workspace...");
-      process.run();
-      return true;
-    }
-
-    boolean ok = myProgressManager.runProcessWithProgressSynchronously(process, "Preparing workspace...", canCancelProjectLoading(), project);
-    if (!ok) {
-      closeProject(project, false, false, true);
-      notifyProjectOpenFailed();
-      return false;
-    }
-
-    return true;
+    return openProjectAsync(project, uiAccess).getResultSync();
   }
 
+  @Nonnull
   @Override
-  public boolean openProjectAsync(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+  public AsyncResult<Boolean> openProjectAsync(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
     if (isLight(project)) {
       ((ProjectImpl)project).setTemporarilyDisposed(false);
       boolean isInitialized = StartupManagerEx.getInstanceEx(project).startupActivityPassed();
       if (isInitialized) {
         addToOpened(project);
         // events already fired
-        return true;
+        return AsyncResult.resolved(Boolean.TRUE);
       }
     }
 
     for (Project p : getOpenProjects()) {
       if (ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
         GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), ModalityState.NON_MODAL);
-        return false;
+        return AsyncResult.resolved(Boolean.FALSE);
       }
     }
 
     if (!addToOpened(project)) {
-      return false;
+      return AsyncResult.resolved(Boolean.FALSE);
     }
 
-    Runnable process = () -> {
-      uiAccess.giveAndWait(() -> fireProjectOpened(project));
+    AsyncResult<Boolean> result = new AsyncResult<>();
 
-      final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-      startupManager.runStartupActivities(uiAccess);
+    Task.Backgroundable task = new Task.Backgroundable(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading()) {
+      @Override
+      public void run(@Nonnull ProgressIndicator indicator) {
+        try {
+          fireProjectOpened(project, uiAccess);
 
-      // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
-      // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
-      // Post-startup activities should not ever see unindexed and at the same time non-dumb state
-      uiAccess.giveAndWait(startupManager::startCacheUpdate);
+          final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
+          startupManager.runStartupActivities(uiAccess);
 
-      startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
+          // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
+          // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
+          // Post-startup activities should not ever see unindexed and at the same time non-dumb state
+          startupManager.startCacheUpdate();
 
-      uiAccess.giveAndWaitIfNeed(() -> {
-        if (!project.isDisposed()) {
-          startupManager.runPostStartupActivities(uiAccess);
+          startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
 
-          Application application = ApplicationManager.getApplication();
-          if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
-            final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
-            if (macroSubstitutor != null) {
-              StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
+          if (!project.isDisposed()) {
+            startupManager.runPostStartupActivities(uiAccess);
+
+            Application application = ApplicationManager.getApplication();
+            if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+              final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+              if (macroSubstitutor != null) {
+                StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
+              }
             }
-          }
 
-          if (ApplicationManager.getApplication().isActive()) {
-            JFrame projectFrame = WindowManager.getInstance().getFrame(project);
-            if (projectFrame != null) {
-              IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
+            if (ApplicationManager.getApplication().isActive()) {
+              JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+              if (projectFrame != null) {
+                uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true)nt);
+              }
             }
           }
         }
-      }/*, ModalityState.NON_MODAL*/);
+        finally {
+          result.setDone(Boolean.TRUE);
+        }
+      }
+
+      @RequiredDispatchThread
+      @Override
+      public void onCancel() {
+        closeProject(project, false, false, true, uiAccess);
+        notifyProjectOpenFailed();
+        result.setRejected(Boolean.FALSE);
+      }
     };
 
-    ProgressIndicator indicator = myProgressManager.getProgressIndicator();
-    if (indicator != null) {
-      indicator.setText("Preparing workspace...");
-      process.run();
-      return true;
-    }
+    task.queue();
 
-    boolean ok = myProgressManager.runProcessWithProgressSynchronously(process, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
-    if (!ok) {
-      closeProject(project, false, false, true);
-      notifyProjectOpenFailed();
-      return false;
-    }
-
-    return true;
+    return result;
   }
 
   private boolean addToOpened(@Nonnull Project project) {
@@ -895,14 +829,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     LOG.assertTrue(removed);
   }
 
-  public void fireProjectOpened(Project project) {
+  public void fireProjectOpened(Project project, UIAccess uiAccess) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("projectOpened");
     }
 
     for (ProjectManagerListener listener : myListeners) {
       try {
-        listener.projectOpened(project);
+        listener.projectOpened(project, uiAccess);
       }
       catch (Exception e) {
         LOG.error(e);

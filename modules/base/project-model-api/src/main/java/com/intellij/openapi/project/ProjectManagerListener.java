@@ -31,6 +31,12 @@ public interface ProjectManagerListener extends EventListener {
    *
    * @param project opening project
    */
+  default void projectOpened(Project project, UIAccess uiAccess) {
+    projectOpened(project);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use overload method with UIAccess parameter")
   default void projectOpened(Project project) {
   }
 

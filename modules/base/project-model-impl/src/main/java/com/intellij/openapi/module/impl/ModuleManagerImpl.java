@@ -26,8 +26,8 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.*;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.*;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -51,7 +51,6 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.StringInterner;
 import com.intellij.util.graph.*;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -514,7 +513,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   protected void fireModuleAddedInWriteAction(final Module module) {
     ApplicationManager.getApplication().runWriteAction(() -> {
       ((ModuleEx)module).moduleAdded();

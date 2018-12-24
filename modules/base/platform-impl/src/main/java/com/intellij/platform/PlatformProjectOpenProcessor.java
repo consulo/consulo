@@ -171,15 +171,18 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     Consumer<Project> afterProjectAction = project -> {
       openProjectToolWindow(project, uiAccess);
       openFileFromCommandLineAsync(project, virtualFile, line, uiAccess);
-      if (!projectManager.openProjectAsync(project, uiAccess)) {
-        WelcomeFrame.showIfNoProjectOpened();
-        final Project finalProject = project;
-        ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));
-      }
 
-      if (callback != null && runConfigurators.get()) {
-        callback.consume(project);
-      }
+      projectManager.openProjectAsync(project, uiAccess).doWhenProcessed((value) -> {
+         if(value == Boolean.FALSE) {
+           WelcomeFrame.showIfNoProjectOpened();
+
+           ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(project));
+         }
+
+        if (callback != null && runConfigurators.get()) {
+          callback.consume(project);
+        }
+      });
     };
 
     result.doWhenDone(afterProjectAction);

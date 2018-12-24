@@ -184,9 +184,14 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
       final boolean[] canClose = {true};
       for (final Project project : manager.getOpenProjects()) {
         try {
-          CommandProcessor.getInstance().executeCommandAsync(project, (r, ui) -> {
-            if (!manager.closeProject(project, true, true, checkCanCloseProject, uiAccess)) {
-              canClose[0] = false;
+          CommandProcessor.getInstance().executeCommandAsync(project, (result, ui) -> {
+            try {
+              if (!manager.closeProject(project, true, true, checkCanCloseProject, uiAccess)) {
+                canClose[0] = false;
+              }
+            }
+            finally {
+              result.setDone();
             }
           }, ApplicationBundle.message("command.exit"), null, uiAccess);
         }

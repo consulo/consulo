@@ -84,6 +84,7 @@ import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.platform.Platform;
+import consulo.startup.DumbAwareStartupAction;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
@@ -1383,25 +1384,23 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      */
     connection.subscribe(UISettingsListener.TOPIC, new MyUISettingsListener());
 
-    StartupManager.getInstance(myProject).registerPostStartupActivity((DumbAwareRunnable)() -> {
+    //noinspection RedundantCast
+    StartupManager.getInstance(myProject).registerPostStartupActivity((DumbAwareStartupAction)(ui) -> {
       if (myProject.isDisposed()) return;
       setTabsMode(UISettings.getInstance().getEditorTabPlacement() != UISettings.TABS_NONE);
 
-      ToolWindowManager.getInstance(myProject).invokeLater(() -> {
-        if (!myProject.isDisposed()) {
-          CommandProcessor.getInstance().executeCommand(myProject, () -> {
-            ApplicationManager.getApplication().invokeLater(() -> {
-              long currentTime = System.nanoTime();
-              Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
-              if (startTime != null) {
-                LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
-                PluginManagerCore.dumpPluginClassStatistics();
-              }
-            }, myProject.getDisposed());
-            // group 1
-          }, "", null);
+      AccessRule.writeAsync(() -> CommandProcessor.getInstance().executeCommandAsync(myProject, (result, uiAccess) -> uiAccess.give(() -> {
+        if (myProject.isDisposed()) {
+          return;
         }
-      });
+
+        long currentTime = System.nanoTime();
+        Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
+        if (startTime != null) {
+          LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
+          PluginManagerCore.dumpPluginClassStatistics();
+        }
+      }), "", null, ui));
     });
   }
 

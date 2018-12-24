@@ -213,9 +213,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     MessageBusConnection busConnection = project.getMessageBus().connect();
     busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project) {
+      public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          DesktopToolWindowManagerImpl.this.projectOpened();
+          uiAccess.giveAndWait(DesktopToolWindowManagerImpl.this::projectOpened);
         }
       }
 

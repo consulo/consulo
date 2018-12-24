@@ -52,7 +52,8 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   public abstract boolean openProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
-  public abstract boolean openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+  @Nonnull
+  public abstract AsyncResult<Boolean> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   public abstract boolean isProjectOpened(Project project);
 
