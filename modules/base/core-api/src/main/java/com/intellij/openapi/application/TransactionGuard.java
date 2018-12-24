@@ -95,6 +95,7 @@ import javax.annotation.Nullable;
  * @since 2016.2
  * @author peter
  */
+@Deprecated
 public abstract class TransactionGuard {
   private static volatile TransactionGuard ourInstance;
 

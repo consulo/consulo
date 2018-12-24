@@ -51,6 +51,7 @@ import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationProperties;
 import consulo.application.DummyTransactionGuard;
@@ -163,7 +164,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
   }
 
   private TransactionGuardEx transactionGuard() {
-    if(myTransactionGuardImpl == null) {
+    if (myTransactionGuardImpl == null) {
       myTransactionGuardImpl = new DummyTransactionGuard();
     }
     return myTransactionGuardImpl;
@@ -176,18 +177,18 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     builder.bind(TransactionGuard.class).to(transactionGuard());
   }
 
-  @RequiredDispatchThread
-  private boolean disposeSelf(final boolean checkCanCloseProject) {
+  @RequiredWriteAction
+  private boolean disposeSelf(final boolean checkCanCloseProject, UIAccess uiAccess) {
     final ProjectManagerImpl manager = (ProjectManagerImpl)ProjectManagerEx.getInstanceEx();
     if (manager != null) {
       final boolean[] canClose = {true};
       for (final Project project : manager.getOpenProjects()) {
         try {
-          CommandProcessor.getInstance().executeCommand(project, () -> {
-            if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
+          CommandProcessor.getInstance().executeCommandAsync(project, (r, ui) -> {
+            if (!manager.closeProject(project, true, true, checkCanCloseProject, uiAccess)) {
               canClose[0] = false;
             }
-          }, ApplicationBundle.message("command.exit"), null);
+          }, ApplicationBundle.message("command.exit"), null, uiAccess);
         }
         catch (Throwable e) {
           LOG.error(e);
@@ -197,7 +198,8 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
         }
       }
     }
-    runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));
+
+    Disposer.dispose(this);
 
     Disposer.assertIsEmpty();
     return true;
@@ -379,7 +381,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
 
   @Override
   public void exit(boolean force, final boolean exitConfirmed) {
-    exit(false, exitConfirmed, true, false);
+    exit(false, exitConfirmed, true, false, UIAccess.current());
   }
 
   @Override
@@ -389,7 +391,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
 
   @Override
   public void restart(final boolean exitConfirmed) {
-    exit(false, exitConfirmed, true, true);
+    exit(false, exitConfirmed, true, true, UIAccess.current());
   }
 
   /*
@@ -401,61 +403,45 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
    *  Note: there are possible scenarios when we get a quit notification at a moment when another
    *  quit message is shown. In that case, showing multiple messages sounds contra-intuitive as well
    */
-  private static volatile boolean exiting = false;
+  private volatile boolean exiting = false;
 
-  public void exit(final boolean force, final boolean exitConfirmed, final boolean allowListenersToCancel, final boolean restart) {
+  public void exit(final boolean force, final boolean exitConfirmed, final boolean allowListenersToCancel, final boolean restart, UIAccess uiAccess) {
     if (!force && exiting) {
       return;
     }
 
     exiting = true;
-    try {
-      if (!force && !exitConfirmed && getDefaultModalityState() != ModalityState.NON_MODAL) {
+    if (!force && !exitConfirmed && getDefaultModalityState() != ModalityState.NON_MODAL) {
+      return;
+    }
+
+    AccessRule.writeAsync(() -> {
+      if (!force && !confirmExitIfNeeded(exitConfirmed)) {
+        saveAll();
         return;
       }
 
-      Runnable runnable = new Runnable() {
-        @Override
-        @RequiredDispatchThread
-        public void run() {
-          if (!force && !confirmExitIfNeeded(exitConfirmed)) {
-            AccessRule.writeAsync(() -> saveAll());
-            return;
-          }
+      getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).appClosing();
+      myDisposeInProgress = true;
 
-          getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).appClosing();
-          myDisposeInProgress = true;
-
-          try {
-            doExit(allowListenersToCancel, restart);
-          }
-          finally {
-            myDisposeInProgress = false;
-          }
-        }
-      };
-
-      if (isDispatchThread()) {
-        runnable.run();
+      try {
+        doExit(allowListenersToCancel, restart, uiAccess);
       }
-      else {
-        invokeLater(runnable, ModalityState.NON_MODAL);
+      finally {
+        myDisposeInProgress = false;
       }
-    }
-    finally {
-      exiting = false;
-    }
+    }).doWhenProcessed(() -> exiting = false);
   }
 
-  @RequiredDispatchThread
-  private boolean doExit(boolean allowListenersToCancel, boolean restart) {
+  @RequiredWriteAction
+  private boolean doExit(boolean allowListenersToCancel, boolean restart, UIAccess uiAccess) {
     saveSettings();
 
     if (allowListenersToCancel && !canExit()) {
       return false;
     }
 
-    final boolean success = disposeSelf(allowListenersToCancel);
+    final boolean success = disposeSelf(allowListenersToCancel, uiAccess);
     if (!success || isUnitTestMode()) {
       return false;
     }

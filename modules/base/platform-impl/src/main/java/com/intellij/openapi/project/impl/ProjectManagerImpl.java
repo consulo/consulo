@@ -64,7 +64,6 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.ex.ApplicationEx2;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
@@ -138,10 +137,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
 
       @Override
-      public void projectClosed(Project project) {
-        busPublisher.projectClosed(project);
+      public void projectClosed(Project project, UIAccess uiAccess) {
+        busPublisher.projectClosed(project, uiAccess);
         for (ProjectManagerListener listener : getListeners(project)) {
-          listener.projectClosed(project);
+          listener.projectClosed(project, uiAccess);
         }
 
         ZipHandler.clearFileAccessorCache();
@@ -788,11 +787,17 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   @RequiredDispatchThread
   public boolean closeProject(@Nonnull final Project project) {
-    return closeProject(project, true, false, true);
+    return closeProject(project, true, false, true, UIAccess.current());
   }
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
+  @Deprecated
   public boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
+    return closeProject(project, save, dispose, checkCanClose, UIAccess.current());
+  }
+
+  @RequiredWriteAction
+  public boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose, @Nonnull UIAccess uiAccess) {
     if (isLight(project)) {
       removeFromOpened(project);
       return true;
@@ -816,73 +821,16 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
       fireProjectClosing(project); // somebody can start progress here, do not wrap in write action
 
-      ApplicationManager.getApplication().runWriteAction(() -> {
-        removeFromOpened(project);
+      removeFromOpened(project);
 
-        fireProjectClosed(project);
+      fireProjectClosed(project, uiAccess);
 
-        if (dispose) {
-          Disposer.dispose(project);
-        }
-      });
+      if (dispose) {
+        Disposer.dispose(project);
+      }
     }
     finally {
       shutDownTracker.unregisterStopperThread(Thread.currentThread());
-    }
-
-    return true;
-  }
-
-  @Override
-  @RequiredDispatchThread
-  public boolean closeProjectAsync(@Nonnull final Project project) {
-    return closeProjectAsync(project, true, false, true);
-  }
-
-  @RequiredDispatchThread
-  public boolean closeProjectAsync(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
-    if (isLight(project)) {
-      removeFromOpened(project);
-      return true;
-    }
-    else {
-      if (!isProjectOpened(project)) return true;
-    }
-
-    if (checkCanClose && !canClose(project)) return false;
-    final ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
-    shutDownTracker.registerStopperThread(Thread.currentThread());
-
-    Ref<Boolean> beforeWrite = Ref.create(Boolean.TRUE);
-    try {
-      if (save) {
-        FileDocumentManager.getInstance().saveAllDocuments();
-        project.saveAsync();
-      }
-
-      if (checkCanClose && !ensureCouldCloseIfUnableToSave(project)) {
-        return false;
-      }
-
-      fireProjectClosing(project); // somebody can start progress here, do not wrap in write action
-
-      beforeWrite.set(Boolean.FALSE);
-
-      AccessRule.writeAsync(() -> {
-        removeFromOpened(project);
-
-        fireProjectClosed(project);
-
-        if (dispose) {
-          Disposer.dispose(project);
-        }
-      }).doWhenProcessed(() -> shutDownTracker.unregisterStopperThread(Thread.currentThread()));
-    }
-    finally {
-      // if exception throw before puting inside write thread
-      if (beforeWrite.get()) {
-        shutDownTracker.unregisterStopperThread(Thread.currentThread());
-      }
     }
 
     return true;
@@ -895,7 +843,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @RequiredDispatchThread
   @Override
   public boolean closeAndDispose(@Nonnull final Project project) {
-    return closeProject(project, true, true, true);
+    return closeProject(project, true, true, true, UIAccess.current());
   }
 
   private void fireProjectClosing(Project project) {
@@ -962,14 +910,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
   }
 
-  private void fireProjectClosed(Project project) {
+  private void fireProjectClosed(Project project, UIAccess uiAccess) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("projectClosed");
     }
 
     for (ProjectManagerListener listener : myListeners) {
       try {
-        listener.projectClosed(project);
+        listener.projectClosed(project, uiAccess);
       }
       catch (Exception e) {
         LOG.error(e);

@@ -314,7 +314,7 @@ public class StartupManagerImpl extends StartupManagerEx {
     if (myProject.isDisposed()) return;
 
     try {
-      DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
+      DumbService dumbService = DumbService.getInstance(myProject);
 
       // pre-startup activities have registered dumb tasks that load VFS (scanning files to index)
       // only after these tasks pass does VFS refresh make sense

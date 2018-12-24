@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.command.AbnormalCommandTerminationException;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.Document;
@@ -23,22 +23,29 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class CommandProcessorImpl extends CoreCommandProcessor {
-  @RequiredDispatchThread
+  @Inject
+  public CommandProcessorImpl(Application application) {
+    super(application);
+  }
+
+  @RequiredWriteAction
   @Override
-  public void finishCommand(final Project project, final Object command, final Throwable throwable) {
+  protected void finishCommand(Project project, CoreCommandProcessor.CommandDescriptor command, UIAccess uiAccess, Throwable throwable) {
     if (myCurrentCommand != command) return;
     final boolean failed;
     try {
       if (throwable instanceof AbnormalCommandTerminationException) {
         final AbnormalCommandTerminationException rollback = (AbnormalCommandTerminationException)throwable;
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (myApplication.isUnitTestMode()) {
           throw new RuntimeException(rollback);
         }
         failed = true;
@@ -56,7 +63,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
       }
     }
     finally {
-      super.finishCommand(project, command, throwable);
+      super.finishCommand(project, command, uiAccess, throwable);
     }
     if (failed) {
       if (project != null) {

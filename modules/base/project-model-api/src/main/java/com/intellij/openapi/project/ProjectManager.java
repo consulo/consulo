@@ -116,8 +116,6 @@ public abstract class ProjectManager {
   @RequiredDispatchThread
   public abstract boolean closeProject(@Nonnull Project project);
 
-  @RequiredUIAccess
-  public abstract boolean closeProjectAsync(@Nonnull Project project);
 
   /**
    * Asynchronously reloads the specified project.

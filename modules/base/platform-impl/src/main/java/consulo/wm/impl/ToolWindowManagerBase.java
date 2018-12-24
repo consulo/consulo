@@ -18,7 +18,7 @@ package consulo.wm.impl;
 import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
@@ -187,7 +187,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     @Override
     @Nullable
     public Condition getExpireCondition() {
-      return ApplicationManager.getApplication().getDisposed();
+      return myApplication.getDisposed();
     }
   }
 
@@ -221,6 +221,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected final ToolWindowSideStack mySideStack = new ToolWindowSideStack();
   protected final ToolWindowActiveStack myActiveStack = new ToolWindowActiveStack();
 
+  protected final Application myApplication;
   protected final Project myProject;
   protected final WindowManagerEx myWindowManager;
   protected final EventDispatcher<ToolWindowManagerListener> myDispatcher = EventDispatcher.create(ToolWindowManagerListener.class);
@@ -234,7 +235,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected final InternalDecoratorListener myInternalDecoratorListener;
   protected final CommandProcessorBase myCommandProcessor;
 
-  protected ToolWindowManagerBase(Project project, WindowManager windowManager) {
+  protected ToolWindowManagerBase(Application application, Project project, WindowManager windowManager) {
+    myApplication = application;
     myProject = project;
     myWindowManager = (WindowManagerEx)windowManager;
 
@@ -380,7 +382,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @Nonnull
   protected ToolWindow registerDisposable(@Nonnull final String id, @Nonnull final Disposable parentDisposable, @Nonnull ToolWindow window) {
-    Disposer.register(parentDisposable, () -> unregisterToolWindow(id));
+    Disposer.register(parentDisposable, () -> {
+      UIAccess lastUIAccess = myApplication.getLastUIAccess();
+
+      lastUIAccess.giveAndWait(() -> unregisterToolWindow(id));
+    });
     return window;
   }
 
@@ -596,7 +602,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       myActiveStack.push(id);
     }
 
-    if (autoFocusContents && ApplicationManager.getApplication().isActive()) {
+    if (autoFocusContents && myApplication.isActive()) {
       appendRequestFocusInToolWindowCmd(id, commandsList, forcedFocusRequest);
     }
   }

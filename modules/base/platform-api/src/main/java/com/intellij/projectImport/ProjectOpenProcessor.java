@@ -22,8 +22,6 @@ package com.intellij.projectImport;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.Language;
@@ -49,24 +47,12 @@ public abstract class ProjectOpenProcessor {
 
   public abstract boolean canOpenProject(@Nonnull File file);
 
-  @Nullable
-  @RequiredDispatchThread
-  @Deprecated
-  @DeprecationInfo("Use #doOpenProjectAsync()")
-  public abstract Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
-
   public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
                                  @Nonnull VirtualFile virtualFile,
                                  @Nullable Project projectToClose,
                                  boolean forceOpenInNewFrame,
                                  @Nonnull UIAccess uiAccess) {
-    Project project = doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
-    if (project != null) {
-      asyncResult.setDone(project);
-    }
-    else {
-      asyncResult.reject("project not loaded");
-    }
+    throw new AbstractMethodError();
   }
 
   public void refreshProjectFiles(File basedir) {

@@ -15,23 +15,15 @@
  */
 package com.intellij.openapi.command;
 
-import com.intellij.openapi.project.Project;
-import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.annotations.RequiredWriteAction;
 
 /**
  * @author max
  */
 public abstract class CommandProcessorEx extends CommandProcessor {
+  @RequiredWriteAction
   public abstract void enterModal();
+
+  @RequiredWriteAction
   public abstract void leaveModal();
-
-  @Nullable
-  public abstract Object startCommand(@Nonnull Project project, @Nls String name, Object groupId, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy);
-
-  @RequiredUIAccess
-  public abstract void finishCommand(Project project, final Object command, Throwable throwable);
 }

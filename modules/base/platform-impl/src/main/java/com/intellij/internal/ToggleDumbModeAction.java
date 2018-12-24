@@ -20,11 +20,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbModeTask;
-import com.intellij.openapi.project.DumbServiceImpl;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.*;
 import com.intellij.util.TimeoutUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -43,7 +41,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
       final Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
 
-      DumbServiceImpl.getInstance(project).queueTask(new DumbModeTask() {
+      DumbService.getInstance(project).queueTask(new DumbModeTask() {
         @Override
         public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
           while (myDumb) {
@@ -59,7 +57,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    presentation.setEnabled(project != null && myDumb == DumbServiceImpl.getInstance(project).isDumb());
+    presentation.setEnabled(project != null && myDumb == DumbService.getInstance(project).isDumb());
     if (myDumb) {
       presentation.setText("Exit Dumb Mode");
     }

@@ -52,6 +52,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.UIAccess;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.status.ModuleLayerWidget;
 
@@ -429,15 +430,19 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     statusBar.addWidget(moduleLayerWidget, "after " + insertOverwritePanel.ID());
 
     Disposer.register(project, () -> {
-      statusBar.removeWidget(encodingPanel.ID());
-      statusBar.removeWidget(moduleLayerWidget.ID());
-      statusBar.removeWidget(lineSeparatorPanel.ID());
-      statusBar.removeWidget(positionPanel.ID());
-      statusBar.removeWidget(notificationArea.ID());
-      statusBar.removeWidget(readOnlyAttributePanel.ID());
-      statusBar.removeWidget(insertOverwritePanel.ID());
+      UIAccess uiAccess = Application.get().getLastUIAccess();
 
-      ((StatusBarEx)statusBar).removeCustomIndicationComponents();
+      uiAccess.giveAndWait(() -> {
+        statusBar.removeWidget(encodingPanel.ID());
+        statusBar.removeWidget(moduleLayerWidget.ID());
+        statusBar.removeWidget(lineSeparatorPanel.ID());
+        statusBar.removeWidget(positionPanel.ID());
+        statusBar.removeWidget(notificationArea.ID());
+        statusBar.removeWidget(readOnlyAttributePanel.ID());
+        statusBar.removeWidget(insertOverwritePanel.ID());
+
+        ((StatusBarEx)statusBar).removeCustomIndicationComponents();
+      });
     });
   }
 

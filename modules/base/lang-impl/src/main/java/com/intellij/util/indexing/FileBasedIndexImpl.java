@@ -714,7 +714,7 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
       }
     }
 
-    throw new IndexNotReadyException(project == null ? null : DumbServiceImpl.getInstance(project).getDumbModeStartTrace());
+    throw new IndexNotReadyException(project == null ? null : ((DumbServiceImpl)DumbService.getInstance(project)).getDumbModeStartTrace());
   }
 
   @Override

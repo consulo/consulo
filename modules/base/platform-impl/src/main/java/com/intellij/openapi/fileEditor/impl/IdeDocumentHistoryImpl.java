@@ -17,7 +17,6 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.command.CommandAdapter;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
@@ -37,11 +36,11 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.lang.ref.WeakReference;
 import java.util.*;
 
@@ -83,15 +82,15 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   private final Set<VirtualFile> myChangedFilesInCurrentCommand = new THashSet<VirtualFile>();
   private boolean myCurrentCommandHasMoves = false;
 
-  private final CommandListener myCommandListener = new CommandAdapter() {
+  private final CommandListener myCommandListener = new CommandListener() {
     @Override
     public void commandStarted(CommandEvent event) {
-      onCommandStarted();
+      event.getUIAccess().giveAndWait(() -> onCommandStarted());
     }
 
     @Override
     public void commandFinished(CommandEvent event) {
-      onCommandFinished(event.getCommandGroupId());
+      event.getUIAccess().giveAndWait(() -> onCommandFinished(event.getCommandGroupId()));
     }
   };
 

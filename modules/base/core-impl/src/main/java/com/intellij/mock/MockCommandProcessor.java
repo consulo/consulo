@@ -8,12 +8,14 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Deprecated
 public class MockCommandProcessor extends CommandProcessor {
@@ -43,47 +45,27 @@ public class MockCommandProcessor extends CommandProcessor {
                              boolean shouldRecordCommandForActiveDocument) {
   }
 
-  @RequiredDispatchThread
-  @Override
-  public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId) {
-
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document) {
-
-  }
-
-  @RequiredDispatchThread
+  @RequiredWriteAction
   @Override
   public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull Supplier<AsyncResult<Void>> runnable,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy) {
-
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull Supplier<AsyncResult<Void>> command,
+                                  @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                                   @Nullable String name,
                                   @Nullable Object groupId,
                                   @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  @Nullable Document document) {
+                                  @Nullable Document document,
+                                  @Nonnull UIAccess uiAccess) {
 
   }
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   @Override
   public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull Supplier<AsyncResult<Void>> command,
+                                  @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                                   @Nullable String name,
                                   @Nullable Object groupId,
                                   @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  boolean shouldRecordCommandForActiveDocument) {
+                                  boolean shouldRecordCommandForActiveDocument,
+                                  @Nonnull UIAccess uiAccess) {
 
   }
 

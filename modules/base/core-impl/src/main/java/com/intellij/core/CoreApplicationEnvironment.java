@@ -123,7 +123,7 @@ public class CoreApplicationEnvironment {
 
     registerApplicationService(JobLauncher.class, createJobLauncher());
     registerApplicationService(CodeFoldingSettings.class, new CodeFoldingSettings());
-    registerApplicationService(CommandProcessor.class, new CoreCommandProcessor());
+    registerApplicationService(CommandProcessor.class, new CoreCommandProcessor(myApplication));
     myApplication.registerService(ApplicationInfo.class, ApplicationInfoImpl.class);
   }
 

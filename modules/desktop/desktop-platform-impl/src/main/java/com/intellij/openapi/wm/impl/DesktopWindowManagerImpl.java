@@ -19,7 +19,6 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.DataManagerImpl;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -44,6 +43,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -132,11 +132,10 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     }
 
     if (!application.isUnitTestMode()) {
-      Disposer.register(application, new Disposable() {
-        @Override
-        public void dispose() {
-          disposeRootFrame();
-        }
+      Disposer.register(application, () -> {
+        UIAccess uiAccess = Application.get().getLastUIAccess();
+
+        uiAccess.giveAndWait(() -> disposeRootFrame());
       });
     }
 
@@ -623,6 +622,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     }
   }
 
+  @Override
   public final void disposeRootFrame() {
     if (myProject2Frame.size() == 1) {
       final IdeFrameImpl rootFrame = myProject2Frame.remove(null);

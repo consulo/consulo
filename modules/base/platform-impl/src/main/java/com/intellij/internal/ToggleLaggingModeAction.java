@@ -15,9 +15,12 @@
  */
 package com.intellij.internal;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbServiceImpl;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Alarm;
 
@@ -50,7 +53,7 @@ public class ToggleLaggingModeAction extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    presentation.setEnabled(project != null && myLagging == DumbServiceImpl.getInstance(project).isDumb());
+    presentation.setEnabled(project != null && myLagging == DumbService.getInstance(project).isDumb());
     if (myLagging) {
       presentation.setText("Exit lagging mode");
     }

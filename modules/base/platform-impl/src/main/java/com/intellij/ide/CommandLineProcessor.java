@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -31,6 +32,8 @@ import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.CommandLineArgs;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -82,7 +85,9 @@ public class CommandLineProcessor {
   private static Project doOpenFile(VirtualFile virtualFile, int line) {
     final Project[] projects = ProjectManager.getInstance().getOpenProjects();
     if (projects.length == 0) {
-      return PlatformProjectOpenProcessor.doOpenProject(virtualFile, null, false, line, null);
+      AsyncResult<Project> result = new AsyncResult<>();
+      PlatformProjectOpenProcessor.getInstance().doOpenProjectAsync(result, virtualFile, null, false, UIAccess.current());
+      return result.getResultSync();
     }
     else {
       Project project = findBestProject(virtualFile, projects);

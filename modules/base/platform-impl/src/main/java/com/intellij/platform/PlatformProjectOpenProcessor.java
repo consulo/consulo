@@ -19,7 +19,6 @@ import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
@@ -41,17 +40,13 @@ import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.application.AccessRule;
-import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -71,131 +66,19 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER).exists();
   }
 
-  @RequiredDispatchThread
-  @Override
-  @Nullable
-  public Project doOpenProject(@Nonnull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {
-    return doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame, -1, null);
-  }
-
-  @Nullable
-  public static Project doOpenProject(@Nonnull final VirtualFile virtualFile, Project projectToClose, final boolean forceOpenInNewFrame, final int line, @Nullable Consumer<Project> callback) {
-    VirtualFile baseDir = virtualFile;
-    if (!baseDir.isDirectory()) {
-      baseDir = virtualFile.getParent();
-      while (baseDir != null) {
-        if (new File(FileUtil.toSystemDependentName(baseDir.getPath()), Project.DIRECTORY_STORE_FOLDER).exists()) {
-          break;
-        }
-        baseDir = baseDir.getParent();
-      }
-      if (baseDir == null) {
-        baseDir = virtualFile.getParent();
-      }
-    }
-
-    final File projectDir = new File(FileUtil.toSystemDependentName(baseDir.getPath()), Project.DIRECTORY_STORE_FOLDER);
-
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    if (!forceOpenInNewFrame && openProjects.length > 0) {
-      if (projectToClose == null) {
-        projectToClose = openProjects[openProjects.length - 1];
-      }
-
-      int exitCode = ProjectUtil.confirmOpenNewProject(false);
-      if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
-        if (!ProjectUtil.closeAndDispose(projectToClose)) return null;
-      }
-      else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
-        return null;
-      }
-    }
-
-    boolean runConfigurators = true;
-    final ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
-    Project project = null;
-    if (projectDir.exists()) {
-      try {
-        for (ProjectOpenProcessor processor : ProjectOpenProcessors.getInstance().getProcessors()) {
-          processor.refreshProjectFiles(projectDir);
-        }
-
-        project = projectManager.convertAndLoadProject(baseDir.getPath());
-        if (project == null) {
-          WelcomeFrame.showIfNoProjectOpened();
-          return null;
-        }
-        final Module[] modules = ModuleManager.getInstance(project).getModules();
-        if (modules.length > 0) {
-          runConfigurators = false;
-        }
-      }
-      catch (Exception e) {
-        LOGGER.error(e);
-      }
-    }
-    else {
-      projectDir.mkdirs();
-    }
-
-    if (project == null) {
-      project = projectManager.newProject(projectDir.getParentFile().getName(), projectDir.getParent(), true, false);
-    }
-
-    if (project == null) return null;
-    openProjectToolWindow(project);
-    openFileFromCommandLine(project, virtualFile, line);
-    if (!projectManager.openProject(project)) {
-      WelcomeFrame.showIfNoProjectOpened();
-      final Project finalProject = project;
-      ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));
-      return project;
-    }
-
-    if (callback != null && runConfigurators) {
-      callback.consume(project);
-    }
-
-    return project;
-  }
-
-  public static void openProjectToolWindow(final Project project) {
-    Platform.hacky(() -> desktopOpenProjectToolWindow(project), () -> {
-      // TODO [VISTALL] implement it!!!
-    });
-  }
-
-  private static void desktopOpenProjectToolWindow(final Project project) {
+  public static void openProjectToolWindow(Project project, UIAccess uiAccess) {
     //noinspection RedundantCast
     StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
       // ensure the dialog is shown after all startup activities are done
-      SwingUtilities.invokeLater(() -> ApplicationManager.getApplication().invokeLater(() -> {
+      uiAccess.give(() -> {
         if (project.isDisposed()) return;
+
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+
         if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
           toolWindow.activate(null);
         }
-      }, ModalityState.NON_MODAL));
-    });
-  }
-
-  private static void openFileFromCommandLine(@Nonnull Project project, final VirtualFile virtualFile, final int line) {
-    //noinspection RedundantCast
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      if (project.isDisposed()) {
-        return;
-      }
-
-      Application.get().invokeLater(() -> {
-        if (!virtualFile.isDirectory()) {
-          if (line > 0) {
-            new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
-          }
-          else {
-            new OpenFileDescriptor(project, virtualFile).navigate(true);
-          }
-        }
-      }, ModalityState.NON_MODAL);
+      });
     });
   }
 
@@ -240,13 +123,13 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     doOpenProjectAsync(asyncResult, virtualFile, projectToClose, forceOpenInNewFrame, -1, uiAccess, null);
   }
 
-  public static void doOpenProjectAsync(@Nonnull AsyncResult<Project> result,
-                                        @Nonnull VirtualFile virtualFile,
-                                        Project projectToClose,
-                                        boolean forceOpenInNewFrame,
-                                        int line,
-                                        @Nonnull UIAccess uiAccess,
-                                        @Nullable Consumer<Project> callback) {
+  private static void doOpenProjectAsync(@Nonnull AsyncResult<Project> result,
+                                         @Nonnull VirtualFile virtualFile,
+                                         Project projectToClose,
+                                         boolean forceOpenInNewFrame,
+                                         int line,
+                                         @Nonnull UIAccess uiAccess,
+                                         @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
       baseDir = virtualFile.getParent();
@@ -286,7 +169,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     AtomicBoolean runConfigurators = new AtomicBoolean(true);
 
     Consumer<Project> afterProjectAction = project -> {
-      openProjectToolWindow(project);
+      openProjectToolWindow(project, uiAccess);
       openFileFromCommandLineAsync(project, virtualFile, line, uiAccess);
       if (!projectManager.openProjectAsync(project, uiAccess)) {
         WelcomeFrame.showIfNoProjectOpened();
@@ -308,7 +191,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
       AsyncResult<Project> anotherResult = new AsyncResult<>();
       anotherResult.doWhenDone((project) -> {
-        ThrowableComputable<Module[],RuntimeException> action = () -> ModuleManager.getInstance(project).getModules();
+        ThrowableComputable<Module[], RuntimeException> action = () -> ModuleManager.getInstance(project).getModules();
         final Module[] modules = AccessRule.read(action);
         if (modules.length > 0) {
           runConfigurators.set(false);

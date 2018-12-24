@@ -29,7 +29,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.impl.ModuleEx;
 import com.intellij.openapi.project.DumbModeTask;
-import com.intellij.openapi.project.DumbServiceImpl;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
@@ -55,11 +55,11 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;
@@ -166,7 +166,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     if (myDoLogCachesUpdate) LOG.debug("refresh");
-    DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
+    DumbService dumbService = DumbService.getInstance(myProject);
     DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(myProject);
     if (task != null) {
       dumbService.queueTask(task);
@@ -292,7 +292,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
     else if (!ApplicationManager.getApplication().isUnitTestMode()) LOG.info("project roots have changed");
 
-    DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
+    DumbService dumbService = DumbService.getInstance(myProject);
     if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
       dumbService.queueTask(new UnindexedFilesUpdater(myProject));
     }

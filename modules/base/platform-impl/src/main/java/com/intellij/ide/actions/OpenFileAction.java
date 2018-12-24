@@ -36,6 +36,7 @@ import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -44,6 +45,8 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -145,7 +148,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
       }
       else {
         PlatformProjectOpenProcessor processor = PlatformProjectOpenProcessor.getInstance();
-        processor.doOpenProject(file, null, false);
+        processor.doOpenProjectAsync(new AsyncResult<>(), file, null, false, UIAccess.current());
       }
     }
   }

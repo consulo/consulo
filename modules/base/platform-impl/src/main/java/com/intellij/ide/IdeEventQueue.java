@@ -139,7 +139,7 @@ public class IdeEventQueue extends EventQueue {
 
   private IdeEventQueue() {
     if(Platform.current().isWebService()) {
-      throw new UnsupportedOperationException("we should init event awt event queue");
+      throw new UnsupportedOperationException("we should not init event awt event queue");
     }
 
     EventQueue systemEventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();

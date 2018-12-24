@@ -44,7 +44,9 @@ import com.intellij.util.containers.Queue;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.TestOnly;
@@ -81,25 +83,22 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   private final Map<DumbModeTask, ProgressIndicatorEx> myProgresses = ContainerUtil.newConcurrentMap();
 
   private final Queue<Runnable> myRunWhenSmartQueue = new Queue<>(5);
+  private final Application myApplication;
   private final Project myProject;
   private final ThreadLocal<Integer> myAlternativeResolution = new ThreadLocal<>();
   private final StartupManager myStartupManager;
 
   @Inject
-  public DumbServiceImpl(Project project, StartupManager startupManager) {
+  public DumbServiceImpl(Application application, Project project, StartupManager startupManager) {
+    myApplication = application;
     myProject = project;
     myPublisher = project.getMessageBus().syncPublisher(DUMB_MODE);
     myStartupManager = startupManager;
   }
 
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  public static DumbServiceImpl getInstance(@Nonnull Project project) {
-    return (DumbServiceImpl)DumbService.getInstance(project);
-  }
-
   @Override
   public void cancelTask(@Nonnull DumbModeTask task) {
-    if (ApplicationManager.getApplication().isInternal()) LOG.info("cancel " + task);
+    if (ApplicationProperties.isInSandbox()) LOG.info("cancel " + task);
     ProgressIndicatorEx indicator = myProgresses.get(task);
     if (indicator != null) {
       indicator.cancel();
@@ -107,8 +106,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Override
+  @RequiredWriteAction
   public void dispose() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertWriteAccessAllowed();
     myUpdatesQueue.clear();
     myQueuedEquivalences.clear();
     myRunWhenSmartQueue.clear();
@@ -176,9 +176,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   public void queueTask(@Nonnull DumbModeTask task) {
     if (LOG.isDebugEnabled()) LOG.debug("Scheduling task " + task);
     LOG.assertTrue(!myProject.isDefault(), "No indexing tasks should be created for default project: " + task);
-    final Application application = ApplicationManager.getApplication();
-
-    if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
+    if (myApplication.isUnitTestMode() || myApplication.isHeadlessEnvironment()) {
       runTaskSynchronously(task);
     }
     else {
@@ -218,7 +216,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
     if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
       enterDumbMode(contextTransaction, trace).doWhenProcessed(() -> {
-        ApplicationManager.getApplication().invokeLater(this::startBackgroundProcess, myProject.getDisposed());
+        myApplication.invokeLater(this::startBackgroundProcess, myProject.getDisposed());
       });
     }
   }
@@ -231,7 +229,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
     myProgresses.put(task, new ProgressIndicatorBase());
     Disposer.register(task, () -> {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      myApplication.assertIsDispatchThread();
       myProgresses.remove(task);
     });
     myUpdatesQueue.addLast(task);
@@ -262,7 +260,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
   private void queueUpdateFinished() {
     if (myState.compareAndSet(State.RUNNING_DUMB_TASKS, State.WAITING_FOR_FINISH)) {
-      StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> TransactionGuard.getInstance().submitTransaction(myProject, myDumbStartTransaction, this::updateFinished));
+      StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
+        AccessRule.writeAsync(this::updateFinished);
+      });
     }
   }
 
@@ -277,10 +277,11 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     return !myProject.isDisposed();
   }
 
+  @RequiredWriteAction
   private void updateFinished() {
-    if (!WriteAction.compute(this::switchToSmartMode)) return;
+    if (!switchToSmartMode()) return;
 
-    if (ApplicationManager.getApplication().isInternal()) LOG.info("updateFinished");
+    if (ApplicationProperties.isInSandbox()) LOG.info("updateFinished");
 
     try {
       myPublisher.exitDumbMode();
@@ -327,8 +328,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
       return;
     }
 
-    final Application application = ApplicationManager.getApplication();
-    if (application.isReadAccessAllowed() || application.isDispatchThread()) {
+    if (myApplication.isReadAccessAllowed() || myApplication.isDispatchThread()) {
       throw new AssertionError("Don't invoke waitForSmartMode from inside read action in dumb mode");
     }
 
@@ -370,7 +370,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
   @Override
   public void smartInvokeLater(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
-    ApplicationManager.getApplication().invokeLater(() -> {
+    myApplication.invokeLater(() -> {
       if (isDumb()) {
         runWhenSmart(() -> smartInvokeLater(runnable, modalityState));
       }
@@ -395,8 +395,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   private void showModalProgress() {
     NoAccessDuringPsiEvents.checkCallContext();
     try {
-      ((ApplicationEx2)ApplicationManager.getApplication())
-              .executeSuspendingWriteAction(myProject, IdeBundle.message("progress.indexing"), () -> runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator()));
+      ((ApplicationEx2)myApplication).executeSuspendingWriteAction(myProject, IdeBundle.message("progress.indexing"), () -> runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator()));
     }
     finally {
       if (myState.get() != State.SMART) {
@@ -464,8 +463,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
   }
 
-  private static void runSingleTask(final DumbModeTask task, final ProgressIndicatorEx taskIndicator) {
-    if (ApplicationManager.getApplication().isInternal()) LOG.info("Running dumb mode task: " + task);
+  private void runSingleTask(final DumbModeTask task, final ProgressIndicatorEx taskIndicator) {
+    if (ApplicationProperties.isInSandbox()) LOG.info("Running dumb mode task: " + task);
 
     // nested runProcess is needed for taskIndicator to be honored in ProgressManager.checkCanceled calls deep inside tasks
     ProgressManager.getInstance().runProcess(() -> {

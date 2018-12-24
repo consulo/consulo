@@ -16,7 +16,6 @@
 package consulo.ide.newProject.actions;
 
 import com.intellij.CommonBundle;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
@@ -26,11 +25,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -39,9 +38,10 @@ import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -112,14 +112,13 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     return new SlideNewProjectPanel(parentDisposable, null, null);
   }
 
-  @Nullable
   @RequiredDispatchThread
-  protected static Project generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
+  protected static void generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
     final File location = new File(projectPanel.getLocationText());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
       Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
-      return null;
+      return;
     }
 
     final VirtualFile baseDir = ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
@@ -133,11 +132,14 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     if (childCount > 0) {
       int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project", Messages.getQuestionIcon());
       if (rc == Messages.NO) {
-        return null;
+        return;
       }
     }
 
     RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
-    return PlatformProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> NewProjectUtilPlatform.doCreate(projectPanel, project1, baseDir));
+
+    AsyncResult<Project> result = new AsyncResult<>();
+    PlatformProjectOpenProcessor.getInstance().doOpenProjectAsync(result, baseDir, null, false, UIAccess.current());
+    result.doWhenProcessed(newProject -> NewProjectUtilPlatform.doCreate(projectPanel, newProject, baseDir));
   }
 }

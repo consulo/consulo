@@ -15,6 +15,7 @@
  */
 package consulo.web.wm.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -60,8 +61,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   private IdeFrameEx myFrame;
 
   @Inject
-  public WebToolWindowManagerImpl(Project project, WindowManager windowManager) {
-    super(project, windowManager);
+  public WebToolWindowManagerImpl(Application application, Project project, WindowManager windowManager) {
+    super(application, project, windowManager);
 
     if (project.isDefault()) {
       return;

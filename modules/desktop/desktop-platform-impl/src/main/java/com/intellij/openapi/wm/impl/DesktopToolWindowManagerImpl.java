@@ -22,6 +22,7 @@ import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.RoamingType;
@@ -93,8 +94,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Anton Katilin
@@ -196,8 +197,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Inject
-  public DesktopToolWindowManagerImpl(final Project project, final WindowManager windowManager, final ActionManager actionManager) {
-    super(project, windowManager);
+  public DesktopToolWindowManagerImpl(Application application, Project project, WindowManager windowManager, ActionManager actionManager) {
+    super(application, project, windowManager);
 
     if (project.isDefault()) {
       return;
@@ -219,9 +220,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          DesktopToolWindowManagerImpl.this.projectClosed();
+          uiAccess.giveAndWait(DesktopToolWindowManagerImpl.this::projectClosed);
         }
       }
     });
@@ -530,7 +531,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     UiNotifyConnector.doWhenFirstShown((JComponent)component, () -> ApplicationManager.getApplication().invokeLater(runnable));
   }
 
-  public void projectClosed() {
+  @RequiredUIAccess
+  private void projectClosed() {
     if (myFrame == null) {
       return;
     }
@@ -961,6 +963,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       return null;
     }
 
+    UIAccess uiAccess = Application.get().getLastUIAccess();
+    return uiAccess.giveAndWait(this::getStateInUIThread);
+  }
+
+  // TODO [VISTALL] calling this data from UI thread is painful. Need remove calling ui thread from this code
+  @Nonnull
+  private Element getStateInUIThread() {
     // Update size of all open floating windows. See SCR #18439
     for (final String id : getToolWindowIds()) {
       final WindowInfoImpl info = getInfo(id);

@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.project;
 
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.UIAccess;
+
 import java.util.EventListener;
 
 /**
@@ -41,11 +44,17 @@ public interface ProjectManagerListener extends EventListener {
     return true;
   }
 
+  default void projectClosed(Project project, UIAccess uiAccess) {
+    projectClosed(project);
+  }
+
   /**
    * Invoked on project close.
    *
    * @param project closing project
    */
+  @Deprecated
+  @DeprecationInfo("Use overload method with UIAccess parameter")
   default void projectClosed(Project project) {
   }
 

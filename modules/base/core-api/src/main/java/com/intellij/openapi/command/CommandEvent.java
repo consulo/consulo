@@ -18,41 +18,49 @@ package com.intellij.openapi.command;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.util.EventObject;
-import java.util.function.Supplier;
+import java.util.function.BiConsumer;
 
 public class CommandEvent extends EventObject {
-  private final Supplier<AsyncResult<Void>> myCommand;
+  private final BiConsumer<AsyncResult<Void>, UIAccess> myCommand;
   private final Project myProject;
   private final String myCommandName;
   private final Object myCommandGroupId;
   private final UndoConfirmationPolicy myUndoConfirmationPolicy;
   private final boolean myShouldRecordActionForActiveDocument;
   private final Document myDocument;
+  private final UIAccess myUIAccess;
 
-  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Supplier<AsyncResult<Void>> command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
-    this(processor, command, null, null, project, undoConfirmationPolicy);
+  public CommandEvent(@Nonnull CommandProcessor processor,
+                      @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                      Project project,
+                      @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
+                      @Nonnull UIAccess uiAccess) {
+    this(processor, command, null, null, project, undoConfirmationPolicy, uiAccess);
   }
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Supplier<AsyncResult<Void>> command,
+                      @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
-                      @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
-    this(processor, command, commandName, commandGroupId, project, undoConfirmationPolicy, true, null);
+                      @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
+                      @Nonnull UIAccess uiAccess) {
+    this(processor, command, commandName, commandGroupId, project, undoConfirmationPolicy, true, null, uiAccess);
   }
+
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Supplier<AsyncResult<Void>> command,
+                      @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
                       @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
                       boolean shouldRecordActionForActiveDocument,
-                      Document document) {
+                      Document document,
+                      @Nonnull UIAccess uiAccess) {
     super(processor);
     myCommand = command;
     myCommandName = commandName;
@@ -61,6 +69,7 @@ public class CommandEvent extends EventObject {
     myUndoConfirmationPolicy = undoConfirmationPolicy;
     myShouldRecordActionForActiveDocument = shouldRecordActionForActiveDocument;
     myDocument = document;
+    myUIAccess = uiAccess;
   }
 
   @Nonnull
@@ -69,7 +78,12 @@ public class CommandEvent extends EventObject {
   }
 
   @Nonnull
-  public Supplier<AsyncResult<Void>> getCommand() {
+  public UIAccess getUIAccess() {
+    return myUIAccess;
+  }
+
+  @Nonnull
+  public BiConsumer<AsyncResult<Void>, UIAccess> getCommand() {
     return myCommand;
   }
 

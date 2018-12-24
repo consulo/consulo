@@ -17,11 +17,13 @@ package com.intellij.openapi.vcs.checkout;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.UIAccess;
 
 import java.io.File;
 
@@ -41,7 +43,9 @@ public class ProjectImporterCheckoutListener implements CheckoutListener {
               .message("checkout.open.project.prompt", ProjectDirCheckoutListener.getProductNameWithArticle(), files[0].getPath()),
                                               VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
             if (rc == Messages.YES) {
-              openProcessor.doOpenProject(virtualFile, project, false);
+              AsyncResult<Project> result = new AsyncResult<>();
+              openProcessor.doOpenProjectAsync(result, virtualFile, project, false, UIAccess.current());
+              result.getResultSync();
             }
             return true;
           }

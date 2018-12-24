@@ -37,7 +37,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
-import com.intellij.openapi.project.DumbServiceImpl;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LibraryOrderEntry;
@@ -65,9 +65,9 @@ import com.intellij.util.Processor;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
@@ -84,7 +84,7 @@ public class FindInProjectUtil {
     PsiElement psiElement = null;
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
-    if (project != null && !DumbServiceImpl.getInstance(project).isDumb()) {
+    if (project != null && !DumbService.getInstance(project).isDumb()) {
       try {
         psiElement = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
       }

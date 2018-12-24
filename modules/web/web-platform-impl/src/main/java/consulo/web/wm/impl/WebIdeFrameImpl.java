@@ -56,7 +56,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     ((com.vaadin.ui.Window)myWindow).addCloseListener(closeEvent -> {
       myWindow.close();
 
-      ProjectManager.getInstance().closeProjectAsync(myProject);
+      ProjectManager.getInstance().closeProject(myProject);
     });
 
     myWindow.setContent(myRootView.getComponent());

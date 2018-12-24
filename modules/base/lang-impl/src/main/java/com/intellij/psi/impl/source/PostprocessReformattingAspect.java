@@ -156,16 +156,14 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     getContext().myPostponedCounter++;
   }
 
-  @RequiredDispatchThread
   private void decrementPostponedCounter() {
-    Application application = ApplicationManager.getApplication();
-    application.assertIsDispatchThread();
+    Application application = Application.get();
     if (--getContext().myPostponedCounter == 0) {
       if (application.isWriteAccessAllowed()) {
         doPostponedFormatting();
       }
       else {
-        application.runWriteAction(() -> doPostponedFormatting());
+        application.runWriteAction((Runnable)this::doPostponedFormatting);
       }
     }
   }

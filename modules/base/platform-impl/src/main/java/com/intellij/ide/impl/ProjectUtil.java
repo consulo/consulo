@@ -19,8 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.impl.stores.IProjectStore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -131,28 +129,7 @@ public class ProjectUtil {
   @Deprecated
   @DeprecationInfo("Sync variant of #openAsync()")
   public static Project open(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
-    final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-
-    if (virtualFile == null) return null;
-
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
-    if (provider != null) {
-      final Project project = provider.doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
-
-      if (project != null) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-          if (!project.isDisposed()) {
-            final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-            if (toolWindow != null) {
-              toolWindow.activate(null);
-            }
-          }
-        }, ModalityState.NON_MODAL);
-      }
-
-      return project;
-    }
-    return null;
+    return openAsync(path, projectToClose, forceOpenInNewFrame, UIAccess.current()).getResultSync();
   }
 
   /**
