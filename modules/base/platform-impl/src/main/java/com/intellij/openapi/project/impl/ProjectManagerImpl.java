@@ -426,7 +426,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
             if (ApplicationManager.getApplication().isActive()) {
               JFrame projectFrame = WindowManager.getInstance().getFrame(project);
               if (projectFrame != null) {
-                uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true)nt);
+                uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
               }
             }
           }
