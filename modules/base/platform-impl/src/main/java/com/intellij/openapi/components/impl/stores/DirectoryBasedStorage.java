@@ -16,8 +16,6 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.store.ReadOnlyModificationException;
 import com.intellij.openapi.components.store.StateStorageBase;
@@ -28,16 +26,16 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -61,8 +59,8 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     mySplitter = splitter;
 
     VirtualFileTracker virtualFileTracker = ServiceManager.getService(VirtualFileTracker.class);
-    if (virtualFileTracker != null && listener != null) {
-      virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
+    if (listener != null) {
+      virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileListener() {
         @Override
         public void contentsChanged(@Nonnull VirtualFileEvent event) {
           notifyIfNeed(event);
@@ -164,15 +162,11 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
       return file;
     }
 
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DirectoryBasedStorage.class);
     try {
       return parentVirtualFile.createChildData(requestor, fileName);
     }
     catch (IOException e) {
       throw new StateStorageException(e);
-    }
-    finally {
-      token.finish();
     }
   }
 
@@ -314,16 +308,10 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     }
 
     private void deleteFiles(@Nonnull VirtualFile dir) {
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DirectoryBasedStorage.class);
-      try {
-        for (VirtualFile file : dir.getChildren()) {
-          if (removedFileNames.contains(file.getName())) {
-            deleteFile(file, this);
-          }
+      for (VirtualFile file : dir.getChildren()) {
+        if (removedFileNames.contains(file.getName())) {
+          deleteFile(file, this);
         }
-      }
-      finally {
-        token.finish();
       }
     }
   }

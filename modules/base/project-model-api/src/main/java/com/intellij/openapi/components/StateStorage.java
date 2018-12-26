@@ -54,10 +54,6 @@ public interface StateStorage {
 
   interface SaveSession {
     void save();
-
-    default void saveAsync() {
-      save();
-    }
   }
 
   interface Listener {

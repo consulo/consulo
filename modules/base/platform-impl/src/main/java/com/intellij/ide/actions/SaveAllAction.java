@@ -18,11 +18,25 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.DumbAware;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class SaveAllAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    ApplicationManager.getApplication().saveAll();
+  private final Application myApplication;
+
+  @Inject
+  public SaveAllAction(Application application) {
+    myApplication = application;
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    AccessRule.writeAsync(myApplication::saveAll);
   }
 }

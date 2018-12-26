@@ -23,6 +23,7 @@ import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
 import consulo.util.pointers.Named;
 
@@ -64,6 +65,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
     }
   }
 
+  @RequiredWriteAction
   @Override
   public void save() {
     ServiceBean.loadServicesFromBeans(SCHEME_OWNER, Object.class);

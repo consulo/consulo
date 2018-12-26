@@ -27,7 +27,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
@@ -177,30 +176,6 @@ public class StorageUtil {
 
     assert resultFile != null;
     return resultFile;
-  }
-
-  @Nonnull
-  public static AsyncResult<VirtualFile> writeFileAsync(@Nullable File file,
-                                                        @Nonnull Object requestor,
-                                                        @Nullable final VirtualFile fileRef,
-                                                        @Nonnull BufferExposingByteArrayOutputStream content,
-                                                        @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
-    return AccessRule.writeAsync(() -> {
-      VirtualFile virtualFile = fileRef;
-
-      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-        virtualFile = getOrCreateVirtualFile(requestor, file);
-      }
-      assert virtualFile != null;
-      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
-        if (lineSeparatorIfPrependXmlProlog != null) {
-          out.write(XML_PROLOG);
-          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
-        }
-        content.writeTo(out);
-      }
-      return virtualFile;
-    });
   }
 
   public static void deleteFile(@Nonnull File file, @Nonnull Object requestor, @Nullable VirtualFile virtualFile) throws IOException {

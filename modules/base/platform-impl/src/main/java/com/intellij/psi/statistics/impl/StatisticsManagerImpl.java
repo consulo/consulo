@@ -29,6 +29,7 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.ScrambledInputStream;
 import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
@@ -123,6 +124,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     return ContainerUtil.map2Array(strings, StatisticsInfo.class, (NotNullFunction<String, StatisticsInfo>)s -> new StatisticsInfo(context, s));
   }
 
+  @RequiredWriteAction
   public void save() {
     synchronized (LOCK) {
       if (!ApplicationManager.getApplication().isUnitTestMode()){

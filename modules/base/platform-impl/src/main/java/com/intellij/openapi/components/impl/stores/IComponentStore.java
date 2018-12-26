@@ -59,8 +59,6 @@ public interface IComponentStore {
 
   void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
 
-  void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
-
   interface Reloadable extends IComponentStore {
     /**
      * null if reloaded

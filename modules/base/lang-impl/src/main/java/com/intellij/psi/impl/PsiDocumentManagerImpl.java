@@ -46,6 +46,7 @@ import com.intellij.psi.impl.source.tree.injected.MultiHostRegistrarImpl;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -163,6 +164,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
     if (viewProvider != null && component != null) component.doPostponedFormatting(viewProvider);
   }
 
+  @RequiredWriteAction
   @Override
   public void save() {
     // Ensure all documents are committed on save so file content dependent indices, that use PSI to build have consistent content.

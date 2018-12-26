@@ -323,38 +323,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
   }
 
-  @Override
-  protected final void doSaveAsync(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
-    ProjectImpl.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectImpl.UnableToSaveProjectNotification.class, myProject);
-    if (notifications.length > 0) {
-      throw new SaveCancelledException();
-    }
-
-    beforeSave(readonlyFiles);
-
-    super.doSaveAsync(saveSessions, readonlyFiles);
-
-    if (!readonlyFiles.isEmpty()) {
-      ReadonlyStatusHandler.OperationStatus status = AccessRule.read(() -> ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(getFilesList(readonlyFiles)));
-      if (status.hasReadonlyFiles()) {
-        ProjectImpl.dropUnableToSaveProjectNotification(myProject, status.getReadonlyFiles());
-        throw new SaveCancelledException();
-      }
-      else {
-        List<Pair<SaveSession, VirtualFile>> oldList = new ArrayList<>(readonlyFiles);
-        readonlyFiles.clear();
-        for (Pair<SaveSession, VirtualFile> entry : oldList) {
-          executeSave(entry.first, readonlyFiles);
-        }
-
-        if (!readonlyFiles.isEmpty()) {
-          ProjectImpl.dropUnableToSaveProjectNotification(myProject, getFilesList(readonlyFiles));
-          throw new SaveCancelledException();
-        }
-      }
-    }
-  }
-
   protected void beforeSave(@Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
   }
 

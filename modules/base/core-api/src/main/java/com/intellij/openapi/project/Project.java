@@ -111,10 +111,6 @@ public interface Project extends ComponentManager {
 
   void save();
 
-  default void saveAsync() {
-    save();
-  }
-
   boolean isOpen();
 
   boolean isInitialized();
