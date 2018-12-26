@@ -232,7 +232,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   @Override
   public void commitAllDocuments() {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     if (myUncommittedDocuments.isEmpty()) return;
 

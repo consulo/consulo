@@ -15,12 +15,16 @@
  */
 package com.intellij.openapi.fileChooser;
 
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,5 +35,12 @@ public interface PathChooserDialog {
   Key<Boolean> PREFER_LAST_OVER_EXPLICIT = Key.create("prefer.last.over.explicit");
   Key<Boolean> NATIVE_MAC_CHOOSER_SHOW_HIDDEN_FILES = Key.create("native.mac.chooser.show.hidden.files");
 
-  void choose(@Nullable VirtualFile toSelect, @Nonnull final Consumer<List<VirtualFile>> callback);
+  @Deprecated
+  default void choose(@Nullable VirtualFile toSelect, @Nonnull final Consumer<List<VirtualFile>> callback) {
+    chooseAsync(toSelect).doWhenDone((f) -> callback.consume(Arrays.asList(f))).getResultSync();
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect);
 }

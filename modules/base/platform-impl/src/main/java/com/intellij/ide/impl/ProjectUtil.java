@@ -106,7 +106,7 @@ public class ProjectUtil {
    */
   @RequiredDispatchThread
   public static boolean closeAndDispose(@Nonnull final Project project) {
-    return ProjectManagerEx.getInstanceEx().closeAndDispose(project);
+    return ProjectManagerEx.getInstanceEx().closeAndDispose(project).getResultSync();
   }
 
   @Deprecated

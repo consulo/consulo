@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -141,7 +141,7 @@ public abstract class DialogWrapperPeer {
    */
   public abstract void setLocation(int x, int y);
 
-  public abstract ActionCallback show();
+  public abstract AsyncResult<Void> show();
 
   public abstract void setContentPane(JComponent content);
 

@@ -59,7 +59,7 @@ public class RootUIBuilder implements UIBuilder {
 
     window.setContent(new WGwtLoadingPanelImpl());
 
-    UIAccess access = UIAccess.get();
+    UIAccess access = UIAccess.current();
 
     scheduleWelcomeFrame(access, window);
   }

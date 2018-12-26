@@ -161,7 +161,7 @@ public abstract class FileEditorManagerTest extends FileEditorManagerTestCase {
 
     myManager.loadState(rootElement);
 
-    UIAccess uiAccess = UIAccess.get();
+    UIAccess uiAccess = UIAccess.current();
     Future<?> future = ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override
       public void run() {

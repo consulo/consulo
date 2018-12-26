@@ -16,8 +16,10 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,5 +44,11 @@ public interface FileChooserDialog {
    * @return files chosen by user
    */
   @Nonnull
-  VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect);
+  @Deprecated
+  default VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
+    return chooseAsync(project, toSelect).getResultSync();
+  }
+
+  @Nonnull
+  AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile... toSelect);
 }

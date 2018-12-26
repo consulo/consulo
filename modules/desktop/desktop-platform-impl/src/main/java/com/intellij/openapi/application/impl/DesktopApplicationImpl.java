@@ -186,7 +186,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
         try {
           CommandProcessor.getInstance().executeCommandAsync(project, (result, ui) -> {
             try {
-              if (!manager.closeProject(project, true, true, checkCanCloseProject, uiAccess)) {
+              if (!manager.closeProject(project, true, true, checkCanCloseProject, uiAccess).getResultSync()) {
                 canClose[0] = false;
               }
             }

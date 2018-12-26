@@ -190,7 +190,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       command.accept(result, uiAccess);
 
-      result.doWhenDone(() -> AccessRule.writeAsync(() -> finishCommand(project, descriptor, uiAccess, null)).getResultSync());
+      result.doWhenDone(() -> AccessRule.writeAsync(() -> finishCommand(project, descriptor, uiAccess, null)));
 
       result.doWhenRejectedWithThrowable((t) -> AccessRule.writeAsync(() -> finishCommand(project, descriptor, uiAccess, t)));
     }

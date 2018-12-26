@@ -20,6 +20,7 @@ import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.notification.impl.NotificationsConfigurable;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
@@ -36,6 +37,8 @@ import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -45,9 +48,18 @@ import javax.swing.event.AncestorEvent;
  * @author peter
  */
 public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
+  private final Application myApplication;
+
+  public EventLogToolWindowFactory(Application application) {
+    myApplication = application;
+  }
+
   @Override
   public void createToolWindowContent(@Nonnull final Project project, @Nonnull ToolWindow toolWindow) {
-    EventLog.getProjectComponent(project).initDefaultContent();
+    UIAccess lastUIAccess = myApplication.getLastUIAccess();
+
+    EventLog.ProjectTracker projectTracker = EventLog.getProjectComponent(project);
+    lastUIAccess.give(projectTracker::initDefaultContent);
   }
 
   static void createContent(Project project, ToolWindow toolWindow, EventLogConsole console, String title) {
@@ -115,8 +127,9 @@ public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
       myProject = project;
     }
 
+    @RequiredDispatchThread
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       ShowSettingsUtil.getInstance().editConfigurable(myProject, new NotificationsConfigurable());
     }
   }

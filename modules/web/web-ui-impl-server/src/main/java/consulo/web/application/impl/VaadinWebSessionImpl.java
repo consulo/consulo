@@ -30,7 +30,7 @@ public class VaadinWebSessionImpl implements WebSession {
 
   @RequiredUIAccess
   public VaadinWebSessionImpl() {
-    myAccess = UIAccess.get();
+    myAccess = UIAccess.current();
   }
 
   @Nullable

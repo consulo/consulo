@@ -32,10 +32,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -303,14 +300,14 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
   }
 
   @Override
-  public ActionCallback show() {
+  public AsyncResult<Void> show() {
     LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
     hidePopupsIfNeeded();
 
     myDialog.setVisible(true);
 
-    return ActionCallback.DONE;
+    return AsyncResult.resolved();
   }
 
   @Override

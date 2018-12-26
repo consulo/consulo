@@ -26,6 +26,7 @@ import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -34,6 +35,8 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.OwnerOptional;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -174,6 +177,13 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     }
   }
 
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+    return null;
+  }
+
   @Nonnull
   private static FileDialog createFileDialogWithoutOwner(String title, int load) {
     // This is bad. But sometimes we do not have any windows at all.
@@ -189,5 +199,11 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     choose(toSelect, files -> {
     });
     return virtualFiles;
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
+    return null;
   }
 }

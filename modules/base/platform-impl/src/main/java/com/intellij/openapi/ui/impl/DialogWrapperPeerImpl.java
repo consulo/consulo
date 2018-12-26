@@ -88,7 +88,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
   protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
-    myTypeAheadCallback = myWrapper.isTypeAheadEnabled() ? new AsyncResult<Void>() : null;
+    myTypeAheadCallback = myWrapper.isTypeAheadEnabled() ? new AsyncResult<>() : null;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
     if (application != null) {
@@ -419,13 +419,13 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
   }
 
   @Override
-  public ActionCallback show() {
+  public AsyncResult<Void> show() {
     LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
     if (myTypeAheadCallback != null) {
       IdeFocusManager.getInstance(myProject).typeAheadUntil(myTypeAheadCallback);
     }
     LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = new AsyncResult<>();
 
     final AnCancelAction anCancelAction = new AnCancelAction();
     final JRootPane rootPane = getRootPane();
@@ -463,7 +463,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
     finally {
       if (changeModalityState) {
-        AccessRule.writeAsync(() -> commandProcessor.leaveModal()).getResultSync();
+        AccessRule.writeAsync(commandProcessor::leaveModal).getResultSync();
 
         if (ModalityPerProjectEAPDescriptor.is()) {
           LaterInvocator.leaveModal(project, myDialog.getWindow());

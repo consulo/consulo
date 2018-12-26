@@ -209,7 +209,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     final VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(info.getFirst());
     final Integer second = info.getSecond();
     if (file != null) {
-      getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
+      getManager().openFileImpl4(UIAccess.current(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
     }
   }
 
@@ -220,7 +220,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
       final VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(info.getFirst());
       final Integer second = info.getSecond();
       if (file != null) {
-        getManager().openFileImpl4(UIAccess.get(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
+        getManager().openFileImpl4(UIAccess.current(), this, file, null, true, true, null, second == null ? -1 : second.intValue());
       }
     }
   }
@@ -468,7 +468,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
       disposeTabs();
       if (currentFile != null) {
         currentFile.putUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN, null);
-        getManager().openFileImpl2(UIAccess.get(), this, currentFile, focusEditor && myOwner.getCurrentWindow() == this);
+        getManager().openFileImpl2(UIAccess.current(), this, currentFile, focusEditor && myOwner.getCurrentWindow() == this);
       }
       else {
         myPanel.repaint();
@@ -706,7 +706,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
         final DesktopEditorWindow[] siblings = findSiblings();
         final DesktopEditorWindow target = siblings[0];
         if (virtualFile != null) {
-          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.get(), target, virtualFile, focusNew, null, true).first;
+          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.current(), target, virtualFile, focusNew, null, true).first;
           syncCaretIfPossible(editors);
         }
         return target;
@@ -751,7 +751,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
           }
 
           final VirtualFile nextFile = virtualFile == null ? file : virtualFile;
-          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.get(), res, nextFile, focusNew, null, true).first;
+          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.current(), res, nextFile, focusNew, null, true).first;
           syncCaretIfPossible(editors);
           res.setFilePinned(nextFile, isFilePinned(file));
           if (!focusNew) {
@@ -770,9 +770,9 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
           panel.revalidate();
           final VirtualFile firstFile = firstEC.getFile();
           final VirtualFile nextFile = virtualFile == null ? firstFile : virtualFile;
-          final FileEditor[] firstEditors = fileEditorManager.openFileImpl3(UIAccess.get(), this, firstFile, !focusNew, null, true).first;
+          final FileEditor[] firstEditors = fileEditorManager.openFileImpl3(UIAccess.current(), this, firstFile, !focusNew, null, true).first;
           syncCaretIfPossible(firstEditors);
-          final FileEditor[] secondEditors = fileEditorManager.openFileImpl3(UIAccess.get(), res, nextFile, focusNew, null, true).first;
+          final FileEditor[] secondEditors = fileEditorManager.openFileImpl3(UIAccess.current(), res, nextFile, focusNew, null, true).first;
           syncCaretIfPossible(secondEditors);
         }
         return res;

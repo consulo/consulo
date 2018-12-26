@@ -672,45 +672,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @RequiredDispatchThread
   @Override
-  public void runWriteAction(@Nonnull final Runnable action) {
-    Class<? extends Runnable> clazz = action.getClass();
-    startWrite(clazz);
-    try {
-      action.run();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public <T> T runWriteAction(@Nonnull final Computable<T> computation) {
-    Class<? extends Computable> clazz = computation.getClass();
-    startWrite(clazz);
-    try {
-      return computation.compute();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    Class<? extends ThrowableComputable> clazz = computation.getClass();
-    startWrite(clazz);
-    try {
-      return computation.compute();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
-  @RequiredDispatchThread
-  @Override
   public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
     assertReadAccessAllowed();
 

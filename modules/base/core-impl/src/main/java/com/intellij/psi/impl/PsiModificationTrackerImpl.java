@@ -16,8 +16,8 @@
 package com.intellij.psi.impl;
 
 import com.intellij.lang.Language;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -29,7 +29,7 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.messages.MessageBus;
-import consulo.application.TransactionGuardEx;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,9 +58,11 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   private final Map<Language, ModificationTracker> myLanguageTrackers = ConcurrentFactoryMap.createMap(language -> new SimpleModificationTracker());
 
   private final Listener myPublisher;
+  private final Application myApplication;
 
   @Inject
-  public PsiModificationTrackerImpl(Project project) {
+  public PsiModificationTrackerImpl(Application application, Project project) {
+    myApplication = application;
     MessageBus bus = project.getMessageBus();
     myPublisher = bus.syncPublisher(TOPIC);
     bus.connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
@@ -88,11 +90,13 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     incCountersInner(3);
   }
 
+  @RequiredWriteAction
   private void fireEvent() {
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    myApplication.assertWriteAccessAllowed();
     myPublisher.modificationCountChanged();
   }
 
+  @RequiredWriteAction
   private void incCountersInner(int bits) {
     if ((bits & 0x1) != 0) myModificationCount.incModificationCount();
     if ((bits & 0x2) != 0) myOutOfCodeBlockModificationTracker.incModificationCount();

@@ -289,9 +289,4 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     myConfigurable.disposeUIResources();
     myConfigurable = null;
   }
-
-  @Override
-  public void show() {
-    TransactionGuard.getInstance().submitTransactionAndWait(super::show);
-  }
 }

@@ -20,10 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -61,6 +58,10 @@ import java.util.List;
 @Singleton
 @State(name = "TodoView", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class TodoView implements PersistentStateComponent<TodoView.State>, Disposable {
+  public static TodoView getInstance(@Nonnull Project project) {
+    return ServiceManager.getService(project, TodoView.class);
+  }
+
   private final Project myProject;
 
   private ContentManager myContentManager;
@@ -148,9 +149,8 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   public void dispose() {
   }
 
-  public void initToolWindow(@Nonnull ToolWindow toolWindow) {
+  public void initToolWindow(@Nonnull ContentFactory contentFactory, @Nonnull ToolWindow toolWindow) {
     // Create panels
-    ContentFactory contentFactory = ContentFactory.getInstance();
     Content allTodosContent = contentFactory.createContent(null, IdeBundle.message("title.project"), false);
     myAllTodos = new TodoPanel(myProject, state.all, false, allTodosContent) {
       @Override
@@ -175,8 +175,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     Disposer.register(this, currentFileTodos);
     currentFileTodosContent.setComponent(currentFileTodos);
 
-    myChangeListTodosContent = contentFactory
-            .createContent(null, IdeBundle.message("changelist.todo.title", ChangeListManager.getInstance(myProject).getDefaultChangeList().getName()), false);
+    myChangeListTodosContent = contentFactory.createContent(null, IdeBundle.message("changelist.todo.title", ChangeListManager.getInstance(myProject).getDefaultChangeList().getName()), false);
     ChangeListTodosPanel changeListTodos = new ChangeListTodosPanel(myProject, state.current, myChangeListTodosContent) {
       @Override
       protected TodoTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {

@@ -1078,7 +1078,7 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
 
         DaemonCodeAnalyzerSettings.getInstance().setImportHintEnabled(false);
         ensureIndexesUpToDate(getProject());
-        ((StartupManagerImpl)StartupManagerEx.getInstanceEx(getProject())).runPostStartupActivities(UIAccess.get());
+        ((StartupManagerImpl)StartupManagerEx.getInstanceEx(getProject())).runPostStartupActivities(UIAccess.current());
       }
     });
   }

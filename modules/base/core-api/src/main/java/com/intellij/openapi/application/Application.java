@@ -431,7 +431,7 @@ public interface Application extends ComponentManager {
    */
   @Nonnull
   default UIAccess getLastUIAccess() {
-    return UIAccess.get();
+    return UIAccess.current();
   }
 
   // region Deprecated stuff

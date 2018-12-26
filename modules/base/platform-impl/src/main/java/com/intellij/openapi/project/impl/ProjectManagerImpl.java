@@ -721,26 +721,37 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   @RequiredDispatchThread
   public boolean closeProject(@Nonnull final Project project) {
-    return closeProject(project, true, false, true, UIAccess.current());
+    return closeProject(project, true, false, true, UIAccess.current()).getResultSync();
   }
 
   @RequiredWriteAction
   @Deprecated
-  public boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
+  public AsyncResult<Boolean> closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
     return closeProject(project, save, dispose, checkCanClose, UIAccess.current());
   }
 
   @RequiredWriteAction
-  public boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose, @Nonnull UIAccess uiAccess) {
+  public AsyncResult<Boolean> closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose, @Nonnull UIAccess uiAccess) {
+    AsyncResult<Boolean> result = new AsyncResult<>();
     if (isLight(project)) {
       removeFromOpened(project);
-      return true;
+      result.setDone(Boolean.TRUE);
+      return result;
     }
     else {
-      if (!isProjectOpened(project)) return true;
+      if (!isProjectOpened(project)) {
+        result.setDone(Boolean.TRUE);
+        return result;
+      }
     }
 
-    if (checkCanClose && !canClose(project)) return false;
+    if (checkCanClose && !canClose(project)) {
+      result.setDone(Boolean.FALSE);
+      return result;
+    }
+
+    Application.get().assertWriteAccessAllowed();
+
     final ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
     shutDownTracker.registerStopperThread(Thread.currentThread());
     try {
@@ -750,7 +761,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
 
       if (checkCanClose && !ensureCouldCloseIfUnableToSave(project)) {
-        return false;
+        result.setDone(Boolean.FALSE);
+        return result;
       }
 
       fireProjectClosing(project); // somebody can start progress here, do not wrap in write action
@@ -767,17 +779,19 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       shutDownTracker.unregisterStopperThread(Thread.currentThread());
     }
 
-    return true;
+    result.setDone(Boolean.TRUE);
+    return result;
   }
 
   public static boolean isLight(@Nonnull Project project) {
     return ApplicationManager.getApplication().isUnitTestMode() && project.toString().contains("light_temp_");
   }
 
-  @RequiredDispatchThread
+  @Nonnull
+  @RequiredWriteAction
   @Override
-  public boolean closeAndDispose(@Nonnull final Project project) {
-    return closeProject(project, true, true, true, UIAccess.current());
+  public AsyncResult<Boolean> closeAndDispose(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+    return closeProject(project, true, true, true, uiAccess);
   }
 
   private void fireProjectClosing(Project project) {

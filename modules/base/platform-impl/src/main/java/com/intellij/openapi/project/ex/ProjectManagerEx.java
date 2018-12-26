@@ -22,6 +22,8 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.TestOnly;
@@ -75,8 +77,15 @@ public abstract class ProjectManagerEx extends ProjectManager {
   public abstract Collection<Project> closeTestProject(@Nonnull Project project);
 
   // returns true on success
-  @RequiredDispatchThread
-  public abstract boolean closeAndDispose(@Nonnull Project project);
+  @RequiredUIAccess
+  @Deprecated
+  public AsyncResult<Boolean> closeAndDispose(@Nonnull Project project) {
+    return closeAndDispose(project, UIAccess.current());
+  }
+
+  @Nonnull
+  @RequiredWriteAction
+  public abstract AsyncResult<Boolean> closeAndDispose(@Nonnull Project project, UIAccess uiAccess);
 
   @Nullable
   @Override

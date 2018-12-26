@@ -21,13 +21,15 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.*;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbModeTask;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
@@ -358,8 +360,7 @@ public class StartupManagerImpl extends StartupManagerEx {
 
   @Override
   public void runWhenProjectIsInitialized(@Nonnull final Runnable action) {
-    final ApplicationEx application = (ApplicationEx)ApplicationManager.getApplication();
-    if (application == null) return;
+    final Application application = Application.get();
 
     Runnable runnable = () -> {
       if (myProject.isDisposed()) return;

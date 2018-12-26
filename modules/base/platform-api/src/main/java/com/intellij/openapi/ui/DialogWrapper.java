@@ -1623,12 +1623,7 @@ public abstract class DialogWrapper {
       Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
     }
 
-    Disposer.register(myDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        result.setDone(isOK());
-      }
-    });
+    Disposer.register(myDisposable, () -> result.setDone(isOK()));
 
     myPeer.show();
 

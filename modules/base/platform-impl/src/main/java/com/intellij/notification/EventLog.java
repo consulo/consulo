@@ -487,7 +487,7 @@ public class EventLog {
       createNewContent(DEFAULT_CATEGORY);
 
       for (Notification notification : myInitial) {
-        doPrintNotification(notification, ObjectUtils.assertNotNull(getConsole(notification)));
+        doPrintNotification(notification, ObjectUtil.assertNotNull(getConsole(notification)));
       }
       myInitial.clear();
     }

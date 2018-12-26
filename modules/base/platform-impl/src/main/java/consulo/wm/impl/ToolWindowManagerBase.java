@@ -1338,11 +1338,16 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @Override
   public void dispose() {
-    for (String id : new ArrayList<>(myId2StripeButton.keySet())) {
-      unregisterToolWindow(id);
-    }
+    UIAccess lastUIAccess = myApplication.getLastUIAccess();
 
-    assert myId2StripeButton.isEmpty();
+    lastUIAccess.giveAndWait(() -> {
+      for (String id : new ArrayList<>(myId2StripeButton.keySet())) {
+        unregisterToolWindow(id);
+      }
+
+      assert myId2StripeButton.isEmpty();
+      return null;
+    });
   }
 
   @RequiredUIAccess

@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -48,8 +47,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.text.DateFormatUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -206,7 +205,7 @@ public class TodoCheckinHandler extends CheckinHandler {
 
   private void showTodo(TodoCheckinHandlerWorker worker) {
     String title = "For commit (" + DateFormatUtil.formatDateTime(System.currentTimeMillis()) + ")";
-    ServiceManager.getService(myProject, TodoView.class).addCustomTodoView(new TodoTreeBuilderFactory() {
+    TodoView.getInstance(myProject).addCustomTodoView(new TodoTreeBuilderFactory() {
       @Override
       public TodoTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {
         return new CustomChangelistTodosTreeBuilder(tree, treeModel, myProject, title, worker.inOneList());

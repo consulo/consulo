@@ -157,7 +157,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
       file.putUserData(DesktopEditorWindow.INITIAL_INDEX_KEY, index);
     }
 
-    ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(UIAccess.get(), window, file, true);
+    ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(UIAccess.current(), window, file, true);
     window.setFilePinned(file, dockableEditor.isPinned());
   }
 
@@ -249,7 +249,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
   public void showNotify() {
     if (!myWasEverShown) {
       myWasEverShown = true;
-      getSplitters().openFiles(UIAccess.get());
+      getSplitters().openFiles(UIAccess.current());
     }
   }
 

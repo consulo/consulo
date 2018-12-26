@@ -303,7 +303,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   }
 
   public int getEditorsCount() {
-    return mySplittersElement == null ? 0 : countFiles(mySplittersElement, UIAccess.get());
+    return mySplittersElement == null ? 0 : countFiles(mySplittersElement, UIAccess.current());
   }
 
   private double myProgressStep;

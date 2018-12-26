@@ -134,7 +134,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   @RequiredUIAccess
   @Override
   protected void doWhenFirstShown(Object component, Runnable runnable) {
-    UIAccess.get().give(runnable);
+    UIAccess.current().give(runnable);
   }
 
   @Nonnull
