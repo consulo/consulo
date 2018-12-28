@@ -539,10 +539,17 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
           }
         }
       }).doWhenProcessed(() -> {
-        if (changeModalityState) {
-          AccessRule.writeAsync(commandProcessor::leaveModal).getResultSync();
-        }
-        result.setDone();
+        uiAccess.give(() -> {
+          AsyncResult<Void> subResult = AsyncResult.resolved();
+          subResult.doWhenProcessed((Runnable)result::setDone);
+
+          if (changeModalityState) {
+            AccessRule.writeAsync(commandProcessor::leaveModal).notify(subResult);
+          }
+          else {
+            subResult.setDone();
+          }
+        });
       });
     });
 

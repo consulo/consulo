@@ -54,6 +54,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -1599,14 +1600,14 @@ public abstract class DialogWrapper {
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
   @Deprecated
+  @DeprecationInfo("Use #showAsync()")
   public void show() {
-    showAndGetOk();
+    showAsync();
   }
 
   @Deprecated
   public boolean showAndGet() {
-    show();
-    return isOK();
+    throw new UnsupportedOperationException("Use #showAsync()");
   }
 
   @Nonnull

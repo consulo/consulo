@@ -117,8 +117,8 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
     return ApplicationManager.getApplication().getComponent(HttpConfigurable.class);
   }
 
-  public static boolean editConfigurable(@Nullable JComponent parent) {
-    return ShowSettingsUtil.getInstance().editConfigurable(parent, new HttpProxyConfigurable());
+  public static void editConfigurable(@Nullable JComponent parent) {
+    ShowSettingsUtil.getInstance().editConfigurable(parent, new HttpProxyConfigurable());
   }
 
   @Override

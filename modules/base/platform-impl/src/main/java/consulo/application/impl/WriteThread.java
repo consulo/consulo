@@ -109,7 +109,7 @@ public class WriteThread extends Thread implements Disposable {
     finally {
       long l = System.currentTimeMillis() - start;
 
-      if(l > 300) {
+      if(l > 1_000L) {
         LOG.warn("Long write operation. Time: " + l, e);
       }
     }
