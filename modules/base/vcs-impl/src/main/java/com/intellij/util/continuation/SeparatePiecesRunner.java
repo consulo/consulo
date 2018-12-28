@@ -23,10 +23,10 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -110,7 +110,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
     private final TaskDescriptor myTaskDescriptor;
     private volatile boolean mySuspended;
 
-    TaskWrapper(@javax.annotation.Nullable Project project,
+    TaskWrapper(@Nullable Project project,
                 @Nonnull String title,
                 boolean canBeCancelled,
                 TaskDescriptor taskDescriptor) {

@@ -275,7 +275,7 @@ class ProgressDialog implements Disposable {
   }
 
   private boolean isWriteActionProgress() {
-    return myProgressWindow instanceof PotemkinProgress;
+    return false;
   }
 
   private class MyDialogWrapper extends DialogWrapper {

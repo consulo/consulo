@@ -101,11 +101,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
-  @RequiredDispatchThread
-  @Override
-  public void assertIsDispatchThread(@Nullable final JComponent component) {
-  }
-
   @Override
   public void assertTimeConsuming() {
   }

@@ -15,6 +15,8 @@
  */
 package com.intellij.profile;
 
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nullable;
 
 public interface ProfileChangeAdapter {
@@ -24,7 +26,7 @@ public interface ProfileChangeAdapter {
   default void profileActivated(@Nullable Profile oldProfile, @javax.annotation.Nullable Profile profile) {
   }
 
-  default void profilesInitialized() {
+  default void profilesInitialized(UIAccess uiAccess) {
   }
 
   default void profilesShutdown() {

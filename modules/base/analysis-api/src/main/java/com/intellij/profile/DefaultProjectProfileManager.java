@@ -30,6 +30,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -46,7 +47,7 @@ import java.util.Map;
  * Date: 30-Nov-2005
  */
 public abstract class DefaultProjectProfileManager extends ProjectProfileManager implements PersistentStateComponent<Element> {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.profile.DefaultProjectProfileManager");
+  protected static final Logger LOG = Logger.getInstance(DefaultProjectProfileManager.class);
 
   @NonNls public static final String SCOPES = "scopes";
   @NonNls protected static final String SCOPE = "scope";
@@ -64,7 +65,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
 
   private final ApplicationProfileManager myApplicationProfileManager;
 
-  private final Map<String, Profile> myProfiles = new THashMap<String, Profile>();
+  private final Map<String, Profile> myProfiles = new THashMap<>();
   protected final DependencyValidationManager myHolder;
   private final List<ProfileChangeAdapter> myProfilesListener = ContainerUtil.createLockFreeCopyOnWriteList();
   @NonNls private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
@@ -242,12 +243,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
 
   public void addProfileChangeListener(@Nonnull final ProfileChangeAdapter profilesListener, @Nonnull Disposable parent) {
     myProfilesListener.add(profilesListener);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        myProfilesListener.remove(profilesListener);
-      }
-    });
+    Disposer.register(parent, () -> myProfilesListener.remove(profilesListener));
   }
 
   public void removeProfileChangeListener(@Nonnull ProfileChangeAdapter profilesListener) {
@@ -279,9 +275,9 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     }
   }
 
-  protected void fireProfilesInitialized() {
+  protected void fireProfilesInitialized(@Nonnull UIAccess uiAccess) {
     for (ProfileChangeAdapter profileChangeAdapter : myProfilesListener) {
-      profileChangeAdapter.profilesInitialized();
+      profileChangeAdapter.profilesInitialized(uiAccess);
     }
   }
   protected void fireProfilesShutdown() {

@@ -27,7 +27,6 @@ import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -74,7 +73,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread implements ApplicationEx2 {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
@@ -509,50 +507,6 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     return true;
   }
 
-  @Override
-  public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
-                                                            @Nullable Project project,
-                                                            @Nullable JComponent parentComponent,
-                                                            @Nullable String cancelText,
-                                                            @Nonnull Consumer<ProgressIndicator> action) {
-    Class<?> clazz = action.getClass();
-    startWrite(clazz);
-    try {
-      PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
-      indicator.runInSwingThread(() -> action.accept(indicator));
-      return !indicator.isCanceled();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
-  public boolean runWriteActionWithProgressInBackgroundThread(@Nonnull String title,
-                                                              @Nullable Project project,
-                                                              @Nullable JComponent parentComponent,
-                                                              @Nullable String cancelText,
-                                                              @Nonnull Consumer<ProgressIndicator> action) {
-    Class<?> clazz = action.getClass();
-    startWrite(clazz);
-    try {
-      PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
-      indicator.runInBackground(() -> {
-        assert myWriteActionThread == null;
-        myWriteActionThread = Thread.currentThread();
-        try {
-          action.accept(indicator);
-        }
-        finally {
-          myWriteActionThread = null;
-        }
-      });
-      return !indicator.isCanceled();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
   @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
@@ -604,27 +558,6 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
                                          describe(getEventQueueThread()), dump);
   }
 
-  @RequiredDispatchThread
-  @Override
-  public void assertIsDispatchThread(@Nullable final JComponent component) {
-    if (component == null) return;
-
-    if (isDispatchThread()) {
-      return;
-    }
-
-    if (Boolean.TRUE.equals(component.getClientProperty(WAS_EVER_SHOWN))) {
-      assertIsDispatchThread();
-    }
-    else {
-      final JRootPane root = component.getRootPane();
-      if (root != null) {
-        component.putClientProperty(WAS_EVER_SHOWN, Boolean.TRUE);
-        assertIsDispatchThread();
-      }
-    }
-  }
-
   @Override
   public void assertTimeConsuming() {
     if (myHeadlessMode || ShutDownTracker.isShutdownHookRunning()) return;
@@ -646,39 +579,6 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     }
 
     return ApplicationActivationStateManager.getState().isActive();
-  }
-
-  @Override
-  public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
-    assertIsDispatchThread();
-    if (!myLock.isWriteLocked()) {
-      runModalProgress(project, title, runnable);
-      return;
-    }
-
-    transactionGuard().submitTransactionAndWait(() -> {
-      int prevBase = myWriteStackBase;
-      myWriteStackBase = myWriteActionsStack.size();
-      try (AccessToken ignored = myLock.writeSuspend()) {
-        runModalProgress(project, title, () -> {
-          try (AccessToken ignored1 = myLock.grantReadPrivilege()) {
-            runnable.run();
-          }
-        });
-      }
-      finally {
-        myWriteStackBase = prevBase;
-      }
-    });
-  }
-
-  private static void runModalProgress(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
-    ProgressManager.getInstance().run(new Task.Modal(project, title, false) {
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
-        runnable.run();
-      }
-    });
   }
 
   @Override

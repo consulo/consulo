@@ -44,6 +44,7 @@ import com.intellij.util.containers.Queue;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationProperties;
@@ -394,15 +395,21 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
   private void showModalProgress() {
     NoAccessDuringPsiEvents.checkCallContext();
-    try {
-      ((ApplicationEx2)myApplication).executeSuspendingWriteAction(myProject, IdeBundle.message("progress.indexing"), () -> runBackgroundProcess(ProgressManager.getInstance().getProgressIndicator()));
-    }
-    finally {
-      if (myState.get() != State.SMART) {
-        if (myState.get() != State.WAITING_FOR_FINISH) throw new AssertionError(myState.get());
-        updateFinished();
+    new Task.Modal(myProject, IdeBundle.message("progress.indexing"), false) {
+      @Override
+      public void run(@Nonnull ProgressIndicator indicator) {
+        runBackgroundProcess(indicator);
       }
-    }
+
+      @RequiredDispatchThread
+      @Override
+      public void onFinished() {
+        if (myState.get() != State.SMART) {
+          if (myState.get() != State.WAITING_FOR_FINISH) throw new AssertionError(myState.get());
+          updateFinished();
+        }
+      }
+    }.queue();
   }
 
   private void startBackgroundProcess() {

@@ -71,21 +71,22 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     MessageBusConnection busConnection = project.getMessageBus().connect();
     busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project) {
+      public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          WebToolWindowManagerImpl.this.projectOpened();
+          uiAccess.giveAndWait(WebToolWindowManagerImpl.this::projectOpened);
         }
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          WebToolWindowManagerImpl.this.projectClosed();
+          uiAccess.giveAndWait(WebToolWindowManagerImpl.this::projectClosed);
         }
       }
     });
   }
 
+  @RequiredUIAccess
   private void projectOpened() {
     myFrame = myWindowManager.allocateFrame(myProject);
 

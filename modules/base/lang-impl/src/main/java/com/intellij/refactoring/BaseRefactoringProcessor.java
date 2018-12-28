@@ -35,6 +35,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -68,6 +69,7 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
+import consulo.application.AccessRule;
 import consulo.application.ex.ApplicationEx2;
 import org.jetbrains.annotations.TestOnly;
 
@@ -110,7 +112,8 @@ public abstract class BaseRefactoringProcessor implements Runnable {
    *
    * @param elements - refreshed elements that are returned by UsageViewDescriptor.getElements()
    */
-  protected void refreshElements(@Nonnull PsiElement[] elements) {}
+  protected void refreshElements(@Nonnull PsiElement[] elements) {
+  }
 
   /**
    * Is called inside atomic action.
@@ -186,8 +189,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       }
     };
 
-    if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(findUsagesRunnable, RefactoringBundle.message("progress.text"),
-                                                                           true, myProject)) {
+    if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(findUsagesRunnable, RefactoringBundle.message("progress.text"), true, myProject)) {
       return;
     }
 
@@ -208,7 +210,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       //do not proceed if find usages fails
       return;
     }
-    assert !refUsages.isNull(): "Null usages from processor " + this;
+    assert !refUsages.isNull() : "Null usages from processor " + this;
     if (!preprocessUsages(refUsages)) return;
     final UsageInfo[] usages = refUsages.get();
     assert usages != null;
@@ -290,7 +292,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   private boolean ensureElementsWritable(@Nonnull final UsageInfo[] usages, @Nonnull UsageViewDescriptor descriptor) {
     Set<PsiElement> elements = ContainerUtil.newIdentityTroveSet(); // protect against poorly implemented equality
     for (UsageInfo usage : usages) {
-      assert usage != null: "Found null element in usages array";
+      assert usage != null : "Found null element in usages array";
       if (skipNonCodeUsages() && usage.isNonCodeUsage()) continue;
       PsiElement element = usage.getElement();
       if (element != null) elements.add(element);
@@ -401,7 +403,9 @@ public abstract class BaseRefactoringProcessor implements Runnable {
           }
         });
       }
-    }, "Preprocess usages", true, myProject)) return;
+    }, "Preprocess usages", true, myProject)) {
+      return;
+    }
 
     if (convertUsagesRef.isNull()) return;
 
@@ -430,12 +434,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   }
 
   private void addDoRefactoringAction(@Nonnull UsageView usageView, @Nonnull Runnable refactoringRunnable, @Nonnull String canNotMakeString) {
-    usageView.addPerformOperationAction(refactoringRunnable, getCommandName(), canNotMakeString,
-                                        RefactoringBundle.message("usageView.doAction"), false);
+    usageView.addPerformOperationAction(refactoringRunnable, getCommandName(), canNotMakeString, RefactoringBundle.message("usageView.doAction"), false);
   }
 
   private void doRefactoring(@Nonnull final Collection<UsageInfo> usageInfoSet) {
-    for (Iterator<UsageInfo> iterator = usageInfoSet.iterator(); iterator.hasNext();) {
+    for (Iterator<UsageInfo> iterator = usageInfoSet.iterator(); iterator.hasNext(); ) {
       UsageInfo usageInfo = iterator.next();
       final PsiElement element = usageInfo.getElement();
       if (element == null || !isToBeChanged(usageInfo)) {
@@ -488,14 +491,16 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
         finally {
           if (refactoringId != null) {
-            myProject.getMessageBus()
-                    .syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).refactoringDone(refactoringId, getAfterData(writableUsageInfos));
+            myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).refactoringDone(refactoringId, getAfterData(writableUsageInfos));
           }
         }
       };
+
       ApplicationEx2 app = (ApplicationEx2)Application.get();
       if (Registry.is("run.refactorings.under.progress")) {
-        app.runWriteActionWithProgressInDispatchThread(getCommandName(), myProject, null, null, indicator -> performRefactoringRunnable.run());
+        Task.Backgroundable.queue(myProject, getCommandName(), progressIndicator -> {
+          AccessRule.writeAsync(performRefactoringRunnable::run).getResultSync();
+        });
       }
       else {
         app.runWriteAction(performRefactoringRunnable);
@@ -503,7 +508,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
       DumbService.getInstance(myProject).completeJustSubmittedTasks();
 
-      for(Map.Entry<RefactoringHelper, Object> e: preparedData.entrySet()) {
+      for (Map.Entry<RefactoringHelper, Object> e : preparedData.entrySet()) {
         //noinspection unchecked
         e.getKey().performOperation(myProject, e.getValue());
       }
@@ -628,8 +633,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       if (refactoringId != null) {
         RefactoringEventData conflictUsages = new RefactoringEventData();
         conflictUsages.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts.values());
-        myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC)
-                .conflictsDetected(refactoringId, conflictUsages);
+        myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).conflictsDetected(refactoringId, conflictUsages);
       }
       final ConflictsDialog conflictsDialog = prepareConflictsDialog(conflicts, usages);
       if (!conflictsDialog.showAndGet()) {

@@ -19,10 +19,9 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -63,16 +62,12 @@ public interface Notifications {
     }
 
     public static void notify(@Nonnull final Notification notification, @Nullable final Project project) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
+      Application application = Application.get();
+      if (application.isUnitTestMode()) {
         doNotify(notification, project);
       }
       else {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            doNotify(notification, project);
-          }
-        });
+        application.getLastUIAccess().giveIfNeed(() -> doNotify(notification, project));
       }
     }
 
@@ -80,9 +75,9 @@ public interface Notifications {
       if (project != null && !project.isDisposed()) {
         project.getMessageBus().syncPublisher(TOPIC).notify(notification);
       } else {
-        Application app = ApplicationManager.getApplication();
-        if (!app.isDisposed()) {
-          app.getMessageBus().syncPublisher(TOPIC).notify(notification);
+        Application application = Application.get();
+        if (!application.isDisposed()) {
+          application.getMessageBus().syncPublisher(TOPIC).notify(notification);
         }
       }
     }

@@ -163,12 +163,14 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>svg-salamander</artifactId>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>ar.com.hjg</groupId>
       <artifactId>pngj</artifactId>
-      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-imaging</artifactId>
     </dependency>
   </dependencies>
 </project>

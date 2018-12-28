@@ -5,7 +5,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -24,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -221,12 +219,6 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     return true;
   }
 
-  @RequiredDispatchThread
-  @Override
-  public void assertIsDispatchThread(@Nullable JComponent component) {
-
-  }
-
   @Override
   public void assertTimeConsuming() {
 
@@ -251,19 +243,5 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Nullable
   public WebSession getCurrentSession() {
     return myCurrentSession;
-  }
-
-  @Override
-  public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
-
-  }
-
-  @Override
-  public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
-                                                            @Nullable Project project,
-                                                            @Nullable JComponent parentComponent,
-                                                            @Nullable String cancelText,
-                                                            @Nonnull Consumer<ProgressIndicator> action) {
-    return true;
   }
 }

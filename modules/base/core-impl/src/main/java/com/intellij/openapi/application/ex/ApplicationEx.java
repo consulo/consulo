@@ -19,7 +19,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,9 +105,6 @@ public interface ApplicationEx extends Application {
                                               @Nullable Project project,
                                               JComponent parentComponent,
                                               final String cancelText);
-
-  @RequiredDispatchThread
-  void assertIsDispatchThread(@Nullable JComponent component);
 
   void assertTimeConsuming();
 

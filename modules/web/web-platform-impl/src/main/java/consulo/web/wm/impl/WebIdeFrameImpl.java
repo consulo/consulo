@@ -17,18 +17,22 @@ package consulo.web.wm.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
+import consulo.application.AccessRule;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Rectangle2D;
 import consulo.web.application.WebApplication;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -39,7 +43,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   private final WebStatusBarImpl myStatusBar = new WebStatusBarImpl(this);
   private final Project myProject;
 
-  private consulo.ui.Window myWindow;
+  private Window myWindow;
   private final WebIdeRootView myRootView;
 
   public WebIdeFrameImpl(Project project) {
@@ -56,7 +60,9 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     ((com.vaadin.ui.Window)myWindow).addCloseListener(closeEvent -> {
       myWindow.close();
 
-      ProjectManager.getInstance().closeProject(myProject);
+      UIAccess uiAccess = UIAccess.current();
+      ProjectManagerEx projectManager = (ProjectManagerEx)ProjectManager.getInstance();
+      AccessRule.writeAsync(() -> projectManager.closeAndDispose(myProject, uiAccess));
     });
 
     myWindow.setContent(myRootView.getComponent());
@@ -72,7 +78,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
   @Nonnull
   @Override
-  public consulo.ui.Window getWindow() {
+  public Window getWindow() {
     return myWindow;
   }
 
@@ -92,7 +98,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Project getProject() {
     return myProject;
@@ -113,7 +119,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public BalloonLayout getBalloonLayout() {
     return null;

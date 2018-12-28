@@ -85,11 +85,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     this(shouldShowCancel, shouldShowBackground, project, null, cancelText);
   }
 
-  public ProgressWindow(boolean shouldShowCancel,
-                        boolean shouldShowBackground,
-                        @Nullable Project project,
-                        JComponent parentComponent,
-                        String cancelText) {
+  public ProgressWindow(boolean shouldShowCancel, boolean shouldShowBackground, @Nullable Project project, JComponent parentComponent, String cancelText) {
     myProject = project;
     myShouldShowCancel = shouldShowCancel;
     myCancelText = cancelText;

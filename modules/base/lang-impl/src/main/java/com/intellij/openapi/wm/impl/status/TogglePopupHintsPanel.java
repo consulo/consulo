@@ -21,6 +21,7 @@ import com.intellij.codeInsight.daemon.impl.HectorComponent;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.PowerSaveMode;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -33,7 +34,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +43,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
-  private consulo.ui.image.Image myCurrentIcon;
+  private Image myCurrentIcon;
   private String myToolTipText;
 
   public TogglePopupHintsPanel(@Nonnull final Project project) {
@@ -68,7 +70,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
 
   @Override
   @Nonnull
-  public consulo.ui.image.Image getIcon() {
+  public Image getIcon() {
     return myCurrentIcon;
   }
 
@@ -110,7 +112,8 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   }
 
   public void updateStatus() {
-    UIUtil.invokeLaterIfNeeded(() -> updateStatus(getCurrentFile()));
+    Application application = Application.get();
+    application.getLastUIAccess().giveIfNeed(() -> updateStatus(getCurrentFile()));
   }
 
   private void updateStatus(PsiFile file) {
@@ -122,9 +125,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
       }
       else if (HighlightingLevelManager.getInstance(myProject).shouldInspect(file)) {
         myCurrentIcon = AllIcons.Ide.HectorOn;
-        myToolTipText = "Current inspection profile: " +
-                        InspectionProjectProfileManager.getInstance(file.getProject()).getInspectionProfile().getName() +
-                        ".\n";
+        myToolTipText = "Current inspection profile: " + InspectionProjectProfileManager.getInstance(file.getProject()).getInspectionProfile().getName() + ".\n";
       }
       else if (HighlightingLevelManager.getInstance(myProject).shouldHighlight(file)) {
         myCurrentIcon = AllIcons.Ide.HectorSyntax;
@@ -151,9 +152,10 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   }
 
   @Nullable
+  @RequiredReadAction
   private PsiFile getCurrentFile() {
     VirtualFile virtualFile = getSelectedFile();
-    if (virtualFile != null && virtualFile.isValid()){
+    if (virtualFile != null && virtualFile.isValid()) {
       return PsiManager.getInstance(getProject()).findFile(virtualFile);
     }
     return null;

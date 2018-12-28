@@ -93,7 +93,7 @@ public class TabbedPaneWrapper  {
   private void assertIsDispatchThread() {
     final ApplicationEx application = ApplicationManagerEx.getApplicationEx();
     if (application != null){
-      application.assertIsDispatchThread(myTabbedPane.getComponent());
+      application.assertIsDispatchThread();
     }
   }
 

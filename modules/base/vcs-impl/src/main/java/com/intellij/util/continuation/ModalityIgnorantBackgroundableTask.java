@@ -21,10 +21,10 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -38,29 +38,27 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   private Consumer<Task.Backgroundable> myRunner;
   private int myCnt;
 
-  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project,
-                                            @Nonnull String title,
-                                            boolean canBeCancelled,
-                                            @Nullable PerformInBackgroundOption backgroundOption) {
+  public ModalityIgnorantBackgroundableTask(@Nullable Project project, @Nonnull String title, boolean canBeCancelled, @Nullable PerformInBackgroundOption backgroundOption) {
     super(project, title, canBeCancelled, backgroundOption);
   }
 
-  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project,
-                                            @Nonnull String title,
-                                            boolean canBeCancelled) {
+  public ModalityIgnorantBackgroundableTask(@Nullable Project project, @Nonnull String title, boolean canBeCancelled) {
     super(project, title, canBeCancelled);
   }
 
-  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project, @Nonnull String title) {
+  public ModalityIgnorantBackgroundableTask(@Nullable Project project, @Nonnull String title) {
     super(project, title);
   }
 
   @RequiredDispatchThread
   protected abstract void doInAwtIfFail(final Exception e);
+
   @RequiredDispatchThread
   protected abstract void doInAwtIfCancel();
+
   @RequiredDispatchThread
   protected abstract void doInAwtIfSuccess();
+
   protected abstract void runImpl(@Nonnull ProgressIndicator indicator);
 
   public void runSteadily(final Consumer<Backgroundable> consumer) {
@@ -73,9 +71,10 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   public void run(@Nonnull final ProgressIndicator indicator) {
     try {
       runImpl(indicator);
-    } catch (final ToBeRepeatedException tbre) {
+    }
+    catch (final ToBeRepeatedException tbre) {
       if (myRunner != null && myCnt > 0) {
-        -- myCnt;
+        --myCnt;
         // we are on some background thread and do not want to reschedule too often
         try {
           Thread.sleep(100);
@@ -92,7 +91,8 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
           doInAwtIfFail(tbre);
         }
       });
-    } catch (final Exception e) {
+    }
+    catch (final Exception e) {
       LOG.info(e);
       SwingUtilities.invokeLater(new Runnable() {
         @Override
@@ -108,12 +108,14 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
       public void run() {
         if (indicator.isCanceled()) {
           doInAwtIfCancel();
-        } else {
+        }
+        else {
           doInAwtIfSuccess();
         }
       }
     });
   }
 
-  public static class ToBeRepeatedException extends RuntimeException {}
+  public static class ToBeRepeatedException extends RuntimeException {
+  }
 }

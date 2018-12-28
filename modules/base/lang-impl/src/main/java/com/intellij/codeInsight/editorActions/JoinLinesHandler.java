@@ -25,19 +25,18 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.IdeBundle;
 import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
@@ -48,7 +47,7 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.application.ex.ApplicationEx2;
+import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,24 +103,26 @@ public class JoinLinesHandler extends EditorActionHandler {
     int lineCount = endLine - startLine;
     int line = startLine;
 
-    ((ApplicationEx2)ApplicationManager.getApplication()).runWriteActionWithProgressInDispatchThread(
-            "Join Lines", project, null, IdeBundle.message("action.stop"), indicator -> {
-              Ref<Integer> caretRestoreOffset = new Ref<>(-1);
-              CodeEditUtil.setNodeReformatStrategy(node -> node.getTextRange().getStartOffset() >= startReformatOffset);
-              try {
-                for (int count = 0; count < lineCount; count++) {
-                  indicator.checkCanceled();
-                  indicator.setFraction(((double)count) / lineCount);
-                  ProgressManager.getInstance().executeNonCancelableSection(
-                          () -> doJoinTwoLines(doc, project, docManager, psiFile, line, caretRestoreOffset));
-                }
-              }
-              finally {
-                CodeEditUtil.setNodeReformatStrategy(null);
-              }
 
-              positionCaret(editor, caret, caretRestoreOffset.get());
-            });
+    Task.Backgroundable.queue(project, "Join Lines", indicator -> {
+      AccessRule.writeAsync(() -> {
+        Ref<Integer> caretRestoreOffset = new Ref<>(-1);
+        CodeEditUtil.setNodeReformatStrategy(node -> node.getTextRange().getStartOffset() >= startReformatOffset);
+        try {
+          for (int count = 0; count < lineCount; count++) {
+            indicator.checkCanceled();
+            indicator.setFraction(((double)count) / lineCount);
+
+            ProgressManager.getInstance().executeNonCancelableSection(() -> doJoinTwoLines(doc, project, docManager, psiFile, line, caretRestoreOffset));
+          }
+        }
+        finally {
+          CodeEditUtil.setNodeReformatStrategy(null);
+        }
+
+        positionCaret(editor, caret, caretRestoreOffset.get());
+      }).getResultSync();
+    });
   }
 
   private static void positionCaret(Editor editor, Caret caret, int caretRestoreOffset) {
@@ -159,9 +160,10 @@ public class JoinLinesHandler extends EditorActionHandler {
     int start;
     int end;
     TextRange limits = findStartAndEnd(text, offsets.lastNonSpaceOffsetInStartLine, offsets.firstNonSpaceOffsetInNextLine, doc.getTextLength());
-    start = limits.getStartOffset(); end = limits.getEndOffset();
+    start = limits.getStartOffset();
+    end = limits.getEndOffset();
     // run raw joiners
-    for (JoinLinesHandlerDelegate delegate: Extensions.getExtensions(JoinLinesHandlerDelegate.EP_NAME)) {
+    for (JoinLinesHandlerDelegate delegate : Extensions.getExtensions(JoinLinesHandlerDelegate.EP_NAME)) {
       if (delegate instanceof JoinRawLinesHandlerDelegate) {
         rc = ((JoinRawLinesHandlerDelegate)delegate).tryJoinRawLines(doc, psiFile, start, end);
         if (rc != CANNOT_JOIN) {
@@ -194,12 +196,13 @@ public class JoinLinesHandler extends EditorActionHandler {
 
       text = doc.getCharsSequence();
       limits = findStartAndEnd(text, offsets.lineEndOffset - 1, offsets.lineEndOffset, doc.getTextLength());
-      start = limits.getStartOffset(); end = limits.getEndOffset();
+      start = limits.getStartOffset();
+      end = limits.getEndOffset();
 
       // Check if we're joining splitted string literal.
       docManager.commitDocument(doc);
 
-      for(JoinLinesHandlerDelegate delegate: Extensions.getExtensions(JoinLinesHandlerDelegate.EP_NAME)) {
+      for (JoinLinesHandlerDelegate delegate : Extensions.getExtensions(JoinLinesHandlerDelegate.EP_NAME)) {
         rc = delegate.tryJoinLines(doc, psiFile, start, end);
         if (rc != CANNOT_JOIN) break;
       }
@@ -265,17 +268,14 @@ public class JoinLinesHandler extends EditorActionHandler {
     CharSequence text = doc.getCharsSequence();
     offsets.lineEndOffset = doc.getLineEndOffset(startLine);
     offsets.firstNonSpaceOffsetInNextLine = doc.getLineStartOffset(startLine + 1);
-    while (offsets.firstNonSpaceOffsetInNextLine < text.length() - 1
-           && (text.charAt(offsets.firstNonSpaceOffsetInNextLine) == ' ' || text.charAt(offsets.firstNonSpaceOffsetInNextLine) == '\t'))
-    {
+    while (offsets.firstNonSpaceOffsetInNextLine < text.length() - 1 && (text.charAt(offsets.firstNonSpaceOffsetInNextLine) == ' ' || text.charAt(offsets.firstNonSpaceOffsetInNextLine) == '\t')) {
       offsets.firstNonSpaceOffsetInNextLine++;
     }
     PsiElement elementAtNextLineStart = psiFile.findElementAt(offsets.firstNonSpaceOffsetInNextLine);
     offsets.isNextLineStartsWithComment = isCommentElement(elementAtNextLineStart);
 
     offsets.lastNonSpaceOffsetInStartLine = offsets.lineEndOffset;
-    while (offsets.lastNonSpaceOffsetInStartLine > 0 &&
-           (text.charAt(offsets.lastNonSpaceOffsetInStartLine - 1) == ' ' || text.charAt(offsets.lastNonSpaceOffsetInStartLine - 1) == '\t')) {
+    while (offsets.lastNonSpaceOffsetInStartLine > 0 && (text.charAt(offsets.lastNonSpaceOffsetInStartLine - 1) == ' ' || text.charAt(offsets.lastNonSpaceOffsetInStartLine - 1) == '\t')) {
       offsets.lastNonSpaceOffsetInStartLine--;
     }
     int elemOffset = offsets.lastNonSpaceOffsetInStartLine > doc.getLineStartOffset(startLine) ? offsets.lastNonSpaceOffsetInStartLine - 1 : -1;
@@ -288,12 +288,11 @@ public class JoinLinesHandler extends EditorActionHandler {
   private static void tryConvertEndOfLineComment(Document doc, PsiElement commentElement) {
     Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(commentElement.getLanguage());
     if (commenter instanceof CodeDocumentationAwareCommenter) {
-      CodeDocumentationAwareCommenter docCommenter = (CodeDocumentationAwareCommenter) commenter;
+      CodeDocumentationAwareCommenter docCommenter = (CodeDocumentationAwareCommenter)commenter;
       String lineCommentPrefix = commenter.getLineCommentPrefix();
       String blockCommentPrefix = commenter.getBlockCommentPrefix();
       String blockCommentSuffix = commenter.getBlockCommentSuffix();
-      if (commentElement.getNode().getElementType() == docCommenter.getLineCommentTokenType() &&
-          blockCommentPrefix != null && blockCommentSuffix != null && lineCommentPrefix != null) {
+      if (commentElement.getNode().getElementType() == docCommenter.getLineCommentTokenType() && blockCommentPrefix != null && blockCommentSuffix != null && lineCommentPrefix != null) {
         String commentText = StringUtil.trimStart(commentElement.getText(), lineCommentPrefix);
         try {
           Project project = commentElement.getProject();

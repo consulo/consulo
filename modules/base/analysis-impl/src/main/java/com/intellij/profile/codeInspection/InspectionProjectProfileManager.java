@@ -19,25 +19,21 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.profile.DefaultProjectProfileManager;
 import com.intellij.profile.Profile;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
  * User: anna
  * Date: 30-Nov-2005
  */
-public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager
-        implements ProjectComponent, SeverityProvider, PersistentStateComponent<Element> {
-  public InspectionProjectProfileManager(@Nonnull Project project,
-                                         @Nonnull InspectionProfileManager inspectionProfileManager,
-                                         @Nonnull DependencyValidationManager holder) {
+public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
+  public InspectionProjectProfileManager(@Nonnull Project project, @Nonnull InspectionProfileManager inspectionProfileManager, @Nonnull DependencyValidationManager holder) {
     super(project, inspectionProfileManager, holder);
   }
 

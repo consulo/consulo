@@ -35,6 +35,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.project.DumbService;
@@ -385,7 +386,11 @@ public class FindInProjectUtil {
     FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(true);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
-    processPresentation.setProgressIndicatorFactory(() -> new FindProgressIndicator(project, presentation.getScopeText()));
+
+
+    processPresentation.setProgressIndicatorFactory(
+            () -> new BackgroundableProcessIndicator(project, FindBundle.message("find.progress.searching.message", presentation.getScopeText()), new SearchInBackgroundOption(),
+                                                     FindBundle.message("find.progress.stop.title"), FindBundle.message("find.progress.stop.background.button"), true));
     return processPresentation;
   }
 
@@ -418,7 +423,7 @@ public class FindInProjectUtil {
   static String buildStringToFindForIndicesFromRegExp(@Nonnull String stringToFind, @Nonnull Project project) {
     if (!Registry.is("idea.regexp.search.uses.indices")) return "";
 
-    ThrowableComputable<String,RuntimeException> action = () -> {
+    ThrowableComputable<String, RuntimeException> action = () -> {
       final List<PsiElement> topLevelRegExpChars = getTopLevelRegExpChars("a", project);
       if (topLevelRegExpChars.size() != 1) return "";
 

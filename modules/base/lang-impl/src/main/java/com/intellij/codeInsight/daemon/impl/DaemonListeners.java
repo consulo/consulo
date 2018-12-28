@@ -78,6 +78,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.command.undo.ProjectUndoManager;
+import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NonNls;
 
@@ -493,8 +494,8 @@ public class DaemonListeners implements Disposable {
     }
 
     @Override
-    public void profilesInitialized() {
-      UIUtil.invokeLaterIfNeeded(() -> {
+    public void profilesInitialized(UIAccess uiAccess) {
+      uiAccess.give(() -> {
         if (myProject.isDisposed()) return;
         StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
         myTogglePopupHintsPanel = new TogglePopupHintsPanel(myProject);
