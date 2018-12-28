@@ -1612,11 +1612,18 @@ public abstract class DialogWrapper {
 
   @Nonnull
   @RequiredUIAccess
-  public AsyncResult<Boolean> showAsync() {
+  public AsyncResult<Void> showAsync() {
     UIAccess uiAccess = UIAccess.current();
 
-    AsyncResult<Boolean> result = new AsyncResult<>();
-    showInternal().doWhenProcessed(() -> result.setDone(isOK()));
+    AsyncResult<Void> result = new AsyncResult<>();
+    showInternal().doWhenProcessed(() -> {
+      if (isOK()) {
+        result.setDone();
+      }
+      else {
+        result.setRejected();
+      }
+    });
     return result;
   }
 

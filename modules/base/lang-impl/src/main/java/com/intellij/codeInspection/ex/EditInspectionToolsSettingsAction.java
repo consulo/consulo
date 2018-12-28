@@ -26,6 +26,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
@@ -33,8 +34,8 @@ import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -73,24 +74,14 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = projectProfileManager.getInspectionProfile();
-    editToolSettings(project,
-                     inspectionProfile, true,
-                     myShortName);
+    editToolSettings(project, inspectionProfile, true, myShortName);
   }
 
-  public boolean editToolSettings(final Project project,
-                                  final InspectionProfileImpl inspectionProfile,
-                                  final boolean canChooseDifferentProfiles) {
-    return editToolSettings(project,
-                            inspectionProfile,
-                            canChooseDifferentProfiles,
-                            myShortName);
+  public AsyncResult<Void> editToolSettings(final Project project, final InspectionProfileImpl inspectionProfile, final boolean canChooseDifferentProfiles) {
+    return editToolSettings(project, inspectionProfile, canChooseDifferentProfiles, myShortName);
   }
 
-  public static boolean editToolSettings(final Project project,
-                                         final InspectionProfile inspectionProfile,
-                                         final boolean canChooseDifferentProfile,
-                                         final String selectedToolShortName) {
+  public static AsyncResult<Void> editToolSettings(final Project project, final InspectionProfile inspectionProfile, final boolean canChooseDifferentProfile, final String selectedToolShortName) {
     final ShowSettingsUtil settingsUtil = ShowSettingsUtil.getInstance();
     final ErrorsConfigurable errorsConfigurable;
     if (!canChooseDifferentProfile) {

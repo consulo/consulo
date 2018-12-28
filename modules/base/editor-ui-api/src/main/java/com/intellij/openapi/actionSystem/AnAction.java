@@ -28,6 +28,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import org.intellij.lang.annotations.JdkConstants;
@@ -255,7 +256,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param e Carries information on the invocation place and data available
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
   }
 
@@ -265,7 +266,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param e Carries information on the invocation place and data available
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
     boolean worksInInjected = isInInjectedContext();
     e.setInjectedContext(worksInInjected);
@@ -296,7 +297,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param e Carries information on the invocation place
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void actionPerformed(@Nonnull AnActionEvent e);
 
   protected void setShortcutSet(ShortcutSet shortcutSet) {

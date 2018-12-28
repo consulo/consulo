@@ -27,11 +27,14 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class ViewBreakpointsAction extends AnAction implements AnAction.TransparentUpdate, DumbAware {
   private Object myInitialBreakpoint;
 
-  public ViewBreakpointsAction(){
+  public ViewBreakpointsAction() {
     this(ActionsBundle.actionText(XDebuggerActions.VIEW_BREAKPOINTS), null);
   }
 
@@ -40,7 +43,9 @@ public class ViewBreakpointsAction extends AnAction implements AnAction.Transpar
     myInitialBreakpoint = initialBreakpoint;
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
@@ -56,7 +61,9 @@ public class ViewBreakpointsAction extends AnAction implements AnAction.Transpar
     myInitialBreakpoint = null;
   }
 
-  public void update(AnActionEvent event){
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     Project project = event.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -65,5 +72,4 @@ public class ViewBreakpointsAction extends AnAction implements AnAction.Transpar
     }
     presentation.setEnabled(true);
   }
-
 }

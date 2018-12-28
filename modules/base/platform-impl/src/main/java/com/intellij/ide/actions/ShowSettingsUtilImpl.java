@@ -28,6 +28,7 @@ import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
@@ -197,8 +198,8 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
   @RequiredUIAccess
   @Override
-  public void editConfigurable(@Nullable String title, Project project, Configurable configurable) {
-    editConfigurable(title, project, createDimensionKey(configurable), configurable);
+  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
+    return editConfigurable(title, project, createDimensionKey(configurable), configurable);
   }
 
   @Override
@@ -213,30 +214,30 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
   @RequiredUIAccess
   @Override
-  public void editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @Nonnull Configurable configurable) {
-    editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
+  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @Nonnull Configurable configurable) {
+    return editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
   }
 
   @Override
   @RequiredUIAccess
-  public void editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
-    editConfigurable(null, project, configurable, title, createDimensionKey(configurable), advancedInitialization);
+  public AsyncResult<Void> editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
+    return editConfigurable(null, project, configurable, title, createDimensionKey(configurable), advancedInitialization);
   }
 
   @RequiredUIAccess
   @Override
-  public void editConfigurable(Component parent, Configurable configurable) {
-    editConfigurable(parent, configurable, null);
+  public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
+    return editConfigurable(parent, configurable, null);
   }
 
   @RequiredUIAccess
   @Override
-  public void editConfigurable(final Component parent, final Configurable configurable, @Nullable final Runnable advancedInitialization) {
-    editConfigurable(parent, null, configurable, null, createDimensionKey(configurable), advancedInitialization);
+  public AsyncResult<Void> editConfigurable(final Component parent, final Configurable configurable, @Nullable final Runnable advancedInitialization) {
+    return editConfigurable(parent, null, configurable, null, createDimensionKey(configurable), advancedInitialization);
   }
 
   @RequiredUIAccess
-  private static void editConfigurable(@Nullable Component parent,
+  private static AsyncResult<Void> editConfigurable(@Nullable Component parent,
                                        @Nullable Project project,
                                        Configurable configurable,
                                        String title,
@@ -257,7 +258,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
         }
       });
     }
-    editor.showAsync();
+    return editor.showAsync();
   }
 
   public static String createDimensionKey(@Nonnull Configurable configurable) {
@@ -270,8 +271,8 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
   @RequiredUIAccess
   @Override
-  public void editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
-    editConfigurable(parent, null, configurable, null, dimensionServiceKey, null);
+  public AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
+    return editConfigurable(parent, null, configurable, null, dimensionServiceKey, null);
   }
 
   public boolean isAlreadyShown() {

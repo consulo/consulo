@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -50,6 +51,7 @@ public class BreakpointsDialogFactory {
     return (myBalloonToHide != null && !myBalloonToHide.isDisposed()) || myDialogShowing != null;
   }
 
+  @RequiredUIAccess
   public void showDialog(@Nullable Object initialBreakpoint) {
     if (myDialogShowing != null) {
       return;
@@ -75,6 +77,6 @@ public class BreakpointsDialogFactory {
     }
     myDialogShowing = dialog;
 
-    dialog.show();
+    dialog.showAsync();
   }
 }

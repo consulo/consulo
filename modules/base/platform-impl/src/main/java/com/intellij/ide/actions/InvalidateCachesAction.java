@@ -28,19 +28,23 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
 public class InvalidateCachesAction extends AnAction implements DumbAware {
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setText(ApplicationManager.getApplication().isRestartCapable() ? "Invalidate Caches / Restart..." : "Invalidate Caches...");
   }
 
+  @RequiredUIAccess
+  @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final ApplicationEx app = (ApplicationEx)ApplicationManager.getApplication();
     final boolean mac = Messages.canShowMacSheetPanel();
@@ -66,18 +70,11 @@ public class InvalidateCachesAction extends AnAction implements DumbAware {
       warnings += descriptions.get(0) + " will be also cleared.";
     }
     else {
-      warnings += "The following items will also be cleared:\n"
-                  + StringUtil.join(descriptions, s -> "  " + s, "\n");
+      warnings += "The following items will also be cleared:\n" + StringUtil.join(descriptions, s -> "  " + s, "\n");
     }
 
-    String message = "The caches will be invalidated and rebuilt on the next startup.\n\n" +
-                     warnings + "\n\n" +
-                     "Would you like to continue?\n";
-    int result = Messages.showDialog(e.getData(CommonDataKeys.PROJECT),
-                                     message,
-                                     "Invalidate Caches",
-                                     options, 0,
-                                     Messages.getWarningIcon());
+    String message = "The caches will be invalidated and rebuilt on the next startup.\n\n" + warnings + "\n\n" + "Would you like to continue?\n";
+    int result = Messages.showDialog(e.getData(CommonDataKeys.PROJECT), message, "Invalidate Caches", options, 0, Messages.getWarningIcon());
 
     if (result == -1 || result == (mac ? 1 : 2)) {
       return;

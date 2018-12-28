@@ -17,6 +17,7 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
@@ -43,37 +44,37 @@ public abstract class ShowSettingsUtil {
   public abstract void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect);
 
   @RequiredUIAccess
-  public void editConfigurable(Project project, Configurable configurable) {
-    editConfigurable(null, project, configurable);
+  public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {
+    return editConfigurable(null, project, configurable);
   }
 
   @RequiredUIAccess
-  public abstract void editConfigurable(@Nullable String title, Project project, Configurable configurable);
+  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable);
 
   @RequiredUIAccess
-  public void editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
-    editConfigurable(null, project, configurable, advancedInitialization);
+  public AsyncResult<Void> editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
+    return editConfigurable(null, project, configurable, advancedInitialization);
   }
 
   @RequiredUIAccess
-  public abstract void editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
+  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
 
   @RequiredUIAccess
-  public abstract void editConfigurable(Component parent, Configurable configurable);
+  public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable);
 
   @RequiredUIAccess
-  public abstract void editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
+  public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
 
   @RequiredUIAccess
-  public void editConfigurable(Project project, @NonNls String dimensionServiceKey, Configurable configurable) {
-    editConfigurable(null, project, dimensionServiceKey, configurable);
+  public AsyncResult<Void> editConfigurable(Project project, @NonNls String dimensionServiceKey, Configurable configurable) {
+    return editConfigurable(null, project, dimensionServiceKey, configurable);
   }
 
   @RequiredUIAccess
-  public abstract void editConfigurable(@Nullable String title, Project project, @NonNls String dimensionServiceKey, Configurable configurable);
+  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, @NonNls String dimensionServiceKey, Configurable configurable);
 
   @RequiredUIAccess
-  public abstract void editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
+  public abstract AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
 
   /**
    * @deprecated create a new instance of configurable instead
