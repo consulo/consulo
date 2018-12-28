@@ -24,10 +24,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.containers.WeakHashMap;
+import consulo.wm.ex.DesktopIdeFrame;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -94,12 +95,12 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
       }
       myFocusedWindows.add(myFocusedWindow);
       // Set new root frame
-      final IdeFrameImpl frame;
-      if (window instanceof IdeFrameImpl) {
-        frame = (IdeFrameImpl)window;
+      final DesktopIdeFrameImpl frame;
+      if (window instanceof DesktopIdeFrameImpl) {
+        frame = (DesktopIdeFrameImpl)window;
       }
       else {
-        frame = (IdeFrameImpl)SwingUtilities.getAncestorOfClass(IdeFrameImpl.class, window);
+        frame = (DesktopIdeFrameImpl)SwingUtilities.getAncestorOfClass(DesktopIdeFrameImpl.class, window);
       }
       if (frame != null) {
         JOptionPane.setRootFrame(frame);
@@ -217,7 +218,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public FocusWatcher getFocusWatcherFor(Component c) {
     final Window window = SwingUtilities.getWindowAncestor(c);
     final WindowInfo info = myWindow2Info.get(window);
@@ -233,7 +234,8 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
       Window window = getFocusedWindowForProject(project);
       if (window == null) {
         if (project != null) {
-          return (Window)WindowManagerEx.getInstanceEx().findFrameFor(project);
+          DesktopIdeFrame frameFor = (DesktopIdeFrame)WindowManagerEx.getInstanceEx().findFrameFor(project);
+          return frameFor == null ? null : frameFor.getJWindow();
         }
         else {
           return null;
@@ -290,7 +292,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
    * @return active window for specified <code>project</code>. There is only one window
    * for project can be at any point of time.
    */
-  @javax.annotation.Nullable
+  @Nullable
   private Window getFocusedWindowForProject(@Nullable final Project project) {
     //todo[anton,vova]: it is possible that returned wnd is not contained in myFocusedWindows; investigate
     outer:

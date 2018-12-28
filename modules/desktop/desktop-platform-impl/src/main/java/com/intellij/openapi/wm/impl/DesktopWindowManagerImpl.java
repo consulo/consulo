@@ -22,7 +22,6 @@ import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -44,6 +43,7 @@ import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.wm.ex.DesktopIdeFrame;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -109,7 +109,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
    */
   private final ToolWindowLayout myLayout;
 
-  private final HashMap<Project, IdeFrameImpl> myProject2Frame;
+  private final HashMap<Project, DesktopIdeFrameImpl> myProject2Frame;
 
   private final HashMap<Project, Set<JDialog>> myDialogsToDispose;
 
@@ -152,8 +152,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
       @Override
       public void windowActivated(WindowEvent e) {
         Window activeWindow = e.getWindow();
-        if (activeWindow instanceof IdeFrameImpl) { // must be
-          proceedDialogDisposalQueue(((IdeFrameImpl)activeWindow).getProject());
+        if (activeWindow instanceof DesktopIdeFrameImpl) { // must be
+          proceedDialogDisposalQueue(((DesktopIdeFrameImpl)activeWindow).getProject());
         }
       }
     };
@@ -168,7 +168,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
           if (openProjects.length > 0) {
             WindowManagerEx wm = WindowManagerEx.getInstanceEx();
             for (Project project : openProjects) {
-              IdeFrameImpl frame = (IdeFrameImpl)wm.getFrame(project);
+              DesktopIdeFrameImpl frame = (DesktopIdeFrameImpl)wm.getFrame(project);
               if (frame != null) {
                 frame.storeFullScreenStateIfNeeded();
               }
@@ -194,15 +194,22 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
 
   @Override
   @Nonnull
-  public IdeFrameImpl[] getAllProjectFrames() {
-    final Collection<IdeFrameImpl> ideFrames = myProject2Frame.values();
-    return ideFrames.toArray(new IdeFrameImpl[ideFrames.size()]);
+  public DesktopIdeFrameImpl[] getAllProjectFrames() {
+    final Collection<DesktopIdeFrameImpl> ideFrames = myProject2Frame.values();
+    return ideFrames.toArray(new DesktopIdeFrameImpl[ideFrames.size()]);
   }
 
   @Override
   public JFrame findVisibleFrame() {
-    IdeFrameImpl[] frames = getAllProjectFrames();
-    return frames.length > 0 ? frames[0] : (JFrame)WelcomeFrame.getInstance();
+    DesktopIdeFrameImpl[] frames = getAllProjectFrames();
+    if (frames.length > 0) {
+      return frames[0];
+    }
+    DesktopIdeFrame desktopIdeFrame = (DesktopIdeFrame)WelcomeFrame.getInstance();
+    if (desktopIdeFrame == null) {
+      throw new UnsupportedOperationException("Welcome frame not showing. Possible bug?");
+    }
+    return (JFrame)desktopIdeFrame.getJWindow();
   }
 
   @Override
@@ -365,7 +372,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
       dialog.dispose();
     }
     else {
-      IdeFrameImpl frame = getFrame(project);
+      DesktopIdeFrameImpl frame = getFrame(project);
       if (frame.isActive()) {
         dialog.dispose();
       }
@@ -416,7 +423,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     if (!myProject2Frame.containsKey(project)) {
       return null;
     }
-    final IdeFrameImpl frame = getFrame(project);
+    final DesktopIdeFrameImpl frame = getFrame(project);
     LOG.assertTrue(frame != null);
     return frame.getStatusBar();
   }
@@ -489,7 +496,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  public final IdeFrameImpl getFrame(@Nullable final Project project) {
+  public final DesktopIdeFrameImpl getFrame(@Nullable final Project project) {
     // no assert! otherwise WindowWatcher.suggestParentWindow fails for default project
     //LOG.assertTrue(myProject2Frame.containsKey(project));
     return myProject2Frame.get(project);
@@ -515,7 +522,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   public void showFrame() {
-    final IdeFrameImpl frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager, myDataManager, ApplicationManager.getApplication());
+    final DesktopIdeFrameImpl frame = new DesktopIdeFrameImpl(myActionManager, myDataManager, ApplicationManager.getApplication());
     myProject2Frame.put(null, frame);
 
     if (myFrameBounds == null || !ScreenUtil.isVisible(myFrameBounds)) { //avoid situations when IdeFrame is out of all screens
@@ -531,7 +538,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
 
   }
 
-  private IdeFrameImpl getDefaultEmptyIdeFrame() {
+  private DesktopIdeFrameImpl getDefaultEmptyIdeFrame() {
     return myProject2Frame.get(null);
   }
 
@@ -541,7 +548,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   public final IdeFrameEx allocateFrame(final Project project) {
     LOG.assertTrue(!myProject2Frame.containsKey(project));
 
-    final IdeFrameImpl frame;
+    final DesktopIdeFrameImpl frame;
     if (myProject2Frame.containsKey(null)) {
       frame = getDefaultEmptyIdeFrame();
       myProject2Frame.remove(null);
@@ -549,7 +556,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
       frame.setProject(project);
     }
     else {
-      frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager, myDataManager, ApplicationManager.getApplication());
+      frame = new DesktopIdeFrameImpl(myActionManager, myDataManager, ApplicationManager.getApplication());
 
       final Rectangle bounds = ProjectFrameBounds.getInstance(project).getBounds();
 
@@ -598,7 +605,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
 
   @Override
   public final void releaseFrame(final IdeFrameEx frame) {
-    IdeFrameImpl implFrame = (IdeFrameImpl)frame;
+    DesktopIdeFrameImpl implFrame = (DesktopIdeFrameImpl)frame;
 
     myEventDispatcher.getMulticaster().beforeFrameReleased(implFrame);
 
@@ -625,7 +632,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   @Override
   public final void disposeRootFrame() {
     if (myProject2Frame.size() == 1) {
-      final IdeFrameImpl rootFrame = myProject2Frame.remove(null);
+      final DesktopIdeFrameImpl rootFrame = myProject2Frame.remove(null);
       if (rootFrame != null) {
         // disposing last frame if quitting
         rootFrame.dispose();
@@ -736,7 +743,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     }
 
     Project project = projects[0];
-    final IdeFrameImpl frame = getFrame(project);
+    final DesktopIdeFrameImpl frame = getFrame(project);
     if (frame == null) {
       return null;
     }
@@ -757,7 +764,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     return frameElement;
   }
 
-  private int updateFrameBounds(IdeFrameImpl frame) {
+  private int updateFrameBounds(DesktopIdeFrameImpl frame) {
     int extendedState = frame.getExtendedState();
     if (SystemInfo.isMacOSLion) {
       ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(frame);

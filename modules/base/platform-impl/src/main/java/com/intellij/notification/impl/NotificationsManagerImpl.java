@@ -56,6 +56,7 @@ import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.wm.ex.DesktopIdeFrame;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -290,7 +291,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static Window findWindowForBalloon(@Nullable Project project) {
     Window frame = WindowManager.getInstance().getFrame(project);
     if (frame == null && project == null) {
-      frame = (Window)WelcomeFrame.getInstance();
+      IdeFrame ideFrame = WelcomeFrame.getInstance();
+      frame = ideFrame == null ? null : ((DesktopIdeFrame)ideFrame).getJWindow();
     }
     if (frame == null && project == null) {
       frame = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();

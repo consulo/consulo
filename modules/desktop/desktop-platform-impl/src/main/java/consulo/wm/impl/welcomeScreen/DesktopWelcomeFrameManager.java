@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.start;
+package consulo.wm.impl.welcomeScreen;
 
-import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.wm.IdeFrame;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Window;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -26,13 +29,16 @@ import javax.inject.Singleton;
  * @since 14-Oct-17
  */
 @Singleton
-public class DesktopWelcomeFrameManager implements WelcomeFrameManager {
+public class DesktopWelcomeFrameManager extends WelcomeFrameManager {
+  @Inject
+  public DesktopWelcomeFrameManager(Application application) {
+    super(application);
+  }
+
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Window openFrame() {
-    FlatWelcomeFrame flatWelcomeFrame = new FlatWelcomeFrame();
-    flatWelcomeFrame.setVisible(true);
-    return flatWelcomeFrame;
+  public IdeFrame createFrame() {
+    return new DesktopWelcomeIdeFrame(this::frameClosed);
   }
 }

@@ -22,9 +22,8 @@ import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.wm.IdeFrame;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
@@ -33,7 +32,6 @@ import consulo.ui.app.impl.settings.SettingsDialog;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
-import consulo.web.application.WebApplication;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -47,36 +45,32 @@ import java.util.List;
  * @since 23-Sep-17
  */
 @Singleton
-public class WebWelcomeFrameManager implements WelcomeFrameManager {
-  private Window myWindow;
+public class WebWelcomeFrameManager extends WelcomeFrameManager {
+  private final ProjectManager myProjectManager;
+  private final RecentProjectsManager myRecentProjectsManager;
+  private final DataManager myDataManager;
 
   @Inject
-  public WebWelcomeFrameManager(@Nonnull Application application) {
-    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
-      @Override
-      public void projectOpened(Project project) {
-        Window window = myWindow;
-
-        myWindow = null;
-
-        if (window != null) {
-          WebApplication.invokeOnCurrentSession(window::close);
-        }
-      }
-    });
+  public WebWelcomeFrameManager(Application application, ProjectManager projectManager, RecentProjectsManager recentProjectsManager, DataManager dataManager) {
+    super(application);
+    myProjectManager = projectManager;
+    myRecentProjectsManager = recentProjectsManager;
+    myDataManager = dataManager;
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Window openFrame() {
+  public IdeFrame createFrame() {
     Window welcomeFrame = Window.createModal(FrameTitleUtil.buildTitle());
+    welcomeFrame.addListener(Window.CloseListener.class, () -> frameClosed());
+
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
     welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
     welcomeFrame.setContent(Label.create("Loading..."));
 
-    AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
+    AnAction[] recentProjectsActions = myRecentProjectsManager.getRecentProjectsActions(false);
 
     ListModel<AnAction> model = ListModel.create(Arrays.asList(recentProjectsActions));
 
@@ -85,7 +79,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     listSelect.addValueListener(event -> {
       ReopenProjectAction value = (ReopenProjectAction)event.getValue();
 
-      AnActionEvent e = AnActionEvent.createFromAnAction(value, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext(welcomeFrame));
+      AnActionEvent e = AnActionEvent.createFromAnAction(value, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
 
       value.actionPerformed(e);
     });
@@ -103,7 +97,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     collectAllActions(group, quickStart);
 
     for (AnAction action : group) {
-      AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext(welcomeFrame));
+      AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
       action.update(e);
 
       Presentation presentation = e.getPresentation();
@@ -113,9 +107,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
           text = text.substring(0, text.length() - 3);
         }
 
-        Hyperlink component = Hyperlink.create(text, () -> {
-          action.actionPerformed(e);
-        });
+        Hyperlink component = Hyperlink.create(text, () -> action.actionPerformed(e));
 
         component.setImage(TargetAWT.from(presentation.getIcon()));
 
@@ -134,8 +126,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     layout.center(projectActionLayout);
 
     welcomeFrame.setContent(layout);
-    myWindow = welcomeFrame;
-    return welcomeFrame;
+    return new WebWelcomeIdeFrame(welcomeFrame, myProjectManager.getDefaultProject());
   }
 
   public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {

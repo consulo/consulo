@@ -23,80 +23,59 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
-import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.Component;
-import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.shared.Rectangle2D;
-import consulo.ui.shared.Size;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
-import consulo.ui.style.ColorKey;
 
 import javax.accessibility.AccessibleContext;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.EventListener;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, AccessibleContextAccessor, UISettingsListener, consulo.ui.Window {
+public class FlatWelcomeFrame extends JFrame implements Disposable, AccessibleContextAccessor, UISettingsListener {
+  private final Runnable myClearInstance;
   private BalloonLayout myBalloonLayout;
-  private final FlatWelcomeScreen myScreen;
   private boolean myDisposed;
 
-  @RequiredDispatchThread
-  public FlatWelcomeFrame() {
+  @RequiredUIAccess
+  public FlatWelcomeFrame(Runnable clearInstance) {
+    myClearInstance = clearInstance;
     final JRootPane rootPane = getRootPane();
-    myScreen = new FlatWelcomeScreen(this);
+    FlatWelcomeScreen screen = new FlatWelcomeScreen(this);
 
     final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
 
     setGlassPane(glassPane);
     glassPane.setVisible(false);
     //setUndecorated(true);
-    setContentPane(myScreen);
+    setContentPane(screen);
     setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
     SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
     setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
-    Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrame.DIMENSION_KEY);
+    Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrameManager.DIMENSION_KEY);
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
     setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
-    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
-      @Override
-      public void projectOpened(Project project) {
-        Disposer.dispose(FlatWelcomeFrame.this);
-      }
-    }, this);
-
-    myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
+    myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), screen.getMainWelcomePanel().myEventListener, screen.getMainWelcomePanel().myEventLocation);
 
     setupCloseAction(this);
     MnemonicHelper.init(this);
@@ -121,7 +100,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   public static void saveLocation(Rectangle location) {
     Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
-    DimensionService.getInstance().setLocationNoRealKey(WelcomeFrame.DIMENSION_KEY, middle);
+    DimensionService.getInstance().setLocationNoRealKey(WelcomeFrameManager.DIMENSION_KEY, middle);
   }
 
   public void setDefaultTitle() {
@@ -142,15 +121,10 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
       myBalloonLayout = null;
     }
 
-    WelcomeFrame.resetInstance();
-
     // open project from welcome screen show progress dialog and call FocusTrackback.register()
     FocusTrackback.release(this);
-  }
 
-  @Override
-  public StatusBar getStatusBar() {
-    return null;
+    myClearInstance.run();
   }
 
   @Override
@@ -158,38 +132,31 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
     return accessibleContext;
   }
 
-  @Override
   public BalloonLayout getBalloonLayout() {
     return myBalloonLayout;
   }
 
-  @Override
   public Rectangle2D suggestChildFrameBounds() {
     return TargetAWT.from(getBounds());
   }
 
   @Nullable
-  @Override
   public Project getProject() {
     return ProjectManager.getInstance().getDefaultProject();
   }
 
-  @Override
   public void setFrameTitle(String title) {
     setTitle(title);
   }
 
-  @Override
   public void setFileTitle(String fileTitle, File ioFile) {
     setTitle(fileTitle);
   }
 
-  @Override
   public IdeRootPaneNorthExtension getNorthExtension(String key) {
     return null;
   }
 
-  @Override
   public JComponent getComponent() {
     return getRootPane();
   }
@@ -198,88 +165,4 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
   public void uiSettingsChanged(UISettings source) {
     SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, getRootPane());
   }
-
-  // region Migration staff
-  @RequiredUIAccess
-  @Override
-  public void setContent(@Nonnull Component content) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setMenuBar(@Nullable MenuBar menuBar) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setClosable(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void close() {
-    setVisible(false);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeBorder(@Nonnull BorderPosition borderPosition) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nullable
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    throw new UnsupportedOperationException();
-  }
-  // endregion
 }

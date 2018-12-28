@@ -65,6 +65,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
+import consulo.start.WelcomeFrameManager;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -400,6 +402,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         try {
+          // more faster welcome frame closing
+          uiAccess.give(() -> WelcomeFrameManager.getInstance().closeFrame());
+
           fireProjectOpened(project, uiAccess);
 
           final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
@@ -436,7 +441,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onCancel() {
         closeProject(project, false, false, true, uiAccess);
@@ -719,9 +724,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  @RequiredDispatchThread
-  public boolean closeProject(@Nonnull final Project project) {
-    return closeProject(project, true, false, true, UIAccess.current()).getResultSync();
+  @RequiredWriteAction
+  public AsyncResult<Boolean> closeProject(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+    return closeProject(project, true, false, true, uiAccess);
   }
 
   @RequiredWriteAction

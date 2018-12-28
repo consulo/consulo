@@ -18,6 +18,7 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.BalloonLayout;
+import consulo.ui.Window;
 import consulo.ui.shared.Rectangle2D;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,12 +43,8 @@ public interface IdeFrame {
 
   IdeRootPaneNorthExtension getNorthExtension(String key);
 
-  default JComponent getComponent() {
-    throw new AbstractMethodError();
-  }
-
   @Nonnull
-  default consulo.ui.Window getWindow() {
+  default Window getWindow() {
     throw new AbstractMethodError();
   }
 
@@ -57,4 +54,10 @@ public interface IdeFrame {
   interface Child extends IdeFrame {
     IdeFrame getParentFrame();
   }
+
+  // region AWT & Swing dependency
+  default JComponent getComponent() {
+    throw new AbstractMethodError();
+  }
+  // endregion
 }

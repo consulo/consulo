@@ -15,21 +15,25 @@
  */
 package consulo.web.servlet;
 
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.AccessRule;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.*;
+import consulo.ui.DockLayout;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+import consulo.ui.Window;
 import consulo.ui.ex.internal.WGwtLoadingPanelImpl;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import consulo.web.application.impl.VaadinWebSessionImpl;
 import consulo.web.servlet.ui.UIBuilder;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,13 +50,14 @@ public class RootUIBuilder implements UIBuilder {
         return;
       }
 
-      WriteAction.run(() -> {
+      UIAccess uiAccess = UIAccess.current();
+      AccessRule.writeAsync(() -> {
         ProjectManager projectManager = ProjectManager.getInstance();
 
         Project[] openProjects = projectManager.getOpenProjects();
 
         for (Project openProject : openProjects) {
-          projectManager.closeProject(openProject);
+          projectManager.closeProject(openProject, uiAccess);
         }
       });
     });
@@ -98,8 +103,6 @@ public class RootUIBuilder implements UIBuilder {
 
     application.setCurrentSession(currentSession);
 
-    Window frame = WelcomeFrameManager.getInstance().openFrame();
-
-    frame.show();
+    WelcomeFrame.showIfNoProjectOpened();
   }
 }

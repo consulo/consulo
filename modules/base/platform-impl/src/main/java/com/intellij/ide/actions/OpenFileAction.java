@@ -41,15 +41,14 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
@@ -115,7 +114,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+    if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
     }
   }

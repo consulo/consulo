@@ -30,7 +30,6 @@ import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -40,7 +39,6 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.status.*;
@@ -54,6 +52,7 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.UIAccess;
 import consulo.ui.shared.Rectangle2D;
+import consulo.wm.ex.DesktopIdeFrame;
 import consulo.wm.impl.status.ModuleLayerWidget;
 
 import javax.accessibility.AccessibleContext;
@@ -71,7 +70,7 @@ import java.lang.reflect.Field;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContextAccessor, DataProvider {
+public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleContextAccessor, DataProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.IdeFrameImpl");
 
   private static final String FULL_SCREEN = "FullScreen";
@@ -90,10 +89,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
   private PropertyChangeListener myWindowsBorderUpdater;
   private boolean myRestoreFullScreen;
 
-  public IdeFrameImpl(ApplicationInfoEx applicationInfoEx,
-                      ActionManager actionManager,
-                      DataManager dataManager,
-                      Application application) {
+  public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
     super(FrameTitleUtil.buildTitle());
     myRootPane = createRootPane(actionManager, dataManager, application);
     setRootPane(myRootPane);
@@ -169,7 +165,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
 
       for (IdeFrame frame : projectFrames) {
         if (frame == this) continue;
-        if (((IdeFrameImpl)frame).isInFullScreen() && ScreenUtil.getScreenDevice(((IdeFrameImpl)frame).getBounds()) == device) {
+        if (((DesktopIdeFrameImpl)frame).isInFullScreen() && ScreenUtil.getScreenDevice(((DesktopIdeFrameImpl)frame).getBounds()) == device) {
           Insets insets = ScreenUtil.getScreenInsets(device.getDefaultConfiguration());
           int mask = SideBorder.NONE;
           if (insets.top != 0) mask |= SideBorder.TOP;
@@ -187,6 +183,12 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
                                        DataManager dataManager,
                                        Application application) {
     return new IdeRootPane(actionManager, dataManager, application, this);
+  }
+
+  @Nonnull
+  @Override
+  public Window getJWindow() {
+    return this;
   }
 
   @Nonnull
@@ -564,7 +566,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     }
     IdeFrame[] frames = WindowManager.getInstance().getAllProjectFrames();
     for (IdeFrame frame : frames) {
-      ((IdeFrameImpl)frame).updateBorder();
+      ((DesktopIdeFrameImpl)frame).updateBorder();
     }
 
     return ActionCallback.DONE;

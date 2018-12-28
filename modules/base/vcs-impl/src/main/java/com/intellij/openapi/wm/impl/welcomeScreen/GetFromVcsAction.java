@@ -18,19 +18,19 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.openapi.vcs.checkout.CheckoutAction;
 import com.intellij.ui.UIBundle;
-import consulo.annotations.RequiredDispatchThread;
-import javax.annotation.Nonnull;
+import consulo.start.WelcomeFrameManager;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public class GetFromVcsAction extends WelcomePopupAction{
 
   protected void fillActions(DefaultActionGroup group) {
-    final CheckoutProvider[] providers = Extensions.getExtensions(CheckoutProvider.EXTENSION_POINT_NAME);
+    final CheckoutProvider[] providers = CheckoutProvider.EXTENSION_POINT_NAME.getExtensions();
     Arrays.sort(providers, new CheckoutProvider.CheckoutProviderComparator());
     for (CheckoutProvider provider : providers) {
       group.add(new CheckoutAction(provider));
@@ -50,11 +50,11 @@ public class GetFromVcsAction extends WelcomePopupAction{
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(Extensions.getExtensions(CheckoutProvider.EXTENSION_POINT_NAME).length > 0);
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+    e.getPresentation().setEnabledAndVisible(CheckoutProvider.EXTENSION_POINT_NAME.getExtensions().length > 0);
+    if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.FromVCS);
     }
   }

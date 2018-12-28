@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,6 +33,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
   public VaadinWindowImpl(boolean modal) {
     setModal(modal);
     setContent((com.vaadin.ui.Component)myRootPanel);
+    addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
   }
 
   @RequiredUIAccess

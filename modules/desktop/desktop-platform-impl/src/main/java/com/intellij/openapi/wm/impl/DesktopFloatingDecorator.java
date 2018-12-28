@@ -70,7 +70,7 @@ public final class DesktopFloatingDecorator extends JDialog implements ToolWindo
   private float myEndRatio; // start and end alpha ratio for transparency animation
 
 
-  DesktopFloatingDecorator(final IdeFrameImpl owner, final WindowInfoImpl info, final DesktopInternalDecorator internalDecorator) {
+  DesktopFloatingDecorator(final DesktopIdeFrameImpl owner, final WindowInfoImpl info, final DesktopInternalDecorator internalDecorator) {
     super(owner, internalDecorator.getToolWindow().getId());
     MnemonicHelper.init(getContentPane());
     myInternalDecorator = internalDecorator;

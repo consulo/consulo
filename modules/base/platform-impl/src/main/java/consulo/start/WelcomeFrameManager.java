@@ -15,28 +15,106 @@
  */
 package consulo.start;
 
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.DumbAwareRunnable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.shared.Size;
-import consulo.ui.Window;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 23-Sep-17
  */
-public interface WelcomeFrameManager {
+public abstract class WelcomeFrameManager {
+  public static final String DIMENSION_KEY = "WELCOME_SCREEN";
+
   @Nonnull
   public static Size getDefaultWindowSize() {
     return new Size(777, 460);
   }
 
+  public static boolean isFromWelcomeFrame(@Nonnull AnActionEvent e) {
+    return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
+  }
+
   @Nonnull
-  static WelcomeFrameManager getInstance() {
+  public static WelcomeFrameManager getInstance() {
     return ServiceManager.getService(WelcomeFrameManager.class);
+  }
+
+  private IdeFrame myFrameInstance;
+
+  private final Application myApplication;
+
+  protected WelcomeFrameManager(Application application) {
+    myApplication = application;
+
+    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project, UIAccess uiAccess) {
+        uiAccess.give(() -> closeFrame());
+      }
+    });
+  }
+
+  @Nullable
+  @RequiredUIAccess
+  public IdeFrame getCurrentFrame() {
+    UIAccess.assertIsUIThread();
+    return myFrameInstance;
+  }
+
+  protected void frameClosed() {
+    myFrameInstance = null;
+  }
+
+  @RequiredUIAccess
+  public void showFrame() {
+    UIAccess.assertIsUIThread();
+
+    if (myFrameInstance == null) {
+      myFrameInstance = createFrame();
+      myFrameInstance.getWindow().show();
+    }
+  }
+
+  @RequiredUIAccess
+  public void closeFrame() {
+    UIAccess.assertIsUIThread();
+    IdeFrame frameInstance = myFrameInstance;
+
+    if (frameInstance == null) {
+      return;
+    }
+
+    frameInstance.getWindow().close();
+  }
+
+  public void showIfNoProjectOpened() {
+    myApplication.invokeLater((DumbAwareRunnable)() -> {
+      WindowManagerEx windowManager = (WindowManagerEx)WindowManager.getInstance();
+      windowManager.disposeRootFrame();
+      IdeFrame[] frames = windowManager.getAllProjectFrames();
+      if (frames.length == 0) {
+        showFrame();
+      }
+    }, ModalityState.NON_MODAL);
   }
 
   @Nonnull
   @RequiredUIAccess
-  Window openFrame();
+  protected abstract IdeFrame createFrame();
 }

@@ -26,16 +26,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -103,8 +103,8 @@ public class EditorEmptyTextPainter {
 
   protected static boolean isToolwindowVisible(@Nonnull JComponent splitters, @Nonnull String toolwindowId) {
     Window frame = SwingUtilities.getWindowAncestor(splitters);
-    if (frame instanceof IdeFrameImpl) {
-      Project project = ((IdeFrameImpl)frame).getProject();
+    if (frame instanceof IdeFrame) {
+      Project project = ((IdeFrame)frame).getProject();
       if (project != null) {
         if (!project.isInitialized()) return true;
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(toolwindowId);

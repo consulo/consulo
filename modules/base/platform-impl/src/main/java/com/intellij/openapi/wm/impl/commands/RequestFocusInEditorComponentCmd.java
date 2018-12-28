@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
@@ -97,8 +97,8 @@ public final class RequestFocusInEditorComponentCmd extends FinalizableCommand{
         return;
       }
 
-      final Window activeFrame = IdeFrameImpl.getActiveFrame();
-      if (activeFrame != null && owner instanceof IdeFrameImpl && activeFrame != owner) {
+      final Window activeFrame = DesktopIdeFrameImpl.getActiveFrame();
+      if (activeFrame != null && owner instanceof DesktopIdeFrameImpl && activeFrame != owner) {
         myDoneCallback.setRejected();
         return;
       }

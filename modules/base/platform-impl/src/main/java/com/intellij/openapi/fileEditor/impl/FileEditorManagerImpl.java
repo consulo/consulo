@@ -62,7 +62,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.docking.DockContainer;
@@ -1643,7 +1643,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       if (component != null) {
         return component instanceof EditorComponentImpl;
       }
-      return window instanceof IdeFrameImpl;
+      return window instanceof DesktopIdeFrameImpl;
     }
     return true;
   }
