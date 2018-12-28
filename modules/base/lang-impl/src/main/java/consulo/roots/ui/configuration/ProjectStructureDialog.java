@@ -29,12 +29,12 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ui.StripeTabPanel;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -53,23 +53,23 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   private StripeTabPanel myStripeTabPanel;
   private ProjectStructureConfigurable myStructureConfigurable;
 
-  public static boolean show(@Nonnull Project project) {
-    return show(project, EmptyConsumer.<ProjectStructureConfigurable>getInstance());
+  public static void show(@Nonnull Project project) {
+    show(project, EmptyConsumer.<ProjectStructureConfigurable>getInstance());
   }
 
-  public static boolean show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
+  public static void show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    ProjectStructureDialog dialog =
-            new ProjectStructureDialog(project, configurable, OptionsEditorDialog.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
+    ProjectStructureDialog dialog = new ProjectStructureDialog(project, configurable, OptionsEditorDialog.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
     if (configurableConsumer != null) {
-      new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable.Adapter() {
+      new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
         @Override
         public void showNotify() {
           configurableConsumer.consume(configurable);
         }
       });
     }
-    return dialog.showAndGet();
+
+    dialog.showAsync();
   }
 
   public ProjectStructureDialog(@Nonnull Project project,
@@ -139,7 +139,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   @Override
   protected JComponent createSouthPanel() {
     JComponent southPanel = super.createSouthPanel();
-    if(southPanel != null) {
+    if (southPanel != null) {
       southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
       BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
       borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
@@ -193,7 +193,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
     for (StripeTabPanel.TabInfo tab : tabs) {
       Configurable other = tab.getUserData(CONFIGURABLE_KEY);
-      if(other == configurable) {
+      if (other == configurable) {
         tab.select();
         break;
       }
@@ -204,7 +204,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   public Configurable getSelectedConfigurable() {
     List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
     for (StripeTabPanel.TabInfo tab : tabs) {
-      if(tab.isSelected()) {
+      if (tab.isSelected()) {
         Configurable data = tab.getUserData(CONFIGURABLE_KEY);
         assert data != null;
         return data;

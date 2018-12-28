@@ -98,11 +98,10 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       @RequiredUIAccess
       @Override
       public void onFrameDeactivated() {
-        UIAccess uiAccess = UIAccess.current();
-
         LOG.debug("save(): enter");
+        boolean inModalContext = LaterInvocator.isInModalContext();
         AccessRule.writeAsync(() -> {
-          if (canSyncOrSave(uiAccess)) {
+          if (canSyncOrSave(inModalContext)) {
             saveProjectsAndDocuments();
           }
           LOG.debug("save(): exit");
@@ -137,6 +136,10 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
   @Override
   public void scheduleRefresh() {
     myRefreshDelayAlarm.cancelAndRequest();
+  }
+
+  private boolean canSyncOrSave(boolean isInModalContext) {
+    return !isInModalContext && !myProgressManager.hasModalProgressIndicator();
   }
 
   private boolean canSyncOrSave(UIAccess uiAccess) {

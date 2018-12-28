@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterClient;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
@@ -27,14 +27,14 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.tree.IElementType;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-class UnifiedEditorHighlighter implements EditorHighlighter {
+class UnifiedEditorHighlighter implements EditorHighlighter, DocumentListener {
   public static final Logger LOG = UnifiedDiffViewer.LOG;
 
   @Nonnull
@@ -151,6 +151,12 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
   public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
   }
 
+  @Nonnull
+  @Override
+  public DocumentListener getDocumentListener() {
+    return this;
+  }
+
   @Override
   public void setEditor(@Nonnull HighlighterClient editor) {
   }
@@ -159,13 +165,6 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
   public void setText(@Nonnull CharSequence text) {
   }
 
-  @Override
-  public void beforeDocumentChange(DocumentEvent event) {
-  }
-
-  @Override
-  public void documentChanged(DocumentEvent event) {
-  }
 
   private static class ProxyIterator implements HighlighterIterator {
     private final Document myDocument;

@@ -15,7 +15,9 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.util.AsyncResult;
 import com.vaadin.ui.UI;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -34,11 +36,20 @@ public class VaadinUIAccessImpl implements UIAccess {
     return myUI.isAttached() && myUI.getSession() != null;
   }
 
+  @Nonnull
   @Override
-  public void give(@RequiredUIAccess @Nonnull Runnable runnable) {
+  public AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
+    AsyncResult<Void> result = new AsyncResult<>();
     if (isValid()) {
-      myUI.access(runnable);
+      myUI.access(() -> {
+        runnable.run();
+        result.setDone();
+      });
     }
+    else {
+      result.setDone();
+    }
+    return result;
   }
 
   @Override

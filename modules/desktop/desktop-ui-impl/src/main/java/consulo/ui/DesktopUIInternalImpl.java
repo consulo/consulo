@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
@@ -249,7 +251,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   UIAccess _UIAccess_get() {
-    return AWTUIAccessImpl.ourInstance;
+    Application application = ApplicationManager.getApplication();
+    return application == null ? AWTUIAccessImpl.ourInstance : IdeAWTUIAccessImpl.ourInstance;
   }
 
   @Override

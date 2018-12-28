@@ -15,20 +15,20 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import com.intellij.util.PairConsumer;
-import consulo.annotations.DeprecationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 
 public class AsyncResult<T> extends ActionCallback {
-  private static final Logger LOG = Logger.getInstance(AsyncResult.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AsyncResult.class);
 
   private static final AsyncResult REJECTED = new Rejected();
 
@@ -144,8 +144,8 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
-  public AsyncResult<T> doWhenRejected(@Nonnull final PairConsumer<T, String> consumer) {
-    doWhenRejected(() -> consumer.consume(myResult, myError));
+  public AsyncResult<T> doWhenRejected(@Nonnull final BiConsumer<T, String> consumer) {
+    doWhenRejected(() -> consumer.accept(myResult, myError));
     return this;
   }
 
@@ -193,17 +193,7 @@ public class AsyncResult<T> extends ActionCallback {
     return this;
   }
 
-  @Deprecated
-  @DeprecationInfo("Use #done() method")
-  public static class Done<T> extends AsyncResult<T> {
-    public Done(T value) {
-      setDone(value);
-    }
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #rejected() method")
-  public static class Rejected<T> extends AsyncResult<T> {
+  private static class Rejected<T> extends AsyncResult<T> {
     public Rejected() {
       setRejected();
     }
@@ -231,7 +221,7 @@ public class AsyncResult<T> extends ActionCallback {
       }
       catch (Throwable e) {
         subResult.reject(e.getMessage());
-        LOG.error(e);
+        LOG.error(e.getMessage(), e);
         return;
       }
       subResult.setDone(v);
@@ -254,7 +244,7 @@ public class AsyncResult<T> extends ActionCallback {
       }
       catch (Throwable e) {
         subResult.reject(e.getMessage());
-        LOG.error(e);
+        LOG.error(e.getMessage(), e);
         return;
       }
       subResult.setDone();

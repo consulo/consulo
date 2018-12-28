@@ -18,6 +18,7 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ArrayUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -137,18 +138,25 @@ public abstract class DialogWrapperPeer {
   public abstract void setLocation(Point p);
 
   /**
-   * @see javax.swing.JDialog#setLocation(int,int)
+   * @see javax.swing.JDialog#setLocation(int, int)
    */
   public abstract void setLocation(int x, int y);
 
   public abstract AsyncResult<Void> show();
+
+  @Nonnull
+  public AsyncResult<Void> showAsync() {
+    return show();
+  }
 
   public abstract void setContentPane(JComponent content);
 
   public abstract void centerInParent();
 
   public abstract void validate();
+
   public abstract void repaint();
+
   public abstract void pack();
 
   public abstract void setAppIcons();

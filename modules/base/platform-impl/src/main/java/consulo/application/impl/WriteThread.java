@@ -17,6 +17,7 @@ package consulo.application.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;
@@ -36,15 +37,17 @@ public class WriteThread extends Thread implements Disposable {
     private ThrowableComputable myComputable;
     private AsyncResult myResult;
     private Class myCallClass;
-    private String myCreateTrace;
+    private Exception myCreateTrace;
 
     private CallInfo(ThrowableComputable computable, AsyncResult result, Class callClass) {
       myComputable = computable;
       myResult = result;
       myCallClass = callClass;
-      myCreateTrace = ExceptionUtil.currentStackTrace();
+      myCreateTrace = new Exception();
     }
   }
+
+  private static final Logger LOG = Logger.getInstance(WriteThread.class);
 
   private final Deque<CallInfo> myQueue = new ConcurrentLinkedDeque<>();
   private final BaseApplicationWithOwnWriteThread myApplication;
@@ -62,7 +65,7 @@ public class WriteThread extends Thread implements Disposable {
 
   public <T> void push(ThrowableComputable<T, Throwable> computable, AsyncResult<T> result, Class caller) {
     if(myApplication.isWriteAccessAllowed()) {
-      runImpl(caller, computable, result, ExceptionUtil.getThrowableText(new Exception()));
+      runImpl(caller, computable, result, new Exception());
       return;
     }
     myQueue.addLast(new CallInfo(computable, result, caller));
@@ -84,7 +87,8 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   @SuppressWarnings("unchecked")
-  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult, @Nonnull String creationTrace) {
+  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult, @Nonnull Exception e) {
+    long start = System.currentTimeMillis();
     try {
       Object compute;
       //noinspection RequiredXAction
@@ -98,9 +102,16 @@ public class WriteThread extends Thread implements Disposable {
       String throwableText = ExceptionUtil.getThrowableText(throwable);
 
       System.err.println("Exception trace: " + throwableText);
-      System.err.println("Call trace: " + creationTrace);
+      System.err.println("Call trace: " + ExceptionUtil.getThrowableText(e));
 
       asyncResult.rejectWithThrowable(throwable);
+    }
+    finally {
+      long l = System.currentTimeMillis() - start;
+
+      if(l > 300) {
+        LOG.warn("Long write operation. Time: " + l, e);
+      }
     }
   }
 

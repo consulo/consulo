@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
@@ -59,9 +61,12 @@ public interface UIAccess {
 
   boolean isValid();
 
-  void give(@RequiredUIAccess @Nonnull Runnable runnable);
+  @Nonnull
+  AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable);
 
-  void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable);
+  default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
+    give(runnable).getResultSync();
+  }
 
   @SuppressWarnings("unchecked")
   default <T> T giveAndWait(@RequiredUIAccess @Nonnull Supplier<T> supplier) {

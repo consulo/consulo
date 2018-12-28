@@ -123,11 +123,6 @@ public class MockProjectStore implements IProjectStore {
   }
 
   @Override
-  public void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   @Nullable
   public String getPresentableUrl() {
     throw new UnsupportedOperationException("Method getPresentableUrl not implemented in " + getClass());

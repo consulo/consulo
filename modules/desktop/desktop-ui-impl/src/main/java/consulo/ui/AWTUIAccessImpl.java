@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -27,17 +29,24 @@ import java.lang.reflect.InvocationTargetException;
 public class AWTUIAccessImpl implements UIAccess {
   public static UIAccess ourInstance = new AWTUIAccessImpl();
 
-  private AWTUIAccessImpl() {
-  }
-
   @Override
   public boolean isValid() {
     return true;
   }
 
+  @Nonnull
   @Override
-  public void give(@RequiredUIAccess @Nonnull Runnable runnable) {
-    SwingUtilities.invokeLater(runnable);
+  public AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
+    AsyncResult<Void> result = new AsyncResult<>();
+    SwingUtilities.invokeLater(() -> {
+      try {
+        runnable.run();
+      }
+      finally {
+        result.setDone();
+      }
+    });
+    return result;
   }
 
   @Override

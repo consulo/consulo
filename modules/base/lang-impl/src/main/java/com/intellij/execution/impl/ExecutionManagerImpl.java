@@ -54,7 +54,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.Alarm;
-import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -69,6 +68,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 @Singleton
 public class ExecutionManagerImpl extends ExecutionManager implements Disposable {
@@ -289,7 +289,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         }, o -> project.isDisposed())).doWhenRejectedWithThrowable(errorHandler);
       }
       catch (ExecutionException e) {
-        errorHandler.consume(e);
+        errorHandler.accept(e);
       }
     };
 

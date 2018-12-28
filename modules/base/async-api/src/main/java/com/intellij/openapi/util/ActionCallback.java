@@ -15,14 +15,13 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class ActionCallback {
   public static final ActionCallback DONE = new Done();
@@ -139,7 +138,7 @@ public class ActionCallback {
   public final ActionCallback doWhenRejectedWithThrowable(@Nonnull final Consumer<Throwable> consumer) {
     myRejected.doWhenExecuted(() -> {
       if (myThrowable != null) {
-        consumer.consume(myThrowable);
+        consumer.accept(myThrowable);
       }
     });
     return this;
@@ -147,7 +146,7 @@ public class ActionCallback {
 
   @Nonnull
   public final ActionCallback doWhenRejected(@Nonnull final Consumer<String> consumer) {
-    myRejected.doWhenExecuted(() -> consumer.consume(myError));
+    myRejected.doWhenExecuted(() -> consumer.accept(myError));
     return this;
   }
 
@@ -194,7 +193,6 @@ public class ActionCallback {
     }
   }
 
-  @NonNls
   @Override
   public String toString() {
     final String name = myName != null ? myName : super.toString();

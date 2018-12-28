@@ -59,6 +59,7 @@ import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;
@@ -424,7 +425,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     if (myTypeAheadCallback != null) {
       IdeFocusManager.getInstance(myProject).typeAheadUntil(myTypeAheadCallback);
     }
-    LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
     final AsyncResult<Void> result = new AsyncResult<>();
 
     final AnCancelAction anCancelAction = new AnCancelAction();
@@ -475,6 +475,76 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
       myDialog.getFocusManager().doWhenFocusSettlesDown(result.createSetDoneRunnable());
     }
+
+    return result;
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Void> showAsync() {
+    LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
+    if (myTypeAheadCallback != null) {
+      IdeFocusManager.getInstance(myProject).typeAheadUntil(myTypeAheadCallback);
+    }
+
+    final AnCancelAction anCancelAction = new AnCancelAction();
+    final JRootPane rootPane = getRootPane();
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
+    anCancelAction.registerCustomShortcutSet(CommonShortcuts.ESCAPE, rootPane);
+    myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
+
+    if (!myCanBeParent && myWindowManager != null) {
+      myWindowManager.doNotSuggestAsParent(myDialog.getWindow());
+    }
+
+    final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+    final boolean appStarted = commandProcessor != null;
+
+    boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog(); // ProgressWindow starts a modality state itself
+    Project project = myProject;
+
+    UIAccess uiAccess = UIAccess.current();
+
+    AsyncResult<Void> modalUpdate = AsyncResult.resolved();
+    if (changeModalityState) {
+      modalUpdate = AccessRule.writeAsync(commandProcessor::enterModal);
+    }
+
+    AsyncResult<Void> result = new AsyncResult<>();
+
+    modalUpdate.doWhenProcessed(() -> {
+      uiAccess.give(() -> {
+        if (changeModalityState) {
+          if (ModalityPerProjectEAPDescriptor.is()) {
+            LaterInvocator.enterModal(project, myDialog.getWindow());
+          }
+          else {
+            LaterInvocator.enterModal(myDialog);
+          }
+        }
+
+        if (appStarted) {
+          hidePopupsIfNeeded();
+        }
+
+        try {
+          myDialog.show();
+        }
+        finally {
+          if (ModalityPerProjectEAPDescriptor.is()) {
+            LaterInvocator.leaveModal(project, myDialog.getWindow());
+          }
+          else {
+            LaterInvocator.leaveModal(myDialog);
+          }
+        }
+      }).doWhenProcessed(() -> {
+        if (changeModalityState) {
+          AccessRule.writeAsync(commandProcessor::leaveModal).getResultSync();
+        }
+        result.setDone();
+      });
+    });
 
     return result;
   }

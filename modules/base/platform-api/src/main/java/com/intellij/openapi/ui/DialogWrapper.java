@@ -55,6 +55,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import sun.swing.SwingUtilities2;
@@ -67,8 +69,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -1596,13 +1598,38 @@ public abstract class DialogWrapper {
    *
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
+  @Deprecated
   public void show() {
     showAndGetOk();
   }
 
+  @Deprecated
   public boolean showAndGet() {
     show();
     return isOK();
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public AsyncResult<Boolean> showAsync() {
+    UIAccess uiAccess = UIAccess.current();
+
+    AsyncResult<Boolean> result = new AsyncResult<>();
+    showInternal().doWhenProcessed(() -> result.setDone(isOK()));
+    return result;
+  }
+
+  @NonNls
+  private AsyncResult<Void> showInternal() {
+    ensureEventDispatchThread();
+
+    registerKeyboardShortcuts();
+
+    final Disposable uiParent = Disposer.get("ui");
+    if (uiParent != null) { // may be null if no app yet (license agreement)
+      Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
+    }
+    return myPeer.showAsync();
   }
 
   /**
@@ -1611,6 +1638,7 @@ public abstract class DialogWrapper {
    * @return result callback
    */
   @Nonnull
+  @Deprecated
   public AsyncResult<Boolean> showAndGetOk() {
     final AsyncResult<Boolean> result = new AsyncResult<Boolean>();
 
@@ -1650,8 +1678,7 @@ public abstract class DialogWrapper {
 
     ActionListener cancelKeyboardAction = createCancelAction();
     if (cancelKeyboardAction != null) {
-      rootPane
-              .registerKeyboardAction(cancelKeyboardAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+      rootPane.registerKeyboardAction(cancelKeyboardAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
       ActionUtil.registerForEveryKeyboardShortcut(getRootPane(), cancelKeyboardAction, CommonShortcuts.getCloseActiveWindow());
     }
     registerForEveryKeyboardShortcut(cancelKeyboardAction, CommonShortcuts.getCloseActiveWindow());
@@ -2214,9 +2241,7 @@ public abstract class DialogWrapper {
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
   private static void ensureEventDispatchThread() {
-    if (!EventQueue.isDispatchThread()) {
-      throw new IllegalStateException("The DialogWrapper can be used only on event dispatch thread.");
-    }
+    UIAccess.assertIsUIThread();
   }
 
   public final Disposable getDisposable() {

@@ -103,7 +103,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   }
 
   private void updateChangesForDocument(@Nonnull final Document document) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (myProject.isDisposed()) return;
     List<Pair<PsiElement, Boolean>> toUpdate = changedElements.get(document);
     if (toUpdate == null) {
@@ -194,7 +194,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   }
 
   private void queueElement(@Nonnull PsiElement child, final boolean whitespaceOptimizationAllowed, @Nonnull PsiTreeChangeEvent event) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     PsiFile file = event.getFile();
     if (file == null) file = child.getContainingFile();
     if (file == null) {
