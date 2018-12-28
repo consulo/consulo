@@ -25,6 +25,7 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
@@ -33,6 +34,7 @@ import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginDialog;
 import consulo.ide.updateSettings.impl.PlatformOrPluginNode;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -169,13 +171,16 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
       ourInstallingNodes.removeAll(pluginNodes);
     };
+
     downloadAndInstallPlugins(project, list, myAvailablePluginPanel.getPluginsModel().getAllPlugins(), afterCallback);
   }
 
-  public static boolean downloadAndInstallPlugins(@Nullable Project project,
-                                                  @Nonnull final List<IdeaPluginDescriptor> toInstall,
-                                                  @Nonnull final List<IdeaPluginDescriptor> allPlugins,
-                                                  @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
+  @RequiredUIAccess
+  @Nonnull
+  public static AsyncResult<Void> downloadAndInstallPlugins(@Nullable Project project,
+                                                            @Nonnull final List<IdeaPluginDescriptor> toInstall,
+                                                            @Nonnull final List<IdeaPluginDescriptor> allPlugins,
+                                                            @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
     List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream().map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x)).collect(Collectors.toList());
@@ -189,13 +194,14 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       }
       return true;
     };
+
     PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback);
     if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
       dialog.doOKAction();
-      return true;
+      return AsyncResult.resolved();
     }
     else {
-      return dialog.showAndGet();
+      return dialog.showAsync();
     }
   }
 

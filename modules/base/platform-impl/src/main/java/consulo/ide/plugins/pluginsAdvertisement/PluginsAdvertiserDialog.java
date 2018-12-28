@@ -18,12 +18,14 @@ package consulo.ide.plugins.pluginsAdvertisement;
 import com.intellij.ide.plugins.*;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
 import javax.annotation.Nonnull;
 
@@ -43,7 +45,6 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
   @Nullable
   private final Project myProject;
   private final List<IdeaPluginDescriptor> myToInstallPlugins;
-  private boolean myUserAccepted;
   private final Map<PluginId, Boolean> myDownloadState;
 
   public PluginsAdvertiserDialog(@Nullable Project project, @Nonnull List<IdeaPluginDescriptor> toInstallPlugins) {
@@ -60,7 +61,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     init();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
@@ -106,19 +107,13 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     return new Dimension(500, 800);
   }
 
-  @Override
-  protected void doOKAction() {
+  @RequiredUIAccess
+  public AsyncResult<Void> createDownloadAsyncResult() {
     List<IdeaPluginDescriptor> toDownload = myToInstallPlugins.stream().filter(it -> myDownloadState.get(it.getPluginId())).collect(Collectors.toList());
-    myUserAccepted = InstallPluginAction
-            .downloadAndInstallPlugins(myProject, toDownload, PluginsAdvertiserHolder.getLoadedPluginDescriptors(), ideaPluginDescriptors -> {
-              if (!ideaPluginDescriptors.isEmpty()) {
-                PluginManagerMain.notifyPluginsWereInstalled(ideaPluginDescriptors, null);
-              }
-            });
-    super.doOKAction();
-  }
-
-  public boolean isUserInstalledPlugins() {
-    return isOK() && myUserAccepted;
+    return InstallPluginAction.downloadAndInstallPlugins(myProject, toDownload, PluginsAdvertiserHolder.getLoadedPluginDescriptors(), ideaPluginDescriptors -> {
+      if (!ideaPluginDescriptors.isEmpty()) {
+        PluginManagerMain.notifyPluginsWereInstalled(ideaPluginDescriptors, null);
+      }
+    });
   }
 }

@@ -17,6 +17,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
@@ -33,6 +34,7 @@ import consulo.application.ApplicationProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
@@ -64,6 +66,7 @@ public class PerformanceWatcher implements Disposable {
   private final ThreadMXBean myThreadMXBean;
   private final DateFormat myDateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
   private final File mySessionLogDir;
+  private final Application myApplication;
   private File myCurHangLogDir;
   private List<StackTraceElement> myStacktraceCommonPart;
   private final IdePerformanceListener myPublisher;
@@ -86,17 +89,14 @@ public class PerformanceWatcher implements Disposable {
     return ApplicationManager.getApplication().getComponent(PerformanceWatcher.class);
   }
 
-  public PerformanceWatcher() {
+  @Inject
+  public PerformanceWatcher(Application application) {
+    myApplication = application;
     myCurHangLogDir = mySessionLogDir = new File(PathManager.getLogPath() + "/threadDumps-" + myDateFormat.format(new Date())
                                                  + "-" + ApplicationInfo.getInstance().getBuild().asString());
-    myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(IdePerformanceListener.TOPIC);
+    myPublisher = application.getMessageBus().syncPublisher(IdePerformanceListener.TOPIC);
     myThreadMXBean = ManagementFactory.getThreadMXBean();
-    myThread = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
-      @Override
-      public void run() {
-        samplePerformance();
-      }
-    }, SAMPLING_INTERVAL_MS, SAMPLING_INTERVAL_MS, TimeUnit.MILLISECONDS);
+    myThread = JobScheduler.getScheduler().scheduleWithFixedDelay((Runnable)() -> samplePerformance(), SAMPLING_INTERVAL_MS, SAMPLING_INTERVAL_MS, TimeUnit.MILLISECONDS);
 
     UNRESPONSIVE_THRESHOLD_SECONDS = SystemProperties.getIntProperty("performance.watcher.threshold", 5);
     UNRESPONSIVE_INTERVAL_SECONDS = SystemProperties.getIntProperty("performance.watcher.interval", 5);
@@ -115,12 +115,7 @@ public class PerformanceWatcher implements Disposable {
         }
       });
 
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-        @Override
-        public void run() {
-          deleteOldThreadDumps();
-        }
-      });
+      application.executeOnPooledThread((Runnable)PerformanceWatcher::deleteOldThreadDumps);
 
       for (MemoryPoolMXBean bean : ManagementFactory.getMemoryPoolMXBeans()) {
         if ("Code Cache".equals(bean.getName())) {
@@ -180,7 +175,7 @@ public class PerformanceWatcher implements Disposable {
   }
 
   private boolean shouldWatch() {
-    return !ApplicationManager.getApplication().isHeadlessEnvironment() &&
+    return !myApplication.isHeadlessEnvironment() &&
            UNRESPONSIVE_INTERVAL_SECONDS != 0 &&
            UNRESPONSIVE_THRESHOLD_SECONDS != 0;
   }

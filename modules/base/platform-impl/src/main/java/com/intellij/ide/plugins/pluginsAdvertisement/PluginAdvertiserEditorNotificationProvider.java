@@ -28,6 +28,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
@@ -36,10 +37,11 @@ import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -94,6 +96,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   }
 
   @Nonnull
+  @RequiredUIAccess
   private EditorNotificationPanel createPanel(VirtualFile virtualFile, final Set<IdeaPluginDescriptor> plugins, List<IdeaPluginDescriptor> allPlugins) {
     String extension = virtualFile.getExtension();
 
@@ -111,11 +114,14 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     else {
       panel.createActionLabel("Install plugins", () -> {
         final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(plugins));
-        advertiserDialog.show();
-        if (advertiserDialog.isUserInstalledPlugins()) {
-          myEnabledExtensions.add(extension);
-          myNotifications.updateAllNotifications();
-        }
+        advertiserDialog.showAsync().doWhenDone(() -> {
+          AsyncResult<Void> downloadAsyncResult = advertiserDialog.createDownloadAsyncResult();
+
+          downloadAsyncResult.doWhenDone(() -> {
+            myEnabledExtensions.add(extension);
+            myNotifications.updateAllNotifications();
+          });
+        });
       });
     }
 
