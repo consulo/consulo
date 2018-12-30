@@ -52,7 +52,7 @@ public class LexerEditorHighlighter implements EditorHighlighter {
   private PrioritizedDocumentListener myDocumentListener = new PrioritizedDocumentListener() {
     @Override
     public void documentChanged(DocumentEvent event) {
-      myEditor.invoke(() -> documentChanged(event));
+      myEditor.invoke(() -> LexerEditorHighlighter.this.documentChanged(event));
     }
 
     @Override
