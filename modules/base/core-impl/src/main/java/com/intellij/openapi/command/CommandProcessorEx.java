@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.command;
 
-import consulo.annotations.RequiredWriteAction;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author max
  */
 public abstract class CommandProcessorEx extends CommandProcessor {
-  @RequiredWriteAction
+  @RequiredUIAccess
   public abstract void enterModal();
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   public abstract void leaveModal();
 }

@@ -1389,18 +1389,20 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       if (myProject.isDisposed()) return;
       setTabsMode(UISettings.getInstance().getEditorTabPlacement() != UISettings.TABS_NONE);
 
-      AccessRule.writeAsync(() -> CommandProcessor.getInstance().executeCommandAsync(myProject, (result, uiAccess) -> uiAccess.give(() -> {
-        if (myProject.isDisposed()) {
-          return;
-        }
+      ui.give(() -> {
+        CommandProcessor.getInstance().executeCommandAsync(myProject, (result, uiAccess) -> uiAccess.give(() -> {
+          if (myProject.isDisposed()) {
+            return;
+          }
 
-        long currentTime = System.nanoTime();
-        Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
-        if (startTime != null) {
-          LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
-          PluginManagerCore.dumpPluginClassStatistics();
-        }
-      }), "", null, ui));
+          long currentTime = System.nanoTime();
+          Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
+          if (startTime != null) {
+            LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
+            PluginManagerCore.dumpPluginClassStatistics();
+          }
+        }), "", null, ui);
+      });
     });
   }
 

@@ -57,7 +57,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
-import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
@@ -444,7 +444,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     Project project = myProject;
 
     if (changeModalityState) {
-      AccessRule.writeAsync(commandProcessor::enterModal).getResultSync();
+      commandProcessor.enterModal();
 
       if (ModalityPerProjectEAPDescriptor.is()) {
         LaterInvocator.enterModal(project, myDialog.getWindow());
@@ -463,7 +463,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
     finally {
       if (changeModalityState) {
-        AccessRule.writeAsync(commandProcessor::leaveModal).getResultSync();
+        commandProcessor.leaveModal();
 
         if (ModalityPerProjectEAPDescriptor.is()) {
           LaterInvocator.leaveModal(project, myDialog.getWindow());
@@ -505,32 +505,31 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     UIAccess uiAccess = UIAccess.current();
 
-    AsyncResult<Void> modalUpdate = AsyncResult.resolved();
-    if (changeModalityState) {
-      modalUpdate = AccessRule.writeAsync(commandProcessor::enterModal);
-    }
-
     AsyncResult<Void> result = new AsyncResult<>();
 
-    modalUpdate.doWhenProcessed(() -> {
-      uiAccess.give(() -> {
+    uiAccess.give(() -> {
+      if (changeModalityState) {
+        commandProcessor.enterModal();
+
+        if (ModalityPerProjectEAPDescriptor.is()) {
+          LaterInvocator.enterModal(project, myDialog.getWindow());
+        }
+        else {
+          LaterInvocator.enterModal(myDialog);
+        }
+      }
+
+      if (appStarted) {
+        hidePopupsIfNeeded();
+      }
+
+      try {
+        myDialog.show();
+      }
+      finally {
         if (changeModalityState) {
-          if (ModalityPerProjectEAPDescriptor.is()) {
-            LaterInvocator.enterModal(project, myDialog.getWindow());
-          }
-          else {
-            LaterInvocator.enterModal(myDialog);
-          }
-        }
+          commandProcessor.leaveModal();
 
-        if (appStarted) {
-          hidePopupsIfNeeded();
-        }
-
-        try {
-          myDialog.show();
-        }
-        finally {
           if (ModalityPerProjectEAPDescriptor.is()) {
             LaterInvocator.leaveModal(project, myDialog.getWindow());
           }
@@ -538,20 +537,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             LaterInvocator.leaveModal(myDialog);
           }
         }
-      }).doWhenProcessed(() -> {
-        uiAccess.give(() -> {
-          AsyncResult<Void> subResult = AsyncResult.resolved();
-          subResult.doWhenProcessed((Runnable)result::setDone);
-
-          if (changeModalityState) {
-            AccessRule.writeAsync(commandProcessor::leaveModal).notify(subResult);
-          }
-          else {
-            subResult.setDone();
-          }
-        });
-      });
-    });
+      }
+    }).notify(result);
 
     return result;
   }
@@ -566,6 +553,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
   private class AnCancelAction extends AnAction implements DumbAware {
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -603,6 +591,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       return false;
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       myWrapper.doCancelAction(e.getInputEvent());

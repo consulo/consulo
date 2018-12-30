@@ -20,6 +20,7 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -34,6 +35,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class TextEditorBackgroundHighlighter implements BackgroundEditorHighlighter {
+  private static final Logger LOG = Logger.getInstance(TextEditorBackgroundHighlighter.class);
+
   private static final int[] EXCEPT_OVERRIDDEN = {
           Pass.UPDATE_FOLDING,
           Pass.POPUP_HINTS,
@@ -47,7 +50,6 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
   private final Document myDocument;
   private PsiFile myFile;
   private final Project myProject;
-  private boolean myCompiled;
 
   public TextEditorBackgroundHighlighter(@Nonnull Project project, @Nonnull Editor editor) {
     myProject = project;
@@ -59,10 +61,6 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
   private void renewFile() {
     if (myFile == null || !myFile.isValid()) {
       myFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
-      myCompiled = myFile instanceof PsiCompiledFile;
-      if (myCompiled) {
-        myFile = ((PsiCompiledFile)myFile).getDecompiledPsiFile();
-      }
       if (myFile != null && !myFile.isValid()) {
         myFile = null;
       }
@@ -76,13 +74,22 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
   @Nonnull
   List<TextEditorHighlightingPass> getPasses(@Nonnull int[] passesToIgnore) {
     if (myProject.isDisposed()) return Collections.emptyList();
-    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+
+    LOG.assertTrue(PsiDocumentManager.getInstance(myProject).isCommitted(myDocument));
+
     renewFile();
-    if (myFile == null) return Collections.emptyList();
-    if (myCompiled) {
+    PsiFile file = myFile;
+    if (file == null) return Collections.emptyList();
+
+    boolean compiled = file instanceof PsiCompiledFile;
+    if (compiled) {
+      file = ((PsiCompiledFile)file).getDecompiledPsiFile();
+    }
+
+    if (compiled) {
       passesToIgnore = EXCEPT_OVERRIDDEN;
     }
-    else if (!DaemonCodeAnalyzer.getInstance(myProject).isHighlightingAvailable(myFile)) {
+    else if (!DaemonCodeAnalyzer.getInstance(myProject).isHighlightingAvailable(file)) {
       return Collections.emptyList();
     }
 

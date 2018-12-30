@@ -27,9 +27,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.annotations.RequiredWriteAction;
-import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -130,7 +128,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     };
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   @Override
   public void executeCommandAsync(Project project,
                                   @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
@@ -142,7 +140,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     executeCommandAsync(project, command, name, groupId, confirmationPolicy, true, document, uiAccess);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   @Override
   public void executeCommandAsync(@Nullable Project project,
                                   @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
@@ -154,7 +152,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     executeCommandAsync(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null, uiAccess);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   private void executeCommandAsync(@Nullable Project project,
                                    @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                                    @Nullable String name,
@@ -163,7 +161,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                                    boolean shouldRecordCommandForActiveDocument,
                                    @Nullable Document document,
                                    @Nonnull UIAccess uiAccess) {
-    myApplication.assertWriteAccessAllowed();
+    UIAccess.assertIsUIThread();
 
     if (project != null && project.isDisposed()) {
       CommandLog.LOG.error("Project " + project + " already disposed");
@@ -190,9 +188,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       command.accept(result, uiAccess);
 
-      result.doWhenDone(() -> AccessRule.writeAsync(() -> finishCommand(project, descriptor, uiAccess, null)));
+      result.doWhenDone(() -> finishCommand(project, descriptor, uiAccess, null));
 
-      result.doWhenRejectedWithThrowable((t) -> AccessRule.writeAsync(() -> finishCommand(project, descriptor, uiAccess, t)));
+      result.doWhenRejectedWithThrowable((t) -> finishCommand(project, descriptor, uiAccess, t));
     }
     catch (Throwable th) {
       // in case error not from async result - finish action
@@ -220,17 +218,17 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     return myCurrentCommand;
   }*/
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   protected void finishCommand(final Project project, final CommandDescriptor command, UIAccess uiAccess, Throwable throwable) {
-    myApplication.assertWriteAccessAllowed();
+    UIAccess.assertIsUIThread();
 
     CommandLog.LOG.assertTrue(myCurrentCommand != null, "no current command in progress");
     fireCommandFinished(uiAccess);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   protected void fireCommandFinished(UIAccess uiAccess) {
-    myApplication.assertWriteAccessAllowed();
+    UIAccess.assertIsUIThread();
 
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
@@ -259,9 +257,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredWriteAction
+  @RequiredUIAccess
   public void enterModal() {
-    myApplication.assertWriteAccessAllowed();
+    UIAccess.assertIsUIThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     myInterruptedCommands.push(currentCommand);
     if (currentCommand != null) {
@@ -270,9 +268,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredWriteAction
+  @RequiredUIAccess
   public void leaveModal() {
-    myApplication.assertWriteAccessAllowed();
+    UIAccess.assertIsUIThread();
     CommandLog.LOG.assertTrue(myCurrentCommand == null, "Command must not run: " + myCurrentCommand);
 
     myCurrentCommand = myInterruptedCommands.pop();
@@ -282,18 +280,18 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setCurrentCommandName(String name) {
-    myApplication.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandLog.LOG.assertTrue(currentCommand != null);
     currentCommand.myName = name;
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setCurrentCommandGroupId(Object groupId) {
-    myApplication.assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandLog.LOG.assertTrue(currentCommand != null);
     currentCommand.myGroupId = groupId;
@@ -396,9 +394,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   private void fireCommandStarted() {
-    myApplication.assertWriteAccessAllowed();
+    UIAccess.assertIsUIThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
                                           currentCommand.myShouldRecordActionForActiveDocument, currentCommand.myDocument, currentCommand.myUIAccess);

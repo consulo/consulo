@@ -23,7 +23,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredWriteAction;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -76,17 +76,17 @@ public abstract class CommandProcessor {
                                       @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                       boolean shouldRecordCommandForActiveDocument);
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   public void executeCommandAsync(@Nullable Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, @Nullable String name, @Nullable Object groupId, @Nonnull UIAccess uiAccess) {
     executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, uiAccess);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   public void executeCommandAsync(Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, String name, Object groupId, Document document, @Nonnull UIAccess uiAccess) {
     executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document, uiAccess);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   public void executeCommandAsync(Project project,
                                   @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
                                   final String name,
@@ -96,7 +96,7 @@ public abstract class CommandProcessor {
     executeCommandAsync(project, command, name, groupId, confirmationPolicy, null, uiAccess);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   public abstract void executeCommandAsync(@Nullable Project project,
                                            @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                                            @Nullable String name,
@@ -110,7 +110,7 @@ public abstract class CommandProcessor {
    *                                             Examples of such actions: Create New File, Change Project Settings etc.
    *                                             Default is true.
    */
-  @RequiredWriteAction
+  @RequiredUIAccess
   public abstract void executeCommandAsync(@Nullable Project project,
                                            @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                                            @Nullable String name,

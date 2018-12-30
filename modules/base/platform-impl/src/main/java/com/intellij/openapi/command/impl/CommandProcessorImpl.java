@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredWriteAction;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -37,7 +37,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
     super(application);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   @Override
   protected void finishCommand(Project project, CoreCommandProcessor.CommandDescriptor command, UIAccess uiAccess, Throwable throwable) {
     if (myCurrentCommand != command) return;

@@ -44,6 +44,8 @@ import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.inject.Inject;
@@ -931,15 +933,16 @@ public class HintManagerImpl extends HintManager implements Disposable {
    */
   private final class MyProjectManagerListener extends ProjectManagerAdapter {
     @Override
-    public void projectOpened(Project project) {
+    public void projectOpened(Project project, UIAccess uiAccess) {
       project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, myEditorManagerListener);
     }
 
     @Override
-    public void projectClosed(Project project) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
-      // avoid leak through com.intellij.codeInsight.hint.TooltipController.myCurrentTooltip
-      TooltipController.getInstance().cancelTooltips();
+    public void projectClosed(Project project, UIAccess uiAccess) {
+      uiAccess.giveAndWait(() -> {
+        // avoid leak through com.intellij.codeInsight.hint.TooltipController.myCurrentTooltip
+        TooltipController.getInstance().cancelTooltips();
+      });
 
       myQuestionAction = null;
       myQuestionHint = null;
