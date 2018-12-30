@@ -19,7 +19,6 @@ import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -42,6 +41,7 @@ import com.intellij.openapi.wm.impl.commands.InvokeLaterCmd;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
+import consulo.components.PersistentStateComponentWithUIState;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.ui.RequiredUIAccess;
@@ -62,7 +62,7 @@ import java.util.*;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponent<Element>, Disposable {
+public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
   public static final String ID = "ToolWindowManager";
 
   public static class InitToolWindowsActivity implements StartupActivity, DumbAware {

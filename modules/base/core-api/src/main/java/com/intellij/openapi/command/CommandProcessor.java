@@ -116,8 +116,7 @@ public abstract class CommandProcessor {
                                            @Nullable String name,
                                            @Nullable Object groupId,
                                            @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                           boolean shouldRecordCommandForActiveDocument,
-                                           @Nonnull UIAccess uiAccess);
+                                           boolean shouldRecordCommandForActiveDocument);
 
   public abstract void setCurrentCommandName(@Nullable String name);
 

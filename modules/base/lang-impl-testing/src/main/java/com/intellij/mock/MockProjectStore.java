@@ -22,7 +22,9 @@ import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredWriteAction;
 import consulo.components.impl.stores.StateComponentInfo;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -117,8 +119,9 @@ public class MockProjectStore implements IProjectStore {
     throw new UnsupportedOperationException("Method load is not yet implemented in " + getClass().getName());
   }
 
+  @RequiredWriteAction
   @Override
-  public void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
+  public void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles, @Nonnull UIAccess uiAccess) {
     throw new UnsupportedOperationException();
   }
 

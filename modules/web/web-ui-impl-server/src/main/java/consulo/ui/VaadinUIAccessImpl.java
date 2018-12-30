@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
 import com.intellij.openapi.util.AsyncResult;
 import com.vaadin.ui.UI;
 
@@ -54,6 +55,8 @@ public class VaadinUIAccessImpl implements UIAccess {
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
+    ComponentStoreImpl.assertIfInsideSavingSession();
+
     if (isValid()) {
       myUI.accessSynchronously(runnable);
     }

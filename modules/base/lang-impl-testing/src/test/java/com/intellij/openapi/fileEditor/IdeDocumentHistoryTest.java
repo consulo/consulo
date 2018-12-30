@@ -8,7 +8,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.testFramework.PlatformLangTestCase;
-import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -35,7 +34,7 @@ public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
 
       @Override
       protected void executeCommand(Runnable runnable, String name, Object groupId) {
-        myHistory.onCommandStarted(UIAccess.current());
+        myHistory.onCommandStarted();
         runnable.run();
         myHistory.onSelectionChanged();
         myHistory.onCommandFinished(groupId);
@@ -65,7 +64,7 @@ public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
     };
   }
   public void testNoHistoryRecording() throws Throwable {
-    myHistory.onCommandStarted(UIAccess.current());
+    myHistory.onCommandStarted();
     myHistory.onCommandFinished(null);
 
     assertFalse(myHistory.isBackAvailable());
@@ -162,7 +161,7 @@ public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
   }
 
   private void makeNavigationChange(MyState newState) {
-    myHistory.onCommandStarted(UIAccess.current());
+    myHistory.onCommandStarted();
     myHistory.onSelectionChanged();
     myHistory.onCommandFinished(null);
     myEditorState = newState;

@@ -129,9 +129,6 @@ public class TargetElementUtil {
     Document document = editor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (file == null) return null;
-    if (ApplicationManager.getApplication().isDispatchThread()) {
-      PsiDocumentManager.getInstance(project).commitAllDocuments();
-    }
 
     offset = adjustOffset(file, document, offset);
 

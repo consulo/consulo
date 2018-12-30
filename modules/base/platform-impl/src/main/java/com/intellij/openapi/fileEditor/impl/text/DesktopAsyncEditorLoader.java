@@ -197,7 +197,6 @@ public class DesktopAsyncEditorLoader {
   TextEditorState getEditorState(@Nonnull FileEditorStateLevel level) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-
     TextEditorState state = myProvider.getStateImpl(myProject, myEditor, level);
     if (!myLoadingFinished.isDone() && myDelayedState != null) {
       state.setDelayedFoldState(myDelayedState::getFoldingState);

@@ -33,12 +33,16 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.JDOMXIncluder;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.components.PersistentStateComponentWithUIState;
 import consulo.components.impl.stores.StateComponentInfo;
+import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -51,7 +55,15 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
+  private static ThreadLocal<Boolean> ourInsideSavingSessionLocal = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
   private static final Logger LOG = Logger.getInstance(ComponentStoreImpl.class);
+
+  public static void assertIfInsideSavingSession() {
+    if(ourInsideSavingSessionLocal.get() == Boolean.TRUE) {
+      throw new IllegalStateException("Can't call another inside saving session. Thread: " + Thread.currentThread());
+    }
+  }
 
   private final Map<String, StateComponentInfo<?>> myComponents = Collections.synchronizedMap(new THashMap<>());
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
@@ -79,16 +91,28 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     return componentInfo;
   }
 
+  @RequiredWriteAction
   @Override
-  public final void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
+  public void save(@Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles, @Nonnull UIAccess uiAccess) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
       Arrays.sort(names);
-      for (String name : names) {
-        StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponent(componentInfo, externalizationSession);
+      Map<String, Object> statesFromUI = getStatesFromUI(names, uiAccess);
+
+      try {
+        ourInsideSavingSessionLocal.set(Boolean.TRUE);
+
+        for (String name : names) {
+          StateComponentInfo<?> componentInfo = myComponents.get(name);
+          Object stateFromUI = statesFromUI.get(name);
+
+          commitComponent(componentInfo, stateFromUI, externalizationSession);
+        }
+      }
+      finally {
+        ourInsideSavingSessionLocal.remove();
       }
     }
 
@@ -102,6 +126,26 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
 
     doSave(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
+  }
+
+  @Nonnull
+  private Map<String, Object> getStatesFromUI(String[] names, UIAccess uiAccess) {
+    Map<String, Object> map = new HashMap<>();
+
+    uiAccess.giveAndWait(() -> {
+      for (String name : names) {
+        StateComponentInfo<?> stateComponentInfo = myComponents.get(name);
+
+        PersistentStateComponent<?> component = stateComponentInfo.getComponent();
+
+        if (component instanceof PersistentStateComponentWithUIState) {
+          Object stateFromUI = ((PersistentStateComponentWithUIState)component).getStateFromUI();
+          map.put(name, stateFromUI == ObjectUtil.NULL ? null : stateFromUI);
+        }
+      }
+    });
+
+    return map;
   }
 
   protected void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
@@ -121,10 +165,19 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
   }
 
-  private <T> void commitComponent(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session) {
+  @SuppressWarnings("unchecked")
+  @RequiredWriteAction
+  private <T> void commitComponent(@Nonnull StateComponentInfo<T> componentInfo, @Nullable Object stateFromUI, @Nonnull ExternalizationSession session) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
 
-    T state = component.getState();
+    T state;
+    if (component instanceof PersistentStateComponentWithUIState) {
+      state = (T)((PersistentStateComponentWithUIState)component).getState(stateFromUI == null ? ObjectUtil.NULL : stateFromUI);
+    }
+    else {
+      state = component.getState();
+    }
+
     if (state != null) {
       Storage[] storageSpecs = getComponentStorageSpecs(component, componentInfo.getState(), StateStorageOperation.WRITE);
       session.setState(storageSpecs, component, componentInfo.getName(), state);
@@ -376,7 +429,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
       }).getResultSync();
 
       Throwable e = exceptionRef.get();
-      if(e != null) {
+      if (e != null) {
         Messages.showWarningDialog(ProjectBundle.message("project.reload.failed", e.getMessage()), ProjectBundle.message("project.reload.failed.title"));
         return ReloadComponentStoreStatus.ERROR;
       }

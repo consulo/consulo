@@ -30,6 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,12 +42,12 @@ public final class StoreUtil {
   }
 
   @RequiredWriteAction
-  public static void save(@Nonnull IComponentStore stateStore, @Nullable Project project) {
+  public static void save(@Nonnull IComponentStore stateStore, @Nonnull UIAccess uiAccess, @Nullable Project project) {
     Application.get().assertWriteAccessAllowed();
 
     ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
     try {
-      stateStore.save(new SmartList<>());
+      stateStore.save(new SmartList<>(), uiAccess);
     }
     catch (IComponentStore.SaveCancelledException e) {
       LOG.info(e);

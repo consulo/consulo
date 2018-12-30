@@ -28,7 +28,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -77,7 +76,9 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.components.PersistentStateComponentWithUIState;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
@@ -110,7 +111,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Vladimir Kondratyev
  */
 @State(name = "FileEditorManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponent<Element> {
+public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithUIState<Element, Element> {
   private static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
 
   private static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");
@@ -1406,9 +1407,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     });
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     if (mySplitters == null) {
       // do not save if not initialized yet
       return null;
@@ -1417,6 +1419,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     Element state = new Element("state");
     getMainSplitters().writeExternal(state);
     return state;
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
+    return element;
   }
 
   @Override

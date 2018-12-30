@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
 import com.intellij.openapi.diagnostic.Logger;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,9 @@ public class IdeAWTUIAccessImpl extends AWTUIAccessImpl {
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
-    if(Application.get().isWriteAccessAllowed()) {
+    ComponentStoreImpl.assertIfInsideSavingSession();
+
+    if (Application.get().isWriteAccessAllowed()) {
       LOG.warn(new IllegalStateException("Invoking #giveAndWait() from write-thread"));
     }
     super.giveAndWait(runnable);

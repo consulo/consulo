@@ -309,7 +309,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   public void _saveSettings() {
     if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
       try {
-        StoreUtil.save(getStateStore(), null);
+        StoreUtil.save(getStateStore(), getLastUIAccess(), null);
       }
       finally {
         mySaveSettingsIsInProgress.set(false);

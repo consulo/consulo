@@ -38,7 +38,6 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.fileEditor.impl.EditorWindow;
-import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
@@ -130,7 +129,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     CommandListener commandListener = new CommandListener() {
       @Override
       public void commandStarted(CommandEvent event) {
-        onCommandStarted(event.getUIAccess());
+        onCommandStarted();
       }
 
       @Override
@@ -204,8 +203,8 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
   }
 
-  public final void onCommandStarted(UIAccess uiAccess) {
-    myCommandStartPlace = uiAccess.giveAndWait(this::getCurrentPlaceInfo);
+  public final void onCommandStarted() {
+    myCommandStartPlace = getCurrentPlaceInfo();
     myCurrentCommandIsNavigation = false;
     myCurrentCommandHasChanges = false;
     myCurrentCommandHasMoves = false;

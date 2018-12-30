@@ -19,7 +19,9 @@ import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredWriteAction;
 import consulo.components.impl.stores.StateComponentInfo;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,7 +59,8 @@ public interface IComponentStore {
     }
   }
 
-  void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
+  @RequiredWriteAction
+  void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles, @Nonnull UIAccess uiAccess);
 
   interface Reloadable extends IComponentStore {
     /**

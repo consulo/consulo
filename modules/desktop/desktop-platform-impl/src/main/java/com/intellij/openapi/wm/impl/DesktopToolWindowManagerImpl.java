@@ -66,6 +66,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.annotations.RequiredWriteAction;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.RequiredUIAccess;
@@ -956,20 +957,15 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     return lastActiveToolWindowId;
   }
 
+  @RequiredUIAccess
+  @Nullable
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     if (myFrame == null) {
       // do nothing if the project was not opened
       return null;
     }
 
-    UIAccess uiAccess = Application.get().getLastUIAccess();
-    return uiAccess.giveAndWait(this::getStateInUIThread);
-  }
-
-  // TODO [VISTALL] calling this data from UI thread is painful. Need remove calling ui thread from this code
-  @Nonnull
-  private Element getStateInUIThread() {
     // Update size of all open floating windows. See SCR #18439
     for (final String id : getToolWindowIds()) {
       final WindowInfoImpl info = getInfo(id);
@@ -1010,6 +1006,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       element.addContent(layoutToRestoreElement);
     }
 
+    return element;
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
     return element;
   }
 

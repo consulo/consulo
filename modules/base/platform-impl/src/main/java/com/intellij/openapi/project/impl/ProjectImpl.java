@@ -288,7 +288,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
       }
 
-      StoreUtil.save(getStateStore(), this);
+      StoreUtil.save(getStateStore(), Application.get().getLastUIAccess(), this);
     }
     finally {
       mySavingInProgress.set(false);

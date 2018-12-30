@@ -108,7 +108,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   public void executeCommand(Project project, @Nonnull final Runnable command, final String name, final Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy, Document document) {
-    executeCommandAsync(project, wrap(command), name, groupId, confirmationPolicy, true, document, UIAccess.current());
+    executeCommandAsync(project, wrap(command), name, groupId, confirmationPolicy, true, document);
   }
 
   @Override
@@ -137,7 +137,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                                   @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                   Document document,
                                   @Nonnull UIAccess uiAccess) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, true, document, uiAccess);
+    executeCommandAsync(project, command, name, groupId, confirmationPolicy, true, document);
   }
 
   @RequiredUIAccess
@@ -147,9 +147,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                                   @Nullable String name,
                                   @Nullable Object groupId,
                                   @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  boolean shouldRecordCommandForActiveDocument,
-                                  @Nonnull UIAccess uiAccess) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null, uiAccess);
+                                  boolean shouldRecordCommandForActiveDocument) {
+    executeCommandAsync(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
   }
 
   @RequiredUIAccess
@@ -159,9 +158,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                                    @Nullable Object groupId,
                                    @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                    boolean shouldRecordCommandForActiveDocument,
-                                   @Nullable Document document,
-                                   @Nonnull UIAccess uiAccess) {
-    UIAccess.assertIsUIThread();
+                                   @Nullable Document document) {
+    UIAccess uiAccess = UIAccess.current();
 
     if (project != null && project.isDisposed()) {
       CommandLog.LOG.error("Project " + project + " already disposed");
