@@ -598,11 +598,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @Override
-  public boolean isWriteActionInProgress() {
-    return myLock.isWriteLocked();
-  }
-
   protected void assertWriteActionStart() {
     if (!isWriteAccessAllowed()) {
       throw new IllegalArgumentException("Can't start write action from current thread. Thread: " + Thread.currentThread().getName());

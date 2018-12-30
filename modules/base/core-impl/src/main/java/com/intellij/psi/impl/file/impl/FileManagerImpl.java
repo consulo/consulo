@@ -44,6 +44,7 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
 
@@ -146,6 +147,7 @@ public class FileManagerImpl implements FileManager {
     markInvalidations(originalFileToPsiFileMap);
   }
 
+  @RequiredWriteAction
   @Override
   public void forceReload(@Nonnull VirtualFile vFile) {
     LanguageSubstitutors.cancelReparsing(vFile);

@@ -15,13 +15,14 @@
  */
 package com.intellij.usages;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.GuiUtils;
 import com.intellij.usageView.UsageViewBundle;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,9 +31,7 @@ import javax.annotation.Nonnull;
 public class UsageLimitUtil {
   public static final int USAGES_LIMIT = 1000;
 
-  public static void showAndCancelIfAborted(@Nonnull Project project,
-                                            @Nonnull String message,
-                                            @Nonnull UsageViewPresentation usageViewPresentation) {
+  public static void showAndCancelIfAborted(@Nonnull Project project, @Nonnull String message, @Nonnull UsageViewPresentation usageViewPresentation) {
     Result retCode = showTooManyUsagesWarning(project, message, usageViewPresentation);
 
     if (retCode != Result.CONTINUE) {
@@ -41,21 +40,18 @@ public class UsageLimitUtil {
   }
 
   public enum Result {
-    CONTINUE, ABORT
+    CONTINUE,
+    ABORT
   }
 
   @Nonnull
-  public static Result showTooManyUsagesWarning(@Nonnull final Project project,
-                                                @Nonnull final String message,
-                                                @Nonnull final UsageViewPresentation usageViewPresentation) {
+  public static Result showTooManyUsagesWarning(@Nonnull final Project project, @Nonnull final String message, @Nonnull final UsageViewPresentation usageViewPresentation) {
     final String[] buttons = {UsageViewBundle.message("button.text.continue"), UsageViewBundle.message("button.text.abort")};
     int result = runOrInvokeAndWait(new Computable<Integer>() {
       @Override
       public Integer compute() {
         String title = UsageViewBundle.message("find.excessive.usages.title", StringUtil.capitalize(StringUtil.pluralize(usageViewPresentation.getUsagesWord())));
-        return Messages.showOkCancelDialog(project, message,
-                                           title, buttons[0], buttons[1],
-                                           Messages.getWarningIcon());
+        return Messages.showOkCancelDialog(project, message, title, buttons[0], buttons[1], Messages.getWarningIcon());
       }
     });
     return result == Messages.OK ? Result.CONTINUE : Result.ABORT;
@@ -63,17 +59,12 @@ public class UsageLimitUtil {
 
   private static int runOrInvokeAndWait(@Nonnull final Computable<Integer> f) {
     final int[] answer = new int[1];
-    try {
-      GuiUtils.runOrInvokeAndWait(new Runnable() {
-        @Override
-        public void run() {
-          answer[0] = f.compute();
-        }
-      });
-    }
-    catch (Exception e) {
-      answer[0] = 0;
-    }
+    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+      @Override
+      public void run() {
+        answer[0] = f.compute();
+      }
+    });
 
     return answer[0];
   }

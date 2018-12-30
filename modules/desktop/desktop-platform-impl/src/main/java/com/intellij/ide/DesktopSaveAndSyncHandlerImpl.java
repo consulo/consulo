@@ -27,6 +27,7 @@ import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
@@ -170,8 +171,9 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
     }
   }
 
+  @Nonnull
   @Override
-  public void refreshOpenFiles() {
+  public AsyncResult<Void> refreshOpenFiles() {
     List<VirtualFile> files = ContainerUtil.newArrayList();
 
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
@@ -184,7 +186,12 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
     if (!files.isEmpty()) {
       // refresh open files synchronously so it doesn't wait for potentially longish refresh request in the queue to finish
-      RefreshQueue.getInstance().refresh(false, false, null, files);
+      AsyncResult<Void> request = new AsyncResult<>();
+      RefreshQueue.getInstance().refresh(true, false, request::setDone, files);
+      return request;
+    }
+    else {
+      return AsyncResult.resolved();
     }
   }
 

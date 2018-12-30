@@ -60,7 +60,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   private static final Logger LOG = Logger.getInstance(ComponentStoreImpl.class);
 
   public static void assertIfInsideSavingSession() {
-    if(ourInsideSavingSessionLocal.get() == Boolean.TRUE) {
+    if (ourInsideSavingSessionLocal.get() == Boolean.TRUE) {
       throw new IllegalStateException("Can't call another inside saving session. Thread: " + Thread.currentThread());
     }
   }
@@ -172,7 +172,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
 
     T state;
     if (component instanceof PersistentStateComponentWithUIState) {
-      state = (T)((PersistentStateComponentWithUIState)component).getState(stateFromUI == null ? ObjectUtil.NULL : stateFromUI);
+      state = (T)((PersistentStateComponentWithUIState)component).getState(stateFromUI == ObjectUtil.NULL ? null : stateFromUI);
     }
     else {
       state = component.getState();

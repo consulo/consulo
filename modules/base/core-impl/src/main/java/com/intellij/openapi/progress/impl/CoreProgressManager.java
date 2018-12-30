@@ -35,10 +35,10 @@ import com.intellij.util.containers.SmartHashSet;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -504,12 +504,6 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
       if (progress == null) myCurrentUnsafeProgressCount.decrementAndGet();
       if (modal) myCurrentModalProgressCount.decrementAndGet();
     }
-  }
-
-  @Override
-  public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
-    ApplicationManager.getApplication().runReadAction(action);
-    return true;
   }
 
   private void registerIndicatorAndRun(@Nonnull ProgressIndicator indicator,

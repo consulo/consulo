@@ -86,6 +86,7 @@ public interface FileManager extends Disposable {
     return null;
   }
 
+  @RequiredWriteAction
   default void forceReload(@Nonnull VirtualFile vFile) {
   }
 

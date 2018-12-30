@@ -353,9 +353,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     if (state instanceof DocumentFoldingInfo) {
       ((DocumentFoldingInfo)state).writeExternal(element);
     }
-    else {
-      throw new WriteExternalException();
-    }
   }
 
   @Override

@@ -16,7 +16,10 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.AsyncResult;
 import consulo.annotations.RequiredWriteAction;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Kirill Likhodedov
@@ -28,12 +31,17 @@ public abstract class SaveAndSyncHandler {
 
   @RequiredWriteAction
   public abstract void saveProjectsAndDocuments();
+
   public abstract void scheduleRefresh();
-  public abstract void refreshOpenFiles();
+
+  @Nonnull
+  public abstract AsyncResult<Void> refreshOpenFiles();
 
   public abstract void blockSaveOnFrameDeactivation();
+
   public abstract void unblockSaveOnFrameDeactivation();
 
   public abstract void blockSyncOnFrameActivation();
+
   public abstract void unblockSyncOnFrameActivation();
 }

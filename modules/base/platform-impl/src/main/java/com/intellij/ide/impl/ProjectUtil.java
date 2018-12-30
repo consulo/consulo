@@ -33,6 +33,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.DefaultPaths;
@@ -127,9 +128,9 @@ public class ProjectUtil {
    */
   @Nullable
   @Deprecated
-  @DeprecationInfo("Sync variant of #openAsync()")
+  @DeprecationInfo("Use #openAsync()")
   public static Project open(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
-    return openAsync(path, projectToClose, forceOpenInNewFrame, UIAccess.current()).getResultSync();
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -187,7 +188,6 @@ public class ProjectUtil {
     return DefaultPaths.getInstance().getDocumentsDir();
   }
 
-  //region Async staff
   @Nonnull
   public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
@@ -196,23 +196,27 @@ public class ProjectUtil {
 
     AsyncResult<Project> result = new AsyncResult<>();
 
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
-    if (provider != null) {
-      result.doWhenDone((project) -> {
-        uiAccess.give(() -> {
-          if (!project.isDisposed()) {
+    AppExecutorUtil.getAppExecutorService().execute(() -> {
+      ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
+      if (provider != null) {
+        result.doWhenDone((project) -> {
+          uiAccess.give(() -> {
+            if (project.isDisposed()) return;
+
             final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-            if (toolWindow != null) {
+
+            if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
               toolWindow.activate(null);
             }
-          }
+          });
         });
-      });
 
-      provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess);
-      return result;
-    }
-    return AsyncResult.rejected("provider for file path is not find");
+        provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess);
+      }
+      else {
+        result.reject("provider for file path is not find");
+      }
+    });
+    return result;
   }
-  //endregion
 }

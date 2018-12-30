@@ -24,6 +24,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.*;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.Topic;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -334,13 +336,14 @@ public abstract class DumbService {
     /**
      * The event arrives on EDT
      */
+    @RequiredUIAccess
     default void enteredDumbMode() {}
 
     /**
      * The event arrives on EDT
      */
+    @RequiredUIAccess
     default void exitDumbMode() {}
-
   }
 
 }

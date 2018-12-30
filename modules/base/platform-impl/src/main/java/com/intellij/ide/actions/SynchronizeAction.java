@@ -21,12 +21,19 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class SynchronizeAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    FileDocumentManager.getInstance().saveAllDocuments();
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    AccessRule.writeAsync(() -> FileDocumentManager.getInstance().saveAllDocuments());
+
     SaveAndSyncHandler.getInstance().refreshOpenFiles();
+
     VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
   }
 }

@@ -47,7 +47,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
 
     UIAccess uiAccess = UIAccess.current();
     AccessRule.writeAsync(() -> {
-      myProjectManager.closeAndDispose(project, uiAccess).doWhenProcessed(() -> {
+      myProjectManager.closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> {
         RecentProjectsManagerBase.getInstance().updateLastProjectPath();
         WelcomeFrame.showIfNoProjectOpened();
       });

@@ -53,9 +53,6 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   public abstract boolean openProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
-  @Nonnull
-  public abstract AsyncResult<Boolean> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
-
   public abstract boolean isProjectOpened(Project project);
 
   public abstract boolean canClose(Project project);
@@ -79,12 +76,12 @@ public abstract class ProjectManagerEx extends ProjectManager {
   @RequiredUIAccess
   @Deprecated
   public AsyncResult<Boolean> closeAndDispose(@Nonnull Project project) {
-    return closeAndDispose(project, UIAccess.current());
+    return closeAndDisposeAsync(project, UIAccess.current());
   }
 
   @Nonnull
   @RequiredWriteAction
-  public abstract AsyncResult<Boolean> closeAndDispose(@Nonnull Project project, UIAccess uiAccess);
+  public abstract AsyncResult<Boolean> closeAndDisposeAsync(@Nonnull Project project, UIAccess uiAccess);
 
   @Nullable
   @Override
@@ -94,6 +91,4 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   @Nullable
   public abstract Project convertAndLoadProject(String filePath) throws IOException;
-
-  public abstract void convertAndLoadProjectAsync(@Nonnull AsyncResult<Project> result, String filePath);
 }

@@ -17,6 +17,8 @@ package com.intellij.openapi.startup;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import consulo.startup.DumbAwareStartupAction;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -71,6 +73,11 @@ public abstract class StartupManager {
    * @see StartupActivity#POST_STARTUP_ACTIVITY
    */
   public abstract void registerPostStartupActivity(@Nonnull Consumer<UIAccess> runnable);
+
+  public void registerUIPostStartupActivity(@RequiredUIAccess @Nonnull Runnable runnable) {
+    //noinspection RedundantCast
+    registerPostStartupActivity((DumbAwareStartupAction)(ui) -> ui.give(runnable));
+  }
 
   /**
    * Executes the specified runnable immediately if the initialization of the current project

@@ -159,8 +159,20 @@ public class AsyncResult<T> extends ActionCallback {
 
   @Override
   @Nonnull
+  @SuppressWarnings("unchecked")
   public final AsyncResult<T> notify(@Nonnull final ActionCallback child) {
+    if(child instanceof AsyncResult) {
+      return notify((AsyncResult<T>)child);
+    }
     super.notify(child);
+    return this;
+  }
+
+  @Nonnull
+  public final AsyncResult<T> notify(@Nonnull final AsyncResult<T> child) {
+    doWhenDone((Consumer<T>)child::setDone);
+    doWhenRejected(child::reject);
+    doWhenRejectedWithThrowable(child::rejectWithThrowable);
     return this;
   }
 

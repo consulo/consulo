@@ -62,7 +62,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
       UIAccess uiAccess = UIAccess.current();
       ProjectManagerEx projectManager = (ProjectManagerEx)ProjectManager.getInstance();
-      AccessRule.writeAsync(() -> projectManager.closeAndDispose(myProject, uiAccess));
+      AccessRule.writeAsync(() -> projectManager.closeAndDisposeAsync(myProject, uiAccess));
     });
 
     myWindow.setContent(myRootView.getComponent());

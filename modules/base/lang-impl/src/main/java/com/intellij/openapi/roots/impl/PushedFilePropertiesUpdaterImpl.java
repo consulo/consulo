@@ -20,13 +20,11 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -45,12 +43,11 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
-import com.intellij.psi.impl.file.impl.FileManagerImpl;
-import com.intellij.ui.GuiUtils;
-import com.intellij.util.ThrowableRunnable;
+import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
+import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
@@ -74,10 +71,10 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   @Inject
   public PushedFilePropertiesUpdaterImpl(final Project project, StartupManager startupManager) {
     myProject = project;
-    myPushers = Extensions.getExtensions(FilePropertyPusher.EP_NAME);
+    myPushers = FilePropertyPusher.EP_NAME.getExtensions();
     myFilePushers = ContainerUtil.findAllAsArray(myPushers, pusher -> !pusher.pushDirectoriesOnly());
 
-    if(project.isDefault()) {
+    if (project.isDefault()) {
       return;
     }
 
@@ -125,12 +122,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
       queueTasks(delayedTasks);
     }
     if (pushedSomething) {
-      GuiUtils.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          PushedFilePropertiesUpdaterImpl.this.scheduleDumbModeReindexingIfNeeded();
-        }
-      }, ModalityState.defaultModalityState());
+      scheduleDumbModeReindexingIfNeeded();
     }
   }
 
@@ -264,7 +256,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     List<Runnable> tasks = new ArrayList<>();
 
     for (final Module module : modules) {
-      ThrowableComputable<Runnable,RuntimeException> action = () -> {
+      ThrowableComputable<Runnable, RuntimeException> action = () -> {
         if (module.isDisposed()) return EmptyRunnable.INSTANCE;
         ProgressManager.checkCanceled();
 
@@ -300,7 +292,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
       int numThreads = Math.max(Math.min(CacheUpdateRunner.indexingThreadCount() - 1, tasks.size() - 1), 1);
 
       for (int i = 0; i < numThreads; ++i) {
-        results.add(ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        results.add(Application.get().executeOnPooledThread(new Runnable() {
           @Override
           public void run() {
             ProgressManager.getInstance().runProcess(new Runnable() {
@@ -378,6 +370,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   }
 
   @Override
+  @RequiredReadAction
   public void filePropertiesChanged(@Nonnull final VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     FileBasedIndex.getInstance().requestReindex(file);
@@ -386,26 +379,11 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     }
   }
 
+  @RequiredReadAction
   private static void reloadPsi(final VirtualFile file, final Project project) {
-    final FileManagerImpl fileManager = (FileManagerImpl)((PsiManagerEx)PsiManager.getInstance(project)).getFileManager();
+    final FileManager fileManager = ((PsiManagerEx)PsiManager.getInstance(project)).getFileManager();
     if (fileManager.findCachedViewProvider(file) != null) {
-      Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-          WriteAction.run(new ThrowableRunnable<RuntimeException>() {
-            @Override
-            public void run() throws RuntimeException {
-              fileManager.forceReload(file);
-            }
-          });
-        }
-      };
-      if (ApplicationManager.getApplication().isDispatchThread()) {
-        runnable.run();
-      }
-      else {
-        TransactionGuard.submitTransaction(project, runnable);
-      }
+      WriteAction.run(() -> fileManager.forceReload(file));
     }
   }
 }

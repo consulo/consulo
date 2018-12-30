@@ -19,13 +19,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -254,7 +252,7 @@ public class ProgressIndicatorUtils {
    * Ensure the current EDT activity finishes in case it requires many write actions, with each being delayed a bit
    * by background thread read action (until its first checkCanceled call). Shouldn't be called from under read action.
    */
+  @Deprecated
   public static void yieldToPendingWriteActions() {
-    ApplicationManager.getApplication().invokeAndWait(EmptyRunnable.INSTANCE, ModalityState.any());
   }
 }

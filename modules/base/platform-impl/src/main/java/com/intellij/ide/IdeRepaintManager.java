@@ -142,7 +142,7 @@ public class IdeRepaintManager extends RepaintManager {
       myLastComponent = new WeakReference<>(c);
 
       LOG.warn("Access to realized (ever shown) UI components should be done only from the AWT event dispatch thread," +
-               " revalidate(), invalidate() & repaint() is ok from any thread", exception);
+               " revalidate(), invalidate() & repaint() is ok from any thread. Thread: " + Thread.currentThread(), exception);
     }
   }
 }

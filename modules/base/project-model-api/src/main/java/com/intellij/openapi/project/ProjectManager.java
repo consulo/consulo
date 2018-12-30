@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredWriteAction;
 import consulo.ui.RequiredUIAccess;
@@ -50,7 +51,11 @@ public abstract class ProjectManager {
    * @param listener listener to add
    */
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
+
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
+
+  @Nonnull
+  public abstract AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
 
   /**
    * Removes global listener from all projects.
@@ -100,7 +105,7 @@ public abstract class ProjectManager {
    *
    * @param filePath the .ipr file path
    * @return the opened project file, or null if the project failed to load because of version mismatch
-   *         or because the project is already open.
+   * or because the project is already open.
    * @throws IOException          if the project file was not found or failed to read
    * @throws JDOMException        if the project file contained invalid XML
    * @throws InvalidDataException if the project file contained invalid data
@@ -131,7 +136,6 @@ public abstract class ProjectManager {
    *
    * @param name project name
    * @param path project location
-   *
    * @return newly crated project
    */
   @Nullable

@@ -22,7 +22,6 @@ package com.intellij.openapi.util.process;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.ui.GuiUtils;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -108,16 +107,11 @@ public abstract class InterruptibleActivity {
   protected int processTimeoutInEDT() {
     final int[] retcode = new int[1];
 
-    try {
-      GuiUtils.runOrInvokeAndWait(new Runnable() {
-        public void run() {
-          retcode[0] = processTimeout();
-        }
-      });
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+      public void run() {
+        retcode[0] = processTimeout();
+      }
+    });
 
     return retcode[0];
   }

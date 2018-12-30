@@ -16,24 +16,23 @@
 package com.intellij.util.net;
 
 import com.intellij.CommonBundle;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Ref;
-import com.intellij.ui.GuiUtils;
 import com.intellij.util.ObjectUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.InvocationTargetException;
 
 public class IOExceptionDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance(IOExceptionDialog.class);
   private final JTextArea myErrorLabel;
 
-  public IOExceptionDialog(String title, String errorText)  {
+  public IOExceptionDialog(String title, String errorText) {
     super((Project)null, true);
     setTitle(title);
     setOKButtonText(CommonBundle.message("dialog.ioexception.tryagain"));
@@ -56,38 +55,29 @@ public class IOExceptionDialog extends DialogWrapper {
   @Nonnull
   @Override
   protected Action[] createLeftSideActions() {
-    return new Action[] {
-      new AbstractAction(CommonBundle.message("dialog.ioexception.proxy")) {
-        @Override
-        public void actionPerformed(@Nonnull ActionEvent e) {
-          HttpConfigurable.editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class));
-        }
+    return new Action[]{new AbstractAction(CommonBundle.message("dialog.ioexception.proxy")) {
+      @Override
+      public void actionPerformed(@Nonnull ActionEvent e) {
+        HttpConfigurable.editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class));
       }
-    };
+    }};
   }
 
   /**
    * Show the dialog
+   *
    * @return <code>true</code> if "Try Again" button pressed and <code>false</code> if "Cancel" button pressed
    */
   public static boolean showErrorDialog(final String title, final String text) {
     final Ref<Boolean> ok = Ref.create(false);
-    try {
-      GuiUtils.runOrInvokeAndWait(new Runnable() {
-        @Override
-        public void run() {
-          IOExceptionDialog dialog = new IOExceptionDialog(title, text);
-          dialog.show();
-          ok.set(dialog.isOK());
-        }
-      });
-    }
-    catch (InterruptedException e) {
-      LOG.info(e);
-    }
-    catch (InvocationTargetException e) {
-      LOG.info(e);
-    }
+    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+      @Override
+      public void run() {
+        IOExceptionDialog dialog = new IOExceptionDialog(title, text);
+        dialog.show();
+        ok.set(dialog.isOK());
+      }
+    });
 
     return ok.get();
   }

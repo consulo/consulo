@@ -48,12 +48,6 @@ public interface ApplicationEx extends Application {
   boolean holdsReadLock();
 
   /**
-   * @return true if the EDT is performing write action right now.
-   * @see #runWriteAction(Runnable)
-   */
-  boolean isWriteActionInProgress();
-
-  /**
    * @return true if the EDT started to acquire write action but has not acquired it yet.
    * @see #runWriteAction(Runnable)
    */

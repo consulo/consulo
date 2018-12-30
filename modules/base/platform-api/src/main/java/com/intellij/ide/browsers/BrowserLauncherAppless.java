@@ -40,7 +40,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.ui.GuiUtils;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -48,16 +47,15 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.OptionsDialog;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
@@ -234,16 +232,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
           }
         };
 
-        try {
-          GuiUtils.runOrInvokeAndWait(r);
-        }
-        catch (InvocationTargetException ignored) {
-          extract.set(false);
-        }
-        catch (InterruptedException ignored) {
-          extract.set(false);
-        }
-
+        ApplicationManager.getApplication().invokeAndWait(r);
         if (!extract.get()) {
           return null;
         }

@@ -17,8 +17,6 @@ package com.intellij.codeInsight.navigation.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.codeInsight.TargetElementUtilEx;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.navigation.NavigationUtil;
@@ -51,11 +49,12 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredDispatchThread;
+import consulo.codeInsight.TargetElementUtil;
+import consulo.codeInsight.TargetElementUtilEx;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -84,8 +83,6 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
   @RequiredDispatchThread
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
-
     DumbService.getInstance(project).setAlternativeResolveEnabled(true);
     try {
       int offset = editor.getCaretModel().getOffset();

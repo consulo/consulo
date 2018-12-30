@@ -222,23 +222,5 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     }
   }
 
-  /**
-   * This method attempts to run provided action synchronously in a read action, so that, if possible, it wouldn't impact any pending,
-   * executing or future write actions (for this to work effectively the action should invoke {@link ProgressManager#checkCanceled()} or
-   * {@link ProgressIndicator#checkCanceled()} often enough).
-   * It returns {@code true} if action was executed successfully. It returns {@code false} if the action was not
-   * executed successfully, i.e. if:
-   * <ul>
-   * <li>write action was in progress when the method was called</li>
-   * <li>write action was pending when the method was called</li>
-   * <li>action started to execute, but was aborted using {@link ProcessCanceledException} when some other thread initiated
-   * write action</li>
-   * </ul>
-   * @param action the code to execute under read action
-   * @param indicator progress indicator that should be cancelled if a write action is about to start. Can be null.
-   * @since 171.*
-   */
-  public abstract boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action, @Nullable ProgressIndicator indicator);
-
   public abstract boolean isInNonCancelableSection();
 }

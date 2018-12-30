@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.PingProgress;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.progress.util.SmoothProgressAdapter;
 import com.intellij.openapi.util.Disposer;
@@ -198,11 +197,6 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     };
 
     return ApplicationManager.getApplication().executeOnPooledThread(action);
-  }
-
-  @Override
-  public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
-    return ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(action, indicator);
   }
 
   /**

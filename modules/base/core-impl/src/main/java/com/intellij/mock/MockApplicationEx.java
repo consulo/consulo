@@ -112,11 +112,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
-  public boolean isWriteActionInProgress() {
-    return false;
-  }
-
-  @Override
   public boolean isWriteActionPending() {
     return false;
   }

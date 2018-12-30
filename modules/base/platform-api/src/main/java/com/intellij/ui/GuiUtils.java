@@ -359,6 +359,7 @@ public class GuiUtils {
     return s;
   }
 
+  @Deprecated
   public static void runOrInvokeAndWait(@Nonnull Runnable runnable) throws InvocationTargetException, InterruptedException {
     ApplicationManager.getApplication().invokeAndWait(runnable);
   }

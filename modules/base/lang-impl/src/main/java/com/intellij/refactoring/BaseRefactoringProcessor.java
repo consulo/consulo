@@ -58,7 +58,6 @@ import com.intellij.refactoring.listeners.impl.RefactoringTransaction;
 import com.intellij.refactoring.ui.ConflictsDialog;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.refactoring.util.MoveRenameUsageInfo;
-import com.intellij.ui.GuiUtils;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
@@ -75,7 +74,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class BaseRefactoringProcessor implements Runnable {
@@ -546,12 +544,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   protected void prepareSuccessful() {
     if (myPrepareSuccessfulSwingThreadCallback != null) {
       // make sure that dialog is closed in swing thread
-      try {
-        GuiUtils.runOrInvokeAndWait(myPrepareSuccessfulSwingThreadCallback);
-      }
-      catch (InterruptedException | InvocationTargetException e) {
-        LOG.error(e);
-      }
+      ApplicationManager.getApplication().invokeAndWait(myPrepareSuccessfulSwingThreadCallback);
     }
   }
 

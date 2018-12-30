@@ -54,7 +54,4 @@ public abstract class ProjectOpenProcessor {
                                  @Nonnull UIAccess uiAccess) {
     throw new AbstractMethodError();
   }
-
-  public void refreshProjectFiles(File basedir) {
-  }
 }

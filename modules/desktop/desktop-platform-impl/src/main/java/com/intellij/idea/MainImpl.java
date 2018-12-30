@@ -15,7 +15,6 @@
  */
 package com.intellij.idea;
 
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.starter.DesktopApplicationPostStarter;
 import com.intellij.idea.starter.DesktopApplicationStarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -32,9 +31,7 @@ public class MainImpl {
     StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new DesktopApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
 
-      AppExecutorUtil.getAppExecutorService().execute(() -> {
-        app.run(newConfigFolder);
-      });
+      AppExecutorUtil.getAppExecutorService().execute(() -> app.run(newConfigFolder));
     });
   }
 }

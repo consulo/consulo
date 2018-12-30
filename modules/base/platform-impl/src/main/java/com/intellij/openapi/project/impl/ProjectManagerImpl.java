@@ -20,7 +20,6 @@ import com.intellij.conversion.ConversionService;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.Disposable;
@@ -53,7 +52,6 @@ import com.intellij.openapi.vfs.impl.ZipHandler;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import com.intellij.ui.GuiUtils;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SingleAlarm;
 import com.intellij.util.SmartList;
@@ -64,9 +62,9 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -369,90 +367,124 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   @Override
   public boolean openProject(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-    return openProjectAsync(project, uiAccess).getResultSync();
+    throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public AsyncResult<Boolean> openProjectAsync(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-    if (isLight(project)) {
-      ((ProjectImpl)project).setTemporarilyDisposed(false);
-      boolean isInitialized = StartupManagerEx.getInstanceEx(project).startupActivityPassed();
-      if (isInitialized) {
-        addToOpened(project);
-        // events already fired
-        return AsyncResult.resolved(Boolean.TRUE);
+  public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
+    AsyncResult<Project> projectAsyncResult = new AsyncResult<>();
+
+    AsyncResult<ConversionResult> preparingResult = new AsyncResult<>();
+    String fp = toCanonicalName(file.getPath());
+
+    preparingResult.doWhenRejected(projectAsyncResult::reject);
+    preparingResult.doWhenDone(conversionResult -> tryInitProjectByPath(conversionResult, projectAsyncResult, file, uiAccess));
+
+    Task.Backgroundable.queue(null, "Preparing project...", canCancelProjectLoading(), (indicator) -> {
+      final ConversionResult conversionResult = ConversionService.getInstance().convert(fp);
+      if (conversionResult.openingIsCanceled()) {
+        preparingResult.reject("conversion canceled");
+        return;
       }
-    }
+      preparingResult.setDone(conversionResult);
+    });
+    return projectAsyncResult;
+  }
+
+  private void tryInitProjectByPath(ConversionResult conversionResult, AsyncResult<Project> projectAsyncResult, VirtualFile path, UIAccess uiAccess) {
+    final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, false, true);
 
     for (Project p : getOpenProjects()) {
-      if (ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
-        GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), ModalityState.NON_MODAL);
-        return AsyncResult.resolved(Boolean.FALSE);
+      if (ProjectUtil.isSameProject(path.getPath(), p)) {
+        uiAccess.give(() -> ProjectUtil.focusProjectWindow(p, false));
+        AccessRule.writeAsync(() -> {
+          closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Already opened project"));
+        });
+        return;
       }
     }
 
-    if (!addToOpened(project)) {
-      return AsyncResult.resolved(Boolean.FALSE);
+    Task.Backgroundable.queue(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), progressIndicator -> {
+      try {
+        if (!addToOpened(project)) {
+          AccessRule.writeAsync(() -> {
+            closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened"));
+          });
+          return;
+        }
+
+        initProjectAsync(project, null, progressIndicator);
+
+        prepareProjectWorkspace(conversionResult, project, uiAccess, projectAsyncResult);
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+
+        projectAsyncResult.rejectWithThrowable(e);
+      }
+    });
+  }
+
+  private void prepareProjectWorkspace(ConversionResult conversionResult, Project project, UIAccess uiAccess, AsyncResult<Project> projectAsyncResult) {
+    Task.Backgroundable.queue(project, "Preparing workspace...", canCancelProjectLoading(), progressIndicator -> {
+      try {
+        progressIndicator.setIndeterminate(true);
+
+        StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
+
+        openProjectRequireBackgroundTask(project, uiAccess);
+
+        projectAsyncResult.setDone(project);
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+
+        projectAsyncResult.rejectWithThrowable(e);
+      }
+    });
+  }
+
+  private void openProjectRequireBackgroundTask(Project project, UIAccess uiAccess) {
+    // more faster welcome frame closing
+    uiAccess.give(() -> WelcomeFrameManager.getInstance().closeFrame());
+
+    fireProjectOpened(project, uiAccess);
+
+    final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
+    startupManager.runStartupActivities(uiAccess);
+
+    // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
+    // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
+    // Post-startup activities should not ever see unindexed and at the same time non-dumb state
+    startupManager.startCacheUpdate();
+
+    startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
+
+    if (!project.isDisposed()) {
+      startupManager.runPostStartupActivities(uiAccess);
+
+      Application application = ApplicationManager.getApplication();
+      if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+        final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+        if (macroSubstitutor != null) {
+          StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
+        }
+      }
+
+      if (ApplicationManager.getApplication().isActive()) {
+        JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+        if (projectFrame != null) {
+          uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
+        }
+      }
     }
-
-    AsyncResult<Boolean> result = new AsyncResult<>();
-
-    Task.Backgroundable task = new Task.Backgroundable(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading()) {
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
-        try {
-          // more faster welcome frame closing
-          uiAccess.give(() -> WelcomeFrameManager.getInstance().closeFrame());
-
-          fireProjectOpened(project, uiAccess);
-
-          final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-          startupManager.runStartupActivities(uiAccess);
-
-          // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
-          // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
-          // Post-startup activities should not ever see unindexed and at the same time non-dumb state
-          startupManager.startCacheUpdate();
-
-          startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
-
-          if (!project.isDisposed()) {
-            startupManager.runPostStartupActivities(uiAccess);
-
-            Application application = ApplicationManager.getApplication();
-            if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
-              final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
-              if (macroSubstitutor != null) {
-                StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
-              }
-            }
-
-            if (ApplicationManager.getApplication().isActive()) {
-              JFrame projectFrame = WindowManager.getInstance().getFrame(project);
-              if (projectFrame != null) {
-                uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
-              }
-            }
-          }
-        }
-        finally {
-          result.setDone(Boolean.TRUE);
-        }
-      }
-
-      @RequiredUIAccess
-      @Override
-      public void onCancel() {
-        closeProject(project, false, false, true, uiAccess);
-        notifyProjectOpenFailed();
-        result.setRejected(Boolean.FALSE);
-      }
-    };
-
-    task.queue();
-
-    return result;
   }
 
   private boolean addToOpened(@Nonnull Project project) {
@@ -795,7 +827,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Nonnull
   @RequiredWriteAction
   @Override
-  public AsyncResult<Boolean> closeAndDispose(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+  public AsyncResult<Boolean> closeAndDisposeAsync(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
     return closeProject(project, true, true, true, uiAccess);
   }
 
@@ -938,58 +970,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     myDefaultProjectRootElement = defaultProjectRootElement;
   }
 
-  //region Async staff
-  @Override
-  public void convertAndLoadProjectAsync(@Nonnull AsyncResult<Project> result, String filePath) {
-    final String fp = toCanonicalName(filePath);
-    final ConversionResult conversionResult = ConversionService.getInstance().convert(fp);
-    if (conversionResult.openingIsCanceled()) {
-      result.reject("conversion canceled");
-      return;
-    }
+  private void initProjectAsync(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template, ProgressIndicator progressIndicator) throws IOException {
+    progressIndicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
+    progressIndicator.setIndeterminate(true);
 
-    result.doWhenDone((project) -> {
-      if (!conversionResult.conversionNotNeeded()) {
-        StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
-      }
-    });
-
-    loadProjectWithProgressAsync(result, filePath);
-  }
-
-  /**
-   * Opens the project at the specified path.
-   */
-  private void loadProjectWithProgressAsync(AsyncResult<Project> result, @Nonnull final String filePath) {
-    final ProjectImpl project = createProject(null, toCanonicalName(filePath), false, false, true);
-    try {
-      myProgressManager.runProcessWithProgressSynchronously(() -> {
-        try {
-          initProjectAsync(project, null);
-
-          result.setDone(project);
-        }
-        catch (ProcessCanceledException e) {
-          throw e;
-        }
-        catch (Throwable e) {
-          result.rejectWithThrowable(e);
-        }
-      }, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
-    }
-    catch (ProcessCanceledException ignore) {
-      result.reject("canceled");
-    }
-  }
-
-  private void initProjectAsync(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
-    ProgressIndicator indicator = myProgressManager.getProgressIndicator();
-    if (indicator != null && !project.isDefault()) {
-      indicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
-      indicator.setIndeterminate(true);
-    }
-
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
+    Application.get().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
 
     boolean succeed = false;
     try {
@@ -1011,6 +996,4 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
     }
   }
-
-  //endregion
 }

@@ -32,6 +32,7 @@ import com.intellij.ide.dnd.*;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
@@ -157,7 +158,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   EditorGutterComponentImpl(@Nonnull DesktopEditorImpl editor) {
     myEditor = editor;
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (!Application.get().isHeadlessEnvironment()) {
       installDnD();
     }
     setOpaque(true);

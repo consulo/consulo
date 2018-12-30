@@ -18,37 +18,24 @@ package com.intellij.platform;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import com.intellij.util.Consumer;
-import consulo.application.AccessRule;
-import consulo.project.ProjectOpenProcessors;
+import consulo.startup.DumbAwareStartupAction;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author max
@@ -63,42 +50,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
   @Override
   public boolean canOpenProject(@Nonnull File file) {
-    return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER).exists();
-  }
-
-  public static void openProjectToolWindow(Project project, UIAccess uiAccess) {
-    //noinspection RedundantCast
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      // ensure the dialog is shown after all startup activities are done
-      uiAccess.give(() -> {
-        if (project.isDisposed()) return;
-
-        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-
-        if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
-          toolWindow.activate(null);
-        }
-      });
-    });
-  }
-
-  private static void openFileFromCommandLineAsync(@Nonnull Project project, final VirtualFile virtualFile, final int line, UIAccess uiAccess) {
-    //noinspection RedundantCast
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      if (project.isDisposed()) {
-        return;
-      }
-      uiAccess.give(() -> {
-        if (!virtualFile.isDirectory()) {
-          if (line > 0) {
-            new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
-          }
-          else {
-            new OpenFileDescriptor(project, virtualFile).navigate(true);
-          }
-        }
-      });
-    });
+    return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER + "/modules.xml").exists();
   }
 
   @Override
@@ -113,23 +65,9 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     return "<b>Consulo</b> project";
   }
 
-  //region Async staff
   @Override
-  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
-                                 @Nonnull VirtualFile virtualFile,
-                                 @Nullable Project projectToClose,
-                                 boolean forceOpenInNewFrame,
-                                 @Nonnull UIAccess uiAccess) {
-    doOpenProjectAsync(asyncResult, virtualFile, projectToClose, forceOpenInNewFrame, -1, uiAccess, null);
-  }
+  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> result, @Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
 
-  private static void doOpenProjectAsync(@Nonnull AsyncResult<Project> result,
-                                         @Nonnull VirtualFile virtualFile,
-                                         Project projectToClose,
-                                         boolean forceOpenInNewFrame,
-                                         int line,
-                                         @Nonnull UIAccess uiAccess,
-                                         @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
       baseDir = virtualFile.getParent();
@@ -166,50 +104,12 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
-    AtomicBoolean runConfigurators = new AtomicBoolean(true);
-
-    Consumer<Project> afterProjectAction = project -> {
-      openProjectToolWindow(project, uiAccess);
-      openFileFromCommandLineAsync(project, virtualFile, line, uiAccess);
-
-      projectManager.openProjectAsync(project, uiAccess).doWhenProcessed((value) -> {
-         if(value == Boolean.FALSE) {
-           WelcomeFrame.showIfNoProjectOpened();
-
-           ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(project));
-         }
-
-        if (callback != null && runConfigurators.get()) {
-          callback.consume(project);
-        }
-      });
-    };
-
-    result.doWhenDone(afterProjectAction);
 
     if (projectDir.exists()) {
-      for (ProjectOpenProcessor processor : ProjectOpenProcessors.getInstance().getProcessors()) {
-        processor.refreshProjectFiles(projectDir);
-      }
+      AsyncResult<Project> projectAsync = projectManager.openProjectAsync(baseDir, uiAccess);
 
-      AsyncResult<Project> anotherResult = new AsyncResult<>();
-      anotherResult.doWhenDone((project) -> {
-        ThrowableComputable<Module[], RuntimeException> action = () -> ModuleManager.getInstance(project).getModules();
-        final Module[] modules = AccessRule.read(action);
-        if (modules.length > 0) {
-          runConfigurators.set(false);
-        }
-
-        result.setDone(project);
-      });
-
-      anotherResult.doWhenRejected((Runnable)result::setRejected);
-
-      anotherResult.doWhenRejectedButNotThrowable(WelcomeFrame::showIfNoProjectOpened);
-
-      anotherResult.doWhenRejectedWithThrowable(LOGGER::error);
-
-      projectManager.convertAndLoadProjectAsync(anotherResult, baseDir.getPath());
+      projectAsync.doWhenDone(project -> openFileFromCommandLineAsync(project, virtualFile, -1));
+      projectAsync.doWhenRejected(WelcomeFrame::showIfNoProjectOpened);
     }
     else {
       projectDir.mkdirs();
@@ -222,5 +122,24 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
       result.setDone(project);
     }
   }
-  //endregion
+
+  private static void openFileFromCommandLineAsync(@Nonnull Project project, final VirtualFile virtualFile, final int line) {
+    //noinspection RedundantCast
+    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareStartupAction)(ui) -> {
+      if (project.isDisposed()) {
+        return;
+      }
+
+      ui.give(() -> {
+        if (!virtualFile.isDirectory()) {
+          if (line > 0) {
+            new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
+          }
+          else {
+            new OpenFileDescriptor(project, virtualFile).navigate(true);
+          }
+        }
+      });
+    });
+  }
 }
