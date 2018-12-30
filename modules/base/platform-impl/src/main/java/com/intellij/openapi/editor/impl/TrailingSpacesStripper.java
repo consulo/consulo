@@ -33,6 +33,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.application.AccessRule;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -95,7 +96,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
       final int end = document.getLineEndOffset(lines - 1);
       if (start != end) {
         final CharSequence content = document.getCharsSequence();
-        ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(document, null) {
+        AccessRule.writeAsync(new DocumentRunnable(document, null) {
           @Override
           public void run() {
             CommandProcessor.getInstance().runUndoTransparentAction(() -> {
@@ -107,7 +108,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
               }
             });
           }
-        });
+        }).getResultSync();
       }
     }
   }

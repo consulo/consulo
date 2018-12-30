@@ -35,6 +35,7 @@ import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import consulo.ui.*;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
@@ -213,9 +214,17 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     return false;
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
+    return null;
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
     return new Element("state");
   }
 

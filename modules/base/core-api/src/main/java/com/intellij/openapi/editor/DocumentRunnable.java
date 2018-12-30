@@ -16,13 +16,14 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ThrowableRunnable;
 
 import javax.annotation.Nullable;
 
 /**
  * @author cdr
  */
-public abstract class DocumentRunnable implements Runnable {
+public abstract class DocumentRunnable implements ThrowableRunnable<Throwable>, Runnable {
   private final Document myDocument;
   private final Project myProject;
 

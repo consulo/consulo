@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -164,6 +165,7 @@ public abstract class EditorActionHandler {
    *                    without current context
    * @param dataContext the data context for the action.
    */
+  @RequiredUIAccess
   protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     if (inExecution) {
       return;

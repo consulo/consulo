@@ -18,13 +18,14 @@ package com.intellij.openapi.editor.actionSystem;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.reporting.FreezeLogger;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -160,7 +161,7 @@ public class TypedAction {
           HintManager.getInstance().showInformationHint(editor, "File is not writable");
           return;
         }
-        ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
+        AccessRule.writeAsync(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
           @Override
           public void run() {
             Document doc = editor.getDocument();
@@ -175,7 +176,7 @@ public class TypedAction {
               doc.stopGuardedBlockChecking();
             }
           }
-        });
+        }).getResultSync();
       }, "", editor.getDocument(), UndoConfirmationPolicy.DEFAULT, editor.getDocument());
     }
   }

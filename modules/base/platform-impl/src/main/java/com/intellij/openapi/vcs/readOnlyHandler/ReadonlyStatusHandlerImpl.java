@@ -72,7 +72,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     if (files.length == 0) {
       return new OperationStatusImpl(VirtualFile.EMPTY_ARRAY);
     }
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertReadAccessAllowed();
 
     Set<VirtualFile> realFiles = new THashSet<VirtualFile>(files.length);
     for (VirtualFile file : files) {

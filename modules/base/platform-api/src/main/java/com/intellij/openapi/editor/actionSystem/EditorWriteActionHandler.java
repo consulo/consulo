@@ -17,12 +17,13 @@ package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nullable;
 
 /**
@@ -40,7 +41,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void doExecute(final Editor editor, @Nullable final Caret caret, final DataContext dataContext) {
     if (editor.isViewer()) return;
 
@@ -49,7 +50,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
       if (project != null && !FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) return;
     }
 
-    ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
+    AccessRule.writeAsync(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
       @Override
       public void run() {
         final Document doc = editor.getDocument();
@@ -65,7 +66,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
           doc.stopGuardedBlockChecking();
         }
       }
-    });
+    }).getResultSync();
   }
 
   /**

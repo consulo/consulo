@@ -16,12 +16,12 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.DocumentRunnable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.ide.KillRingTransferable;
+import consulo.application.AccessRule;
 
 /**
  * Stands for emacs <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Kill-Commands.html">kill-ring-save</a> command.
@@ -61,12 +61,12 @@ public class KillRingSaveAction extends TextComponentEditorAction {
       }
       KillRingUtil.copyToKillRing(editor, start, end, false);
       if (myRemove) {
-        ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(),editor.getProject()) {
+        AccessRule.writeAsync(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
           @Override
           public void run() {
             editor.getDocument().deleteString(start, end);
           }
-        });
+        }).getResultSync();
       } 
     }
   }
