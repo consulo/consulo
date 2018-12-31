@@ -18,11 +18,14 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.SavingRequestor;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,7 +55,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
    * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.
    * @param document the document to save.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void saveDocumentAsIs(@Nonnull Document document);
   
   @Nonnull
@@ -60,7 +63,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
   public abstract boolean isDocumentUnsaved(@Nonnull Document document);
   public abstract boolean isFileModified(@Nonnull VirtualFile file);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void reloadFromDisk(@Nonnull Document document);
 
   @Nonnull
@@ -74,12 +77,27 @@ public abstract class FileDocumentManager implements SavingRequestor {
    * @return true if writing access allowed
    * @see com.intellij.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile...)
    */
+  @Deprecated
+  @DeprecationInfo("Use #requestWritingAsync()")
   public abstract boolean requestWriting(@Nonnull Document document, @Nullable Project project);
+
+  /**
+   * Requests writing access on given document, possibly involving interaction with user.
+   *
+   * @param document document
+   * @param project  project
+   * @return true if writing access allowed
+   * @see com.intellij.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile...)
+   */
+  @Nonnull
+  public AsyncResult<Boolean> requestWritingAsync(@Nonnull Document document, @Nonnull UIAccess uiAccess, @Nullable Project project) {
+    return AsyncResult.resolved(requestWriting(document, project));
+  }
 
   public static boolean fileForDocumentCheckedOutSuccessfully(@Nonnull Document document, @Nonnull Project project) {
     return getInstance().requestWriting(document, project);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void reloadFiles(VirtualFile... files);
 }

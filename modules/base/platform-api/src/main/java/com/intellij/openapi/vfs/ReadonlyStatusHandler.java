@@ -18,17 +18,82 @@ package com.intellij.openapi.vfs;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredReadAction;
+import consulo.ui.UIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public abstract class ReadonlyStatusHandler {
+  public abstract static class OperationStatus {
+    @Nonnull
+    public abstract VirtualFile[] getReadonlyFiles();
+
+    public abstract boolean hasReadonlyFiles();
+
+    @Nonnull
+    public abstract String getReadonlyFilesMessage();
+  }
+
+  public static ReadonlyStatusHandler getInstance(Project project) {
+    return ServiceManager.getService(project, ReadonlyStatusHandler.class);
+  }
+
+  @Nonnull
+  @RequiredReadAction
+  public static AsyncResult<Boolean> ensureFilesWritableAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull VirtualFile... files) {
+    AsyncResult<OperationStatus> result = getInstance(project).ensureFilesWritableAsync(uiAccess, files);
+    AsyncResult<Boolean> boolResult = new AsyncResult<>();
+    result.doWhenDone((s) -> boolResult.setDone(!s.hasReadonlyFiles()));
+    return boolResult;
+  }
+
+  @Nonnull
+  @RequiredReadAction
+  public static AsyncResult<Boolean> ensureDocumentWritableAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull Document document) {
+    final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+    AsyncResult<Boolean> okWritable;
+    if (psiFile == null) {
+      okWritable = AsyncResult.resolved(document.isWritable());
+    }
+    else {
+      final VirtualFile virtualFile = psiFile.getVirtualFile();
+      if (virtualFile != null) {
+        okWritable = ensureFilesWritableAsync(project, uiAccess, virtualFile);
+      }
+      else {
+        okWritable = AsyncResult.resolved(psiFile.isWritable());
+      }
+    }
+    return okWritable;
+  }
+
+  @Nonnull
+  @RequiredReadAction
+  public abstract AsyncResult<OperationStatus> ensureFilesWritableAsync(@Nonnull UIAccess uiAccess, @Nonnull VirtualFile... files);
+
+  @RequiredReadAction
+  @Nonnull
+  public AsyncResult<OperationStatus> ensureFilesWritableAsync(@Nonnull UIAccess uiAccess, @Nonnull Collection<VirtualFile> files) {
+    return ensureFilesWritableAsync(uiAccess, VfsUtilCore.toVirtualFileArray(files));
+  }
+
+  // region Deprecated staff
+
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Use #ensureFilesWritableAsync()")
   public static boolean ensureFilesWritable(@Nonnull Project project, @Nonnull VirtualFile... files) {
     return !getInstance(project).ensureFilesWritable(files).hasReadonlyFiles();
   }
 
+  @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Use #ensureFilesWritableAsync()")
   public static boolean ensureDocumentWritable(@Nonnull Project project, @Nonnull Document document) {
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     boolean okWritable;
@@ -47,24 +112,15 @@ public abstract class ReadonlyStatusHandler {
     return okWritable;
   }
 
-  public abstract static class OperationStatus {
-    @Nonnull
-    public abstract VirtualFile[] getReadonlyFiles();
-
-    public abstract boolean hasReadonlyFiles();
-
-    @Nonnull
-    public abstract String getReadonlyFilesMessage();
-  }
-
+  @Deprecated
+  @DeprecationInfo("Use #ensureFilesWritableAsync()")
   public abstract OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files);
 
+  @Deprecated
+  @DeprecationInfo("Use #ensureFilesWritableAsync()")
   public OperationStatus ensureFilesWritable(@Nonnull Collection<VirtualFile> files) {
     return ensureFilesWritable(VfsUtilCore.toVirtualFileArray(files));
   }
 
-  public static ReadonlyStatusHandler getInstance(Project project) {
-    return ServiceManager.getService(project, ReadonlyStatusHandler.class);
-  }
-
+  // endregion
 }

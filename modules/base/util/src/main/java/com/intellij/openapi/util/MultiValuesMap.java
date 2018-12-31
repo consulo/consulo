@@ -15,10 +15,14 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nullable;
 
 import java.util.*;
 
+@Deprecated
+@DeprecationInfo("Use com.intellij.util.containers.MultiMap or com.google.common.collect.Multimap")
 public class MultiValuesMap<K, V>{
   private final Map<K, Collection<V>> myBaseMap;
   private final boolean myOrdered;

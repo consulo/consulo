@@ -44,6 +44,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.application.TransactionGuardEx;
 import consulo.platform.Platform;
 import sun.awt.AppContext;
@@ -70,6 +71,8 @@ import static java.awt.event.MouseEvent.MOUSE_PRESSED;
  * @author Vladimir Kondratyev
  * @author Anton Katilin
  */
+@Deprecated
+@DeprecationInfo("Desktop only")
 public class IdeEventQueue extends EventQueue {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.IdeEventQueue");
   private static TransactionGuardEx ourTransactionGuard;
