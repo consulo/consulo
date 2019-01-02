@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import consulo.roots.ContentFolderScopes;
 import gnu.trove.THashMap;
 
@@ -64,6 +65,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
       }
     });
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         project.getMessageBus().asyncPublisher(LOGICAL_ROOTS).logicalRootsChanged();

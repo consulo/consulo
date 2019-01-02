@@ -44,6 +44,7 @@ import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.PsiTreeChangeListener;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -255,6 +256,7 @@ public class NavBarListener
     updateModel();
   }
 
+  @RequiredWriteAction
   @Override
   public void rootsChanged(ModuleRootEvent event) {
     updateModel();

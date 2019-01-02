@@ -15,5 +15,9 @@
  */
 package com.intellij.psi;
 
+import consulo.annotations.DeprecationInfo;
+
+@Deprecated
+@DeprecationInfo("Use consulo.psi.impl.ExternalChangeMarker")
 public interface IgnorePsiEventsMarker {
 }

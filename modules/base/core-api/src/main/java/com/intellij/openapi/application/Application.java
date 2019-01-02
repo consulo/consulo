@@ -120,15 +120,6 @@ public interface Application extends ComponentManager {
   }
 
   /**
-   * Returns true if there is currently executing write action of the specified class.
-   *
-   * @param actionClass the class of the write action to return.
-   * @return true if the action is running, or false if no action of the specified class is currently executing.
-   */
-  @RequiredReadAction
-  boolean hasWriteAction(@Nonnull Class<?> actionClass);
-
-  /**
    * Asserts whether the read access is allowed.
    */
   @RequiredReadAction
@@ -210,7 +201,9 @@ public interface Application extends ComponentManager {
    *
    * @return true if the current thread is the Swing dispatch thread, false otherwise.
    */
-  boolean isDispatchThread();
+  default boolean isDispatchThread() {
+    return UIAccess.isUIThread();
+  }
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the

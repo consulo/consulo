@@ -1747,6 +1747,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   private class MyRootsListener implements ModuleRootListener {
     private boolean myScheduled;
 
+    @RequiredWriteAction
     @Override
     public void rootsChanged(ModuleRootEvent event) {
       if (myScheduled) return;

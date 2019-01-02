@@ -31,6 +31,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
@@ -78,6 +79,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     }, this);
 
     project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myPackageCache.clear();

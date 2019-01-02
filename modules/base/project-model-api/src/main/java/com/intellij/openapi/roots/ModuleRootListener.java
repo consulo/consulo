@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.roots;
 
+import consulo.annotations.RequiredWriteAction;
+
 import java.util.EventListener;
 
 /**
@@ -24,6 +26,7 @@ public interface ModuleRootListener extends EventListener {
   default void beforeRootsChange(ModuleRootEvent event) {
   }
 
+  @RequiredWriteAction
   default void rootsChanged(ModuleRootEvent event) {
   }
 }

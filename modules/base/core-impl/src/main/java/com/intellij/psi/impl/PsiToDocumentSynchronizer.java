@@ -18,7 +18,6 @@ package com.intellij.psi.impl;
 
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
@@ -28,13 +27,17 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiTreeChangeAdapter;
+import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import consulo.annotations.RequiredWriteAction;
+import consulo.psi.impl.ExternalChangeMarker;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -208,7 +211,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   public boolean toProcessPsiEvent() {
-    return !myIgnorePsiEvents && !myPsiDocumentManager.isCommitInProgress() && !ApplicationManager.getApplication().hasWriteAction(IgnorePsiEventsMarker.class);
+    return !myIgnorePsiEvents && !myPsiDocumentManager.isCommitInProgress() && !ExternalChangeMarker.isMarked(ExternalChangeMarker.IgnorePsiEventsMarker);
   }
 
   @TestOnly

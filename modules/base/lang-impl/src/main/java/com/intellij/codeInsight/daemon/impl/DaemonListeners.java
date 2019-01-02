@@ -77,6 +77,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.annotations.RequiredWriteAction;
 import consulo.command.undo.ProjectUndoManager;
 import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
@@ -265,6 +266,7 @@ public class DaemonListeners implements Disposable {
     psiManager.addPsiTreeChangeListener(changeHandler, changeHandler);
 
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         stopDaemonAndRestartAllFiles("Project roots changed");

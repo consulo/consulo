@@ -25,7 +25,6 @@ import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ApplicationWithOwnWriteThread;
-import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -72,15 +71,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
 
   @Override
   public boolean isReadAccessAllowed() {
-    if (isDispatchThread()) {
-      return myWriteActionThread == null; // no reading from EDT during background write action
-    }
-    return isWriteAccessAllowed() || myLock.isReadLockedByThisThread();
-  }
-
-  @Override
-  public boolean isDispatchThread() {
-    return UIAccess.isUIThread();
+    return isWriteAccessAllowed() || myLock.isReadLockedByThisThread() || isDispatchThread();
   }
 
   @Override

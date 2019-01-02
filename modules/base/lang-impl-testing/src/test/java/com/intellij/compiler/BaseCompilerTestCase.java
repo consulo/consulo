@@ -6,6 +6,7 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.testFramework.ModuleTestCase;
+import consulo.annotations.RequiredWriteAction;
 import consulo.compiler.server.BuildManager;
 import junit.framework.Assert;
 
@@ -26,6 +27,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
     super.setUp();
     if (useExternalCompiler()) {
       myProject.getMessageBus().connect(myTestRootDisposable).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+        @RequiredWriteAction
         @Override
         public void rootsChanged(ModuleRootEvent event) {
           //todo[nik] projectOpened isn't called in tests so we need to add this listener manually

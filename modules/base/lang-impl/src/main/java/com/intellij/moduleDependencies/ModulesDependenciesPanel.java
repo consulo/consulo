@@ -49,6 +49,7 @@ import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphAlgorithms;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -440,6 +441,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
   public void beforeRootsChange(ModuleRootEvent event) {
   }
 
+  @RequiredWriteAction
   @Override
   public void rootsChanged(ModuleRootEvent event) {
     initLeftTreeModel();

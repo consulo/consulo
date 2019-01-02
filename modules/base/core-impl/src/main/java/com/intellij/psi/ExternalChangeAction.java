@@ -18,9 +18,12 @@ package com.intellij.psi;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.DocumentRunnable;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nullable;
 
+@Deprecated
+@DeprecationInfo("Use consulo.psi.impl.ExternalChangeMarker")
 public interface ExternalChangeAction extends Runnable,IgnorePsiEventsMarker {
   abstract class ExternalDocumentChange extends DocumentRunnable implements ExternalChangeAction {
     protected ExternalDocumentChange(@Nullable Document document, Project project) {

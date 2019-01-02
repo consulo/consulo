@@ -17,7 +17,6 @@ package consulo.application;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
@@ -52,7 +51,7 @@ public final class AccessRule {
   @SuppressWarnings("deprecation")
   @Nonnull
   public static AsyncResult<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
-    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), AccessRule.class);
 
     Application application = Application.get();
     if (application instanceof ApplicationWithOwnWriteThread) {
@@ -62,7 +61,16 @@ public final class AccessRule {
       });
     }
     else {
-      AsyncResult<Void> result = new AsyncResult<>();
+      AsyncResult<Void> result = new AsyncResult<Void>() {
+        @Nullable
+        @Override
+        public Void getResultSync(long msTimeout) {
+          if(application.isReadAccessAllowed() && !application.isWriteAccessAllowed() && !application.isDispatchThread()) {
+            throw new IllegalStateException("Can't block waiting thread inside read lock");
+          }
+          return super.getResultSync(msTimeout);
+        }
+      };
 
       // noinspection RequiredXAction
       try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
@@ -82,7 +90,7 @@ public final class AccessRule {
   @SuppressWarnings("deprecation")
   @Nonnull
   public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableComputable<T, Throwable> action) {
-    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), AccessRule.class);
 
     Application application = Application.get();
 
@@ -90,7 +98,16 @@ public final class AccessRule {
       return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, action);
     }
     else {
-      AsyncResult<T> result = new AsyncResult<>();
+      AsyncResult<T> result = new AsyncResult<T>() {
+        @Nullable
+        @Override
+        public T getResultSync(long msTimeout) {
+          if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed() && !application.isDispatchThread()) {
+            throw new IllegalStateException("Can't block waiting thread inside read lock");
+          }
+          return super.getResultSync(msTimeout);
+        }
+      };
 
       // noinspection RequiredXAction
       try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {

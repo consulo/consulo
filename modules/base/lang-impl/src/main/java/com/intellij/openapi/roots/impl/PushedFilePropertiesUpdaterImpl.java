@@ -48,6 +48,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
@@ -79,6 +80,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     }
 
     startupManager.registerPreStartupActivity((ui) -> project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(final ModuleRootEvent event) {
         for (FilePropertyPusher pusher : myPushers) {
@@ -179,6 +181,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
       }
     };
     myProject.getMessageBus().connect(task).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         DumbService.getInstance(myProject).cancelTask(task);

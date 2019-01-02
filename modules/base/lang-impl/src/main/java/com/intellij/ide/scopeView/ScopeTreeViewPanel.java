@@ -80,6 +80,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -781,6 +782,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
   }
 
   private class MyModuleRootListener extends ModuleRootAdapter {
+    @RequiredWriteAction
     @Override
     public void rootsChanged(ModuleRootEvent event) {
       myUpdateQueue.cancelAllUpdates();

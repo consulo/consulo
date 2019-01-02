@@ -50,6 +50,7 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
@@ -1379,6 +1380,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
           }
         }
 
+        @RequiredWriteAction
         @Override
         public void rootsChanged(final ModuleRootEvent event) {
           if (isSuspended(projectId)) {

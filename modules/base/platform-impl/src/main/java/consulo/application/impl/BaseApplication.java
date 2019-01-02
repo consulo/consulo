@@ -24,7 +24,10 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationListener;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
@@ -55,7 +58,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.PausesStat;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
@@ -663,18 +665,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   public AccessToken acquireWriteActionLock(@Nonnull Class clazz) {
     return new WriteAccessToken(clazz);
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
-    assertReadAccessAllowed();
-
-    for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {
-      Class action = myWriteActionsStack.get(i);
-      if (actionClass == action || ReflectionUtil.isAssignable(actionClass, action)) return true;
-    }
-    return false;
   }
 
   @NonNls

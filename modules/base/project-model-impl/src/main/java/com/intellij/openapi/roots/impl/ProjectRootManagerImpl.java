@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -49,7 +50,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
   private final OrderRootsCache myRootsCache;
 
-  private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<RootProvider, Set<OrderEntry>>();
+  private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<>();
   protected final List<OrderEntryWithTracking> myModuleExtensionWithSdkOrderEntries = ContainerUtil.newArrayList();
   protected boolean myStartupActivityPerformed = false;
   private final RootProviderChangeListener myRootProviderChangeListener = new RootProviderChangeListener();
@@ -126,12 +127,14 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
   protected final BatchSession myRootsChanged = new BatchSession(false);
   protected final BatchSession myFileTypesChanged = new BatchSession(true);
+  protected final Application myApplication;
 
   public static ProjectRootManagerImpl getInstanceImpl(Project project) {
     return (ProjectRootManagerImpl)getInstance(project);
   }
 
-  public ProjectRootManagerImpl(Project project) {
+  public ProjectRootManagerImpl(Application application, Project project) {
+    myApplication = application;
     myProject = project;
     myRootsCache = new OrderRootsCache(project);
   }
@@ -145,7 +148,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   @Override
   @Nonnull
   public List<String> getContentRootUrls() {
-    final List<String> result = new ArrayList<String>();
+    final List<String> result = new ArrayList<>();
     for (Module module : getModuleManager().getModules()) {
       final String[] urls = ModuleRootManager.getInstance(module).getContentRootUrls();
       ContainerUtil.addAll(result, urls);
@@ -156,7 +159,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   @Override
   @Nonnull
   public VirtualFile[] getContentRoots() {
-    final List<VirtualFile> result = new ArrayList<VirtualFile>();
+    final List<VirtualFile> result = new ArrayList<>();
     for (Module module : getModuleManager().getModules()) {
       final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
       ContainerUtil.addAll(result, contentRoots);
@@ -166,7 +169,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
   @Override
   public VirtualFile[] getContentSourceRoots() {
-    final List<VirtualFile> result = new ArrayList<VirtualFile>();
+    final List<VirtualFile> result = new ArrayList<>();
     for (Module module : getModuleManager().getModules()) {
       final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.all(false));
       ContainerUtil.addAll(result, sourceRoots);
@@ -188,7 +191,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
   @Override
   public VirtualFile[] getContentRootsFromAllModules() {
-    List<VirtualFile> result = new ArrayList<VirtualFile>();
+    List<VirtualFile> result = new ArrayList<>();
     final Module[] modules = getModuleManager().getSortedModules();
     for (Module module : modules) {
       final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
@@ -286,7 +289,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   private boolean fireRootsChanged(boolean filetypes) {
     if (myProject.isDisposed()) return false;
 
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
+    myApplication.assertWriteAccessAllowed();
 
     LOG.assertTrue(!isFiringEvent, "Do not use API that changes roots from roots events. Try using invoke later or something else.");
 
@@ -312,6 +315,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     return true;
   }
 
+  @RequiredWriteAction
   protected void fireRootsChangedEvent(boolean filetypes) {
   }
 
@@ -344,7 +348,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   void subscribeToRootProvider(OrderEntry owner, final RootProvider provider) {
     Set<OrderEntry> owners = myRegisteredRootProviders.get(provider);
     if (owners == null) {
-      owners = new HashSet<OrderEntry>();
+      owners = new HashSet<>();
       myRegisteredRootProviders.put(provider, owners);
       provider.addRootSetChangedListener(myRootProviderChangeListener);
     }
@@ -386,7 +390,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     multilistener.removeListener(libraryListener);
   }
 
-  private final Map<LibraryTable, LibraryTableMultilistener> myLibraryTableMultilisteners = new HashMap<LibraryTable, LibraryTableMultilistener>();
+  private final Map<LibraryTable, LibraryTableMultilistener> myLibraryTableMultilisteners = new HashMap<>();
 
   private class LibraryTableMultilistener implements LibraryTable.Listener {
     final List<LibraryTable.Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();

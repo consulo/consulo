@@ -43,6 +43,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -96,6 +97,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     getSplitter().setProportion(0.3f);
     myMessageBusConnection = myModule.getProject().getMessageBus().connect();
     myMessageBusConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myClasspaths.clear();

@@ -54,6 +54,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.TransactionGuardEx;
 import consulo.platform.Platform;
+import consulo.psi.impl.ExternalChangeMarker;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -82,9 +83,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  protected PsiDocumentManagerBase(@Nonnull final Project project,
-                                   @Nonnull PsiManager psiManager,
-                                   @NonNls @Nonnull final DocumentCommitProcessor documentCommitProcessor) {
+  protected PsiDocumentManagerBase(@Nonnull final Project project, @Nonnull PsiManager psiManager, @NonNls @Nonnull final DocumentCommitProcessor documentCommitProcessor) {
     myProject = project;
     myPsiManager = psiManager;
     myDocumentCommitProcessor = documentCommitProcessor;
@@ -322,10 +321,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   // public for Upsource
-  public boolean finishCommit(@Nonnull final Document document,
-                              @Nonnull final List<Processor<Document>> finishProcessors,
-                              final boolean synchronously,
-                              @Nonnull final Object reason) {
+  public boolean finishCommit(@Nonnull final Document document, @Nonnull final List<Processor<Document>> finishProcessors, final boolean synchronously, @Nonnull final Object reason) {
     assert !myProject.isDisposed() : "Already disposed";
     ApplicationManager.getApplication().assertIsDispatchThread();
     final boolean[] ok = {true};
@@ -356,9 +352,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return ok[0];
   }
 
-  protected boolean finishCommitInWriteAction(@Nonnull final Document document,
-                                              @Nonnull final List<Processor<Document>> finishProcessors,
-                                              final boolean synchronously) {
+  protected boolean finishCommitInWriteAction(@Nonnull final Document document, @Nonnull final List<Processor<Document>> finishProcessors, final boolean synchronously) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myProject.isDisposed()) return false;
     assert !(document instanceof DocumentWindow);
@@ -396,7 +390,9 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   private boolean commitToExistingPsi(@Nonnull Document document,
                                       @Nonnull List<Processor<Document>> finishProcessors,
-                                      boolean synchronously, @Nullable VirtualFile virtualFile, @Nonnull FileViewProvider viewProvider) {
+                                      boolean synchronously,
+                                      @Nullable VirtualFile virtualFile,
+                                      @Nonnull FileViewProvider viewProvider) {
     for (Processor<Document> finishRunnable : finishProcessors) {
       boolean success = finishRunnable.process(document);
       if (synchronously) {
@@ -495,7 +491,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     if (ApplicationManager.getApplication().isReadAccessAllowed()) {
-      LOG.error("Don't call commitAndRunReadAction inside ReadAction, it will cause a deadlock otherwise. "+Thread.currentThread());
+      LOG.error("Don't call commitAndRunReadAction inside ReadAction, it will cause a deadlock otherwise. " + Thread.currentThread());
     }
 
     while (true) {
@@ -550,8 +546,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       // re-add all uncommitted documents into the queue with this new modality
       // because this client obviously expects them to commit even inside modal dialog
       for (Document document : myUncommittedDocuments) {
-        myDocumentCommitProcessor.commitAsynchronously(myProject, document,
-                                                       "re-added with modality "+current+" because performWhenAllCommitted("+current+") was called", current);
+        myDocumentCommitProcessor.commitAsynchronously(myProject, document, "re-added with modality " + current + " because performWhenAllCommitted(" + current + ") was called", current);
       }
     }
     return false;
@@ -577,7 +572,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       whenAllCommitted.run();
     }
     else {
-      if(Platform.current().isDesktop()) {
+      if (Platform.current().isDesktop()) {
         UIUtil.invokeLaterIfNeeded(() -> performWhenAllCommitted(whenAllCommitted));
       }
       else {
@@ -612,8 +607,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     if (!hasUncommitedDocuments() && !actionsWhenAllDocumentsAreCommitted.isEmpty()) {
-      List<Map.Entry<Object, Runnable>> entries = new ArrayList<>(
-              new LinkedHashMap<>(actionsWhenAllDocumentsAreCommitted).entrySet());
+      List<Map.Entry<Object, Runnable>> entries = new ArrayList<>(new LinkedHashMap<>(actionsWhenAllDocumentsAreCommitted).entrySet());
       beforeCommitHandler();
 
       try {
@@ -640,6 +634,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   private void beforeCommitHandler() {
     actionsWhenAllDocumentsAreCommitted.put(PERFORM_ALWAYS_KEY, EmptyRunnable.getInstance()); // to prevent listeners from registering new actions during firing
   }
+
   private void checkWeAreOutsideAfterCommitHandler() {
     if (isInsideCommitHandler()) {
       throw new IncorrectOperationException("You must not call performWhenAllCommitted()/cancelAndRunWhenCommitted() from within after-commit handler");
@@ -763,8 +758,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   public boolean isCommitted(@Nonnull Document document) {
     if (document instanceof DocumentWindow) document = ((DocumentWindow)document).getDelegate();
     if (getSynchronizer().isInSynchronization(document)) return true;
-    return (!(document instanceof DocumentEx) || !((DocumentEx)document).isInEventsHandling())
-           && !isInUncommittedSet(document);
+    return (!(document instanceof DocumentEx) || !((DocumentEx)document).isInEventsHandling()) && !isInUncommittedSet(document);
   }
 
   @Override
@@ -794,7 +788,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     PsiFile psiCause = null;
     for (PsiFile file : files) {
       if (file == null) {
-        throw new AssertionError("View provider "+viewProvider+" ("+viewProvider.getClass()+") returned null in its files array: "+files+" for file "+viewProvider.getVirtualFile());
+        throw new AssertionError("View provider " + viewProvider + " (" + viewProvider.getClass() + ") returned null in its files array: " + files + " for file " + viewProvider.getVirtualFile());
       }
 
       if (PsiToDocumentSynchronizer.isInsideAtomicChange(file)) {
@@ -834,7 +828,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     List<PsiFile> files = viewProvider.getAllFiles();
     boolean commitNecessary = files.stream().noneMatch(file -> PsiToDocumentSynchronizer.isInsideAtomicChange(file) || !(file instanceof PsiFileImpl));
 
-    boolean forceCommit = ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.class) &&
+    boolean forceCommit = ExternalChangeMarker.isMarked(ExternalChangeMarker.ExternalChangeAction) &&
                           (SystemProperties.getBooleanProperty("idea.force.commit.on.external.change", false) ||
                            ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode());
 
@@ -883,15 +877,18 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     // we can end up outside write action here if the document has forUseInNonAWTThread=true
-    ApplicationManager.getApplication().runWriteAction(new ExternalChangeAction() {
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        FileViewProvider viewProvider = psiFile.getViewProvider();
-        if (viewProvider instanceof SingleRootFileViewProvider) {
-          ((SingleRootFileViewProvider)viewProvider).onContentReload();
-        } else {
-          LOG.error("Invalid view provider: " + viewProvider + " of " + viewProvider.getClass());
-        }
+       ExternalChangeMarker.mark(() -> {
+         FileViewProvider viewProvider = psiFile.getViewProvider();
+         if (viewProvider instanceof SingleRootFileViewProvider) {
+           ((SingleRootFileViewProvider)viewProvider).onContentReload();
+         }
+         else {
+           LOG.error("Invalid view provider: " + viewProvider + " of " + viewProvider.getClass());
+         }
+       }, ExternalChangeMarker.ExternalChangeAction);
       }
     });
   }
@@ -926,9 +923,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     char[] fileText = psiFile.textToCharArray();
-    @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
-    @NonNls String error = "File '" + psiFile.getName() + "' text mismatch after reparse. " +
-                           "File length=" + fileText.length + "; Doc length=" + documentLength + "\n";
+    @SuppressWarnings("NonConstantStringShouldBeStringBuffer") @NonNls String error =
+            "File '" + psiFile.getName() + "' text mismatch after reparse. " + "File length=" + fileText.length + "; Doc length=" + documentLength + "\n";
     int i = 0;
     for (; i < documentLength; i++) {
       if (i >= fileText.length) {

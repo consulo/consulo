@@ -27,6 +27,8 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Alarm;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;
@@ -80,6 +82,7 @@ public class VcsRootScanner implements BulkFileListener, ModuleRootListener, Vcs
   public void beforeRootsChange(ModuleRootEvent event) {
   }
 
+  @RequiredWriteAction
   @Override
   public void rootsChanged(ModuleRootEvent event) {
     scheduleScan();

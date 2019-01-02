@@ -40,6 +40,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
@@ -63,6 +64,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     final MessageBusConnection connection = project.getMessageBus().connect(this);
 
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         queueUpdate();

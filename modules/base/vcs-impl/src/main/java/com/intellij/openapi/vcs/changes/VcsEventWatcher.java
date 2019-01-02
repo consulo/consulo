@@ -26,6 +26,7 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.ProblemListener;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -47,6 +48,7 @@ public class VcsEventWatcher implements ProjectComponent {
   public void projectOpened() {
     MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {

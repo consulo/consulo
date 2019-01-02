@@ -52,7 +52,6 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.pom.core.impl.PomModelImpl;
-import com.intellij.psi.ExternalChangeAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
@@ -66,6 +65,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.TransactionGuardEx;
+import consulo.psi.impl.ExternalChangeMarker;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.TestOnly;
 
@@ -118,7 +118,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     @Override
     public void documentChanged(DocumentEvent e) {
       final Document document = e.getDocument();
-      if (!ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.ExternalDocumentChange.class)) {
+      if (!ExternalChangeMarker.isMarked(ExternalChangeMarker.ExternalDocumentChange)) {
         myUnsavedDocuments.add(document);
       }
       final Runnable currentCommand = CommandProcessor.getInstance().getCurrentCommand();
@@ -574,7 +574,9 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
       final Document document = getCachedDocument(file);
       if (document != null) {
-        ApplicationManager.getApplication().runWriteAction((ExternalChangeAction)() -> document.setReadOnly(!file.isWritable()));
+        ApplicationManager.getApplication().runWriteAction(() -> {
+          ExternalChangeMarker.mark(() -> document.setReadOnly(!file.isWritable()), ExternalChangeMarker.ExternalChangeAction);
+        });
       }
     }
     else if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
@@ -638,26 +640,27 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
     boolean[] isReloadable = {isReloadable(file, document, project)};
     if (isReloadable[0]) {
-      CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(new ExternalChangeAction.ExternalDocumentChange(document, project) {
-        @Override
-        public void run() {
-          if (!isBinaryWithoutDecompiler(file)) {
-            LoadTextUtil.setCharsetWasDetectedFromBytes(file, null);
-            file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
-            file.setCharset(null, null, false);
-            boolean wasWritable = document.isWritable();
-            document.setReadOnly(false);
-            boolean tooLarge = FileUtilRt.isTooLarge(file.getLength());
-            CharSequence reloaded = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
-            isReloadable[0] = isReloadable(file, document, project);
-            if (isReloadable[0]) {
-              DocumentEx documentEx = (DocumentEx)document;
-              documentEx.replaceText(reloaded, file.getModificationStamp());
+      CommandProcessor.getInstance().executeCommand(project, () -> {
+        ApplicationManager.getApplication().runWriteAction(() -> {
+          ExternalChangeMarker.mark(() -> {
+            if (!isBinaryWithoutDecompiler(file)) {
+              LoadTextUtil.setCharsetWasDetectedFromBytes(file, null);
+              file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
+              file.setCharset(null, null, false);
+              boolean wasWritable = document.isWritable();
+              document.setReadOnly(false);
+              boolean tooLarge = FileUtilRt.isTooLarge(file.getLength());
+              CharSequence reloaded = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
+              isReloadable[0] = isReloadable(file, document, project);
+              if (isReloadable[0]) {
+                DocumentEx documentEx = (DocumentEx)document;
+                documentEx.replaceText(reloaded, file.getModificationStamp());
+              }
+              document.setReadOnly(!wasWritable);
             }
-            document.setReadOnly(!wasWritable);
-          }
-        }
-      }), UIBundle.message("file.cache.conflict.action"), null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
+          }, ExternalChangeMarker.ExternalDocumentChange);
+        });
+      }, UIBundle.message("file.cache.conflict.action"), null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
     }
     if (isReloadable[0]) {
       myMultiCaster.fileContentReloaded(file, document);

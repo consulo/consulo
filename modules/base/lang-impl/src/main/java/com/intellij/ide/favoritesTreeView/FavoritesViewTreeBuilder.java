@@ -41,6 +41,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -94,6 +95,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
       }
     };
     bus.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         queueUpdate(true);

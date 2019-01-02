@@ -43,11 +43,11 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.psi.ExternalChangeAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.HashSet;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.psi.impl.ExternalChangeMarker;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.TestOnly;
 
@@ -95,7 +95,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   private DocumentReference myOriginatorReference;
 
   public static boolean isRefresh() {
-    return ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.class);
+    return ExternalChangeMarker.isMarked(ExternalChangeMarker.ExternalChangeAction);
   }
 
   public static int getGlobalUndoLimit() {

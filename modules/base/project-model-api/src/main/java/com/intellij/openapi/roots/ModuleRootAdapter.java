@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.roots;
 
+import consulo.annotations.RequiredWriteAction;
+
 /**
  * @author nik
  */
@@ -23,6 +25,7 @@ public abstract class ModuleRootAdapter implements ModuleRootListener {
   public void beforeRootsChange(ModuleRootEvent event) {
   }
 
+  @RequiredWriteAction
   @Override
   public void rootsChanged(ModuleRootEvent event) {
   }

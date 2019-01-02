@@ -38,6 +38,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakHashMap;
+import consulo.annotations.RequiredWriteAction;
 import consulo.ui.image.Image;
 import consulo.util.ProjectPropertiesComponent;
 import gnu.trove.THashMap;
@@ -102,6 +103,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     initializeConfigurationTypes(ConfigurationType.CONFIGURATION_TYPE_EP.getExtensions());
     myProject.getMessageBus().connect(myProject).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         RunnerAndConfigurationSettings configuration = getSelectedConfiguration();

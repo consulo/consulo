@@ -39,6 +39,7 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -94,6 +95,7 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
       myMappingsForRemovedModules.clear();
     }
 
+    @RequiredWriteAction
     @Override
     public void rootsChanged(ModuleRootEvent event) {
       for (Pair<String, VcsDirectoryMapping> mapping : myMappingsForRemovedModules) {

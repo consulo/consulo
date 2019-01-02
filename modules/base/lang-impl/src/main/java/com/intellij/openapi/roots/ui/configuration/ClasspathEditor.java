@@ -23,6 +23,8 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import com.intellij.openapi.util.Disposer;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -82,6 +84,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   public void beforeRootsChange(ModuleRootEvent event) {
   }
 
+  @RequiredWriteAction
   @Override
   public void rootsChanged(ModuleRootEvent event) {
     if (myPanel != null) {

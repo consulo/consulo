@@ -88,6 +88,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
 import consulo.ui.RequiredUIAccess;
@@ -222,6 +223,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     myConnection = project.getMessageBus().connect();
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         refresh();

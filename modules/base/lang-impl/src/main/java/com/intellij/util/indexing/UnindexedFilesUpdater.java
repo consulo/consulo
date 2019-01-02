@@ -33,6 +33,8 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;
@@ -50,6 +52,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
   public UnindexedFilesUpdater(final Project project) {
     myProject = project;
     project.getMessageBus().connect(this).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         DumbService.getInstance(project).cancelTask(UnindexedFilesUpdater.this);

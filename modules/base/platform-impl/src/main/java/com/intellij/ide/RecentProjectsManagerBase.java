@@ -40,6 +40,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
@@ -398,6 +399,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       SystemDock.updateMenu();
 
       project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+        @RequiredWriteAction
         @Override
         public void rootsChanged(ModuleRootEvent event) {
           updateProjectModuleExtensions(project);

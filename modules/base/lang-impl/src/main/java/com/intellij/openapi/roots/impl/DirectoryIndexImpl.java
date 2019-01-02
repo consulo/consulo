@@ -39,6 +39,7 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
@@ -81,6 +82,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     });
 
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @RequiredWriteAction
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myRootIndex = null;

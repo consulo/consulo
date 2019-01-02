@@ -42,6 +42,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.psi.PsiPackageSupportProviders;
 
@@ -89,6 +90,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     connection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
     connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, myVcsListener);
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @RequiredWriteAction
       @Override
       @RequiredReadAction
       public void rootsChanged(ModuleRootEvent event) {
