@@ -24,6 +24,7 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +34,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
   @Override
-  protected void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback, @Nonnull RunProfileState state) throws ExecutionException {
+  protected void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback, @Nonnull RunProfileState state) throws ExecutionException {
     startRunProfile(environment, state, callback, runProfileStarter(() -> execute(environment, state)));
   }
 
@@ -44,10 +45,10 @@ public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extend
   protected static void startRunProfile(ExecutionEnvironment environment,
                                         RunProfileState state,
                                         ProgramRunner.Callback callback,
-                                        @javax.annotation.Nullable RunProfileStarter starter) {
+                                        @Nullable RunProfileStarter starter) {
 
     ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> func = () -> {
-      AsyncResult<RunContentDescriptor> promise = starter == null ? AsyncResult.done(null) : starter.executeAsync(state, environment);
+      AsyncResult<RunContentDescriptor> promise = starter == null ? AsyncResult.resolved() : starter.executeAsync(state, environment);
       return promise.doWhenDone(it -> BaseProgramRunner.postProcess(environment, it, callback));
     };
 

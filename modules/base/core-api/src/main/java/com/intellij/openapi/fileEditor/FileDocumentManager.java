@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
@@ -47,6 +48,11 @@ public abstract class FileDocumentManager implements SavingRequestor {
 
   @RequiredWriteAction
   public abstract void saveAllDocuments();
+
+  @Nonnull
+  public AsyncResult<Void> saveAllDocumentsAsync() {
+    return AccessRule.writeAsync(this::saveAllDocuments);
+  }
 
   @RequiredWriteAction
   public abstract void saveDocument(@Nonnull Document document);

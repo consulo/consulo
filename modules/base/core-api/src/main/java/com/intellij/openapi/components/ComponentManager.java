@@ -20,6 +20,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolder;
@@ -28,6 +29,7 @@ import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides access to components. Serves as a base interface for {@link Application}
@@ -37,7 +39,7 @@ import javax.annotation.Nonnull;
  * @see Project
  */
 public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner, AreaInstance{
-  default void initNotLazyServices() {
+  default void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
     throw new UnsupportedOperationException();
   }
 

@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.impl.EditorFactoryImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorFactoryImpl;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
@@ -157,7 +157,7 @@ public class ExportToFileUtil {
 
     @Override
     protected JComponent createCenterPanel() {
-      final Document document = ((EditorFactoryImpl)EditorFactory.getInstance()).createDocument(true);
+      final Document document = ((DesktopEditorFactoryImpl)EditorFactory.getInstance()).createDocument(true);
       ((DocumentImpl)document).setAcceptSlashR(true);
 
       myTextArea = EditorFactory.getInstance().createEditor(document, myProject, PlainTextFileType.INSTANCE, true);

@@ -17,7 +17,6 @@ package com.intellij.psi.impl;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -30,6 +29,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,22 +66,21 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     MessageBus bus = project.getMessageBus();
     myPublisher = bus.syncPublisher(TOPIC);
     bus.connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
-      private void doIncCounter() {
-        ApplicationManager.getApplication().runWriteAction(() -> incCounter());
+      @RequiredWriteAction
+      @Override
+      public void enteredDumbMode(@Nonnull UIAccess uiAccess) {
+        incCounter();
       }
 
+      @RequiredWriteAction
       @Override
-      public void enteredDumbMode() {
-        doIncCounter();
-      }
-
-      @Override
-      public void exitDumbMode() {
-        doIncCounter();
+      public void exitDumbMode(@Nonnull UIAccess uiAccess) {
+        incCounter();
       }
     });
   }
 
+  @RequiredWriteAction
   public void incCounter() {
     incCountersInner(7);
   }

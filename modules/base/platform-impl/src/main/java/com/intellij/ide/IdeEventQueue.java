@@ -21,7 +21,10 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
@@ -45,7 +48,6 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.application.TransactionGuardEx;
 import consulo.platform.Platform;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
@@ -59,8 +61,8 @@ import java.awt.event.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -75,7 +77,6 @@ import static java.awt.event.MouseEvent.MOUSE_PRESSED;
 @DeprecationInfo("Desktop only")
 public class IdeEventQueue extends EventQueue {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.IdeEventQueue");
-  private static TransactionGuardEx ourTransactionGuard;
 
   /**
    * Adding/Removing of "idle" listeners should be thread safe.
@@ -419,14 +420,7 @@ public class IdeEventQueue extends EventQueue {
 
   @Nullable
   static AccessToken startActivity(@Nonnull AWTEvent e) {
-    if (ourTransactionGuard == null && appIsLoaded()) {
-      if (ApplicationManager.getApplication() != null && !ApplicationManager.getApplication().isDisposed()) {
-        ourTransactionGuard = (TransactionGuardEx)TransactionGuard.getInstance();
-      }
-    }
-    return ourTransactionGuard == null
-           ? null
-           : ourTransactionGuard.startActivity(isInputEvent(e) || e instanceof ItemEvent || e instanceof FocusEvent);
+    return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   private void processException(@Nonnull Throwable t) {

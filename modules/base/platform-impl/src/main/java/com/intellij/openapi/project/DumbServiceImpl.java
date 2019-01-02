@@ -19,7 +19,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -151,7 +153,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   public void setDumb(boolean dumb, UIAccess uiAccess) {
     if (dumb) {
       myState.set(State.RUNNING_DUMB_TASKS);
-      uiAccess.give(myPublisher::enteredDumbMode);
+      myPublisher.enteredDumbMode(uiAccess);
     }
     else {
       myState.set(State.WAITING_FOR_FINISH);
@@ -223,7 +225,6 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
     myProgresses.put(task, new ProgressIndicatorBase());
     Disposer.register(task, () -> {
-      myApplication.assertIsDispatchThread();
       myProgresses.remove(task);
     });
     myUpdatesQueue.addLast(task);
@@ -243,14 +244,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
       myModificationCount++;
     }).doWhenProcessed(() -> {
       if (wasSmart) {
-        uiAccess.give(() -> {
-          try {
-            myPublisher.enteredDumbMode();
-          }
-          catch (Throwable e) {
-            LOG.error(e);
-          }
-        }).notify(result);
+        myPublisher.enteredDumbMode(uiAccess);
+        result.setDone();
       }
     });
 
@@ -281,7 +276,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     if (ApplicationProperties.isInSandbox()) LOG.info("updateFinished");
 
     try {
-      myPublisher.exitDumbMode();
+      myPublisher.exitDumbMode(uiAccess);
+
       FileEditorManagerEx.getInstanceEx(myProject).refreshIcons();
     }
     finally {

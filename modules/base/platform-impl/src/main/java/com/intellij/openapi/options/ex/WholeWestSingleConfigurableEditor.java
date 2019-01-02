@@ -17,9 +17,8 @@ package com.intellij.openapi.options.ex;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
@@ -29,13 +28,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.application.AccessRule;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -67,11 +67,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     myConfigurable = configurable;
   }
 
-  public WholeWestSingleConfigurableEditor(@Nullable Project project,
-                                           Configurable configurable,
-                                           @NonNls String dimensionKey,
-                                           final boolean showApplyButton,
-                                           final IdeModalityType ideModalityType) {
+  public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
     super(project, true, ideModalityType);
     myDimensionKey = dimensionKey;
     myShowApplyButton = showApplyButton;
@@ -83,11 +79,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     myConfigurable.reset();
   }
 
-  public WholeWestSingleConfigurableEditor(Component parent,
-                                           Configurable configurable,
-                                           String dimensionServiceKey,
-                                           final boolean showApplyButton,
-                                           final IdeModalityType ideModalityType) {
+  public WholeWestSingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
     super(parent, true);
     myDimensionKey = dimensionServiceKey;
     myShowApplyButton = showApplyButton;
@@ -158,7 +150,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
   @Override
   @Nonnull
   protected Action[] createActions() {
-    List<Action> actions = new ArrayList<Action>();
+    List<Action> actions = new ArrayList<>();
     actions.add(getOKAction());
     actions.add(getCancelAction());
     if (myShowApplyButton) {
@@ -177,18 +169,18 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
 
   @Override
   public void doCancelAction() {
-    if (myChangesWereApplied) {
-      ApplicationManager.getApplication().saveAll();
-    }
     super.doCancelAction();
+
+    if (myChangesWereApplied) {
+      AccessRule.writeAsync(() -> Application.get().saveAll());
+    }
   }
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
     try {
       if (myConfigurable.isModified()) myConfigurable.apply();
-
-      ApplicationManager.getApplication().saveAll();
     }
     catch (ConfigurationException e) {
       if (e.getMessage() != null) {
@@ -202,6 +194,8 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
       return;
     }
     super.doOKAction();
+
+    AccessRule.writeAsync(() -> Application.get().saveAll());
   }
 
   protected static String createDimensionKey(Configurable configurable) {
@@ -266,14 +260,14 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void initRootPanel(@Nonnull JPanel rootPanel) {
     myRootPanel = rootPanel;
     super.initRootPanel(rootPanel);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent) {

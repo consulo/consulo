@@ -34,7 +34,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
@@ -285,16 +285,15 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public void initNotLazyServices() {
+  public void initNotLazyServices(ProgressIndicator progressIndicator) {
     try {
       if (myComponentsCreated) {
         throw new IllegalArgumentException("Injector already build");
       }
 
       for (Class<?> componentInterface : myNotLazyServices) {
-        ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
-        if (indicator != null) {
-          indicator.checkCanceled();
+        if (progressIndicator != null) {
+          progressIndicator.checkCanceled();
         }
 
         Object component = getComponent(componentInterface);
@@ -393,7 +392,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredWriteAction
   public void dispose() {
     Application.get().assertWriteAccessAllowed();
 

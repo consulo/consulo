@@ -25,6 +25,7 @@ import com.intellij.openapi.util.Couple;
 import javax.annotation.Nonnull;
 
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -55,6 +56,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
     return Couple.of(splitter.getFirstComponent(), splitter.getSecondComponent());
   }
 
+  @RequiredUIAccess
   @Override
   protected void doOKAction() {
     RunConfigurable configurable = getConfigurable();

@@ -22,7 +22,6 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -150,7 +149,7 @@ public class StartupManagerImpl extends StartupManagerEx {
   }
 
   public void runPostStartupActivitiesFromExtensions(@Nonnull UIAccess uiAccess) {
-    StartupActivity[] extensions = Extensions.getExtensions(StartupActivity.POST_STARTUP_ACTIVITY);
+    StartupActivity[] extensions = StartupActivity.POST_STARTUP_ACTIVITY.getExtensions();
     for (final StartupActivity extension : extensions) {
       final Consumer<UIAccess> runnable = (c) -> {
         if (!myProject.isDisposed()) {
@@ -158,7 +157,7 @@ public class StartupManagerImpl extends StartupManagerEx {
           extension.runActivity(c, myProject);
           long duration = System.currentTimeMillis() - start;
           if (duration > 200) {
-            LOG.info(extension.getClass().getSimpleName() + " run in " + duration);
+            LOG.info(extension.getClass().getSimpleName() + " run in " + duration + " ms.");
           }
         }
       };
