@@ -43,7 +43,7 @@ import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.impl.EditorFactoryImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorFactoryImpl;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
@@ -621,7 +621,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     if (allEditors.length > 0) {
       for (Editor editor : allEditors) {
         try {
-          EditorFactoryImpl.throwNotReleasedError(editor);
+          DesktopEditorFactoryImpl.throwNotReleasedError(editor);
         }
         catch (Throwable e) {
           result.add(e);

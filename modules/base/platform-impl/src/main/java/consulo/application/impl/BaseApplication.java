@@ -454,7 +454,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredWriteAction
   @Override
   public void dispose() {
     fireApplicationExiting();

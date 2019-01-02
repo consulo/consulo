@@ -62,7 +62,7 @@
 
     <component>
       <interface-class>com.intellij.openapi.editor.EditorFactory</interface-class>
-      <implementation-class>com.intellij.openapi.editor.impl.EditorFactoryImpl</implementation-class>
+      <implementation-class>com.intellij.openapi.editor.impl.DesktopEditorFactoryImpl</implementation-class>
     </component>
 
     <component>

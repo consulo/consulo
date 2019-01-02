@@ -17,7 +17,6 @@ package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -33,8 +32,8 @@ import com.intellij.util.PausesStat;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -271,28 +270,11 @@ public class ActionUtil {
   }
 
   public static void performActionDumbAware(AnAction action, AnActionEvent e) {
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          action.actionPerformed(e);
-        }
-        catch (IndexNotReadyException e1) {
-          showDumbModeWarning(e);
-        }
-      }
-
-      @Override
-      public String toString() {
-        return action + " of " + action.getClass();
-      }
-    };
-
-    if (action.startInTransaction()) {
-      TransactionGuard.getInstance().submitTransactionAndWait(runnable);
+    try {
+      action.actionPerformed(e);
     }
-    else {
-      runnable.run();
+    catch (IndexNotReadyException e1) {
+      showDumbModeWarning(e);
     }
   }
 

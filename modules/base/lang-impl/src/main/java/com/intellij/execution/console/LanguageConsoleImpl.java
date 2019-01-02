@@ -39,7 +39,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.editor.impl.EditorFactoryImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorFactoryImpl;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
@@ -133,7 +133,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     myConsoleEditor.getScrollPane().getHorizontalScrollBar().setEnabled(false);
     myConsoleEditor.addFocusListener(myFocusListener);
     myCurrentEditor = myConsoleEditor;
-    Document historyDocument = ((EditorFactoryImpl)editorFactory).createDocument(true);
+    Document historyDocument = ((DesktopEditorFactoryImpl)editorFactory).createDocument(true);
     UndoUtil.disableUndoFor(historyDocument);
     myHistoryViewer = (EditorEx)editorFactory.createViewer(historyDocument, getProject());
     myHistoryViewer.getDocument().addDocumentListener(myDocumentAdapter);

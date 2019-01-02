@@ -18,7 +18,7 @@ package com.intellij.codeInsight.actions;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.impl.EditorFactoryImpl;
+import com.intellij.openapi.editor.impl.DesktopEditorFactoryImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.VcsException;
@@ -113,7 +113,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
   private static List<Range> getRanges(@Nonnull Document document,
                                        @Nonnull CharSequence contentFromVcs) throws FilesTooBigForDiffException
   {
-    Document documentFromVcs = ((EditorFactoryImpl)EditorFactory.getInstance()).createDocument(contentFromVcs, true, false);
+    Document documentFromVcs = ((DesktopEditorFactoryImpl)EditorFactory.getInstance()).createDocument(contentFromVcs, true, false);
     return RangesBuilder.createRanges(document, documentFromVcs);
   }
 

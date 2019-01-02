@@ -50,6 +50,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -58,14 +59,16 @@ import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class EditorFactoryImpl extends EditorFactory {
+@Deprecated
+@DeprecationInfo("Desktop only")
+public class DesktopEditorFactoryImpl extends EditorFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.EditorFactoryImpl");
   private final EditorEventMulticasterImpl myEditorEventMulticaster = new EditorEventMulticasterImpl();
   private final EventDispatcher<EditorFactoryListener> myEditorFactoryEventDispatcher = EventDispatcher.create(EditorFactoryListener.class);
   private final List<Editor> myEditors = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Inject
-  public EditorFactoryImpl(EditorActionManager editorActionManager) {
+  public DesktopEditorFactoryImpl(EditorActionManager editorActionManager) {
     Application application = ApplicationManager.getApplication();
     MessageBus bus = application.getMessageBus();
     MessageBusConnection connect = bus.connect();
