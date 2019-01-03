@@ -17,6 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.NotificationsManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
@@ -133,49 +134,33 @@ public class StorageUtil {
                                       @Nullable final VirtualFile originalVirtualFile,
                                       @Nonnull final BufferExposingByteArrayOutputStream content,
                                       @Nullable final LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
-    Ref<Exception> exceptionRef = Ref.create();
+    Application.get().assertWriteAccessAllowed();
 
-    VirtualFile resultFile = AccessRule.writeAsync(() -> {
-      VirtualFile virtualFile = originalVirtualFile;
-      try {
-        if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-          virtualFile = getOrCreateVirtualFile(requestor, file);
-        }
-
-        assert virtualFile != null;
-
-        try (OutputStream out = virtualFile.getOutputStream(requestor)) {
-          if (lineSeparatorIfPrependXmlProlog != null) {
-            out.write(XML_PROLOG);
-            out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
-          }
-          content.writeTo(out);
-        }
-        return virtualFile;
-      }
-      catch (FileNotFoundException e) {
-        if (virtualFile == null) {
-          exceptionRef.set(e);
-        }
-        else {
-          exceptionRef.set(new ReadOnlyModificationException(virtualFile));
-        }
+    VirtualFile virtualFile = originalVirtualFile;
+    try {
+      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
+        virtualFile = getOrCreateVirtualFile(requestor, file);
       }
 
-      return null;
-    }).getResultSync();
+      assert virtualFile != null;
 
-    Exception exception = exceptionRef.get();
-    if (exception instanceof IOException) {
-      throw (IOException)exception;
+      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
+        if (lineSeparatorIfPrependXmlProlog != null) {
+          out.write(XML_PROLOG);
+          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
+        }
+        content.writeTo(out);
+      }
+      return virtualFile;
     }
-
-    if (exception != null) {
-      throw new RuntimeException(exception);
+    catch (FileNotFoundException e) {
+      if (virtualFile == null) {
+        throw e;
+      }
+      else {
+        throw new ReadOnlyModificationException(virtualFile);
+      }
     }
-
-    assert resultFile != null;
-    return resultFile;
   }
 
   public static void deleteFile(@Nonnull File file, @Nonnull Object requestor, @Nullable VirtualFile virtualFile) throws IOException {
@@ -205,7 +190,7 @@ public class StorageUtil {
     }).getResultSync();
 
     FileNotFoundException exception = exceptionRef.get();
-    if(exception != null) {
+    if (exception != null) {
       throw new ReadOnlyModificationException(virtualFile);
     }
   }
