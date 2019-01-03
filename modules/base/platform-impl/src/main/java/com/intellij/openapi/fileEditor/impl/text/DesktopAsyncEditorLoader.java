@@ -72,60 +72,6 @@ public class DesktopAsyncEditorLoader {
     myEditorComponent.getContentPanel().setVisible(false);
   }
 
-  @Nonnull
-  Future<?> start() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    Future<Runnable> continuationFuture = scheduleLoading();
-    boolean showProgress = true;
-    if (worthWaiting()) {
-      /*
-       * Possible alternatives:
-       * 1. show "Loading" from the beginning, then it'll be always noticeable at least in fade-out phase
-       * 2. show a gray screen for some time and then "Loading" if it's still loading; it'll produce quick background blinking for all editors
-       * 3. show non-highlighted and unfolded editor as "Loading" background and allow it to relayout at the end of loading phase
-       * 4. freeze EDT a bit and hope that for small editors it'll suffice and for big ones show "Loading" after that.
-       * This strategy seems to produce minimal blinking annoyance.
-       */
-      Runnable continuation = resultInTimeOrNull(continuationFuture, SYNCHRONOUS_LOADING_WAITING_TIME_MS);
-      if (continuation != null) {
-        showProgress = false;
-        loadingFinished(continuation);
-      }
-    }
-    if (showProgress) myEditorComponent.startLoading();
-    return myLoadingFinished;
-  }
-
-  private Future<Runnable> scheduleLoading() {
-    PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(myProject);
-    long startStamp = myEditor.getDocument().getModificationStamp();
-    return ourExecutor.submit(() -> {
-      Ref<Runnable> ref = new Ref<>();
-      try {
-        while (!myEditorComponent.isDisposed()) {
-          ProgressIndicatorUtils
-                  .runWithWriteActionPriority(() -> ref.set(psiDocumentManager.commitAndRunReadAction(() -> myProject.isDisposed() ? EmptyRunnable.INSTANCE : myTextEditor.loadEditorInBackground())),
-                                              new ProgressIndicatorBase());
-          Runnable continuation = ref.get();
-          if (continuation != null) {
-            invokeLater(() -> {
-              if (startStamp == myEditor.getDocument().getModificationStamp()) {
-                loadingFinished(continuation);
-              }
-              else if (!myProject.isDisposed() && !myEditorComponent.isDisposed()) scheduleLoading();
-            });
-            return continuation;
-          }
-          ProgressIndicatorUtils.yieldToPendingWriteActions();
-        }
-      }
-      finally {
-        if (ref.isNull()) invokeLater(() -> loadingFinished(null));
-      }
-      return null;
-    });
-  }
-
   Future<?> startNew() {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
