@@ -76,7 +76,7 @@ public abstract class DumbService {
    * Note that it's not guaranteed that the dumb mode won't start again during this runnable execution, it should manage that situation explicitly.
    * @param runnable runnable to run
    */
-  public abstract void runWhenSmart(@Nonnull Runnable runnable);
+  public abstract void runWhenSmart(@RequiredUIAccess @Nonnull Runnable runnable);
 
   /**
    * Pause the current thread until dumb mode ends and then continue execution.

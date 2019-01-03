@@ -2694,6 +2694,8 @@ public class UIUtil {
     return result.toString();
   }
 
+  @Deprecated
+  @DeprecationInfo("Desktop only")
   public static void invokeLaterIfNeeded(@Nonnull Runnable runnable) {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();

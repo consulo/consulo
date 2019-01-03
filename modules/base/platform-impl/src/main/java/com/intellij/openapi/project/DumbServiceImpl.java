@@ -270,7 +270,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @RequiredWriteAction
-  private void updateFinished(UIAccess uiAccess) {
+  private void updateFinished(@Nonnull UIAccess uiAccess) {
     if (!switchToSmartMode()) return;
 
     if (ApplicationProperties.isInSandbox()) LOG.info("updateFinished");
@@ -292,7 +292,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
           runnable = myRunWhenSmartQueue.pullFirst();
         }
         try {
-          runnable.run();
+          uiAccess.giveAndWait(runnable);
         }
         catch (ProcessCanceledException e) {
           LOG.error("Task canceled: " + runnable, new Attachment("pce", e));

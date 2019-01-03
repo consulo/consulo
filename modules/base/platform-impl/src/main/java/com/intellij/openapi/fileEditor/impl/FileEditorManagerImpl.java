@@ -1121,6 +1121,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return null;
   }
 
+  @RequiredReadAction
   protected Editor getOpenedEditor(@Nonnull Editor editor, final boolean focusEditor) {
     return editor;
   }
@@ -1591,34 +1592,45 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   private final class MyVirtualFileListener implements VirtualFileListener {
     @Override
     public void beforeFileDeletion(@Nonnull VirtualFileEvent e) {
-      assertDispatchThread();
+      Application application = Application.get();
 
-      boolean moveFocus = moveFocusOnDelete();
+      application.assertWriteAccessAllowed();
 
-      final VirtualFile file = e.getFile();
-      final VirtualFile[] openFiles = getOpenFiles();
-      for (int i = openFiles.length - 1; i >= 0; i--) {
-        if (VfsUtilCore.isAncestor(file, openFiles[i], false)) {
-          closeFile(openFiles[i], moveFocus, true);
+      UIAccess lastUIAccess = application.getLastUIAccess();
+
+      lastUIAccess.give(() -> {
+        boolean moveFocus = moveFocusOnDelete();
+
+        final VirtualFile file = e.getFile();
+        final VirtualFile[] openFiles = getOpenFiles();
+        for (int i = openFiles.length - 1; i >= 0; i--) {
+          if (VfsUtilCore.isAncestor(file, openFiles[i], false)) {
+            closeFile(openFiles[i], moveFocus, true);
+          }
         }
-      }
+      });
     }
 
     @Override
     public void propertyChanged(@Nonnull VirtualFilePropertyEvent e) {
-      if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
-        assertDispatchThread();
-        final VirtualFile file = e.getFile();
-        if (isFileOpen(file)) {
-          updateFileName(file);
-          updateFileIcon(file); // file type can change after renaming
-          updateFileBackgroundColor(file);
+      Application application = Application.get();
+
+      application.assertWriteAccessAllowed();
+
+      application.getLastUIAccess().give(() -> {
+        if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
+          final VirtualFile file = e.getFile();
+          if (isFileOpen(file)) {
+            updateFileName(file);
+            updateFileIcon(file); // file type can change after renaming
+            updateFileBackgroundColor(file);
+          }
         }
-      }
-      else if (VirtualFile.PROP_WRITABLE.equals(e.getPropertyName()) || VirtualFile.PROP_ENCODING.equals(e.getPropertyName())) {
-        // TODO: message bus?
-        updateIconAndStatusBar(e);
-      }
+        else if (VirtualFile.PROP_WRITABLE.equals(e.getPropertyName()) || VirtualFile.PROP_ENCODING.equals(e.getPropertyName())) {
+          // TODO: message bus?
+          updateIconAndStatusBar(e);
+        }
+      });
     }
 
     private void updateIconAndStatusBar(final VirtualFilePropertyEvent e) {
@@ -1636,14 +1648,18 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     public void fileMoved(@Nonnull VirtualFileMoveEvent e) {
-      final VirtualFile file = e.getFile();
-      final VirtualFile[] openFiles = getOpenFiles();
-      for (final VirtualFile openFile : openFiles) {
-        if (VfsUtilCore.isAncestor(file, openFile, false)) {
-          updateFileName(openFile);
-          updateFileBackgroundColor(openFile);
+      UIAccess lastUIAccess = Application.get().getLastUIAccess();
+
+      lastUIAccess.give(() -> {
+        final VirtualFile file = e.getFile();
+        final VirtualFile[] openFiles = getOpenFiles();
+        for (final VirtualFile openFile : openFiles) {
+          if (VfsUtilCore.isAncestor(file, openFile, false)) {
+            updateFileName(openFile);
+            updateFileBackgroundColor(openFile);
+          }
         }
-      }
+      });
     }
   }
 
@@ -1753,15 +1769,15 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       if (myScheduled) return;
       myScheduled = true;
 
-      UIAccess uiAccess = UIAccess.get();
       DumbService.getInstance(myProject).runWhenSmart(() -> {
         myScheduled = false;
-        handleRootChange(uiAccess);
+
+        handleRootChange(UIAccess.current());
       });
     }
 
     private void handleRootChange(UIAccess uiAccess) {
-      EditorFileSwapper[] swappers = Extensions.getExtensions(EditorFileSwapper.EP_NAME);
+      EditorFileSwapper[] swappers = EditorFileSwapper.EP_NAME.getExtensions();
 
       for (EditorWindow eachWindow : getWindows()) {
         EditorWithProviderComposite selected = eachWindow.getSelectedEditor();

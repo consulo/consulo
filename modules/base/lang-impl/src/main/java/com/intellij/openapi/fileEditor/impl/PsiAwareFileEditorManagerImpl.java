@@ -17,7 +17,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.PowerSaveMode;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -37,7 +37,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -56,10 +57,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   private final MyPsiTreeChangeListener myPsiTreeChangeListener;
   private final ProblemListener myProblemListener;
 
-  public PsiAwareFileEditorManagerImpl(final Project project,
-                                       final PsiManager psiManager,
-                                       final WolfTheProblemSolver problemSolver,
-                                       DockManager dockManager) {
+  public PsiAwareFileEditorManagerImpl(final Project project, final PsiManager psiManager, final WolfTheProblemSolver problemSolver, DockManager dockManager) {
     super(project, dockManager);
 
     myPsiManager = psiManager;
@@ -70,16 +68,11 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
 
     // reinit syntax highlighter for Groovy. In power save mode keywords are highlighted by GroovySyntaxHighlighter insteadof
     // GrKeywordAndDeclarationHighlighter. So we need to drop caches for token types attributes in LayeredLexerEditorHighlighter
-    project.getMessageBus().connect().subscribe(PowerSaveMode.TOPIC, new PowerSaveMode.Listener() {
-      @Override
-      public void powerSaveStateChanged() {
-        UIUtil.invokeLaterIfNeeded(() -> {
-          for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
-            ((EditorEx)editor).reinitSettings();
-          }
-        });
+    project.getMessageBus().connect().subscribe(PowerSaveMode.TOPIC, () -> Application.get().getLastUIAccess().give(() -> {
+      for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
+        ((EditorEx)editor).reinitSettings();
       }
-    });
+    }));
   }
 
   @Override
@@ -109,6 +102,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     return tooltipText.toString();
   }
 
+  @RequiredReadAction
   @Override
   protected Editor getOpenedEditor(@Nonnull final Editor editor, final boolean focusEditor) {
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(getProject());
@@ -128,13 +122,15 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     @Override
     public void propertyChanged(@Nonnull final PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        final VirtualFile[] openFiles = getOpenFiles();
-        for (int i = openFiles.length - 1; i >= 0; i--) {
-          final VirtualFile file = openFiles[i];
-          LOG.assertTrue(file != null);
-          updateFileIcon(file);
-        }
+        UIAccess lastUIAccess = Application.get().getLastUIAccess();
+        lastUIAccess.give(() -> {
+          final VirtualFile[] openFiles = getOpenFiles();
+          for (int i = openFiles.length - 1; i >= 0; i--) {
+            final VirtualFile file = openFiles[i];
+            LOG.assertTrue(file != null);
+            updateFileIcon(file);
+          }
+        });
       }
     }
 
@@ -164,6 +160,10 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     }
 
     private void doChange(final PsiTreeChangeEvent event) {
+      Application.get().getLastUIAccess().give(() -> doChangeImpl(event));
+    }
+
+    private void doChangeImpl(final PsiTreeChangeEvent event) {
       final PsiFile psiFile = event.getFile();
       if (psiFile == null) return;
       VirtualFile file = psiFile.getVirtualFile();
