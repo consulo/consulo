@@ -66,7 +66,7 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
     myComponent = createEditorComponent(project, file);
     Disposer.register(this, myComponent);
     myAsyncLoader = new DesktopAsyncEditorLoader(this, myComponent, provider);
-    myLoadingFinished = myAsyncLoader.start();
+    myLoadingFinished = myAsyncLoader.startNew();
   }
 
   @Nonnull

@@ -20,6 +20,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.vaadin.ui.UI;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -37,14 +38,12 @@ public class VaadinUIAccessImpl implements UIAccess {
     return myUI.isAttached() && myUI.getSession() != null;
   }
 
-  @Nonnull
   @Override
-  public AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
-    AsyncResult<Void> result = new AsyncResult<>();
+  public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
+    AsyncResult<T> result = new AsyncResult<>();
     if (isValid()) {
       myUI.access(() -> {
-        runnable.run();
-        result.setDone();
+        result.setDone(supplier.get());
       });
     }
     else {

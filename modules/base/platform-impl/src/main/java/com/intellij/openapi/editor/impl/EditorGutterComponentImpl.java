@@ -66,8 +66,10 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
 import consulo.awt.TargetAWT;
+import consulo.ui.UIAccess;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntFunction;
 import gnu.trove.TIntObjectHashMap;
@@ -167,13 +169,10 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     Project project = myEditor.getProject();
     if (project != null) {
       project.getMessageBus().connect(myEditor.getDisposable()).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+        @RequiredWriteAction
         @Override
-        public void enteredDumbMode() {
-        }
-
-        @Override
-        public void exitDumbMode() {
-          updateSize();
+        public void exitDumbMode(@Nonnull UIAccess uiAccess) {
+          uiAccess.give(() -> updateSize());
         }
       });
     }

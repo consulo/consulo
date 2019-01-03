@@ -62,7 +62,14 @@ public interface UIAccess {
   boolean isValid();
 
   @Nonnull
-  AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable);
+  default AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
+    return give(() -> {
+      runnable.run();
+      return null;
+    });
+  }
+
+  <T> AsyncResult<T> give(@RequiredUIAccess @Nonnull Supplier<T> supplier);
 
   default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
     give(runnable).getResultSync();
