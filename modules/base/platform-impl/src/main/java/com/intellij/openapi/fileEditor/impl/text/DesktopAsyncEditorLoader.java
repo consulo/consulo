@@ -134,6 +134,8 @@ public class DesktopAsyncEditorLoader {
     UIAccess uiAccess = UIAccess.current();
     long startStamp = myEditor.getDocument().getModificationStamp();
 
+    myEditorComponent.startLoading();
+
     psiDocumentManager.commitAllDocumentsAsync().doWhenDone(() -> {
       uiAccess.give(myTextEditor::loadEditorInBackground).doWhenDone((continuation) -> {
         if (startStamp == myEditor.getDocument().getModificationStamp()) {
