@@ -47,7 +47,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ThreeState;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -55,7 +55,7 @@ import javax.annotation.Nullable;
  * @author mike
  */
 public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();

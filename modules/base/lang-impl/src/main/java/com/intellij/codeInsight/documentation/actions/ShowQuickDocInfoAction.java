@@ -22,7 +22,10 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.PopupAction;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutter;
@@ -30,8 +33,9 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
   @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
@@ -47,7 +51,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new CodeInsightActionHandler() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
@@ -65,7 +69,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
@@ -121,7 +125,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);

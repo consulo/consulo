@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -154,7 +154,7 @@ public abstract class PsiDocumentManager {
    * @see #commitDocument(Document)
    */
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract Document[] getUncommittedDocuments();
 
   /**
@@ -261,7 +261,7 @@ public abstract class PsiDocumentManager {
    * @param action to run when all documents committed
    * @return true if action was run immediately (i.e. all documents are already committed)
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract boolean performWhenAllCommitted(@Nonnull Runnable action);
 
   /**

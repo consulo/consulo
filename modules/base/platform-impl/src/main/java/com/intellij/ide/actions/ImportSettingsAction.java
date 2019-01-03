@@ -35,8 +35,9 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.updateSettings.UpdateSettings;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -49,7 +50,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 public class ImportSettingsAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);

@@ -23,7 +23,7 @@ package com.intellij.internal.psiView;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class ViewerNodeDescriptor extends NodeDescriptor {
   private final Object myElement;
@@ -34,7 +34,7 @@ public class ViewerNodeDescriptor extends NodeDescriptor {
     myName = myElement.toString();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean update() {
     return false;

@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
 import org.jetbrains.annotations.NonNls;
 
@@ -141,7 +141,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
@@ -305,7 +305,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myEditor.getPreferredFocusedComponent();

@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -32,7 +32,7 @@ public abstract class LibraryTableTreeContentElement<E> extends NodeDescriptor<E
     return isValid ? UIUtil.getListForeground() : JBColor.RED;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean update() {
     return false;

@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,13 +50,13 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
     super(project, title);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract void doInAwtIfFail(final Exception e);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract void doInAwtIfCancel();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract void doInAwtIfSuccess();
 
   protected abstract void runImpl(@Nonnull ProgressIndicator indicator);

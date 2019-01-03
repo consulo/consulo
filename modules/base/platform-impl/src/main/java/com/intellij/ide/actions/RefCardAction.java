@@ -22,19 +22,19 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author Vladimir Kondratyev
  */
 public class RefCardAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     BrowserUtil.browse("https://github.com/consulo/consulo/wiki/Default-Keymap");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     super.update(e);

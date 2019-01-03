@@ -23,11 +23,11 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 public class SaveFileAsTemplateAction extends AnAction{
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e){
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
@@ -49,7 +49,7 @@ public class SaveFileAsTemplateAction extends AnAction{
     dialog.show();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);

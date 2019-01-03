@@ -32,7 +32,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @javax.annotation.Nullable Editor editor) {
@@ -45,7 +45,7 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
     DiffManager.getInstance().showDiff(e.getProject(), createDiffData());

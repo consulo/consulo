@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.start.WelcomeFrameManager;
 
 import javax.annotation.Nonnull;
@@ -32,7 +32,7 @@ public class ImportProjectAction extends ImportModuleAction {
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

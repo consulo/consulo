@@ -29,7 +29,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,7 +50,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
   private static final NotificationGroup TEST_TOOLWINDOW_GROUP = NotificationGroup.toolWindowGroup("Test ToolWindow Notification", ToolWindowId.TODO_VIEW, true);
   private static final String MESSAGE_KEY = "NotificationTestAction_Message";
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
     new NotificationDialog(event.getProject()).show();

@@ -24,10 +24,10 @@ import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class BackAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
@@ -35,7 +35,7 @@ public class BackAction extends AnAction implements DumbAware {
     IdeDocumentHistory.getInstance(project).back();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();

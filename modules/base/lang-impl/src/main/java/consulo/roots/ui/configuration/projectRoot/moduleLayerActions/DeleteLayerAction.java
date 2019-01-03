@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.util.IconUtil;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author VISTALL
@@ -35,7 +35,7 @@ public class DeleteLayerAction extends AnAction {
     myModuleEditor = moduleEditor;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
@@ -45,7 +45,7 @@ public class DeleteLayerAction extends AnAction {
     modifiableRootModelProxy.removeLayer(currentLayerName, true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();

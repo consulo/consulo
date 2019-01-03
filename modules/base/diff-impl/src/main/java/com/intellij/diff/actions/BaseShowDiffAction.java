@@ -25,12 +25,13 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithoutContent;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 abstract class BaseShowDiffAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
@@ -41,7 +42,7 @@ abstract class BaseShowDiffAction extends AnAction implements DumbAware {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();

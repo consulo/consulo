@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.*;
 
@@ -265,7 +265,7 @@ abstract class GeneralRunner implements ContinuationContext {
   }
 
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void onCancel() {
     // left only "final" tasks
     synchronized (myQueueLock) {

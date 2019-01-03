@@ -18,9 +18,8 @@ package consulo.options;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,7 +49,7 @@ public abstract class SimpleConfigurable<T extends NotNullComputable<? extends C
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void disposeUIResources(@Nonnull T component) {
     // nothing
   }

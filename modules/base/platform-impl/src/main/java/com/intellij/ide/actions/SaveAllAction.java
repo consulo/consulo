@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.DumbAware;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ public class SaveAllAction extends AnAction implements DumbAware {
     myApplication = application;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     AccessRule.writeAsync(myApplication::saveAll);

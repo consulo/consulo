@@ -24,10 +24,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
@@ -140,7 +139,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return configurable instanceof Configurable ? ((Configurable)configurable).getHelpTopic() : null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -154,25 +153,25 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return getConfigurable().createUIComponent();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return getConfigurable().isModified();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     getConfigurable().apply();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     getConfigurable().reset();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     getConfigurable().disposeUIResources();

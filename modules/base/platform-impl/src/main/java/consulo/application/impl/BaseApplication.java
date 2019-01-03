@@ -62,7 +62,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
@@ -660,7 +660,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public AccessToken acquireWriteActionLock(@Nonnull Class clazz) {

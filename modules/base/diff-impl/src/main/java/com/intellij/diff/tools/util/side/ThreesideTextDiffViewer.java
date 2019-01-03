@@ -43,10 +43,10 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.List;
@@ -82,14 +82,14 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
     super.onInit();
     installEditorListeners();
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyEditorListeners();
     super.onDispose();
@@ -125,7 +125,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
   // Listeners
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void installEditorListeners() {
     new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
 
@@ -145,7 +145,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void destroyEditorListeners() {
     getEditor(ThreeSide.LEFT).getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener1);
     getEditor(ThreeSide.BASE).getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener1);
@@ -242,7 +242,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
   // Abstract
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void scrollToLine(@Nonnull ThreeSide side, int line) {
     DiffUtil.scrollEditor(getEditor(side), line, false);
     setCurrentSide(side);
@@ -251,7 +251,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
   @javax.annotation.Nullable
   protected abstract SyncScrollSupport.SyncScrollable getSyncScrollable(@Nonnull Side side);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   protected LogicalPosition transferPosition(@Nonnull ThreeSide baseSide,
                                              @Nonnull ThreeSide targetSide,

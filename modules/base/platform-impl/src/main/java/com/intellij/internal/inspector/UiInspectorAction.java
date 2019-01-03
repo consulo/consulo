@@ -47,7 +47,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 import net.miginfocom.swing.MigLayout;
@@ -149,13 +149,13 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
       DefaultActionGroup actions = new DefaultActionGroup();
       actions.addAction(new IconWithTextAction("Highlight") {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
           setHighlightingEnabled(myHighlightComponent == null);
         }
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void update(AnActionEvent e) {
           e.getPresentation().setEnabled(myInfo != null || (myComponent != null && myComponent.isVisible()));
@@ -167,13 +167,13 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
       actions.add(new IconWithTextAction("Refresh") {
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
           getCurrentTable().refresh();
         }
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void update(AnActionEvent e) {
           e.getPresentation().setEnabled(myComponent != null && myComponent.isVisible());
@@ -349,7 +349,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       setBorder(JBUI.Borders.empty(0, 3));
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void customizeCellRenderer(@Nonnull JTree tree,
                                       Object value,

@@ -23,7 +23,7 @@ import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.stores.StorageData;
 import com.intellij.openapi.components.impl.stores.XmlElementStorage;
 import com.intellij.openapi.util.Disposer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.testFramework.MockApplicationTestCase;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -42,7 +42,7 @@ import static com.intellij.openapi.util.JDOMBuilder.tag;
 public  class XmlElementStorageTest extends MockApplicationTestCase {
   private Disposable myParentDisposable;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void setUp() throws Exception {
     super.setUp();

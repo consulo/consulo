@@ -26,7 +26,7 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.ex.ApplicationEx2;
 
 import javax.annotation.Nonnull;
@@ -85,7 +85,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
   public void installUI(JComponent c) {
     c.addMouseListener(myMouseListener = new MouseAdapter() {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void mouseClicked(MouseEvent e) {
         myPanel.mouseClicked(e);
       }

@@ -19,7 +19,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.EditorWindow;
 import javax.annotation.Nonnull;
@@ -35,7 +35,7 @@ public class ReopenClosedTabAction extends AnAction {
     super("Reopen Closed Tab");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final EditorWindow window = getEditorWindow(e);
@@ -56,7 +56,7 @@ public class ReopenClosedTabAction extends AnAction {
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     final EditorWindow window = getEditorWindow(e);

@@ -51,7 +51,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Alarm;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.NullableFunction;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -552,7 +552,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final void update(@Nonnull final AnActionEvent event) {
       super.update(event);
@@ -577,7 +577,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       myProviderLanguageExtension = providerLanguageExtension;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final void actionPerformed(@Nonnull final AnActionEvent event) {
       final DataContext dataContext = event.getDataContext();
@@ -604,7 +604,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       return viewType;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final void update(@Nonnull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
@@ -663,7 +663,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   public class ChangeScopeAction extends ComboBoxAction {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final void update(@Nonnull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
@@ -740,7 +740,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         myScopeType = scopeType;
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public final void actionPerformed(@Nonnull final AnActionEvent e) {
         selectScope(myScopeType);
@@ -752,7 +752,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         super("Configure...");
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         EditScopesDialog.showDialog(myProject, null);

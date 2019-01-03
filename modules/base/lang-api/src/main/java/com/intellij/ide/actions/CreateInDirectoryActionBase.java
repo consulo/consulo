@@ -20,7 +20,7 @@ import com.intellij.ide.IdeView;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 
@@ -49,7 +49,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
     super(text, description, icon);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent e) {
     if (!e.getPresentation().isVisible()) {

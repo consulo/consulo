@@ -17,7 +17,8 @@ package com.intellij.notification;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,7 +30,7 @@ public abstract class NotificationAction extends DumbAwareAction {
     super(text);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     actionPerformed(e, Notification.get(e));

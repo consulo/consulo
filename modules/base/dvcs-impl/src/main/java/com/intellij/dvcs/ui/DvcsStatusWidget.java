@@ -34,7 +34,7 @@ import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.awt.event.MouseEvent;
 
@@ -121,7 +121,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     update();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @javax.annotation.Nullable
   @Override
   public String getSelectedValue() {
@@ -169,7 +169,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void update() {
     myText = null;
     myTooltip = null;

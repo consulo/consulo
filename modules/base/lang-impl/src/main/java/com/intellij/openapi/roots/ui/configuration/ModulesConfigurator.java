@@ -50,7 +50,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.moduleImport.ModuleImportContext;
@@ -101,7 +101,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     myContext = context;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void disposeUIResources() {
     for (final ModuleEditor moduleEditor : myModuleEditors) {
       Disposer.dispose(moduleEditor);
@@ -167,7 +167,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void resetModuleEditors() {
     myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
 
@@ -210,7 +210,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return ModuleCompilerUtil.createGraphGenerator(models);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     // validate content and source roots 
     final Map<VirtualFile, String> contentRootToModuleNameMap = new HashMap<>();
@@ -312,7 +312,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @SuppressWarnings("unchecked")
   public List<Module> addModule(Component parent, boolean anImport) {
     if (myProject.isDefault()) return null;
@@ -338,7 +338,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     }
     else {
       FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public boolean isFileSelectable(VirtualFile file) {
           if (!super.isFileSelectable(file)) {
@@ -387,7 +387,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private Module createModule(final ModuleBuilder builder) {
     final Exception[] ex = new Exception[]{null};
     final Module module = ApplicationManager.getApplication().runWriteAction(new Computable<Module>() {
@@ -410,7 +410,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public Module addModule(final ModuleBuilder moduleBuilder) {
     final Module module = createModule(moduleBuilder);
     if (module != null) {

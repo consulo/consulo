@@ -31,7 +31,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.LightweightHint;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -41,7 +41,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
   private static final Key<WeakReference<LightweightHint>> MY_LAST_HINT_KEY = Key.create("MY_LAST_HINT_KEY");
   private static final Key<PsiElement> CONTAINER_KEY = Key.create("CONTAINER_KEY");
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();

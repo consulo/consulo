@@ -31,7 +31,8 @@ import com.intellij.ui.JBCardLayout;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -50,13 +51,13 @@ public class FlatWelcomeScreen extends JPanel {
   private final FlatWelcomePanel myMainWelcomePanel;
   private final FlatWelcomeFrame myWelcomeFrame;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public FlatWelcomeScreen(FlatWelcomeFrame welcomeFrame) {
     super(new JBCardLayout());
     myWelcomeFrame = welcomeFrame;
     myMainWelcomePanel = new FlatWelcomePanel(welcomeFrame) {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public JComponent createActionPanel() {
         return FlatWelcomeScreen.this.createActionPanel(this);
       }
@@ -77,7 +78,7 @@ public class FlatWelcomeScreen extends JPanel {
     return myMainWelcomePanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private JComponent createActionPanel(FlatWelcomePanel welcomePanel) {
     JPanel actions = new NonOpaquePanel();
     actions.setBorder(JBUI.Borders.emptyLeft(10));
@@ -94,7 +95,7 @@ public class FlatWelcomeScreen extends JPanel {
       if (action instanceof WelcomeScreenSlideAction) {
         final WelcomeScreenSlideAction oldAction = (WelcomeScreenSlideAction)action;
         action = new AnAction() {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             JComponent panel = oldAction.createSlide(myWelcomeFrame, myWelcomeFrame::setTitle);

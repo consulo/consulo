@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -134,7 +134,7 @@ public interface Application extends ComponentManager {
   /**
    * Asserts whether the method is being called from the event dispatch thread.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void assertIsDispatchThread();
 
   /**
@@ -322,7 +322,7 @@ public interface Application extends ComponentManager {
    *
    * @return the idle time of IDE.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   long getIdleTime();
 
   /**
@@ -445,7 +445,7 @@ public interface Application extends ComponentManager {
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use runWriteAction(Runnable)")
-  @RequiredDispatchThread
+  @RequiredUIAccess
   default AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     throw new UnsupportedOperationException();
   }

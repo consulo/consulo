@@ -16,13 +16,13 @@
 package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.openapi.editor.Editor;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 /**
  * Implementations of this interface are expected to provide correct {@link #equals(Object)} & {@link #hashCode()} implementations.
  */
 public interface CodeFoldingState {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void setToEditor(@Nonnull Editor editor);
 }

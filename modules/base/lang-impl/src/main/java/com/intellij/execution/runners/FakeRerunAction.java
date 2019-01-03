@@ -29,14 +29,14 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class FakeRerunAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
@@ -51,7 +51,7 @@ public class FakeRerunAction extends AnAction implements DumbAware {
     presentation.setEnabled(false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
     ExecutionEnvironment environment = getEnvironment(event);

@@ -19,16 +19,16 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class CompileDirtyAction extends CompileActionBase {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void doAction(DataContext dataContext, Project project) {
     CompilerManager.getInstance(project).make(null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event){
     super.update(event);
     Presentation presentation = event.getPresentation();

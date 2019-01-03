@@ -29,7 +29,7 @@ import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.VerticalLayout;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +61,7 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     return "reference.settings.editor.general.breadcrumbs";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     if (component == null) {
@@ -113,7 +113,7 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     return component;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
@@ -125,7 +125,7 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     updateEnabled();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
@@ -137,7 +137,7 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     boolean modified = false;

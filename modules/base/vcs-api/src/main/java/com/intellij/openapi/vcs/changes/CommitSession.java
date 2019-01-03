@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.ui.ValidationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -70,7 +70,7 @@ public interface CommitSession {
    */
   String getHelpId();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   default ValidationInfo validateFields() {
     return null;
   }

@@ -19,7 +19,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.impl.UsageViewImpl;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class RerunSearchAction extends DumbAwareAction {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
@@ -36,7 +37,7 @@ public class RerunSearchAction extends DumbAwareAction {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);

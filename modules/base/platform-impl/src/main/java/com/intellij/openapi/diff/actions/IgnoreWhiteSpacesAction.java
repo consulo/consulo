@@ -24,7 +24,7 @@ import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.DiffPanelImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.containers.HashMap;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -64,7 +64,7 @@ public class IgnoreWhiteSpacesAction extends ComboBoxAction implements DumbAware
     return actionGroup;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     Presentation presentation = e.getPresentation();

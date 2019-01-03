@@ -17,7 +17,7 @@ package com.intellij.diff.requests;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class MessageDiffRequest extends DiffRequest {
   @Nullable private String myTitle;
@@ -52,7 +52,7 @@ public class MessageDiffRequest extends DiffRequest {
     myMessage = message;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void onAssigned(boolean isAssigned) {
   }

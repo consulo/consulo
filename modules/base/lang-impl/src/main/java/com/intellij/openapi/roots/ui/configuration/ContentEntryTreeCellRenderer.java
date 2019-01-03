@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
@@ -42,7 +42,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
     myTreeEditor = treeEditor;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);

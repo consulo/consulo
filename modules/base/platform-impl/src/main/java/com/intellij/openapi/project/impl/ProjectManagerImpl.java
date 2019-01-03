@@ -60,7 +60,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ex.ApplicationEx2;
@@ -513,7 +513,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return !(indicator instanceof NonCancelableSection);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public Project loadAndOpenProject(@Nonnull final String filePath) throws IOException {
     final Project project = convertAndLoadProject(filePath);
@@ -677,7 +677,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void openTestProject(@Nonnull final Project project) {
     assert ApplicationManager.getApplication().isUnitTestMode();
     openProject(project);
@@ -685,7 +685,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public Collection<Project> closeTestProject(@Nonnull Project project) {
     assert ApplicationManager.getApplication().isUnitTestMode();
     closeProject(project, false, false, false);

@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public abstract class ThreesideDiffChangeBase {
     myType = type;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void installHighlighters() {
     assert myHighlighters.isEmpty();
 
@@ -48,7 +48,7 @@ public abstract class ThreesideDiffChangeBase {
     if (isChange(Side.RIGHT)) createHighlighter(ThreeSide.RIGHT);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void installInnerHighlighters() {
     assert myInnerHighlighters.isEmpty();
 
@@ -57,7 +57,7 @@ public abstract class ThreesideDiffChangeBase {
     if (isChange(Side.RIGHT)) createInnerHighlighter(ThreeSide.RIGHT);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void destroyHighlighters() {
     for (RangeHighlighter highlighter : myHighlighters) {
       highlighter.dispose();
@@ -65,7 +65,7 @@ public abstract class ThreesideDiffChangeBase {
     myHighlighters.clear();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void destroyInnerHighlighters() {
     for (RangeHighlighter highlighter : myInnerHighlighters) {
       highlighter.dispose();

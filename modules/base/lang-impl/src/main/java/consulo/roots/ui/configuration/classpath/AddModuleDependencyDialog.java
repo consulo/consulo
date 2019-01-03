@@ -28,7 +28,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.ui.StripeTabPanel;
 
 import javax.annotation.Nullable;
@@ -44,7 +44,7 @@ public class AddModuleDependencyDialog extends DialogWrapper {
 
   private StripeTabPanel myTabs;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public AddModuleDependencyDialog(@Nonnull ClasspathPanel panel, StructureConfigurableContext context) {
     super(panel.getComponent(), true);
 

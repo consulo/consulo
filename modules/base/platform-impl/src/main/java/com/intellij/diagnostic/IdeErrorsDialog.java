@@ -49,7 +49,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -148,7 +148,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onSuccess() {
         Collection<Developer> developers = myDevelopers[0];

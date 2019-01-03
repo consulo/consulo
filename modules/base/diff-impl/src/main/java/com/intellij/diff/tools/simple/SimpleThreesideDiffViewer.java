@@ -42,7 +42,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 
 import java.util.ArrayList;
@@ -213,7 +213,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void destroyChangedBlocks() {
     super.destroyChangedBlocks();
     for (SimpleThreesideDiffChange change : myDiffChanges) {
@@ -232,7 +232,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
   //
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onBeforeDocumentChange(@Nonnull DocumentEvent e) {
     super.onBeforeDocumentChange(e);
     if (myDiffChanges.isEmpty()) return;

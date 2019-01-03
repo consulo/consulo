@@ -35,9 +35,10 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,7 +71,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     installPluginFromFileSystem.setMnemonic('d');
     installPluginFromFileSystem.addActionListener(e -> {
       final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, false, true, true, false, false) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public boolean isFileSelectable(VirtualFile file) {
           return file.getFileType() instanceof ArchiveFileType;
@@ -329,7 +330,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
   private class MyFilterEnabledAction extends ComboBoxAction implements DumbAware {
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
@@ -342,7 +343,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       final DefaultActionGroup gr = new DefaultActionGroup();
       for (final String enabledValue : InstalledPluginsTableModel.ENABLED_VALUES) {
         gr.add(new AnAction(enabledValue) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             final IdeaPluginDescriptor[] selection = myPluginTable.getSelectedObjects();

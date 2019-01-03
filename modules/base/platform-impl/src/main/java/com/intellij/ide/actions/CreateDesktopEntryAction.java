@@ -39,7 +39,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -55,7 +56,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     return SystemInfo.isUnix && SystemInfo.hasXdgOpen();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent event) {
     final boolean enabled = isAvailable();
@@ -64,7 +65,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     presentation.setVisible(enabled);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent event) {
     if (!isAvailable()) return;

@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -50,7 +50,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
   }
 
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     //Force move focus to IdeFrame

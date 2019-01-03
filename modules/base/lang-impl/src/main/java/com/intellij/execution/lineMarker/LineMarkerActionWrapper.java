@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ public class LineMarkerActionWrapper extends AnAction {
     copyFrom(origin);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     AnActionEvent event = wrapEvent(e);
@@ -54,7 +54,7 @@ public class LineMarkerActionWrapper extends AnAction {
                              e.getModifiers());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     myOrigin.actionPerformed(wrapEvent(e));
@@ -69,7 +69,7 @@ public class LineMarkerActionWrapper extends AnAction {
 
     @Nullable
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public synchronized Object getData(@NonNls Key dataId) {
       if (Location.DATA_KEY == dataId) return myElement.isValid() ? new PsiLocation<>(myElement) : null;
       return myDelegate.getData(dataId);

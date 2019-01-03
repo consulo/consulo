@@ -16,7 +16,8 @@
 package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.openapi.components.ComponentManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,7 +31,7 @@ public abstract class DisposeAwareProjectChange implements Runnable {
     myComponentManager = componentManager;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void execute();
 
   @Override

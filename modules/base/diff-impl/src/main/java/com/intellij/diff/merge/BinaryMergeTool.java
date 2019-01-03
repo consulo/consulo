@@ -28,7 +28,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -168,7 +168,7 @@ public class BinaryMergeTool implements MergeTool {
       }
 
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void rediff(boolean trySync) {
       }
     }

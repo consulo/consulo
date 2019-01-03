@@ -66,7 +66,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import org.jetbrains.annotations.TestOnly;
 
@@ -151,7 +151,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         final EditorActionHandler editorEscape = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ESCAPE);
         if (!myAction.isShowInBalloon()) {
           new AnAction() {
-            @RequiredDispatchThread
+            @RequiredUIAccess
             @Override
             public void update(AnActionEvent e) {
               Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
@@ -161,7 +161,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                       (editorEscape == null || !editorEscape.isEnabled(editor, e.getDataContext())));
             }
 
-            @RequiredDispatchThread
+            @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
               closeEditor();
@@ -227,7 +227,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                 .setFillColor(UIUtil.getControlColor())
                 .createBalloon();
         new AnAction() {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(AnActionEvent e) {
             balloon.hide();

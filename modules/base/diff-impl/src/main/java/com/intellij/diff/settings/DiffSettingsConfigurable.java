@@ -17,10 +17,10 @@ package com.intellij.diff.settings;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -51,7 +51,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     return "diff.base";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -61,13 +61,13 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     return mySettingsPane.getPanel();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return mySettingsPane != null && mySettingsPane.isModified();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (mySettingsPane != null) {
@@ -75,7 +75,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     if (mySettingsPane != null) {
@@ -83,7 +83,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     mySettingsPane = null;

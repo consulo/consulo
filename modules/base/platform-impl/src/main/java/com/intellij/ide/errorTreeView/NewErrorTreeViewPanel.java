@@ -45,7 +45,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -509,7 +509,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
   private JPanel createToolbarPanel(@Nullable Runnable rerunAction) {
     AnAction closeMessageViewAction = new CloseTabToolbarAction() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         close();
@@ -593,14 +593,14 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       myCloseAction = closeAction;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myCloseAction.actionPerformed(e);
       myRerunAction.run();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
@@ -613,7 +613,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       super(IdeBundle.message("action.stop"), null, AllIcons.Actions.Suspend);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (canControlProcess()) {
@@ -623,7 +623,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       myRightToolbar.updateActionsImmediately();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent event) {
       Presentation presentation = event.getPresentation();
@@ -654,7 +654,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
@@ -680,7 +680,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       super.update(e);

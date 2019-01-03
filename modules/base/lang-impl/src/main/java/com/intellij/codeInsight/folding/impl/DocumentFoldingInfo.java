@@ -38,7 +38,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringTokenizer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -115,12 +115,12 @@ class DocumentFoldingInfo implements CodeFoldingState {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static void assertDispatchThread() {
     Application.get().assertIsDispatchThread();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void setToEditor(@Nonnull final Editor editor) {
     assertDispatchThread();

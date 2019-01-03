@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -38,10 +38,10 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
    * Blocks modal dialogs that we don't want to popup during some process, for example, above the commit dialog.
    * They will be shown when notifications are unblocked.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void blockModalNotifications();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void unblockModalNotifications();
 
   /**

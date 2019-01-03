@@ -47,10 +47,9 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
-import consulo.ui.image.*;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.*;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.*;
@@ -104,7 +103,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
     super.onInit();
     myContentPanel.setPainter(new MyDividerPainter());
@@ -112,7 +111,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyChangedBlocks();
     myFoldingModel.destroy();
@@ -173,14 +172,14 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void processContextHints() {
     super.processContextHints();
     myInitialScrollHelper.processContext(myRequest);
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void updateContextHints() {
     super.updateContextHints();
     myFoldingModel.updateContext(myRequest, getFoldingModelSettings());
@@ -319,7 +318,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onBeforeDocumentChange(@Nonnull DocumentEvent e) {
     super.onBeforeDocumentChange(e);
     if (myDiffChanges.isEmpty()) return;
@@ -347,7 +346,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean doScrollToChange(@Nonnull ScrollToPolicy scrollToPolicy) {
     SimpleDiffChange targetChange = scrollToPolicy.select(myDiffChanges);
     if (targetChange == null) return false;
@@ -430,7 +429,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private List<SimpleDiffChange> getSelectedChanges(@Nonnull Side side) {
     final BitSet lines = DiffUtil.getSelectedLines(getEditor(side));
 
@@ -448,7 +447,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private SimpleDiffChange getSelectedChange(@Nonnull Side side) {
     int caretLine = getEditor(side).getCaretModel().getLogicalPosition().line;
 

@@ -18,7 +18,7 @@ package consulo.options;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.Nls;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -40,25 +40,25 @@ public class ConfigurableAdapter implements Configurable {
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createComponent() {
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
   }

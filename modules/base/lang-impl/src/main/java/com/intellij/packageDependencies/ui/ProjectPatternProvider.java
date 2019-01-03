@@ -34,7 +34,7 @@ import com.intellij.packageDependencies.DependencyUISettings;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.psi.PsiPackageSupportProviders;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
@@ -146,7 +146,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void update(final AnActionEvent e) {
       super.update(e);
       Project eventProject = getEventProject(e);

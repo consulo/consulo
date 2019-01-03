@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -49,7 +49,7 @@ public class OverrideMethodsAction extends BaseCodeInsightAction {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent event) {
     if (CodeInsightActions.OVERRIDE_METHOD.hasAnyExtensions()) {

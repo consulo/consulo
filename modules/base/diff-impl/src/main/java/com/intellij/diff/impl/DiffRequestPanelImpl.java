@@ -24,7 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -106,7 +107,7 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public synchronized void updateRequest(boolean force, @javax.annotation.Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
       applyRequest(myRequest, force, scrollToChangePolicy);
     }

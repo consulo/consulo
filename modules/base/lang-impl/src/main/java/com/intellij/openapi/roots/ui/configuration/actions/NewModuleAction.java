@@ -31,10 +31,11 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -50,7 +51,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = getEventProject(e);
     if (project == null) {
@@ -73,7 +74,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
     FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public boolean isFileSelectable(VirtualFile file) {
         if (!super.isFileSelectable(file)) {
           return false;
@@ -125,7 +126,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     return module;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

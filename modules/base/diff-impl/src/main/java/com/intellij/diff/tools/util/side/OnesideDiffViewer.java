@@ -31,10 +31,10 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.List;
@@ -69,7 +69,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyEditorHolder();
     super.onDispose();

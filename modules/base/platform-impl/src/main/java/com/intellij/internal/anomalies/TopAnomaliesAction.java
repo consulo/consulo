@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +61,7 @@ public class TopAnomaliesAction extends ActionGroup {
     TreeSet<Pair<JComponent, Integer>> top = new TreeSet<Pair<JComponent, Integer>>(COMPARATOR);
     TreeSet<Pair<JComponent, Integer>> old = new TreeSet<Pair<JComponent, Integer>>(COMPARATOR);
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setText("Top " + LIMIT + " Component Parents");
@@ -73,7 +73,7 @@ public class TopAnomaliesAction extends ActionGroup {
       old.clear();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       old = new TreeSet<Pair<JComponent, Integer>>(top);
@@ -111,7 +111,7 @@ public class TopAnomaliesAction extends ActionGroup {
     TreeSet<Pair<JComponent, Integer>> top = new TreeSet<Pair<JComponent, Integer>>(COMPARATOR);
     TreeSet<Pair<JComponent, Integer>> old = new TreeSet<Pair<JComponent, Integer>>(COMPARATOR);
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setText("Top " + LIMIT + " ClientProperties");
@@ -123,7 +123,7 @@ public class TopAnomaliesAction extends ActionGroup {
       old.clear();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       old = new TreeSet<Pair<JComponent, Integer>>(top);
@@ -179,7 +179,7 @@ public class TopAnomaliesAction extends ActionGroup {
     void reset() {
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       for (ResettableAction action : CHILDREN) {

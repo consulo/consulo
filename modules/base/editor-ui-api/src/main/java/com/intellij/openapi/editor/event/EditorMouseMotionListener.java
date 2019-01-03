@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.event;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.EventListener;
 
@@ -32,7 +32,7 @@ public interface EditorMouseMotionListener extends EventListener {
    *
    * @param e the event containing information about the mouse movement.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void mouseMoved(EditorMouseEvent e);
 
   /**
@@ -40,6 +40,6 @@ public interface EditorMouseMotionListener extends EventListener {
    *
    * @param e the event containing information about the mouse movement.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void mouseDragged(EditorMouseEvent e);
 }

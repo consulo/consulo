@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileTypes.FileTypeWithPredefinedCharset;
 
 import javax.annotation.Nonnull;
@@ -104,7 +104,7 @@ public class EncodingUtil {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void saveIn(@Nonnull final Document document, final Editor editor, @Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset) {
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     documentManager.saveDocument(document);

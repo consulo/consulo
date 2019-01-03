@@ -44,9 +44,9 @@ import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.Timings;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.ThrowableRunnable;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -88,7 +88,7 @@ public abstract class RangeMarkerTest extends LightPlatformTestCase {
     if (ex[0] != null) throw ex[0];
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void setUp() throws Exception {
     super.setUp();

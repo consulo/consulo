@@ -21,7 +21,7 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class MergeContext implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
@@ -36,7 +36,7 @@ public abstract class MergeContext implements UserDataHolder {
   /**
    * Called by MergeTool on conflict resolve end. Should delegate to the {@link MergeRequest#applyResult(MergeResult)}
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void finishMerge(@Nonnull MergeResult result);
 
   /**

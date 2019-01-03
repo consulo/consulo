@@ -21,7 +21,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 public class IncrementalSearchAction extends AnAction implements DumbAware {
@@ -29,7 +30,7 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
     setEnabledInModalContext(true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
@@ -40,7 +41,7 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
     new IncrementalSearchHandler().invoke(project, editor);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();

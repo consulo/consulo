@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -37,7 +37,7 @@ import java.io.OutputStream;
 public class EOFAction extends DumbAwareAction implements AnAction.TransparentUpdate {
   @NonNls public static final String ACTION_ID = "SendEOF";
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
@@ -48,7 +48,7 @@ public class EOFAction extends DumbAwareAction implements AnAction.TransparentUp
                                              && !handler.isProcessTerminated());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());

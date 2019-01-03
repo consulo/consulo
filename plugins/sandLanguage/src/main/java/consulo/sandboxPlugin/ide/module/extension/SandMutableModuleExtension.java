@@ -23,7 +23,7 @@ import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 
@@ -44,7 +44,7 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
 
   @javax.annotation.Nullable
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
     JPanel panel = new JPanel(new VerticalFlowLayout(true, false));
     panel.add(ModuleExtensionSdkBoxBuilder.createAndDefine(this, updateOnCheck).build());

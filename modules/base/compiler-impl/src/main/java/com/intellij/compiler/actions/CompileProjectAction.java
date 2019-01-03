@@ -23,10 +23,10 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class CompileProjectAction extends CompileActionBase {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void doAction(DataContext dataContext, final Project project) {
     CompilerManager.getInstance(project).rebuild(new CompileStatusNotification() {
@@ -43,7 +43,7 @@ public class CompileProjectAction extends CompileActionBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();

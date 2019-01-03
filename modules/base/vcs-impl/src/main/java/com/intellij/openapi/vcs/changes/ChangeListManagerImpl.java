@@ -52,7 +52,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -244,14 +244,14 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     return dialog.showAndGet();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @CalledInAwt
   public void blockModalNotifications() {
     myModalNotificationsBlocked = true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @CalledInAwt
   public void unblockModalNotifications() {

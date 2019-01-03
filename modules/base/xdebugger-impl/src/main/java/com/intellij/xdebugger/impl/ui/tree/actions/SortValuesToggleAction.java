@@ -22,14 +22,14 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author nik
  */
 public class SortValuesToggleAction extends ToggleAction implements DumbAware {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

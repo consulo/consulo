@@ -34,7 +34,7 @@ import com.intellij.util.Range;
 import com.intellij.util.containers.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     Project project = editor.getProject();
     if (project == null) return false;
@@ -78,7 +78,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static PsiElement[] getElementList(@Nonnull PsiFile file, int rangeStart, int rangeEnd) {
     PsiElement startElement = file.findElementAt(rangeStart);
     if (startElement == null) return null;

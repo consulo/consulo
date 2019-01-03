@@ -36,7 +36,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
@@ -243,7 +243,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
 
   private class MyTreeCellRenderer extends ColoredTreeCellRenderer {
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void customizeCellRenderer(JTree tree, Object nodeValue, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       final Object value = ((DefaultMutableTreeNode)nodeValue).getUserObject();
       if (value instanceof DirectoryChooser.ItemWrapper) {

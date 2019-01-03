@@ -29,7 +29,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nullable;
@@ -110,7 +110,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -150,7 +150,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     return panel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
@@ -163,7 +163,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
@@ -173,7 +173,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();

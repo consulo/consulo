@@ -38,7 +38,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PairConvertor;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
@@ -76,7 +76,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     return FileTypesBundle.message("filetype.settings.title");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myFileTypePanel = new FileTypePanel();
@@ -116,7 +116,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     return result.toArray(new FileType[result.size()]);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     Set<UserFileType> modifiedUserTypes = myOriginalToEditedMap.keySet();
@@ -142,7 +142,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     myTempPatternsTable = myManager.getExtensionMap().copy();
@@ -157,7 +157,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     myFileTypePanel.myIgnoreFilesField.setText(myManager.getIgnoredFilesList());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     if (!myManager.isIgnoredFilesListEqualToCurrent(myFileTypePanel.myIgnoreFilesField.getText())) return true;
@@ -167,7 +167,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
            !myTempTemplateDataLanguages.equals(TemplateDataLanguagePatterns.getInstance().getAssocTable());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myFileTypePanel != null) myFileTypePanel.dispose();

@@ -24,13 +24,12 @@ import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -77,7 +76,7 @@ public class MockApplication extends MockComponentManager implements Application
   public void assertWriteAccessAllowed() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread() {
   }
@@ -143,19 +142,19 @@ public class MockApplication extends MockComponentManager implements Application
     return computation.compute();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull Runnable action) {
     action.run();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T> T runWriteAction(@Nonnull Computable<T> computation) {
     return computation.compute();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     return computation.compute();
@@ -167,7 +166,7 @@ public class MockApplication extends MockComponentManager implements Application
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
@@ -191,7 +190,7 @@ public class MockApplication extends MockComponentManager implements Application
     return 0;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public long getIdleTime() {
     return 0;
@@ -264,7 +263,7 @@ public class MockApplication extends MockComponentManager implements Application
   public void exit() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void saveAll() {
   }

@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -134,7 +134,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   }
 
   private class MyFilterCategoryAction extends ComboBoxAction implements DumbAware {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);

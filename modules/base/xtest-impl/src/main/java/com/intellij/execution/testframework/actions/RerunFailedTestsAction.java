@@ -23,19 +23,19 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 
 public class RerunFailedTestsAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(getAction(e, false));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     getAction(e, true);

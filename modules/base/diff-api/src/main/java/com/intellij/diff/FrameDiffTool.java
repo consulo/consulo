@@ -20,7 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.List;
@@ -29,7 +29,7 @@ public interface FrameDiffTool extends DiffTool {
   /**
    * Creates viewer for the given request. Clients should call {@link #canShow(DiffContext, DiffRequest)} first.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request);
 
@@ -44,11 +44,11 @@ public interface FrameDiffTool extends DiffTool {
      * Should be called after adding {@link #getComponent()} to the components hierarchy.
      */
     @Nonnull
-    @RequiredDispatchThread
+    @RequiredUIAccess
     ToolbarComponents init();
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     void dispose();
   }
 

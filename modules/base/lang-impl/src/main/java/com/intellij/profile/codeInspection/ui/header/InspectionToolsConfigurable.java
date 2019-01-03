@@ -62,7 +62,6 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.HashMap;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -320,7 +319,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
       @Override
       public void doImport() {
         final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, false) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public boolean isFileSelectable(VirtualFile file) {
             return "xml".equals(file.getExtension());
@@ -445,7 +444,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     };
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     buildUI();
@@ -456,7 +455,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
   protected abstract InspectionProfileImpl getCurrentProfile();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     buildUI();
@@ -473,7 +472,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return !myDeletedProfiles.isEmpty();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     buildUI();
@@ -523,7 +522,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     buildUI();
@@ -615,7 +614,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return result;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     for (SingleInspectionProfilePanel panel : myPanels.values()) {

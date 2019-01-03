@@ -37,7 +37,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   protected HierarchyNodeDescriptor myBaseDescriptor;
@@ -201,7 +201,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
       return myName;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final boolean update() {
       return true;

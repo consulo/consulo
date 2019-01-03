@@ -33,7 +33,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,7 +162,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     if (element == myRootElement) {
       return new NodeDescriptor(myProject, null) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public boolean update() {
           return false;

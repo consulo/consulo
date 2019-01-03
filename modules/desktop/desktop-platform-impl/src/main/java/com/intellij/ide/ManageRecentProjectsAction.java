@@ -25,7 +25,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.impl.welcomeScreen.NewRecentProjectPanel;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -34,7 +35,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 public class ManageRecentProjectsAction extends DumbAwareAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Disposable disposable = Disposer.newDisposable();
@@ -52,7 +53,7 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
     popup.showCenteredInCurrentWindow(project);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getProject();

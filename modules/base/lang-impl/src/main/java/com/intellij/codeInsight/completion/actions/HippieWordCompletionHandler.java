@@ -37,7 +37,7 @@ import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.*;
 
@@ -52,7 +52,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     myForward = forward;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;

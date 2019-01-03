@@ -46,10 +46,9 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.List;
@@ -94,14 +93,14 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
     super.onInit();
     installEditorListeners();
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyEditorListeners();
     super.onDispose();
@@ -156,7 +155,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   // Listeners
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void installEditorListeners() {
     new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
 
@@ -173,7 +172,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void destroyEditorListeners() {
     getEditor(Side.LEFT).getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener);
     getEditor(Side.RIGHT).getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener);
@@ -266,7 +265,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   // Abstract
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   protected LineCol transferPosition(@Nonnull Side baseSide, @Nonnull LineCol position) {
     if (mySyncScrollSupport == null) return position;
@@ -274,7 +273,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     return new LineCol(line, position.column);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void scrollToLine(@Nonnull Side side, int line) {
     DiffUtil.scrollEditor(getEditor(side), line, false);
     setCurrentSide(side);

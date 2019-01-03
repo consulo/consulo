@@ -45,7 +45,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NonNls;
 
@@ -234,7 +234,7 @@ public abstract class PluginManagerMain implements Disposable {
     new MySpeedSearchBar(myPluginTable);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void refresh() {
     final IdeaPluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
     pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel,

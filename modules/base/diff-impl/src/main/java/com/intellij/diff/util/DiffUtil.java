@@ -99,7 +99,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.NonNls;
@@ -1065,7 +1065,7 @@ public class DiffUtil {
   // Writable
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void executeWriteCommand(@Nullable Project project,
                                          @Nonnull Document document,
                                          @Nullable String commandName,
@@ -1091,7 +1091,7 @@ public class DiffUtil {
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void executeWriteCommand(@Nonnull final Document document,
                                          @Nullable final Project project,
                                          @Nullable final String commandName,
@@ -1115,14 +1115,14 @@ public class DiffUtil {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static boolean makeWritable(@Nullable Project project, @Nonnull Document document) {
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null || !file.isValid()) return document.isWritable();
     return makeWritable(project, file) && document.isWritable();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static boolean makeWritable(@Nullable Project project, @Nonnull VirtualFile file) {
     if (project == null) project = ProjectManager.getInstance().getDefaultProject();
     return !ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles();

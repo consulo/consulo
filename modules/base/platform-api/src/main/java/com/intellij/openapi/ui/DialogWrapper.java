@@ -55,7 +55,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.MagicConstant;
@@ -337,7 +336,7 @@ public abstract class DialogWrapper {
    * @return <code>null</code> if everything is OK or validation descriptor
    */
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected ValidationInfo doValidate() {
     return null;
   }
@@ -696,7 +695,7 @@ public abstract class DialogWrapper {
           final CustomShortcutSet sc = new CustomShortcutSet(KeyStroke.getKeyStroke("alt pressed " + Character.valueOf((char)eachInfo.getMnemonic())));
 
           new NoTransactionAction() {
-            @RequiredDispatchThread
+            @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
               final JBOptionButton buttonToActivate = eachInfo.getButton();
@@ -1133,7 +1132,7 @@ public abstract class DialogWrapper {
    * on the screen.
    */
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public JComponent getPreferredFocusedComponent() {
     return SystemInfo.isMac ? myPreferredFocusedComponent : null;
   }
@@ -1237,7 +1236,7 @@ public abstract class DialogWrapper {
 
     final CustomShortcutSet sc = new CustomShortcutSet(SHOW_OPTION_KEYSTROKE);
     final AnAction toggleShowOptions = new NoTransactionAction() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(AnActionEvent e) {
         expandNextOptionButton();
@@ -1307,7 +1306,7 @@ public abstract class DialogWrapper {
 
   protected static void installEnterHook(JComponent root) {
     new NoTransactionAction() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(AnActionEvent e) {
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -1316,7 +1315,7 @@ public abstract class DialogWrapper {
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(AnActionEvent e) {
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

@@ -28,7 +28,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -58,7 +58,7 @@ public class GoToChangePopupBuilder {
       myOnSelected = onSelected;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (myChain.getRequests().size() <= 1) {
@@ -69,7 +69,7 @@ public class GoToChangePopupBuilder {
       e.getPresentation().setEnabledAndVisible(true);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       JBPopup popup = createPopup(e);

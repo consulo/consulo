@@ -24,7 +24,6 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Couple;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
@@ -45,7 +44,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
     return (RunConfigurable)super.getConfigurable();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {

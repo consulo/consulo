@@ -57,7 +57,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -167,22 +167,22 @@ public abstract class DiffRequestProcessor implements Disposable {
   // Update
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void reloadRequest() {
     updateRequest(true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void updateRequest() {
     updateRequest(false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void updateRequest(boolean force) {
     updateRequest(force, null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void updateRequest(boolean force, @Nullable ScrollToPolicy scrollToChangePolicy);
 
   @Nonnull
@@ -261,7 +261,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   @javax.annotation.Nullable
   private ApplyData myQueuedApplyRequest;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void applyRequest(@Nonnull DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
     myIterationState = IterationState.NONE;
 
@@ -279,7 +279,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(task);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void doApplyRequest(@Nonnull DiffRequest request, boolean force, @javax.annotation.Nullable ScrollToPolicy scrollToChangePolicy) {
     if (!force && request == myActiveRequest) return;
 
@@ -316,7 +316,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   protected void onAfterNavigate() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
   }
 
@@ -526,7 +526,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       EmptyAction.setupAction(this, "Diff.ShowInExternalTool", null);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       if (!ExternalDiffTool.isEnabled()) {
@@ -537,7 +537,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setVisible(true);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       try {
@@ -555,7 +555,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       setEnabledInModalContext(true);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       Presentation presentation = e.getPresentation();
@@ -599,7 +599,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       myDiffTool = tool;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (myState.getActiveTool() == myDiffTool) return;
@@ -615,13 +615,13 @@ public abstract class DiffRequestProcessor implements Disposable {
       EmptyAction.setupAction(this, "Diff.ShowSettingsPopup", null);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myPopupActionGroup != null && myPopupActionGroup.getChildrenCount() > 0);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       assert myPopupActionGroup != null;
@@ -640,31 +640,31 @@ public abstract class DiffRequestProcessor implements Disposable {
   @Nonnull
   private IterationState myIterationState = IterationState.NONE;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean hasNextChange() {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean hasPrevChange() {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void goToNextChange(boolean fromDifferences) {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void goToPrevChange(boolean fromDifferences) {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean isNavigationEnabled() {
     return false;
   }
 
   protected class MyNextDifferenceAction extends NextDifferenceAction {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -686,7 +686,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(false);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
@@ -709,7 +709,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   protected class MyPrevDifferenceAction extends PrevDifferenceAction {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -731,7 +731,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(false);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       PrevNextDifferenceIterable iterable = e.getDataContext().getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
@@ -805,7 +805,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   // Iterate requests
 
   protected class MyNextChangeAction extends NextChangeAction {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -822,7 +822,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(hasNextChange());
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (!isNavigationEnabled() || !hasNextChange()) return;
@@ -832,7 +832,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   protected class MyPrevChangeAction extends PrevChangeAction {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -849,7 +849,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(hasPrevChange());
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (!isNavigationEnabled() || !hasPrevChange()) return;
@@ -961,19 +961,19 @@ public abstract class DiffRequestProcessor implements Disposable {
       myContext = context;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void reopenDiffRequest() {
       updateRequest(true);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void reloadDiffRequest() {
       reloadRequest();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void showProgressBar(boolean enabled) {
       if (enabled) {
@@ -1036,10 +1036,10 @@ public abstract class DiffRequestProcessor implements Disposable {
   //
 
   private interface ViewerState {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     void init();
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     void destroy();
 
     @javax.annotation.Nullable
@@ -1055,12 +1055,12 @@ public abstract class DiffRequestProcessor implements Disposable {
   private static class EmptyState implements ViewerState {
     private static final EmptyState INSTANCE = new EmptyState();
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void init() {
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void destroy() {
     }
@@ -1105,7 +1105,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void init() {
       myContentPanel.setContent(myViewer.getComponent());
 
@@ -1114,7 +1114,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void destroy() {
       Disposer.dispose(myViewer);
     }
@@ -1150,7 +1150,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void init() {
       myContentPanel.setContent(myViewer.getComponent());
       setTitle(myActiveRequest.getTitle());
@@ -1164,7 +1164,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void destroy() {
       Disposer.dispose(myViewer);
     }
@@ -1207,7 +1207,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void init() {
       myContentPanel.setContent(myWrapperViewer.getComponent());
       setTitle(myActiveRequest.getTitle());
@@ -1237,7 +1237,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void destroy() {
       Disposer.dispose(myViewer);
       Disposer.dispose(myWrapperViewer);

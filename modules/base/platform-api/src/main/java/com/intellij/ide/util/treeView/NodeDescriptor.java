@@ -17,7 +17,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -59,7 +59,7 @@ public abstract class NodeDescriptor<E> {
     myIndex = index;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract boolean update();
 
   public abstract E getElement();

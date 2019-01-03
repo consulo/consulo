@@ -27,7 +27,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author ven
@@ -39,7 +39,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
 
   private final boolean myIsNextParameterHandler;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -55,7 +55,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
            ParameterInfoController.hasPrevOrNextParameter(editor, lbraceOffset, myIsNextParameterHandler);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     int offset = caret != null ? caret.getOffset() : editor.getCaretModel().getOffset();

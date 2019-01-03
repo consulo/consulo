@@ -29,7 +29,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.ui.StripeTabPanel;
 import org.jetbrains.annotations.NonNls;
 
@@ -150,13 +150,13 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
   @Nonnull
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public Couple<JComponent> createSplitterComponents(final JPanel rootPanel) {
     myRightPanel = new JPanel(new CardLayout());
 
     myStripeTabPanel = new StripeTabPanel();
     myStripeTabPanel.addSelectListener(new StripeTabPanel.SelectListener() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void selected(@Nonnull StripeTabPanel.TabInfo tabInfo) {
         Configurable configurable = tabInfo.getUserData(CONFIGURABLE_KEY);
@@ -188,7 +188,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     return Couple.<JComponent>of(myStripeTabPanel, myRightPanel);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void select(@Nonnull Configurable configurable) {
     List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
     for (StripeTabPanel.TabInfo tab : tabs) {

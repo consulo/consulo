@@ -24,7 +24,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.actionSystem.ex.ComboBoxButtonImpl;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -36,7 +36,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   protected ComboBoxAction() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CUSTOM_COMPONENT_PROPERTY);
@@ -84,7 +84,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     return myPopupTitle;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
   }

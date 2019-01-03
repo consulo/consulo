@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -90,7 +90,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @Nonnull
   protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
@@ -175,7 +175,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
       super(project, directory);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean checkInput(String inputString) {
       final StringTokenizer tokenizer = new StringTokenizer(inputString, "\\/");
@@ -239,7 +239,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
       return super.create(newName);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean canClose(final String inputString) {
       if (inputString.length() == 0) {

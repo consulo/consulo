@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.HashSet;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,7 +68,7 @@ public class GotoCustomRegionDialog extends DialogWrapper {
     setTitle(IdeBundle.message("goto.custom.region.command"));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myRegionsList.isEmpty()) {

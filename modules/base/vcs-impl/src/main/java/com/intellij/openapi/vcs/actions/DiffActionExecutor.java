@@ -46,7 +46,7 @@ import com.intellij.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -165,13 +165,13 @@ public abstract class DiffActionExecutor {
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onCancel() {
         onSuccess();
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onSuccess() {
         myHandler.completed(VcsBackgroundableActions.keyFrom(mySelectedFile));

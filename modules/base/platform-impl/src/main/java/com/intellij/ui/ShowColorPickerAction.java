@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -30,7 +30,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 public class ShowColorPickerAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();

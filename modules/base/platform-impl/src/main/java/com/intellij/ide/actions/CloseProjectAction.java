@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 import consulo.ui.UIAccess;
 
@@ -40,7 +40,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
     myProjectManager = (ProjectManagerEx)projectManager;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
@@ -54,7 +54,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();

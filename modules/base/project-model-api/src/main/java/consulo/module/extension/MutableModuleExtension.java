@@ -15,10 +15,9 @@
  */
 package consulo.module.extension;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +29,7 @@ import javax.swing.*;
  */
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   default JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
     return null;
   }

@@ -25,12 +25,13 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+
 import javax.annotation.Nonnull;
 
 public class CheckForUpdateAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     String place = e.getPlace();
@@ -43,7 +44,7 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
 

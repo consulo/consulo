@@ -20,14 +20,14 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class AddOccurrenceAction extends OccurrenceAction {
   public AddOccurrenceAction() {
     super(IdeActions.ACTION_SELECT_NEXT_OCCURENCE, AllIcons.Actions.AddMulticaret);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     e.getRequiredData(EditorSearchSession.SESSION_KEY).addNextOccurrence();

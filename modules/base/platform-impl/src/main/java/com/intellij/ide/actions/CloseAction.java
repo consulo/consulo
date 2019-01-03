@@ -21,12 +21,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 public class CloseAction extends AnAction implements DumbAware {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setIcon(ActionPlaces.isToolbarPlace(e.getPlace()) ? AllIcons.Actions.Cancel : null);
@@ -35,7 +35,7 @@ public class CloseAction extends AnAction implements DumbAware {
     e.getPresentation().setEnabled(closeTarget != null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     e.getData(CloseTarget.KEY).close();

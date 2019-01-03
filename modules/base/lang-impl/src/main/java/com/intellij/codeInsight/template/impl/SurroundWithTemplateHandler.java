@@ -32,7 +32,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.Set;
  * @author mike
  */
 public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;

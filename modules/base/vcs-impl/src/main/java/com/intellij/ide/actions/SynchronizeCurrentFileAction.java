@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
@@ -55,7 +55,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
                              : IdeBundle.message("action.synchronize.selected.files");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = getEventProject(e);

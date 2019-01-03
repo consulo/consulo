@@ -41,7 +41,8 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -87,7 +88,7 @@ public abstract class BaseRefactoringAction extends AnAction {
   @Nullable
   protected abstract RefactoringActionHandler getHandler(@Nonnull DataContext dataContext);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
@@ -149,7 +150,7 @@ public abstract class BaseRefactoringAction extends AnAction {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();

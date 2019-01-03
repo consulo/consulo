@@ -42,7 +42,8 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import com.intellij.util.Consumer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     final DataContext dc = e.getDataContext();
@@ -71,7 +72,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     return iterable != null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dc = e.getDataContext();

@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +48,7 @@ public class NavigateAction<T extends PsiElement> extends AnAction {
     myInfo = info;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     if (myInfo.getNavigationHandler() != null) {

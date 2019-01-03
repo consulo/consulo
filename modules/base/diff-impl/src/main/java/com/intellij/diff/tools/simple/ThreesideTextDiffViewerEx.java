@@ -35,10 +35,10 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,7 +77,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
     super.onInit();
     myContentPanel.setPainter(new MyDividerPainter(Side.LEFT), Side.LEFT);
@@ -86,21 +86,21 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyChangedBlocks();
     super.onDispose();
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void processContextHints() {
     super.processContextHints();
     myInitialScrollHelper.processContext(myRequest);
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void updateContextHints() {
     super.updateContextHints();
     myFoldingModel.updateContext(myRequest, getFoldingModelSettings());
@@ -150,7 +150,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     myFoldingModel.onDocumentChanged(e);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean doScrollToChange(@Nonnull ScrollToPolicy scrollToPolicy) {
     ThreesideDiffChangeBase targetChange = scrollToPolicy.select(getChanges());
     if (targetChange == null) return false;
@@ -251,7 +251,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
   //
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected ThreesideDiffChangeBase getSelectedChange(@Nonnull ThreeSide side) {
     int caretLine = getEditor(side).getCaretModel().getLogicalPosition().line;
 
@@ -335,7 +335,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
       mySide = side;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean isSyncScrollEnabled() {
       return getTextSettings().isEnableSyncScroll();

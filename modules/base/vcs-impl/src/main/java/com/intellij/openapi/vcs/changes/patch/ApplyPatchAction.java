@@ -60,7 +60,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,7 +129,7 @@ public class ApplyPatchAction extends DumbAwareAction {
     dialog.show();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static Boolean showAndGetApplyPatch(@Nonnull final Project project, @Nonnull final File file) {
     VirtualFile vFile = VfsUtil.findFileByIoFile(file, true);
     String patchPath = file.getPath();

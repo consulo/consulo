@@ -31,7 +31,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ContentFolderTypeProvider;
@@ -73,7 +73,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     super(IdeBundle.message("action.create.new.directory.or.package"), IdeBundle.message("action.create.new.directory.or.package"), null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     IdeView view = e.getData(LangDataKeys.IDE_VIEW);
@@ -102,7 +102,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
@@ -154,7 +154,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> getInfo(PsiDirectory d) {
     Project project = d.getProject();
     ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(project);

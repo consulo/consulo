@@ -26,7 +26,6 @@ import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +83,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract Couple<JComponent> createSplitterComponents(JPanel rootPanel);
 
   @Override
@@ -93,7 +92,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void initRootPanel(@Nonnull JPanel rootPanel) {
     JBSplitter splitter = new OnePixelSplitter();
     splitter.setProportion(getSplitterDefaultValue());

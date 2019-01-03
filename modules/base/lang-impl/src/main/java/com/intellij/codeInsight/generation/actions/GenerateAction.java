@@ -26,10 +26,10 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class GenerateAction extends DumbAwareAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
@@ -46,7 +46,7 @@ public class GenerateAction extends DumbAwareAction {
     popup.showInBestPositionFor(dataContext);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
@@ -119,7 +119,7 @@ public class GenerateAction extends DumbAwareAction {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       final Project project = getEventProject(e);
       assert project != null;

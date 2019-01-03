@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.*;
@@ -75,7 +75,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
 
   private static void importData(@Nonnull final Collection<DataNode<ContentRootData>> datas, @Nonnull final Module module, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);

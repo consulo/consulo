@@ -9,7 +9,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.DummyTransactionGuard;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
@@ -75,7 +75,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread() {
     if (!isDispatchThread()) {
@@ -137,7 +137,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     return ModalityState.NON_MODAL;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public long getIdleTime() {
     return 0;
@@ -178,19 +178,19 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable Project project, JComponent parentComponent) {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                                      @Nonnull String progressTitle,

@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author ven
@@ -34,7 +34,7 @@ public class CollapseSelectionHandler implements CodeInsightActionHandler {
   private static final String ourPlaceHolderText = "...";
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.folding.impl.CollapseSelectionHandler");
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     editor.getFoldingModel().runBatchFoldingOperation(

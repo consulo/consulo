@@ -19,7 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -34,7 +35,7 @@ public abstract class BaseWelcomeScreenPanel<E> extends JPanel {
   protected final JComponent myLeftComponent;
   protected final E myParam;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public BaseWelcomeScreenPanel(@Nonnull Disposable parentDisposable, @Nullable E param) {
     super(new BorderLayout());
     myParam = param;
@@ -61,6 +62,6 @@ public abstract class BaseWelcomeScreenPanel<E> extends JPanel {
   protected abstract JComponent createLeftComponent(@Nonnull Disposable parentDisposable, @Nullable E param);
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract JComponent createRightComponent(@Nullable E param);
 }

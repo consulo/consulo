@@ -23,14 +23,14 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
 
 public class ExportToHTMLAction extends AnAction {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
@@ -46,7 +46,7 @@ public class ExportToHTMLAction extends AnAction {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();

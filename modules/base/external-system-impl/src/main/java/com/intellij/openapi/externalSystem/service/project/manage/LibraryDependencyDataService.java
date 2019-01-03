@@ -35,7 +35,7 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.types.BinariesOrderRootType;
 
 import javax.annotation.Nonnull;
@@ -82,7 +82,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
 
   public void importData(@Nonnull final Collection<DataNode<LibraryDependencyData>> nodesToImport, @Nonnull final Module module, final boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         importMissingProjectLibraries(module, nodesToImport, synchronous);

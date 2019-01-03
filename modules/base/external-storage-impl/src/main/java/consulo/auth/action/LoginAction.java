@@ -22,11 +22,12 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.ObjectUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.auth.ServiceAuthConfiguration;
 import consulo.auth.ServiceAuthEarlyAccessProgramDescriptor;
 import consulo.auth.ui.ServiceAuthDialog;
 import consulo.ide.eap.EarlyAccessProgramManager;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -40,7 +41,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
     super("Login", null, AllIcons.Actions.LoginAvator);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (!EarlyAccessProgramManager.is(ServiceAuthEarlyAccessProgramDescriptor.class)) {
@@ -65,7 +66,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ServiceAuthDialog dialog = new ServiceAuthDialog();

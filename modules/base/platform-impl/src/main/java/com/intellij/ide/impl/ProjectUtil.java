@@ -35,7 +35,7 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.DefaultPaths;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
@@ -105,14 +105,14 @@ public class ProjectUtil {
   /**
    * @param project cannot be null
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static boolean closeAndDispose(@Nonnull final Project project) {
     return ProjectManagerEx.getInstanceEx().closeAndDispose(project).getResultSync();
   }
 
   @Deprecated
   @DeprecationInfo("ProjectUtil#open()")
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @SuppressWarnings({"unused", "deprecation"})
   public static Project openOrImport(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
     return open(path, projectToClose, forceOpenInNewFrame);

@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -68,7 +68,7 @@ public class SelectTemplateDialog extends DialogWrapper {
     return centerPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void loadCombo() {
     DefaultComboBoxModel model = new DefaultComboBoxModel();
     FileTemplate[] allTemplates = FileTemplateManager.getInstance(myProject).getAllTemplates();

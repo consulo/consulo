@@ -29,7 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
@@ -64,7 +64,7 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
     return getId();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     getOrCreateMainPanel();
@@ -78,25 +78,25 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
     return myPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPanel.isModified();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     myPanel.apply();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     myPanel.reset();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myPanel != null) {

@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.ReflectionUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,7 +83,7 @@ public class ActionStub extends AnAction {
     return myIconPath;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     throw new UnsupportedOperationException();

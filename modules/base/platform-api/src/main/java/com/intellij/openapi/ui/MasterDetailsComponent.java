@@ -42,7 +42,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -324,7 +324,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     processRemovedItems();
     final ConfigurationException[] ex = new ConfigurationException[1];

@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -54,7 +54,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
       mySelected = selected;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull final AnActionEvent e) {
       update();

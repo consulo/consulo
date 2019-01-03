@@ -27,7 +27,7 @@ import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
@@ -126,7 +126,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.addTreeSelectionListener(new TreeSelectionListener() {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void valueChanged(final TreeSelectionEvent e) {
         final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
         updateSecondComponent(ContainerUtil.<MutableModuleExtension>getFirstItem(selected));
@@ -142,12 +142,12 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private JComponent createConfigurationPanel(final @Nonnull MutableModuleExtension extension) {
     myConfigurablePanelExtension = extension;
     final Runnable updateOnCheck = new Runnable() {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void run() {
         extensionChanged(extension);
       }
@@ -176,7 +176,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     return configurablePanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void updateSecondComponent(@Nullable MutableModuleExtension extension) {
     if (extension == null || !extension.isEnabled()) {
       mySplitter.setSecondComponent(null);
@@ -186,7 +186,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void extensionChanged(MutableModuleExtension extension) {
     final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
     if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {

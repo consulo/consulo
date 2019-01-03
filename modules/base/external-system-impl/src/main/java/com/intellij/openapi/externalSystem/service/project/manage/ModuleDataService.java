@@ -21,12 +21,13 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
@@ -76,7 +77,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         final Collection<DataNode<ModuleData>> toCreate = filterExistingModules(toImport, project);
@@ -93,7 +94,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void createModules(@Nonnull final Collection<DataNode<ModuleData>> toCreate, @Nonnull final Project project) {
     final Map<DataNode<ModuleData>, Module> moduleMappings = ContainerUtilRt.newHashMap();
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -143,7 +144,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private Collection<DataNode<ModuleData>> filterExistingModules(@Nonnull Collection<DataNode<ModuleData>> modules, @Nonnull Project project) {
     Collection<DataNode<ModuleData>> result = ContainerUtilRt.newArrayList();
     for (DataNode<ModuleData> node : modules) {
@@ -180,7 +181,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       @RequiredWriteAction
       public void execute() {
@@ -194,7 +195,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void unlinkModuleFromExternalSystem(@Nonnull Module module) {
     ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
@@ -232,7 +233,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static void setModuleOptions(@Nonnull final Module module,
                                        @javax.annotation.Nullable final ModifiableRootModel originalModel,
                                        @Nonnull final DataNode<ModuleData> moduleDataNode) {

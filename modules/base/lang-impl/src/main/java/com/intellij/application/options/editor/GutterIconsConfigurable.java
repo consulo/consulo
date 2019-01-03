@@ -40,7 +40,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.EmptyIcon;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
@@ -77,7 +77,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     return "reference.settings.editor.gutter.icons";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -142,7 +142,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     return myPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     for (GutterIconDescriptor descriptor : myDescriptors) {
@@ -153,7 +153,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     return myShowGutterIconsJBCheckBox.isSelected() != EditorSettingsExternalizable.getInstance().areGutterIconsShown();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
@@ -169,7 +169,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     for (GutterIconDescriptor descriptor : myDescriptors) {
@@ -180,7 +180,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     myList.setEnabled(gutterIconsShown);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     for (ChangeListener listener : myShowGutterIconsJBCheckBox.getChangeListeners()) {

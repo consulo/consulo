@@ -32,7 +32,7 @@ import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 
 import java.lang.ref.WeakReference;
@@ -71,7 +71,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void dispose() {
     if (myDisposed) return;
     myDisposed = true;
@@ -108,7 +108,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean isInsideCommand() {
     return myInsideCommand;
   }
@@ -125,7 +125,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   // Repaint
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void invalidateHighlighters(int index) {
     if (myBulkChangeUpdateDepth > 0) {
       myChangesToUpdate.add(index);
@@ -135,12 +135,12 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void enterBulkChangeUpdateBlock() {
     myBulkChangeUpdateDepth++;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void exitBulkChangeUpdateBlock() {
     myBulkChangeUpdateDepth--;
     LOG.assertTrue(myBulkChangeUpdateDepth >= 0);
@@ -154,7 +154,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract void reinstallHighlighters(int index);
 
   //
@@ -162,17 +162,17 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   //
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract S storeChangeState(int index);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void restoreChangeState(@Nonnull S state) {
     setLineStart(state.myIndex, state.myStartLine);
     setLineEnd(state.myIndex, state.myEndLine);
   }
 
   @javax.annotation.Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected S processDocumentChange(int index, int oldLine1, int oldLine2, int shift) {
     int line1 = getLineStart(index);
     int line2 = getLineEnd(index);
@@ -392,7 +392,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
    * null means all changes could be affected
    */
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private TIntArrayList collectAffectedChanges(@Nonnull TIntArrayList directChanges) {
     TIntArrayList result = new TIntArrayList(directChanges.size());
 

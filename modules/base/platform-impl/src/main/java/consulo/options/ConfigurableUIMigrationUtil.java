@@ -17,7 +17,8 @@ package consulo.options;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.UnnamedConfigurable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ import javax.swing.*;
  */
 public class ConfigurableUIMigrationUtil {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static JComponent createComponent(@Nonnull UnnamedConfigurable configurable) {
     JComponent component = configurable.createComponent();
     if (component != null) {
@@ -42,7 +43,7 @@ public class ConfigurableUIMigrationUtil {
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static JComponent getPreferredFocusedComponent(@Nonnull Configurable.HoldPreferredFocusedComponent component) {
     JComponent preferredFocusedComponent = component.getPreferredFocusedComponent();
     if(preferredFocusedComponent != null) {

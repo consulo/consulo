@@ -31,7 +31,8 @@ import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -43,7 +44,7 @@ import java.util.List;
 public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.actions.CreateFromTemplateGroup");
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     super.update(event);
@@ -61,7 +62,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
 
   @Override
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
     Project project = e.getProject();

@@ -34,7 +34,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.Collections;
 
@@ -82,12 +82,12 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void updateRequest(final boolean force, @Nullable final ScrollToPolicy scrollToChangePolicy) {
     updateRequest(force, true, scrollToChangePolicy);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void updateRequest(final boolean force, boolean useCache, @Nullable final ScrollToPolicy scrollToChangePolicy) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (isDisposed()) return;
@@ -141,7 +141,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     super.onDispose();
     myQueue.abort();

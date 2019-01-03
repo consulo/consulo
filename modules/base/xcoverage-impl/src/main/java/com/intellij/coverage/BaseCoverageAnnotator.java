@@ -8,7 +8,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author Roman.Chernyatchik
@@ -37,7 +37,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
           request.run();
         }
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void onSuccess() {
           final CoverageView coverageView = CoverageViewManager.getInstance(myProject).getToolwindow(suite);

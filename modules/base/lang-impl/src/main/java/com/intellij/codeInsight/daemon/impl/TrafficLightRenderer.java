@@ -52,11 +52,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -129,7 +128,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     errorCount = newErrors;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   static void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel,
                                               @Nonnull Project project,
                                               @Nonnull Document document,

@@ -80,10 +80,11 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.*;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+
 import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
@@ -495,7 +496,7 @@ public abstract class ChooseByNameBase {
     if (checkBoxName != null) {
       if (myCheckBox != null && myCheckBoxShortcut != null) {
         new AnAction("change goto check box", null, null) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             myCheckBox.setSelected(!myCheckBox.isSelected());
@@ -1678,7 +1679,7 @@ public abstract class ChooseByNameBase {
       super(ACTION_NAME, ACTION_NAME, AllIcons.General.AutohideOff);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
       cancelListUpdater();
@@ -1742,13 +1743,13 @@ public abstract class ChooseByNameBase {
             });
           }
 
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void onSuccess() {
             showUsageView(targets, usages, presentation);
           }
 
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void onCancel() {
             myCalcUsagesThread.cancel();
@@ -1791,7 +1792,7 @@ public abstract class ChooseByNameBase {
       UsageViewManager.getInstance(myProject).showUsages(usageTargets, usages.toArray(new Usage[usages.size()]), presentation);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (myFindUsagesTitle == null || myProject == null) {

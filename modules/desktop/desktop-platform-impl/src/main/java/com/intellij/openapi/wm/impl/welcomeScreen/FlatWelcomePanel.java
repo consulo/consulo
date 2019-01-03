@@ -36,7 +36,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
@@ -63,7 +63,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
   public Consumer<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
     super(flatWelcomeFrame, null);
     myFlatWelcomeFrame = flatWelcomeFrame;
@@ -84,7 +84,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract JComponent createActionPanel();
 
   @Nonnull
@@ -93,7 +93,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     return new NewRecentProjectPanel(parentDisposable);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @Nonnull
   protected JComponent createRightComponent(Void param) {
@@ -140,7 +140,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
   private JComponent createEventsLink() {
     final Ref<ActionLink> actionLinkRef = new Ref<>();
     final JComponent panel = createActionLink("Events", AllIcons.Ide.Notification.NoEvents, actionLinkRef, new AnAction() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         ((WelcomeDesktopBalloonLayoutImpl)myFlatWelcomeFrame.getBalloonLayout()).showPopup();
@@ -175,7 +175,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
   private JComponent createActionLink(final String text, final String groupId, Icon icon, boolean focusListOnLeft) {
     final Ref<ActionLink> ref = new Ref<>(null);
     AnAction action = new AnAction() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         ActionGroup configureGroup = (ActionGroup)ActionManager.getInstance().getAction(groupId);
@@ -366,14 +366,14 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
 
       Presentation presentation = child.getTemplatePresentation();
       return new AnAction(presentation.getText(), presentation.getDescription(), null) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           child.actionPerformed(e);
           UsageTrigger.trigger("welcome.screen." + e.getActionManager().getId(child));
         }
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
           child.update(e);

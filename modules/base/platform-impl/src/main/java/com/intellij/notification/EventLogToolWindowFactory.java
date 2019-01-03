@@ -37,7 +37,7 @@ import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -127,7 +127,7 @@ public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
       myProject = project;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       ShowSettingsUtil.getInstance().editConfigurable(myProject, new NotificationsConfigurable());

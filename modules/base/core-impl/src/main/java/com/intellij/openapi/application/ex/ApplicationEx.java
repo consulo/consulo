@@ -18,7 +18,7 @@ package com.intellij.openapi.application.ex;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,7 +73,7 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                               @Nonnull String progressTitle,
                                               boolean canBeCanceled,
@@ -82,7 +82,7 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                               @Nonnull String progressTitle,
                                               boolean canBeCanceled,
@@ -92,7 +92,7 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                               @Nonnull String progressTitle,
                                               boolean canBeCanceled,

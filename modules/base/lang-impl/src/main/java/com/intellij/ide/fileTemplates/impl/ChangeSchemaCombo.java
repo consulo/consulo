@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Condition;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -38,7 +38,7 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
     myConfigurable = configurable;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     super.update(e);
@@ -70,7 +70,7 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
       myScheme = scheme;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       myConfigurable.changeScheme(myScheme);

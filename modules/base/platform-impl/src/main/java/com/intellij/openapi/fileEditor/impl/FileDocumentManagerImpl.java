@@ -61,7 +61,7 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.TransactionGuardEx;
@@ -365,7 +365,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void saveDocumentAsIs(@Nonnull Document document) {
     VirtualFile file = getFile(document);
@@ -533,7 +533,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     return AsyncResult.resolved(Boolean.FALSE);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reloadFiles(@Nonnull final VirtualFile... files) {
     for (VirtualFile file : files) {
@@ -625,7 +625,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reloadFromDisk(@Nonnull final Document document) {
     ApplicationManager.getApplication().assertIsDispatchThread();

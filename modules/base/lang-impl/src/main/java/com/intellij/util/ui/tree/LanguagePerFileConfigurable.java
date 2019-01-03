@@ -31,7 +31,7 @@ import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.table.JBTable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -159,7 +159,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
           myVirtualFile = o instanceof Project ? null : (VirtualFile)o;
 
           final ChooseSomethingAction changeAction = new ChooseSomethingAction(myVirtualFile) {
-            @RequiredDispatchThread
+            @RequiredUIAccess
             @Override
             public void update(@Nonnull final AnActionEvent e) {
               boolean enabled = isValueEditableForFile(myVirtualFile);

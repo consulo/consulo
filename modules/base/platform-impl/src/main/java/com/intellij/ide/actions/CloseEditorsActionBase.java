@@ -23,7 +23,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.FileStatusManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 
@@ -65,7 +65,7 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
 
   protected abstract boolean isFileToClose(EditorComposite editor, EditorWindow window);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
@@ -79,7 +79,7 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
     }, IdeBundle.message("command.close.all.unmodified.editors"), null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
     final Presentation presentation = event.getPresentation();

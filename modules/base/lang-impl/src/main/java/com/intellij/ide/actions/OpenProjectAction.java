@@ -30,14 +30,14 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
 public class OpenProjectAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true);

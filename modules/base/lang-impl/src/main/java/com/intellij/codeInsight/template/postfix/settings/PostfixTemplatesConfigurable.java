@@ -26,7 +26,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
@@ -149,7 +149,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
     component.myShortcutComboBox.setValue((char)templatesSettings.getShortcut());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void disposeUIResources(@Nonnull Layout component) {
     super.disposeUIResources(component);

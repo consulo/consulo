@@ -20,26 +20,26 @@ import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.util.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class DiffTaskQueue {
   @javax.annotation.Nullable
   private ProgressIndicator myProgressIndicator;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void abort() {
     if (myProgressIndicator != null) myProgressIndicator.cancel();
     myProgressIndicator = null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void executeAndTryWait(@Nonnull final Function<ProgressIndicator, Runnable> backgroundTask,
                                 @Nullable final Runnable onSlowAction,
                                 final int waitMillis) {
     executeAndTryWait(backgroundTask, onSlowAction, waitMillis, false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void executeAndTryWait(@Nonnull final Function<ProgressIndicator, Runnable> backgroundTask,
                                 @Nullable final Runnable onSlowAction,
                                 final int waitMillis,

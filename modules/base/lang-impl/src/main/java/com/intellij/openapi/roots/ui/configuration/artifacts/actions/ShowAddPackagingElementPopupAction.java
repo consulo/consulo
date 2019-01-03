@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementType;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -39,7 +39,7 @@ public class ShowAddPackagingElementPopupAction extends DumbAwareAction {
     myArtifactEditor = artifactEditor;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DefaultActionGroup group = new DefaultActionGroup();

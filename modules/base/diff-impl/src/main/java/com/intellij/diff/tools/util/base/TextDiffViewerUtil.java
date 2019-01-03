@@ -40,7 +40,7 @@ import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
@@ -171,7 +171,7 @@ public class TextDiffViewerUtil {
       setEnabledInModalContext(true);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       Presentation presentation = e.getPresentation();
@@ -221,7 +221,7 @@ public class TextDiffViewerUtil {
         mySetting = setting;
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         applySetting(mySetting, e);
@@ -376,7 +376,7 @@ public class TextDiffViewerUtil {
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (!isVisible()) {

@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
   private final int myWidth;
@@ -31,7 +31,7 @@ public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
     myWidth = width;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     int offset = editor.getCaretModel().getOffset();

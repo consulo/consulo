@@ -29,7 +29,7 @@ import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
 
     group.addSeparator();
     group.add(new DumbAwareAction("Edit Scopes Order...") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final ScopesOrderDialog dlg = new ScopesOrderDialog(myInspectionProfile, myProject);

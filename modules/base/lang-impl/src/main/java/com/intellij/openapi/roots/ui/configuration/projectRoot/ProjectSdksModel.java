@@ -38,7 +38,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
@@ -123,17 +123,17 @@ public class ProjectSdksModel implements SdkModel {
     return myModified;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     apply(null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void apply(@Nullable MasterDetailsComponent configurable) throws ConfigurationException {
     apply(configurable, false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void apply(@Nullable MasterDetailsComponent configurable, boolean addedOnly) throws ConfigurationException {
     String[] errorString = new String[1];
     if (!canApply(errorString, configurable, addedOnly)) {
@@ -263,7 +263,7 @@ public class ProjectSdksModel implements SdkModel {
 
     for (final SdkType type : list) {
       final AnAction addAction = new DumbAwareAction(type.getPresentableName(), null, TargetAWT.to(type.getIcon())) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             doAdd(parent, type, updateTree);

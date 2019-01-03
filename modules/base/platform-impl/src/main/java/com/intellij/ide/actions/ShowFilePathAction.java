@@ -48,7 +48,7 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinDef;
 import consulo.annotations.Exported;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -135,7 +135,7 @@ public class ShowFilePathAction extends AnAction {
     return StringUtil.defaultIfEmpty(dataHome, SystemProperties.getUserHome() + "/.local/share") + ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (SystemInfo.isMac || !isSupported()) {
@@ -145,7 +145,7 @@ public class ShowFilePathAction extends AnAction {
     e.getPresentation().setEnabled(getFile(e) != null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     show(getFile(e), popup -> DataManager.getInstance().getDataContextFromFocus().doWhenDone(popup::showInBestPositionFor));

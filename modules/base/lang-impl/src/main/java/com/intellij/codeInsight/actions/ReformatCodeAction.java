@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiUtilCore;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -53,7 +53,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   protected static ReformatFilesOptions myTestOptions;
 
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
@@ -257,7 +257,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     return PsiUtilCore.toPsiFileArray(result);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();

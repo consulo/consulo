@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.configurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +42,7 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable implements Configurable
     myMeasure = measure;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));

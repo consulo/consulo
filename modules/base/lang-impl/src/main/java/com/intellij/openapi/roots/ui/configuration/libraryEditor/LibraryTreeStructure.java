@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.libraries.ui.OrderRootTypePresentation;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
     myParentEditor = parentElement;
     myComponentDescriptor = componentDescriptor;
     myRootElementDescriptor = new NodeDescriptor(null, null) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public boolean update() {
         myName = ProjectBundle.message("library.root.node");

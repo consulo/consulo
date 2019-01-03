@@ -58,7 +58,7 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NonNls;
 
@@ -417,7 +417,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       myShadow = new ShadowAction(this, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE), c);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       e.getPresentation().setIcon(AllIcons.Actions.CloseNew);
@@ -426,7 +426,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       e.getPresentation().setText("Close. Alt-click to close others.");
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       final FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);

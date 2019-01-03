@@ -33,7 +33,7 @@ import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -122,7 +122,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     return getCallbacks(eventType).add(callback);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void onSuccess() {
     super.onSuccess();
@@ -131,7 +131,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void onCancel() {
     super.onCancel();

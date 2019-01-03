@@ -30,7 +30,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.jdom.JDOMException;
@@ -84,7 +84,7 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   public Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
     String pathToBeImported = myProvider.getPathToBeImported(virtualFile);

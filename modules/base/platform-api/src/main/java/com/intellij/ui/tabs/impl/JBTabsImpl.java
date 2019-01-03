@@ -42,7 +42,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Internal;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 import org.jetbrains.annotations.NonNls;
@@ -2062,7 +2062,7 @@ public abstract class JBTabsImpl extends JComponent
       setEnabledInModalContext(true);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final void update(@Nonnull final AnActionEvent e) {
       JBTabsImpl tabs = e.getData(NAVIGATION_ACTIONS_KEY);
@@ -2107,7 +2107,7 @@ public abstract class JBTabsImpl extends JComponent
 
     protected abstract void _update(AnActionEvent e, final JBTabsImpl tabs, int selectedIndex);
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final void actionPerformed(@Nonnull final AnActionEvent e) {
       JBTabsImpl tabs = e.getData(NAVIGATION_ACTIONS_KEY);

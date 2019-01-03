@@ -28,7 +28,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.xdebugger.XDebuggerBundle;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -105,7 +105,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       super(CodeInsightBundle.message("quick.definition.forward"), null, AllIcons.Actions.Forward);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       if (myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1){
@@ -114,7 +114,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1);
@@ -126,7 +126,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       super(CodeInsightBundle.message("quick.definition.back"), null, AllIcons.Actions.Back);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       if (myHistory.size() > 1 && myCurrentIndex > 0) {
@@ -136,7 +136,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     }
 
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myHistory.size() > 1 && myCurrentIndex > 0);
@@ -152,14 +152,14 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
       myTree = tree;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       TreePath path = myTree.getSelectionPath();
       e.getPresentation().setEnabled(path != null && path.getPathCount() > 1);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       TreePath path = myTree.getSelectionPath();

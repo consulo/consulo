@@ -7,12 +7,11 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TitledSeparator;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.platform.Platform;
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
@@ -93,7 +92,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return myRootComponent;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -137,7 +136,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return panel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     for (Configurable child : children) {
@@ -148,7 +147,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     for (Configurable child : children) {
@@ -158,7 +157,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     for (Configurable child : children) {
@@ -166,7 +165,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myRootPanel = null;

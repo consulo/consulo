@@ -41,7 +41,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 
@@ -62,7 +62,7 @@ public class ShowRunningListAction extends AnAction {
           ImageEffects.layered(AllIcons.RunConfigurations.Variables, AllIcons.Nodes.RunnableMark));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Project project = e.getProject();
@@ -176,7 +176,7 @@ public class ShowRunningListAction extends AnAction {
     return Pair.create(panel, state.toString());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();

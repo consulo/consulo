@@ -44,7 +44,7 @@ import com.intellij.packaging.impl.artifacts.PackagingElementPath;
 import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.LibraryElementType;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
@@ -340,7 +340,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     reset(); // TODO: fix to not reset on apply!
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myPackagingEditorContext.saveEditorSettings();

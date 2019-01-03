@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -46,7 +46,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
     return list;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);
@@ -55,7 +55,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
     e.getPresentation().setEnabled(enabled);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     final XDebuggerTree tree = XDebuggerTree.getTree(e);

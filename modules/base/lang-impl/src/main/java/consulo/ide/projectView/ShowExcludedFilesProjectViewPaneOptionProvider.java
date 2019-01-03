@@ -27,7 +27,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author VISTALL
@@ -65,7 +65,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();

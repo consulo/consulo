@@ -17,7 +17,7 @@ package com.intellij.ide.errorTreeView;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author Eugene Zhuravlev
@@ -31,7 +31,7 @@ public class ErrorTreeNodeDescriptor extends NodeDescriptor<ErrorTreeElement>{
     myElement = element;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean update() {
     return false;
   }

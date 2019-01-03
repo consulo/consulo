@@ -32,7 +32,7 @@ import com.intellij.util.PairProcessor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.List;
 
@@ -129,7 +129,7 @@ public class HistoryCacheManager {
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void onSuccess() {
       if (myException != null) {
@@ -169,7 +169,7 @@ public class HistoryCacheManager {
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void onSuccess() {
       // todo track whether the db was initialized, if not - delete all other requests

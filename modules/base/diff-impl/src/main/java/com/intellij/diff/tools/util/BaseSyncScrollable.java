@@ -17,7 +17,7 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.diff.util.Side;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScrollable {
   /*
@@ -30,7 +30,7 @@ public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScroll
    */
   protected abstract void processHelper(@Nonnull ScrollHelper helper);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public int transfer(@Nonnull Side baseSide, int line) {
     ScrollHelper helper = new ScrollHelper(baseSide, line);
     processHelper(helper);

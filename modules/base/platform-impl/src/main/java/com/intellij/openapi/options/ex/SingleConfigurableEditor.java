@@ -30,7 +30,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -52,12 +52,12 @@ public class SingleConfigurableEditor extends DialogWrapper {
   private final boolean myShowApplyButton;
   private boolean myChangesWereApplied;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
     this(project, configurable, null, dimensionKey, showApplyButton, ideModalityType);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public SingleConfigurableEditor(@Nullable Project project,
                                   Configurable configurable,
                                   @Nullable String title,
@@ -75,13 +75,13 @@ public class SingleConfigurableEditor extends DialogWrapper {
     myConfigurable.reset();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
     this(parent, configurable, null, dimensionServiceKey, showApplyButton, ideModalityType);
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public SingleConfigurableEditor(Component parent,
                                   Configurable configurable,
                                   @Nullable String title,
@@ -176,7 +176,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void doCancelAction() {
     if (myChangesWereApplied) {
       ApplicationManager.getApplication().saveAll();
@@ -185,7 +185,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void doOKAction() {
     try {
       if (myConfigurable.isModified()) myConfigurable.apply();
@@ -239,7 +239,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void actionPerformed(ActionEvent event) {
       if (myPerformAction) return;
       try {
@@ -265,13 +265,13 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected JComponent createCenterPanel() {
     myCenterPanel = ConfigurableUIMigrationUtil.createComponent(myConfigurable);
     return myCenterPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent) {
@@ -282,7 +282,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void dispose() {
     super.dispose();
     myConfigurable.disposeUIResources();

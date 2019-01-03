@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
@@ -66,7 +66,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
    * @return created elements. Never null.
    */
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
 
   protected abstract String getErrorTitle();
@@ -75,7 +75,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
 
   protected abstract String getActionName(PsiDirectory directory, String newName);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
@@ -114,7 +114,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
       return myDirectory;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean checkInput(final String inputString) {
       return true;
@@ -130,7 +130,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
       return CreateElementActionBase.this.getActionName(myDirectory, newName);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean canClose(final String inputString) {
       myCreatedElements = tryCreate(inputString);

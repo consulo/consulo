@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import com.intellij.ui.IdeBorderFactory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -51,13 +51,13 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
     myGroup = new DefaultActionGroup(actions.toArray(new ChangeCompareModeAction[actions.size()]));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     myButton.doClick();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

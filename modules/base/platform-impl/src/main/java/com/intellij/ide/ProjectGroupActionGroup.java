@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.List;
@@ -36,11 +36,11 @@ public class ProjectGroupActionGroup extends DefaultActionGroup implements DumbA
     myGroup = group;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     new RecentProjectsWelcomeScreenActionBase() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(AnActionEvent e) {
         myGroup.setExpanded(!myGroup.isExpanded());

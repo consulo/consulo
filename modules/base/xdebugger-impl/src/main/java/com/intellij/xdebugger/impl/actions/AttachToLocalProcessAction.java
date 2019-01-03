@@ -46,7 +46,7 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.attach.XLocalAttachDebugger;
 import com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider;
 import com.intellij.xdebugger.attach.XLocalAttachGroup;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,7 +65,7 @@ public class AttachToLocalProcessAction extends AnAction {
           XDebuggerBundle.message("xdebugger.attach.toLocal.action.description"), null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
@@ -75,7 +75,7 @@ public class AttachToLocalProcessAction extends AnAction {
     e.getPresentation().setEnabledAndVisible(enabled);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = getEventProject(e);

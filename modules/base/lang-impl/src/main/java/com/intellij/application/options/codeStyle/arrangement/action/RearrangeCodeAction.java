@@ -27,7 +27,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * Arranges content at the target file(s).
@@ -37,7 +37,7 @@ import consulo.annotations.RequiredDispatchThread;
  */
 public class RearrangeCodeAction extends AnAction {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     PsiFile file = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
@@ -45,7 +45,7 @@ public class RearrangeCodeAction extends AnAction {
     e.getPresentation().setEnabled(enabled);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();

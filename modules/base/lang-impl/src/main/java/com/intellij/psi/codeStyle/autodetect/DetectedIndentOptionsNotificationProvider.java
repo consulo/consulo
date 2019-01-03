@@ -35,8 +35,8 @@ import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
@@ -59,7 +59,7 @@ public class DetectedIndentOptionsNotificationProvider implements EditorNotifica
   }
 
   @RequiredReadAction
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull FileEditor fileEditor) {

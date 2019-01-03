@@ -23,7 +23,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.List;
 
@@ -38,16 +38,16 @@ public abstract class DiffManagerEx extends DiffManager {
   // Usage
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showMergeBuiltin(@Nullable Project project, @Nonnull MergeRequest request);
 
   @Nonnull

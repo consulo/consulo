@@ -6,20 +6,20 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class MarkAllNotificationsAsReadAction extends DumbAwareAction {
   public MarkAllNotificationsAsReadAction() {
     super("Mark all notifications as read", "Mark all unread notifications as read", AllIcons.Actions.Selectall);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(!EventLog.getLogModel(e.getData(CommonDataKeys.PROJECT)).getNotifications().isEmpty());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     EventLog.markAllAsRead(e.getData(CommonDataKeys.PROJECT));

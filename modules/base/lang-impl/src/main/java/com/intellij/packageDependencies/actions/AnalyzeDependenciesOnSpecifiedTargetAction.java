@@ -20,7 +20,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.GlobalSearchScope;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -33,7 +34,7 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
     super("Analyze Dependencies on Specified Target");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
@@ -43,7 +44,7 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
     new AnalyzeDependenciesOnSpecifiedTargetHandler(module.getProject(), new AnalysisScope(module), targetScope).analyze();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);

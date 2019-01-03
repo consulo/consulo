@@ -20,7 +20,7 @@ import com.intellij.util.ui.ThreeStateCheckBox;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -271,7 +271,7 @@ public class CheckboxTreeNoPolicy extends Tree {
       myCheckbox.setSelected(false);
       myCheckbox.setThirdStateEnabled(false);
       myTextRenderer = new ColoredTreeCellRenderer() {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) { }
       };
@@ -285,7 +285,7 @@ public class CheckboxTreeNoPolicy extends Tree {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public final Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       invalidate();
       if (value instanceof CheckedTreeNode) {

@@ -30,7 +30,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +68,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     myArrowLabel = new JLabel(" " + UIUtil.rightArrow() + " ");
     myDestPushTargetPanelComponent = destPushTargetPanelComponent;
     myTextRenderer = new ColoredTreeCellRenderer() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void customizeCellRenderer(@Nonnull JTree tree,
                                         Object value,

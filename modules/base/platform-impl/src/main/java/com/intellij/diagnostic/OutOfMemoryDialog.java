@@ -27,7 +27,7 @@ import com.intellij.util.MemoryDumpHelper;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -204,7 +204,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
                                     : new Action[]{myShutdownAction, myContinueAction};
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myMemoryKind == MemoryKind.METASPACE ? myMetaspaceSizeField :

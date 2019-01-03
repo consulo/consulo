@@ -40,7 +40,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -54,7 +54,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
 
   private static final Logger LOG = Logger.getInstance(DvcsCompareWithBranchAction.class.getName());
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
     Project project = event.getRequiredData(CommonDataKeys.PROJECT);
@@ -89,7 +89,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
     return vFiles[0];
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
@@ -155,7 +155,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onSuccess() {
         //if changes null -> then exception occurred before

@@ -40,7 +40,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -499,7 +499,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
   private static AnAction createSplitTabsAction(final TabbedContent content) {
     return new DumbAwareAction("Split '" + content.getTitlePrefix() + "' group") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         content.split();
@@ -509,7 +509,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
   private static AnAction createMergeTabsAction(final ContentManager manager, final String tabPrefix) {
     return new DumbAwareAction("Merge tabs to '" + tabPrefix + "' group") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final Content selectedContent = manager.getSelectedContent();
@@ -641,7 +641,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         for (int j = 0; j < tabActions.length; j++) {
           final int index = j;
           tabActions[j] = new DumbAwareAction(tabs.get(index).first) {
-            @RequiredDispatchThread
+            @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
               myManager.setSelectedContent(tabbedContent);
@@ -662,7 +662,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         }
       } else {
         actions[i] = new DumbAwareAction(content.getTabName()) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             myManager.setSelectedContent(content, true, true);

@@ -21,7 +21,8 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -56,7 +57,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return children != null && children.length == 1 ? children[0].getHelpTopic() : null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void disposeUIResources() {
     root = null;
@@ -94,7 +95,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return isChildrenMerged() ? DebuggerConfigurable.EMPTY_CONFIGURABLES : children;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public final JComponent createComponent() {
@@ -137,7 +138,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return rootComponent;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void reset() {
     if (root != null) {
@@ -151,7 +152,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final boolean isModified() {
     if (root != null && root.isModified(getSettings())) {
@@ -167,7 +168,7 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void apply() throws ConfigurationException {
     if (root != null) {

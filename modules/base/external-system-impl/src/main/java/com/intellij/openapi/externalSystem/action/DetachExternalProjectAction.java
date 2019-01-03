@@ -30,7 +30,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;
@@ -48,14 +48,14 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
     getTemplatePresentation().setIcon(SystemInfoRt.isMac ? AllIcons.ToolbarDecorator.Mac.Remove : AllIcons.ToolbarDecorator.Remove);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     e.getPresentation().setEnabled(info.externalProject != null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());

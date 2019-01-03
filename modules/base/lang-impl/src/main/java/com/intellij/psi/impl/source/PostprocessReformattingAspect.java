@@ -53,7 +53,7 @@ import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.TextRangeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -139,7 +139,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public <T> T postponeFormattingInside(@Nonnull Computable<T> computable) {
     Application application = ApplicationManager.getApplication();
     application.assertIsDispatchThread();

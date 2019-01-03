@@ -23,10 +23,9 @@ import com.intellij.util.SmartList;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -134,7 +133,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     return new MergedCompositeConfigurable("", "", mergedRootConfigurables);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (myRootConfigurable != null) {
@@ -153,7 +152,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     return XBreakpointType.EXTENSION_POINT_NAME.getExtensions().length != 0;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     compute();
@@ -168,13 +167,13 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     return myRootConfigurable != null ? myRootConfigurable.createUIComponent() : null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myRootConfigurable != null && myRootConfigurable.isModified();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     if (myRootConfigurable != null) {
@@ -182,7 +181,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myRootConfigurable != null) {

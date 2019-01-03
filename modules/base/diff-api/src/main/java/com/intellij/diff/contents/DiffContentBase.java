@@ -18,7 +18,7 @@ package com.intellij.diff.contents;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class DiffContentBase extends UserDataHolderBase implements DiffContent {
   @Nullable
@@ -28,7 +28,7 @@ public abstract class DiffContentBase extends UserDataHolderBase implements Diff
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void onAssigned(boolean isAssigned) {
   }
 }

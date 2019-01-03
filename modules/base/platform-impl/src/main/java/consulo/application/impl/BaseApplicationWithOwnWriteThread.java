@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationWithOwnWriteThread;
 
 import javax.annotation.Nonnull;
@@ -50,7 +50,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use runWriteAction(Runnable)")
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     throw new UnsupportedOperationException();
   }

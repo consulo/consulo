@@ -17,7 +17,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -392,7 +392,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
       return engChooser;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);

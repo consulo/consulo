@@ -45,7 +45,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -54,7 +54,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
   private static final Logger LOG = Logger.getInstance(ListTemplatesHandler.class);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;

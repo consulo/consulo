@@ -27,7 +27,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.ui.components.JBCheckBox;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
@@ -82,7 +82,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     settings.setShowParameterNameHints(myShowParameterNameHints.isSelected());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
@@ -102,7 +102,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     super.reset();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
@@ -129,7 +129,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     super.apply();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     if (super.isModified()) return true;
@@ -175,7 +175,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     return "reference.settingsdialog.IDE.editor.appearance";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     for (UnnamedConfigurable provider : getConfigurables()) {
@@ -185,7 +185,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     return myRootPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myAddonPanel.removeAll();

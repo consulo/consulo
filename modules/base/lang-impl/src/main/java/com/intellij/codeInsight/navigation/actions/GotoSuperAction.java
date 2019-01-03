@@ -27,9 +27,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
 
@@ -41,7 +41,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
     return this;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -60,7 +60,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent event) {
     if (CodeInsightActions.GOTO_SUPER.hasAnyExtensions()) {

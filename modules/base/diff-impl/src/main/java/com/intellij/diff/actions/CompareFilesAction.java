@@ -26,8 +26,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileTypes.ArchiveFileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +38,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
   public static final String LAST_USED_FILE_KEY = "two.files.diff.last.used.file";
   public static final String LAST_USED_FOLDER_KEY = "two.files.diff.last.used.folder";
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

@@ -48,7 +48,7 @@ import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -242,13 +242,13 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     myInvokator.invokeLater(transactionGuard().wrapLaterInvocation(runnable, state), state, expired);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
                                                      @Nonnull final String progressTitle,
@@ -258,7 +258,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, parentComponent, null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
                                                      @Nonnull final String progressTitle,
@@ -369,7 +369,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     return ModalityState.NON_MODAL;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public long getIdleTime() {
     assertIsDispatchThread();
@@ -527,7 +527,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     return AWTAccessor.getEventQueueAccessor().getDispatchThread(eventQueue);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread() {
     if (isDispatchThread()) return;

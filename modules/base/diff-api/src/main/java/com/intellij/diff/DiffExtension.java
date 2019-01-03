@@ -18,12 +18,12 @@ package com.intellij.diff;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class DiffExtension {
   public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create("com.intellij.diff.DiffExtension");
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void onViewerCreated(@Nonnull FrameDiffTool.DiffViewer viewer,
                                        @Nonnull DiffContext context,
                                        @Nonnull DiffRequest request);

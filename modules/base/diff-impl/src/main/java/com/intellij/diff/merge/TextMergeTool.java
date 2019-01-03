@@ -16,7 +16,7 @@
 package com.intellij.diff.merge;
 
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +25,7 @@ public class TextMergeTool implements MergeTool {
 
   public static final Logger LOG = Logger.getInstance(TextMergeTool.class);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {

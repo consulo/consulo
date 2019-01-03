@@ -22,9 +22,9 @@ import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.JBUI;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -45,7 +45,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
     myConsoleProperties = consoleProperties;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void customizeCellRenderer(final JTree tree,
                                     final Object value,

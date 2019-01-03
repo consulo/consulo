@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,14 +68,14 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process, @Nonnull final String progressTitle, final boolean canBeCanceled, @Nullable final Project project,
                                                      final JComponent parentComponent) {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                                      @Nonnull String progressTitle,
@@ -86,7 +86,7 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                                      @Nonnull String progressTitle,

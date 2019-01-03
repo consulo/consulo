@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckedTreeNode;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
@@ -90,7 +90,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setChecked(boolean enabled) {
     if (myExtension == null) {
       return;

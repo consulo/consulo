@@ -29,7 +29,7 @@ import com.intellij.util.text.Matcher;
 import com.intellij.util.ui.GraphicsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -51,7 +51,7 @@ public class VariantsCompletionAction extends AnAction {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Editor editor = e.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);

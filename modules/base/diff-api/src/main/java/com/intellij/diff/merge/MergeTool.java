@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.BooleanGetter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.List;
@@ -32,7 +32,7 @@ public interface MergeTool {
   /**
    * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request);
 
@@ -64,11 +64,11 @@ public interface MergeTool {
      * Should be called after adding {@link #getComponent()} to the components hierarchy.
      */
     @Nonnull
-    @RequiredDispatchThread
+    @RequiredUIAccess
     ToolbarComponents init();
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     void dispose();
   }
 

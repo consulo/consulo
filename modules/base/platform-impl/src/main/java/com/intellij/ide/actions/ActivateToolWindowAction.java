@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.SizedIcon;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -72,7 +72,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Project project = getEventProject(e);
@@ -103,7 +103,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     presentation.setIcon(icon == null ? null : new SizedIcon(icon, icon.getIconHeight(), icon.getIconHeight()));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = getEventProject(e);

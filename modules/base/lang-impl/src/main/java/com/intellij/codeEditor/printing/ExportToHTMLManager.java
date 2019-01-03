@@ -38,7 +38,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 
 import java.io.*;
@@ -56,7 +56,7 @@ class ExportToHTMLManager {
   /**
    * Should be invoked in event dispatch thread
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void executeExport(final DataContext dataContext) throws FileNotFoundException {
     PsiDirectory psiDirectory = null;
     PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);

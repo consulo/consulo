@@ -55,7 +55,7 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.SwingUIDecorator;
@@ -100,31 +100,31 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       return myConfigurable.getHelpTopic();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public JComponent createComponent() {
       return myConfigurable.createComponent();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean isModified() {
       return myConfigurable.isModified();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void apply() throws ConfigurationException {
       myConfigurable.apply();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void reset() {
       myConfigurable.reset();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void disposeUIResources() {
       myConfigurable.disposeUIResources();
@@ -194,7 +194,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     JComponent myComponent;
     Configurable myConfigurable;
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     ConfigurableContext(final Configurable configurable) {
       myConfigurable = configurable;
       myComponent = ConfigurableUIMigrationUtil.createComponent(configurable);
@@ -813,7 +813,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     return result;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private ActionCallback initConfigurable(@Nonnull final Configurable configurable) {
     final ActionCallback result = new ActionCallback();
 
@@ -912,7 +912,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void fireModificationInt(final Configurable configurable) {
     if (configurable.isModified()) {
       getContext().fireModifiedAdded(configurable, null);

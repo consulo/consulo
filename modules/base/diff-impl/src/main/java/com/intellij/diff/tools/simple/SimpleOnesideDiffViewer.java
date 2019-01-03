@@ -37,10 +37,9 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Key;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     for (RangeHighlighter highlighter : myHighlighters) {
       highlighter.dispose();
@@ -103,14 +102,14 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void processContextHints() {
     super.processContextHints();
     myInitialScrollHelper.processContext(myRequest);
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void updateContextHints() {
     super.updateContextHints();
     myInitialScrollHelper.updateContext(myRequest);

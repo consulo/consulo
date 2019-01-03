@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.project.DumbAware;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -28,7 +28,7 @@ public class ShowMoreOptions extends AnAction implements DumbAware {
     registerCustomShortcutSet(new CustomShortcutSet(SHORT_CUT), shortcutHolder);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final ActionButton secondaryActions = myToolbarComponent.getSecondaryActionsButton();

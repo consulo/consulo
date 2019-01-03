@@ -49,7 +49,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
@@ -80,7 +80,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     DumbService.getInstance(project).setAlternativeResolveEnabled(true);
@@ -297,7 +297,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return Pair.empty();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent event) {
     InputEvent inputEvent = event.getInputEvent();

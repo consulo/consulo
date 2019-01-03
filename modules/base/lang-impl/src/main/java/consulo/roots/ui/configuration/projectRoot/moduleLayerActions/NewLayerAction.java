@@ -24,7 +24,8 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.IconUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import java.util.Set;
@@ -43,21 +44,21 @@ public class NewLayerAction extends AnAction {
     myCopy = copy;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModel = myModuleEditor.getModifiableRootModelProxy();
     String copyName = myCopy ? modifiableRootModel.getCurrentLayerName() : null;
     String newName = Messages.showInputDialog(modifiableRootModel.getProject(), "Name", "Enter Name", Messages.getQuestionIcon(),
                                               createUniqueSdkName(copyName, modifiableRootModel), new InputValidator() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public boolean checkInput(String inputString) {
         String trimString = inputString.trim();
         return !StringUtil.isEmpty(trimString) && modifiableRootModel.findLayerByName(trimString) == null;
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public boolean canClose(String inputString) {
         return true;

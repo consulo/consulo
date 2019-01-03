@@ -38,7 +38,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.Collections;
 import java.util.List;
@@ -70,12 +70,12 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
     updateRequest(true, false, null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void updateRequest(final boolean force, @Nullable final ScrollToPolicy scrollToChangePolicy) {
     updateRequest(force, true, scrollToChangePolicy);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void updateRequest(final boolean force, boolean useCache, @Nullable final ScrollToPolicy scrollToChangePolicy) {
     if (isDisposed()) return;
 
@@ -100,7 +100,7 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
               public Runnable fun(ProgressIndicator indicator) {
                 final DiffRequest request = loadRequest(producer, indicator);
                 return new Runnable() {
-                  @RequiredDispatchThread
+                  @RequiredUIAccess
                   @Override
                   public void run() {
                     myRequestCache.put(producer, request);
@@ -149,7 +149,7 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
   //
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     super.onDispose();
     myQueue.abort();
