@@ -46,7 +46,7 @@ public class ImplementMethodsAction extends BaseCodeInsightAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     if (CodeInsightActions.IMPLEMENT_METHOD.hasAnyExtensions()) {
       event.getPresentation().setVisible(true);
       super.update(event);

@@ -40,7 +40,7 @@ public class GotoTestOrCodeAction extends BaseCodeInsightAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation p = event.getPresentation();
     if (TestFinderHelper.getFinders().length == 0) {
       p.setVisible(false);

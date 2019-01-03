@@ -67,7 +67,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
 
   @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
 
     Project project = event.getData(CommonDataKeys.PROJECT);

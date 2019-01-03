@@ -17,6 +17,7 @@ package consulo.application;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
@@ -33,6 +34,8 @@ import javax.annotation.Nullable;
  * @since 2018-04-24
  */
 public final class AccessRule {
+  private static final Logger LOGGER = Logger.getInstance(AccessRule.class);
+
   @SuppressWarnings("deprecation")
   public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
     try (AccessToken ignored = Application.get().acquireReadActionLock()) {
@@ -65,8 +68,12 @@ public final class AccessRule {
         @Nullable
         @Override
         public Void getResultSync(long msTimeout) {
-          if(application.isReadAccessAllowed() && !application.isWriteAccessAllowed() && !application.isDispatchThread()) {
+          if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed() && !application.isDispatchThread()) {
             throw new IllegalStateException("Can't block waiting thread inside read lock");
+          }
+
+          if (application.isDispatchThread()) {
+            LOGGER.warn(new Exception("UI thread is not good idea as waiting thread"));
           }
           return super.getResultSync(msTimeout);
         }
@@ -104,6 +111,10 @@ public final class AccessRule {
         public T getResultSync(long msTimeout) {
           if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed() && !application.isDispatchThread()) {
             throw new IllegalStateException("Can't block waiting thread inside read lock");
+          }
+
+          if (application.isDispatchThread()) {
+            LOGGER.warn(new Exception("UI thread is not good idea as waiting thread"));
           }
           return super.getResultSync(msTimeout);
         }

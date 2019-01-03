@@ -23,36 +23,38 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class CodeInsightAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     if (project != null) {
-      Editor editor = getEditor(e.getDataContext(), project);
-      actionPerformedImpl(project, editor);
+      UIAccess uiAccess = UIAccess.current();
+      getEditor(e.getDataContext(), project, false).doWhenDone((editor) -> uiAccess.give(() -> actionPerformedImpl(project, editor)));
     }
   }
 
-  @Nullable
-  @RequiredDispatchThread
-  protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project) {
-    return dataContext.getData(CommonDataKeys.EDITOR);
+  @Nonnull
+  @RequiredUIAccess
+  protected AsyncResult<Editor> getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
+    return AsyncResult.resolved(dataContext.getData(CommonDataKeys.EDITOR));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void actionPerformedImpl(@Nonnull final Project project, final Editor editor) {
     if (editor == null) return;
-    //final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
     if (psiFile == null) return;
     CommandProcessor.getInstance().executeCommand(project, new Runnable() {
@@ -66,6 +68,7 @@ public abstract class CodeInsightAction extends AnAction {
             handler.invoke(project, editor, psiFile);
           }
         };
+
         if (handler.startInWriteAction()) {
           ApplicationManager.getApplication().runWriteAction(action);
         }
@@ -76,7 +79,7 @@ public abstract class CodeInsightAction extends AnAction {
     }, getCommandName(), DocCommandGroupId.noneGroupId(editor.getDocument()));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
@@ -87,8 +90,10 @@ public abstract class CodeInsightAction extends AnAction {
       return;
     }
 
-    final DataContext dataContext = e.getDataContext();
-    Editor editor = getEditor(dataContext, project);
+    DataContext dataContext = e.getDataContext();
+    AsyncResult<Editor> editorAsync = getEditor(dataContext, project, true);
+    assert editorAsync.isDone() : "Async result is not done";
+    Editor editor = editorAsync.getResult();
     if (editor == null) {
       presentation.setEnabled(false);
       return;
@@ -107,8 +112,7 @@ public abstract class CodeInsightAction extends AnAction {
     presentation.setEnabled(isValidForFile(project, editor, file));
   }
 
-  protected void update(@Nonnull Presentation presentation, @Nonnull Project project,
-                        @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext dataContext, @Nullable String actionPlace) {
+  protected void update(@Nonnull Presentation presentation, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext dataContext, @Nullable String actionPlace) {
     update(presentation, project, editor, file);
   }
 

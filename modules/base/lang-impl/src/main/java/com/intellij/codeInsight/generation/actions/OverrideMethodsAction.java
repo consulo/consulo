@@ -22,13 +22,14 @@ import com.intellij.codeInsight.generation.OverrideMethodsHandler;
 import com.intellij.lang.CodeInsightActions;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageCodeInsightActionHandler;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
+
+import javax.annotation.Nonnull;
 
 public class OverrideMethodsAction extends BaseCodeInsightAction {
 
@@ -50,7 +51,7 @@ public class OverrideMethodsAction extends BaseCodeInsightAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     if (CodeInsightActions.OVERRIDE_METHOD.hasAnyExtensions()) {
       event.getPresentation().setVisible(true);
       super.update(event);

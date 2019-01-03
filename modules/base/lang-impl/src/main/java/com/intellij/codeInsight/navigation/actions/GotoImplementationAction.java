@@ -39,7 +39,7 @@ public class GotoImplementationAction extends BaseCodeInsightAction implements D
 
   @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     if (!DefinitionsScopedSearch.INSTANCE.hasAnyExecutors()) {
       event.getPresentation().setVisible(false);
     }

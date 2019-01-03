@@ -22,8 +22,9 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 public class HippieCompletionAction extends BaseCodeInsightAction implements DumbAware {
   public HippieCompletionAction() {
@@ -31,7 +32,7 @@ public class HippieCompletionAction extends BaseCodeInsightAction implements Dum
     setEnabledInModalContext(true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformedImpl(@Nonnull Project project, Editor editor) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.hippie");

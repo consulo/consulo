@@ -299,7 +299,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
   @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     InputEvent inputEvent = event.getInputEvent();
     if (inputEvent instanceof MouseEvent) {
       Component component = inputEvent.getComponent();

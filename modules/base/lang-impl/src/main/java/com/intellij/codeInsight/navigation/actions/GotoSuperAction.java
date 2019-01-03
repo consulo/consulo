@@ -62,7 +62,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
 
   @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     if (CodeInsightActions.GOTO_SUPER.hasAnyExtensions()) {
       event.getPresentation().setVisible(true);
       super.update(event);

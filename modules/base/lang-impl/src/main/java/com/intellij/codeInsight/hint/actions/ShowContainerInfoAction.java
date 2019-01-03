@@ -25,6 +25,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -35,6 +37,7 @@ public class ShowContainerInfoAction extends BaseCodeInsightAction{
     return new ShowContainerInfoHandler();
   }
 
+  @RequiredUIAccess
   @Override
   @Nullable
   protected Editor getBaseEditor(final DataContext dataContext, final Project project) {

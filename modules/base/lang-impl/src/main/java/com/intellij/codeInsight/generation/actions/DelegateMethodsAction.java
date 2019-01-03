@@ -50,7 +50,7 @@ public class DelegateMethodsAction extends BaseCodeInsightAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     if (CodeInsightActions.DELEGATE_METHODS.hasAnyExtensions()) {
       event.getPresentation().setVisible(true);
       super.update(event);

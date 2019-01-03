@@ -18,15 +18,16 @@ package com.intellij.psi;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.EventListener;
 
@@ -99,6 +100,11 @@ public abstract class PsiDocumentManager {
   @RequiredWriteAction
   public abstract void commitAllDocuments();
 
+  @Nonnull
+  public AsyncResult<Void> commitAllDocumentsAsync() {
+    return AccessRule.writeAsync(this::commitAllDocuments);
+  }
+
   /**
    * If the document is committed, runs action synchronously, otherwise schedules to execute it right after it has been committed.
    */
@@ -124,7 +130,6 @@ public abstract class PsiDocumentManager {
   /**
    * @return for uncommitted documents, the last stamp before the document change: the same stamp that current PSI should have.
    * For committed documents, just their stamp.
-   *
    * @see Document#getModificationStamp()
    * @see FileViewProvider#getModificationStamp()
    */
@@ -132,6 +137,7 @@ public abstract class PsiDocumentManager {
 
   /**
    * Returns the document for specified PsiFile intended to be used when working with committed PSI, e.g. outside dispatch thread.
+   *
    * @param file the file for which the document is requested.
    * @return an immutable document corresponding to the current PSI state. For committed documents, the contents and timestamp are equal to
    * the ones of {@link #getDocument(PsiFile)}. For uncommitted documents, the text is {@link #getLastCommittedText(Document)} and
@@ -188,7 +194,7 @@ public abstract class PsiDocumentManager {
    * Reparses the specified set of files after an external configuration change that would cause them to be parsed differently
    * (for example, a language level change in the settings).
    *
-   * @param files the files to reparse.
+   * @param files            the files to reparse.
    * @param includeOpenFiles if true, the files opened in editor tabs will also be reparsed.
    */
   public abstract void reparseFiles(@Nonnull final Collection<VirtualFile> files, final boolean includeOpenFiles);
@@ -201,7 +207,7 @@ public abstract class PsiDocumentManager {
      * Called when a document instance is created for a file.
      *
      * @param document the created document instance.
-     * @param psiFile the file for which the document was created.
+     * @param psiFile  the file for which the document was created.
      * @see PsiDocumentManager#getDocument(PsiFile)
      */
     void documentCreated(@Nonnull Document document, PsiFile psiFile);
@@ -209,7 +215,7 @@ public abstract class PsiDocumentManager {
     /**
      * Called when a file instance is created for a document.
      *
-     * @param file the created file instance.
+     * @param file     the created file instance.
      * @param document the document for which the file was created.
      * @see PsiDocumentManager#getDocument(PsiFile)
      */
