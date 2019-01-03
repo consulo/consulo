@@ -17,12 +17,12 @@ package consulo.application;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -34,8 +34,6 @@ import javax.annotation.Nullable;
  * @since 2018-04-24
  */
 public final class AccessRule {
-  private static final Logger LOGGER = Logger.getInstance(AccessRule.class);
-
   @SuppressWarnings("deprecation")
   public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
     try (AccessToken ignored = Application.get().acquireReadActionLock()) {
@@ -51,34 +49,35 @@ public final class AccessRule {
     }
   }
 
-  @SuppressWarnings("deprecation")
+  @Nonnull
+  public static AsyncResult<Void> readAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
+    return readAsync(() -> {
+      action.run();
+      return null;
+    });
+  }
+
+  @Nonnull
+  public static <T> AsyncResult<T> readAsync(@RequiredWriteAction @Nonnull ThrowableComputable<T, Throwable> action) {
+    AsyncResult<T> result = new AsyncResult<>();
+    Application application = Application.get();
+    AppExecutorUtil.getAppExecutorService().execute(() -> {
+      try {
+        result.setDone(application.runReadAction(action));
+      }
+      catch (Throwable throwable) {
+        result.rejectWithThrowable(throwable);
+      }
+    });
+    return result;
+  }
+
   @Nonnull
   public static AsyncResult<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
-    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), AccessRule.class);
-
-    Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread) {
-      return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, () -> {
-        action.run();
-        return null;
-      });
-    }
-    else {
-      AsyncResult<Void> result = new AsyncResult<Void>();
-
-      // noinspection RequiredXAction
-      try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
-        try {
-          action.run();
-          result.setDone();
-        }
-        catch (Throwable throwable) {
-          result.rejectWithThrowable(throwable);
-        }
-      }
-
-      return result;
-    }
+    return writeAsync(() -> {
+      action.run();
+      return null;
+    });
   }
 
   @SuppressWarnings("deprecation")

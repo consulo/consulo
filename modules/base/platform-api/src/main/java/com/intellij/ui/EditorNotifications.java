@@ -20,13 +20,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -52,6 +52,7 @@ public abstract class EditorNotifications  {
     return project.getComponent(EditorNotifications.class);
   }
 
+  @RequiredUIAccess
   public abstract void updateNotifications(final VirtualFile file);
 
   public abstract void updateAllNotifications();

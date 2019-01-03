@@ -15,30 +15,25 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.progress.util.ReadTask;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.reference.SoftReference;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.editor.notifications.EditorNotificationProviders;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,8 +47,6 @@ import java.util.concurrent.ExecutorService;
  * @author peter
  */
 public class EditorNotificationsImpl extends EditorNotifications {
-  private static final Key<WeakReference<ProgressIndicator>> CURRENT_UPDATES = Key.create("CURRENT_UPDATES");
-  private static final ExecutorService ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
   private final MergingUpdateQueue myUpdateMerger;
   private final Project myProject;
 
@@ -77,111 +70,39 @@ public class EditorNotificationsImpl extends EditorNotifications {
       }
     });
     connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      @RequiredWriteAction
       @Override
-      public void enteredDumbMode() {
-        updateAllNotifications();
+      public void enteredDumbMode(@Nonnull UIAccess uiAccess) {
+        uiAccess.give(() -> updateAllNotifications());
       }
 
+      @RequiredWriteAction
       @Override
-      public void exitDumbMode() {
-        updateAllNotifications();
+      public void exitDumbMode(@Nonnull UIAccess uiAccess) {
+        uiAccess.give(() -> updateAllNotifications());
       }
     });
 
   }
 
+  @RequiredUIAccess
   @Override
   public void updateNotifications(@Nonnull final VirtualFile file) {
-    UIUtil.invokeLaterIfNeeded(() -> {
-      ProgressIndicator indicator = getCurrentProgress(file);
-      if (indicator != null) {
-        indicator.cancel();
-      }
-      file.putUserData(CURRENT_UPDATES, null);
+    List<FileEditor> editors = ContainerUtil.filter(FileEditorManager.getInstance(myProject).getAllEditors(file),
+                                                    editor -> !(editor instanceof TextEditor) || DesktopAsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
 
-      if (myProject.isDisposed() || !file.isValid()) {
-        return;
-      }
+    AccessRule.readAsync(() -> {
+      final List<EditorNotificationProvider<?>> providers = DumbService.getInstance(myProject).filterByDumbAwareness(myProvidersValue.getValue());
 
-      indicator = new ProgressIndicatorBase();
-      final ReadTask task = createTask(indicator, file);
-      if (task == null) return;
-
-      file.putUserData(CURRENT_UPDATES, new WeakReference<>(indicator));
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        ReadTask.Continuation continuation = task.performInReadAction(indicator);
-        if (continuation != null) {
-          continuation.getAction().run();
+      final List<Runnable> updates = ContainerUtil.newArrayList();
+      for (final FileEditor editor : editors) {
+        for (final EditorNotificationProvider<?> provider : providers) {
+          final JComponent component = provider.createNotificationPanel(file, editor);
+          updates.add(() -> updateNotification(editor, provider.getKey(), component));
         }
-      }
-      else {
-        ProgressIndicatorUtils.scheduleWithWriteActionPriority(indicator, ourExecutor, task);
       }
     });
   }
-
-  @Nullable
-  private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
-    List<FileEditor> editors = ContainerUtil.filter(
-            FileEditorManager.getInstance(myProject).getAllEditors(file),
-            editor -> !(editor instanceof TextEditor) || DesktopAsyncEditorLoader.isEditorLoaded(((TextEditor) editor).getEditor()));
-
-    if (editors.isEmpty()) return null;
-
-    return new ReadTask() {
-      private boolean isOutdated() {
-        if (myProject.isDisposed() || !file.isValid() || indicator != getCurrentProgress(file)) {
-          return true;
-        }
-
-        for (FileEditor editor : editors) {
-          if (!editor.isValid()) {
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      @RequiredReadAction
-      @Nullable
-      @Override
-      public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
-        if (isOutdated()) return null;
-
-        final List<EditorNotificationProvider<?>> providers = DumbService.getInstance(myProject). filterByDumbAwareness(myProvidersValue.getValue());
-
-        final List<Runnable> updates = ContainerUtil.newArrayList();
-        for (final FileEditor editor : editors) {
-          for (final EditorNotificationProvider<?> provider : providers) {
-            final JComponent component = provider.createNotificationPanel(file, editor);
-            updates.add(() -> updateNotification(editor, provider.getKey(), component));
-          }
-        }
-
-        return new Continuation(() -> {
-          if (!isOutdated()) {
-            file.putUserData(CURRENT_UPDATES, null);
-            for (Runnable update : updates) {
-              update.run();
-            }
-          }
-        }, ModalityState.any());
-      }
-
-      @Override
-      public void onCanceled(@Nonnull ProgressIndicator ignored) {
-        if (getCurrentProgress(file) == indicator) {
-          updateNotifications(file);
-        }
-      }
-    };
-  }
-
-  private static ProgressIndicator getCurrentProgress(VirtualFile file) {
-    return SoftReference.dereference(file.getUserData(CURRENT_UPDATES));
-  }
-
 
   private void updateNotification(@Nonnull FileEditor editor, @Nonnull Key<? extends JComponent> key, @Nullable JComponent component) {
     JComponent old = editor.getUserData(key);
