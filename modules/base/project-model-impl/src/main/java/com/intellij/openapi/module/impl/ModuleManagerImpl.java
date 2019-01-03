@@ -19,7 +19,6 @@ package com.intellij.openapi.module.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -509,16 +508,15 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   protected void fireModulesAdded() {
     for (final Module module : myModuleModel.myModules) {
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> fireModuleAddedInWriteAction(module));
+      AccessRule.writeAsync(() -> fireModuleAddedInWriteAction(module)).getResultSync();
     }
   }
 
   @RequiredWriteAction
   protected void fireModuleAddedInWriteAction(final Module module) {
-    ApplicationManager.getApplication().runWriteAction(() -> {
-      ((ModuleEx)module).moduleAdded();
-      fireModuleAdded(module);
-    });
+    ((ModuleEx)module).moduleAdded();
+
+    fireModuleAdded(module);
   }
 
   @RequiredWriteAction

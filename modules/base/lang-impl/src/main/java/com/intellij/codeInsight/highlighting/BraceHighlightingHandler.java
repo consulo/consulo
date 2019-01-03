@@ -68,6 +68,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,49 +127,44 @@ public class BraceHighlightingHandler {
     final Project project = editor.getProject();
     final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
     if (!isValidFile(psiFile)) return;
-    application.executeOnPooledThread(() -> {
-      if (!application.tryRunReadAction(() -> {
-        final PsiFile injected;
-        try {
-          if (psiFile instanceof PsiBinaryFile || !isValidEditor(editor) || !isValidFile(psiFile)) {
-            injected = null;
-          }
-          else {
-            injected = getInjectedFileIfAny(editor, project, offset, psiFile, alarm);
-          }
+
+    UIAccess uiAccess = UIAccess.current();
+
+    uiAccess.give(() -> {
+      final PsiFile injected;
+      try {
+        if (psiFile instanceof PsiBinaryFile || !isValidEditor(editor) || !isValidFile(psiFile)) {
+          injected = null;
         }
-        catch (RuntimeException e) {
-          // Reset processing flag in case of unexpected exception.
-          application.invokeLater(new DumbAwareRunnable() {
-            @Override
-            public void run() {
-              PROCESSED_EDITORS.remove(editor);
-            }
-          });
-          throw e;
+        else {
+          injected = getInjectedFileIfAny(editor, project, offset, psiFile, alarm);
         }
+      }
+      catch (RuntimeException e) {
+        // Reset processing flag in case of unexpected exception.
         application.invokeLater(new DumbAwareRunnable() {
           @Override
           public void run() {
-            try {
-              if (isValidEditor(editor) && isValidFile(injected)) {
-                Editor newEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injected);
-                BraceHighlightingHandler handler = new BraceHighlightingHandler(project, newEditor, alarm, injected);
-                processor.process(handler);
-              }
-            }
-            finally {
-              PROCESSED_EDITORS.remove(editor);
+            PROCESSED_EDITORS.remove(editor);
+          }
+        });
+        throw e;
+      }
+      application.invokeLater(new DumbAwareRunnable() {
+        @Override
+        public void run() {
+          try {
+            if (isValidEditor(editor) && isValidFile(injected)) {
+              Editor newEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injected);
+              BraceHighlightingHandler handler = new BraceHighlightingHandler(project, newEditor, alarm, injected);
+              processor.process(handler);
             }
           }
-        }, ModalityState.stateForComponent(editor.getComponent()));
-      })) {
-        // write action is queued in AWT. restart after it's finished
-        application.invokeLater(() -> {
-          PROCESSED_EDITORS.remove(editor);
-          lookForInjectedAndMatchBracesInOtherThread(editor, alarm, processor);
-        }, ModalityState.stateForComponent(editor.getComponent()));
-      }
+          finally {
+            PROCESSED_EDITORS.remove(editor);
+          }
+        }
+      }, ModalityState.stateForComponent(editor.getComponent()));
     });
   }
 

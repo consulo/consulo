@@ -18,21 +18,25 @@ package consulo.application.impl;
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationWithOwnWriteThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-05-12
  */
 public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication implements ApplicationWithOwnWriteThread {
+  private static final Logger LOGGER = Logger.getInstance(BaseApplicationWithOwnWriteThread.class);
+
   private final WriteThread myWriteThread;
 
   public BaseApplicationWithOwnWriteThread(@Nonnull Ref<? extends StartupProgress> splashRef) {
@@ -64,7 +68,24 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
   @Override
   @Nonnull
   public <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable) {
-    AsyncResult<T> asyncResult = new AsyncResult<>();
+    AsyncResult<T> asyncResult = new AsyncResult<T>() {
+      @Nullable
+      @Override
+      public T getResultSync(long msTimeout) {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed() && !isDispatchThread()) {
+          throw new IllegalStateException("Can't block waiting thread inside read lock");
+        }
+
+        if(isWriteAccessAllowed()) {
+          throw new IllegalStateException("Self blocking write thread call");
+        }
+
+        if (isDispatchThread()) {
+          LOGGER.warn(new Exception("UI thread is not good idea as waiting thread"));
+        }
+        return super.getResultSync(msTimeout);
+      }
+    };
     myWriteThread.push(computable, asyncResult, caller);
     return asyncResult;
   }

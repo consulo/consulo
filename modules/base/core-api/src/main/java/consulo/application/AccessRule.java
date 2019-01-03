@@ -64,20 +64,7 @@ public final class AccessRule {
       });
     }
     else {
-      AsyncResult<Void> result = new AsyncResult<Void>() {
-        @Nullable
-        @Override
-        public Void getResultSync(long msTimeout) {
-          if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed() && !application.isDispatchThread()) {
-            throw new IllegalStateException("Can't block waiting thread inside read lock");
-          }
-
-          if (application.isDispatchThread()) {
-            LOGGER.warn(new Exception("UI thread is not good idea as waiting thread"));
-          }
-          return super.getResultSync(msTimeout);
-        }
-      };
+      AsyncResult<Void> result = new AsyncResult<Void>();
 
       // noinspection RequiredXAction
       try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
@@ -105,20 +92,7 @@ public final class AccessRule {
       return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, action);
     }
     else {
-      AsyncResult<T> result = new AsyncResult<T>() {
-        @Nullable
-        @Override
-        public T getResultSync(long msTimeout) {
-          if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed() && !application.isDispatchThread()) {
-            throw new IllegalStateException("Can't block waiting thread inside read lock");
-          }
-
-          if (application.isDispatchThread()) {
-            LOGGER.warn(new Exception("UI thread is not good idea as waiting thread"));
-          }
-          return super.getResultSync(msTimeout);
-        }
-      };
+      AsyncResult<T> result = new AsyncResult<T>();
 
       // noinspection RequiredXAction
       try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {

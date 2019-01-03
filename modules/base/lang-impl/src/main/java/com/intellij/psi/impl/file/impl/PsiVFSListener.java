@@ -348,10 +348,13 @@ public class PsiVFSListener implements VirtualFileListener {
     });
   }
 
+  @RequiredWriteAction
   private void runWriteActionWithExternalMarker(@RequiredWriteAction Runnable runnable) {
     Application application = Application.get();
 
-    application.runWriteAction(() -> ExternalChangeMarker.mark(runnable, ExternalChangeMarker.ExternalChangeAction));
+    application.assertWriteAccessAllowed();
+
+    ExternalChangeMarker.mark(runnable, ExternalChangeMarker.ExternalChangeAction);
   }
 
   private boolean isExcludeRoot(VirtualFile file) {

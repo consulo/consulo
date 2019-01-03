@@ -64,10 +64,6 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   public <T> void push(ThrowableComputable<T, Throwable> computable, AsyncResult<T> result, Class caller) {
-    if(myApplication.isWriteAccessAllowed()) {
-      runImpl(caller, computable, result, new Exception());
-      return;
-    }
     myQueue.addLast(new CallInfo(computable, result, caller));
   }
 
