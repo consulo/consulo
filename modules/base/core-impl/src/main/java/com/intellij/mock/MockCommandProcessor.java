@@ -28,11 +28,7 @@ public class MockCommandProcessor extends CommandProcessor {
   }
 
   @Override
-  public void executeCommand(Project project,
-                             @Nonnull Runnable runnable,
-                             String name,
-                             Object groupId,
-                             @Nonnull UndoConfirmationPolicy confirmationPolicy) {
+  public void executeCommand(Project project, @Nonnull Runnable runnable, String name, Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy) {
 
   }
 
@@ -47,25 +43,24 @@ public class MockCommandProcessor extends CommandProcessor {
 
   @RequiredWriteAction
   @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  @Nullable Document document,
-                                  @Nonnull UIAccess uiAccess) {
-
+  public AsyncResult<Void> executeCommandAsync(@Nullable Project project,
+                                               @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                                               @Nullable String name,
+                                               @Nullable Object groupId,
+                                               @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                               @Nullable Document document) {
+    return AsyncResult.resolved();
   }
 
   @RequiredWriteAction
   @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  boolean shouldRecordCommandForActiveDocument) {
-
+  public AsyncResult<Void> executeCommandAsync(@Nullable Project project,
+                                               @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                                               @Nullable String name,
+                                               @Nullable Object groupId,
+                                               @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                               boolean shouldRecordCommandForActiveDocument) {
+    return AsyncResult.resolved();
   }
 
   @Override
@@ -124,13 +119,12 @@ public class MockCommandProcessor extends CommandProcessor {
   }
 
   @Override
-  public void runUndoTransparentAction(@Nonnull Consumer<AsyncResult<Void>> consumer) {
-
+  public AsyncResult<Void> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<Void>> consumer) {
+    return AsyncResult.resolved();
   }
 
   @Override
-  public void executeCommand(Project project, @Nonnull Runnable command, String name, Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                             Document document) {
+  public void executeCommand(Project project, @Nonnull Runnable command, String name, Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy, Document document) {
   }
 
   @Override

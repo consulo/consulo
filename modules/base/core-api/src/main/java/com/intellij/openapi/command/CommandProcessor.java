@@ -77,33 +77,31 @@ public abstract class CommandProcessor {
                                       boolean shouldRecordCommandForActiveDocument);
 
   @RequiredUIAccess
-  public void executeCommandAsync(@Nullable Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, @Nullable String name, @Nullable Object groupId, @Nonnull UIAccess uiAccess) {
-    executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, uiAccess);
+  public AsyncResult<Void> executeCommandAsync(@Nullable Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, @Nullable String name, @Nullable Object groupId) {
+    return executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT);
   }
 
   @RequiredUIAccess
-  public void executeCommandAsync(Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, String name, Object groupId, Document document, @Nonnull UIAccess uiAccess) {
-    executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document, uiAccess);
+  public AsyncResult<Void> executeCommandAsync(Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, String name, Object groupId, Document document) {
+    return executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document);
   }
 
   @RequiredUIAccess
-  public void executeCommandAsync(Project project,
-                                  @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                  final String name,
-                                  final Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  @Nonnull UIAccess uiAccess) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, null, uiAccess);
+  public AsyncResult<Void> executeCommandAsync(Project project,
+                                               @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
+                                               final String name,
+                                               final Object groupId,
+                                               @Nonnull UndoConfirmationPolicy confirmationPolicy) {
+    return executeCommandAsync(project, command, name, groupId, confirmationPolicy, null);
   }
 
   @RequiredUIAccess
-  public abstract void executeCommandAsync(@Nullable Project project,
-                                           @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                           @Nullable String name,
-                                           @Nullable Object groupId,
-                                           @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                           @Nullable Document document,
-                                           @Nonnull UIAccess uiAccess);
+  public abstract AsyncResult<Void> executeCommandAsync(@Nullable Project project,
+                                                        @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                                                        @Nullable String name,
+                                                        @Nullable Object groupId,
+                                                        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                                        @Nullable Document document);
 
   /**
    * @param shouldRecordCommandForActiveDocument false if the action is not supposed to be recorded into the currently open document's history.
@@ -111,7 +109,7 @@ public abstract class CommandProcessor {
    *                                             Default is true.
    */
   @RequiredUIAccess
-  public abstract void executeCommandAsync(@Nullable Project project,
+  public abstract AsyncResult<Void> executeCommandAsync(@Nullable Project project,
                                            @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
                                            @Nullable String name,
                                            @Nullable Object groupId,
@@ -142,7 +140,8 @@ public abstract class CommandProcessor {
 
   public abstract void runUndoTransparentAction(@Nonnull Runnable action);
 
-  public abstract void runUndoTransparentAction(@Nonnull Consumer<AsyncResult<Void>> consumer);
+  @Nonnull
+  public abstract AsyncResult<Void> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<Void>> consumer);
 
   public abstract boolean isUndoTransparentActionInProgress();
 

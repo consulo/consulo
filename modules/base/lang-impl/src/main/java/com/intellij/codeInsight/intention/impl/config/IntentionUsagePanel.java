@@ -62,7 +62,7 @@ class IntentionUsagePanel extends JPanel {
 
       if (myEditor.isDisposed()) return;
 
-      CommandProcessor.getInstance().runUndoTransparentAction((result) -> configureByText(usageText, fileType, result));
+      CommandProcessor.getInstance().runUndoTransparentActionAsync((result) -> configureByText(usageText, fileType, result));
     });
   }
 

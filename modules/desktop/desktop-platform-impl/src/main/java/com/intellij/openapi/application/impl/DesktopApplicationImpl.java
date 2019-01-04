@@ -189,7 +189,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
                   canClose[0] = false;
                 }
               }).notify(result);
-            }, ApplicationBundle.message("command.exit"), null, uiAccess);
+            }, ApplicationBundle.message("command.exit"), null);
           });
         }
         catch (Throwable e) {

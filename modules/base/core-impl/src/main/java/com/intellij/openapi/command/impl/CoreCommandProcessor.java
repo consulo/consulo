@@ -130,40 +130,39 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @RequiredUIAccess
   @Override
-  public void executeCommandAsync(Project project,
-                                  @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                  @Nullable String name,
-                                  final Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  Document document,
-                                  @Nonnull UIAccess uiAccess) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, true, document);
+  public AsyncResult<Void> executeCommandAsync(Project project,
+                                               @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
+                                               @Nullable String name,
+                                               final Object groupId,
+                                               @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                               Document document) {
+    return executeCommandAsync(project, command, name, groupId, confirmationPolicy, true, document);
   }
 
   @RequiredUIAccess
   @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  boolean shouldRecordCommandForActiveDocument) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
+  public AsyncResult<Void> executeCommandAsync(@Nullable Project project,
+                                               @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                                               @Nullable String name,
+                                               @Nullable Object groupId,
+                                               @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                               boolean shouldRecordCommandForActiveDocument) {
+    return executeCommandAsync(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
   }
 
   @RequiredUIAccess
-  private void executeCommandAsync(@Nullable Project project,
-                                   @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                   @Nullable String name,
-                                   @Nullable Object groupId,
-                                   @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                   boolean shouldRecordCommandForActiveDocument,
-                                   @Nullable Document document) {
+  private AsyncResult<Void> executeCommandAsync(@Nullable Project project,
+                                                @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                                                @Nullable String name,
+                                                @Nullable Object groupId,
+                                                @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                                boolean shouldRecordCommandForActiveDocument,
+                                                @Nullable Document document) {
     UIAccess uiAccess = UIAccess.current();
 
     if (project != null && project.isDisposed()) {
       CommandLog.LOG.error("Project " + project + " already disposed");
-      return;
+      return AsyncResult.rejected();
     }
 
     if (CommandLog.LOG.isDebugEnabled()) {
@@ -172,8 +171,10 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
     if (myCurrentCommand != null) {
       command.accept(new AsyncResult<>(), uiAccess);
-      return;
+      return AsyncResult.resolved();
     }
+
+    AsyncResult<Void> returnResult = new AsyncResult<>();
 
     try {
       CommandDescriptor descriptor = new CommandDescriptor(command, project, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, document, uiAccess);
@@ -186,14 +187,25 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       command.accept(result, uiAccess);
 
-      result.doWhenDone(() -> finishCommand(project, descriptor, uiAccess, null));
+      result.doWhenDone(() -> {
+        finishCommand(project, descriptor, uiAccess, null);
 
-      result.doWhenRejectedWithThrowable((t) -> finishCommand(project, descriptor, uiAccess, t));
+        returnResult.setDone(null);
+      });
+
+      result.doWhenRejectedWithThrowable((t) -> {
+        finishCommand(project, descriptor, uiAccess, t);
+
+        returnResult.setRejected();
+      });
     }
     catch (Throwable th) {
       // in case error not from async result - finish action
       finishCommand(project, myCurrentCommand, uiAccess, th);
+
+      returnResult.rejectWithThrowable(th);
     }
+    return returnResult;
   }
 
   /*@Nullable
@@ -359,8 +371,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
   }
 
+  @Nonnull
   @Override
-  public void runUndoTransparentAction(@Nonnull Consumer<AsyncResult<Void>> consumer) {
+  public AsyncResult<Void> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<Void>> consumer) {
     if (myUndoTransparentCount++ == 0) fireUndoTransparentStarted();
 
     AsyncResult<Void> result = new AsyncResult<>();
@@ -372,6 +385,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         fireUndoTransparentFinished();
       }
     });
+
+    return result;
   }
 
   @Override

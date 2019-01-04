@@ -1403,7 +1403,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
             PluginManagerCore.dumpPluginClassStatistics();
           }
-        }), "", null, ui);
+        }), "", null);
       });
     });
   }
