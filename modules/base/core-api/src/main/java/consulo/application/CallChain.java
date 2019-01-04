@@ -128,6 +128,13 @@ public final class CallChain {
     public void toss(@Nonnull Consumer<NewValue> consumer) {
       myCallChain.start(consumer);
     }
+
+    @Nonnull
+    public AsyncResult<NewValue> tossAsync() {
+      AsyncResult<NewValue> result = new AsyncResult<>();
+      toss(result::setDone);
+      return result;
+    }
   }
 
   @Nonnull
