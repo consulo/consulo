@@ -16,36 +16,30 @@
 package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.application.CallChain;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Deprecated
 @DeprecationInfo("Desktop only")
 @SuppressWarnings("deprecation")
 public class DesktopAsyncEditorLoader {
-  private static final ExecutorService ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("AsyncEditorLoader pool", 2);
   private static final Key<DesktopAsyncEditorLoader> ASYNC_LOADER = Key.create("ASYNC_LOADER");
-  private static final int SYNCHRONOUS_LOADING_WAITING_TIME_MS = 200;
-  private static final int RETRY_TIME_MS = 10;
+
   @Nonnull
   private final Editor myEditor;
   @Nonnull
@@ -82,38 +76,21 @@ public class DesktopAsyncEditorLoader {
 
     myEditorComponent.startLoading();
 
-    psiDocumentManager.commitAllDocumentsAsync().doWhenDone(() -> {
-      uiAccess.give(myTextEditor::loadEditorInBackground).doWhenDone((continuation) -> {
-        if (startStamp == myEditor.getDocument().getModificationStamp()) {
-          uiAccess.give(() -> loadingFinished(continuation));
-        }
-        else if (!myProject.isDisposed() && !myEditorComponent.isDisposed()) {
-          startNew();
-        }
-      });
-    });
+    CallChain.first(uiAccess)
+        .linkWrite(psiDocumentManager::commitAllDocuments)
+        .linkUI(myTextEditor::loadEditorInBackground)
+        .linkUI(continuation -> {
+          if (startStamp == myEditor.getDocument().getModificationStamp()) {
+            uiAccess.give(() -> loadingFinished(continuation));
+          }
+          else if (!myProject.isDisposed() && !myEditorComponent.isDisposed()) {
+            startNew();
+          }
+          return null;
+        })
+        .toss();
+
     return CompletableFuture.completedFuture(null);
-  }
-
-  private static void invokeLater(Runnable runnable) {
-    ApplicationManager.getApplication().invokeLater(runnable, ModalityState.any());
-  }
-
-  private boolean worthWaiting() {
-    // cannot perform commitAndRunReadAction in parallel to EDT waiting
-    return !PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments() && !ApplicationManager.getApplication().isWriteAccessAllowed();
-  }
-
-  private static <T> T resultInTimeOrNull(Future<T> future, long timeMs) {
-    try {
-      return future.get(timeMs, TimeUnit.MILLISECONDS);
-    }
-    catch (InterruptedException | TimeoutException ignored) {
-    }
-    catch (ExecutionException e) {
-      throw new RuntimeException(e);
-    }
-    return null;
   }
 
   private void loadingFinished(Runnable continuation) {
