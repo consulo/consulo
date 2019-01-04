@@ -22,7 +22,6 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.module.Module;
@@ -62,15 +61,17 @@ import java.util.concurrent.Future;
 
 @Singleton
 public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater");
+  private static final Logger LOG = Logger.getInstance(PushedFilePropertiesUpdaterImpl.class);
 
+  private final Application myApplication;
   private final Project myProject;
   private final FilePropertyPusher[] myPushers;
   private final FilePropertyPusher[] myFilePushers;
   private final Queue<Runnable> myTasks = new ConcurrentLinkedQueue<>();
 
   @Inject
-  public PushedFilePropertiesUpdaterImpl(final Project project, StartupManager startupManager) {
+  public PushedFilePropertiesUpdaterImpl(Application application, Project project, StartupManager startupManager) {
+    myApplication = application;
     myProject = project;
     myPushers = FilePropertyPusher.EP_NAME.getExtensions();
     myFilePushers = ContainerUtil.findAllAsArray(myPushers, pusher -> !pusher.pushDirectoriesOnly());
@@ -324,7 +325,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   }
 
   private void applyPushersToFile(final VirtualFile fileOrDir, final FilePropertyPusher[] pushers, final Object[] moduleValues) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
+    myApplication.runReadAction(new Runnable() {
       @Override
       public void run() {
         ProgressManager.checkCanceled();
@@ -375,8 +376,10 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   @Override
   @RequiredReadAction
   public void filePropertiesChanged(@Nonnull final VirtualFile file) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    myApplication.assertReadAccessAllowed();
+
     FileBasedIndex.getInstance().requestReindex(file);
+
     for (final Project project : ProjectManager.getInstance().getOpenProjects()) {
       reloadPsi(file, project);
     }
@@ -386,7 +389,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   private static void reloadPsi(final VirtualFile file, final Project project) {
     final FileManager fileManager = ((PsiManagerEx)PsiManager.getInstance(project)).getFileManager();
     if (fileManager.findCachedViewProvider(file) != null) {
-      WriteAction.run(() -> fileManager.forceReload(file));
+      AccessRule.writeAsync(() -> fileManager.forceReload(file));
     }
   }
 }
