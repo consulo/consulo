@@ -19,8 +19,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.impl.ProjectManagerImpl;
+import com.intellij.openapi.project.impl.DefaultProjectImpl;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
@@ -37,21 +36,24 @@ import java.util.List;
 
 @Singleton
 public class DefaultProjectStoreImpl extends ProjectStoreImpl {
-  private final ProjectManagerImpl myProjectManager;
   @NonNls
   private static final String ROOT_TAG_NAME = "defaultProject";
 
   @Inject
-  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectManager projectManager, @Nonnull ProjectPathMacroManager pathMacroManager) {
+  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectPathMacroManager pathMacroManager) {
     super(project, pathMacroManager);
-
-    myProjectManager = (ProjectManagerImpl)projectManager;
   }
 
   @Nullable
   Element getStateCopy() {
-    final Element element = myProjectManager.getDefaultProjectRootElement();
+    final Element element = getProject().getStateElement();
     return element != null ? element.clone() : null;
+  }
+
+  @Override
+  @Nonnull
+  protected DefaultProjectImpl getProject() {
+    return (DefaultProjectImpl)super.getProject();
   }
 
   @Nonnull
@@ -61,7 +63,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Override
       @Nullable
       protected Element loadLocalData() {
-        return myProjectManager.getDefaultProjectRootElement();
+        return getProject().getStateElement();
       }
 
       @Override
@@ -70,7 +72,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
           @Override
           protected void doSave(@Nullable Element element) {
             // we must set empty element instead of null as indicator - ProjectManager state is ready to save
-            myProjectManager.setDefaultProjectRootElement(element == null ? new Element("empty") : element);
+            getProject().setStateElement(element == null ? new Element("empty") : element);
           }
 
           // we must not collapse paths here, because our solution is just a big hack
@@ -171,7 +173,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
   @Override
   public void load() throws IOException {
-    if (myProjectManager.getDefaultProjectRootElement() != null) {
+    Element stateElement = getProject().getStateElement();
+    if (stateElement != null) {
       super.load();
     }
   }

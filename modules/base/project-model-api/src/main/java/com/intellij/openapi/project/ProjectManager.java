@@ -96,7 +96,9 @@ public abstract class ProjectManager {
    * @return the template project instance.
    */
   @Nonnull
-  public abstract Project getDefaultProject();
+  public Project getDefaultProject() {
+    return DefaultProjectFactory.getInstance().getDefaultProject();
+  }
 
   /**
    * Loads and opens a project with the specified path. If the project file is from an older IDEA

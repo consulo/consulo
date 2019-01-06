@@ -17,6 +17,7 @@
 package com.intellij.openapi.components;
 
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nullable;
@@ -47,6 +48,7 @@ public interface PersistentStateComponent<T> {
    * @param state loaded component state
    * @see com.intellij.util.xmlb.XmlSerializerUtil#copyBean(Object, Object)
    */
+  @RequiredReadAction
   void loadState(T state);
 
   /**

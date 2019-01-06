@@ -19,14 +19,15 @@ import com.intellij.conversion.ConversionResult;
 import com.intellij.conversion.ConversionService;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.StateStorage;
+import com.intellij.openapi.components.StateStorageException;
+import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl.ReloadComponentStoreStatus;
 import com.intellij.openapi.components.impl.stores.FileBasedStorage;
@@ -60,37 +61,29 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.WelcomeFrameManager;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
-import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@State(name = "ProjectManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/project.default.xml")})
-@Singleton
-public class ProjectManagerImpl extends ProjectManagerEx implements PersistentStateComponent<Element>, Disposable {
+public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance(ProjectManagerImpl.class);
 
   private static final Key<List<ProjectManagerListener>> LISTENERS_IN_PROJECT_KEY = Key.create("LISTENERS_IN_PROJECT_KEY");
-
-  private ProjectImpl myDefaultProject; // Only used asynchronously in save and dispose, which itself are synchronized.
-  private Element myDefaultProjectRootElement; // Only used asynchronously in save and dispose, which itself are synchronized.
 
   private Project[] myOpenProjects = {}; // guarded by lock
   private final Object lock = new Object();
@@ -102,7 +95,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
 
   private final ProgressManager myProgressManager;
-  private volatile boolean myDefaultProjectWasDisposed = false;
+
+  private static final boolean LOG_PROJECT_LEAKAGE_IN_TESTS = Boolean.getBoolean("LOG_PROJECT_LEAKAGE_IN_TESTS");
+  private static final int MAX_LEAKY_PROJECTS = 42;
+  @SuppressWarnings("FieldCanBeLocal")
+  private final Map<Project, String> myProjects = new WeakHashMap<>();
 
   private final Runnable restartApplicationOrReloadProjectTask = () -> {
     if (isReloadUnblocked() && tryToReloadApplication()) {
@@ -192,18 +189,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public void dispose() {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     Disposer.dispose(myChangedFilesAlarm);
-    if (myDefaultProject != null) {
-      Disposer.dispose(myDefaultProject);
-
-      myDefaultProject = null;
-      myDefaultProjectWasDisposed = true;
-    }
   }
-
-  private static final boolean LOG_PROJECT_LEAKAGE_IN_TESTS = Boolean.getBoolean("LOG_PROJECT_LEAKAGE_IN_TESTS");
-  private static final int MAX_LEAKY_PROJECTS = 42;
-  @SuppressWarnings("FieldCanBeLocal")
-  private final Map<Project, String> myProjects = new WeakHashMap<>();
 
   @Override
   @Nullable
@@ -258,7 +244,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return message;
   }
 
-  private void initProject(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
+  public void initProject(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
     ProgressIndicator indicator = myProgressManager.getProgressIndicator();
     if (indicator != null && !project.isDefault()) {
       indicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
@@ -286,13 +272,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Nonnull
-  private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed) {
-    return createProject(projectName, dirPath, isDefault, isOptimiseTestLoadSpeed, false);
-  }
-
-  @Nonnull
-  private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed, boolean noUICall) {
-    return isDefault ? new DefaultProject(this, "", isOptimiseTestLoadSpeed) : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
+  private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, boolean noUICall) {
+    return new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
   }
 
   @Override
@@ -319,35 +300,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
 
     return filePath;
-  }
-
-  @TestOnly
-  public synchronized boolean isDefaultProjectInitialized() {
-    return myDefaultProject != null;
-  }
-
-  @Override
-  @Nonnull
-  public synchronized Project getDefaultProject() {
-    LOG.assertTrue(!myDefaultProjectWasDisposed, "Default project has been already disposed!");
-    if (myDefaultProject == null) {
-      ProgressManager.getInstance().executeNonCancelableSection(() -> {
-        try {
-          myDefaultProject = createProject(null, "", true, ApplicationManager.getApplication().isUnitTestMode());
-          initProject(myDefaultProject, null);
-          myDefaultProjectRootElement = null;
-        }
-        catch (Throwable t) {
-          PluginManager.processException(t);
-        }
-      });
-    }
-    return myDefaultProject;
-  }
-
-  @Nullable
-  public Element getDefaultProjectRootElement() {
-    return myDefaultProjectRootElement;
   }
 
   @Override
@@ -393,7 +345,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   private void tryInitProjectByPath(ConversionResult conversionResult, AsyncResult<Project> projectAsyncResult, VirtualFile path, UIAccess uiAccess) {
-    final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, false, true);
+    final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, true);
 
     for (Project p : getOpenProjects()) {
       if (ProjectUtil.isSameProject(path.getPath(), p)) {
@@ -937,37 +889,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
     final String msg = String.format("%s was unable to save some project files,\nare you sure you want to close this project anyway?", ApplicationNamesInfo.getInstance().getProductName());
     return Messages.showDialog(project, msg, "Unsaved Project", "Read-only files:\n\n" + fileNames, new String[]{"Yes", "No"}, 0, 1, Messages.getWarningIcon()) == 0;
-  }
-
-
-  @Nullable
-  @Override
-  public Element getState() {
-    if (myDefaultProject != null) {
-      myDefaultProject.save();
-    }
-
-    if (myDefaultProjectRootElement == null) {
-      // we are not ready to save
-      return null;
-    }
-
-    Element element = new Element("state");
-    myDefaultProjectRootElement.detach();
-    element.addContent(myDefaultProjectRootElement);
-    return element;
-  }
-
-  @Override
-  public void loadState(Element state) {
-    myDefaultProjectRootElement = state.getChild("defaultProject");
-    if (myDefaultProjectRootElement != null) {
-      myDefaultProjectRootElement.detach();
-    }
-  }
-
-  public void setDefaultProjectRootElement(@Nonnull Element defaultProjectRootElement) {
-    myDefaultProjectRootElement = defaultProjectRootElement;
   }
 
   private void initProjectAsync(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template, ProgressIndicator progressIndicator) throws IOException {

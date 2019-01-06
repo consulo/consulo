@@ -198,7 +198,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   }
 
   @Override
-  @RequiredWriteAction
+  @RequiredReadAction
   public void loadState(Element state) {
     boolean firstLoad = myFirstLoad;
     if (firstLoad) {

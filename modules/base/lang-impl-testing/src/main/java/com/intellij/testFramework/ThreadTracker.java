@@ -15,8 +15,8 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.impl.ProjectManagerImpl;
+import com.intellij.openapi.project.DefaultProjectFactory;
+import com.intellij.openapi.project.impl.DefaultProjectFactoryImpl;
 import gnu.trove.THashSet;
 import junit.framework.Assert;
 
@@ -33,7 +33,7 @@ public class ThreadTracker {
 
   public ThreadTracker() {
     before = getThreads();
-    myDefaultProjectInitialized = ((ProjectManagerImpl)ProjectManager.getInstance()).isDefaultProjectInitialized();
+    myDefaultProjectInitialized = ((DefaultProjectFactoryImpl)DefaultProjectFactory.getInstance()).isDefaultProjectInitialized();
   }
 
   private static Collection<Thread> getThreads() {
@@ -76,7 +76,7 @@ public class ThreadTracker {
   }};
   public void checkLeak() throws AssertionError {
     try {
-      if (myDefaultProjectInitialized != ((ProjectManagerImpl)ProjectManager.getInstance()).isDefaultProjectInitialized()) return;
+      if (myDefaultProjectInitialized != ((DefaultProjectFactoryImpl)DefaultProjectFactory.getInstance()).isDefaultProjectInitialized()) return;
 
       Collection<Thread> after = new THashSet<Thread>(getThreads());
       after.removeAll(before);
