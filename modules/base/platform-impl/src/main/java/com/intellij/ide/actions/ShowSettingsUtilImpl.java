@@ -25,6 +25,7 @@ import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -34,6 +35,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;
@@ -51,32 +53,38 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Singleton
 public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   private static final Logger LOG = Logger.getInstance(ShowSettingsUtilImpl.class);
-  private AtomicBoolean myShown = new AtomicBoolean(false);
+  private final AtomicBoolean myShown = new AtomicBoolean(false);
 
   @RequiredUIAccess
   @Override
   public void showSettingsDialog(@Nullable Project project) {
-    try {
-      myShown.set(true);
+    UIAccess uiAccess = UIAccess.current();
+
+    Task.Backgroundable.queue(project, "Open Settings", progressIndicator -> {
       Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
+
       Configurable[] configurables = buildConfigurables(project);
-      _showSettingsDialog(actualProject, configurables, null);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-    finally {
-      myShown.set(false);
-    }
+
+      uiAccess.give(() -> {
+        try {
+          myShown.set(true);
+
+          _showSettingsDialog(actualProject, configurables, null).doWhenDone(() -> myShown.set(false));
+        }
+        catch (Exception e) {
+          LOG.error(e);
+        }
+      });
+    });
   }
 
   @RequiredUIAccess
-  private static void _showSettingsDialog(@Nonnull final Project project, @Nonnull Configurable[] configurables, @Nullable Configurable toSelect) {
+  private static AsyncResult<Void> _showSettingsDialog(@Nonnull final Project project, @Nonnull Configurable[] configurables, @Nullable Configurable toSelect) {
     if (ModalityPerProjectEAPDescriptor.is()) {
-      new OptionsEditorDialog(project, configurables, toSelect, true).showAsync();
+      return new OptionsEditorDialog(project, configurables, toSelect, true).showAsync();
     }
     else {
-      new OptionsEditorDialog(project, configurables, toSelect).showAsync();
+      return new OptionsEditorDialog(project, configurables, toSelect).showAsync();
     }
   }
 
@@ -238,11 +246,11 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
   @RequiredUIAccess
   private static AsyncResult<Void> editConfigurable(@Nullable Component parent,
-                                       @Nullable Project project,
-                                       Configurable configurable,
-                                       String title,
-                                       String dimensionKey,
-                                       @Nullable final Runnable advancedInitialization) {
+                                                    @Nullable Project project,
+                                                    Configurable configurable,
+                                                    String title,
+                                                    String dimensionKey,
+                                                    @Nullable final Runnable advancedInitialization) {
     SingleConfigurableEditor editor;
     if (parent != null) {
       editor = new SingleConfigurableEditor(parent, configurable, title, dimensionKey, true, DialogWrapper.IdeModalityType.IDE);

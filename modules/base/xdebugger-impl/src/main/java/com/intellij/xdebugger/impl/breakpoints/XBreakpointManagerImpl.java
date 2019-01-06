@@ -109,6 +109,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     return myProject;
   }
 
+  @RequiredWriteAction
   @Override
   @Nonnull
   public <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(final XBreakpointType<XBreakpoint<T>, T> type, @Nullable final T properties) {
@@ -170,6 +171,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     getBreakpointDispatcherMulticaster().breakpointChanged(breakpoint);
   }
 
+  @RequiredWriteAction
   @Override
   public void removeBreakpoint(@Nonnull final XBreakpoint<?> breakpoint) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
@@ -199,6 +201,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     }
   }
 
+  @RequiredWriteAction
   @Override
   @Nonnull
   public <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(final XLineBreakpointType<T> type,
@@ -208,6 +211,7 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     return addLineBreakpoint(type, fileUrl, line, properties, false);
   }
 
+  @RequiredWriteAction
   @Override
   @Nonnull
   public <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(final XLineBreakpointType<T> type,

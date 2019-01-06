@@ -19,6 +19,7 @@ import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -56,6 +57,9 @@ import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.application.CallChain;
+import consulo.ui.UIAccess;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 
@@ -136,7 +140,7 @@ public class XLineBreakpointManager {
 
   public void registerBreakpoint(XLineBreakpointImpl breakpoint, final boolean initUI) {
     if (initUI) {
-      breakpoint.updateUI();
+      Application.get().getLastUIAccess().give(() -> breakpoint.updateUI());
     }
     Document document = breakpoint.getDocument();
     if (document != null) {
@@ -272,15 +276,22 @@ public class XLineBreakpointManager {
         return;
       }
 
-      PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+      CallChain.first(UIAccess.current())
+              .linkWrite(() -> PsiDocumentManager.getInstance(myProject).commitAllDocuments())
+              .linkUI(() -> afterMouseClicked(editor, e))
+              .toss();
+    }
+
+    @RequiredReadAction
+    private void afterMouseClicked(Editor editor, EditorMouseEvent e) {
+      MouseEvent mouseEvent = e.getMouseEvent();
       final int line = EditorUtil.yPositionToLogicalLine(editor, mouseEvent);
       final Document document = editor.getDocument();
       final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
       if (line >= 0 && line < document.getLineCount() && file != null) {
         ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT, e.getMouseEvent());
 
-        final AsyncResult<XLineBreakpoint> lineBreakpoint =
-                XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
+        final AsyncResult<XLineBreakpoint> lineBreakpoint = XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
         lineBreakpoint.doWhenDone(breakpoint -> {
           if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
             breakpoint.setSuspendPolicy(SuspendPolicy.NONE);

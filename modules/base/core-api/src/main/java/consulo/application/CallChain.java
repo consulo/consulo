@@ -48,6 +48,14 @@ public final class CallChain {
     }
 
     @Nonnull
+    public <SubNewValue> Link<NewValue, SubNewValue> linkUI(@RequiredUIAccess @Nonnull Runnable runnable) {
+      return linkUI(newValue -> {
+        runnable.run();
+        return null;
+      });
+    }
+
+    @Nonnull
     public <SubNewValue> Link<NewValue, SubNewValue> linkUI(@RequiredUIAccess @Nonnull Supplier<SubNewValue> function) {
       return linkUI(newValue -> function.get());
     }

@@ -18,6 +18,8 @@ package com.intellij.xdebugger.breakpoints;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.xdebugger.XDebuggerManager;
+import consulo.annotations.RequiredWriteAction;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -25,27 +27,24 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
- * Use {@link com.intellij.xdebugger.XDebuggerManager#getBreakpointManager()} to obtain instance of this service
+ * Use {@link XDebuggerManager#getBreakpointManager()} to obtain instance of this service
  *
  * @author nik
  */
 public interface XBreakpointManager {
   @Nonnull
+  @RequiredWriteAction
   <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(XBreakpointType<XBreakpoint<T>, T> type, @Nullable T properties);
 
   @Nonnull
-  <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
-                                                                         @Nonnull String fileUrl,
-                                                                         int line,
-                                                                         @Nullable T properties,
-                                                                         boolean temporary);
+  @RequiredWriteAction
+  <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type, @Nonnull String fileUrl, int line, @Nullable T properties, boolean temporary);
 
   @Nonnull
-  <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
-                                                                         @Nonnull String fileUrl,
-                                                                         int line,
-                                                                         @Nullable T properties);
+  @RequiredWriteAction
+  <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type, @Nonnull String fileUrl, int line, @Nullable T properties);
 
+  @RequiredWriteAction
   void removeBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
 
   @Nonnull
@@ -58,24 +57,18 @@ public interface XBreakpointManager {
   <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass);
 
   @Nullable
-  <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(@Nonnull XLineBreakpointType<P> type,
-                                                                            @Nonnull VirtualFile file,
-                                                                            int line);
+  <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(@Nonnull XLineBreakpointType<P> type, @Nonnull VirtualFile file, int line);
 
   boolean isDefaultBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
 
   @Nullable
   <B extends XBreakpoint<?>> B getDefaultBreakpoint(@Nonnull XBreakpointType<B, ?> type);
 
-  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
-                                                                                         @Nonnull XBreakpointListener<B> listener);
+  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type, @Nonnull XBreakpointListener<B> listener);
 
-  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(@Nonnull XBreakpointType<B, P> type,
-                                                                                            @Nonnull XBreakpointListener<B> listener);
+  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(@Nonnull XBreakpointType<B, P> type, @Nonnull XBreakpointListener<B> listener);
 
-  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
-                                                                                         @Nonnull XBreakpointListener<B> listener,
-                                                                                         Disposable parentDisposable);
+  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type, @Nonnull XBreakpointListener<B> listener, Disposable parentDisposable);
 
   void addBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener);
 
