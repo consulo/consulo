@@ -281,27 +281,37 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
       FileEditorManagerEx.getInstanceEx(myProject).refreshIcons();
     }
     finally {
-      // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
-      // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
-      while (!isDumb()) {
-        final Runnable runnable;
-        synchronized (myRunWhenSmartQueue) {
-          if (myRunWhenSmartQueue.isEmpty()) {
-            break;
-          }
-          runnable = myRunWhenSmartQueue.pullFirst();
-        }
-        try {
-          uiAccess.giveAndWait(runnable);
-        }
-        catch (ProcessCanceledException e) {
-          LOG.error("Task canceled: " + runnable, new Attachment("pce", e));
-        }
-        catch (Throwable e) {
-          LOG.error("Error executing task " + runnable, e);
-        }
-      }
+      runSmartQueue(uiAccess);
     }
+  }
+
+  private void runSmartQueue(@Nonnull UIAccess uiAccess) {
+    // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
+    // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
+
+    if (isDumb()) {
+      return;
+    }
+
+    final Runnable runnable;
+    synchronized (myRunWhenSmartQueue) {
+      if (myRunWhenSmartQueue.isEmpty()) {
+        return;
+      }
+      runnable = myRunWhenSmartQueue.pullFirst();
+    }
+
+    uiAccess.give(() -> {
+      try {
+        runnable.run();
+      }
+      catch (ProcessCanceledException e) {
+        LOG.error("Task canceled: " + runnable, new Attachment("pce", e));
+      }
+      catch (Throwable e) {
+        LOG.error("Error executing task " + runnable, e);
+      }
+    }).doWhenDone(() -> runSmartQueue(uiAccess));
   }
 
   @Override
