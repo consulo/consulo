@@ -424,10 +424,6 @@ public class CompilerTask extends Task.Backgroundable {
     }
 
     @Override
-    public void projectOpened(Project project) {
-    }
-
-    @Override
     public void projectClosed(Project project) {
       if (project.equals(myProject) && myContent != null) {
         myContentManager.removeContent(myContent, true);

@@ -18,6 +18,7 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.image.Image;
@@ -32,7 +33,8 @@ import java.util.List;
 public class NativeFileType implements INativeFileType {
   public static final NativeFileType INSTANCE = new NativeFileType();
 
-  private NativeFileType() { }
+  private NativeFileType() {
+  }
 
   @Override
   @Nonnull
@@ -62,12 +64,9 @@ public class NativeFileType implements INativeFileType {
     return true;
   }
 
+  @Nonnull
   @Override
-  public boolean openFileInAssociatedApplication(final Project project, @Nonnull final VirtualFile file) {
-    return openAssociatedApplication(file);
-  }
-
-  public static boolean openAssociatedApplication(@Nonnull final VirtualFile file) {
+  public AsyncResult<Boolean> openFileInAssociatedApplicationAsync(Project project, @Nonnull VirtualFile file) {
     final List<String> commands = new ArrayList<>();
     if (SystemInfo.isWindows) {
       commands.add("rundll32.exe");
@@ -80,16 +79,16 @@ public class NativeFileType implements INativeFileType {
       commands.add("xdg-open");
     }
     else {
-      return false;
+      return AsyncResult.resolved(Boolean.FALSE);
     }
     commands.add(file.getPath());
 
     try {
       new GeneralCommandLine(commands).createProcess();
-      return true;
+      return AsyncResult.resolved(Boolean.TRUE);
     }
     catch (Exception e) {
-      return false;
+      return AsyncResult.resolved(Boolean.FALSE);
     }
   }
 }

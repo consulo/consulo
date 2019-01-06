@@ -15,6 +15,10 @@
  */
 package com.intellij.pom;
 
+import com.intellij.openapi.util.AsyncResult;
+
+import javax.annotation.Nonnull;
+
 public interface Navigatable {
   /**
    * Open editor and select/navigate to the object there if possible.
@@ -22,7 +26,21 @@ public interface Navigatable {
    *
    * @param requestFocus <code>true</code> if focus requesting is necessary
    */
-  void navigate(boolean requestFocus);
+  default void navigate(boolean requestFocus) {
+    navigateAsync(requestFocus).getResultSync();
+  }
+
+  /**
+   * Open editor and select/navigate to the object there if possible.
+   * Just do nothing if navigation is not possible like in case of a package
+   *
+   * @param requestFocus <code>true</code> if focus requesting is necessary
+   */
+  @Nonnull
+  default AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    navigate(requestFocus);
+    return AsyncResult.resolved(null);
+  }
 
   /**
    * @return <code>false</code> if navigation is not possible for any reason.

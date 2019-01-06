@@ -138,17 +138,8 @@ public class EnforcedPlainTextFileTypeManager extends PersistentFileSetManager i
   }
 
   @Override
-  public boolean canCloseProject(Project project) {
-    return true;
-  }
-
-  @Override
   public void projectClosed(Project project) {
     myProcessedProjects.remove(project);
-  }
-
-  @Override
-  public void projectClosing(Project project) {
   }
 
   private boolean syncWithProject(Project project) {

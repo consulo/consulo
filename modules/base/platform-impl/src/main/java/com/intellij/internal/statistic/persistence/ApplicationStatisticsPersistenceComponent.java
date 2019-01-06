@@ -170,19 +170,6 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   private void onProjectClosing() {
     ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project) {
-      }
-
-      @Override
-      public boolean canCloseProject(Project project) {
-        return true;
-      }
-
-      @Override
-      public void projectClosed(Project project) {
-      }
-
-      @Override
       public void projectClosing(Project project) {
         if (project != null && project.isInitialized()) {
           if (persistOnClosing) {

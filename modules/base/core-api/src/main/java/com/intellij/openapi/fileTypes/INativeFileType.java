@@ -16,12 +16,20 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import javax.annotation.Nonnull;
 
 public interface INativeFileType extends FileType {
-  boolean openFileInAssociatedApplication(Project project, @Nonnull VirtualFile file);
+  default boolean openFileInAssociatedApplication(Project project, @Nonnull VirtualFile file) {
+    return openFileInAssociatedApplicationAsync(project, file).getResultSync();
+  }
+
+  @Nonnull
+  default AsyncResult<Boolean> openFileInAssociatedApplicationAsync(Project project, @Nonnull VirtualFile file) {
+    return AsyncResult.resolved(openFileInAssociatedApplication(project, file));
+  }
 
   @Deprecated
   @DeprecationInfo("Unused")

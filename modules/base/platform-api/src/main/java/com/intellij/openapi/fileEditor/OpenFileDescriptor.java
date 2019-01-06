@@ -25,17 +25,18 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.INativeFileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.pom.Navigatable;
+import consulo.application.CallChain;
 import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescriptor> {
@@ -80,7 +81,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     if (offset >= 0) {
       myRangeMarker = LazyRangeMarkerFactory.getInstance(project).createRangeMarker(file, offset);
     }
-    else if (logicalLine >= 0 ){
+    else if (logicalLine >= 0) {
       myRangeMarker = LazyRangeMarkerFactory.getInstance(project).createRangeMarker(file, logicalLine, Math.max(0, logicalColumn), persistent);
     }
     else {
@@ -110,30 +111,57 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     return myLogicalColumn;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     if (!canNavigate()) {
       throw new IllegalStateException("target not valid");
     }
 
-    if (!myFile.isDirectory() && navigateInEditorOrNativeApp(myProject, requestFocus)) return;
-
-    navigateInProjectView(requestFocus);
+    if (!myFile.isDirectory()) {
+      return CallChain.first()
+              .linkAsync(() -> navigateInEditorOrNativeAppAsync(myProject, requestFocus))
+              .linkAsync((value) -> {
+                if(value == Boolean.TRUE) {
+                  return AsyncResult.resolved();
+                }
+                else {
+                  return navigateInProjectViewAsync(requestFocus);
+                }
+              })
+              .tossAsync();
+    }
+    else {
+      return navigateInProjectViewAsync(requestFocus);
+    }
   }
 
-  private boolean navigateInEditorOrNativeApp(@Nonnull Project project, boolean requestFocus) {
-    FileType type = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(myFile,project);
-    if (type == null || !myFile.isValid()) return false;
+  @Nonnull
+  private AsyncResult<Boolean> navigateInEditorOrNativeAppAsync(@Nonnull Project project, boolean requestFocus) {
+    FileType type = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(myFile, project);
+    if (type == null || !myFile.isValid()) return AsyncResult.resolved(Boolean.FALSE);
 
     if (type instanceof INativeFileType) {
-      return ((INativeFileType) type).openFileInAssociatedApplication(project, myFile);
+      return ((INativeFileType)type).openFileInAssociatedApplicationAsync(project, myFile);
     }
 
-    return navigateInEditor(project, requestFocus);
+    return navigateInEditorAsync(project, requestFocus);
   }
 
   public boolean navigateInEditor(@Nonnull Project project, boolean requestFocus) {
     return navigateInRequestedEditor() || navigateInAnyFileEditor(project, requestFocus);
+  }
+
+  @Nonnull
+  public AsyncResult<Boolean> navigateInEditorAsync(@Nonnull Project project, boolean requestFocus) {
+    return CallChain.first().linkAsync(this::navigateInRequestedEditorAsync).linkAsync(it -> {
+      if (it == Boolean.TRUE) {
+        return AsyncResult.resolved(Boolean.TRUE);
+      }
+      else {
+        return navigateInAnyFileEditorAsync(project, requestFocus);
+      }
+    }).tossAsync();
   }
 
   private boolean navigateInRequestedEditor() {
@@ -144,6 +172,17 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
 
     navigateIn(e);
     return true;
+  }
+
+  @Nonnull
+  private AsyncResult<Boolean> navigateInRequestedEditorAsync() {
+    @SuppressWarnings("deprecation") DataContext ctx = DataManager.getInstance().getDataContext();
+    Editor e = ctx.getData(NAVIGATE_IN_EDITOR);
+    if (e == null) return AsyncResult.resolved(Boolean.FALSE);
+    if (!Comparing.equal(FileDocumentManager.getInstance().getFile(e.getDocument()), myFile)) return AsyncResult.resolved(Boolean.FALSE);
+
+    navigateIn(e);
+    return AsyncResult.resolved(Boolean.TRUE);
   }
 
   private boolean navigateInAnyFileEditor(Project project, boolean focusEditor) {
@@ -160,7 +199,23 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     return !editors.isEmpty();
   }
 
-  private void navigateInProjectView(boolean requestFocus) {
+  @Nonnull
+  private AsyncResult<Boolean> navigateInAnyFileEditorAsync(Project project, boolean focusEditor) {
+    List<FileEditor> editors = FileEditorManager.getInstance(project).openEditor(this, focusEditor);
+    for (FileEditor editor : editors) {
+      if (editor instanceof TextEditor) {
+        Editor e = ((TextEditor)editor).getEditor();
+        unfoldCurrentLine(e);
+        if (focusEditor) {
+          Platform.onlyAtDesktop(() -> IdeFocusManager.getInstance(myProject).requestFocus(e.getContentComponent(), true));
+        }
+      }
+    }
+    return AsyncResult.resolved(!editors.isEmpty());
+  }
+
+  @Nonnull
+  private AsyncResult<Void> navigateInProjectViewAsync(boolean requestFocus) {
     SelectInContext context = new SelectInContext() {
       @Override
       @Nonnull
@@ -184,9 +239,11 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     for (SelectInTarget target : SelectInManager.getInstance(myProject).getTargets()) {
       if (target.canSelect(context)) {
         target.selectIn(context, requestFocus);
-        return;
+        return AsyncResult.resolved();
       }
     }
+
+    return AsyncResult.resolved();
   }
 
   public void navigateIn(@Nonnull Editor e) {

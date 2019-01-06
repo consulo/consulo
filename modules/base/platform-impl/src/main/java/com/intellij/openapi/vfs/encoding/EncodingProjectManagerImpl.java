@@ -34,8 +34,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupManager;
@@ -46,6 +44,8 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -76,20 +76,21 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   private boolean myNative2AsciiForPropertiesFilesWasSpecified;
 
   @Inject
-  public EncodingProjectManagerImpl(Project project, EncodingManager ideEncodingManager, ProjectManager projectManager) {
+  public EncodingProjectManagerImpl(Project project, EncodingManager ideEncodingManager, StartupManager startupManager) {
     myProject = project;
     myIdeEncodingManager = (EncodingManagerImpl)ideEncodingManager;
-    projectManager.addProjectManagerListener(project, new ProjectManagerAdapter() {
-      @Override
-      public void projectOpened(Project project) {
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(EncodingProjectManagerImpl.this::reloadAlreadyLoadedDocuments);
-      }
-    });
+
+    if (myProject.isDefault()) {
+      return;
+    }
+
+    startupManager.runWhenProjectIsInitialized(EncodingProjectManagerImpl.this::reloadAlreadyLoadedDocuments);
   }
 
   private final Map<VirtualFile, Charset> myMapping = ContainerUtil.newConcurrentMap();
   private volatile Charset myProjectCharset;
 
+  @RequiredWriteAction
   @Override
   public Element getState() {
     Element element = new Element("x");
@@ -125,6 +126,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     return element;
   }
 
+  @RequiredReadAction
   @Override
   public void loadState(Element element) {
     myMapping.clear();
@@ -249,11 +251,13 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     return result;
   }
 
+  @Override
   @Nonnull
   public Map<VirtualFile, Charset> getAllMappings() {
     return myMapping;
   }
 
+  @Override
   public void setMapping(@Nonnull final Map<VirtualFile, Charset> mapping) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified

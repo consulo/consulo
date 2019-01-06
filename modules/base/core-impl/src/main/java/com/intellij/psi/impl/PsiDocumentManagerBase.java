@@ -52,6 +52,7 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
 import consulo.application.TransactionGuardEx;
 import consulo.platform.Platform;
 import consulo.psi.impl.ExternalChangeMarker;
@@ -60,7 +61,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -483,14 +483,9 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   @Override
   public void commitAndRunReadAction(@Nonnull final Runnable runnable) {
-    final Application application = ApplicationManager.getApplication();
-    if (SwingUtilities.isEventDispatchThread()) {
-      commitAllDocuments();
-      runnable.run();
-      return;
-    }
+    final Application application = Application.get();
 
-    if (ApplicationManager.getApplication().isReadAccessAllowed()) {
+    if (application.isReadAccessAllowed() && !application.isDispatchThread()) {
       LOG.error("Don't call commitAndRunReadAction inside ReadAction, it will cause a deadlock otherwise. " + Thread.currentThread());
     }
 
@@ -506,7 +501,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
       final Semaphore semaphore = new Semaphore();
       semaphore.down();
-      application.invokeLater(() -> {
+      AccessRule.writeAsync(() -> {
         if (myProject.isDisposed()) {
           // committedness doesn't matter anymore; give clients a chance to do checkCanceled
           semaphore.up();
@@ -514,7 +509,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         }
 
         performWhenAllCommitted(() -> semaphore.up());
-      }, ModalityState.any());
+      });
       semaphore.waitFor();
     }
   }
