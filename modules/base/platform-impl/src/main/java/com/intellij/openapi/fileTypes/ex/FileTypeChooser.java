@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
@@ -34,13 +35,13 @@ import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.application.AccessRule;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -177,6 +178,19 @@ public class FileTypeChooser extends DialogWrapper {
 
   @Nullable
   @RequiredUIAccess
+  public static AsyncResult<FileType> getKnownFileTypeOrAssociateAsync(@Nonnull VirtualFile file, @Nullable Project project) {
+    if (project != null && !(file instanceof FakeVirtualFile)) {
+      PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
+    }
+    FileType type = file.getFileType();
+    if (type == UnknownFileType.INSTANCE) {
+      return getKnownFileTypeOrAssociateAsync(file.getName());
+    }
+    return AsyncResult.resolved(type);
+  }
+
+  @Nullable
+  @RequiredUIAccess
   public static FileType getKnownFileTypeOrAssociate(@Nonnull String fileName) {
     FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     FileType type = fileTypeManager.getFileTypeByFileName(fileName);
@@ -188,6 +202,18 @@ public class FileTypeChooser extends DialogWrapper {
 
   @Nullable
   @RequiredUIAccess
+  public static AsyncResult<FileType> getKnownFileTypeOrAssociateAsync(@Nonnull String fileName) {
+    FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+    FileType type = fileTypeManager.getFileTypeByFileName(fileName);
+    if (type == UnknownFileType.INSTANCE) {
+      return associateFileTypeAsync(fileName);
+    }
+    return AsyncResult.resolved(type);
+  }
+
+  @Nullable
+  @RequiredUIAccess
+  @Deprecated
   public static FileType associateFileType(@Nonnull final String fileName) {
     final FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
     if (!chooser.showAndGet()) {
@@ -204,10 +230,39 @@ public class FileTypeChooser extends DialogWrapper {
       return null;
     }
 
-    ApplicationManager.getApplication()
-            .runWriteAction(() -> FileTypeManagerEx.getInstanceEx().associatePattern(type, (String)chooser.myPattern.getSelectedItem()));
+    ApplicationManager.getApplication().runWriteAction(() -> FileTypeManagerEx.getInstanceEx().associatePattern(type, (String)chooser.myPattern.getSelectedItem()));
 
     return type;
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public static AsyncResult<FileType> associateFileTypeAsync(@Nonnull final String fileName) {
+    AsyncResult<FileType> fileTypeAsyncResult = new AsyncResult<>();
+
+    final FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
+    chooser.showAsync().doWhenDone(aVoid -> {
+      final FileType type = chooser.getSelectedType();
+      if (type == null) {
+        final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(chooser.myFeaturePlugins));
+        advertiserDialog.showAsync();
+        fileTypeAsyncResult.setRejected();
+        return;
+      }
+
+      if (type == UnknownFileType.INSTANCE) {
+        fileTypeAsyncResult.setRejected();
+        return;
+      }
+
+      AccessRule.writeAsync(() -> {
+        FileTypeManagerEx.getInstanceEx().associatePattern(type, (String)chooser.myPattern.getSelectedItem());
+      }).doWhenDone(() -> {
+        fileTypeAsyncResult.setDone(type);
+      });
+    });
+
+    return fileTypeAsyncResult;
   }
 
   @Nonnull

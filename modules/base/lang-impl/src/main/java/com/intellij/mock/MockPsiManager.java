@@ -29,11 +29,11 @@ import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.util.PsiModificationTracker;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 
 public class MockPsiManager extends PsiManagerEx {
@@ -130,7 +130,7 @@ public class MockPsiManager extends PsiManagerEx {
     getFileManager().cleanupForNextTest();
   }
 
-  @RequiredUIAccess
+  @RequiredWriteAction
   @Override
   public void dropPsiCaches() {
     dropResolveCaches();

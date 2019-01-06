@@ -35,7 +35,7 @@ public class IdeAWTUIAccessImpl extends AWTUIAccessImpl {
     ComponentStoreImpl.assertIfInsideSavingSession();
 
     if (Application.get().isWriteAccessAllowed()) {
-      LOG.warn(new IllegalStateException("Invoking #giveAndWait() from write-thread"));
+      //LOG.warn(new IllegalStateException("Invoking #giveAndWait() from write-thread"));
     }
     super.giveAndWait(runnable);
   }

@@ -20,10 +20,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.util.PsiModificationTracker;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * The main entry point for accessing the PSI services for a project.
@@ -154,7 +155,7 @@ public abstract class PsiManager extends UserDataHolderBase {
    * Clears all {@link com.intellij.psi.util.CachedValue} depending on {@link PsiModificationTracker#MODIFICATION_COUNT} and resolve caches.
    * Can be used to reduce memory consumption in batch operations sequentially processing multiple files. Should be invoked on Swing thread.
    */
-  @RequiredUIAccess
+  @RequiredWriteAction
   public abstract void dropPsiCaches();
 
   /**

@@ -19,7 +19,6 @@ package com.intellij.psi.impl;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -37,8 +36,8 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -110,11 +109,11 @@ public class PsiManagerImpl extends PsiManagerEx {
     beforeChange(false);
   }
 
-  @RequiredUIAccess
+  @RequiredWriteAction
   @Override
   public void dropPsiCaches() {
     dropResolveCaches();
-    WriteAction.run(() -> ((PsiModificationTrackerImpl)myModificationTracker).incCounter());
+    ((PsiModificationTrackerImpl)myModificationTracker).incCounter();
   }
 
   @Override

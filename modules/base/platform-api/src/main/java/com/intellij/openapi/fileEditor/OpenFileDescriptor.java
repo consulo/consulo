@@ -21,7 +21,6 @@ import com.intellij.ide.SelectInManager;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.INativeFileType;
 import com.intellij.openapi.project.Project;
@@ -119,17 +118,14 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     }
 
     if (!myFile.isDirectory()) {
-      return CallChain.first()
-              .linkAsync(() -> navigateInEditorOrNativeAppAsync(myProject, requestFocus))
-              .linkAsync((value) -> {
-                if(value == Boolean.TRUE) {
-                  return AsyncResult.resolved();
-                }
-                else {
-                  return navigateInProjectViewAsync(requestFocus);
-                }
-              })
-              .tossAsync();
+      return CallChain.first().linkAsync(() -> navigateInEditorOrNativeAppAsync(myProject, requestFocus)).linkAsync((value) -> {
+        if (value == Boolean.TRUE) {
+          return AsyncResult.resolved();
+        }
+        else {
+          return navigateInProjectViewAsync(requestFocus);
+        }
+      }).tossAsync();
     }
     else {
       return navigateInProjectViewAsync(requestFocus);
@@ -138,14 +134,25 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
 
   @Nonnull
   private AsyncResult<Boolean> navigateInEditorOrNativeAppAsync(@Nonnull Project project, boolean requestFocus) {
-    FileType type = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(myFile, project);
-    if (type == null || !myFile.isValid()) return AsyncResult.resolved(Boolean.FALSE);
+    AsyncResult<Boolean> result = new AsyncResult<>();
 
-    if (type instanceof INativeFileType) {
-      return ((INativeFileType)type).openFileInAssociatedApplicationAsync(project, myFile);
-    }
+    FileTypeManager.getInstance().getKnownFileTypeOrAssociateAsync(myFile, project).doWhenDone((type) -> {
+      if (!myFile.isValid()) {
+        result.setDone(Boolean.FALSE);
+        return;
+      }
 
-    return navigateInEditorAsync(project, requestFocus);
+      if (type instanceof INativeFileType) {
+        ((INativeFileType)type).openFileInAssociatedApplicationAsync(project, myFile).notify(result);
+        return;
+      }
+
+      navigateInEditorAsync(project, requestFocus).notify(result);
+    }).doWhenRejected(() -> {
+      result.setDone(Boolean.FALSE);
+    });
+
+    return result;
   }
 
   public boolean navigateInEditor(@Nonnull Project project, boolean requestFocus) {

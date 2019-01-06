@@ -1598,6 +1598,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     return FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
   }
 
+  @Nonnull
+  @Override
+  public AsyncResult<FileType> getKnownFileTypeOrAssociateAsync(@Nonnull VirtualFile file, @Nonnull Project project) {
+    return FileTypeChooser.getKnownFileTypeOrAssociateAsync(file, project);
+  }
+
   private void registerReDetectedMappings(@Nonnull StandardFileType pair) {
     FileType fileType = pair.fileType;
     if (fileType == PlainTextFileType.INSTANCE) return;

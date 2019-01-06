@@ -19,6 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.CachedSingletonsRegistry;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
@@ -129,8 +130,15 @@ public abstract class FileTypeManager extends FileTypeRegistry {
   @Nullable
   @Deprecated() // use getKnownFileTypeOrAssociate(VirtualFile file, Project project) instead
   public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file);
+
   @Nullable
+  @Deprecated
   public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project);
+
+  @Nonnull
+  public AsyncResult<FileType> getKnownFileTypeOrAssociateAsync(@Nonnull VirtualFile file, @Nonnull Project project) {
+    return AsyncResult.resolved(getKnownFileTypeOrAssociate(file, project));
+  }
 
   /**
    * Returns the semicolon-delimited list of patterns for files and folders

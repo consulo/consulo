@@ -21,16 +21,22 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class AssociateFileType extends AnAction {
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-    FileTypeChooser.associateFileType(file.getName());
+
+    FileTypeChooser.associateFileTypeAsync(file.getName());
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
     Project project = e.getData(CommonDataKeys.PROJECT);
