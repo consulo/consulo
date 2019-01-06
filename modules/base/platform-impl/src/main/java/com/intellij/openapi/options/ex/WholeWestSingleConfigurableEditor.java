@@ -16,7 +16,6 @@
 package com.intellij.openapi.options.ex;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -29,6 +28,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
 import consulo.application.AccessRule;
+import consulo.ide.ide.base.BaseShowSettingsUtil;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
@@ -112,15 +112,15 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
   }
 
   public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, IdeModalityType ideModalityType) {
-    this(project, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable), ideModalityType);
+    this(project, configurable, BaseShowSettingsUtil.createDimensionKey(configurable), ideModalityType);
   }
 
   public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable) {
-    this(project, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable));
+    this(project, configurable, BaseShowSettingsUtil.createDimensionKey(configurable));
   }
 
   public WholeWestSingleConfigurableEditor(Component parent, Configurable configurable) {
-    this(parent, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable));
+    this(parent, configurable, BaseShowSettingsUtil.createDimensionKey(configurable));
   }
 
   public Configurable getConfigurable() {

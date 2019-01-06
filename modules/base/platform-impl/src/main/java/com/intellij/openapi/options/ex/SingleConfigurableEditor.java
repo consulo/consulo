@@ -16,7 +16,6 @@
 package com.intellij.openapi.options.ex;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -30,12 +29,13 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
-import consulo.ui.RequiredUIAccess;
+import consulo.ide.ide.base.BaseShowSettingsUtil;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -120,15 +120,15 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, IdeModalityType ideModalityType) {
-    this(project, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable), ideModalityType);
+    this(project, configurable, BaseShowSettingsUtil.createDimensionKey(configurable), ideModalityType);
   }
 
   public SingleConfigurableEditor(@Nullable Project project, Configurable configurable) {
-    this(project, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable));
+    this(project, configurable, BaseShowSettingsUtil.createDimensionKey(configurable));
   }
 
   public SingleConfigurableEditor(Component parent, Configurable configurable) {
-    this(parent, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable));
+    this(parent, configurable, BaseShowSettingsUtil.createDimensionKey(configurable));
   }
 
   public Configurable getConfigurable() {

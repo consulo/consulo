@@ -15,61 +15,76 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.CommonBundle;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableEP;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
+import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
-import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ide.ide.base.BaseShowSettingsUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author max
  */
 @Singleton
-public class ShowSettingsUtilImpl extends ShowSettingsUtil {
-  private static final Logger LOG = Logger.getInstance(ShowSettingsUtilImpl.class);
+public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
+  private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
+
   private final AtomicBoolean myShown = new AtomicBoolean(false);
+
+  private final DefaultProjectFactory myDefaultProjectFactory;
+
+  @Inject
+  DesktopShowSettingsUtilImpl(DefaultProjectFactory defaultProjectFactory) {
+    myDefaultProjectFactory = defaultProjectFactory;
+  }
 
   @RequiredUIAccess
   @Override
   public void showSettingsDialog(@Nullable Project project) {
-    UIAccess uiAccess = UIAccess.current();
+    showSettingsImpl(project, UIAccess.current(), null);
+  }
 
-    Task.Backgroundable.queue(project, "Open Settings", progressIndicator -> {
-      Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
+  @SuppressWarnings("deprecation")
+  private void showSettingsImpl(@Nullable Project tempProject, @Nonnull UIAccess uiAccess, @Nullable Configurable toSelect) {
+    Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
-      Configurable[] configurables = buildConfigurables(project);
+    Task.Backgroundable.queue(actualProject, "Opening " + CommonBundle.settingsTitle() + "...", i -> {
+      Configurable[] configurables = buildConfigurables(actualProject);
 
       uiAccess.give(() -> {
         try {
           myShown.set(true);
 
-          _showSettingsDialog(actualProject, configurables, null).doWhenDone(() -> myShown.set(false));
+          DesktopSettingsDialog dialog;
+          if (ModalityPerProjectEAPDescriptor.is()) {
+            dialog = new DesktopSettingsDialog(actualProject, configurables, toSelect, true);
+          }
+          else {
+            dialog = new DesktopSettingsDialog(actualProject, configurables, toSelect);
+          }
+
+          dialog.showAsync().doWhenDone(() -> myShown.set(false));
         }
         catch (Exception e) {
           LOG.error(e);
@@ -81,10 +96,10 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   @RequiredUIAccess
   private static AsyncResult<Void> _showSettingsDialog(@Nonnull final Project project, @Nonnull Configurable[] configurables, @Nullable Configurable toSelect) {
     if (ModalityPerProjectEAPDescriptor.is()) {
-      return new OptionsEditorDialog(project, configurables, toSelect, true).showAsync();
+      return new DesktopSettingsDialog(project, configurables, toSelect, true).showAsync();
     }
     else {
-      return new OptionsEditorDialog(project, configurables, toSelect).showAsync();
+      return new DesktopSettingsDialog(project, configurables, toSelect).showAsync();
     }
   }
 
@@ -120,30 +135,31 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
 
-    OptionsEditorDialog dialog;
+    DesktopSettingsDialog dialog;
     if (ModalityPerProjectEAPDescriptor.is()) {
-      dialog = new OptionsEditorDialog(actualProject, configurables, nameToSelect, true);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, nameToSelect, true);
     }
     else {
-      dialog = new OptionsEditorDialog(actualProject, configurables, nameToSelect);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, nameToSelect);
     }
     dialog.show();
   }
 
+  @Override
   @RequiredUIAccess
-  public static void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
+  public void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
     Configurable[] configurables = buildConfigurables(project);
 
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
 
     final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
-    final OptionsEditorDialog dialog;
+    final DesktopSettingsDialog dialog;
     if (ModalityPerProjectEAPDescriptor.is()) {
-      dialog = new OptionsEditorDialog(actualProject, configurables, configurable2Select, true);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, configurable2Select, true);
     }
     else {
-      dialog = new OptionsEditorDialog(actualProject, configurables, configurable2Select);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, configurable2Select);
     }
 
     new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
@@ -155,24 +171,6 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
       }
     });
     dialog.showAsync();
-  }
-
-  @Nonnull
-  public static Configurable[] buildConfigurables(@Nullable Project project) {
-    if (project == null) {
-      project = ProjectManager.getInstance().getDefaultProject();
-    }
-
-    final Project tempProject = project;
-
-    List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<>();
-    Collections.addAll(configurableEPs, Configurable.APPLICATION_CONFIGURABLE.getExtensions());
-    Collections.addAll(configurableEPs, Configurable.PROJECT_CONFIGURABLE.getExtensions(project));
-
-    List<Configurable> result =
-            ConfigurableExtensionPointUtil.buildConfigurablesList(configurableEPs, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
-
-    return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
   }
 
   @Nullable
@@ -269,20 +267,13 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return editor.showAsync();
   }
 
-  public static String createDimensionKey(@Nonnull Configurable configurable) {
-    String displayName = configurable.getDisplayName();
-    if (displayName == null) {
-      displayName = configurable.getClass().getName();
-    }
-    return '#' + StringUtil.replaceChar(StringUtil.replaceChar(displayName, '\n', '_'), ' ', '_');
-  }
-
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
     return editConfigurable(parent, null, configurable, null, dimensionServiceKey, null);
   }
 
+  @Override
   public boolean isAlreadyShown() {
     return myShown.get();
   }

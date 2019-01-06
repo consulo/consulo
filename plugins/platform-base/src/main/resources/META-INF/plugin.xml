@@ -1211,7 +1211,7 @@
                         serviceImplementation="com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
-                        serviceImplementation="com.intellij.ide.actions.ShowSettingsUtilImpl"/>
+                        serviceImplementation="com.intellij.ide.actions.DesktopShowSettingsUtilImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
                         serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl" />
 

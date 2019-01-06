@@ -110,6 +110,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ide.actions.QualifiedNameProviders;
+import consulo.ide.ide.base.BaseShowSettingsUtil;
 import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
 
@@ -1954,7 +1955,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
         project.putUserData(ChooseByNamePopup.CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY, null);
         myActionProvider = createActionProvider();
         myConfigurables.clear();
-        fillConfigurablesIds(null, ShowSettingsUtilImpl.buildConfigurables(project));
+        fillConfigurablesIds(null, BaseShowSettingsUtil.buildConfigurables(project));
       }
       if (myStructureModel == null && myFileEditor != null && Registry.is("search.everywhere.structure")) {
         runReadAction(new Runnable() {

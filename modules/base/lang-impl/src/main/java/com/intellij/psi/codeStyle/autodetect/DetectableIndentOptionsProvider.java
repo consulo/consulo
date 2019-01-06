@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.codeStyle.autodetect;
 
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.lang.LanguageFormatting;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
@@ -24,6 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiCompiledFile;
@@ -33,10 +33,10 @@ import com.intellij.psi.codeStyle.*;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakList;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.intellij.psi.codeStyle.EditorNotificationInfo.ActionLabelData;
@@ -129,7 +129,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
             new Runnable() {
               @Override
               public void run() {
-                ShowSettingsUtilImpl.showSettingsDialog(project, "preferences.sourceCode", "detect indent");
+                ShowSettingsUtil.getInstance().showSettingsDialog(project, "preferences.sourceCode", "detect indent");
               }
             }
     );

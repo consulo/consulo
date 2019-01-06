@@ -24,6 +24,7 @@ import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
@@ -47,7 +48,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataProvider{
+public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider {
 
   private Project myProject;
   private Configurable[] myConfigurables;
@@ -55,40 +56,42 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   private OptionsEditor myEditor;
 
   private ApplyAction myApplyAction;
-  public static final String DIMENSION_KEY = "OptionsEditor";
-  @NonNls static final String LAST_SELECTED_CONFIGURABLE = "options.lastSelected";
+  @NonNls
+  static final String LAST_SELECTED_CONFIGURABLE = "options.lastSelected";
 
-  /** This constructor should be eliminated after the new modality approach
-   *  will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
-   *  @deprecated
+  /**
+   * This constructor should be eliminated after the new modality approach
+   * will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
+   *
+   * @deprecated
    */
-  public OptionsEditorDialog(Project project, Configurable[] configurables,
-                             @Nullable Configurable preselectedConfigurable, boolean applicationModalIfPossible) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable, boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
-    init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
+    initializeDialog(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
   }
 
-  /** This constructor should be eliminated after the new modality approach
-   *  will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
-   *  @deprecated
+  /**
+   * This constructor should be eliminated after the new modality approach
+   * will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
+   *
+   * @deprecated
    */
-  public OptionsEditorDialog(Project project, Configurable[] configurables,
-                             @Nonnull String preselectedConfigurableDisplayName, boolean applicationModalIfPossible) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull String preselectedConfigurableDisplayName, boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
-    init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
+    initializeDialog(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }
 
-  public OptionsEditorDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable) {
     super(project, true);
-    init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
+    initializeDialog(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
   }
 
-  public OptionsEditorDialog(Project project, Configurable[] configurables, @Nonnull String preselectedConfigurableDisplayName) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull String preselectedConfigurableDisplayName) {
     super(project, true);
-    init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
+    initializeDialog(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }
 
-  private void init(final Project project, final Configurable[] configurables, @Nullable final Configurable preselected) {
+  private void initializeDialog(Project project, Configurable[] configurables, @Nullable final Configurable preselected) {
     myProject = project;
     myConfigurables = configurables;
     myPreselected = preselected;
@@ -99,8 +102,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @Nullable
-  private static Configurable getPreselectedByDisplayName(final Configurable[] configurables, final String preselectedConfigurableDisplayName,
-                                                   final Project project) {
+  private static Configurable getPreselectedByDisplayName(final Configurable[] configurables, final String preselectedConfigurableDisplayName, final Project project) {
     Configurable result = findPreselectedByDisplayName(preselectedConfigurableDisplayName, configurables);
 
     return result == null ? findLastSavedConfigurable(configurables, project) : result;
@@ -132,7 +134,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   @Override
   protected JComponent createSouthPanel() {
     JComponent southPanel = super.createSouthPanel();
-    if(southPanel != null) {
+    if (southPanel != null) {
       southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
       BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
       borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
@@ -172,10 +174,11 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   public boolean updateStatus() {
     myApplyAction.setEnabled(myEditor.canApply());
 
-    final Map<Configurable,ConfigurationException> errors = myEditor.getContext().getErrors();
+    final Map<Configurable, ConfigurationException> errors = myEditor.getContext().getErrors();
     if (errors.size() == 0) {
       setErrorText(null);
-    } else {
+    }
+    else {
       String text = "Changes were not applied because of an error";
 
       final String errorMessage = getErrorMessage(errors);
@@ -201,7 +204,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
 
   @Override
   protected String getDimensionServiceKey() {
-    return DIMENSION_KEY;
+    return ShowSettingsUtil.DIMENSION_KEY;
   }
 
   @Override
@@ -228,7 +231,8 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
 
     if (current instanceof SearchableConfigurable) {
       props.setValue(LAST_SELECTED_CONFIGURABLE, ((SearchableConfigurable)current).getId());
-    } else {
+    }
+    else {
       props.setValue(LAST_SELECTED_CONFIGURABLE, current.getClass().getName());
     }
   }
@@ -247,7 +251,8 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     for (Configurable c : configurables) {
       if (c instanceof SearchableConfigurable && id.equals(((SearchableConfigurable)c).getId())) {
         return c;
-      } else if (id.equals(c.getClass().getName())) {
+      }
+      else if (id.equals(c.getClass().getName())) {
         return c;
       }
     }
@@ -294,7 +299,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   @Override
   protected Action[] createActions() {
     myApplyAction = new ApplyAction();
-    return new Action[] {getOKAction(), getCancelAction(), myApplyAction, getHelpAction()};
+    return new Action[]{getOKAction(), getCancelAction(), myApplyAction, getHelpAction()};
   }
 
   @Override

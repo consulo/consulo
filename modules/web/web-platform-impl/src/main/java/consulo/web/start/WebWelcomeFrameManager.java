@@ -18,7 +18,6 @@ package consulo.web.start;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.Configurable;
@@ -26,6 +25,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
+import consulo.ide.ide.base.BaseShowSettingsUtil;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.app.impl.settings.SettingsDialog;
@@ -116,7 +116,7 @@ public class WebWelcomeFrameManager extends WelcomeFrameManager {
     }
 
     projectActionLayout.add(Button.create("Settings", () -> {
-      Configurable[] configurables = ShowSettingsUtilImpl.buildConfigurables(null);
+      Configurable[] configurables = BaseShowSettingsUtil.buildConfigurables(null);
 
       SettingsDialog settingsDialog = new SettingsDialog(configurables);
 

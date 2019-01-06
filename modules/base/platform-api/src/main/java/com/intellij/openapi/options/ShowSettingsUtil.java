@@ -27,6 +27,8 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class ShowSettingsUtil {
+  public static final String DIMENSION_KEY = "OptionsEditor";
+
   public static ShowSettingsUtil getInstance() {
     return ServiceManager.getService(ShowSettingsUtil.class);
   }
@@ -39,6 +41,9 @@ public abstract class ShowSettingsUtil {
 
   @RequiredUIAccess
   public abstract void showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect);
+
+  @RequiredUIAccess
+  public abstract void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter);
 
   @RequiredUIAccess
   public abstract void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect);
@@ -85,6 +90,8 @@ public abstract class ShowSettingsUtil {
    * @deprecated create a new instance of configurable instead
    */
   public abstract <T extends Configurable> T findApplicationConfigurable(Class<T> confClass);
+
+  public abstract boolean isAlreadyShown();
 
   @Nonnull
   public static String getSettingsMenuName() {

@@ -16,8 +16,8 @@
 package consulo.roots.ui.configuration;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
-import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.util.Couple;
@@ -29,8 +29,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.ui.RequiredUIAccess;
 import consulo.roots.ui.StripeTabPanel;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -59,7 +59,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
   public static void show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    ProjectStructureDialog dialog = new ProjectStructureDialog(project, configurable, OptionsEditorDialog.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
+    ProjectStructureDialog dialog = new ProjectStructureDialog(project, configurable, ShowSettingsUtil.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
     if (configurableConsumer != null) {
       new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
         @Override
@@ -115,7 +115,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
   @Override
   protected String getDimensionServiceKey() {
-    return OptionsEditorDialog.DIMENSION_KEY;
+    return ShowSettingsUtil.DIMENSION_KEY;
   }
 
   @Nonnull
