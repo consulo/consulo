@@ -25,6 +25,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
@@ -297,8 +298,12 @@ public class ConflictsDialog extends DialogWrapper{
       public boolean canNavigate() {
         return false;
       }
+
+      @Nonnull
       @Override
-      public void navigate(boolean requestFocus) {}
+      public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+        return AsyncResult.resolved();
+      }
 
       @Override
       public FileEditorLocation getLocation() {

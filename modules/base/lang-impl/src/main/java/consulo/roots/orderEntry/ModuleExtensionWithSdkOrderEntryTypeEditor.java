@@ -21,10 +21,11 @@ import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.Consumer;
 import consulo.bundle.SdkUtil;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -33,20 +34,17 @@ import javax.annotation.Nonnull;
  * @since 06-Jun-16
  */
 public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public void navigate(@Nonnull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+  public AsyncResult<Void> navigateAsync(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     final Sdk sdk = orderEntry.getSdk();
     if (sdk == null) {
-      return;
+      return AsyncResult.resolved();
     }
     Project project = orderEntry.getModuleRootLayer().getProject();
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
-    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable configurable) {
-        config.select(sdk, true);
-      }
-    });
+    return ProjectStructureDialog.show(project, configurable -> config.select(sdk, true));
   }
 
   @Nonnull

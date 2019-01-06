@@ -16,6 +16,7 @@
 package com.intellij.pom;
 
 import com.intellij.openapi.util.AsyncResult;
+import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 
@@ -26,6 +27,8 @@ public interface Navigatable {
    *
    * @param requestFocus <code>true</code> if focus requesting is necessary
    */
+  @Deprecated
+  @DeprecationInfo("Use #navigateAsync(requestFocus)")
   default void navigate(boolean requestFocus) {
     navigateAsync(requestFocus).getResultSync();
   }
@@ -39,7 +42,7 @@ public interface Navigatable {
   @Nonnull
   default AsyncResult<Void> navigateAsync(boolean requestFocus) {
     navigate(requestFocus);
-    return AsyncResult.resolved(null);
+    return AsyncResult.resolved();
   }
 
   /**

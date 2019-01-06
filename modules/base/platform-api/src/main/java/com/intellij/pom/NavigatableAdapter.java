@@ -17,7 +17,10 @@ package com.intellij.pom;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
+
+import javax.annotation.Nonnull;
 
 /**
  * Very often both methods <code>canNavigate</code> and <code>canNavigateToSource</code>
@@ -27,19 +30,33 @@ import com.intellij.openapi.vfs.VirtualFile;
  * @author Konstantin Bulenkov
  */
 public abstract class NavigatableAdapter implements Navigatable {
+  @Override
   public boolean canNavigate() {
     return true;
   }
 
+  @Override
   public boolean canNavigateToSource() {
     return true;
   }
 
+  @Deprecated
   public static void navigate(Project project, VirtualFile file, boolean requestFocus) {
     navigate(project, file, 0, requestFocus);
   }
 
+  @Deprecated
   public static void navigate(Project project, VirtualFile file, int offset, boolean requestFocus) {
     new OpenFileDescriptor(project, file, offset).navigate(requestFocus);
+  }
+
+  @Nonnull
+  public static AsyncResult<Void> navigateAsync(Project project, VirtualFile file, boolean requestFocus) {
+    return navigateAsync(project, file, 0, requestFocus);
+  }
+
+  @Nonnull
+  public static AsyncResult<Void> navigateAsync(Project project, VirtualFile file, int offset, boolean requestFocus) {
+    return new OpenFileDescriptor(project, file, offset).navigateAsync(requestFocus);
   }
 }

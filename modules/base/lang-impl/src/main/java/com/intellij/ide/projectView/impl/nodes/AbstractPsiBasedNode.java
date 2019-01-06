@@ -33,6 +33,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -245,16 +246,19 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     if (canNavigate()) {
       if (requestFocus) {
-        NavigationUtil.activateFileWithPsiElement(extractPsiFromValue(), true);
+        return NavigationUtil.activateFileWithPsiElementAsync(extractPsiFromValue(), true).toVoid();
       }
       else {
-        getNavigationItem().navigate(requestFocus);
+        return getNavigationItem().navigateAsync(requestFocus);
       }
     }
+
+    return AsyncResult.resolved();
   }
 
   @Override

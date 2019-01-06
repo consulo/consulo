@@ -1065,7 +1065,7 @@ public class AbstractTreeUi {
           final NodeDescriptor descriptor = getDescriptorFrom(path.getLastPathComponent());
           if (descriptor != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-            maybeYield((AsyncRunnable)() -> (AsyncResult<?>)update(descriptor, false).doWhenDone(new TreeRunnable("AbstractTreeUi.updateRow: inner") {
+            maybeYield((AsyncRunnable)() -> (AsyncResult<Void>)update(descriptor, false).doWhenDone(new TreeRunnable("AbstractTreeUi.updateRow: inner") {
               @Override
               public void perform() {
                 updateRow(row + 1, pass);
@@ -1620,7 +1620,7 @@ public class AbstractTreeUi {
   }
 
   @Nonnull
-  private AsyncResult<?> processExistingNodes(@Nonnull final DefaultMutableTreeNode node,
+  private AsyncResult<Void> processExistingNodes(@Nonnull final DefaultMutableTreeNode node,
                                               @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
                                               @Nonnull final TreeUpdatePass pass,
                                               final boolean canSmartExpand,
@@ -1630,10 +1630,10 @@ public class AbstractTreeUi {
     final List<TreeNode> childNodes = TreeUtil.listChildren(node);
     return maybeYield((AsyncRunnable)() -> {
       if (pass.isExpired()) return AsyncResult.rejected();
-      if (childNodes.isEmpty()) return AsyncResult.done(null);
+      if (childNodes.isEmpty()) return AsyncResult.resolved();
 
 
-      List<AsyncResult<?>> asyncResults = new SmartList<>();
+      List<AsyncResult<Void>> asyncResults = new SmartList<>();
       for (TreeNode each : childNodes) {
         final DefaultMutableTreeNode eachChild = (DefaultMutableTreeNode)each;
         if (isLoadingNode(eachChild)) {
@@ -1678,11 +1678,11 @@ public class AbstractTreeUi {
 
   @FunctionalInterface
   private abstract static interface AsyncRunnable {
-    public abstract AsyncResult<?> run();
+    public abstract AsyncResult<Void> run();
   }
 
   @Nonnull
-  private AsyncResult<?> maybeYield(@Nonnull final AsyncRunnable processRunnable, @Nonnull final TreeUpdatePass pass, final DefaultMutableTreeNode node) {
+  private AsyncResult<Void> maybeYield(@Nonnull final AsyncRunnable processRunnable, @Nonnull final TreeUpdatePass pass, final DefaultMutableTreeNode node) {
     if (isRerunNeeded(pass)) {
       getUpdater().requeue(pass);
       return AsyncResult.rejected();
@@ -1740,13 +1740,13 @@ public class AbstractTreeUi {
   }
 
   @Nonnull
-  private AsyncResult<?> execute(@Nonnull AsyncRunnable runnable) throws ProcessCanceledException {
+  private AsyncResult<Void> execute(@Nonnull AsyncRunnable runnable) throws ProcessCanceledException {
     try {
       if (!canInitiateNewActivity()) {
         throw new ProcessCanceledException();
       }
 
-      AsyncResult<?> promise = runnable.run();
+      AsyncResult<Void> promise = runnable.run();
       if (!canInitiateNewActivity()) {
         throw new ProcessCanceledException();
       }
@@ -2912,7 +2912,7 @@ public class AbstractTreeUi {
   }
 
   @Nonnull
-  private AsyncResult<?> processExistingNode(@Nonnull final DefaultMutableTreeNode childNode,
+  private AsyncResult<Void> processExistingNode(@Nonnull final DefaultMutableTreeNode childNode,
                                              final NodeDescriptor childDescriptor,
                                              @Nonnull final DefaultMutableTreeNode parentNode,
                                              @Nonnull final MutualMap<Object, Integer> elementToIndexMap,

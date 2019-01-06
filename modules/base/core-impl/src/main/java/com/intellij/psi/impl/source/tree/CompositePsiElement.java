@@ -23,6 +23,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
@@ -38,6 +39,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.lang.LanguageVersion;
+
 import javax.annotation.Nonnull;
 
 public abstract class CompositePsiElement extends CompositeElement implements PsiElement, NavigationItem {
@@ -220,10 +222,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
   }
 
   @Override
-  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
-                                     @Nonnull ResolveState state,
-                                     PsiElement lastParent,
-                                     @Nonnull PsiElement place) {
+  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place) {
     return true;
   }
 
@@ -275,10 +274,12 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     return null;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
-    if (descriptor != null) descriptor.navigate(requestFocus);
+    if (descriptor != null) return descriptor.navigateAsync(requestFocus);
+    return AsyncResult.resolved();
   }
 
   @Override

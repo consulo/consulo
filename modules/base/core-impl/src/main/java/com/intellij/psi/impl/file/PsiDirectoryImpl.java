@@ -28,6 +28,7 @@ import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.ui.Queryable;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
@@ -626,9 +627,10 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     return ItemPresentationProviders.getItemPresentation(this);
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
-    PsiNavigationSupport.getInstance().navigateToDirectory(this, requestFocus);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return PsiNavigationSupport.getInstance().navigateToDirectoryAsync(this, requestFocus);
   }
 
   @Override

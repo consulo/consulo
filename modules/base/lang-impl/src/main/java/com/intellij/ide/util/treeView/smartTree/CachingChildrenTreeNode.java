@@ -19,6 +19,7 @@ package com.intellij.ide.util.treeView.smartTree;
 import com.intellij.ide.structureView.impl.StructureViewElementWrapper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.pom.Navigatable;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
@@ -231,9 +232,10 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
 
   protected abstract void initChildren();
 
+  @Nonnull
   @Override
-  public void navigate(final boolean requestFocus) {
-    ((Navigatable)getValue()).navigate(requestFocus);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return ((Navigatable)getValue()).navigateAsync(requestFocus);
   }
 
   @Override

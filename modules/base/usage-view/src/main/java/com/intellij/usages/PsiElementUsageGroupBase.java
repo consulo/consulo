@@ -19,6 +19,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
@@ -79,11 +80,13 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     return element != null && element.isValid();
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean focus) throws UnsupportedOperationException {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     if (canNavigate()) {
-      getElement().navigate(focus);
+      return getElement().navigateAsync(requestFocus);
     }
+    return AsyncResult.resolved();
   }
 
   @Override

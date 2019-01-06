@@ -21,6 +21,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
 import com.intellij.ui.RowIcon;
@@ -96,9 +97,10 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
           return bookmark.canNavigateToSource();
         }
 
+        @Nonnull
         @Override
-        public void navigate(boolean requestFocus) {
-          bookmark.navigate(requestFocus);
+        public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+          return bookmark.navigateAsync(requestFocus);
         }
 
         @Override

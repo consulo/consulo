@@ -17,6 +17,7 @@ package com.intellij.psi;
 
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.PsiDeclaredTarget;
@@ -44,13 +45,15 @@ public class DelegatePsiTarget implements PsiTarget {
     return myElement.getTextOffset();
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     final int offset = getTextOffset();
     final VirtualFile virtualFile = PsiUtilBase.getVirtualFile(myElement);
     if (virtualFile != null && virtualFile.isValid()) {
-      new OpenFileDescriptor(myElement.getProject(), virtualFile, offset).navigate(requestFocus);
+      return new OpenFileDescriptor(myElement.getProject(), virtualFile, offset).navigateAsync(requestFocus);
     }
+    return AsyncResult.resolved();
   }
 
   @Override

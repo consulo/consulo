@@ -19,16 +19,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.util.Consumer;
+import com.intellij.openapi.util.AsyncResult;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.ui.configuration.ProjectStructureDialog;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -36,15 +37,12 @@ import javax.annotation.Nonnull;
  * @since 06-Jun-16
  */
 public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleLibraryOrderEntryImpl> {
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public void navigate(@Nonnull final ModuleLibraryOrderEntryImpl orderEntry) {
+  public AsyncResult<Void> navigateAsync(@Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
-    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable config) {
-        config.select(orderEntry, true);
-      }
-    });
+    return ProjectStructureDialog.show(project, config -> config.select(orderEntry, true));
   }
 
   @Nonnull

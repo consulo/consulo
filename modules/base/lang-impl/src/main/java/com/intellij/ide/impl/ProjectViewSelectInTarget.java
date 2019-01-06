@@ -27,7 +27,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -35,10 +35,10 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,13 +56,13 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
   }
 
   @Nonnull
-  public static ActionCallback select(@Nonnull Project project,
-                                      final Object toSelect,
-                                      @Nullable final String viewId,
-                                      @Nullable final String subviewId,
-                                      final VirtualFile virtualFile,
-                                      final boolean requestFocus) {
-    final ActionCallback result = new ActionCallback();
+  public static AsyncResult<Void> select(@Nonnull Project project,
+                                   final Object toSelect,
+                                   @Nullable final String viewId,
+                                   @Nullable final String subviewId,
+                                   final VirtualFile virtualFile,
+                                   final boolean requestFocus) {
+    final AsyncResult<Void> result = new AsyncResult<>();
 
     final ProjectView projectView = ProjectView.getInstance(project);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -75,7 +75,7 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     final ToolWindow projectViewToolWindow = windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
     final Runnable runnable = () -> {
       Runnable r = () -> projectView.selectCB(toSelect, virtualFile, requestFocus).notify(result);
-      projectView.changeViewCB(ObjectUtils.chooseNotNull(viewId, ProjectViewPane.ID), subviewId).doWhenProcessed(r);
+      projectView.changeViewCB(ObjectUtil.chooseNotNull(viewId, ProjectViewPane.ID), subviewId).doWhenProcessed(r);
     };
 
     if (requestFocus) {

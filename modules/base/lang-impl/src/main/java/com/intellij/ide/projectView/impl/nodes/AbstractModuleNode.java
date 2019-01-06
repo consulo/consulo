@@ -23,6 +23,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
@@ -90,12 +91,14 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
     return "tooltip";
   }
 
+  @Nonnull
   @Override
-  public void navigate(final boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     Module module = getValue();
     if (module != null) {
-      ProjectSettingsService.getInstance(myProject).openModuleSettings(module);
+      return ProjectSettingsService.getInstance(myProject).openModuleSettings(module);
     }
+    return AsyncResult.resolved();
   }
 
   @Override

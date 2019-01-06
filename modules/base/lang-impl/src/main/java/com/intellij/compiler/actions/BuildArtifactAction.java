@@ -89,7 +89,7 @@ public class BuildArtifactAction extends DumbAwareAction {
       selectedIndices.add(0);
       selectedArtifacts.clear();
     }
-    
+
     for (Artifact artifact : artifacts) {
       final ArtifactPopupItem item = new ArtifactPopupItem(artifact, artifact.getName(), artifact.getArtifactType().getIcon());
       if (selectedArtifacts.contains(artifact)) {
@@ -97,22 +97,22 @@ public class BuildArtifactAction extends DumbAwareAction {
       }
       items.add(item);
     }
-    
+
     final ProjectSettingsService projectSettingsService = ProjectSettingsService.getInstance(project);
-    final ArtifactAwareProjectSettingsService settingsService = projectSettingsService instanceof ArtifactAwareProjectSettingsService ? (ArtifactAwareProjectSettingsService)projectSettingsService : null;
-    
-    final ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project, settingsService);
+
+    final ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project, projectSettingsService);
     step.setDefaultOptionIndices(selectedIndices.toNativeArray());
 
     final ListPopupImpl popup = (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(step);
     final KeyStroke editKeyStroke = KeymapUtil.getKeyStroke(CommonShortcuts.getEditSource());
-    if (settingsService != null && editKeyStroke != null) {
+    if (editKeyStroke != null) {
       popup.registerAction("editArtifact", editKeyStroke, new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
           Object[] values = popup.getSelectedValues();
           popup.cancel();
-          settingsService.openArtifactSettings(values.length > 0 ? ((ArtifactPopupItem)values[0]).getArtifact() : null);
+
+          projectSettingsService.openArtifactSettings(values.length > 0 ? ((ArtifactPopupItem)values[0]).getArtifact() : null);
         }
       });
     }
@@ -195,8 +195,7 @@ public class BuildArtifactAction extends DumbAwareAction {
           for (String name : outputPathContainingSourceRoots.keySet()) {
             info.append(" '").append(name).append("' artifact ('").append(outputPathContainingSourceRoots.get(name)).append("')\n");
           }
-          message = "The output directories of the following artifacts contains source roots:\n" +
-                    info + "Do you want to continue and clear these directories?";
+          message = "The output directories of the following artifacts contains source roots:\n" + info + "Do you want to continue and clear these directories?";
         }
         final int answer = Messages.showYesNoDialog(myProject, message, "Clean Artifacts", null);
         if (answer != Messages.YES) {
@@ -212,7 +211,8 @@ public class BuildArtifactAction extends DumbAwareAction {
             indicator.checkCanceled();
             File file = pair.getFirst();
             if (!FileUtil.delete(file)) {
-              NOTIFICATION_GROUP.createNotification("Cannot clean '" + pair.getSecond().getName() + "' artifact", "cannot delete '" + file.getAbsolutePath() + "'", NotificationType.ERROR, null).notify(myProject);
+              NOTIFICATION_GROUP.createNotification("Cannot clean '" + pair.getSecond().getName() + "' artifact", "cannot delete '" + file.getAbsolutePath() + "'", NotificationType.ERROR, null)
+                      .notify(myProject);
             }
             else {
               deleted.add(file);
@@ -236,9 +236,9 @@ public class BuildArtifactAction extends DumbAwareAction {
   }
 
   private static class EditArtifactItem extends ArtifactActionItem {
-    private final ArtifactAwareProjectSettingsService mySettingsService;
+    private final ProjectSettingsService mySettingsService;
 
-    private EditArtifactItem(List<ArtifactPopupItem> item, Project project, final ArtifactAwareProjectSettingsService projectSettingsService) {
+    private EditArtifactItem(List<ArtifactPopupItem> item, Project project, final ProjectSettingsService projectSettingsService) {
       super(item, project, "Edit...");
       mySettingsService = projectSettingsService;
     }
@@ -266,7 +266,8 @@ public class BuildArtifactAction extends DumbAwareAction {
   }
 
   private static class ArtifactPopupItem {
-    @Nullable private final Artifact myArtifact;
+    @Nullable
+    private final Artifact myArtifact;
     private final String myText;
     private final Image myIcon;
 
@@ -294,15 +295,13 @@ public class BuildArtifactAction extends DumbAwareAction {
       return artifact != null ? Collections.singletonList(artifact) : ArtifactUtil.getArtifactWithOutputPaths(project);
     }
   }
-  
+
   private static class ChooseArtifactStep extends MultiSelectionListPopupStep<ArtifactPopupItem> {
     private final Artifact myFirst;
     private final Project myProject;
-    private ArtifactAwareProjectSettingsService mySettingsService;
+    private ProjectSettingsService mySettingsService;
 
-    public ChooseArtifactStep(List<ArtifactPopupItem> artifacts,
-                              Artifact first,
-                              Project project, final ArtifactAwareProjectSettingsService settingsService) {
+    public ChooseArtifactStep(List<ArtifactPopupItem> artifacts, Artifact first, Project project, final ProjectSettingsService settingsService) {
       super("Build Artifact", artifacts);
       myFirst = first;
       myProject = project;

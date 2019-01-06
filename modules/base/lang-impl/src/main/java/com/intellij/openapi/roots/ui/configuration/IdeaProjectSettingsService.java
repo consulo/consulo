@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.compiler.actions.ArtifactAwareProjectSettingsService;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -23,9 +22,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +37,7 @@ import javax.inject.Singleton;
  * @author yole
  */
 @Singleton
-public class IdeaProjectSettingsService extends ProjectSettingsService implements ArtifactAwareProjectSettingsService {
+public class IdeaProjectSettingsService extends ProjectSettingsService {
   private final Project myProject;
 
   @Inject
@@ -47,23 +48,13 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
   @Override
   public void openProjectSettings() {
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(myProject);
-    ShowSettingsUtil.getInstance().editConfigurable(myProject, config, new Runnable() {
-      @Override
-      public void run() {
-        config.selectProjectGeneralSettings(true);
-      }
-    });
+    ShowSettingsUtil.getInstance().editConfigurable(myProject, config, () -> config.selectProjectGeneralSettings(true));
   }
 
   @Override
   public void openLibrary(@Nonnull final Library library) {
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(myProject);
-    ShowSettingsUtil.getInstance().editConfigurable(myProject, config, new Runnable() {
-      @Override
-      public void run() {
-        config.selectProjectOrGlobalLibrary(library, true);
-      }
-    });
+    ShowSettingsUtil.getInstance().editConfigurable(myProject, config, () -> config.selectProjectOrGlobalLibrary(library, true));
   }
 
   @Override
@@ -71,9 +62,10 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
     return true;
   }
 
+  @Nonnull
   @Override
-  public void openModuleSettings(final Module module) {
-    ModulesConfigurator.showDialog(myProject, module.getName(), null);
+  public AsyncResult<Void> openModuleSettings(final Module module) {
+    return ModulesConfigurator.showDialog(myProject, module.getName(), null);
   }
 
   @Override
@@ -81,9 +73,10 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
     return true;
   }
 
+  @Nonnull
   @Override
-  public void openModuleLibrarySettings(final Module module) {
-    ModulesConfigurator.showDialog(myProject, module.getName(), ClasspathEditor.NAME);
+  public AsyncResult<Void> openModuleLibrarySettings(final Module module) {
+    return ModulesConfigurator.showDialog(myProject, module.getName(), ClasspathEditor.NAME);
   }
 
   @Override
@@ -91,9 +84,10 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
     return true;
   }
 
+  @Nonnull
   @Override
-  public void openContentEntriesSettings(final Module module) {
-    ModulesConfigurator.showDialog(myProject, module.getName(), ContentEntriesEditor.NAME);
+  public AsyncResult<Void> openContentEntriesSettings(final Module module) {
+    return ModulesConfigurator.showDialog(myProject, module.getName(), ContentEntriesEditor.NAME);
   }
 
   @Override
@@ -101,25 +95,26 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
     return true;
   }
 
+  @Nonnull
   @Override
-  public void openModuleDependenciesSettings(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
-    ShowSettingsUtil.getInstance().editConfigurable(myProject, ProjectStructureConfigurable.getInstance(myProject), new Runnable() {
-      @Override
-      public void run() {
-        ProjectStructureConfigurable.getInstance(myProject).selectOrderEntry(module, orderEntry);
-      }
-    });
+  @RequiredUIAccess
+  public AsyncResult<Void> openModuleDependenciesSettings(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
+    return ShowSettingsUtil.getInstance()
+            .editConfigurable(myProject, ProjectStructureConfigurable.getInstance(myProject), () -> ProjectStructureConfigurable.getInstance(myProject).selectOrderEntry(module, orderEntry));
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @SuppressWarnings("unchecked")
   @Override
-  public void openLibraryOrSdkSettings(@Nonnull final OrderEntry orderEntry) {
+  public AsyncResult<Void> openLibraryOrSdkSettings(@Nonnull final OrderEntry orderEntry) {
     OrderEntryType type = orderEntry.getType();
 
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
     if (editor != null) {
-      editor.navigate(orderEntry);
+      return editor.navigateAsync(orderEntry);
     }
+    return AsyncResult.resolved();
   }
 
   @Override
@@ -143,7 +138,7 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
   }
 
   @Override
-  public void openArtifactSettings(@Nullable Artifact artifact) {
-    ModulesConfigurator.showArtifactSettings(myProject, artifact);
+  public AsyncResult<Void> openArtifactSettings(@Nullable Artifact artifact) {
+    return ModulesConfigurator.showArtifactSettings(myProject, artifact);
   }
 }

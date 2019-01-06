@@ -32,6 +32,7 @@ import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -93,12 +94,14 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     return this;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     PsiElement element = getElement();
     if (element instanceof Navigatable && ((Navigatable)element).canNavigate()) {
-      ((Navigatable)element).navigate(requestFocus);
+      return ((Navigatable)element).navigateAsync(requestFocus);
     }
+    return AsyncResult.resolved();
   }
 
   @Override

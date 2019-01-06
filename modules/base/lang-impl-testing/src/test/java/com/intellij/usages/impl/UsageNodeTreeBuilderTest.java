@@ -22,6 +22,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FileStatus;
@@ -222,8 +223,12 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
         return false;
       }
 
+      @Nonnull
       @Override
-      public void navigate(boolean focus) throws UnsupportedOperationException { }
+      public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+        return AsyncResult.resolved();
+      }
+
       @Override
       public boolean canNavigate() { return false; }
 
@@ -258,8 +263,12 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
         return false;
       }
 
+      @Nonnull
       @Override
-      public void navigate(boolean focus) throws UnsupportedOperationException { }
+      public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+        return AsyncResult.resolved();
+      }
+
       @Override
       public boolean canNavigate() { return false; }
 
@@ -346,8 +355,10 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
       return String.valueOf(myId);
     }
 
+    @Nonnull
     @Override
-    public void navigate(boolean requestFocus) {
+    public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+      return AsyncResult.resolved();
     }
 
     @Override

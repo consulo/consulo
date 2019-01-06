@@ -16,6 +16,7 @@
 package com.intellij.usages.impl.rules;
 
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -112,8 +113,13 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
 
     @Override
     public boolean isValid() { return true; }
+
+    @Nonnull
     @Override
-    public void navigate(boolean focus) { }
+    public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+      return AsyncResult.resolved();
+    }
+
     @Override
     public boolean canNavigate() { return false; }
 

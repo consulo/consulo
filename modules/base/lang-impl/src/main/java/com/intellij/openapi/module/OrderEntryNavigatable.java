@@ -17,7 +17,10 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.pom.Navigatable;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,9 +34,10 @@ public class OrderEntryNavigatable implements Navigatable {
     myOrderEntry = orderEntry;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
-    ProjectSettingsService.getInstance(myModule.getProject()).openModuleDependenciesSettings(myModule, myOrderEntry);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return ProjectSettingsService.getInstance(myModule.getProject()).openModuleDependenciesSettings(myModule, myOrderEntry);
   }
 
   @Override

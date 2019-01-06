@@ -17,6 +17,7 @@ package com.intellij.xdebugger.impl.breakpoints;
 
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.ColoredListCellRenderer;
@@ -30,6 +31,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 class XBreakpointItem extends BreakpointItem {
@@ -127,12 +129,14 @@ class XBreakpointItem extends BreakpointItem {
 
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     Navigatable navigatable = myBreakpoint.getNavigatable();
     if (navigatable != null && navigatable.canNavigate()) {
-      navigatable.navigate(requestFocus);
+      return navigatable.navigateAsync(requestFocus);
     }
+    return AsyncResult.resolved();
   }
 
   @Override

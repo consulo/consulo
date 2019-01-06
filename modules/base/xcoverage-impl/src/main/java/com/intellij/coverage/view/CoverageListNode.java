@@ -2,13 +2,12 @@ package com.intellij.coverage.view;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.coverage.CoverageSuitesBundle;
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vcs.FileStatus;
@@ -17,30 +16,29 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.awt.TargetAWT;
+import consulo.ide.IconDescriptorUpdaters;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 
 /**
-* User: anna
-* Date: 1/2/12
-*/
+ * User: anna
+ * Date: 1/2/12
+ */
 public class CoverageListNode extends AbstractTreeNode {
   protected CoverageSuitesBundle myBundle;
   protected CoverageViewManager.StateBean myStateBean;
   private final FileStatusManager myFileStatusManager;
 
-  public CoverageListNode(Project project, 
-                          final PsiNamedElement classOrPackage,
-                          CoverageSuitesBundle bundle,
-                          CoverageViewManager.StateBean stateBean) {
+  public CoverageListNode(Project project, final PsiNamedElement classOrPackage, CoverageSuitesBundle bundle, CoverageViewManager.StateBean stateBean) {
     super(project, classOrPackage);
     myName = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
       @Override
       public String compute() {
-        return classOrPackage.getName(); 
+        return classOrPackage.getName();
       }
     });
     myBundle = bundle;
@@ -62,9 +60,7 @@ public class CoverageListNode extends AbstractTreeNode {
         final Object value = getValue();
         if (value instanceof PsiNamedElement) {
 
-          if (value instanceof PsiQualifiedNamedElement &&
-              (myStateBean.myFlattenPackages && ((PsiNamedElement)value).getContainingFile() == null ||
-               getParent() instanceof CoverageListRootNode)) {
+          if (value instanceof PsiQualifiedNamedElement && (myStateBean.myFlattenPackages && ((PsiNamedElement)value).getContainingFile() == null || getParent() instanceof CoverageListRootNode)) {
             presentation.setPresentableText(((PsiQualifiedNamedElement)value).getQualifiedName());
           }
           else {
@@ -103,17 +99,19 @@ public class CoverageListNode extends AbstractTreeNode {
     return canNavigate();
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     if (canNavigate()) {
       final PsiNamedElement value = (PsiNamedElement)getValue();
       if (requestFocus) {
-        NavigationUtil.activateFileWithPsiElement(value, true);
+        return NavigationUtil.activateFileWithPsiElementAsync(value, true).toVoid();
       }
       else if (value instanceof NavigationItem) {
-        ((NavigationItem)value).navigate(requestFocus);
+        return ((NavigationItem)value).navigateAsync(requestFocus);
       }
     }
+    return AsyncResult.resolved();
   }
 
   @Override

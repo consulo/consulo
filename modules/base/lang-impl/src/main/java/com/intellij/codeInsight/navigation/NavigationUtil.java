@@ -43,6 +43,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -62,14 +63,14 @@ import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author ven
@@ -167,7 +168,17 @@ public final class NavigationUtil {
     return openFileWithPsiElement(elt, searchForOpen, true);
   }
 
+  @Nonnull
+  public static AsyncResult<Boolean> activateFileWithPsiElementAsync(@Nonnull PsiElement elt, boolean searchForOpen) {
+    return openFileWithPsiElementAsync(elt, searchForOpen, true);
+  }
+
   public static boolean openFileWithPsiElement(PsiElement element, boolean searchForOpen, boolean requestFocus) {
+    return openFileWithPsiElementAsync(element, searchForOpen, requestFocus).getResultSync();
+  }
+
+  @Nonnull
+  public static AsyncResult<Boolean> openFileWithPsiElementAsync(PsiElement element, boolean searchForOpen, boolean requestFocus) {
     boolean openAsNative = false;
     if (element instanceof PsiFile) {
       VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
@@ -185,13 +196,15 @@ public final class NavigationUtil {
 
     if (openAsNative || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
       final NavigationItem navigationItem = (NavigationItem)element;
-      if (!navigationItem.canNavigate()) return false;
-      navigationItem.navigate(requestFocus);
-      return true;
+      if (!navigationItem.canNavigate()) return AsyncResult.resolved(Boolean.FALSE);
+
+      AsyncResult<Boolean> result = new AsyncResult<>();
+      navigationItem.navigateAsync(requestFocus).doWhenDone(() -> result.setDone(Boolean.TRUE));
+      return result;
     }
 
     element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, null);
-    return false;
+    return AsyncResult.resolved(Boolean.FALSE);
   }
 
   private static boolean activatePsiElementIfOpen(@Nonnull PsiElement elt, boolean searchForOpen, boolean requestFocus) {

@@ -16,6 +16,7 @@
 package com.intellij.openapi.module;
 
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;
 
@@ -29,9 +30,10 @@ public class ModuleNavigatable implements Navigatable {
     this.module = module;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
-    ProjectSettingsService.getInstance(module.getProject()).openContentEntriesSettings(module);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return ProjectSettingsService.getInstance(module.getProject()).openContentEntriesSettings(module);
   }
 
   @Override

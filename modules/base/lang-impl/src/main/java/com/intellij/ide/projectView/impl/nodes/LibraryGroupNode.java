@@ -30,6 +30,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
+import com.intellij.openapi.util.AsyncResult;
 import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -135,10 +136,11 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     return ProjectSettingsService.getInstance(myProject).canOpenModuleLibrarySettings();
   }
 
+  @Nonnull
   @Override
-  public void navigate(final boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     Module module = getValue().getModule();
-    ProjectSettingsService.getInstance(myProject).openModuleLibrarySettings(module);
+    return ProjectSettingsService.getInstance(myProject).openModuleLibrarySettings(module);
   }
 
   @Nonnull

@@ -20,6 +20,7 @@ import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.pom.Navigatable;
@@ -225,7 +226,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   /**
    * Returns the UI presentation data for the PSI element.
    *
-   * @return null, unless overridden in a subclass. 
+   * @return null, unless overridden in a subclass.
    */
   @Override
   public ItemPresentation getPresentation() {
@@ -238,10 +239,16 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     return null;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     final Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
-    if (descriptor != null) descriptor.navigate(requestFocus);
+    if (descriptor != null) {
+      return descriptor.navigateAsync(requestFocus);
+    }
+    else {
+      return AsyncResult.resolved();
+    }
   }
 
   @Override
@@ -261,7 +268,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
       if (aClass.isInstance(cur)) result.add((T)cur);
     }
-    return result.toArray((T[]) Array.newInstance(aClass, result.size()));
+    return result.toArray((T[])Array.newInstance(aClass, result.size()));
   }
 
   @Nullable

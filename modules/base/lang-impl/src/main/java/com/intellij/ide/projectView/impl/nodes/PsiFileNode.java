@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.io.FileUtil;
@@ -116,20 +117,21 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     return ArchiveVfsUtil.getArchiveRootForLocalFile(file);
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     final VirtualFile jarRoot = getArchiveRoot();
     final Project project = getProject();
     if (requestFocus && jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
       final OrderEntry orderEntry = LibraryUtil.findLibraryEntry(jarRoot, project);
       if (orderEntry != null) {
-        ProjectSettingsService.getInstance(project).openLibraryOrSdkSettings(orderEntry);
-        return;
+        return ProjectSettingsService.getInstance(project).openLibraryOrSdkSettings(orderEntry);
       }
     }
 
-    super.navigate(requestFocus);
+    return super.navigateAsync(requestFocus);
   }
+
 
   @Override
   public String getNavigateActionText(boolean focusEditor) {

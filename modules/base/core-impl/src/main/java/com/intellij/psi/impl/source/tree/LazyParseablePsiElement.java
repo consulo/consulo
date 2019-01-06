@@ -27,6 +27,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.psi.impl.ResolveScopeManager;
@@ -304,9 +305,10 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     return null;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
-    PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return PsiNavigationSupport.getInstance().getDescriptor(this).navigateAsync(requestFocus);
   }
 
   @Override

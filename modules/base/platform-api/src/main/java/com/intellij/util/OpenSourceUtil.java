@@ -17,9 +17,13 @@ package com.intellij.util;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.StatePreservingNavigatable;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OpenSourceUtil {
 
@@ -30,37 +34,46 @@ public class OpenSourceUtil {
     navigate(requestFocus, context.getData(CommonDataKeys.NAVIGATABLE_ARRAY));
   }
 
-  public static void openSourcesFrom(DataProvider context, boolean requestFocus) {
-    navigate(requestFocus, context.getDataUnchecked(CommonDataKeys.NAVIGATABLE_ARRAY));
+  @Nonnull
+  public static AsyncResult<Void> openSourcesFromAsync(DataContext context, boolean requestFocus) {
+    return navigateAsync(requestFocus, context.getData(CommonDataKeys.NAVIGATABLE_ARRAY));
   }
 
   /**
    * Equivalent to navigate(true, navigatables)
    *
    * @param navigatables elements navigate to
-   *
    * @see OpenSourceUtil#navigate(boolean, com.intellij.pom.Navigatable...)
    */
-  public static void navigate(final Navigatable...navigatables) {
+  public static void navigate(final Navigatable... navigatables) {
     navigate(true, navigatables);
   }
 
-  public static void navigate(final boolean requestFocus, final Navigatable...navigatables) {
-    if (navigatables == null) return;
-    for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
-        navigatable.navigate(requestFocus);
-      }
-    }
+  public static void navigate(final boolean requestFocus, final Navigatable... navigatables) {
+    navigateAsync(requestFocus, navigatables).getResultSync();
   }
 
-  public static void navigate(final boolean requestFocus, final boolean tryNotToScroll, final Navigatable...navigatables) {
+  @Nonnull
+  public static AsyncResult<Void> navigateAsync(final boolean requestFocus, final Navigatable... navigatables) {
+    if (navigatables == null) return AsyncResult.resolved();
+
+    List<AsyncResult<Void>> results = new ArrayList<>(navigatables.length);
+    for (Navigatable navigatable : navigatables) {
+      if (navigatable.canNavigate()) {
+        results.add(navigatable.navigateAsync(requestFocus));
+      }
+    }
+    return AsyncResult.merge(results);
+  }
+
+  public static void navigate(final boolean requestFocus, final boolean tryNotToScroll, final Navigatable... navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
       if (navigatable.canNavigate()) {
         if (tryNotToScroll && navigatable instanceof StatePreservingNavigatable) {
           ((StatePreservingNavigatable)navigatable).navigate(requestFocus, true);
-        } else {
+        }
+        else {
           navigatable.navigate(requestFocus);
         }
       }

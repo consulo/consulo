@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.structureView.impl.common;
 
+import com.intellij.openapi.util.AsyncResult;
 import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.structureView.StructureViewExtension;
@@ -114,12 +115,14 @@ public abstract class PsiTreeElementBase <T extends PsiElement> implements Struc
     return result.toArray(new StructureViewTreeElement[result.size()]);
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     final T element = getElement();
     if (element != null) {
-      ((Navigatable)element).navigate(requestFocus);
+      return ((Navigatable)element).navigateAsync(requestFocus);
     }
+    return AsyncResult.resolved();
   }
 
   @Override

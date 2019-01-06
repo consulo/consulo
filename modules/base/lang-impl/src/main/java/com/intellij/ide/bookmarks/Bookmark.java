@@ -39,16 +39,17 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Processor;
+import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
@@ -255,9 +256,10 @@ public class Bookmark implements Navigatable {
     return myTarget.canNavigateToSource();
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
-    myTarget.navigate(requestFocus);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return myTarget.navigateAsync(requestFocus);
   }
 
   public int getLine() {
@@ -279,11 +281,11 @@ public class Bookmark implements Navigatable {
     return result.toString();
   }
 
+  @RequiredReadAction
   public String getQualifiedName() {
     String presentableUrl = myFile.getPresentableUrl();
     if (myFile.isDirectory()) return presentableUrl;
 
-    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(myFile);
 
     if (psiFile == null) return presentableUrl;

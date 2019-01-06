@@ -22,6 +22,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.ui.Queryable;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -35,15 +36,18 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class PsiPackageBase extends PsiElementBase implements PsiPackage, Queryable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.PsiPackageBase");
@@ -53,10 +57,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   private final Class<? extends ModuleExtension> myExtensionClass;
   private final String myQualifiedName;
 
-  public PsiPackageBase(PsiManager manager,
-                        PsiPackageManager packageManager,
-                        Class<? extends ModuleExtension> extensionClass,
-                        String qualifiedName) {
+  public PsiPackageBase(PsiManager manager, PsiPackageManager packageManager, Class<? extends ModuleExtension> extensionClass, String qualifiedName) {
     myManager = manager;
     myPackageManager = packageManager;
     myExtensionClass = extensionClass;
@@ -66,8 +67,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   protected Collection<PsiDirectory> getAllDirectories(boolean inLibrarySources) {
     List<PsiDirectory> directories = new ArrayList<PsiDirectory>();
     PsiManager manager = PsiManager.getInstance(getProject());
-    Query<VirtualFile> directoriesByPackageName =
-      DirectoryIndex.getInstance(getProject()).getDirectoriesByPackageName(getQualifiedName(), inLibrarySources);
+    Query<VirtualFile> directoriesByPackageName = DirectoryIndex.getInstance(getProject()).getDirectoriesByPackageName(getQualifiedName(), inLibrarySources);
     for (VirtualFile virtualFile : directoriesByPackageName) {
       PsiDirectory directory = manager.findDirectory(virtualFile);
       if (directory != null) {
@@ -80,10 +80,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
   @Override
   public boolean equals(Object o) {
-    return o != null &&
-           getClass() == o.getClass() &&
-           myManager == ((PsiPackageBase)o).myManager &&
-           myQualifiedName.equals(((PsiPackageBase)o).myQualifiedName);
+    return o != null && getClass() == o.getClass() && myManager == ((PsiPackageBase)o).myManager && myQualifiedName.equals(((PsiPackageBase)o).myQualifiedName);
   }
 
   @Override
@@ -373,12 +370,14 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     return ItemPresentationProviders.getItemPresentation(this);
   }
 
+  @Nonnull
   @Override
-  public void navigate(final boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     Collection<PsiDirectory> allDirectories = getAllDirectories(true);
-    if(!allDirectories.isEmpty()) {
-      allDirectories.iterator().next().navigate(requestFocus);
+    if (!allDirectories.isEmpty()) {
+      return allDirectories.iterator().next().navigateAsync(requestFocus);
     }
+    return AsyncResult.resolved();
   }
 
   @Override

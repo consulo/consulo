@@ -61,12 +61,13 @@ public class AsyncResult<T> extends ActionCallback {
     return new AsyncResult<R>().setDone(result);
   }
 
-  public static AsyncResult<?> merge(@Nonnull Collection<AsyncResult<?>> list) {
+  @Nonnull
+  public static <T> AsyncResult<T> merge(@Nonnull Collection<AsyncResult<T>> list) {
     if (list.isEmpty()) {
-      return done(null);
+      return resolved(null);
     }
 
-    AsyncResult<Object> result = new AsyncResult<>();
+    AsyncResult<T> result = new AsyncResult<>();
 
     AtomicInteger count = new AtomicInteger(list.size());
     AtomicBoolean rejectResult = new AtomicBoolean();
@@ -174,6 +175,14 @@ public class AsyncResult<T> extends ActionCallback {
     doWhenRejected(child::reject);
     doWhenRejectedWithThrowable(child::rejectWithThrowable);
     return this;
+  }
+
+  @Nonnull
+  public AsyncResult<Void> toVoid() {
+    AsyncResult<Void> result = new AsyncResult<>();
+    doWhenDone((Runnable)result::setDone);
+    doWhenRejected((Runnable)result::setRejected);
+    return result;
   }
 
   public T getResult() {

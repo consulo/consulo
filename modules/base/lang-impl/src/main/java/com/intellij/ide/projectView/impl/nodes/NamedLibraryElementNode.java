@@ -33,6 +33,7 @@ import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -116,10 +117,10 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
       presentation.setIcon(getIconForLibrary(orderEntry));
       presentation.setTooltip(StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
     }
-    else if(orderEntry instanceof OrderEntryWithTracking) {
+    else if (orderEntry instanceof OrderEntryWithTracking) {
       Image icon = null;
       CellAppearanceEx cellAppearance = OrderEntryAppearanceService.getInstance().forOrderEntry(orderEntry);
-      if(cellAppearance instanceof ModifiableCellAppearanceEx) {
+      if (cellAppearance instanceof ModifiableCellAppearanceEx) {
         icon = ((ModifiableCellAppearanceEx)cellAppearance).getIcon();
       }
       presentation.setIcon(icon == null ? AllIcons.Toolbar.Unknown : icon);
@@ -136,14 +137,16 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     return AllIcons.Nodes.PpLib;
   }
 
+  @Nonnull
   @Override
   @SuppressWarnings("unchecked")
-  public void navigate(final boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     OrderEntryType type = getValue().getOrderEntry().getType();
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
-    if(editor != null) {
-      editor.navigate(getValue().getOrderEntry());
+    if (editor != null) {
+      return editor.navigateAsync(getValue().getOrderEntry());
     }
+    return AsyncResult.resolved();
   }
 
   @Override

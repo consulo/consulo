@@ -16,10 +16,12 @@
 package com.intellij.ide.util;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -32,6 +34,13 @@ public abstract class PsiNavigationSupport {
 
   @Nullable
   public abstract Navigatable getDescriptor(final PsiElement element);
+
   public abstract boolean canNavigate(final PsiElement element);
-  public abstract void navigateToDirectory(PsiDirectory psiDirectory, boolean requestFocus);
+
+  public void navigateToDirectory(PsiDirectory psiDirectory, boolean requestFocus) {
+    navigateToDirectoryAsync(psiDirectory, requestFocus).getResultSync();
+  }
+
+  @Nonnull
+  public abstract AsyncResult<Void> navigateToDirectoryAsync(PsiDirectory psiDirectory, boolean requestFocus);
 }

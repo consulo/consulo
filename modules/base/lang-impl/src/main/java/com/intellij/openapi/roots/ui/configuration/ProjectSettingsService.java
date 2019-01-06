@@ -22,13 +22,17 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.packaging.artifacts.Artifact;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
-public class ProjectSettingsService {
+public abstract class ProjectSettingsService {
   public static ProjectSettingsService getInstance(Project project) {
     return ServiceManager.getService(project, ProjectSettingsService.class);
   }
@@ -39,36 +43,37 @@ public class ProjectSettingsService {
   public void openLibrary(@Nonnull Library library) {
   }
 
-  public void openModuleSettings(final Module module) {
-  }
+  @Nonnull
+  public abstract AsyncResult<Void> openModuleSettings(Module module);
 
   public boolean canOpenModuleSettings() {
     return false;
   }
 
-  public void openModuleLibrarySettings(final Module module) {
-  }
+  @Nonnull
+  public abstract AsyncResult<Void> openModuleLibrarySettings(Module module);
 
   public boolean canOpenModuleLibrarySettings() {
     return false;
   }
 
-  public void openContentEntriesSettings(final Module module) {
-  }
+  @Nonnull
+  public abstract AsyncResult<Void> openContentEntriesSettings(Module module);
 
   public boolean canOpenContentEntriesSettings() {
     return false;
   }
 
-  public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
-  }
+  @Nonnull
+  public abstract AsyncResult<Void> openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry);
 
   public boolean canOpenModuleDependenciesSettings() {
     return false;
   }
 
-  public void openLibraryOrSdkSettings(final @Nonnull OrderEntry orderEntry) {
-  }
+  @Nonnull
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> openLibraryOrSdkSettings(final @Nonnull OrderEntry orderEntry);
 
   public boolean processModulesMoved(final Module[] modules, @Nullable final ModuleGroup targetGroup) {
     return false;
@@ -76,4 +81,7 @@ public class ProjectSettingsService {
 
   public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
   }
+
+  @Nonnull
+  public abstract AsyncResult<Void> openArtifactSettings(@Nullable Artifact artifact);
 }

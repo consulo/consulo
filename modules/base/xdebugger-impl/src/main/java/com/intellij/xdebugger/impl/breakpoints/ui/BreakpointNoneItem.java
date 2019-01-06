@@ -17,10 +17,13 @@ package com.intellij.xdebugger.impl.breakpoints.ui;
 
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.popup.util.DetailView;
 import com.intellij.xdebugger.XDebuggerBundle;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 public class BreakpointNoneItem extends BreakpointItem {
   @Override
@@ -63,8 +66,10 @@ public class BreakpointNoneItem extends BreakpointItem {
     return XDebuggerBundle.message("xbreakpoint.master.breakpoint.none");
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return AsyncResult.resolved();
   }
 
   @Override

@@ -20,6 +20,7 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.border.CustomLineBorder;
@@ -53,11 +54,13 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   private StripeTabPanel myStripeTabPanel;
   private ProjectStructureConfigurable myStructureConfigurable;
 
-  public static void show(@Nonnull Project project) {
-    show(project, EmptyConsumer.<ProjectStructureConfigurable>getInstance());
+  @RequiredUIAccess
+  public static AsyncResult<Void> show(@Nonnull Project project) {
+    return show(project, EmptyConsumer.<ProjectStructureConfigurable>getInstance());
   }
 
-  public static void show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
+  @RequiredUIAccess
+  public static AsyncResult<Void> show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
     ProjectStructureDialog dialog = new ProjectStructureDialog(project, configurable, ShowSettingsUtil.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
     if (configurableConsumer != null) {
@@ -69,7 +72,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
       });
     }
 
-    dialog.showAsync();
+    return dialog.showAsync();
   }
 
   public ProjectStructureDialog(@Nonnull Project project,

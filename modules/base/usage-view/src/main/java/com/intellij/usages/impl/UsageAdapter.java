@@ -16,6 +16,7 @@
 package com.intellij.usages.impl;
 
 import com.intellij.openapi.fileEditor.FileEditorLocation;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsagePresentation;
 import javax.annotation.Nonnull;
@@ -52,9 +53,10 @@ public class UsageAdapter implements Usage {
 
   }
 
+  @Nonnull
   @Override
-  public void navigate(final boolean requestFocus) {
-
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return AsyncResult.resolved();
   }
 
   @Override

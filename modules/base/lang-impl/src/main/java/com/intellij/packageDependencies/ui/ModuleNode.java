@@ -20,10 +20,12 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.psi.PsiFile;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Set;
 
@@ -55,9 +57,10 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
     return false;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean focus) {
-    ProjectSettingsService.getInstance(myModule.getProject()).openModuleSettings(myModule);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return ProjectSettingsService.getInstance(myModule.getProject()).openModuleSettings(myModule);
   }
 
   @Override

@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.usageView.UsageViewBundle;
@@ -94,8 +95,10 @@ public class ModuleGroupingRule implements UsageGroupingRule {
       return getText(null).compareToIgnoreCase(usageGroup.getText(null));
     }
 
+    @Nonnull
     @Override
-    public void navigate(boolean requestFocus) {
+    public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+      return AsyncResult.resolved();
     }
 
     @Override
@@ -165,8 +168,10 @@ public class ModuleGroupingRule implements UsageGroupingRule {
       return !myModule.isDisposed();
     }
 
+    @Nonnull
     @Override
-    public void navigate(boolean focus) throws UnsupportedOperationException {
+    public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+      return AsyncResult.resolved();
     }
 
     @Override

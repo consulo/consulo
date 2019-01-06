@@ -31,6 +31,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -88,7 +89,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
             data.addText(" (test source root)", SimpleTextAttributes.GRAY_ATTRIBUTES);
           }
           else {
-            data.addText(" (source root)",  SimpleTextAttributes.GRAY_ATTRIBUTES);
+            data.addText(" (source root)", SimpleTextAttributes.GRAY_ATTRIBUTES);
           }
         }
 
@@ -98,9 +99,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
       }
     }
 
-    final String name = parentValue instanceof Project
-                        ? psiDirectory.getVirtualFile().getPresentableUrl()
-                        : BaseProjectViewDirectoryHelper.getNodeName(getSettings(), parentValue, psiDirectory);
+    final String name = parentValue instanceof Project ? psiDirectory.getVirtualFile().getPresentableUrl() : BaseProjectViewDirectoryHelper.getNodeName(getSettings(), parentValue, psiDirectory);
     if (name == null) {
       setValue(null);
       return;
@@ -178,9 +177,10 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     Project project = getProject();
 
     ProjectSettingsService service = ProjectSettingsService.getInstance(myProject);
-    return file != null && ((ProjectRootsUtil.isModuleContentRoot(file, project) && service.canOpenModuleSettings()) ||
-                            (ProjectRootsUtil.isSourceOrTestRoot(file, project)  && service.canOpenContentEntriesSettings()) ||
-                            (ProjectRootsUtil.isLibraryRoot(file, project) && service.canOpenModuleLibrarySettings()));
+    return file != null &&
+           ((ProjectRootsUtil.isModuleContentRoot(file, project) && service.canOpenModuleSettings()) ||
+            (ProjectRootsUtil.isSourceOrTestRoot(file, project) && service.canOpenContentEntriesSettings()) ||
+            (ProjectRootsUtil.isLibraryRoot(file, project) && service.canOpenModuleLibrarySettings()));
   }
 
   @Override
@@ -188,26 +188,28 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     return false;
   }
 
+  @Nonnull
   @Override
-  public void navigate(final boolean requestFocus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
     Module module = ModuleUtil.findModuleForPsiElement(getValue());
     if (module != null) {
       final VirtualFile file = getVirtualFile();
       final Project project = getProject();
       ProjectSettingsService service = ProjectSettingsService.getInstance(myProject);
       if (ProjectRootsUtil.isModuleContentRoot(file, project)) {
-        service.openModuleSettings(module);
+        return service.openModuleSettings(module);
       }
       else if (ProjectRootsUtil.isLibraryRoot(file, project)) {
         final OrderEntry orderEntry = LibraryUtil.findLibraryEntry(file, module.getProject());
         if (orderEntry != null) {
-          service.openLibraryOrSdkSettings(orderEntry);
+          return service.openLibraryOrSdkSettings(orderEntry);
         }
       }
       else {
-        service.openContentEntriesSettings(module);
+        return service.openContentEntriesSettings(module);
       }
     }
+    return AsyncResult.resolved();
   }
 
   @Override
@@ -216,8 +218,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     Project project = getProject();
 
     if (file != null) {
-      if (ProjectRootsUtil.isModuleContentRoot(file, project) ||
-          ProjectRootsUtil.isSourceOrTestRoot(file, project)) {
+      if (ProjectRootsUtil.isModuleContentRoot(file, project) || ProjectRootsUtil.isSourceOrTestRoot(file, project)) {
         return "Open Module Settings";
       }
       if (ProjectRootsUtil.isLibraryRoot(file, project)) {

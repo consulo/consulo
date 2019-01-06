@@ -1,7 +1,10 @@
 package com.intellij.usages.impl.rules;
 
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.usages.UsageGroup;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -30,8 +33,10 @@ public abstract class UsageGroupBase implements UsageGroup {
     return null;
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean focus) {
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return AsyncResult.resolved();
   }
 
   @Override

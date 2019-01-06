@@ -20,7 +20,9 @@ import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.pom.Navigatable;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -41,9 +43,10 @@ public class LibraryNavigatable implements Navigatable {
     }
   }
 
+  @Nonnull
   @Override
-  public void navigate(boolean requestFocus) {
-    ProjectSettingsService.getInstance(module.getProject()).openLibraryOrSdkSettings(element);
+  public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+    return ProjectSettingsService.getInstance(module.getProject()).openLibraryOrSdkSettings(element);
   }
 
   @Override

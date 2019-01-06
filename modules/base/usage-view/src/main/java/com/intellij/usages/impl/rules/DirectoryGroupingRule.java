@@ -17,8 +17,12 @@ package com.intellij.usages.impl.rules;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.DataSink;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -32,8 +36,8 @@ import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -108,12 +112,14 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
       return myDir.isValid();
     }
 
+    @Nonnull
     @Override
-    public void navigate(boolean focus) throws UnsupportedOperationException {
+    public AsyncResult<Void> navigateAsync(boolean requestFocus) {
       final PsiDirectory directory = getDirectory();
       if (directory != null && directory.canNavigate()) {
-        directory.navigate(focus);
+        return directory.navigateAsync(requestFocus);
       }
+      return AsyncResult.resolved();
     }
 
     private PsiDirectory getDirectory() {
@@ -196,9 +202,10 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
       return myPackage.isValid();
     }
 
+    @Nonnull
     @Override
-    public void navigate(boolean focus) throws UnsupportedOperationException {
-      myPackage.navigate(focus);
+    public AsyncResult<Void> navigateAsync(boolean requestFocus) {
+      return myPackage.navigateAsync(requestFocus);
     }
 
     @Override

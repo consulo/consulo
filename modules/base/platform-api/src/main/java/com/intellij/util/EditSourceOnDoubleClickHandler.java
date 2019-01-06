@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.treeStructure.treetable.TreeTable;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
@@ -34,7 +35,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class EditSourceOnDoubleClickHandler {
-  private EditSourceOnDoubleClickHandler() { }
+  private EditSourceOnDoubleClickHandler() {
+  }
 
   public static void install(final JTree tree, @Nullable final Runnable whenPerformed) {
     new TreeMouseListener(tree, whenPerformed).installOn(tree);
@@ -107,8 +109,7 @@ public class EditSourceOnDoubleClickHandler {
 
     @Override
     public boolean onDoubleClick(MouseEvent e) {
-      final TreePath clickPath = myTree.getUI() instanceof WideSelectionTreeUI ? myTree.getClosestPathForLocation(e.getX(), e.getY())
-                                                                               : myTree.getPathForLocation(e.getX(), e.getY());
+      final TreePath clickPath = myTree.getUI() instanceof WideSelectionTreeUI ? myTree.getClosestPathForLocation(e.getX(), e.getY()) : myTree.getPathForLocation(e.getX(), e.getY());
       if (clickPath == null) return false;
 
       final DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
@@ -120,16 +121,19 @@ public class EditSourceOnDoubleClickHandler {
       final Object lastPathComponent = selectionPath.getLastPathComponent();
       if (((TreeNode)lastPathComponent).isLeaf() || !expandOnDoubleClick(((TreeNode)lastPathComponent))) {
         //Node expansion for non-leafs has a higher priority
-        processDoubleClick(e, dataContext, (TreeNode) lastPathComponent);
+        processDoubleClick(e, dataContext, (TreeNode)lastPathComponent).doWhenDone(() -> {
+          if (myWhenPerformed != null) {
+            myWhenPerformed.run();
+          }
+        });
         return true;
       }
       return false;
     }
 
     @SuppressWarnings("UnusedParameters")
-    protected void processDoubleClick(final MouseEvent e, final DataContext dataContext, final TreeNode lastPathComponent) {
-      OpenSourceUtil.openSourcesFrom(dataContext, true);
-      if (myWhenPerformed != null) myWhenPerformed.run();
+    protected AsyncResult<Void> processDoubleClick(final MouseEvent e, final DataContext dataContext, final TreeNode lastPathComponent) {
+      return OpenSourceUtil.openSourcesFromAsync(dataContext, true);
     }
 
     private static boolean expandOnDoubleClick(final TreeNode treeNode) {

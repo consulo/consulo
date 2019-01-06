@@ -19,11 +19,9 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -31,44 +29,37 @@ import java.awt.event.KeyEvent;
  * @author lesya
  */
 
-public class EditSourceOnEnterKeyHandler{
-  public static void install(final JTree tree){
-    tree.addKeyListener(
-      new KeyAdapter() {
-        public void keyPressed(KeyEvent e) {
-          if (KeyEvent.VK_ENTER == e.getKeyCode()) {
-            DataContext dataContext = DataManager.getInstance().getDataContext(tree);
+public class EditSourceOnEnterKeyHandler {
+  public static void install(final JTree tree) {
+    tree.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (KeyEvent.VK_ENTER == e.getKeyCode()) {
+          DataContext dataContext = DataManager.getInstance().getDataContext(tree);
 
-            Project project = dataContext.getData(CommonDataKeys.PROJECT);
-            if (project == null) return;
+          Project project = dataContext.getData(CommonDataKeys.PROJECT);
+          if (project == null) return;
 
-            OpenSourceUtil.openSourcesFrom(dataContext, false);
-          }
+          OpenSourceUtil.openSourcesFrom(dataContext, false);
         }
       }
-    );
+    });
   }
 
-  public static void install(final JComponent component,
-                           @Nullable final Runnable whenPerformed) {
-    component.registerKeyboardAction(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        DataContext dataContext = DataManager.getInstance().getDataContext(component);
-        OpenSourceUtil.openSourcesFrom(dataContext, true);
-        if (whenPerformed != null) whenPerformed.run();
-      }
+  public static void install(final JComponent component, @Nullable final Runnable whenPerformed) {
+    component.registerKeyboardAction(e -> {
+      DataContext dataContext = DataManager.getInstance().getDataContext(component);
+      OpenSourceUtil.openSourcesFrom(dataContext, true);
+      if (whenPerformed != null) whenPerformed.run();
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
   }
 
-  public static void install(@Nullable final Runnable before, final JComponent component,
-                             @Nullable final Runnable whenPerformed) {
-    component.registerKeyboardAction(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        DataContext dataContext = DataManager.getInstance().getDataContext(component);
-        if (before != null) before.run();
-        OpenSourceUtil.openSourcesFrom(dataContext, true);
-        if (whenPerformed != null) whenPerformed.run();
-      }
+  public static void install(@Nullable final Runnable before, final JComponent component, @Nullable final Runnable whenPerformed) {
+    component.registerKeyboardAction(e -> {
+      DataContext dataContext = DataManager.getInstance().getDataContext(component);
+      if (before != null) before.run();
+      OpenSourceUtil.openSourcesFrom(dataContext, true);
+      if (whenPerformed != null) whenPerformed.run();
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
   }
 }

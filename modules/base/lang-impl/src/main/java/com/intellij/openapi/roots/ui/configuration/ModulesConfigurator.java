@@ -40,10 +40,7 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
@@ -519,9 +516,10 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return myModified;
   }
 
-  public static void showArtifactSettings(@Nonnull Project project, @Nullable final Artifact artifact) {
+  @Nonnull
+  public static AsyncResult<Void> showArtifactSettings(@Nonnull Project project, @Nullable final Artifact artifact) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    ProjectStructureDialog.show(project, config -> configurable.select(artifact, true));
+    return ProjectStructureDialog.show(project, config -> configurable.select(artifact, true));
   }
 
   public static void showSdkSettings(@Nonnull Project project, @Nonnull final Sdk sdk) {
@@ -529,8 +527,9 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     ProjectStructureDialog.show(project, config -> configurable.select(sdk, true));
   }
 
-  public static void showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
-    ProjectStructureDialog.show(project, config -> config.select(moduleToSelect, editorNameToSelect, true));
+  @Nonnull
+  public static AsyncResult<Void> showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
+    return ProjectStructureDialog.show(project, config -> config.select(moduleToSelect, editorNameToSelect, true));
   }
 
   public void moduleRenamed(Module module, final String oldName, final String name) {
