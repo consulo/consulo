@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -28,24 +29,28 @@ import java.util.function.Supplier;
  */
 public class AWTUIAccessImpl implements UIAccess {
   public static UIAccess ourInstance = new AWTUIAccessImpl();
+  private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
 
   @Override
   public boolean isValid() {
     return true;
   }
 
+  @Nonnull
   @Override
   public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
-    AsyncResult<T> result = new AsyncResult<>();
+    AsyncResult<T> asyncResult = new AsyncResult<>();
     SwingUtilities.invokeLater(() -> {
       try {
-        result.setDone(supplier.get());
+        T result = supplier.get();
+        asyncResult.setDone(result);
       }
-      finally {
-        result.setDone();
+      catch (Throwable e) {
+        LOGGER.error(e);
+        asyncResult.rejectWithThrowable(e);
       }
     });
-    return result;
+    return asyncResult;
   }
 
   @Override

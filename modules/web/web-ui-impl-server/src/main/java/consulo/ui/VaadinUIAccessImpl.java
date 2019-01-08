@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.vaadin.ui.UI;
 
@@ -27,6 +28,8 @@ import java.util.function.Supplier;
  * @since 16-Jun-16
  */
 public class VaadinUIAccessImpl implements UIAccess {
+  private static final Logger LOGGER = Logger.getInstance(VaadinUIAccessImpl.class);
+
   private final UI myUI;
 
   public VaadinUIAccessImpl(UI ui) {
@@ -43,7 +46,13 @@ public class VaadinUIAccessImpl implements UIAccess {
     AsyncResult<T> result = new AsyncResult<>();
     if (isValid()) {
       myUI.access(() -> {
-        result.setDone(supplier.get());
+        try {
+          result.setDone(supplier.get());
+        }
+        catch (Throwable e) {
+          LOGGER.error(e);
+          result.rejectWithThrowable(e);
+        }
       });
     }
     else {

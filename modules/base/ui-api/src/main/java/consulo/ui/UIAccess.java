@@ -69,6 +69,7 @@ public interface UIAccess {
     });
   }
 
+  @Nonnull
   <T> AsyncResult<T> give(@RequiredUIAccess @Nonnull Supplier<T> supplier);
 
   default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
