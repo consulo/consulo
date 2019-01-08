@@ -117,7 +117,21 @@ public abstract class PsiDocumentManager {
    *
    * @param document the document to commit.
    */
+  @Deprecated
   public abstract void commitDocument(@Nonnull Document document);
+
+  /**
+   * Updates the PSI tree for the specified document.
+   * Before a modified document is committed, accessing its PSI may return elements
+   * corresponding to original (unmodified) state of the document.
+   *
+   * @param document the document to commit.
+   */
+  @Nonnull
+  public AsyncResult<Void> commitDocumentAsync(@Nonnull Document document) {
+    commitDocument(document);
+    return AsyncResult.resolved();
+  }
 
   /**
    * @return the document text that PSI should be based upon. For changed documents, it's their old text until the document is committed.

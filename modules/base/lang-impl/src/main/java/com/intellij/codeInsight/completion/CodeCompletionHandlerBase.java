@@ -60,14 +60,13 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.ThreeState;
 import consulo.application.AccessRule;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class CodeCompletionHandlerBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CodeCompletionHandlerBase");
@@ -172,12 +171,9 @@ public class CodeCompletionHandlerBase {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.SECOND_BASIC_COMPLETION);
     }
 
-    final CompletionInitializationContext[] initializationContext = {null};
-
-    BiConsumer<AsyncResult<Void>, UIAccess> runnable = (voidAsyncResult, ui) -> {
-      AccessRule.writeAsync(() -> {
-        try {
-          EditorUtil.fillVirtualSpaceUntilCaret(editor);
+    Consumer<AsyncResult<CompletionInitializationContext>> consumer = (asyncResult) -> {
+      EditorUtil.fillVirtualSpaceUntilCaretAsync(editor).doWhenDone(() -> {
+        AccessRule.writeAsync(() -> {
           PsiDocumentManager.getInstance(project).commitAllDocuments();
           CompletionAssertions.checkEditorValid(editor);
 
@@ -186,31 +182,26 @@ public class CodeCompletionHandlerBase {
           psiFile.putUserData(PsiFileEx.BATCH_REFERENCE_PROCESSING, Boolean.TRUE);
           CompletionAssertions.assertCommitSuccessful(editor, psiFile);
 
-          initializationContext[0] = runContributorsBeforeCompletion(editor, psiFile, invocationCount, caret);
-        }
-        finally {
-          voidAsyncResult.setDone();
-        }
+          asyncResult.setDone(runContributorsBeforeCompletion(editor, psiFile, invocationCount, caret));
+        });
       });
     };
 
-    UIAccess uiAccess = UIAccess.current();
-
     CommandProcessor processor = CommandProcessor.getInstance();
     if (autopopup) {
-      processor.runUndoTransparentActionAsync(voidAsyncResult -> runnable.accept(voidAsyncResult, uiAccess)).doWhenDone(() -> {
+      processor.runUndoTransparentActionAsync(consumer::accept).doWhenDone((c) -> {
         CompletionAssertions.checkEditorValid(editor);
 
-        if (!restarted && shouldSkipAutoPopup(editor, initializationContext[0].getFile())) {
+        if (!restarted && shouldSkipAutoPopup(editor, c.getFile())) {
           CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);
           return;
         }
 
-        insertDummyIdentifier(initializationContext[0], hasModifiers, invocationCount);
+        insertDummyIdentifier(c, hasModifiers, invocationCount);
       });
     }
     else {
-      processor.executeCommandAsync(project, runnable, null, null).doWhenDone(() -> insertDummyIdentifier(initializationContext[0], hasModifiers, invocationCount));
+      processor.executeCommandAsync(project, consumer, null, null).doWhenDone((c) -> insertDummyIdentifier(c, hasModifiers, invocationCount));
     }
   }
 
@@ -508,9 +499,9 @@ public class CodeCompletionHandlerBase {
       });
     }
     else {
-      PsiDocumentManager.getInstance(project).commitDocument(copyDocument);
-
-      doComplete(initContext, hasModifiers, invocationCount, translator, topLevelOffsets, copyOffsets);
+      PsiDocumentManager.getInstance(project).commitDocumentAsync(copyDocument).doWhenDone(() -> {
+        doComplete(initContext, hasModifiers, invocationCount, translator, topLevelOffsets, copyOffsets);
+      });
     }
   }
 

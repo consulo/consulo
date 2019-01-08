@@ -87,10 +87,6 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
 
     connection.subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
       @Override
-      public void transactionStarted(@Nonnull final Document doc, @Nonnull final PsiFile file) {
-      }
-
-      @Override
       public void transactionCompleted(@Nonnull final Document document, @Nonnull final PsiFile file) {
         updateChangesForDocument(document);
         document.putUserData(UPDATE_ON_COMMIT_ENGAGED, null); // ensure we don't call updateChangesForDocument() twice which can lead to whole file re-highlight

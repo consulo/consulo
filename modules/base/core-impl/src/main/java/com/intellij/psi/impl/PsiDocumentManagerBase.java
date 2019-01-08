@@ -42,7 +42,6 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.impl.FileManagerImpl;
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.text.BlockSupport;
@@ -93,10 +92,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       @Override
       public void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file) {
         myUncommittedDocuments.remove(document);
-      }
-
-      @Override
-      public void transactionCompleted(@Nonnull Document document, @Nonnull PsiFile file) {
       }
     });
   }
@@ -320,7 +315,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return viewProvider != null && viewProvider.isEventSystemEnabled() && !SingleRootFileViewProvider.isFreeThreaded(viewProvider);
   }
 
-  // public for Upsource
   public boolean finishCommit(@Nonnull final Document document, @Nonnull final List<Processor<Document>> finishProcessors, final boolean synchronously, @Nonnull final Object reason) {
     assert !myProject.isDisposed() : "Already disposed";
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -352,8 +346,32 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return ok[0];
   }
 
+  @Nonnull
+  public AsyncResult<Boolean> finishCommitAsync(@Nonnull final Document document, @Nonnull final List<Processor<Document>> finishProcessors, @Nonnull final Object reason) {
+    assert !myProject.isDisposed() : "Already disposed";
+
+    AsyncResult<Boolean> result = AccessRule.writeAsync(() -> ExternalChangeMarker.mark(() -> {
+      return finishCommitInWriteAction(document, finishProcessors, false);
+    }, ExternalChangeMarker.DocumentRunnable));
+
+    result.doWhenDone((value) -> {
+      if (value == Boolean.TRUE) {
+        // otherwise changes maybe not synced to the document yet, and injectors will crash
+        if (!mySynchronizer.isDocumentAffectedByTransactions(document)) {
+          InjectedLanguageManager.getInstance(myProject).startRunInjectors(document, false);
+        }
+        // run after commit actions outside write action
+        runAfterCommitActions(document);
+        if (DebugUtil.DO_EXPENSIVE_CHECKS && !ApplicationInfoImpl.isInPerformanceTest()) {
+          checkAllElementsValid(document, reason);
+        }
+      }
+    });
+    return result;
+  }
+
   protected boolean finishCommitInWriteAction(@Nonnull final Document document, @Nonnull final List<Processor<Document>> finishProcessors, final boolean synchronously) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (myProject.isDisposed()) return false;
     assert !(document instanceof DocumentWindow);
 
@@ -415,7 +433,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       ((SingleRootFileViewProvider)viewProvider).markInvalidated();
     }
     if (virtualFile != null) {
-      ((FileManagerImpl)((PsiManagerEx)myPsiManager).getFileManager()).forceReload(virtualFile);
+      ((PsiManagerEx)myPsiManager).getFileManager().forceReload(virtualFile);
     }
   }
 
@@ -875,15 +893,15 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-       ExternalChangeMarker.mark(() -> {
-         FileViewProvider viewProvider = psiFile.getViewProvider();
-         if (viewProvider instanceof SingleRootFileViewProvider) {
-           ((SingleRootFileViewProvider)viewProvider).onContentReload();
-         }
-         else {
-           LOG.error("Invalid view provider: " + viewProvider + " of " + viewProvider.getClass());
-         }
-       }, ExternalChangeMarker.ExternalChangeAction);
+        ExternalChangeMarker.mark(() -> {
+          FileViewProvider viewProvider = psiFile.getViewProvider();
+          if (viewProvider instanceof SingleRootFileViewProvider) {
+            ((SingleRootFileViewProvider)viewProvider).onContentReload();
+          }
+          else {
+            LOG.error("Invalid view provider: " + viewProvider + " of " + viewProvider.getClass());
+          }
+        }, ExternalChangeMarker.ExternalChangeAction);
       }
     });
   }

@@ -24,8 +24,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.Topic;
 
 public interface PsiDocumentTransactionListener {
-  Topic<PsiDocumentTransactionListener> TOPIC = new Topic<PsiDocumentTransactionListener>("psi.DocumentTransactionListener", PsiDocumentTransactionListener.class, Topic.BroadcastDirection.TO_PARENT);
+  Topic<PsiDocumentTransactionListener> TOPIC = Topic.create("psi.DocumentTransactionListener", PsiDocumentTransactionListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-  void transactionStarted(Document doc, PsiFile file);
-  void transactionCompleted(Document doc, PsiFile file);
+  default void transactionStarted(Document doc, PsiFile file) {
+  }
+
+  default void transactionCompleted(Document doc, PsiFile file) {
+  }
 }

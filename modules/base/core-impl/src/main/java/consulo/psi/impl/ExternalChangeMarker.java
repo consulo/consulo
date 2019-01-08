@@ -19,6 +19,8 @@ import com.intellij.openapi.application.Application;
 import com.intellij.util.BitUtil;
 import consulo.annotations.RequiredWriteAction;
 
+import java.util.function.Supplier;
+
 /**
  * @author VISTALL
  * @since 2019-01-02
@@ -27,17 +29,26 @@ public class ExternalChangeMarker {
   public static final int IgnorePsiEventsMarker = 1 << 1;
   public static final int ExternalChangeAction = 1 << 2 | IgnorePsiEventsMarker;
   public static final int ExternalDocumentChange = 1 << 3 | ExternalChangeAction;
+  public static final int DocumentRunnable = 1 << 4;
 
   private static ThreadLocal<Integer> ourIgnorePsiEventsMarker = ThreadLocal.withInitial(() -> 0);
 
   @RequiredWriteAction
   public static void mark(Runnable subRunnable, int flags) {
+    mark(() -> {
+      subRunnable.run();
+      return null;
+    }, flags);
+  }
+
+  @RequiredWriteAction
+  public static <T> T mark(Supplier<T> subRunnable, int flags) {
     Application.get().assertWriteAccessAllowed();
     try {
       Integer oldValue = ourIgnorePsiEventsMarker.get();
       ourIgnorePsiEventsMarker.set(BitUtil.set(oldValue, flags, true));
 
-      subRunnable.run();
+      return subRunnable.get();
     }
     finally {
       Integer oldValue = ourIgnorePsiEventsMarker.get();

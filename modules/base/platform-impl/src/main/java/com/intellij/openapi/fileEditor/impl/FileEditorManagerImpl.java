@@ -1392,7 +1392,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       setTabsMode(UISettings.getInstance().getEditorTabPlacement() != UISettings.TABS_NONE);
 
       ui.give(() -> {
-        CommandProcessor.getInstance().executeCommandAsync(myProject, (result, uiAccess) -> uiAccess.give(() -> {
+        CommandProcessor.getInstance().executeCommandAsync(myProject, (result) -> {
           if (myProject.isDisposed()) {
             return;
           }
@@ -1403,7 +1403,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
             PluginManagerCore.dumpPluginClassStatistics();
           }
-        }), "", null);
+        }, "", null);
       });
     });
   }

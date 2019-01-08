@@ -24,15 +24,18 @@ import javax.annotation.Nullable;
 
 class DocumentReferenceByNonlocalVirtualFile implements DocumentReference {
   private final VirtualFile myFile;
+  @Nonnull
+  private final FileDocumentManager myFileDocumentManager;
 
-  DocumentReferenceByNonlocalVirtualFile(@Nonnull VirtualFile file) {
+  DocumentReferenceByNonlocalVirtualFile(@Nonnull VirtualFile file, @Nonnull FileDocumentManager fileDocumentManager) {
     myFile = file;
+    myFileDocumentManager = fileDocumentManager;
   }
 
   @Override
   @Nullable
   public Document getDocument() {
-    return FileDocumentManager.getInstance().getDocument(myFile);
+    return myFileDocumentManager.getDocument(myFile);
   }
 
   @Override

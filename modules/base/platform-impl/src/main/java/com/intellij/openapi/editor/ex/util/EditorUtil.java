@@ -46,6 +46,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.application.AccessRule;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
@@ -240,6 +241,27 @@ public final class EditorUtil {
         editor.getDocument().insertString(offset, filler);
         editor.getCaretModel().moveToOffset(offset + filler.length());
       });
+    }
+  }
+
+  @Nonnull
+  public static AsyncResult<Void> fillVirtualSpaceUntilCaretAsync(@Nonnull Editor editor) {
+    final LogicalPosition position = editor.getCaretModel().getLogicalPosition();
+    return fillVirtualSpaceUntilCaretAsync(editor, position.column, position.line);
+  }
+
+  @Nonnull
+  public static AsyncResult<Void> fillVirtualSpaceUntilCaretAsync(@Nonnull final Editor editor, int columnNumber, int lineNumber) {
+    final int offset = editor.logicalPositionToOffset(new LogicalPosition(lineNumber, columnNumber));
+    final String filler = EditorModificationUtil.calcStringToFillVirtualSpace(editor);
+    if (!filler.isEmpty()) {
+      return AccessRule.writeAsync(() -> {
+        editor.getDocument().insertString(offset, filler);
+        editor.getCaretModel().moveToOffset(offset + filler.length());
+      });
+    }
+    else {
+      return AsyncResult.resolved();
     }
   }
 

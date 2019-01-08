@@ -8,13 +8,11 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredWriteAction;
-import consulo.ui.UIAccess;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Deprecated
@@ -41,26 +39,26 @@ public class MockCommandProcessor extends CommandProcessor {
                              boolean shouldRecordCommandForActiveDocument) {
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   @Override
-  public AsyncResult<Void> executeCommandAsync(@Nullable Project project,
-                                               @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                               @Nullable String name,
-                                               @Nullable Object groupId,
-                                               @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                               @Nullable Document document) {
-    return AsyncResult.resolved();
+  public <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
+                                                @Nonnull Consumer<AsyncResult<T>> command,
+                                                @Nullable String name,
+                                                @Nullable Object groupId,
+                                                @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                                @Nullable Document document) {
+    return null;
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   @Override
-  public AsyncResult<Void> executeCommandAsync(@Nullable Project project,
-                                               @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
-                                               @Nullable String name,
-                                               @Nullable Object groupId,
-                                               @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                               boolean shouldRecordCommandForActiveDocument) {
-    return AsyncResult.resolved();
+  public <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
+                                                @Nonnull Consumer<AsyncResult<T>> command,
+                                                @Nullable String name,
+                                                @Nullable Object groupId,
+                                                @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                                boolean shouldRecordCommandForActiveDocument) {
+    return null;
   }
 
   @Override
@@ -118,9 +116,10 @@ public class MockCommandProcessor extends CommandProcessor {
   public void runUndoTransparentAction(@Nonnull Runnable action) {
   }
 
+  @Nonnull
   @Override
-  public AsyncResult<Void> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<Void>> consumer) {
-    return AsyncResult.resolved();
+  public <T> AsyncResult<T> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<T>> consumer) {
+    return null;
   }
 
   @Override

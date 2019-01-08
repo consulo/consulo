@@ -18,6 +18,7 @@ package com.intellij.psi.impl;
 import com.intellij.openapi.application.TransactionId;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -25,6 +26,9 @@ import javax.annotation.Nullable;
 
 public interface DocumentCommitProcessor {
   void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile);
+
+  AsyncResult<Void> commitAsynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile);
+
   void commitAsynchronously(@Nonnull final Project project,
                             @Nonnull final Document document,
                             @NonNls @Nonnull Object reason,

@@ -24,11 +24,9 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public abstract class CommandProcessor {
@@ -77,18 +75,18 @@ public abstract class CommandProcessor {
                                       boolean shouldRecordCommandForActiveDocument);
 
   @RequiredUIAccess
-  public AsyncResult<Void> executeCommandAsync(@Nullable Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, @Nullable String name, @Nullable Object groupId) {
+  public <T> AsyncResult<T> executeCommandAsync(@Nullable Project project, @Nonnull Consumer<AsyncResult<T>> runnable, @Nullable String name, @Nullable Object groupId) {
     return executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT);
   }
 
   @RequiredUIAccess
-  public AsyncResult<Void> executeCommandAsync(Project project, @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> runnable, String name, Object groupId, Document document) {
+  public <T> AsyncResult<T> executeCommandAsync(Project project, @Nonnull Consumer<AsyncResult<T>> runnable, String name, Object groupId, Document document) {
     return executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document);
   }
 
   @RequiredUIAccess
-  public AsyncResult<Void> executeCommandAsync(Project project,
-                                               @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
+  public <T> AsyncResult<T> executeCommandAsync(Project project,
+                                               @Nonnull final Consumer<AsyncResult<T>> command,
                                                final String name,
                                                final Object groupId,
                                                @Nonnull UndoConfirmationPolicy confirmationPolicy) {
@@ -96,8 +94,8 @@ public abstract class CommandProcessor {
   }
 
   @RequiredUIAccess
-  public abstract AsyncResult<Void> executeCommandAsync(@Nullable Project project,
-                                                        @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+  public abstract <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
+                                                        @Nonnull Consumer<AsyncResult<T>> command,
                                                         @Nullable String name,
                                                         @Nullable Object groupId,
                                                         @Nonnull UndoConfirmationPolicy confirmationPolicy,
@@ -109,8 +107,8 @@ public abstract class CommandProcessor {
    *                                             Default is true.
    */
   @RequiredUIAccess
-  public abstract AsyncResult<Void> executeCommandAsync(@Nullable Project project,
-                                           @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+  public abstract <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
+                                           @Nonnull Consumer<AsyncResult<T>> command,
                                            @Nullable String name,
                                            @Nullable Object groupId,
                                            @Nonnull UndoConfirmationPolicy confirmationPolicy,
@@ -141,7 +139,7 @@ public abstract class CommandProcessor {
   public abstract void runUndoTransparentAction(@Nonnull Runnable action);
 
   @Nonnull
-  public abstract AsyncResult<Void> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<Void>> consumer);
+  public abstract <T> AsyncResult<T> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<T>> consumer);
 
   public abstract boolean isUndoTransparentActionInProgress();
 

@@ -18,6 +18,7 @@ package com.intellij.core;
 import com.intellij.openapi.application.TransactionId;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.DocumentCommitProcessor;
 import org.jetbrains.annotations.NonNls;
@@ -30,6 +31,11 @@ import javax.annotation.Nonnull;
 class MockDocumentCommitProcessor implements DocumentCommitProcessor {
   @Override
   public void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile) {
+  }
+
+  @Override
+  public AsyncResult<Void> commitAsynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile) {
+    return null;
   }
 
   @Override

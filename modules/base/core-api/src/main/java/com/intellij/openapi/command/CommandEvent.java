@@ -23,9 +23,10 @@ import consulo.ui.UIAccess;
 import javax.annotation.Nonnull;
 import java.util.EventObject;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class CommandEvent extends EventObject {
-  private final BiConsumer<AsyncResult<Void>, UIAccess> myCommand;
+  private final Consumer<AsyncResult> myCommand;
   private final Project myProject;
   private final String myCommandName;
   private final Object myCommandGroupId;
@@ -35,7 +36,7 @@ public class CommandEvent extends EventObject {
   private final UIAccess myUIAccess;
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                      @Nonnull Consumer<AsyncResult> command,
                       Project project,
                       @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
                       @Nonnull UIAccess uiAccess) {
@@ -43,7 +44,7 @@ public class CommandEvent extends EventObject {
   }
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                      @Nonnull Consumer<AsyncResult> command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
@@ -53,7 +54,7 @@ public class CommandEvent extends EventObject {
   }
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+                      @Nonnull Consumer<AsyncResult> command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
@@ -83,7 +84,7 @@ public class CommandEvent extends EventObject {
   }
 
   @Nonnull
-  public BiConsumer<AsyncResult<Void>, UIAccess> getCommand() {
+  public Consumer<AsyncResult> getCommand() {
     return myCommand;
   }
 

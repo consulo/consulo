@@ -35,13 +35,12 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Stack;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
   protected static class CommandDescriptor {
     @Nonnull
-    public final BiConsumer<AsyncResult<Void>, UIAccess> myCommand;
+    public final Consumer myCommand;
     public final Project myProject;
     public String myName;
     public Object myGroupId;
@@ -51,7 +50,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     public final boolean myShouldRecordActionForActiveDocument;
     public final UIAccess myUIAccess;
 
-    CommandDescriptor(@Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+    CommandDescriptor(@Nonnull Consumer command,
                       Project project,
                       String name,
                       Object groupId,
@@ -121,8 +120,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     executeCommandAsync(project, wrap(command), name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
   }
 
-  private static BiConsumer<AsyncResult<Void>, UIAccess> wrap(Runnable runnable) {
-    return (c, u) -> {
+  private static Consumer<AsyncResult<Void>> wrap(Runnable runnable) {
+    return (c) -> {
       runnable.run();
       c.setDone();
     };
@@ -130,8 +129,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> executeCommandAsync(Project project,
-                                               @Nonnull final BiConsumer<AsyncResult<Void>, UIAccess> command,
+  public <T> AsyncResult<T> executeCommandAsync(Project project,
+                                               @Nonnull final Consumer<AsyncResult<T>> command,
                                                @Nullable String name,
                                                final Object groupId,
                                                @Nonnull UndoConfirmationPolicy confirmationPolicy,
@@ -141,8 +140,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> executeCommandAsync(@Nullable Project project,
-                                               @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+  public <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
+                                               @Nonnull Consumer<AsyncResult<T>> command,
                                                @Nullable String name,
                                                @Nullable Object groupId,
                                                @Nonnull UndoConfirmationPolicy confirmationPolicy,
@@ -151,8 +150,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @RequiredUIAccess
-  private AsyncResult<Void> executeCommandAsync(@Nullable Project project,
-                                                @Nonnull BiConsumer<AsyncResult<Void>, UIAccess> command,
+  private <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
+                                                @Nonnull Consumer<AsyncResult<T>> command,
                                                 @Nullable String name,
                                                 @Nullable Object groupId,
                                                 @Nonnull UndoConfirmationPolicy confirmationPolicy,
@@ -170,11 +169,12 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     if (myCurrentCommand != null) {
-      command.accept(new AsyncResult<>(), uiAccess);
-      return AsyncResult.resolved();
+      AsyncResult<T> result = new AsyncResult<>();
+      command.accept(result);
+      return result;
     }
 
-    AsyncResult<Void> returnResult = new AsyncResult<>();
+    AsyncResult<T> returnResult = new AsyncResult<>();
 
     try {
       CommandDescriptor descriptor = new CommandDescriptor(command, project, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, document, uiAccess);
@@ -183,9 +183,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       fireCommandStarted();
 
-      AsyncResult<Void> result = new AsyncResult<>();
+      AsyncResult<T> result = new AsyncResult<>();
 
-      command.accept(result, uiAccess);
+      command.accept(result);
 
       result.doWhenDone(() -> {
         finishCommand(project, descriptor, uiAccess, null);
@@ -373,10 +373,10 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Nonnull
   @Override
-  public AsyncResult<Void> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<Void>> consumer) {
+  public <T> AsyncResult<T> runUndoTransparentActionAsync(@Nonnull Consumer<AsyncResult<T>> consumer) {
     if (myUndoTransparentCount++ == 0) fireUndoTransparentStarted();
 
-    AsyncResult<Void> result = new AsyncResult<>();
+    AsyncResult<T> result = new AsyncResult<>();
 
     consumer.accept(result);
 

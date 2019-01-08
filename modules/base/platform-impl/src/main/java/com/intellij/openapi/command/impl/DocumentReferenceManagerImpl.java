@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.editor.Document;
@@ -27,8 +26,7 @@ import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.containers.WeakKeyWeakValueHashMap;
-import com.intellij.util.containers.WeakValueHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.fs.FilePath;
 import org.jetbrains.annotations.TestOnly;
 
@@ -45,14 +43,16 @@ import java.util.Map;
 public class DocumentReferenceManagerImpl extends DocumentReferenceManager {
   private static final Key<List<VirtualFile>> DELETED_FILES = Key.create(DocumentReferenceManagerImpl.class.getName() + ".DELETED_FILES");
 
-  private final Map<Document, DocumentReference> myDocToRef = new WeakKeyWeakValueHashMap<>();
-
   private static final Key<Reference<DocumentReference>> FILE_TO_REF_KEY = Key.create("FILE_TO_REF_KEY");
   private static final Key<DocumentReference> FILE_TO_STRONG_REF_KEY = Key.create("FILE_TO_STRONG_REF_KEY");
-  private final Map<FilePath, DocumentReference> myDeletedFilePathToRef = new WeakValueHashMap<>();
+
+  private final Map<Document, DocumentReference> myDocToRef = ContainerUtil.createConcurrentWeakKeyWeakValueMap();
+  private final Map<FilePath, DocumentReference> myDeletedFilePathToRef = ContainerUtil.createConcurrentWeakValueMap();
+  private final FileDocumentManager myFileDocumentManager;
 
   @Inject
-  public DocumentReferenceManagerImpl(VirtualFileManager virtualFileManager) {
+  public DocumentReferenceManagerImpl(VirtualFileManager virtualFileManager, FileDocumentManager fileDocumentManager) {
+    myFileDocumentManager = fileDocumentManager;
     virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@Nonnull VirtualFileEvent event) {
@@ -105,31 +105,26 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager {
   @Nonnull
   @Override
   public DocumentReference create(@Nonnull Document document) {
-    assertWriteAccessAllowed();
+    checkLocking();
 
-    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+    VirtualFile file = myFileDocumentManager.getFile(document);
     return file == null ? createFromDocument(document) : create(file);
   }
 
   @Nonnull
   private DocumentReference createFromDocument(@Nonnull final Document document) {
-    DocumentReference result = myDocToRef.get(document);
-    if (result == null) {
-      result = new DocumentReferenceByDocument(document);
-      myDocToRef.put(document, result);
-    }
-    return result;
+    return myDocToRef.computeIfAbsent(document, DocumentReferenceByDocument::new);
   }
 
   @Nonnull
   @Override
   public DocumentReference create(@Nonnull VirtualFile file) {
-    assertWriteAccessAllowed();
+    checkLocking();
 
     if (!file.isInLocalFileSystem()) { // we treat local files differently from non local because we can undo their deletion
       DocumentReference reference = file.getUserData(FILE_TO_STRONG_REF_KEY);
       if (reference == null) {
-        file.putUserData(FILE_TO_STRONG_REF_KEY, reference = new DocumentReferenceByNonlocalVirtualFile(file));
+        file.putUserData(FILE_TO_STRONG_REF_KEY, reference = new DocumentReferenceByNonlocalVirtualFile(file, myFileDocumentManager));
       }
       return reference;
     }
@@ -144,8 +139,8 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager {
     return result;
   }
 
-  private static void assertWriteAccessAllowed() {
-    Application.get().assertWriteAccessAllowed();
+  private static void checkLocking() {
+    // before write own thread - assert dispatch thread
   }
 
   @TestOnly

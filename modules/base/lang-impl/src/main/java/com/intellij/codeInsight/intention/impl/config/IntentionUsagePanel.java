@@ -67,7 +67,7 @@ class IntentionUsagePanel extends JPanel {
   }
 
   @RequiredUIAccess
-  private void configureByText(final String usageText, FileType fileType, AsyncResult<Void> result) {
+  private void configureByText(final String usageText, FileType fileType, AsyncResult<Object> result) {
     Document document = myEditor.getDocument();
     String text = StringUtil.convertLineSeparators(usageText);
 
