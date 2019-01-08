@@ -179,18 +179,18 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     });
     connection.subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
       @Override
-      public void projectOpened(Project project) {
+      public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           FileEditorManagerImpl.this.projectOpened(connection);
         }
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           // Dispose created editors. We do not use use closeEditor method because
           // it fires event and changes history.
-          closeAllFiles();
+          uiAccess.giveAndWait(() -> closeAllFiles());
         }
       }
     });
