@@ -80,16 +80,17 @@ class IntentionUsagePanel extends JPanel {
         final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         myEditor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(fileType, scheme, null));
 
-        setupSpots(document);
-
-        result.setDone();
+        setupSpotsAsync(document, result);
       });
     });
   }
 
-  private void setupSpots(Document document) {
-    List<Segment> markers = new ArrayList<>();
+  @RequiredUIAccess
+  private void setupSpotsAsync(Document document, AsyncResult<Object> otherResult) {
+    UIAccess uiAccess = UIAccess.current();
+
     AccessRule.writeAsync(() -> {
+      List<Segment> markers = new ArrayList<>();
       while (true) {
         String text = document.getText();
         final int spotStart = text.indexOf("<" + SPOT_MARKER + ">");
@@ -113,13 +114,16 @@ class IntentionUsagePanel extends JPanel {
         markers.add(spotMarker);
       }
 
-      return null;
-    }).getResultSync();
-
-    myRangeBlinker.resetMarkers(markers);
-    if (!markers.isEmpty()) {
-      myRangeBlinker.startBlinking();
-    }
+      return markers;
+    }).doWhenDone((markers) -> {
+      uiAccess.give(() -> {
+        myRangeBlinker.resetMarkers(markers);
+        if (!markers.isEmpty()) {
+          myRangeBlinker.startBlinking();
+        }
+        otherResult.setDone();
+      });
+    });
   }
 
   public void dispose() {

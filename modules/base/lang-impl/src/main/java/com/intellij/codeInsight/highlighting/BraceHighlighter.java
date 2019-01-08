@@ -32,6 +32,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Alarm;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 public class BraceHighlighter implements StartupActivity {
@@ -39,8 +41,8 @@ public class BraceHighlighter implements StartupActivity {
   private final Alarm myAlarm = new Alarm();
 
   @Override
-  public void runActivity(@Nonnull final Project project) {
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return; // sorry, upsource
+  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull final Project project) {
+    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
     final EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
     CaretListener myCaretListener = new CaretAdapter() {
@@ -88,10 +90,13 @@ public class BraceHighlighter implements StartupActivity {
       @Override
       public void documentChanged(DocumentEvent e) {
         myAlarm.cancelAllRequests();
-        Editor[] editors = EditorFactory.getInstance().getEditors(e.getDocument(), project);
-        for (Editor editor : editors) {
-          updateBraces(editor, myAlarm);
-        }
+
+        uiAccess.give(() -> {
+          Editor[] editors = EditorFactory.getInstance().getEditors(e.getDocument(), project);
+          for (Editor editor : editors) {
+            updateBraces(editor, myAlarm);
+          }
+        });
       }
     };
     eventMulticaster.addDocumentListener(documentListener, project);
