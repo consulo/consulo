@@ -23,15 +23,18 @@ import com.intellij.openapi.module.ModuleNavigatable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class OpenModuleSettingsAction extends EditSourceAction {
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     if (!isModuleInProjectViewPopup(event)) {
       event.getPresentation().setEnabledAndVisible(false);

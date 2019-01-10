@@ -67,6 +67,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -141,8 +142,7 @@ public class FindUsagesManager {
     PsiElement[] primaryElements = myLastSearchInFileData.getPrimaryElements();
     PsiElement[] secondaryElements = myLastSearchInFileData.getSecondaryElements();
     if (primaryElements.length == 0) {//all elements have been invalidated
-      Messages.showMessageDialog(myProject, FindBundle.message("find.searched.elements.have.been.changed.error"),
-                                 FindBundle.message("cannot.search.for.usages.title"), Messages.getInformationIcon());
+      Messages.showMessageDialog(myProject, FindBundle.message("find.searched.elements.have.been.changed.error"), FindBundle.message("cannot.search.for.usages.title"), Messages.getInformationIcon());
       // SCR #10022
       //clearFindingNextUsageInFile();
       return false;
@@ -161,9 +161,7 @@ public class FindUsagesManager {
   }
 
 
-  private void initLastSearchElement(@Nonnull FindUsagesOptions findUsagesOptions,
-                                     @Nonnull PsiElement[] primaryElements,
-                                     @Nonnull PsiElement[] secondaryElements) {
+  private void initLastSearchElement(@Nonnull FindUsagesOptions findUsagesOptions, @Nonnull PsiElement[] primaryElements, @Nonnull PsiElement[] secondaryElements) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     myLastSearchInFileData = new PsiElement2UsageTargetComposite(primaryElements, secondaryElements, findUsagesOptions);
@@ -200,32 +198,30 @@ public class FindUsagesManager {
   }
 
   /**
-   *
    * @param psiElement
    * @param scopeFile
    * @param editor
    * @param showDialog
    * @param searchScope null means default (stored in options)
    */
-  public void findUsages(@Nonnull PsiElement psiElement,
-                         final PsiFile scopeFile,
-                         final FileEditor editor,
-                         boolean showDialog,
-                         @Nullable SearchScope searchScope) {
+  @RequiredUIAccess
+  public void findUsages(@Nonnull PsiElement psiElement, final PsiFile scopeFile, final FileEditor editor, boolean showDialog, @Nullable SearchScope searchScope) {
     FindUsagesHandler handler = getFindUsagesHandler(psiElement, false);
     if (handler == null) return;
 
     boolean singleFile = scopeFile != null;
     AbstractFindUsagesDialog dialog = handler.getFindUsagesDialog(singleFile, shouldOpenInNewTab(), mustOpenInNewTab());
     if (showDialog) {
-      if (!dialog.showAndGet()) {
-        return;
-      }
+      dialog.showAsync().doWhenDone(() -> findUsagesAfterDialog(scopeFile, editor, searchScope, handler, dialog));
     }
     else {
       dialog.close(DialogWrapper.OK_EXIT_CODE);
-    }
 
+      findUsagesAfterDialog(scopeFile, editor, searchScope, handler, dialog);
+    }
+  }
+
+  private void findUsagesAfterDialog(PsiFile scopeFile, FileEditor editor, @Nullable SearchScope searchScope, FindUsagesHandler handler, AbstractFindUsagesDialog dialog) {
     setOpenInNewTab(dialog.isShowInSeparateWindow());
 
     FindUsagesOptions findUsagesOptions = dialog.calcFindUsagesOptions();
@@ -392,7 +388,7 @@ public class FindUsagesManager {
         }
 
         PsiSearchHelper.SERVICE.getInstance(project).processRequests(optionsClone.fastTrack, ref -> {
-          ThrowableComputable<UsageInfo,RuntimeException> action = () -> {
+          ThrowableComputable<UsageInfo, RuntimeException> action = () -> {
             if (!ref.getElement().isValid()) return null;
             return new UsageInfo(ref);
           };
@@ -407,8 +403,7 @@ public class FindUsagesManager {
   }
 
   @Nonnull
-  private static PsiElement2UsageTargetAdapter[] convertToUsageTargets(@Nonnull Iterable<PsiElement> elementsToSearch,
-                                                                       @Nonnull final FindUsagesOptions findUsagesOptions) {
+  private static PsiElement2UsageTargetAdapter[] convertToUsageTargets(@Nonnull Iterable<PsiElement> elementsToSearch, @Nonnull final FindUsagesOptions findUsagesOptions) {
     final List<PsiElement2UsageTargetAdapter> targets = ContainerUtil.map(elementsToSearch, element -> convertToUsageTarget(element, findUsagesOptions));
     return targets.toArray(new PsiElement2UsageTargetAdapter[targets.size()]);
   }
@@ -433,8 +428,8 @@ public class FindUsagesManager {
     PsiElement2UsageTargetAdapter[] secondaryTargets = convertToUsageTargets(Arrays.asList(secondaryElements), findUsagesOptions);
     PsiElement2UsageTargetAdapter[] targets = ArrayUtil.mergeArrays(primaryTargets, secondaryTargets);
     Factory<UsageSearcher> factory = () -> createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, null);
-    UsageView usageView = myAnotherManager.searchAndShowUsages(targets, factory, !toSkipUsagePanelWhenOneUsage, true,
-                                                               createPresentation(primaryElements[0], findUsagesOptions, shouldOpenInNewTab()), null);
+    UsageView usageView =
+            myAnotherManager.searchAndShowUsages(targets, factory, !toSkipUsagePanelWhenOneUsage, true, createPresentation(primaryElements[0], findUsagesOptions, shouldOpenInNewTab()), null);
     myHistory.add(targets[0]);
     return usageView;
   }
@@ -617,9 +612,7 @@ public class FindUsagesManager {
   private static void showEditorHint(String message, final Editor editor) {
     JComponent component = HintUtil.createInformationLabel(message);
     final LightweightHint hint = new LightweightHint(component);
-    HintManagerImpl.getInstanceImpl()
-            .showEditorHint(hint, editor, HintManager.UNDER, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0,
-                            false);
+    HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, HintManager.UNDER, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0, false);
   }
 
   public static String getHelpID(PsiElement element) {
@@ -646,7 +639,7 @@ public class FindUsagesManager {
     PsiElement element = handler.getPsiElement();
     Project project = element.getProject();
     PsiFile file = element.getContainingFile();
-    if (file != null && ProjectFileIndex.SERVICE.getInstance(project).isInContent(file.getViewProvider().getVirtualFile())) {
+    if (file != null && ProjectFileIndex.getInstance(project).isInContent(file.getViewProvider().getVirtualFile())) {
       return GlobalSearchScope.projectScope(project);
     }
     return GlobalSearchScope.allScope(project);

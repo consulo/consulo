@@ -34,6 +34,10 @@ import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.usages.PsiElementUsageTarget;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageView;
+import consulo.application.CallChain;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 public class FindUsagesAction extends AnAction {
@@ -41,47 +45,44 @@ public class FindUsagesAction extends AnAction {
     setInjectedContext(true);
   }
 
+  @RequiredUIAccess
   @Override
-  public boolean startInTransaction() {
-    return true;
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
-    if (usageTargets == null) {
-      final Editor editor = e.getData(CommonDataKeys.EDITOR);
-      chooseAmbiguousTargetAndPerform(project, editor, new PsiElementProcessor<PsiElement>() {
-        @Override
-        public boolean execute(@Nonnull final PsiElement element) {
+    UIAccess uiAccess = UIAccess.current();
+
+    CallChain.first(uiAccess).linkWrite(() -> PsiDocumentManager.getInstance(project).commitAllDocuments()).linkUI(() -> {
+      UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
+      if (usageTargets == null) {
+        final Editor editor = e.getData(CommonDataKeys.EDITOR);
+        chooseAmbiguousTargetAndPerform(project, editor, element -> {
           startFindUsages(element);
           return false;
-        }
-      });
-    }
-    else {
-      UsageTarget target = usageTargets[0];
-      if (target instanceof PsiElementUsageTarget) {
-        PsiElement element = ((PsiElementUsageTarget)target).getElement();
-        if (element != null) {
-          startFindUsages(element);
+        });
+      }
+      else {
+        UsageTarget target = usageTargets[0];
+        if (target instanceof PsiElementUsageTarget) {
+          PsiElement element = ((PsiElementUsageTarget)target).getElement();
+          if (element != null) {
+            startFindUsages(element);
+          }
         }
       }
-    }
+    }).toss();
   }
 
   protected void startFindUsages(@Nonnull PsiElement element) {
     FindManager.getInstance(element.getProject()).findUsages(element);
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     FindUsagesInFileAction.updateFindUsagesAction(event);
   }
 

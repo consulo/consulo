@@ -30,6 +30,7 @@ public class OpenSourceUtil {
   private OpenSourceUtil() {
   }
 
+  @Deprecated
   public static void openSourcesFrom(DataContext context, boolean requestFocus) {
     navigate(requestFocus, context.getData(CommonDataKeys.NAVIGATABLE_ARRAY));
   }
@@ -45,10 +46,12 @@ public class OpenSourceUtil {
    * @param navigatables elements navigate to
    * @see OpenSourceUtil#navigate(boolean, com.intellij.pom.Navigatable...)
    */
+  @Deprecated
   public static void navigate(final Navigatable... navigatables) {
     navigate(true, navigatables);
   }
 
+  @Deprecated
   public static void navigate(final boolean requestFocus, final Navigatable... navigatables) {
     navigateAsync(requestFocus, navigatables).getResultSync();
   }
@@ -66,6 +69,7 @@ public class OpenSourceUtil {
     return AsyncResult.merge(results);
   }
 
+  @Deprecated
   public static void navigate(final boolean requestFocus, final boolean tryNotToScroll, final Navigatable... navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {

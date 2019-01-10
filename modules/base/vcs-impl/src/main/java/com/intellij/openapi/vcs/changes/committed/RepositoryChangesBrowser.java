@@ -32,6 +32,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -108,6 +109,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
   }
 
   private class MyEditSourceAction extends EditSourceAction {
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent event) {
       super.update(event);

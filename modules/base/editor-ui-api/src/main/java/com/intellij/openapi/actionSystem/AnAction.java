@@ -344,6 +344,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    * transaction-related assertions from actions in harmless dialogs like "Enter password" shown inside invokeLater.
    * @see com.intellij.openapi.application.TransactionGuard
    */
+  @Deprecated
   public boolean startInTransaction() {
     return false;
   }

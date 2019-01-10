@@ -28,6 +28,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,6 +43,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     myAfterRunnable = afterRunnable;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (!e.isFromActionToolbar()) {
@@ -72,6 +75,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     e.getPresentation().setEnabledAndVisible(true);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();

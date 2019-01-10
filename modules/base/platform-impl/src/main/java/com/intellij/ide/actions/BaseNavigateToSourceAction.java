@@ -20,6 +20,9 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.util.OpenSourceUtil;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware {
@@ -29,13 +32,17 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     myFocusEditor = focusEditor;
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    OpenSourceUtil.navigate(myFocusEditor, getNavigatables(dataContext));
+    OpenSourceUtil.navigateAsync(myFocusEditor, getNavigatables(dataContext));
   }
 
 
-  public void update(AnActionEvent event) {
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
     final Navigatable target = getTarget(dataContext);
     boolean enabled = target != null;
