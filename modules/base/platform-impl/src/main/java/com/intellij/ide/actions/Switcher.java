@@ -56,7 +56,6 @@ import com.intellij.ui.speedSearch.NameFilteringListModel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
@@ -81,6 +80,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -938,7 +938,7 @@ public class Switcher extends AnAction implements DumbAware {
         final AnAction action = gotoFile;
         SwingUtilities.invokeLater(() -> DataManager.getInstance().getDataContextFromFocus().doWhenDone(new Consumer<DataContext>() {
           @Override
-          public void consume(@Nonnull final DataContext context) {
+          public void accept(@Nonnull final DataContext context) {
             final DataContext dataContext = new DataContext() {
               @Nullable
               @Override

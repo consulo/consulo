@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.Consumer;
-import com.intellij.util.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +24,8 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class AsyncResult<T> extends ActionCallback {
   private static final Logger LOG = LoggerFactory.getLogger(AsyncResult.class);
@@ -140,7 +140,7 @@ public class AsyncResult<T> extends ActionCallback {
 
   @Nonnull
   public AsyncResult<T> doWhenDone(@Nonnull final Consumer<T> consumer) {
-    doWhenDone(() -> consumer.consume(myResult));
+    doWhenDone(() -> consumer.accept(myResult));
     return this;
   }
 
@@ -162,7 +162,7 @@ public class AsyncResult<T> extends ActionCallback {
   @Nonnull
   @SuppressWarnings("unchecked")
   public final AsyncResult<T> notify(@Nonnull final ActionCallback child) {
-    if(child instanceof AsyncResult) {
+    if (child instanceof AsyncResult) {
       return notify((AsyncResult<T>)child);
     }
     super.notify(child);
@@ -200,17 +200,9 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
-  public AsyncResult<T> retranslateTo(@Nonnull AsyncResult<T> other) {
-    doWhenDone((Consumer<T>)other::setDone);
-    doWhenRejected(other::reject);
-    doWhenRejectedWithThrowable(other::rejectWithThrowable);
-    return this;
-  }
-
-  @Nonnull
   public final AsyncResult<T> doWhenProcessed(@Nonnull final Consumer<T> consumer) {
     doWhenDone(consumer);
-    doWhenRejected((result, error) -> consumer.consume(result));
+    doWhenRejected((result, error) -> consumer.accept(result));
     return this;
   }
 
@@ -235,10 +227,10 @@ public class AsyncResult<T> extends ActionCallback {
     }
 
     @Override
-    public void consume(Result result) {
+    public void accept(Result result) {
       SubResult v;
       try {
-        v = doneHandler.fun(result);
+        v = doneHandler.apply(result);
       }
       catch (Throwable e) {
         subResult.reject(e.getMessage());
@@ -259,9 +251,9 @@ public class AsyncResult<T> extends ActionCallback {
     }
 
     @Override
-    public void consume(Result result) {
+    public void accept(Result result) {
       try {
-        doneHandler.consume(result);
+        doneHandler.accept(result);
       }
       catch (Throwable e) {
         subResult.reject(e.getMessage());

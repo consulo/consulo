@@ -21,6 +21,8 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
@@ -178,12 +180,14 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     myUseSafeWrite = useSafeWrite;
   }
 
+  @RequiredWriteAction
   @Nullable
   @Override
   public GeneralSettings getState() {
     return this;
   }
 
+  @RequiredReadAction
   @Override
   public void loadState(GeneralSettings state) {
     XmlSerializerUtil.copyBean(state, this);

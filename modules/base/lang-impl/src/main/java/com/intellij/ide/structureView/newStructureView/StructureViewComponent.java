@@ -70,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class StructureViewComponent extends SimpleToolWindowPanel implements TreeActionsOwner, DataProvider, StructureView.Scrollable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.structureView.newStructureView.StructureViewComponent");
@@ -481,7 +482,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   public boolean select(final Object element, final boolean requestFocus) {
     myAbstractTreeBuilder.getReady(this).doWhenDone(() -> expandPathToElement(element).doWhenDone(new Consumer<AbstractTreeNode>() {
       @Override
-      public void consume(AbstractTreeNode abstractTreeNode) {
+      public void accept(AbstractTreeNode abstractTreeNode) {
         myAbstractTreeBuilder.select(abstractTreeNode, () -> {
           if (requestFocus) {
             IdeFocusManager.getInstance(myProject).requestFocus(myAbstractTreeBuilder.getTree(), false);

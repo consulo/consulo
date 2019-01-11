@@ -34,7 +34,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.content.*;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
@@ -42,6 +41,7 @@ import consulo.ui.shared.Rectangle2D;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * User: anna
@@ -196,7 +196,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
 
     DataManager.getInstance().getDataContextFromFocus().doWhenDone(new Consumer<DataContext>() {
       @Override
-      public void consume(@Nonnull DataContext dataContext) {
+      public void accept(@Nonnull DataContext dataContext) {
         if (!myProject.isOpen()) return;
         updateComponentInner(dataContext);
       }

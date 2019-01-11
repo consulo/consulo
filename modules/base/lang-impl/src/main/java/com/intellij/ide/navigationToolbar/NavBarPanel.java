@@ -757,7 +757,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     myUpdateQueue.rebuildUi();
     if (editor == null) {
       myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
-      getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)relativePoint -> {
+      getHintContainerShowPoint().doWhenDone(relativePoint -> {
         final Component owner = focusManager.getFocusOwner();
         final Component cmp = relativePoint.getComponent();
         if (cmp instanceof JComponent && cmp.isShowing()) {
@@ -768,7 +768,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     }
     else {
       myHintContainer = editor.getContentComponent();
-      getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)rp -> {
+      getHintContainerShowPoint().doWhenDone(rp -> {
         Point p = rp.getPointOn(myHintContainer).getPoint();
         final HintHint hintInfo = new HintHint(editor, p);
         HintManagerImpl.getInstanceImpl().showEditorHint(myHint, editor, p, HintManager.HIDE_BY_ESCAPE, 0, true, hintInfo);
@@ -791,7 +791,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
           myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(DataManager.getInstance().getDataContext(myContextComponent));
         }
         else {
-          DataManager.getInstance().getDataContextFromFocus().doWhenDone((Consumer<DataContext>)dataContext -> {
+          DataManager.getInstance().getDataContextFromFocus().doWhenDone(dataContext -> {
             myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
             myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(DataManager.getInstance().getDataContext(myContextComponent));
           });

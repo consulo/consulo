@@ -36,12 +36,10 @@ public final class CallChain {
   public static final class Link<OldValue, NewValue> {
     private CallChain myCallChain;
 
-    private boolean myUI;
     private Function<OldValue, AsyncResult<NewValue>> myTask;
 
-    private Link(CallChain callChain, boolean ui, Function<OldValue, AsyncResult<NewValue>> task) {
+    private Link(CallChain callChain, Function<OldValue, AsyncResult<NewValue>> task) {
       myCallChain = callChain;
-      myUI = ui;
       myTask = task;
 
       myCallChain.myLinks.add(this);
@@ -89,7 +87,7 @@ public final class CallChain {
         throw new IllegalArgumentException("started already");
       }
 
-      return new Link<>(myCallChain, false, function);
+      return new Link<>(myCallChain, function);
     }
 
     @Nonnull
@@ -153,7 +151,7 @@ public final class CallChain {
   @Nonnull
   public static Link<Void, Void> first(@Nullable UIAccess uiAccess) {
     CallChain callChain = new CallChain(uiAccess);
-    return new Link<>(callChain, false, (f) -> AsyncResult.resolved());
+    return new Link<>(callChain, (f) -> AsyncResult.resolved());
   }
 
   private final UIAccess myUIAccess;
