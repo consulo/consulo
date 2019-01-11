@@ -23,7 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.Layout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import consulo.ui.internal.VaadinWrapper;
+import consulo.ui.web.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
 import javax.annotation.Nonnull;
 

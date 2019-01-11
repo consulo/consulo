@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.Project;
 import consulo.ui.*;
-import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.web.internal.WGwtRootPanelImpl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

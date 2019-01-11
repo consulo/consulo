@@ -23,7 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
-import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.web.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;

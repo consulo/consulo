@@ -15,6 +15,7 @@
  */
 package com.intellij.idea;
 
+import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.idea.starter.DesktopApplicationPostStarter;
 import com.intellij.idea.starter.DesktopApplicationStarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -28,6 +29,8 @@ public class MainImpl {
    * Called from PluginManager via reflection.
    */
   protected static void start(String[] args)  {
+    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
+
     StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new DesktopApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
 

@@ -24,7 +24,7 @@ import com.vaadin.ui.AbstractComponentContainer;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.internal.VaadinWrapper;
+import consulo.ui.web.internal.VaadinWrapper;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;

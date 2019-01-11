@@ -16,7 +16,6 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
@@ -25,7 +24,9 @@ import com.intellij.openapi.application.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.*;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
@@ -48,7 +49,6 @@ import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -59,8 +59,9 @@ import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.start.CommandLineArgs;
-import consulo.ui.AWTUIAccessImpl;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.desktop.internal.AWTUIAccessImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import sun.awt.AWTAccessor;
@@ -88,9 +89,6 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
 
   private volatile boolean myDisposeInProgress;
 
-  @NonNls
-  private static final String WAS_EVER_SHOWN = "was.ever.shown";
-
   private static final ModalityState ANY = new ModalityState() {
     @Override
     public boolean dominates(@Nonnull ModalityState anotherState) {
@@ -103,10 +101,6 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
       return "ANY";
     }
   };
-
-  static {
-    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
-  }
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(splashRef);
@@ -183,7 +177,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
       for (final Project project : manager.getOpenProjects()) {
         try {
           uiAccess.giveAndWait(() -> {
-            CommandProcessor.getInstance().executeCommandAsync(project, (result, ui) -> {
+            CommandProcessor.getInstance().executeCommandAsync(project, (result) -> {
               AccessRule.writeAsync(() -> {
                 if (!manager.closeProject(project, true, true, checkCanCloseProject, uiAccess).getResultSync()) {
                   canClose[0] = false;

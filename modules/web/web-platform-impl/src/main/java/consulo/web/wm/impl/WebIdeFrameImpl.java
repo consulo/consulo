@@ -27,7 +27,7 @@ import consulo.application.AccessRule;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.web.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Rectangle2D;
 import consulo.web.application.WebApplication;
 
