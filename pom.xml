@@ -46,10 +46,11 @@
 
     <module>jre9-stub</module>
 
-    <module>modules/base/annotations</module>
+    <module>modules/autonomic/async-api</module>
+    <module>modules/autonomic/annotations</module>
+
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
-    <module>modules/base/async-api</module>
     <module>modules/base/buildin-server-impl</module>
     <module>modules/base/core-api</module>
     <module>modules/base/core-impl</module>
