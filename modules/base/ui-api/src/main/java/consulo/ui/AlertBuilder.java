@@ -15,61 +15,80 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.util.AsyncResult;
+import consulo.ui.util.TraverseUtil;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 01-Oct-17
  */
-public interface AlertBuilder {
+public interface AlertBuilder<V> {
+  static int OK = 0;
+  static int CANCEL = 1;
+  static int APPLY = 2;
+  static int YES = 3;
+  static int NO = 4;
+
+  /**
+   * @return new alert builder, with default title - and default type *info*
+   */
   @Nonnull
-  static AlertBuilder createInfo() {
-    return UIInternal.get()._Alerts_builder();
+  static <L> AlertBuilder<L> create() {
+    return UIInternal.get()._Alerts_create();
   }
 
   @Nonnull
-  static AlertBuilder createError() {
-    return UIInternal.get()._Alerts_builder();
-  }
+  AlertBuilder<V> asWarning();
 
   @Nonnull
-  static AlertBuilder createWarning() {
-    return UIInternal.get()._Alerts_builder();
-  }
+  AlertBuilder<V> asError();
+
+  AlertBuilder<V> button(int buttonId, @Nonnull Supplier<V> valueGetter);
 
   @Nonnull
-  default AlertBuilder ok() {
-    return ok(() -> {
-    });
-  }
-
-  @Nonnull
-  AlertBuilder ok(@Nonnull Runnable runnable);
-
-  @Nonnull
-  default AlertBuilder button(@Nonnull String text) {
-    return button(text, () -> {
-    });
-  }
-
-  @Nonnull
-  AlertBuilder button(@Nonnull String text, @Nonnull Runnable runnable);
+  AlertBuilder<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter);
 
   /**
    * Mark last added button as default (enter will hit it)
    */
   @Nonnull
-  AlertBuilder markDefault();
+  AlertBuilder<V> markDefault();
+
+  /**
+   * Default title is application name
+   */
+  @Nonnull
+  AlertBuilder<V> title(@Nonnull String text);
 
   @Nonnull
-  AlertBuilder title(@Nonnull String text);
-
-  @Nonnull
-  AlertBuilder text(@Nonnull String text);
+  AlertBuilder<V> text(@Nonnull String text);
 
   /**
    * Does not block UI thread
    */
   @RequiredUIAccess
-  void show();
+  @Nonnull
+  default AsyncResult<V> show(@Nullable Component component) {
+    return show(TraverseUtil.getWindowAncestor(component));
+  }
+
+  /**
+   * Does not block UI thread
+   */
+  @RequiredUIAccess
+  @Nonnull
+  default AsyncResult<V> show() {
+    return show(null);
+  }
+
+  /**
+   * Does not block UI thread
+   */
+  @RequiredUIAccess
+  @Nonnull
+  AsyncResult<V> show(@Nullable Window component);
 }
