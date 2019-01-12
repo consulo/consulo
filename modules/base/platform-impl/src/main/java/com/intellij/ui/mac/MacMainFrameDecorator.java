@@ -22,11 +22,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.wm.impl.IdeFrameDecorator;
 import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
+import com.intellij.openapi.wm.impl.IdeFrameDecorator;
 import com.intellij.ui.CustomProtocolHandler;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
@@ -349,9 +349,9 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   @Nonnull
   @Override
-  public ActionCallback toggleFullScreen(final boolean state) {
-    if (!SystemInfo.isMacOSLion || myFrame == null || myInFullScreen == state) return ActionCallback.REJECTED;
-    final ActionCallback callback = new ActionCallback();
+  public AsyncResult<Void> toggleFullScreen(final boolean state) {
+    if (!SystemInfo.isMacOSLion || myFrame == null || myInFullScreen == state) return AsyncResult.rejected();
+    final AsyncResult<Void> callback = new AsyncResult<>();
     myDispatcher.addListener(new FSAdapter() {
       @Override
       public void windowExitedFullScreen(AppEvent.FullScreenEvent event) {

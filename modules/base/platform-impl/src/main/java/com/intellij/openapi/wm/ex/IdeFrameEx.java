@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.wm.ex;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFrame;
+
 import javax.annotation.Nonnull;
 
 public interface IdeFrameEx extends IdeFrame {
@@ -28,8 +29,8 @@ public interface IdeFrameEx extends IdeFrame {
   }
 
   @Nonnull
-  default ActionCallback toggleFullScreen(boolean state) {
-    return ActionCallback.REJECTED;
+  default AsyncResult<Void> toggleFullScreen(boolean state) {
+    return AsyncResult.rejected();
   }
 
   default void updateView() {

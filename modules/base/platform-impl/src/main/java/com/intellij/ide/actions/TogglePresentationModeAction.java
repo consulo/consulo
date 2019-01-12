@@ -28,18 +28,18 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
@@ -82,7 +82,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
 
     tweakUIDefaults(settings, inPresentation);
 
-    ActionCallback callback = project == null ? ActionCallback.DONE : tweakFrameFullScreen(project, inPresentation);
+    AsyncResult<Void> callback = project == null ? AsyncResult.resolved() : tweakFrameFullScreen(project, inPresentation);
     callback.doWhenProcessed(() -> {
       tweakEditorAndFireUpdateUI(settings, inPresentation);
 
@@ -90,7 +90,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     });
   }
 
-  private static ActionCallback tweakFrameFullScreen(Project project, boolean inPresentation) {
+  private static AsyncResult<Void> tweakFrameFullScreen(Project project, boolean inPresentation) {
     Window window = DesktopIdeFrameImpl.getActiveFrame();
     if (window instanceof IdeFrameEx) {
       IdeFrameEx frame = (IdeFrameEx)window;
@@ -106,7 +106,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
         }
       }
     }
-    return ActionCallback.DONE;
+    return AsyncResult.resolved();
   }
 
   private static void tweakEditorAndFireUpdateUI(UISettings settings, boolean inPresentation) {

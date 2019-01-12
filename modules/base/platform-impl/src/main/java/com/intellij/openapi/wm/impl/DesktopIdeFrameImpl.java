@@ -562,9 +562,8 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
 
   @Nonnull
   @Override
-  public ActionCallback toggleFullScreen(boolean state) {
-
-    if (temporaryFixForIdea156004(state)) return ActionCallback.DONE;
+  public AsyncResult<Void> toggleFullScreen(boolean state) {
+    if (temporaryFixForIdea156004(state)) return AsyncResult.resolved();
 
     if (myFrameDecorator != null) {
       return myFrameDecorator.toggleFullScreen(state);
@@ -574,7 +573,7 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
       ((DesktopIdeFrameImpl)frame).updateBorder();
     }
 
-    return ActionCallback.DONE;
+    return AsyncResult.resolved();
   }
 
   private boolean temporaryFixForIdea156004(final boolean state) {

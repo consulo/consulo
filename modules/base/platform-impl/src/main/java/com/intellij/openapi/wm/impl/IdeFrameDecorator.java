@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.Patches;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
@@ -63,7 +63,7 @@ public abstract class IdeFrameDecorator implements Disposable {
   public abstract boolean isInFullScreen();
 
   @Nonnull
-  public abstract ActionCallback toggleFullScreen(boolean state);
+  public abstract AsyncResult<Void> toggleFullScreen(boolean state);
 
   @Override
   public void dispose() {
@@ -94,11 +94,11 @@ public abstract class IdeFrameDecorator implements Disposable {
 
     @Nonnull
     @Override
-    public ActionCallback toggleFullScreen(boolean state) {
-      if (myFrame == null) return ActionCallback.REJECTED;
+    public AsyncResult<Void> toggleFullScreen(boolean state) {
+      if (myFrame == null) return AsyncResult.rejected();
 
       GraphicsDevice device = ScreenUtil.getScreenDevice(myFrame.getBounds());
-      if (device == null) return ActionCallback.REJECTED;
+      if (device == null) return AsyncResult.rejected();
 
       try {
         myFrame.getRootPane().putClientProperty(ScreenUtil.DISPOSE_TEMPORARY, Boolean.TRUE);
@@ -123,7 +123,7 @@ public abstract class IdeFrameDecorator implements Disposable {
 
         notifyFrameComponents(state);
       }
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     }
   }
 
@@ -151,12 +151,12 @@ public abstract class IdeFrameDecorator implements Disposable {
 
     @Nonnull
     @Override
-    public ActionCallback toggleFullScreen(boolean state) {
+    public AsyncResult<Void> toggleFullScreen(boolean state) {
       if (myFrame != null) {
         myRequestedState = state;
         X11UiUtil.toggleFullScreenMode(myFrame);
       }
-      return ActionCallback.DONE;
+      return AsyncResult.resolved();
     }
   }
 }
