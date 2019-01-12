@@ -17,13 +17,11 @@ package com.intellij.ui;
 
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -38,14 +36,14 @@ import consulo.ui.UIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
-import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 /**
  * @author peter
  */
+@Singleton
 public class EditorNotificationsImpl extends EditorNotifications {
   private final MergingUpdateQueue myUpdateMerger;
   private final Project myProject;

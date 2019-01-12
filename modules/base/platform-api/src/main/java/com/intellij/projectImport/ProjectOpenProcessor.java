@@ -47,11 +47,6 @@ public abstract class ProjectOpenProcessor {
 
   public abstract boolean canOpenProject(@Nonnull File file);
 
-  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
-                                 @Nonnull VirtualFile virtualFile,
-                                 @Nullable Project projectToClose,
-                                 boolean forceOpenInNewFrame,
-                                 @Nonnull UIAccess uiAccess) {
-    throw new AbstractMethodError();
-  }
+  @Nonnull
+  public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess);
 }

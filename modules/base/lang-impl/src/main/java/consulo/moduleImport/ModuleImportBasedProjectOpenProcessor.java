@@ -20,7 +20,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.ImportModuleAction;
 import com.intellij.ide.impl.NewProjectUtil;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -70,23 +69,21 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
   }
 
   @Override
-  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
-                                 @Nonnull VirtualFile virtualFile,
-                                 @Nullable Project projectToClose,
-                                 boolean forceOpenInNewFrame,
-                                 @Nonnull UIAccess uiAccess) {
-    Project project = doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
-    if(project != null) {
+  public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess) {
+    AsyncResult<Project> asyncResult = new AsyncResult<>();
+    Project project = doOpenProject(virtualFile);
+    if (project != null) {
       asyncResult.setDone(project);
     }
     else {
       asyncResult.reject("project not imported");
     }
+    return asyncResult;
   }
 
   @RequiredUIAccess
   @Nullable
-  public Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
+  public Project doOpenProject(@Nonnull VirtualFile virtualFile) {
     String pathToBeImported = myProvider.getPathToBeImported(virtualFile);
 
     final String dotIdeaFilePath = pathToBeImported + File.separator + Project.DIRECTORY_STORE_FOLDER;
@@ -99,11 +96,9 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
     if (!ApplicationManager.getApplication().isHeadlessEnvironment() && dotIdeaFile.exists()) {
       String existingName = "an existing project";
 
-      int result =
-              Messages.showYesNoCancelDialog(projectToClose, IdeBundle.message("project.import.open.existing", existingName, pathToOpen, virtualFile.getName()),
-                                             IdeBundle.message("title.open.project"), IdeBundle.message("project.import.open.existing.openExisting"),
-                                             IdeBundle.message("project.import.open.existing.reimport"), CommonBundle.message("button.cancel"),
-                                             Messages.getQuestionIcon());
+      int result = Messages.showYesNoCancelDialog(IdeBundle.message("project.import.open.existing", existingName, pathToOpen, virtualFile.getName()), IdeBundle.message("title.open.project"),
+                                                  IdeBundle.message("project.import.open.existing.openExisting"), IdeBundle.message("project.import.open.existing.reimport"),
+                                                  CommonBundle.message("button.cancel"), Messages.getQuestionIcon());
       if (result == Messages.CANCEL) return null;
       shouldOpenExisting = result == Messages.OK;
     }
@@ -134,10 +129,8 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
       projectToOpen = NewProjectUtil.createFromWizard(dialog, null, false);
     }
 
-    if (!forceOpenInNewFrame) {
-      NewProjectUtilPlatform.closePreviousProject(projectToClose);
-    }
     ProjectUtil.updateLastProjectLocation(pathToOpen);
+
     ProjectManagerEx.getInstanceEx().openProject(projectToOpen);
 
     return projectToOpen;

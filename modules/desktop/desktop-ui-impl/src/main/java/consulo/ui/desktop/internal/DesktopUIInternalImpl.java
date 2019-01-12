@@ -122,7 +122,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public <T> AlertBuilder<T> _Alerts_create() {
-    return null;
+    return new DesktopAlertBuilder<>();
   }
 
   @Override

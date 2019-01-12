@@ -27,11 +27,11 @@ import java.util.function.Supplier;
  * @since 01-Oct-17
  */
 public interface AlertBuilder<V> {
-  static int OK = 0;
-  static int CANCEL = 1;
-  static int APPLY = 2;
-  static int YES = 3;
-  static int NO = 4;
+  static int OK = 1000;
+  static int CANCEL = 1001;
+  static int APPLY = 1002;
+  static int YES = 1003;
+  static int NO = 1004;
 
   /**
    * @return new alert builder, with default title - and default type *info*
@@ -47,6 +47,10 @@ public interface AlertBuilder<V> {
   @Nonnull
   AlertBuilder<V> asError();
 
+  @Nonnull
+  AlertBuilder<V> asQuestion();
+
+  @Nonnull
   AlertBuilder<V> button(int buttonId, @Nonnull Supplier<V> valueGetter);
 
   @Nonnull

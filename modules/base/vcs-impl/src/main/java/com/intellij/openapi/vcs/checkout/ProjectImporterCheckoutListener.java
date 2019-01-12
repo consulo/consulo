@@ -44,7 +44,7 @@ public class ProjectImporterCheckoutListener implements CheckoutListener {
                                               VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
             if (rc == Messages.YES) {
               AsyncResult<Project> result = new AsyncResult<>();
-              openProcessor.doOpenProjectAsync(result, virtualFile, project, false, UIAccess.current());
+              openProcessor.doOpenProjectAsync(virtualFile, UIAccess.current()).notify(result);
               result.getResultSync();
             }
             return true;

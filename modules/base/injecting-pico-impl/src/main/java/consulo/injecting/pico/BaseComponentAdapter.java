@@ -16,6 +16,7 @@
 package consulo.injecting.pico;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import consulo.injecting.PostInjectListener;
@@ -124,6 +125,9 @@ public class BaseComponentAdapter<T> implements ComponentAdapter {
         catch (Throwable t) {
           LOGGER.error("Problem with after inject: " + myImplementationKey.getTargetClass().getName(), t);
         }
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
       }
       catch (Throwable t) {
         LOGGER.error("Problem with initializing: " + myImplementationKey.getTargetClass().getName(), t);

@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.platform.PlatformProjectOpenProcessor;
+import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.RequiredUIAccess;
@@ -139,7 +139,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
 
     AsyncResult<Project> result = new AsyncResult<>();
-    PlatformProjectOpenProcessor.getInstance().doOpenProjectAsync(result, baseDir, null, false, UIAccess.current());
+    DefaultProjectOpenProcessor.getInstance().doOpenProjectAsync(baseDir, UIAccess.current()).notify(result);
     result.doWhenProcessed(newProject -> NewProjectUtilPlatform.doCreate(projectPanel, newProject, baseDir));
   }
 }

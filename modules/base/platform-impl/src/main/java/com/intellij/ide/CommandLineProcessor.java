@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.platform.PlatformProjectOpenProcessor;
+import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.CommandLineArgs;
@@ -86,7 +86,7 @@ public class CommandLineProcessor {
     final Project[] projects = ProjectManager.getInstance().getOpenProjects();
     if (projects.length == 0) {
       AsyncResult<Project> result = new AsyncResult<>();
-      PlatformProjectOpenProcessor.getInstance().doOpenProjectAsync(result, virtualFile, null, false, UIAccess.current());
+      DefaultProjectOpenProcessor.getInstance().doOpenProjectAsync(virtualFile, UIAccess.current()).notify(result);
       return result.getResultSync();
     }
     else {
