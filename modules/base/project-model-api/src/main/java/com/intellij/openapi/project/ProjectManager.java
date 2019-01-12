@@ -18,17 +18,13 @@ package com.intellij.openapi.project;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredWriteAction;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 
 /**
  * Provides project management.
@@ -99,22 +95,6 @@ public abstract class ProjectManager {
   public Project getDefaultProject() {
     return DefaultProjectFactory.getInstance().getDefaultProject();
   }
-
-  /**
-   * Loads and opens a project with the specified path. If the project file is from an older IDEA
-   * version, prompts the user to convert it to the latest version. If the project file is from a
-   * newer version, shows a message box telling the user that the load failed.
-   *
-   * @param filePath the .ipr file path
-   * @return the opened project file, or null if the project failed to load because of version mismatch
-   * or because the project is already open.
-   * @throws IOException          if the project file was not found or failed to read
-   * @throws JDOMException        if the project file contained invalid XML
-   * @throws InvalidDataException if the project file contained invalid data
-   */
-  @Nullable
-  @RequiredUIAccess
-  public abstract Project loadAndOpenProject(@Nonnull String filePath) throws IOException, JDOMException, InvalidDataException;
 
   /**
    * Closes the specified project.

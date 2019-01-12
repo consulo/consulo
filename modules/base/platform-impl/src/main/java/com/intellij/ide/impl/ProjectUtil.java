@@ -112,7 +112,7 @@ public class ProjectUtil {
    */
   @RequiredUIAccess
   public static boolean closeAndDispose(@Nonnull final Project project) {
-    return ProjectManagerEx.getInstanceEx().closeAndDispose(project).getResultSync();
+    throw new UnsupportedOperationException("dead method");
   }
 
   @Deprecated
@@ -135,7 +135,7 @@ public class ProjectUtil {
   @Deprecated
   @DeprecationInfo("Use #openAsync()")
   public static Project open(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("dead method");
   }
 
   /**

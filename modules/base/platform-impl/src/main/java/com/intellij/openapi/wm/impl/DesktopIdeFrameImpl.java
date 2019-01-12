@@ -18,7 +18,6 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.diagnostic.IdeMessagePanel;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.impl.IdeNotificationArea;
@@ -33,6 +32,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
@@ -48,6 +48,8 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.application.AccessRule;
+import consulo.application.CallChain;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.UIAccess;
@@ -98,7 +100,7 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
     final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
 
     size.width = Math.min(1400, size.width - 20);
-    size.height= Math.min(1000, size.height - 40);
+    size.height = Math.min(1000, size.height - 40);
 
     setSize(size);
     setLocationRelativeTo(null);
@@ -179,9 +181,7 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
     }
   }
 
-  protected IdeRootPane createRootPane(ActionManager actionManager,
-                                       DataManager dataManager,
-                                       Application application) {
+  protected IdeRootPane createRootPane(ActionManager actionManager, DataManager dataManager, Application application) {
     return new IdeRootPane(actionManager, dataManager, application, this);
   }
 
@@ -230,27 +230,30 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
 
   private void setupCloseAction() {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    addWindowListener(
-            new WindowAdapter() {
-              @Override
-              public void windowClosing(@Nonnull final WindowEvent e) {
-                if (isTemporaryDisposed())
-                  return;
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(@Nonnull final WindowEvent e) {
+        if (isTemporaryDisposed()) return;
 
-                final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                if (openProjects.length > 1 || openProjects.length == 1 && SystemInfo.isMacSystemMenu) {
-                  if (myProject != null && myProject.isOpen()) {
-                    ProjectUtil.closeAndDispose(myProject);
-                  }
-                  ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectFrameClosed();
-                  WelcomeFrame.showIfNoProjectOpened();
-                }
-                else {
-                  Application.get().exit();
-                }
-              }
+        final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        if (openProjects.length > 1 || openProjects.length == 1 && SystemInfo.isMacSystemMenu) {
+          UIAccess current = UIAccess.current();
+          CallChain.first(current).linkAsync(() -> {
+            if (myProject != null && myProject.isOpen()) {
+              return AccessRule.writeAsyncWrapped(() -> ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(myProject, current));
             }
-    );
+
+            return AsyncResult.resolved();
+          }).linkUI(() -> {
+            Application.get().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectFrameClosed();
+            WelcomeFrame.showIfNoProjectOpened();
+          }).toss();
+        }
+        else {
+          Application.get().exit();
+        }
+      }
+    });
   }
 
   @Override
@@ -262,7 +265,8 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
   public void setTitle(final String title) {
     if (myUpdatingTitle) {
       super.setTitle(title);
-    } else {
+    }
+    else {
       myTitle = title;
     }
 
@@ -307,7 +311,8 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
       if (SystemInfo.isMac) {
         boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
         builder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
-      } else {
+      }
+      else {
         builder.append(title).append(fileTitle).append(applicationName);
       }
 

@@ -72,13 +72,6 @@ public abstract class ProjectManagerEx extends ProjectManager {
   @RequiredUIAccess
   public abstract Collection<Project> closeTestProject(@Nonnull Project project);
 
-  // returns true on success
-  @RequiredUIAccess
-  @Deprecated
-  public AsyncResult<Boolean> closeAndDispose(@Nonnull Project project) {
-    return closeAndDisposeAsync(project, UIAccess.current());
-  }
-
   @Nonnull
   @RequiredWriteAction
   public abstract AsyncResult<Boolean> closeAndDisposeAsync(@Nonnull Project project, UIAccess uiAccess);
@@ -88,7 +81,4 @@ public abstract class ProjectManagerEx extends ProjectManager {
   public Project createProject(String name, String path) {
     return newProject(name, path, true, false);
   }
-
-  @Nullable
-  public abstract Project convertAndLoadProject(String filePath) throws IOException;
 }

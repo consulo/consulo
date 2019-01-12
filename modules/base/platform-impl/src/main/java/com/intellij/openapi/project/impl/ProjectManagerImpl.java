@@ -465,58 +465,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     return !(indicator instanceof NonCancelableSection);
   }
 
-  @RequiredUIAccess
-  @Override
-  public Project loadAndOpenProject(@Nonnull final String filePath) throws IOException {
-    final Project project = convertAndLoadProject(filePath);
-    if (project == null) {
-      WelcomeFrame.showIfNoProjectOpened();
-      return null;
-    }
-
-    if (!openProject(project)) {
-      WelcomeFrame.showIfNoProjectOpened();
-      ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(project));
-    }
-
-    return project;
-  }
-
-  /**
-   * Converts and loads the project at the specified path.
-   *
-   * @param filePath the path to open the project.
-   * @return the project, or null if the user has cancelled opening the project.
-   */
-  @Override
-  @Nullable
-  public Project convertAndLoadProject(String filePath) throws IOException {
-    final String fp = toCanonicalName(filePath);
-    final ConversionResult conversionResult = ConversionService.getInstance().convert(fp);
-    if (conversionResult.openingIsCanceled()) {
-      return null;
-    }
-
-    final Project project;
-    try {
-      project = loadProjectWithProgress(filePath);
-      if (project == null) return null;
-    }
-    catch (IOException e) {
-      LOG.info(e);
-      throw e;
-    }
-    catch (Throwable t) {
-      LOG.info(t);
-      throw new IOException(t);
-    }
-
-    if (!conversionResult.conversionNotNeeded()) {
-      StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
-    }
-    return project;
-  }
-
   /**
    * Opens the project at the specified path.
    *

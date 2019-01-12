@@ -28,6 +28,7 @@ import consulo.annotations.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -80,6 +81,19 @@ public final class AccessRule {
     });
   }
 
+  /**
+   * Run action in write thread. Return async result from action (which mean that async result maybe finished after write action)
+   */
+  @Nonnull
+  public static <T> AsyncResult<T> writeAsyncWrapped(@RequiredWriteAction @Nonnull Supplier<AsyncResult<T>> supplier) {
+    AsyncResult<T> result = new AsyncResult<>();
+    writeAsync(() -> supplier.get().notify(result));
+    return result;
+  }
+
+  /**
+   * Run action in write thread. Return async result which mean write action finished
+   */
   @SuppressWarnings("deprecation")
   @Nonnull
   public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableComputable<T, Throwable> action) {
