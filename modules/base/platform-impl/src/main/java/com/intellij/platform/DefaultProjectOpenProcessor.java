@@ -54,6 +54,7 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
     return "<b>Consulo</b> project";
   }
 
+  @Nonnull
   @Override
   public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile baseDir, @Nonnull UIAccess uiAccess) {
     return ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess);

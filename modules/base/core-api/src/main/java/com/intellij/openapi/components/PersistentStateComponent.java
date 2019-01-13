@@ -19,6 +19,7 @@ package com.intellij.openapi.components;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.components.PersistentStateComponentWithUIState;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +29,8 @@ import javax.annotation.Nullable;
  * <p>
  * See <a href="http://confluence.jetbrains.net/display/IDEADEV/Persisting+State+of+Components">JetBrains WIKI</a>
  * for detailed description.
+ *
+ * @see PersistentStateComponentWithUIState
  */
 public interface PersistentStateComponent<T> {
   /**

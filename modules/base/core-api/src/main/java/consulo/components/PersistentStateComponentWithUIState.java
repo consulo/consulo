@@ -30,6 +30,7 @@ public interface PersistentStateComponentWithUIState<S, UIState> extends Persist
   @RequiredUIAccess
   UIState getStateFromUI();
 
+  @RequiredWriteAction
   @Nullable
   @Override
   default S getState() {
