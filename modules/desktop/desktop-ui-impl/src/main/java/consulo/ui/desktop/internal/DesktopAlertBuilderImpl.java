@@ -15,19 +15,18 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.CommonBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.AlertBuilder;
+import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
+import consulo.ui.impl.BaseAlertBuilder;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -41,9 +40,7 @@ import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -51,48 +48,12 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2019-01-12
  */
-class DesktopAlertBuilder<V> implements AlertBuilder<V> {
-  enum Type {
-    INFO(UIUtil::getInformationIcon),
-    WARN(UIUtil::getWarningIcon),
-    ERROR(UIUtil::getErrorIcon),
-    QUESTION(UIUtil::getQuestionIcon);
-
-    private Supplier<Icon> myIcon;
-
-    Type(Supplier<Icon> icon) {
-      myIcon = icon;
-    }
-  }
-
-  class ButtonImpl {
-    private int myButtonId;
-    private String myText;
-    private Supplier<V> myValue;
-    private boolean myDefault;
-
-    ButtonImpl(int buttonId, String text, Supplier<V> value) {
-      myButtonId = buttonId;
-      myText = text;
-      myValue = value;
-    }
-  }
-
+class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
   class DialogImpl extends DialogWrapper implements Window {
-
     private V mySelectValue;
 
     DialogImpl(boolean canBeParent) {
       super(canBeParent);
-
-
-      setTitle(myTitle);
-
-      init();
-    }
-
-    protected DialogImpl(@Nonnull Component parent, boolean canBeParent) {
-      super(parent, canBeParent);
 
       setTitle(myTitle);
 
@@ -136,7 +97,7 @@ class DesktopAlertBuilder<V> implements AlertBuilder<V> {
     protected JComponent doCreateCenterPanel() {
       JPanel panel = new JPanel(new BorderLayout(15, 0));
 
-      Icon icon = myType.myIcon.get();
+      Icon icon = getIcon();
       if (icon != null) {
         JLabel iconLabel = new JLabel(icon);
         Container container = new Container();
@@ -209,7 +170,7 @@ class DesktopAlertBuilder<V> implements AlertBuilder<V> {
 
     @RequiredUIAccess
     @Override
-    public void setContent(@Nonnull consulo.ui.Component content) {
+    public void setContent(@Nonnull Component content) {
       throw new UnsupportedOperationException();
     }
 
@@ -261,7 +222,7 @@ class DesktopAlertBuilder<V> implements AlertBuilder<V> {
 
     @Nullable
     @Override
-    public consulo.ui.Component getParentComponent() {
+    public Component getParentComponent() {
       throw new UnsupportedOperationException();
     }
 
@@ -307,81 +268,20 @@ class DesktopAlertBuilder<V> implements AlertBuilder<V> {
     }
   }
 
-  private String getText(ButtonImpl button) {
-    if (button.myText != null) {
-      return button.myText;
-    }
-
-    switch (button.myButtonId) {
-      case CANCEL:
-        return CommonBundle.getCancelButtonText();
+  @Nullable
+  private Icon getIcon() {
+    switch (myType) {
+      case INFO:
+        return UIUtil.getInformationIcon();
+      case WARN:
+        return UIUtil.getWarningIcon();
+      case ERROR:
+        return UIUtil.getErrorIcon();
+      case QUESTION:
+        return UIUtil.getQuestionIcon();
       default:
-        throw new UnsupportedOperationException(String.valueOf(button.myButtonId));
+        throw new UnsupportedOperationException(myType.name());
     }
-  }
-
-  private String myText;
-  private String myTitle;
-  private Type myType = Type.INFO;
-  private List<ButtonImpl> myButtons = new ArrayList<>();
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> asWarning() {
-    myType = Type.WARN;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> asQuestion() {
-    myType = Type.QUESTION;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> asError() {
-    myType = Type.ERROR;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> button(int buttonId, @Nonnull Supplier<V> valueGetter) {
-    myButtons.add(new ButtonImpl(buttonId, null, valueGetter));
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter) {
-    myButtons.add(new ButtonImpl(-1, text, valueGetter));
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> markDefault() {
-    if (myButtons.isEmpty()) {
-      throw new IllegalArgumentException();
-    }
-    ContainerUtil.getLastItem(myButtons).myDefault = true;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> title(@Nonnull String text) {
-    myTitle = text;
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public AlertBuilder<V> text(@Nonnull String text) {
-    myText = text;
-    return this;
   }
 
   @RequiredUIAccess

@@ -33,6 +33,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
+import consulo.application.AccessRule;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -68,7 +69,7 @@ public class DesktopPsiAwareTextEditorProvider extends DesktopTextEditorProvider
       }
       else {
         //PsiDocumentManager.getInstance(project).commitDocument(document);
-        state.setFoldingState(CodeFoldingManager.getInstance(project).readFoldingState(child, document));
+        state.setFoldingState(AccessRule.read(() -> CodeFoldingManager.getInstance(project).readFoldingState(child, document)));
       }
     }
     return state;
