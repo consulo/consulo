@@ -35,7 +35,6 @@ import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.AccessRule;
 import consulo.application.DefaultPaths;
@@ -288,7 +287,7 @@ public class ProjectUtil {
         }
 
         // we need reexecute it due after dialog - it will be executed in ui thread
-        reopenAsync.doWhenDone(() -> AppExecutorUtil.getAppExecutorService().execute(() -> provider.doOpenProjectAsync(virtualFile, uiAccess).notify(result)));
+        reopenAsync.doWhenDone(() -> PooledAsyncResult.create(() -> provider.doOpenProjectAsync(virtualFile, uiAccess)).notify(result));
       }
       else {
         result.reject("provider for file path is not find");
