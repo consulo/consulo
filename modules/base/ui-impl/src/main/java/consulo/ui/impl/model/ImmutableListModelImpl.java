@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.model;
+package consulo.ui.impl.model;
+
+import consulo.ui.model.ListModel;
 
 import javax.annotation.Nonnull;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author VISTALL

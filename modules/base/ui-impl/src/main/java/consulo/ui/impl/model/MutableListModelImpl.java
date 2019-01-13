@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.model;
+package consulo.ui.impl.model;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.util.EventDispatcher;
+import consulo.ui.model.MutableListModel;
+import consulo.ui.model.MutableListModelListener;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
