@@ -54,7 +54,17 @@ public interface AlertBuilder<V> {
   AlertBuilder<V> asQuestion();
 
   @Nonnull
+  default AlertBuilder<V> button(int buttonId, @Nonnull V simpleValue) {
+    return button(buttonId, () -> simpleValue);
+  }
+
+  @Nonnull
   AlertBuilder<V> button(int buttonId, @Nonnull Supplier<V> valueGetter);
+
+  @Nonnull
+  default AlertBuilder<V> button(@Nonnull String text, @Nonnull V simpleValue) {
+    return button(text, () -> simpleValue);
+  }
 
   @Nonnull
   AlertBuilder<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter);
@@ -63,7 +73,21 @@ public interface AlertBuilder<V> {
    * Mark last added button as default (enter will hit it)
    */
   @Nonnull
-  AlertBuilder<V> markDefault();
+  AlertBuilder<V> asDefaultButton();
+
+  /**
+   * Mark last added button as exit action (will be invoked if window closed by X)
+   */
+  @Nonnull
+  AlertBuilder<V> asExitButton();
+
+  @Nonnull
+  default AlertBuilder<V> exitValue(@Nonnull V value) {
+    return exitValue(() -> value);
+  }
+
+  @Nonnull
+  AlertBuilder<V> exitValue(@Nonnull Supplier<V> valueGetter);
 
   /**
    * Default title is application name

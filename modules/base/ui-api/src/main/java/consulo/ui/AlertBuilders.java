@@ -23,17 +23,28 @@ import javax.annotation.Nonnull;
  */
 public class AlertBuilders {
   @Nonnull
-  public static AlertBuilder<Void> notify(int button) {
-    return AlertBuilder.<Void>create().button(button, () -> null);
-  }
-
-  @Nonnull
   public static AlertBuilder<Boolean> okCancel() {
-    return AlertBuilder.<Boolean>create().button(AlertBuilder.OK, () -> Boolean.TRUE).markDefault().button(AlertBuilder.CANCEL, () -> Boolean.FALSE);
+    AlertBuilder<Boolean> builder = AlertBuilder.<Boolean>create();
+
+    builder.button(AlertBuilder.OK, Boolean.TRUE);
+    builder.asDefaultButton();
+
+    builder.button(AlertBuilder.CANCEL, Boolean.FALSE);
+    builder.asExitButton();
+
+    return builder;
   }
 
   @Nonnull
   public static AlertBuilder<Boolean> yesNo() {
-    return AlertBuilder.<Boolean>create().button(AlertBuilder.YES, () -> Boolean.TRUE).markDefault().button(AlertBuilder.NO, () -> Boolean.FALSE);
+    AlertBuilder<Boolean> builder = AlertBuilder.<Boolean>create();
+
+    builder.button(AlertBuilder.YES, Boolean.TRUE);
+    builder.asDefaultButton();
+
+    builder.button(AlertBuilder.NO, Boolean.FALSE);
+    builder.asExitButton();
+
+    return builder;
   }
 }

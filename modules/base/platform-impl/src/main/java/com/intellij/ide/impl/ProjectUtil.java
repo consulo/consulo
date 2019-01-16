@@ -169,6 +169,7 @@ public class ProjectUtil {
     if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
       AlertBuilder<Integer> alertBuilder = AlertBuilder.create();
       alertBuilder.asQuestion();
+      alertBuilder.exitValue(AlertBuilder.CANCEL);
       alertBuilder.rememeber(ProjectNewWindowDoNotAskOption.INSTANCE);
 
       if (isNewProject) {
@@ -176,7 +177,7 @@ public class ProjectUtil {
         alertBuilder.text(IdeBundle.message("prompt.open.project.in.new.frame"));
 
         alertBuilder.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
-        alertBuilder.markDefault();
+        alertBuilder.asDefaultButton();
         alertBuilder.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
       }
       else {
@@ -184,12 +185,12 @@ public class ProjectUtil {
         alertBuilder.text(IdeBundle.message("prompt.open.project.in.new.frame"));
 
         alertBuilder.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
-        alertBuilder.markDefault();
+        alertBuilder.asDefaultButton();
         alertBuilder.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
-        alertBuilder.button(AlertBuilder.CANCEL, () -> AlertBuilder.CANCEL);
+        alertBuilder.button(AlertBuilder.CANCEL, AlertBuilder.CANCEL);
       }
 
-      AsyncResult<Integer> result = new AsyncResult<>();
+      AsyncResult<Integer> result = AsyncResult.undefined();
       uiAccess.give(() -> alertBuilder.show().notify(result));
       return result;
     }

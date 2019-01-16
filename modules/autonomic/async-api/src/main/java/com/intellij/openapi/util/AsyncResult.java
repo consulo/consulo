@@ -33,6 +33,11 @@ public class AsyncResult<T> extends ActionCallback {
   private static final AsyncResult REJECTED = new Rejected();
 
   @Nonnull
+  public static <R> AsyncResult<R> undefined() {
+    return new AsyncResult<>();
+  }
+
+  @Nonnull
   public static <R> AsyncResult<R> rejected() {
     //noinspection unchecked
     return REJECTED;
@@ -97,6 +102,7 @@ public class AsyncResult<T> extends ActionCallback {
 
   protected T myResult;
 
+  @Deprecated
   public AsyncResult() {
   }
 

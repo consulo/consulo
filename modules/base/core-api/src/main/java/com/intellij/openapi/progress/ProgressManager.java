@@ -22,9 +22,9 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Set;
 
@@ -42,7 +42,9 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
   }
 
   public abstract boolean hasProgressIndicator();
+
   public abstract boolean hasModalProgressIndicator();
+
   public abstract boolean hasUnsafeProgressIndicator();
 
   /**
@@ -155,6 +157,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
                                                             @Nonnull Runnable process,
                                                             @Nullable Runnable successRunnable,
                                                             @Nullable Runnable canceledRunnable);
+
   /**
    * Runs a specified {@code process} in a background thread and shows a progress dialog, which can be made non-modal by pressing
    * background button. Upon successful termination of the process a {@code successRunnable} will be called in Swing UI thread and
@@ -193,7 +196,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
 
   public abstract void runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task, @Nonnull ProgressIndicator progressIndicator);
 
-  protected void indicatorCanceled(@Nonnull ProgressIndicator indicator) { }
+  protected void indicatorCanceled(@Nonnull ProgressIndicator indicator) {
+  }
 
   public static void canceled(@Nonnull ProgressIndicator indicator) {
     getInstance().indicatorCanceled(indicator);

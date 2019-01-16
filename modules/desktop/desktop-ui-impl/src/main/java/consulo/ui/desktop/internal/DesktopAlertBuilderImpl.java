@@ -316,7 +316,11 @@ class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
   @Override
   public AsyncResult<V> show(@Nullable Window component) {
     if (myButtons.isEmpty()) {
-      throw new UnsupportedOperationException("buttons empty");
+      throw new UnsupportedOperationException("Buttons empty");
+    }
+
+    if(myExitValue == null) {
+      throw new UnsupportedOperationException("Exit value is not set. Use #asExitButton() or #exitValue()");
     }
 
     V value = myRemember != null ? myRemember.getValue() : null;
@@ -324,14 +328,13 @@ class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
       return AsyncResult.resolved(value);
     }
 
-    AsyncResult<V> result = new AsyncResult<>();
+    AsyncResult<V> result = AsyncResult.undefined();
     DialogImpl dialog = new DialogImpl(false);
     AsyncResult<Void> async = dialog.showAsync();
     async.doWhenProcessed(() -> {
       V selectValue = dialog.mySelectedValue;
-
-      if (dialog.myRememberBox.getValue()) {
-        if (myRemember != null) {
+      if (myRemember != null) {
+        if (dialog.myRememberBox.getValue()) {
           myRemember.setValue(selectValue);
         }
       }

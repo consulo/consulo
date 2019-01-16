@@ -56,8 +56,16 @@ public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
     }
 
     switch (button.myButtonId) {
+      case YES:
+        return CommonBundle.getYesButtonText();
+      case NO:
+        return CommonBundle.getNoButtonText();
+      case OK:
+        return CommonBundle.getOkButtonText();
       case CANCEL:
         return CommonBundle.getCancelButtonText();
+      case APPLY:
+        return CommonBundle.getApplyButtonText();
       default:
         throw new UnsupportedOperationException(String.valueOf(button.myButtonId));
     }
@@ -68,6 +76,8 @@ public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
   protected Type myType = Type.INFO;
   protected List<ButtonImpl> myButtons = new ArrayList<>();
   protected AlertBuilderRemember<V> myRemember;
+
+  protected Supplier<V> myExitValue;
 
   @Nonnull
   @Override
@@ -113,11 +123,28 @@ public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
 
   @Nonnull
   @Override
-  public AlertBuilder<V> markDefault() {
+  public AlertBuilder<V> asDefaultButton() {
     if (myButtons.isEmpty()) {
       throw new IllegalArgumentException();
     }
     ContainerUtil.getLastItem(myButtons).myDefault = true;
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public AlertBuilder<V> asExitButton() {
+    if (myButtons.isEmpty()) {
+      throw new IllegalArgumentException();
+    }
+    myExitValue = ContainerUtil.getLastItem(myButtons).myValue;
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public AlertBuilder<V> exitValue(@Nonnull Supplier<V> valueGetter) {
+    myExitValue = valueGetter;
     return this;
   }
 

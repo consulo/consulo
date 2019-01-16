@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.CommonBundle;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
@@ -33,13 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -59,8 +52,7 @@ import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.start.CommandLineArgs;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.desktop.internal.AWTUIAccessImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -70,6 +62,8 @@ import sun.awt.AWTAutoShutdown;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.Component;
+import java.awt.Window;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
@@ -399,34 +393,46 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
    *  Note: there are possible scenarios when we get a quit notification at a moment when another
    *  quit message is shown. In that case, showing multiple messages sounds contra-intuitive as well
    */
-  private volatile boolean exiting = false;
+  private volatile boolean myExiting = false;
 
+  @RequiredUIAccess
   public void exit(final boolean force, final boolean exitConfirmed, final boolean allowListenersToCancel, final boolean restart, UIAccess uiAccess) {
-    if (!force && exiting) {
+    if (!force && myExiting) {
       return;
     }
 
-    exiting = true;
+    myExiting = true;
     if (!force && !exitConfirmed && getDefaultModalityState() != ModalityState.NON_MODAL) {
+      myExiting = false;
       return;
     }
 
-    AccessRule.writeAsync(() -> {
-      if (!force && !confirmExitIfNeeded(exitConfirmed)) {
-        saveAll();
-        return;
-      }
+    AsyncResult<Boolean> confirmResult = AsyncResult.undefined();
+    if (force) {
+      confirmResult.setDone(true);
+    }
+    else {
+      confirmResult = confirmExitIfNeeded(exitConfirmed);
+    }
 
-      getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).appClosing();
-      myDisposeInProgress = true;
+    confirmResult.doWhenDone((value) -> {
+      if(value) {
+        AccessRule.writeAsync(() -> {
+          getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).appClosing();
+          myDisposeInProgress = true;
 
-      try {
-        doExit(allowListenersToCancel, restart, uiAccess);
+          try {
+            doExit(allowListenersToCancel, restart, uiAccess);
+          }
+          finally {
+            myDisposeInProgress = false;
+          }
+        }).doWhenProcessed(() -> myExiting = false);
       }
-      finally {
-        myDisposeInProgress = false;
+      else {
+        AccessRule.writeAsync(this::saveAll).doWhenProcessed(() -> myExiting = false);
       }
-    }).doWhenProcessed(() -> exiting = false);
+    });
   }
 
   @RequiredWriteAction
@@ -455,49 +461,51 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     return true;
   }
 
-  private static boolean confirmExitIfNeeded(boolean exitConfirmed) {
+  @RequiredUIAccess
+  @Nonnull
+  private static AsyncResult<Boolean> confirmExitIfNeeded(boolean exitConfirmed) {
     final boolean hasUnsafeBgTasks = ProgressManager.getInstance().hasUnsafeProgressIndicator();
     if (exitConfirmed && !hasUnsafeBgTasks) {
-      return true;
+      return AsyncResult.resolved(true);
     }
 
-    DialogWrapper.DoNotAskOption option = new DialogWrapper.DoNotAskOption() {
+    // no tasks and no opened projects
+    if (!hasUnsafeBgTasks && ProjectManager.getInstance().getOpenProjects().length == 0) {
+      return AsyncResult.resolved(true);
+    }
+
+    AlertBuilder<Boolean> alert = AlertBuilders.yesNo();
+    alert.asQuestion();
+    alert.title(ApplicationBundle.message("exit.confirm.title"));
+
+    if (hasUnsafeBgTasks) {
+      alert.text(ApplicationBundle.message("exit.confirm.prompt.tasks", ApplicationNamesInfo.getInstance().getFullProductName()));
+      return alert.show();
+    }
+
+    alert.text(ApplicationBundle.message("exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName()));
+    alert.rememeber(new AlertBuilderRemember<Boolean>() {
       @Override
-      public boolean isToBeShown() {
-        return GeneralSettings.getInstance().isConfirmExit() && ProjectManager.getInstance().getOpenProjects().length > 0;
+      public void setValue(@Nonnull Boolean value) {
+        if (value) {
+          GeneralSettings.getInstance().setConfirmExit(false);
+        }
       }
 
+      @Nullable
       @Override
-      public void setToBeShown(boolean value, int exitCode) {
-        GeneralSettings.getInstance().setConfirmExit(value);
-      }
-
-      @Override
-      public boolean canBeHidden() {
-        return !hasUnsafeBgTasks;
-      }
-
-      @Override
-      public boolean shouldSaveOptionsOnCancel() {
-        return false;
+      public Boolean getValue() {
+        return GeneralSettings.getInstance().isConfirmExit() ? null : Boolean.TRUE;
       }
 
       @Nonnull
       @Override
-      public String getDoNotShowMessage() {
+      public String getMessageBoxText() {
         return "Do not ask me again";
       }
-    };
+    });
 
-    if (hasUnsafeBgTasks || option.isToBeShown()) {
-      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName());
-
-      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message).yesText(ApplicationBundle.message("command.exit")).noText(CommonBundle.message("button.cancel"))
-                  .doNotAsk(option).show() != Messages.YES) {
-        return false;
-      }
-    }
-    return true;
+    return alert.show();
   }
 
   @RequiredReadAction
