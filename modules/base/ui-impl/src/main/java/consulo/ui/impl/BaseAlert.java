@@ -17,7 +17,7 @@ package consulo.ui.impl;
 
 import com.intellij.CommonBundle;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.AlertBuilder;
+import consulo.ui.Alert;
 import consulo.ui.AlertBuilderRemember;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2019-01-13
  */
-public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
+public abstract class BaseAlert<V> implements Alert<V> {
   protected enum Type {
     INFO,
     WARN,
@@ -81,49 +81,49 @@ public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
 
   @Nonnull
   @Override
-  public AlertBuilder<V> rememeber(@Nonnull AlertBuilderRemember<V> remember) {
+  public Alert<V> rememeber(@Nonnull AlertBuilderRemember<V> remember) {
     myRemember = remember;
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> asWarning() {
+  public Alert<V> asWarning() {
     myType = Type.WARN;
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> asQuestion() {
+  public Alert<V> asQuestion() {
     myType = Type.QUESTION;
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> asError() {
+  public Alert<V> asError() {
     myType = Type.ERROR;
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> button(int buttonId, @Nonnull Supplier<V> valueGetter) {
+  public Alert<V> button(int buttonId, @Nonnull Supplier<V> valueGetter) {
     myButtons.add(new ButtonImpl(buttonId, null, valueGetter));
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter) {
+  public Alert<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter) {
     myButtons.add(new ButtonImpl(-1, text, valueGetter));
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> asDefaultButton() {
+  public Alert<V> asDefaultButton() {
     if (myButtons.isEmpty()) {
       throw new IllegalArgumentException();
     }
@@ -133,7 +133,7 @@ public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
 
   @Nonnull
   @Override
-  public AlertBuilder<V> asExitButton() {
+  public Alert<V> asExitButton() {
     if (myButtons.isEmpty()) {
       throw new IllegalArgumentException();
     }
@@ -143,21 +143,21 @@ public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
 
   @Nonnull
   @Override
-  public AlertBuilder<V> exitValue(@Nonnull Supplier<V> valueGetter) {
+  public Alert<V> exitValue(@Nonnull Supplier<V> valueGetter) {
     myExitValue = valueGetter;
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> title(@Nonnull String text) {
+  public Alert<V> title(@Nonnull String text) {
     myTitle = text;
     return this;
   }
 
   @Nonnull
   @Override
-  public AlertBuilder<V> text(@Nonnull String text) {
+  public Alert<V> text(@Nonnull String text) {
     myText = text;
     return this;
   }

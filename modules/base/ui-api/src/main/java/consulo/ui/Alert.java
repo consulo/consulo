@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 01-Oct-17
  */
-public interface AlertBuilder<V> {
+public interface Alert<V> {
   int OK = 1000;
   int CANCEL = 1001;
   int APPLY = 1002;
@@ -37,66 +37,66 @@ public interface AlertBuilder<V> {
    * @return new alert builder, with default title - and default type *info*
    */
   @Nonnull
-  static <L> AlertBuilder<L> create() {
+  static <L> Alert<L> create() {
     return UIInternal.get()._Alerts_create();
   }
 
   @Nonnull
-  AlertBuilder<V> rememeber(@Nonnull AlertBuilderRemember<V> remember);
+  Alert<V> rememeber(@Nonnull AlertBuilderRemember<V> remember);
 
   @Nonnull
-  AlertBuilder<V> asWarning();
+  Alert<V> asWarning();
 
   @Nonnull
-  AlertBuilder<V> asError();
+  Alert<V> asError();
 
   @Nonnull
-  AlertBuilder<V> asQuestion();
+  Alert<V> asQuestion();
 
   @Nonnull
-  default AlertBuilder<V> button(int buttonId, @Nonnull V simpleValue) {
+  default Alert<V> button(int buttonId, @Nonnull V simpleValue) {
     return button(buttonId, () -> simpleValue);
   }
 
   @Nonnull
-  AlertBuilder<V> button(int buttonId, @Nonnull Supplier<V> valueGetter);
+  Alert<V> button(int buttonId, @Nonnull Supplier<V> valueGetter);
 
   @Nonnull
-  default AlertBuilder<V> button(@Nonnull String text, @Nonnull V simpleValue) {
+  default Alert<V> button(@Nonnull String text, @Nonnull V simpleValue) {
     return button(text, () -> simpleValue);
   }
 
   @Nonnull
-  AlertBuilder<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter);
+  Alert<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter);
 
   /**
    * Mark last added button as default (enter will hit it)
    */
   @Nonnull
-  AlertBuilder<V> asDefaultButton();
+  Alert<V> asDefaultButton();
 
   /**
    * Mark last added button as exit action (will be invoked if window closed by X)
    */
   @Nonnull
-  AlertBuilder<V> asExitButton();
+  Alert<V> asExitButton();
 
   @Nonnull
-  default AlertBuilder<V> exitValue(@Nonnull V value) {
+  default Alert<V> exitValue(@Nonnull V value) {
     return exitValue(() -> value);
   }
 
   @Nonnull
-  AlertBuilder<V> exitValue(@Nonnull Supplier<V> valueGetter);
+  Alert<V> exitValue(@Nonnull Supplier<V> valueGetter);
 
   /**
    * Default title is application name
    */
   @Nonnull
-  AlertBuilder<V> title(@Nonnull String text);
+  Alert<V> title(@Nonnull String text);
 
   @Nonnull
-  AlertBuilder<V> text(@Nonnull String text);
+  Alert<V> text(@Nonnull String text);
 
   /**
    * Does not block UI thread

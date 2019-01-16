@@ -241,7 +241,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public <T> AlertBuilder<T> _Alerts_create() {
+  public <T> Alert<T> _Alerts_create() {
     return null;
   }
 

@@ -474,7 +474,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
       return AsyncResult.resolved(true);
     }
 
-    AlertBuilder<Boolean> alert = AlertBuilders.yesNo();
+    Alert<Boolean> alert = Alerts.yesNo();
     alert.asQuestion();
     alert.title(ApplicationBundle.message("exit.confirm.title"));
 

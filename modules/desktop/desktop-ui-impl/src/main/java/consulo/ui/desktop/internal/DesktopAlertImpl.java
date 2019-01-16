@@ -29,7 +29,7 @@ import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
-import consulo.ui.impl.BaseAlertBuilder;
+import consulo.ui.impl.BaseAlert;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -51,7 +51,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2019-01-12
  */
-class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
+class DesktopAlertImpl<V> extends BaseAlert<V> {
   class DialogImpl extends DialogWrapper implements Window {
     private V mySelectedValue;
 

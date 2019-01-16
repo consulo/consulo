@@ -40,7 +40,7 @@ import consulo.application.AccessRule;
 import consulo.application.DefaultPaths;
 import consulo.async.ex.PooledAsyncResult;
 import consulo.project.ProjectOpenProcessors;
-import consulo.ui.AlertBuilder;
+import consulo.ui.Alert;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
@@ -167,31 +167,31 @@ public class ProjectUtil {
     final GeneralSettings settings = GeneralSettings.getInstance();
     int confirmOpenNewProject = settings.getConfirmOpenNewProject();
     if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
-      AlertBuilder<Integer> alertBuilder = AlertBuilder.create();
-      alertBuilder.asQuestion();
-      alertBuilder.exitValue(AlertBuilder.CANCEL);
-      alertBuilder.rememeber(ProjectNewWindowDoNotAskOption.INSTANCE);
+      Alert<Integer> alert = Alert.create();
+      alert.asQuestion();
+      alert.exitValue(Alert.CANCEL);
+      alert.rememeber(ProjectNewWindowDoNotAskOption.INSTANCE);
 
       if (isNewProject) {
-        alertBuilder.title(IdeBundle.message("title.new.project"));
-        alertBuilder.text(IdeBundle.message("prompt.open.project.in.new.frame"));
+        alert.title(IdeBundle.message("title.new.project"));
+        alert.text(IdeBundle.message("prompt.open.project.in.new.frame"));
 
-        alertBuilder.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
-        alertBuilder.asDefaultButton();
-        alertBuilder.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
+        alert.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
+        alert.asDefaultButton();
+        alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
       }
       else {
-        alertBuilder.title(IdeBundle.message("title.open.project"));
-        alertBuilder.text(IdeBundle.message("prompt.open.project.in.new.frame"));
+        alert.title(IdeBundle.message("title.open.project"));
+        alert.text(IdeBundle.message("prompt.open.project.in.new.frame"));
 
-        alertBuilder.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
-        alertBuilder.asDefaultButton();
-        alertBuilder.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
-        alertBuilder.button(AlertBuilder.CANCEL, AlertBuilder.CANCEL);
+        alert.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
+        alert.asDefaultButton();
+        alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
+        alert.button(Alert.CANCEL, Alert.CANCEL);
       }
 
       AsyncResult<Integer> result = AsyncResult.undefined();
-      uiAccess.give(() -> alertBuilder.show().notify(result));
+      uiAccess.give(() -> alert.show().notify(result));
       return result;
     }
 

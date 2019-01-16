@@ -121,8 +121,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public <T> AlertBuilder<T> _Alerts_create() {
-    return new DesktopAlertBuilderImpl<>();
+  public <T> Alert<T> _Alerts_create() {
+    return new DesktopAlertImpl<>();
   }
 
   @Override

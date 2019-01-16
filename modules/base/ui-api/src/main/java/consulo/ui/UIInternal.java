@@ -119,7 +119,7 @@ public abstract class UIInternal {
   @Nonnull
   public abstract Window _Windows_modalWindow(String title);
 
-  public abstract <T> AlertBuilder<T> _Alerts_create();
+  public abstract <T> Alert<T> _Alerts_create();
 
   public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
 

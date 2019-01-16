@@ -18,7 +18,7 @@ package com.intellij.ide.impl;
 import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.ui.AlertBuilder;
+import consulo.ui.Alert;
 import consulo.ui.AlertBuilderRemember;
 
 import javax.annotation.Nonnull;
@@ -55,7 +55,7 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
 
   @Override
   public void setValue(@Nonnull Integer value) {
-    if (value == AlertBuilder.CANCEL) {
+    if (value == Alert.CANCEL) {
       return;
     }
 
