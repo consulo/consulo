@@ -35,6 +35,7 @@ public class FileChooser {
   }
 
   // region dead stuff
+
   /**
    * Normally, callback isn't invoked if a chooser was cancelled.
    * If the situation should be handled separately this interface may be used.
@@ -195,5 +196,17 @@ public class FileChooser {
     AsyncResult<VirtualFile> fileAsyncResult = AsyncResult.undefined();
     chooseFilesAsync(descriptor, parent, project, toSelect).doWhenDone(files -> fileAsyncResult.setDone(ArrayUtil.getFirstElement(files)));
     return fileAsyncResult;
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public static AsyncResult<VirtualFile> chooseFileAsync(@Nonnull final FileChooserDescriptor descriptor,
+                                                         @Nullable final Project project,
+                                                         @Nullable final Component parent,
+                                                         @Nullable final VirtualFile toSelect) {
+    LOG.assertTrue(!descriptor.isChooseMultiple());
+    AsyncResult<VirtualFile> result = AsyncResult.undefined();
+    chooseFilesAsync(descriptor, project, parent, toSelect).doWhenDone(virtualFiles -> result.setDone(virtualFiles[0]));
+    return result;
   }
 }

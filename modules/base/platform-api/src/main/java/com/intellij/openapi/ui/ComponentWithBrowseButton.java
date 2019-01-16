@@ -37,6 +37,7 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -186,13 +187,15 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
       myBrowseButton = browseButton;
     }
 
+    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myBrowseButton.isVisible() && myBrowseButton.isEnabled());
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e){
+    public void actionPerformed(@Nonnull AnActionEvent e){
       myBrowseButton.doClick();
     }
 
@@ -249,6 +252,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(ActionEvent e) {
       FileChooserDescriptor fileChooserDescriptor = myFileChooserDescriptor;
       if (myTitle != null || myDescription != null) {
@@ -261,7 +265,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
       }
 
-      FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile(), this::onFileChosen);
+      FileChooser.chooseFileAsync(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).doWhenDone(f -> onFileChosen(f));
     }
 
     @Nullable
