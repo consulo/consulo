@@ -21,9 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.RefactoringActionHandler;
-import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author Bas Leijdekkers

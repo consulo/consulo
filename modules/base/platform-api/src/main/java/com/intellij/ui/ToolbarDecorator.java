@@ -26,6 +26,8 @@ import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -241,31 +243,31 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     return this;
   }
 
-  public ToolbarDecorator setAddAction(AnActionButtonRunnable action) {
+  public ToolbarDecorator setAddAction(@RequiredUIAccess AnActionButtonRunnable action) {
     myAddActionEnabled = action != null;
     myAddAction = action;
     return this;
   }
 
-  public ToolbarDecorator setEditAction(AnActionButtonRunnable action) {
+  public ToolbarDecorator setEditAction(@RequiredUIAccess AnActionButtonRunnable action) {
     myEditActionEnabled = action != null;
     myEditAction = action;
     return this;
   }
 
-  public ToolbarDecorator setRemoveAction(AnActionButtonRunnable action) {
+  public ToolbarDecorator setRemoveAction(@RequiredUIAccess AnActionButtonRunnable action) {
     myRemoveActionEnabled = action != null;
     myRemoveAction = action;
     return this;
   }
 
-  public ToolbarDecorator setMoveUpAction(AnActionButtonRunnable action) {
+  public ToolbarDecorator setMoveUpAction(@RequiredUIAccess AnActionButtonRunnable action) {
     myUpActionEnabled = action != null;
     myUpAction = action;
     return this;
   }
 
-  public ToolbarDecorator setMoveDownAction(AnActionButtonRunnable action) {
+  public ToolbarDecorator setMoveDownAction(@RequiredUIAccess AnActionButtonRunnable action) {
     myDownActionEnabled = action != null;
     myDownAction = action;
     return this;

@@ -26,6 +26,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -39,6 +40,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.ArchiveFileType;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
@@ -54,7 +56,7 @@ import java.util.Set;
  * @author MYakovlev
  */
 public class PathEditor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.ui.PathEditor");
+  private static final Logger LOG = Logger.getInstance(PathEditor.class);
 
   public static final Color INVALID_COLOR = new JBColor(new Color(210, 0, 0), JBColor.RED);
 
@@ -126,12 +128,11 @@ public class PathEditor {
       ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions().setAddAction(new AnActionButtonRunnable() {
         @Override
         public void run(AnActionButton button) {
-          final VirtualFile[] added = doAdd();
-          if (added.length > 0) {
+          suggetFilesForAdd().doWhenDone((files) -> {
             setModified(true);
-          }
-          requestDefaultFocus();
-          setSelectedRoots(added);
+            requestDefaultFocus();
+            setSelectedRoots(files);
+          }).doWhenRejected(() -> requestDefaultFocus());
         }
       }).setRemoveAction(new AnActionButtonRunnable() {
         @Override
@@ -185,21 +186,27 @@ public class PathEditor {
     requestDefaultFocus();
   }
 
-  private VirtualFile[] doAdd() {
+  @Nonnull
+  @RequiredUIAccess
+  private AsyncResult<VirtualFile[]> suggetFilesForAdd() {
     VirtualFile baseDir = myAddBaseDir;
     Project project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
     if (baseDir == null && project != null) {
       baseDir = project.getBaseDir();
     }
-    VirtualFile[] files = FileChooser.chooseFiles(myDescriptor, myComponent, project, baseDir);
-    files = adjustAddedFileSet(myComponent, files);
-    List<VirtualFile> added = new ArrayList<VirtualFile>(files.length);
-    for (VirtualFile vFile : files) {
-      if (addElement(vFile)) {
-        added.add(vFile);
+
+    AsyncResult<VirtualFile[]> filesAsync = AsyncResult.undefined();
+    FileChooser.chooseFilesAsync(myDescriptor, myComponent, project, baseDir).doWhenDone(files -> {
+      files = adjustAddedFileSet(myComponent, files);
+      List<VirtualFile> added = new ArrayList<>(files.length);
+      for (VirtualFile vFile : files) {
+        if (addElement(vFile)) {
+          added.add(vFile);
+        }
       }
-    }
-    return VfsUtil.toVirtualFileArray(added);
+      filesAsync.setDone(VfsUtil.toVirtualFileArray(added));
+    }).doWhenRejected((Runnable)filesAsync::setRejected);
+    return filesAsync;
   }
 
   /**
@@ -353,7 +360,7 @@ public class PathEditor {
 
   /**
    * @return icon for displaying parameter (ProjectRoot or VirtualFile)
-   *         If parameter is not ProjectRoot or VirtualFile, returns empty icon "/nodes/emptyNode.png"
+   * If parameter is not ProjectRoot or VirtualFile, returns empty icon "/nodes/emptyNode.png"
    */
   private static consulo.ui.image.Image getIconForRoot(Object projectRoot) {
     if (projectRoot instanceof VirtualFile) {
@@ -366,10 +373,10 @@ public class PathEditor {
       }
       else {
         FileType fileType = findFileType(file);
-        if(fileType instanceof ArchiveFileType) {
+        if (fileType instanceof ArchiveFileType) {
           return fileType.getIcon();
         }
-        else if(file.isDirectory()) {
+        else if (file.isDirectory()) {
           return AllIcons.Nodes.Folder;
         }
         return file.getFileType().getIcon();
