@@ -23,6 +23,8 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -40,8 +42,9 @@ public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
     myConfigurable = configurable;
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final ProjectStructureElement element = myConfigurable.getSelectedElement();
     boolean visible = false;
     if (element instanceof LibraryProjectStructureElement) {
@@ -51,8 +54,9 @@ public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
     e.getPresentation().setVisible(visible);
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final LibraryProjectStructureElement element = (LibraryProjectStructureElement)myConfigurable.getSelectedElement();
     if (element == null) return;
     final Library library = element.getLibrary();

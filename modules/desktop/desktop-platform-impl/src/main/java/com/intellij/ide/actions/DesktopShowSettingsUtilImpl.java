@@ -23,6 +23,7 @@ import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
@@ -69,19 +70,26 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
   private void showSettingsImpl(@Nullable Project tempProject, @Nonnull UIAccess uiAccess, @Nullable Configurable toSelect) {
     Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
-    Task.Backgroundable.queue(actualProject, "Opening " + CommonBundle.settingsTitle() + "...", i -> {
-      Configurable[] configurables = buildConfigurables(actualProject);
+    new Task.Backgroundable(actualProject, "Opening " + CommonBundle.settingsTitle() + "...") {
+      private Configurable[] myConfigurables;
 
-      uiAccess.give(() -> {
+      @Override
+      public void run(@Nonnull ProgressIndicator indicator) {
+        myConfigurables = buildConfigurables(actualProject);
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void onFinished() {
         try {
           myShown.set(true);
 
           DesktopSettingsDialog dialog;
           if (ModalityPerProjectEAPDescriptor.is()) {
-            dialog = new DesktopSettingsDialog(actualProject, configurables, toSelect, true);
+            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect, true);
           }
           else {
-            dialog = new DesktopSettingsDialog(actualProject, configurables, toSelect);
+            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect);
           }
 
           dialog.showAsync().doWhenDone(() -> myShown.set(false));
@@ -89,8 +97,8 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
         catch (Exception e) {
           LOG.error(e);
         }
-      });
-    });
+      }
+    }.queue();
   }
 
   @RequiredUIAccess

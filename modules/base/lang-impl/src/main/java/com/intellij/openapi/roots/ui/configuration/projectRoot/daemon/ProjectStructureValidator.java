@@ -24,8 +24,9 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import javax.annotation.Nullable;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -33,8 +34,7 @@ import java.util.List;
  */
 public abstract class ProjectStructureValidator {
 
-  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME =
-    ExtensionPointName.create("com.intellij.projectStructureValidator");
+  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create("com.intellij.projectStructureValidator");
 
   public static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
     for (ProjectStructureValidator validator : EP_NAME.getExtensions()) {
@@ -55,6 +55,7 @@ public abstract class ProjectStructureValidator {
     element.check(problemsHolder);
   }
 
+  @RequiredUIAccess
   public static void showDialogAndAddLibraryToDependencies(final Library library, final Project project, boolean allowEmptySelection) {
     for (ProjectStructureValidator validator : EP_NAME.getExtensions()) {
       if (validator.addLibraryToDependencies(library, project, allowEmptySelection)) {
@@ -65,17 +66,14 @@ public abstract class ProjectStructureValidator {
     final ModuleStructureConfigurable moduleStructureConfigurable = ModuleStructureConfigurable.getInstance(project);
     final List<Module> modules = LibraryEditingUtil.getSuitableModules(moduleStructureConfigurable, ((LibraryEx)library).getKind(), library);
     if (modules.isEmpty()) return;
-    final ChooseModulesDialog
-      dlg = new ChooseModulesDialog(moduleStructureConfigurable.getProject(), modules, ProjectBundle.message("choose.modules.dialog.title"),
-                                    ProjectBundle
-                                      .message("choose.modules.dialog.description", library.getName()));
-    dlg.show();
-    if (dlg.isOK()) {
+    final ChooseModulesDialog dlg = new ChooseModulesDialog(moduleStructureConfigurable.getProject(), modules, ProjectBundle.message("choose.modules.dialog.title"),
+                                                            ProjectBundle.message("choose.modules.dialog.description", library.getName()));
+    dlg.showAsync().doWhenDone(() -> {
       final List<Module> chosenModules = dlg.getChosenElements();
       for (Module module : chosenModules) {
         moduleStructureConfigurable.addLibraryOrderEntry(module, library);
       }
-    }
+    });
   }
 
   /**

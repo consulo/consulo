@@ -40,10 +40,10 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.util.ParameterizedRunnable;
 import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.*;
 
@@ -60,7 +60,7 @@ public class LibraryEditingUtil {
     for (Iterator<Library> it = table.getLibraryIterator(); it.hasNext(); ) {
       final Library library = it.next();
       final String libName;
-      if (table instanceof LibrariesModifiableModel){
+      if (table instanceof LibrariesModifiableModel) {
         libName = ((LibrariesModifiableModel)table).getLibraryEditor(library).getName();
       }
       else {
@@ -73,8 +73,7 @@ public class LibraryEditingUtil {
     return false;
   }
 
-  public static String suggestNewLibraryName(LibraryTable.ModifiableModel table,
-                                             final String baseName) {
+  public static String suggestNewLibraryName(LibraryTable.ModifiableModel table, final String baseName) {
     String candidateName = baseName;
     int idx = 1;
     while (libraryAlreadyExists(table, candidateName)) {
@@ -85,7 +84,7 @@ public class LibraryEditingUtil {
 
   public static Condition<Library> getNotAddedLibrariesCondition(final ModuleRootModel rootModel) {
     final OrderEntry[] orderEntries = rootModel.getOrderEntries();
-    final Set<Library> result = new HashSet<Library>(orderEntries.length);
+    final Set<Library> result = new HashSet<>(orderEntries.length);
     for (OrderEntry orderEntry : orderEntries) {
       if (orderEntry instanceof LibraryOrderEntry && orderEntry.isValid()) {
         final LibraryImpl library = (LibraryImpl)((LibraryOrderEntry)orderEntry).getLibrary();
@@ -150,7 +149,7 @@ public class LibraryEditingUtil {
   }
 
   public static List<LibraryType> getSuitableTypes(ClasspathPanel classpathPanel) {
-    List<LibraryType> suitableTypes = new ArrayList<LibraryType>();
+    List<LibraryType> suitableTypes = new ArrayList<>();
     suitableTypes.add(null);
     for (LibraryType libraryType : LibraryType.EP_NAME.getExtensions()) {
       if (libraryType.getCreateActionName() != null && libraryType.isAvailable(classpathPanel.getRootModel())) {
@@ -164,36 +163,34 @@ public class LibraryEditingUtil {
     return getSuitableTypes(panel).size() > 1;
   }
 
-  public static BaseListPopupStep<LibraryType> createChooseTypeStep(final ClasspathPanel classpathPanel,
-                                                                    final ParameterizedRunnable<LibraryType> action) {
+  public static BaseListPopupStep<LibraryType> createChooseTypeStep(final ClasspathPanel classpathPanel, final ParameterizedRunnable<LibraryType> action) {
     return new BaseListPopupStep<LibraryType>(IdeBundle.message("popup.title.select.library.type"), getSuitableTypes(classpathPanel)) {
-          @Nonnull
-          @Override
-          public String getTextFor(LibraryType value) {
-            String createActionName = value != null ? value.getCreateActionName() : null;
-            return createActionName != null ? createActionName : IdeBundle.message("create.default.library.type.action.name");
-          }
+      @Nonnull
+      @Override
+      public String getTextFor(LibraryType value) {
+        String createActionName = value != null ? value.getCreateActionName() : null;
+        return createActionName != null ? createActionName : IdeBundle.message("create.default.library.type.action.name");
+      }
 
-          @Override
-          public Icon getIconFor(LibraryType aValue) {
-            return aValue != null ? TargetAWT.to(aValue.getIcon()) : AllIcons.Nodes.PpLib;
-          }
+      @Override
+      public Icon getIconFor(LibraryType aValue) {
+        return aValue != null ? TargetAWT.to(aValue.getIcon()) : AllIcons.Nodes.PpLib;
+      }
 
+      @Override
+      public PopupStep onChosen(final LibraryType selectedValue, boolean finalChoice) {
+        return doFinalStep(new Runnable() {
           @Override
-          public PopupStep onChosen(final LibraryType selectedValue, boolean finalChoice) {
-            return doFinalStep(new Runnable() {
-              @Override
-              public void run() {
-                action.run(selectedValue);
-              }
-            });
+          public void run() {
+            action.run(selectedValue);
           }
-        };
+        });
+      }
+    };
   }
 
-  public static List<Module> getSuitableModules(@Nonnull ModuleStructureConfigurable rootConfigurable,
-                                                final @Nullable LibraryKind kind, @Nullable Library library) {
-    final List<Module> modules = new ArrayList<Module>();
+  public static List<Module> getSuitableModules(@Nonnull ModuleStructureConfigurable rootConfigurable, final @Nullable LibraryKind kind, @Nullable Library library) {
+    final List<Module> modules = new ArrayList<>();
     LibraryType type = kind == null ? null : LibraryType.findByKind(kind);
     for (Module module : rootConfigurable.getModules()) {
       final ModuleRootModel rootModel = rootConfigurable.getContext().getModulesConfigurator().getRootModel(module);
@@ -213,9 +210,8 @@ public class LibraryEditingUtil {
     return modules;
   }
 
-  public static void showDialogAndAddLibraryToDependencies(@Nonnull Library library,
-                                                           @Nonnull Project project,
-                                                           boolean allowEmptySelection) {
+  @RequiredUIAccess
+  public static void showDialogAndAddLibraryToDependencies(@Nonnull Library library, @Nonnull Project project, boolean allowEmptySelection) {
     ProjectStructureValidator.showDialogAndAddLibraryToDependencies(library, project, allowEmptySelection);
   }
 }

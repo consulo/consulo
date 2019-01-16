@@ -295,7 +295,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     decorator.setAddAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
-        new AddModuleDependencyDialog(ClasspathPanelImpl.this, getStructureConfigurableContext()).show();
+        new AddModuleDependencyDialog(ClasspathPanelImpl.this, getStructureConfigurableContext()).showAsync();
       }
     }).setRemoveAction(new AnActionButtonRunnable() {
       @Override

@@ -151,7 +151,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
 
     myMessagePool.addListener(myDialog);
     if (!isOtherModalWindowActive()) {
-      myDialog.show();
+      myDialog.showAsync();
     }
     else {
       myDialog.close(0);

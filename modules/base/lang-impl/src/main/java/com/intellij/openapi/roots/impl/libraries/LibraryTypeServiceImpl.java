@@ -18,17 +18,22 @@ package com.intellij.openapi.roots.impl.libraries;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.libraries.*;
+import com.intellij.openapi.roots.libraries.LibraryProperties;
+import com.intellij.openapi.roots.libraries.LibraryType;
+import com.intellij.openapi.roots.libraries.LibraryTypeService;
+import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
@@ -41,23 +46,31 @@ import java.util.List;
 public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static final String DEFAULT_LIBRARY_NAME = "Unnamed";
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public NewLibraryConfiguration createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
-                                                        @Nonnull JComponent parentComponent,
-                                                        @Nullable VirtualFile contextDirectory,
-                                                        LibraryType<?> type,
-                                                        final Project project) {
+  public AsyncResult<NewLibraryConfiguration> createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
+                                                                     @Nonnull JComponent parentComponent,
+                                                                     @Nullable VirtualFile contextDirectory,
+                                                                     LibraryType<?> type,
+                                                                     final Project project) {
     final FileChooserDescriptor chooserDescriptor = descriptor.createAttachFilesChooserDescriptor(null);
     chooserDescriptor.setTitle("Select Library Files");
-    final VirtualFile[] rootCandidates = FileChooser.chooseFiles(chooserDescriptor, parentComponent, project, contextDirectory);
-    if (rootCandidates.length == 0) {
-      return null;
-    }
 
-    final List<OrderRoot> roots = RootDetectionUtil.detectRoots(Arrays.asList(rootCandidates), parentComponent, project, descriptor);
-    if (roots.isEmpty()) return null;
-    String name = suggestLibraryName(roots);
-    return doCreate(type, name, roots);
+    AsyncResult<NewLibraryConfiguration> result = AsyncResult.undefined();
+    AsyncResult<VirtualFile[]> filesAsync = FileChooser.chooseFilesAsync(chooserDescriptor, parentComponent, project, contextDirectory);
+    filesAsync.doWhenDone((rootCandidates) -> {
+      final List<OrderRoot> roots = RootDetectionUtil.detectRoots(Arrays.asList(rootCandidates), parentComponent, project, descriptor);
+      if (roots.isEmpty()) {
+        result.setRejected();
+        return;
+      }
+
+      String name = suggestLibraryName(roots);
+      result.setDone(doCreate(type, name, roots));
+    });
+    filesAsync.doWhenRejected((Runnable)result::setRejected);
+    return result;
   }
 
   private static <P extends LibraryProperties<?>> NewLibraryConfiguration doCreate(final LibraryType<P> type, final String name, final List<OrderRoot> roots) {

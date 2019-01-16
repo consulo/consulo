@@ -30,10 +30,13 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author yole
@@ -47,24 +50,24 @@ public class SdkConfigurationUtil {
   private static FileChooserDescriptor createCompositeDescriptor(final SdkType... sdkTypes) {
     FileChooserDescriptor descriptor0 = sdkTypes[0].getHomeChooserDescriptor();
     FileChooserDescriptor descriptor =
-      new FileChooserDescriptor(descriptor0.isChooseFiles(), descriptor0.isChooseFolders(), descriptor0.isChooseJars(),
-                                descriptor0.isChooseJarsAsFiles(), descriptor0.isChooseJarContents(), descriptor0.isChooseMultiple()) {
+            new FileChooserDescriptor(descriptor0.isChooseFiles(), descriptor0.isChooseFolders(), descriptor0.isChooseJars(), descriptor0.isChooseJarsAsFiles(), descriptor0.isChooseJarContents(),
+                                      descriptor0.isChooseMultiple()) {
 
-        @Override
-        public void validateSelectedFiles(final VirtualFile[] files) throws Exception {
-          if (files.length > 0) {
-            for (SdkType type : sdkTypes) {
-              if (type.isValidSdkHome(files[0].getPath())) {
-                return;
+              @Override
+              public void validateSelectedFiles(final VirtualFile[] files) throws Exception {
+                if (files.length > 0) {
+                  for (SdkType type : sdkTypes) {
+                    if (type.isValidSdkHome(files[0].getPath())) {
+                      return;
+                    }
+                  }
+                }
+                String message = files.length > 0 && files[0].isDirectory()
+                                 ? ProjectBundle.message("sdk.configure.home.invalid.error", sdkTypes[0].getPresentableName())
+                                 : ProjectBundle.message("sdk.configure.home.file.invalid.error", sdkTypes[0].getPresentableName());
+                throw new Exception(message);
               }
-            }
-          }
-          String message = files.length > 0 && files[0].isDirectory()
-                           ? ProjectBundle.message("sdk.configure.home.invalid.error", sdkTypes[0].getPresentableName())
-                           : ProjectBundle.message("sdk.configure.home.file.invalid.error", sdkTypes[0].getPresentableName());
-          throw new Exception(message);
-        }
-      };
+            };
     descriptor.setTitle(descriptor0.getTitle());
     return descriptor;
   }
@@ -104,9 +107,7 @@ public class SdkConfigurationUtil {
         sdkName = sdkType.getName() + PREDEFINED_PREFIX;
       }
       else {
-        sdkName = customSdkSuggestedName == null
-                  ? createUniqueSdkName(sdkType, sdkPath, allSdks)
-                  : createUniqueSdkName(customSdkSuggestedName, allSdks);
+        sdkName = customSdkSuggestedName == null ? createUniqueSdkName(sdkType, sdkPath, allSdks) : createUniqueSdkName(customSdkSuggestedName, allSdks);
       }
 
       sdk = new SdkImpl(SdkTable.getInstance(), sdkName, sdkType);
@@ -124,11 +125,9 @@ public class SdkConfigurationUtil {
     }
     catch (Exception e) {
       if (!silent) {
-        Messages.showErrorDialog("Error configuring SDK: " +
-                                 e.getMessage() +
-                                 ".\nPlease make sure that " +
-                                 FileUtil.toSystemDependentName(homeDir.getPath()) +
-                                 " is a valid home path for this SDK type.", "Error Configuring SDK");
+        Messages.showErrorDialog(
+                "Error configuring SDK: " + e.getMessage() + ".\nPlease make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type.",
+                "Error Configuring SDK");
       }
       return null;
     }
@@ -138,7 +137,7 @@ public class SdkConfigurationUtil {
   /**
    * Tries to create an SDK identified by path; if successful, add the SDK to the global SDK table.
    *
-   * @param path    identifies the SDK
+   * @param path       identifies the SDK
    * @param sdkType
    * @param predefined
    * @return newly created SDK, or null.
@@ -178,6 +177,7 @@ public class SdkConfigurationUtil {
     return newSdkName;
   }
 
+  @RequiredUIAccess
   public static void selectSdkHome(final SdkType sdkType, @Nonnull final Consumer<String> consumer) {
     final FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -186,19 +186,17 @@ public class SdkConfigurationUtil {
       consumer.consume(sdk.getHomePath());
       return;
     }
-    FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType), new Consumer<List<VirtualFile>>() {
-      @Override
-      public void consume(final List<VirtualFile> chosen) {
-        final String path = chosen.get(0).getPath();
-        if (sdkType.isValidSdkHome(path)) {
-          consumer.consume(path);
-          return;
-        }
 
-        final String adjustedPath = sdkType.adjustSelectedSdkHome(path);
-        if (sdkType.isValidSdkHome(adjustedPath)) {
-          consumer.consume(adjustedPath);
-        }
+    FileChooser.chooseFilesAsync(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(chosen -> {
+      final String path = chosen[0].getPath();
+      if (sdkType.isValidSdkHome(path)) {
+        consumer.consume(path);
+        return;
+      }
+
+      final String adjustedPath = sdkType.adjustSelectedSdkHome(path);
+      if (sdkType.isValidSdkHome(adjustedPath)) {
+        consumer.consume(adjustedPath);
       }
     });
   }
@@ -206,13 +204,13 @@ public class SdkConfigurationUtil {
   @Nullable
   public static VirtualFile getSuggestedSdkPath(SdkType sdkType) {
     Collection<String> paths = sdkType.suggestHomePaths();
-    if(paths.isEmpty()) {
+    if (paths.isEmpty()) {
       return null;
     }
 
     for (String path : paths) {
       VirtualFile maybeSdkHomePath = LocalFileSystem.getInstance().findFileByPath(path);
-      if(maybeSdkHomePath != null) {
+      if (maybeSdkHomePath != null) {
         return maybeSdkHomePath;
       }
     }

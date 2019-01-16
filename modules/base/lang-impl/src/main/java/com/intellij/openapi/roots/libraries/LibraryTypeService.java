@@ -18,10 +18,12 @@ package com.intellij.openapi.roots.libraries;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -32,10 +34,11 @@ public abstract class LibraryTypeService {
     return ServiceManager.getService(LibraryTypeService.class);
   }
 
-  @Nullable
-  public abstract NewLibraryConfiguration createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
-                                                                 @Nonnull JComponent parentComponent,
-                                                                 @Nullable VirtualFile contextDirectory,
-                                                                 @Nullable LibraryType<?> type,
-                                                                 final @Nullable Project project);
+  @Nonnull
+  @RequiredUIAccess
+  public abstract AsyncResult<NewLibraryConfiguration> createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
+                                                                              @Nonnull JComponent parentComponent,
+                                                                              @Nullable VirtualFile contextDirectory,
+                                                                              @Nullable LibraryType<?> type,
+                                                                              @Nullable Project project);
 }
