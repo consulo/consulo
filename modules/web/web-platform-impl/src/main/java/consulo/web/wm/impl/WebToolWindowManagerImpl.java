@@ -42,7 +42,7 @@ import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.ui.ex.WGwtToolWindowStripeButton;
 import consulo.ui.web.internal.WGwtRootPanelImpl;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.wm.impl.BaseToolWindowManager;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
 
@@ -57,8 +57,8 @@ import java.util.List;
  * @since 24-Sep-17
  */
 @Singleton
-@State(name = ToolWindowManagerBase.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
-public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
+@State(name = BaseToolWindowManager.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
+public class WebToolWindowManagerImpl extends BaseToolWindowManager {
   private IdeFrameEx myFrame;
 
   @Inject

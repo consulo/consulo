@@ -62,15 +62,15 @@ import java.util.*;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
+public abstract class BaseToolWindowManager extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
   public static final String ID = "ToolWindowManager";
 
   public static class InitToolWindowsActivity implements StartupActivity, DumbAware {
     @Override
     public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
       ToolWindowManagerEx ex = ToolWindowManagerEx.getInstanceEx(project);
-      if (ex instanceof ToolWindowManagerBase) {
-        ToolWindowManagerBase manager = (ToolWindowManagerBase)ex;
+      if (ex instanceof BaseToolWindowManager) {
+        BaseToolWindowManager manager = (BaseToolWindowManager)ex;
         List<FinalizableCommand> list = new ArrayList<>();
         manager.registerToolWindowsFromBeans(list);
         manager.initAll(list);
@@ -210,7 +210,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   @NonNls
   protected static final String LAYOUT_TO_RESTORE = "layout-to-restore";
 
-  private static final Logger LOG = Logger.getInstance(ToolWindowManagerBase.class);
+  private static final Logger LOG = Logger.getInstance(BaseToolWindowManager.class);
 
   protected final Map<String, ToolWindowInternalDecorator> myId2InternalDecorator = new HashMap<>();
   protected final Map<String, ToolWindowFloatingDecorator> myId2FloatingDecorator = new HashMap<>();
@@ -235,7 +235,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected final InternalDecoratorListener myInternalDecoratorListener;
   protected final CommandProcessorBase myCommandProcessor;
 
-  protected ToolWindowManagerBase(Application application, Project project, WindowManager windowManager) {
+  protected BaseToolWindowManager(Application application, Project project, WindowManager windowManager) {
     myApplication = application;
     myProject = project;
     myWindowManager = (WindowManagerEx)windowManager;

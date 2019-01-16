@@ -52,7 +52,7 @@ import java.beans.PropertyChangeSupport;
 public abstract class ToolWindowBase implements ToolWindowEx {
   private static final Logger LOG = Logger.getInstance(ToolWindowBase.class);
 
-  protected final ToolWindowManagerBase myToolWindowManager;
+  protected final BaseToolWindowManager myToolWindowManager;
   protected ContentManager myContentManager;
 
   private final PropertyChangeSupport myChangeSupport;
@@ -73,7 +73,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   private boolean myUseLastFocused = true;
 
   @RequiredUIAccess
-  protected ToolWindowBase(final ToolWindowManagerBase toolWindowManager, final String id, boolean canCloseContent, @Nullable Object component) {
+  protected ToolWindowBase(final BaseToolWindowManager toolWindowManager, final String id, boolean canCloseContent, @Nullable Object component) {
     myToolWindowManager = toolWindowManager;
     myChangeSupport = new PropertyChangeSupport(this);
     myId = id;
@@ -364,7 +364,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     }
   }
 
-  public ToolWindowManagerBase getToolWindowManager() {
+  public BaseToolWindowManager getToolWindowManager() {
     return myToolWindowManager;
   }
 

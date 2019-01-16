@@ -36,7 +36,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.laf.MorphColor;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.wm.impl.BaseToolWindowManager;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -192,7 +192,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     new DoubleClickListener() {
       @Override
       protected boolean onDoubleClick(MouseEvent event) {
-        ToolWindowManagerBase mgr = toolWindow.getToolWindowManager();
+        BaseToolWindowManager mgr = toolWindow.getToolWindowManager();
         mgr.setMaximized(myToolWindow, !mgr.isMaximized(myToolWindow));
         return true;
       }

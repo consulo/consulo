@@ -39,7 +39,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.wm.impl.BaseToolWindowManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -331,8 +331,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     public Insets getBorderInsets(final Component c) {
       if (myProject == null) return new Insets(0, 0, 0, 0);
       ToolWindowManager toolWindowManager =  ToolWindowManager.getInstance(myProject);
-      if (!(toolWindowManager instanceof ToolWindowManagerBase)
-          || !((ToolWindowManagerBase)toolWindowManager).isToolWindowRegistered(myInfo.getId())
+      if (!(toolWindowManager instanceof BaseToolWindowManager)
+          || !((BaseToolWindowManager)toolWindowManager).isToolWindowRegistered(myInfo.getId())
           || myWindow.getType() == ToolWindowType.FLOATING) {
         return new Insets(0, 0, 0, 0);
       }

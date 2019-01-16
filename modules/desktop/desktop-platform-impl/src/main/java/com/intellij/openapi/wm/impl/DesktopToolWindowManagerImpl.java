@@ -76,7 +76,7 @@ import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.migration.AWTComponentProviderUtil;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.wm.impl.BaseToolWindowManager;
 import gnu.trove.THashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
@@ -102,9 +102,9 @@ import java.util.*;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-@State(name = ToolWindowManagerBase.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
+@State(name = BaseToolWindowManager.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 @Singleton
-public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
+public final class DesktopToolWindowManagerImpl extends BaseToolWindowManager {
 
   /**
    * Translates events from InternalDecorator into ToolWindowManager method invocations.
