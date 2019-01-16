@@ -24,6 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+
 public class EditRunConfigurationsAction extends AnAction {
   public EditRunConfigurationsAction() {
     getTemplatePresentation().setIcon(AllIcons.Actions.EditSource);
@@ -31,7 +33,7 @@ public class EditRunConfigurationsAction extends AnAction {
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null && project.isDisposed()) {
       return;
@@ -40,13 +42,12 @@ public class EditRunConfigurationsAction extends AnAction {
       //setup template project configurations
       project = ProjectManager.getInstance().getDefaultProject();
     }
-    final EditConfigurationsDialog dialog = new EditConfigurationsDialog(project);
-    dialog.show();
+    new EditConfigurationsDialog(project).showAsync();
   }
 
   @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull final AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setEnabled(true);
     if (ActionPlaces.RUN_CONFIGURATIONS_COMBOBOX.equals(e.getPlace())) {
