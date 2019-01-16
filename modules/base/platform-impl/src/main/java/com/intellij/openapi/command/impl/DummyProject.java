@@ -17,11 +17,14 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
+import consulo.injecting.InjectingContainer;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -93,6 +96,33 @@ public class DummyProject extends UserDataHolderBase implements Project {
 
   @Override
   public void save() {
+  }
+
+  @Override
+  public void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
+    
+  }
+
+  @Override
+  public boolean isNotLazyServicesCreated() {
+    return false;
+  }
+
+  @Override
+  public int getNotLazyServicesCount() {
+    return 0;
+  }
+
+  @Nonnull
+  @Override
+  public InjectingContainer getInjectingContainer() {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public ExtensionsArea getExtensionsArea() {
+    return null;
   }
 
   @Override

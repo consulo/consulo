@@ -37,7 +37,6 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ex.ApplicationEx2;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.TestOnly;
@@ -61,8 +60,7 @@ public class VfsRootAccess {
     final Application application = ApplicationManager.getApplication();
     if (SHOULD_PERFORM_ACCESS_CHECK &&
         application.isUnitTestMode() &&
-        application instanceof ApplicationEx2 &&
-        ((ApplicationEx2)application).isComponentsCreated() &&
+        application.isNotLazyServicesCreated() &&
         !ApplicationInfoImpl.isInPerformanceTest()) {
 
       if (delegate != LocalFileSystem.getInstance() && !(delegate instanceof ArchiveFileSystem)) {

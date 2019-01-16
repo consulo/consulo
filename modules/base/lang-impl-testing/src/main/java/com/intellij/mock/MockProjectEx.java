@@ -18,8 +18,8 @@ package com.intellij.mock;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.impl.stores.IProjectStore;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.ex.ProjectEx;
+
 import javax.annotation.Nonnull;
 
 public class MockProjectEx  extends MockProject implements ProjectEx {
@@ -39,10 +39,6 @@ public class MockProjectEx  extends MockProject implements ProjectEx {
   @Nonnull
   public IProjectStore getStateStore() {
     return new MockProjectStore();
-  }
-
-  @Override
-  public void initNotLazyServices(ProgressIndicator progressIndicator) {
   }
 
   @Override

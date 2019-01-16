@@ -29,8 +29,6 @@ public interface ApplicationEx2 extends ApplicationEx {
   @Nonnull
   IApplicationStore getStateStore();
 
-  boolean isComponentsCreated();
-
   void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException;
 
   default void editorPaintStart() {

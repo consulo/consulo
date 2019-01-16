@@ -18,11 +18,14 @@ package com.intellij.mock;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
+import consulo.injecting.InjectingContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,6 +55,33 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
 
   public <T> void addComponent(@Nonnull Class<T> interfaceClass, @Nonnull T instance) {
     myComponents.put(interfaceClass, instance);
+  }
+
+  @Override
+  public void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
+
+  }
+
+  @Override
+  public boolean isNotLazyServicesCreated() {
+    return false;
+  }
+
+  @Override
+  public int getNotLazyServicesCount() {
+    return 0;
+  }
+
+  @Nonnull
+  @Override
+  public InjectingContainer getInjectingContainer() {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public ExtensionsArea getExtensionsArea() {
+    return null;
   }
 
   @Override

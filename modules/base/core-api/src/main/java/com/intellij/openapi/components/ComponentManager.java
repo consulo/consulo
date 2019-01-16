@@ -37,27 +37,22 @@ import javax.annotation.Nullable;
  *
  * @see Application
  * @see Project
+ * @see com.intellij.openapi.module.Module
  */
 public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner, AreaInstance{
-  default void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
-    throw new UnsupportedOperationException();
-  }
+  void initNotLazyServices(@Nullable ProgressIndicator progressIndicator);
 
-  default int getNotLazyServicesCount() {
-    throw new UnsupportedOperationException();
-  }
+  boolean isNotLazyServicesCreated();
+
+  int getNotLazyServicesCount();
 
   @Override
   @Nonnull
-  default InjectingContainer getInjectingContainer() {
-    throw new UnsupportedOperationException();
-  }
+  InjectingContainer getInjectingContainer();
 
   @Override
   @Nonnull
-  default ExtensionsArea getExtensionsArea() {
-    throw new UnsupportedOperationException();
-  }
+  ExtensionsArea getExtensionsArea();
 
   /**
    * Gets the component by its interface class.

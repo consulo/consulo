@@ -45,11 +45,6 @@ public class MockProjectStore implements IProjectStore {
   }
 
   @Override
-  public void setProjectFilePath(@Nonnull final String filePath) {
-    throw new UnsupportedOperationException("Method setProjectFilePath is not yet implemented in " + getClass().getName());
-  }
-
-  @Override
   public void reinitComponents(@Nonnull Set<String> componentNames, boolean reloadData) {
     throw new UnsupportedOperationException("Method reinitComponents is not yet implemented in " + getClass().getName());
   }

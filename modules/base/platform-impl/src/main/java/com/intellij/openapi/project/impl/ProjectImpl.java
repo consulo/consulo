@@ -85,7 +85,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   private final List<ProjectComponent> myProjectComponents = new CopyOnWriteArrayList<>();
 
-  protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
+  protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreas.PROJECT);
 
     putUserData(CREATION_TIME, System.nanoTime());
@@ -95,12 +95,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     if (!isDefault()) {
-      if (noUIThread) {
-        getStateStore().setProjectFilePathNoUI(dirPath);
-      }
-      else {
-        getStateStore().setProjectFilePath(dirPath);
-      }
+      getStateStore().setProjectFilePathNoUI(dirPath);
     }
 
     myOptimiseTestLoadSpeed = isOptimiseTestLoadSpeed;

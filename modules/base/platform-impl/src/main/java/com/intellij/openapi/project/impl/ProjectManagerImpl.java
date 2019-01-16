@@ -26,7 +26,6 @@ import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
-import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl;
 import com.intellij.openapi.components.impl.stores.ComponentStoreImpl.ReloadComponentStoreStatus;
@@ -273,7 +272,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   @Nonnull
   private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, boolean noUICall) {
-    return new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
+    return new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
   }
 
   @Override
@@ -463,31 +462,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private static boolean canCancelProjectLoading() {
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     return !(indicator instanceof NonCancelableSection);
-  }
-
-  /**
-   * Opens the project at the specified path.
-   *
-   * @param filePath the path to open the project.
-   * @return the project, or null if the user has cancelled opening the project.
-   */
-  @Nullable
-  private Project loadProjectWithProgress(@Nonnull final String filePath) throws IOException {
-    final ProjectImpl project = createProject(null, toCanonicalName(filePath), false, false);
-    try {
-      myProgressManager.runProcessWithProgressSynchronously((ThrowableComputable<Project, IOException>)() -> {
-        initProject(project, null);
-        return project;
-      }, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
-    }
-    catch (StateStorageException e) {
-      throw new IOException(e);
-    }
-    catch (ProcessCanceledException ignore) {
-      return null;
-    }
-
-    return project;
   }
 
   private static void notifyProjectOpenFailed() {

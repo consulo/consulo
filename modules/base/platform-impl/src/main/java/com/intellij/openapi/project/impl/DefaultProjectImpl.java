@@ -30,7 +30,7 @@ public class DefaultProjectImpl extends ProjectImpl {
   private Element myStateElement;
 
   DefaultProjectImpl(@Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
-    super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
+    super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME);
   }
 
   @Nullable

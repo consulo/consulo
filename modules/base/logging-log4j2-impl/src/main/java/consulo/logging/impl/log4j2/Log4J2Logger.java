@@ -15,6 +15,7 @@
  */
 package consulo.logging.impl.log4j2;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
@@ -24,7 +25,6 @@ import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ex.ApplicationEx2;
 import consulo.platform.impl.action.LastActionTracker;
 import org.jetbrains.annotations.NonNls;
 
@@ -106,8 +106,8 @@ public class Log4J2Logger extends Logger {
     myLogger.error("Vendor: " + System.getProperties().getProperty("java.vendor", "unknown"));
     myLogger.error("OS: " + System.getProperties().getProperty("os.name", "unknown"));
 
-    ApplicationEx2 application = (ApplicationEx2)ApplicationManager.getApplication();
-    if (application != null && application.isComponentsCreated()) {
+    Application application = ApplicationManager.getApplication();
+    if (application != null && application.isNotLazyServicesCreated()) {
       final String lastPreformedActionId = LastActionTracker.ourLastActionId;
       if (lastPreformedActionId != null) {
         myLogger.error("Last Action: " + lastPreformedActionId);

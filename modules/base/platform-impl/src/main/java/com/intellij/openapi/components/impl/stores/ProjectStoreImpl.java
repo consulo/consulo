@@ -16,8 +16,6 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
@@ -68,29 +66,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Override
   protected Project getProject() {
     return myProject;
-  }
-
-  @Override
-  public void setProjectFilePath(@Nonnull final String filePath) {
-    final StateStorageManager stateStorageManager = getStateStorageManager();
-    final LocalFileSystem fs = LocalFileSystem.getInstance();
-
-    final File file = new File(filePath);
-
-    final File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
-    String defaultFilePath = new File(dirStore, "misc.xml").getPath();
-    // deprecated
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
-    stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
-
-    final File ws = new File(dirStore, "workspace.xml");
-    stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
-
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
-
-    ApplicationManager.getApplication().invokeAndWait(() -> VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), ModalityState.defaultModalityState());
-
-    myPresentableUrl = null;
   }
 
   @Override

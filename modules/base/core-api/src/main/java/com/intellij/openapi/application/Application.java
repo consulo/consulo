@@ -42,9 +42,6 @@ import java.util.concurrent.Future;
  * You can call methods requiring read access from the Swing event-dispatch thread without using
  * {@link #runReadAction} method. If you need to invoke such methods from another thread you have to use
  * {@link #runReadAction}. Multiple read actions can run at the same time without locking each other.
- * <p>
- * Write actions can be called only from the Swing thread using {@link #runWriteAction} method.
- * If there are read actions running at this moment <code>runWriteAction</code> is blocked until they are completed.
  */
 public interface Application extends ComponentManager {
   @Nonnull

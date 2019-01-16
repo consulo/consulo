@@ -27,8 +27,6 @@ import javax.annotation.Nullable;
 public interface IProjectStore extends IComponentStore.Reloadable {
   void setProjectFilePathNoUI(@Nonnull String filePath);
 
-  void setProjectFilePath(@Nonnull String filePath);
-
   @Nullable
   VirtualFile getProjectBaseDir();
 

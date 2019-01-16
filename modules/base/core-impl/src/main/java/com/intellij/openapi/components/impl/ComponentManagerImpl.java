@@ -144,7 +144,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final Condition myDisposedCondition = o -> isDisposed();
 
-  private boolean myComponentsCreated = false;
+  private boolean myNotLazyServicesCreated = false;
 
   private ExtensionsAreaImpl myExtensionsArea;
   @Nonnull
@@ -287,7 +287,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public void initNotLazyServices(ProgressIndicator progressIndicator) {
     try {
-      if (myComponentsCreated) {
+      if (myNotLazyServicesCreated) {
         throw new IllegalArgumentException("Injector already build");
       }
 
@@ -301,7 +301,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       }
     }
     finally {
-      myComponentsCreated = true;
+      myNotLazyServicesCreated = true;
     }
   }
 
@@ -321,8 +321,9 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myMessageBus;
   }
 
-  public boolean isComponentsCreated() {
-    return myComponentsCreated;
+  @Override
+  public boolean isNotLazyServicesCreated() {
+    return myNotLazyServicesCreated;
   }
 
   @Override
@@ -406,7 +407,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myInjectingContainer = null;
 
     myComponentsRegistry = null;
-    myComponentsCreated = false;
+    myNotLazyServicesCreated = false;
     myNotLazyServices.clear();
     myDisposed = true;
   }
