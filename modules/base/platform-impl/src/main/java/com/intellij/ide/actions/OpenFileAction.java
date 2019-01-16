@@ -41,14 +41,12 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.DefaultProjectOpenProcessor;
-import com.intellij.util.Consumer;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredUIAccess
@@ -93,20 +91,15 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-    FileChooser.chooseFiles(descriptor, project, userHomeDir, new Consumer<List<VirtualFile>>() {
-      @Override
-      public void consume(final List<VirtualFile> files) {
-        for (VirtualFile file : files) {
-          if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
-            Messages.showInfoMessage(project,
-                                     file.getPresentableUrl() + " contains no " +
-                                     ApplicationNamesInfo.getInstance().getFullProductName() + " project",
-                                     "Cannot Open Project");
-            return;
-          }
+    FileChooser.chooseFilesAsync(descriptor, project, userHomeDir).doWhenDone(files -> {
+      for (VirtualFile file : files) {
+        if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
+          Messages.showInfoMessage(project, file.getPresentableUrl() + " contains no " + ApplicationNamesInfo.getInstance().getFullProductName() + " project", "Cannot Open Project");
+          return;
         }
-        doOpenFile(project, files);
       }
+
+      doOpenFile(project, files);
     });
   }
 
@@ -118,8 +111,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
   }
 
-  private static void doOpenFile(@Nullable final Project project,
-                                 @Nonnull final List<VirtualFile> result) {
+  private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
         Project openedProject = ProjectUtil.open(file.getPath(), project, false);
@@ -128,10 +120,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
       }
 
       if (OpenProjectFileChooserDescriptor.canOpen(file)) {
-        int answer = Messages.showYesNoDialog(project,
-                                              IdeBundle.message("message.open.file.is.project", file.getName()),
-                                              IdeBundle.message("title.open.project"),
-                                              Messages.getQuestionIcon());
+        int answer = Messages.showYesNoDialog(project, IdeBundle.message("message.open.file.is.project", file.getName()), IdeBundle.message("title.open.project"), Messages.getQuestionIcon());
         if (answer == 0) {
           FileChooserUtil.setLastOpenedFile(ProjectUtil.open(file.getPath(), project, false), file);
           return;
@@ -161,11 +150,8 @@ public class OpenFileAction extends AnAction implements DumbAware {
   public static void openFile(final VirtualFile virtualFile, final Project project) {
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
     if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
-      Messages.showMessageDialog(project,
-                                 IdeBundle.message("error.files.of.this.type.cannot.be.opened",
-                                                   ApplicationNamesInfo.getInstance().getProductName()),
-                                 IdeBundle.message("title.cannot.open.file"),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(project, IdeBundle.message("error.files.of.this.type.cannot.be.opened", ApplicationNamesInfo.getInstance().getProductName()),
+                                 IdeBundle.message("title.cannot.open.file"), Messages.getErrorIcon());
       return;
     }
 

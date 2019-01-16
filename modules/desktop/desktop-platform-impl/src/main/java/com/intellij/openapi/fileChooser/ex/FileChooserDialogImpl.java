@@ -141,11 +141,9 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     UIAccess current = UIAccess.current();
 
-    AsyncResult<VirtualFile[]> result = new AsyncResult<>();
+    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
     current.give(() -> {
-      show();
-
-      result.setDone(myChosenFiles);
+      showAsync().doWhenDone(() -> result.setDone(myChosenFiles));
     });
     return result;
   }
@@ -159,16 +157,16 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     UIAccess current = UIAccess.current();
 
-    AsyncResult<VirtualFile[]> result = new AsyncResult<>();
+    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
     current.give(() -> {
-      show();
-
-      if (myChosenFiles.length > 0) {
-        result.setDone(myChosenFiles);
-      }
-      else {
-        result.setRejected();
-      }
+      showAsync().doWhenDone(() -> {
+        if (myChosenFiles.length > 0) {
+          result.setDone(myChosenFiles);
+        }
+        else {
+          result.setRejected();
+        }
+      });
     });
     return result;
   }

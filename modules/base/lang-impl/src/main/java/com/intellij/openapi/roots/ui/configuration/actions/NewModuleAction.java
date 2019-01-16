@@ -30,20 +30,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.RequiredUIAccess;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 5, 2004
+ * Date: Jan 5, 2004
  */
 public class NewModuleAction extends AnAction implements DumbAware {
   public NewModuleAction() {
@@ -53,24 +53,22 @@ public class NewModuleAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e.getProject();
     if (project == null) {
       return;
     }
-    final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-    VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
-    if(moduleDir == null) {
-      return;
-    }
+    VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-    NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
-    if (dialog.showAndGet()) {
-      NewProjectUtilPlatform.doCreate(dialog.getProjectPanel(), project, moduleDir);
-    }
+    selectModuleDirectory(project, virtualFile).doWhenDone(moduleDir -> {
+      NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
+
+      dialog.showAsync().doWhenDone(() -> NewProjectUtilPlatform.doCreate(dialog.getProjectPanel(), project, moduleDir));
+    });
   }
 
-  private static VirtualFile selectModuleDirectory(Project project, VirtualFile virtualFile) {
+  @RequiredUIAccess
+  private static AsyncResult<VirtualFile> selectModuleDirectory(Project project, VirtualFile virtualFile) {
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
     FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
@@ -90,7 +88,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     };
     fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
 
-    return FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
+    return FileChooser.chooseFileAsync(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
   }
 
   @Nullable

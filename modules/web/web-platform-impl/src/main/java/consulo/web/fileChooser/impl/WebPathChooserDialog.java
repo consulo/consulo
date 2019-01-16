@@ -47,7 +47,7 @@ public class WebPathChooserDialog implements PathChooserDialog {
   @Nonnull
   @Override
   public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
-    AsyncResult<VirtualFile[]> result = new AsyncResult<>();
+    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
 
     Window fileTree = Window.createModal("Select file");
     fileTree.setSize(new Size(400, 400));

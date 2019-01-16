@@ -1600,7 +1600,7 @@ public abstract class DialogWrapper {
   @Deprecated
   @DeprecationInfo("Use #showAsync()")
   public void show() {
-    showAsync();
+    throw new UnsupportedOperationException("Use #showAsync()");
   }
 
   @Deprecated

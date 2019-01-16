@@ -33,11 +33,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -99,14 +99,12 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     Project project = e.getProject();
     NewProjectDialog dialog = new NewProjectDialog(project, null);
 
-    if (dialog.showAndGet()) {
-      generateProject(project, dialog.getProjectPanel());
-    }
+    dialog.showAsync().doWhenDone(() -> generateProject(project, dialog.getProjectPanel()));
   }
 
   @Nonnull
   @Override
-  public JComponent createSlide(@Nonnull Disposable parentDisposable, Consumer<String> titleChanger) {
+  public JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull Consumer<String> titleChanger) {
     titleChanger.accept(IdeBundle.message("title.new.project"));
 
     return new SlideNewProjectPanel(parentDisposable, null, null);
@@ -138,7 +136,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
     RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
 
-    AsyncResult<Project> result = new AsyncResult<>();
+    AsyncResult<Project> result = AsyncResult.undefined();
     DefaultProjectOpenProcessor.getInstance().doOpenProjectAsync(baseDir, UIAccess.current()).notify(result);
     result.doWhenProcessed(newProject -> NewProjectUtilPlatform.doCreate(projectPanel, newProject, baseDir));
   }

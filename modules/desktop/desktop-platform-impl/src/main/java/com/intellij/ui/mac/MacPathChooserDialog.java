@@ -181,7 +181,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
   @Nonnull
   @Override
   public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
-    return null;
+    return AsyncResult.rejected();
   }
 
   @Nonnull
