@@ -26,17 +26,15 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.UserActivityProviderComponent;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +48,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
   public EnvironmentVariablesTextFieldWithBrowseButton() {
     super();
     setEditable(false);
-    addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        new MyEnvironmentVariablesDialog().show();
-      }
-    });
+    addActionListener(e -> new MyEnvironmentVariablesDialog().showAsync());
   }
 
   /**
