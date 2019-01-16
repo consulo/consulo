@@ -17,7 +17,6 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.*;
@@ -35,9 +34,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -317,12 +316,8 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
       if (myListeners.isEmpty()) {
         return;
       }
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          fireRootSetChanged();
-        }
-      });
+
+      fireRootSetChanged();
     }
   }
 
