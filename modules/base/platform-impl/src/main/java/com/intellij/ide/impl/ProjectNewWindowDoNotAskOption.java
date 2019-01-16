@@ -18,8 +18,15 @@ package com.intellij.ide.impl;
 import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.AlertBuilder;
+import consulo.ui.AlertBuilderRemember;
 
-public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOption {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOption, AlertBuilderRemember<Integer> {
+  public static final ProjectNewWindowDoNotAskOption INSTANCE = new ProjectNewWindowDoNotAskOption();
+
   @Override
   public boolean isToBeShown() {
     return true;
@@ -27,8 +34,7 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
 
   @Override
   public void setToBeShown(boolean value, int exitCode) {
-    int confirmOpenNewProject = value || exitCode == 2 ? GeneralSettings.OPEN_PROJECT_ASK :
-                                exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : GeneralSettings.OPEN_PROJECT_NEW_WINDOW ;
+    int confirmOpenNewProject = value || exitCode == 2 ? GeneralSettings.OPEN_PROJECT_ASK : exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : GeneralSettings.OPEN_PROJECT_NEW_WINDOW;
     GeneralSettings.getInstance().setConfirmOpenNewProject(confirmOpenNewProject);
   }
 
@@ -44,6 +50,31 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
 
   @Override
   public String getDoNotShowMessage() {
+    return CommonBundle.message("dialog.options.do.not.ask");
+  }
+
+  @Override
+  public void setValue(@Nonnull Integer value) {
+    if (value == AlertBuilder.CANCEL) {
+      return;
+    }
+
+    GeneralSettings.getInstance().setConfirmOpenNewProject(value);
+  }
+
+  @Nullable
+  @Override
+  public Integer getValue() {
+    int confirmOpenNewProject = GeneralSettings.getInstance().getConfirmOpenNewProject();
+    if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
+      return null;
+    }
+    return confirmOpenNewProject;
+  }
+
+  @Nonnull
+  @Override
+  public String getMessageBoxText() {
     return CommonBundle.message("dialog.options.do.not.ask");
   }
 }

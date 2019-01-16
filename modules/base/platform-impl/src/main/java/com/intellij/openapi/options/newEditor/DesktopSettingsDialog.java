@@ -19,7 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -33,6 +33,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.application.AccessRule;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
 import org.jetbrains.annotations.NonNls;
@@ -218,7 +219,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
     saveCurrentConfigurable();
 
-    ApplicationManager.getApplication().saveAll();
+    AccessRule.writeAsync(() -> Application.get().saveAll());
 
     super.doOKAction();
   }

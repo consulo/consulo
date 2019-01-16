@@ -18,6 +18,7 @@ package consulo.ui.impl;
 import com.intellij.CommonBundle;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.AlertBuilder;
+import consulo.ui.AlertBuilderRemember;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -66,6 +67,14 @@ public abstract class BaseAlertBuilder<V> implements AlertBuilder<V> {
   protected String myTitle;
   protected Type myType = Type.INFO;
   protected List<ButtonImpl> myButtons = new ArrayList<>();
+  protected AlertBuilderRemember<V> myRemember;
+
+  @Nonnull
+  @Override
+  public AlertBuilder<V> rememeber(@Nonnull AlertBuilderRemember<V> remember) {
+    myRemember = remember;
+    return this;
+  }
 
   @Nonnull
   @Override

@@ -39,6 +39,11 @@ import javax.annotation.Nullable;
  * @since 23-Sep-17
  */
 public abstract class WelcomeFrameManager {
+  @Nonnull
+  public static WelcomeFrameManager getInstance() {
+    return ServiceManager.getService(WelcomeFrameManager.class);
+  }
+
   public static final String DIMENSION_KEY = "WELCOME_SCREEN";
 
   @Nonnull
@@ -48,11 +53,6 @@ public abstract class WelcomeFrameManager {
 
   public static boolean isFromWelcomeFrame(@Nonnull AnActionEvent e) {
     return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
-  }
-
-  @Nonnull
-  public static WelcomeFrameManager getInstance() {
-    return ServiceManager.getService(WelcomeFrameManager.class);
   }
 
   private IdeFrame myFrameInstance;

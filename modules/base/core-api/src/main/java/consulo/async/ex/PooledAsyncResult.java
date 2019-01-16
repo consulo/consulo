@@ -20,7 +20,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -28,16 +28,9 @@ import java.util.concurrent.Callable;
  */
 public class PooledAsyncResult {
   @Nonnull
-  public static <V> AsyncResult<V> create(@Nonnull Callable<V> callable) {
+  public static <V> AsyncResult<V> create(@Nonnull Supplier<AsyncResult<V>> callable) {
     AsyncResult<V> result = new AsyncResult<>();
-    AppExecutorUtil.getAppExecutorService().execute(() -> {
-      try {
-        result.setDone(callable.call());
-      }
-      catch (Throwable e) {
-        result.rejectWithThrowable(e);
-      }
-    });
+    AppExecutorUtil.getAppExecutorService().execute(() -> result.notify(callable.get()));
     return result;
   }
 

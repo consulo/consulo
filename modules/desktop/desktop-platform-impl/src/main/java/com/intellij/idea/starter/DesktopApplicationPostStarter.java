@@ -30,12 +30,12 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.DesktopSplash;
 import consulo.annotations.Internal;
 import consulo.application.ApplicationProperties;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
+import consulo.start.WelcomeFrameManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,7 +119,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
         windowManager.showFrame();
       }
       else {
-        WelcomeFrame.showNow();
+        WelcomeFrameManager.getInstance().showFrame();
       }
 
       if (!args.isNoRecentProjects()) {

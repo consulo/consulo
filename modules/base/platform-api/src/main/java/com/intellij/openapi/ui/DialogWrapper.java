@@ -562,10 +562,7 @@ public abstract class DialogWrapper {
         return southPanel;
       }
 
-      final JPanel withCB = addDoNotShowCheckBox(southPanel, createDoNotAskCheckbox());
-
-
-      panel = withCB;
+      panel = addDoNotShowCheckBox(southPanel, createDoNotAskCheckbox());
     }
 
     panel.setBorder(IdeBorderFactory.createEmptyBorder(JBUI.insetsTop(8)));
@@ -2260,6 +2257,7 @@ public abstract class DialogWrapper {
   /**
    * @see PropertyDoNotAskOption
    */
+  @Deprecated
   public interface DoNotAskOption {
     abstract class Adapter implements DoNotAskOption {
 

@@ -27,11 +27,11 @@ import java.util.function.Supplier;
  * @since 01-Oct-17
  */
 public interface AlertBuilder<V> {
-  static int OK = 1000;
-  static int CANCEL = 1001;
-  static int APPLY = 1002;
-  static int YES = 1003;
-  static int NO = 1004;
+  int OK = 1000;
+  int CANCEL = 1001;
+  int APPLY = 1002;
+  int YES = 1003;
+  int NO = 1004;
 
   /**
    * @return new alert builder, with default title - and default type *info*
@@ -40,6 +40,9 @@ public interface AlertBuilder<V> {
   static <L> AlertBuilder<L> create() {
     return UIInternal.get()._Alerts_create();
   }
+
+  @Nonnull
+  AlertBuilder<V> rememeber(@Nonnull AlertBuilderRemember<V> remember);
 
   @Nonnull
   AlertBuilder<V> asWarning();

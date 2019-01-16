@@ -187,7 +187,9 @@ public class DaemonListeners implements Disposable {
           return; //no need to stop daemon if something happened in the console
         }
         stopDaemon(true, "Document change");
-        UpdateHighlightersUtil.updateHighlightersByTyping(myProject, e);
+
+        UIAccess lastUIAccess = Application.get().getLastUIAccess();
+        lastUIAccess.give(() -> UpdateHighlightersUtil.updateHighlightersByTyping(myProject, e));
       }
     }, this);
 

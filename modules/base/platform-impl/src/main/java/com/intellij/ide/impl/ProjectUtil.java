@@ -169,6 +169,7 @@ public class ProjectUtil {
     if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
       AlertBuilder<Integer> alertBuilder = AlertBuilder.create();
       alertBuilder.asQuestion();
+      alertBuilder.rememeber(ProjectNewWindowDoNotAskOption.INSTANCE);
 
       if (isNewProject) {
         alertBuilder.title(IdeBundle.message("title.new.project"));
@@ -193,7 +194,7 @@ public class ProjectUtil {
       return result;
     }
 
-    return AsyncResult.resolved(GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
+    return AsyncResult.resolved(confirmOpenNewProject);
   }
 
   public static void focusProjectWindow(final Project p, boolean executeIfAppInactive) {

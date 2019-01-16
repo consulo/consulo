@@ -20,12 +20,14 @@
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
 import com.intellij.openapi.wm.IdeFrame;
+import consulo.annotations.DeprecationInfo;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 
-// FIXME [VISTALL] maybe deprecate it?
+@Deprecated
+@DeprecationInfo("Use WelcomeFrameManager")
 public class WelcomeFrame {
   @Nullable
   @RequiredUIAccess

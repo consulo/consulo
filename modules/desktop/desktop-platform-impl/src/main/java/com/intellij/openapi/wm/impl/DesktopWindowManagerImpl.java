@@ -314,7 +314,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  public void setWindowMask(final Window window, @javax.annotation.Nullable final Shape mask) {
+  public void setWindowMask(final Window window, @Nullable final Shape mask) {
     try {
       if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.PERPIXEL_TRANSPARENT)) {
         AWTUtilitiesWrapper.setWindowShape(window, mask);
@@ -535,7 +535,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     frame.setBounds(myFrameBounds);
     frame.setExtendedState(myFrameExtendedState);
     frame.setVisible(true);
-
   }
 
   private DesktopIdeFrameImpl getDefaultEmptyIdeFrame() {
@@ -545,7 +544,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   @RequiredUIAccess
   @Nonnull
   @Override
-  public final IdeFrameEx allocateFrame(final Project project) {
+  public final IdeFrameEx allocateFrame(@Nonnull final Project project) {
     LOG.assertTrue(!myProject2Frame.containsKey(project));
 
     final DesktopIdeFrameImpl frame;
@@ -652,7 +651,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
 
   @Override
   @Nullable
-  public final Component getFocusedComponent(@javax.annotation.Nullable final Project project) {
+  public final Component getFocusedComponent(@Nullable final Project project) {
     return myWindowWatcher.getFocusedComponent(project);
   }
 
@@ -716,7 +715,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     return FrameBoundsConverter.convertFromDeviceSpace(bounds);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Element getState() {
     Element frameState = getFrameState();

@@ -20,7 +20,10 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.BrowserHyperlinkListener;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.util.ui.DialogUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
@@ -50,7 +53,9 @@ import java.util.function.Supplier;
  */
 class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
   class DialogImpl extends DialogWrapper implements Window {
-    private V mySelectValue;
+    private V mySelectedValue;
+
+    private DesktopCheckBoxImpl myRememberBox;
 
     DialogImpl(boolean canBeParent) {
       super(canBeParent);
@@ -80,7 +85,7 @@ class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
           public void actionPerformed(ActionEvent e) {
             close(exitCode, true);
 
-            mySelectValue = button.myValue.get();
+            mySelectedValue = button.myValue.get();
           }
         };
 
@@ -92,6 +97,28 @@ class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
 
       }
       return actions;
+    }
+
+    @Nullable
+    @Override
+    @RequiredUIAccess
+    protected JComponent createSouthPanel() {
+      JPanel panel = (JPanel)super.createSouthPanel();
+
+      if (myRemember != null) {
+        myRememberBox = new DesktopCheckBoxImpl();
+        myRememberBox.setText(myRemember.getMessageBoxText());
+        myRememberBox.setValue(myRemember.isRememberByDefault());
+
+        DialogUtil.registerMnemonic((JCheckBox)myRememberBox.toAWTComponent(), '&');
+
+        JComponent southPanel = panel;
+
+        panel = addDoNotShowCheckBox(southPanel, (JComponent)myRememberBox.toAWTComponent());
+
+        panel.setBorder(IdeBorderFactory.createEmptyBorder(JBUI.insetsTop(8)));
+      }
+      return panel;
     }
 
     protected JComponent doCreateCenterPanel() {
@@ -291,11 +318,26 @@ class DesktopAlertBuilderImpl<V> extends BaseAlertBuilder<V> {
     if (myButtons.isEmpty()) {
       throw new UnsupportedOperationException("buttons empty");
     }
-    AsyncResult<V> result = new AsyncResult<>();
 
+    V value = myRemember != null ? myRemember.getValue() : null;
+    if (value != null) {
+      return AsyncResult.resolved(value);
+    }
+
+    AsyncResult<V> result = new AsyncResult<>();
     DialogImpl dialog = new DialogImpl(false);
     AsyncResult<Void> async = dialog.showAsync();
-    async.doWhenProcessed(() -> result.setDone(dialog.mySelectValue));
+    async.doWhenProcessed(() -> {
+      V selectValue = dialog.mySelectedValue;
+
+      if (dialog.myRememberBox.getValue()) {
+        if (myRemember != null) {
+          myRemember.setValue(selectValue);
+        }
+      }
+
+      result.setDone(selectValue);
+    });
     return result;
   }
 }

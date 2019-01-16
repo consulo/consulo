@@ -30,9 +30,13 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.MacUIUtil;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.AccessRule;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BackspaceAction extends EditorAction {
   public BackspaceAction() {
@@ -46,7 +50,7 @@ public class BackspaceAction extends EditorAction {
 
     @RequiredWriteAction
     @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+    public AsyncResult<Void> executeActionAsync(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       MacUIUtil.hideCursor();
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
       if (editor instanceof EditorWindow) {
@@ -54,22 +58,24 @@ public class BackspaceAction extends EditorAction {
         // since the latter have trouble finding the right location of caret movement in the case of multi-shred injected fragments
         editor = ((EditorWindow)editor).getDelegate();
       }
-      doBackSpaceAtCaret(editor);
+
+      final Editor finalEditor = editor;
+      return doBackSpaceAtCaret(finalEditor);
     }
   }
 
-  private static void doBackSpaceAtCaret(@Nonnull Editor editor) {
-    if(editor.getSelectionModel().hasSelection()) {
+  private static AsyncResult<Void> doBackSpaceAtCaret(@Nonnull Editor editor) {
+    if (editor.getSelectionModel().hasSelection()) {
       EditorModificationUtil.deleteSelectedText(editor);
-      return;
+      return AsyncResult.resolved();
     }
 
     int lineNumber = editor.getCaretModel().getLogicalPosition().line;
     int colNumber = editor.getCaretModel().getLogicalPosition().column;
     Document document = editor.getDocument();
     int offset = editor.getCaretModel().getOffset();
-    if(colNumber > 0) {
-      if(EditorModificationUtil.calcAfterLineEnd(editor) > 0) {
+    if (colNumber > 0) {
+      if (EditorModificationUtil.calcAfterLineEnd(editor) > 0) {
         int columnShift = -1;
         editor.getCaretModel().moveCaretRelatively(columnShift, 0, false, false, true);
       }
@@ -79,25 +85,34 @@ public class BackspaceAction extends EditorAction {
 
         FoldRegion region = editor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1);
         if (region != null && region.shouldNeverExpand()) {
-          document.deleteString(region.getStartOffset(), region.getEndOffset());
+          AccessRule.writeAsync(() -> document.deleteString(region.getStartOffset(), region.getEndOffset())).getResultSync();
+
           editor.getCaretModel().moveToOffset(region.getStartOffset());
         }
         else {
-          document.deleteString(offset - 1, offset);
+          AccessRule.writeAsync(() -> document.deleteString(offset - 1, offset)).getResultSync();
+
           editor.getCaretModel().moveToOffset(offset - 1, true);
         }
       }
     }
-    else if(lineNumber > 0) {
-      int separatorLength = document.getLineSeparatorLength(lineNumber - 1);
-      int lineEnd = document.getLineEndOffset(lineNumber - 1) + separatorLength;
-      document.deleteString(lineEnd - separatorLength, lineEnd);
-      editor.getCaretModel().moveToOffset(lineEnd - separatorLength);
+    else if (lineNumber > 0) {
+      int navigateOffset = AccessRule.writeAsync(() -> {
+        int separatorLength = document.getLineSeparatorLength(lineNumber - 1);
+        int lineEnd = document.getLineEndOffset(lineNumber - 1) + separatorLength;
+        document.deleteString(lineEnd - separatorLength, lineEnd);
+
+        return lineEnd - separatorLength;
+      }).getResultSync();
+
+      editor.getCaretModel().moveToOffset(navigateOffset);
       EditorModificationUtil.scrollToCaret(editor);
       editor.getSelectionModel().removeSelection();
       // Do not group delete newline and other deletions.
       CommandProcessor commandProcessor = CommandProcessor.getInstance();
       commandProcessor.setCurrentCommandGroupId(null);
     }
+
+    return AsyncResult.resolved();
   }
 }

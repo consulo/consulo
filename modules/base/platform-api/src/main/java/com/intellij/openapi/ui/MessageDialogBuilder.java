@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 
 import javax.swing.*;
 
+@Deprecated
 public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
   protected final String myMessage;
   protected final String myTitle;

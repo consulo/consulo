@@ -17,11 +17,14 @@ package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Caret;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ReadOnlyFragmentModificationException;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
@@ -50,23 +53,21 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
       if (project != null && !FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) return;
     }
 
-    AccessRule.writeAsync(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
-      @Override
-      public void run() {
-        final Document doc = editor.getDocument();
+    final Document doc = editor.getDocument();
 
-        doc.startGuardedBlockChecking();
-        try {
-          executeWriteAction(editor, caret, dataContext);
-        }
-        catch (ReadOnlyFragmentModificationException e) {
-          EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
-        }
-        finally {
-          doc.stopGuardedBlockChecking();
-        }
-      }
-    }).getResultSync();
+    doc.startGuardedBlockChecking();
+
+    try {
+      executeActionAsync(editor, caret, dataContext).doWhenDone(doc::stopGuardedBlockChecking);
+    }
+    catch (ReadOnlyFragmentModificationException e) {
+      EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
+    }
+  }
+
+  public AsyncResult<Void> executeActionAsync(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    executeWriteAction(editor, caret, dataContext);
+    return AsyncResult.resolved();
   }
 
   /**
