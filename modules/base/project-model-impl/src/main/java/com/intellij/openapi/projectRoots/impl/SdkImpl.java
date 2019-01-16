@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SdkImpl extends UserDataHolderBase implements PersistentStateComponent<Element>, Sdk, SdkModificator {
-  public static final Logger LOGGER = Logger.getInstance(SdkImpl.class);
+  private static final Logger LOGGER = Logger.getInstance(SdkImpl.class);
 
   @NonNls
   public static final String ELEMENT_NAME = "name";
