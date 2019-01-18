@@ -141,18 +141,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     throw new UnsupportedOperationException();
   }
 
-  @RequiredUIAccess
-  @Override
-  public void runWriteAction(@Nonnull Runnable action) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    throw new UnsupportedOperationException();
-  }
-
   @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
@@ -351,12 +339,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   @Override
   public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    throw new UnsupportedOperationException();
   }
 
   @Override

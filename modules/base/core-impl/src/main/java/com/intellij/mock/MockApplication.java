@@ -142,24 +142,6 @@ public class MockApplication extends MockComponentManager implements Application
     return computation.compute();
   }
 
-  @RequiredUIAccess
-  @Override
-  public void runWriteAction(@Nonnull Runnable action) {
-    action.run();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    return computation.compute();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return computation.compute();
-  }
-
   @Nonnull
   @Override
   public AccessToken acquireReadActionLock() {

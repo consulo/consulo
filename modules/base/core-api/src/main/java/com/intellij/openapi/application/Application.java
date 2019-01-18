@@ -22,10 +22,9 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
@@ -81,40 +80,6 @@ public interface Application extends ComponentManager {
    * @throws E re-frown from ThrowableComputable
    */
   <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
-
-  /**
-   * Runs the specified write action.
-   * The action is executed immediately if no read actions are currently running, or blocked until all read actions complete.
-   *
-   * @param action the action to run
-   */
-  default void runWriteAction(@Nonnull Runnable action) {
-    AccessRule.writeAsync(action::run).getResultSync();
-  }
-
-  /**
-   * Runs the specified computation in a write action.
-   * The action is executed immediately if no read actions or write actions are currently running,
-   * or blocked until all read actions and write actions complete.
-   *
-   * @param computation the computation to run
-   * @return the result returned by the computation.
-   */
-  default <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync();
-  }
-  /**
-   * Runs the specified computation in a write action.
-   * The action is executed immediately if no read actions or write actions are currently running,
-   * or blocked until all read actions and write actions complete.
-   *
-   * @param computation the computation to run
-   * @return the result returned by the computation.
-   * @throws E re-frown from ThrowableComputable
-   */
-  default <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync();
-  }
 
   /**
    * Asserts whether the read access is allowed.
@@ -441,7 +406,7 @@ public interface Application extends ComponentManager {
    */
   @Nonnull
   @Deprecated
-  @DeprecationInfo("Use runWriteAction(Runnable)")
+  @DeprecationInfo("Use AccessRule#writeAsync")
   @RequiredUIAccess
   default AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     throw new UnsupportedOperationException();
@@ -469,6 +434,47 @@ public interface Application extends ComponentManager {
   @DeprecationInfo("Old IDEA UnitTesting mode was dropped. This method became useless. If you want check if you inside test mode - use #isTestingMode()")
   default boolean isUnitTestMode() {
     return false;
+  }
+
+  /**
+   * Runs the specified write action.
+   * The action is executed immediately if no read actions are currently running, or blocked until all read actions complete.
+   *
+   * @param action the action to run
+   */
+  @Deprecated
+  @DeprecationInfo("Use AccessRule#writeAsync")
+  default void runWriteAction(@Nonnull Runnable action) {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Runs the specified computation in a write action.
+   * The action is executed immediately if no read actions or write actions are currently running,
+   * or blocked until all read actions and write actions complete.
+   *
+   * @param computation the computation to run
+   * @return the result returned by the computation.
+   */
+  @Deprecated
+  @DeprecationInfo("Use AccessRule#writeAsync")
+  default <T> T runWriteAction(@Nonnull Computable<T> computation) {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Runs the specified computation in a write action.
+   * The action is executed immediately if no read actions or write actions are currently running,
+   * or blocked until all read actions and write actions complete.
+   *
+   * @param computation the computation to run
+   * @return the result returned by the computation.
+   * @throws E re-frown from ThrowableComputable
+   */
+  @Deprecated
+  @DeprecationInfo("Use AccessRule#writeAsync")
+  default <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+    throw new UnsupportedOperationException();
   }
   // endregion
 }
