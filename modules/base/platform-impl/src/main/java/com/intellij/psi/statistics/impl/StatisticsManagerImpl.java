@@ -18,7 +18,7 @@ package com.intellij.psi.statistics.impl;
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
@@ -31,11 +31,11 @@ import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.util.Collections;
 import java.util.HashSet;
@@ -52,6 +52,14 @@ public class StatisticsManagerImpl extends StatisticsManager {
   private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<>();
   private boolean myTestingStatistics;
 
+  private final Application myApplication;
+
+  @Inject
+  public StatisticsManagerImpl(Application application) {
+    myApplication = application;
+  }
+
+  @Override
   public int getUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return 0;
 
@@ -93,13 +101,14 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
   }
 
+  @Override
   public void incUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return;
-    if (ApplicationManager.getApplication().isUnitTestMode() && !myTestingStatistics) {
+    if (myApplication.isUnitTestMode() && !myTestingStatistics) {
       return;
     }
 
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
 
     for (StatisticsInfo conjunct : info.getConjuncts()) {
       doIncUseCount(conjunct);
@@ -116,6 +125,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
   }
 
+  @Override
   public StatisticsInfo[] getAllValues(final String context) {
     final String[] strings;
     synchronized (LOCK) {
@@ -124,11 +134,12 @@ public class StatisticsManagerImpl extends StatisticsManager {
     return ContainerUtil.map2Array(strings, StatisticsInfo.class, (NotNullFunction<String, StatisticsInfo>)s -> new StatisticsInfo(context, s));
   }
 
+  @Override
   @RequiredWriteAction
   public void save() {
     synchronized (LOCK) {
-      if (!ApplicationManager.getApplication().isUnitTestMode()){
-        ApplicationManager.getApplication().assertIsDispatchThread();
+      if (!myApplication.isUnitTestMode()){
+        myApplication.assertWriteAccessAllowed();
         for (StatisticsUnit unit : myModifiedUnits) {
           saveUnit(unit.getNumber());
         }
@@ -148,9 +159,9 @@ public class StatisticsManagerImpl extends StatisticsManager {
     return unit;
   }
 
-  private static StatisticsUnit loadUnit(int unitNumber) {
+  private StatisticsUnit loadUnit(int unitNumber) {
     StatisticsUnit unit = new StatisticsUnit(unitNumber);
-    if (!ApplicationManager.getApplication().isUnitTestMode()){
+    if (!myApplication.isUnitTestMode()){
       String path = getPathToUnit(unitNumber);
       try (InputStream in = new ScrambledInputStream(new BufferedInputStream(new FileInputStream(path)))) {
         unit.read(in);
@@ -211,14 +222,11 @@ public class StatisticsManagerImpl extends StatisticsManager {
   @TestOnly
   public void enableStatistics(@Nonnull Disposable parentDisposable) {
     myTestingStatistics = true;
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        synchronized (LOCK) {
-          Collections.fill(myUnits, null);
-        }
-        myTestingStatistics = false;
+    Disposer.register(parentDisposable, () -> {
+      synchronized (LOCK) {
+        Collections.fill(myUnits, null);
       }
+      myTestingStatistics = false;
     });
   }
 
