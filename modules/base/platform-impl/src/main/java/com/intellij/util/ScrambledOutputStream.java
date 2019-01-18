@@ -26,10 +26,12 @@ public class ScrambledOutputStream extends OutputStream{
     myOriginalStream = originalStream;
   }
 
+  @Override
   public void write(int b) throws IOException {
     myOriginalStream.write(b ^ MASK);
   }
 
+  @Override
   public void write(byte[] b, int off, int len) throws IOException {
     byte[] newBytes = new byte[len];
     for(int i = 0; i < len; i++) {
@@ -38,12 +40,13 @@ public class ScrambledOutputStream extends OutputStream{
     myOriginalStream.write(newBytes, 0, len);
   }
 
+  @Override
   public void flush() throws IOException {
     myOriginalStream.flush();
   }
 
+  @Override
   public void close() throws IOException {
     myOriginalStream.close();
   }
-
 }
