@@ -101,7 +101,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
   public static final String ID = "ShowUsages";
 
   public static int getUsagesPageSize() {
-    return Math.max(1, Registry.intValue("ide.usages.page.size", 100));
+    return 100/*Math.max(1, Registry.intValue("ide.usages.page.size", 100))*/;
   }
 
   static final Usage MORE_USAGES_SEPARATOR = NullUsage.INSTANCE;
@@ -511,11 +511,11 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
 
   private void showDialogAndFindUsages(@Nonnull FindUsagesHandler handler, @Nonnull RelativePoint popupPosition, Editor editor, int maxUsages) {
     AbstractFindUsagesDialog dialog = handler.getFindUsagesDialog(false, false, false);
-    if (dialog.showAndGet()) {
+    dialog.showAsync().doWhenDone(() -> {
       dialog.calcFindUsagesOptions();
       FindUsagesOptions options = handler.getFindUsagesOptions(DataManager.getInstance().getDataContext());
       showElementUsages(editor, popupPosition, handler, maxUsages, options);
-    }
+    });
   }
 
   @Nonnull
@@ -734,11 +734,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
       {
         AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_USAGES);
         setShortcutSet(action.getShortcutSet());
-      }
-
-      @Override
-      public boolean startInTransaction() {
-        return true;
       }
 
       @Override
