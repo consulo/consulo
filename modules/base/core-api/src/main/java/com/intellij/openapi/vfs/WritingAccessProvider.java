@@ -16,30 +16,30 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class WritingAccessProvider {
-
   private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create("com.intellij.writingAccessProvider");
+
+  private static final WritingAccessProvider[] EMPTY_ARRAY = new WritingAccessProvider[0];
 
   /**
    * @param files files to be checked
    * @return set of files that cannot be accessed
    */
   @Nonnull
-  public abstract Collection<VirtualFile> requestWriting(VirtualFile... files);
+  public abstract Collection<VirtualFile> requestWriting(@Nonnull VirtualFile... files);
 
   public abstract boolean isPotentiallyWritable(@Nonnull VirtualFile file);
 
   public static WritingAccessProvider[] getProvidersForProject(Project project) {
-    return project == null || project.isDefault() ? new WritingAccessProvider[0] : Extensions.getExtensions(EP_NAME, project);
+    return project == null || project.isDefault() ? EMPTY_ARRAY : EP_NAME.getExtensions(project);
   }
 
   public static boolean isPotentiallyWritable(VirtualFile file, Project project) {

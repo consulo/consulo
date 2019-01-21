@@ -19,15 +19,15 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.event.KeyEvent;
+import java.util.function.Consumer;
 
 public abstract class EditorAction extends AnAction implements DumbAware {
   private EditorActionHandler myHandler;
@@ -60,7 +60,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     if (!myHandlersLoaded) {
       myHandlersLoaded = true;
       final String id = ActionManager.getInstance().getId(this);
-      EditorActionHandlerBean[] extensions = Extensions.getExtensions(EditorActionHandlerBean.EP_NAME);
+      EditorActionHandlerBean[] extensions = EditorActionHandlerBean.EP_NAME.getExtensions();
       for (int i = extensions.length - 1; i >= 0; i--) {
         final EditorActionHandlerBean handlerBean = extensions[i];
         if (handlerBean.action.equals(id)) {
@@ -93,25 +93,22 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     return dataContext.getData(CommonDataKeys.EDITOR);
   }
 
-  public final void actionPerformed(final Editor editor, @Nonnull final DataContext dataContext) {
+  @RequiredUIAccess
+  public final void actionPerformed(@Nullable Editor editor, @Nonnull final DataContext dataContext) {
     if (editor == null) return;
 
     final EditorActionHandler handler = getHandler();
-    Runnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
+    Consumer<AsyncResult<Void>> command = (r) -> handler.executeAsync(editor, null, getProjectAwareDataContext(editor, dataContext), r);
 
     if (!handler.executeInCommand(editor, dataContext)) {
-      command.run();
+      command.accept(AsyncResult.undefined());
       return;
     }
 
     String commandName = getTemplatePresentation().getText();
     if (commandName == null) commandName = "";
-    CommandProcessor.getInstance().executeCommand(editor.getProject(),
-                                                  command,
-                                                  commandName,
-                                                  handler.getCommandGroupId(editor),
-                                                  UndoConfirmationPolicy.DEFAULT,
-                                                  editor.getDocument());
+
+    CommandProcessor.getInstance().executeCommandAsync(editor.getProject(), command, commandName, handler.getCommandGroupId(editor), UndoConfirmationPolicy.DEFAULT, editor.getDocument());
   }
 
   public void update(Editor editor, Presentation presentation, DataContext dataContext) {

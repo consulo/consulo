@@ -18,14 +18,10 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.NotNullLazyKey;
-import com.intellij.openapi.util.UserDataHolder;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.*;
@@ -33,6 +29,7 @@ import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -50,14 +47,14 @@ import java.util.stream.Stream;
 
 public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   private static final Key<Boolean> ENABLE_IN_TESTS = Key.create("NON_PROJECT_FILE_ACCESS_ENABLE_IN_TESTS");
-  private static final NotNullLazyKey<AtomicInteger, UserDataHolder> ACCESS_ALLOWED =
-          NotNullLazyKey.create("NON_PROJECT_FILE_ACCESS", holder -> new AtomicInteger());
+  private static final NotNullLazyKey<AtomicInteger, UserDataHolder> ACCESS_ALLOWED = NotNullLazyKey.create("NON_PROJECT_FILE_ACCESS", holder -> new AtomicInteger());
 
   private static final AtomicBoolean myInitialized = new AtomicBoolean();
 
   @Nonnull
   private final Project myProject;
-  @Nullable private static NullableFunction<List<VirtualFile>, UnlockOption> ourCustomUnlocker;
+  @Nullable
+  private static NullableFunction<List<VirtualFile>, UnlockOption> ourCustomUnlocker;
 
   @TestOnly
   public static void setCustomUnlocker(@Nullable NullableFunction<List<VirtualFile>, UnlockOption> unlocker) {
@@ -80,7 +77,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
   @Nonnull
   @Override
-  public Collection<VirtualFile> requestWriting(VirtualFile... files) {
+  public Collection<VirtualFile> requestWriting(@Nonnull VirtualFile... files) {
     if (isAllAccessAllowed()) return Collections.emptyList();
 
     List<VirtualFile> deniedFiles = Stream.of(files).filter(o -> !isWriteAccessAllowed(o, myProject)).collect(Collectors.toList());
@@ -106,12 +103,27 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   }
 
   @Nullable
+  @Deprecated
   private UnlockOption askToUnlock(@Nonnull List<VirtualFile> files) {
     if (ourCustomUnlocker != null) return ourCustomUnlocker.fun(files);
 
     NonProjectFileWritingAccessDialog dialog = new NonProjectFileWritingAccessDialog(myProject, files);
     if (!dialog.showAndGet()) return null;
     return dialog.getUnlockOption();
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  private AsyncResult<UnlockOption> askToUnlockAsync(@Nonnull List<VirtualFile> files) {
+    if (ourCustomUnlocker != null) return AsyncResult.resolved(ourCustomUnlocker.fun(files));
+
+    NonProjectFileWritingAccessDialog dialog = new NonProjectFileWritingAccessDialog(myProject, files);
+    AsyncResult<UnlockOption> result = AsyncResult.undefined();
+    AsyncResult<Void> showAsync = dialog.showAsync();
+
+    showAsync.doWhenDone(() -> result.setDone(dialog.getUnlockOption()));
+    showAsync.doWhenRejected(() -> result.setRejected());
+    return result;
   }
 
   public static boolean isWriteAccessAllowed(@Nonnull VirtualFile file, @Nonnull Project project) {
@@ -137,12 +149,12 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   }
 
   private static boolean isProjectFile(@Nonnull VirtualFile file, @Nonnull Project project) {
-    for (NonProjectFileWritingAccessExtension each : Extensions.getExtensions(NonProjectFileWritingAccessExtension.EP_NAME, project)) {
+    for (NonProjectFileWritingAccessExtension each : NonProjectFileWritingAccessExtension.EP_NAME.getExtensions(project)) {
       if (each.isWritable(file)) return true;
       if (each.isNotWritable(file)) return false;
     }
 
-    ProjectFileIndex fileIndex = ProjectFileIndex.SERVICE.getInstance(project);
+    ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
     if (fileIndex.isInContent(file)) return true;
     if (!Registry.is("ide.hide.excluded.files") && fileIndex.isExcluded(file) && !fileIndex.isUnderIgnored(file)) return true;
 
@@ -195,9 +207,13 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     return ApplicationManager.getApplication();
   }
 
-  public enum UnlockOption {UNLOCK, UNLOCK_DIR, UNLOCK_ALL}
+  public enum UnlockOption {
+    UNLOCK,
+    UNLOCK_DIR,
+    UNLOCK_ALL
+  }
 
-  private static class OurVirtualFileAdapter extends VirtualFileAdapter {
+  private static class OurVirtualFileAdapter implements VirtualFileListener {
     @Override
     public void fileCreated(@Nonnull VirtualFileEvent event) {
       unlock(event);

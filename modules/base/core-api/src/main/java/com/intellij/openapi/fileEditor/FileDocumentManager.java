@@ -96,8 +96,8 @@ public abstract class FileDocumentManager implements SavingRequestor {
    * @see com.intellij.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile...)
    */
   @Nonnull
-  public AsyncResult<Boolean> requestWritingAsync(@Nonnull Document document, @Nonnull UIAccess uiAccess, @Nullable Project project) {
-    return AsyncResult.resolved(requestWriting(document, project));
+  public AsyncResult<Void> requestWritingAsync(@Nonnull Document document, @Nonnull UIAccess uiAccess, @Nullable Project project) {
+    return requestWriting(document, project) ? AsyncResult.resolved() : AsyncResult.rejected();
   }
 
   public static boolean fileForDocumentCheckedOutSuccessfully(@Nonnull Document document, @Nonnull Project project) {

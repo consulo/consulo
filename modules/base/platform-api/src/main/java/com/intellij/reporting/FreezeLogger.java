@@ -17,8 +17,11 @@ package com.intellij.reporting;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public abstract class FreezeLogger {
 
@@ -26,6 +29,6 @@ public abstract class FreezeLogger {
     return ServiceManager.getService(FreezeLogger.class);
   }
 
-  public abstract void runUnderPerformanceMonitor(@Nullable Project project, @Nonnull Runnable action);
+  public abstract void runUnderPerformanceMonitor(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> action);
 
 }

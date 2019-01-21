@@ -15,16 +15,15 @@
  */
 package com.intellij.openapi.editor.actionSystem;
 
-import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.reporting.FreezeLogger;
-import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +47,7 @@ public class TypedAction {
   private void ensureHandlersLoaded() {
     if (!myHandlersLoaded) {
       myHandlersLoaded = true;
-      for (EditorTypedHandlerBean handlerBean : Extensions.getExtensions(EditorTypedHandlerBean.EP_NAME)) {
+      for (EditorTypedHandlerBean handlerBean : EditorTypedHandlerBean.EP_NAME.getExtensions()) {
         myHandler = handlerBean.getHandler(myHandler);
       }
     }
@@ -139,7 +138,8 @@ public class TypedAction {
   public final void actionPerformed(@Nullable final Editor editor, final char charTyped, final DataContext dataContext) {
     if (editor == null) return;
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    FreezeLogger.getInstance().runUnderPerformanceMonitor(project, () -> myRawHandler.execute(editor, charTyped, dataContext));
+
+    FreezeLogger.getInstance().runUnderPerformanceMonitor(project, () -> myRawHandler.executeAsync(editor, charTyped, dataContext));
   }
 
   private class DefaultRawHandler implements TypedActionHandlerEx {
@@ -154,29 +154,26 @@ public class TypedAction {
       }
     }
 
+    @Nonnull
     @Override
-    public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
-      CommandProcessor.getInstance().executeCommand(dataContext.getData(CommonDataKeys.PROJECT), () -> {
-        if (!EditorModificationUtil.requestWriting(editor)) {
-          HintManager.getInstance().showInformationHint(editor, "File is not writable");
-          return;
-        }
-        AccessRule.writeAsync(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
-          @Override
-          public void run() {
-            Document doc = editor.getDocument();
-            doc.startGuardedBlockChecking();
-            try {
-              getHandler().execute(editor, charTyped, dataContext);
-            }
-            catch (ReadOnlyFragmentModificationException e) {
-              EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
-            }
-            finally {
+    @RequiredUIAccess
+    public AsyncResult<Void> executeAsync(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+      return CommandProcessor.getInstance().executeCommandAsync(dataContext.getData(CommonDataKeys.PROJECT), (commandResult) -> {
+        AsyncResult<Void> result = EditorModificationUtil.requestWritingAsync(editor);
+        result.doWhenDone(() -> {
+          Document doc = editor.getDocument();
+          doc.startGuardedBlockChecking();
+          try {
+            getHandler().executeAsync(editor, charTyped, dataContext).doWhenDone(() -> {
               doc.stopGuardedBlockChecking();
-            }
+
+              commandResult.setDone();
+            });
           }
-        }).getResultSync();
+          catch (ReadOnlyFragmentModificationException e) {
+            EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
+          }
+        });
       }, "", editor.getDocument(), UndoConfirmationPolicy.DEFAULT, editor.getDocument());
     }
   }

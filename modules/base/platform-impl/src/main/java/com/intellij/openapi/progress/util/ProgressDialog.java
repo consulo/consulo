@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.impl.DialogWrapperPeerImpl;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.WindowManager;
@@ -243,10 +244,10 @@ class ProgressDialog implements Disposable {
     return myParentWindow;
   }
 
-  void show() {
+  AsyncResult<Void> show() {
     myWasShown = true;
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
-    if (myParentWindow == null) return;
+    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return AsyncResult.resolved();
+    if (myParentWindow == null) return AsyncResult.resolved();
     if (myPopup != null) {
       myPopup.close(DialogWrapper.CANCEL_EXIT_CODE);
     }
@@ -271,7 +272,7 @@ class ProgressDialog implements Disposable {
 
     Disposer.register(myPopup.getDisposable(), () -> myProgressWindow.exitModality());
 
-    myPopup.show();
+    return myPopup.showAsync();
   }
 
   private boolean isWriteActionProgress() {

@@ -68,6 +68,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     return myState;
   }
 
+  @RequiredReadAction
   @Override
   public void loadState(State state) {
     myState = state;
@@ -159,7 +160,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     }
 
     if (myState.SHOW_DIALOG) {
-      AsyncResult<OperationStatus> result = new AsyncResult<>();
+      AsyncResult<OperationStatus> result = AsyncResult.undefined();
 
       final VirtualFile[] finalFiles = files;
       uiAccess.give(() -> new ReadOnlyStatusDialog(myProject, fileInfos).showAsync()).doWhenDone(() -> result.setDone(createResultStatus(finalFiles)));

@@ -75,31 +75,31 @@ public abstract class CommandProcessor {
                                       boolean shouldRecordCommandForActiveDocument);
 
   @RequiredUIAccess
-  public <T> AsyncResult<T> executeCommandAsync(@Nullable Project project, @Nonnull Consumer<AsyncResult<T>> runnable, @Nullable String name, @Nullable Object groupId) {
-    return executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT);
+  public <T> AsyncResult<T> executeCommandAsync(@Nullable Project project, @RequiredUIAccess @Nonnull Consumer<AsyncResult<T>> command, @Nullable String name, @Nullable Object groupId) {
+    return executeCommandAsync(project, command, name, groupId, UndoConfirmationPolicy.DEFAULT);
   }
 
   @RequiredUIAccess
-  public <T> AsyncResult<T> executeCommandAsync(Project project, @Nonnull Consumer<AsyncResult<T>> runnable, String name, Object groupId, Document document) {
-    return executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document);
+  public <T> AsyncResult<T> executeCommandAsync(Project project, @RequiredUIAccess @Nonnull Consumer<AsyncResult<T>> command, String name, Object groupId, Document document) {
+    return executeCommandAsync(project, command, name, groupId, UndoConfirmationPolicy.DEFAULT, document);
   }
 
   @RequiredUIAccess
   public <T> AsyncResult<T> executeCommandAsync(Project project,
-                                               @Nonnull final Consumer<AsyncResult<T>> command,
-                                               final String name,
-                                               final Object groupId,
-                                               @Nonnull UndoConfirmationPolicy confirmationPolicy) {
+                                                @RequiredUIAccess @Nonnull Consumer<AsyncResult<T>> command,
+                                                final String name,
+                                                final Object groupId,
+                                                @Nonnull UndoConfirmationPolicy confirmationPolicy) {
     return executeCommandAsync(project, command, name, groupId, confirmationPolicy, null);
   }
 
   @RequiredUIAccess
   public abstract <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
-                                                        @Nonnull Consumer<AsyncResult<T>> command,
-                                                        @Nullable String name,
-                                                        @Nullable Object groupId,
-                                                        @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                                        @Nullable Document document);
+                                                         @RequiredUIAccess @Nonnull Consumer<AsyncResult<T>> command,
+                                                         @Nullable String name,
+                                                         @Nullable Object groupId,
+                                                         @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                                         @Nullable Document document);
 
   /**
    * @param shouldRecordCommandForActiveDocument false if the action is not supposed to be recorded into the currently open document's history.
@@ -108,11 +108,11 @@ public abstract class CommandProcessor {
    */
   @RequiredUIAccess
   public abstract <T> AsyncResult<T> executeCommandAsync(@Nullable Project project,
-                                           @Nonnull Consumer<AsyncResult<T>> command,
-                                           @Nullable String name,
-                                           @Nullable Object groupId,
-                                           @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                           boolean shouldRecordCommandForActiveDocument);
+                                                         @RequiredUIAccess @Nonnull Consumer<AsyncResult<T>> command,
+                                                         @Nullable String name,
+                                                         @Nullable Object groupId,
+                                                         @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                                                         boolean shouldRecordCommandForActiveDocument);
 
   public abstract void setCurrentCommandName(@Nullable String name);
 

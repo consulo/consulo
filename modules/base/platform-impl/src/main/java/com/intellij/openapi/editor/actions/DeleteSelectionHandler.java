@@ -22,23 +22,27 @@ import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.ide.CopyPasteManager;
-import consulo.annotations.RequiredWriteAction;
+import com.intellij.openapi.util.AsyncResult;
+import consulo.editor.actionSystem.DocumentEditorActionHandler;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
-public class DeleteSelectionHandler extends EditorWriteActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+public class DeleteSelectionHandler extends DocumentEditorActionHandler {
+  private final DocumentEditorActionHandler myOriginalHandler;
 
+  @Inject
   public DeleteSelectionHandler(EditorActionHandler handler) {
-    myOriginalHandler = handler;
+    myOriginalHandler = (DocumentEditorActionHandler)handler;
   }
 
-  @RequiredWriteAction
   @Override
-  public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+  @RequiredUIAccess
+  public void executeDocumentAction(Editor editor, @Nullable Caret caret, @Nullable DataContext dataContext, @Nonnull AsyncResult<Void> asyncResult) {
     if (caret == null ? editor.getSelectionModel().hasSelection(true) : caret.hasSelection()) {
       EditorUIUtil.hideCursorInEditor(editor);
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
@@ -50,9 +54,11 @@ public class DeleteSelectionHandler extends EditorWriteActionHandler {
       else {
         action.perform(caret);
       }
+
+      asyncResult.setDone();
     }
     else {
-      myOriginalHandler.execute(editor, caret, dataContext);
+      myOriginalHandler.executeDocumentAction(editor, caret, dataContext, asyncResult);
     }
   }
 }

@@ -69,10 +69,10 @@ public class AsyncResult<T> extends ActionCallback {
   @Nonnull
   public static <T> AsyncResult<T> merge(@Nonnull Collection<AsyncResult<T>> list) {
     if (list.isEmpty()) {
-      return resolved(null);
+      return resolved();
     }
 
-    AsyncResult<T> result = new AsyncResult<>();
+    AsyncResult<T> result = undefined();
 
     AtomicInteger count = new AtomicInteger(list.size());
     AtomicBoolean rejectResult = new AtomicBoolean();

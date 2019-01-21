@@ -22,9 +22,13 @@ import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.Producer;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -406,12 +410,17 @@ public class EditorModificationUtil {
     return caretStates;
   }
 
+  @Deprecated
   public static boolean requestWriting(@Nonnull Editor editor) {
-    if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
-      HintManager.getInstance().showInformationHint(editor, EditorBundle.message("editing.read.only.file.hint"));
-      return false;
-    }
-    return true;
+    throw new UnsupportedOperationException("dead method");
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public static AsyncResult<Void> requestWritingAsync(@Nonnull Editor editor) {
+    AsyncResult<Void> result = FileDocumentManager.getInstance().requestWritingAsync(editor.getDocument(), UIAccess.current(), editor.getProject());
+    result.doWhenRejected(() -> HintManager.getInstance().showInformationHint(editor, EditorBundle.message("editing.read.only.file.hint")));
+    return result;
   }
 
   /**

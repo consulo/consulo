@@ -22,14 +22,16 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.Alarm;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
+import java.util.function.Supplier;
 
 @Singleton
 public class FreezeLoggerImpl extends FreezeLogger {
@@ -39,9 +41,9 @@ public class FreezeLoggerImpl extends FreezeLogger {
   private static final int MAX_ALLOWED_TIME = 500;
 
   @Override
-  public void runUnderPerformanceMonitor(@Nullable Project project, @Nonnull Runnable action) {
+  public void runUnderPerformanceMonitor(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> action) {
     if (!shouldReport() || isUnderDebug() || ApplicationManager.getApplication().isUnitTestMode()) {
-      action.run();
+      action.get();
       return;
     }
 
@@ -49,12 +51,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
     ALARM.cancelAllRequests();
     ALARM.addRequest(() -> dumpThreads(project, initial), MAX_ALLOWED_TIME);
 
-    try {
-      action.run();
-    }
-    finally {
-      ALARM.cancelAllRequests();
-    }
+    action.get().doWhenDone(ALARM::cancelAllRequests);
   }
 
   private static boolean shouldReport() {

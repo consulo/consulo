@@ -21,10 +21,13 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.AsyncResult;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface for actions activated by keystrokes in the editor.
@@ -166,6 +169,7 @@ public abstract class EditorActionHandler {
    * @param dataContext the data context for the action.
    */
   @RequiredUIAccess
+  @Deprecated
   protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     if (inExecution) {
       return;
@@ -178,6 +182,12 @@ public abstract class EditorActionHandler {
     finally {
       inExecution = false;
     }
+  }
+
+  @RequiredUIAccess
+  protected void doExecuteAsync(Editor editor, @Nullable Caret caret, DataContext dataContext, @Nonnull AsyncResult<Void> asyncResult) {
+    doExecute(editor, caret, dataContext);
+    asyncResult.setDone();
   }
 
   public boolean executeInCommand(Editor editor, DataContext dataContext) {
@@ -195,24 +205,45 @@ public abstract class EditorActionHandler {
    * @param editor      the editor in which the action is invoked.
    * @param dataContext the data context for the action.
    */
-  public final void execute(@Nonnull Editor editor, @Nullable final Caret contextCaret, final DataContext dataContext) {
+  @RequiredUIAccess
+  public final void executeAsync(@Nonnull Editor editor, @Nullable Caret contextCaret, @Nullable DataContext dataContext, @Nonnull AsyncResult<Void> asyncResult) {
     Editor hostEditor = dataContext == null ? null : dataContext.getData(CommonDataKeys.HOST_EDITOR);
     if (hostEditor == null) {
       hostEditor = editor;
     }
     if (contextCaret == null && runForAllCarets()) {
       hostEditor.getCaretModel().runForEachCaret(caret -> {
-        doIfEnabled(caret, dataContext, (itCaret, dataContext1) -> doExecute(itCaret.getEditor(), itCaret, dataContext1));
+        List<AsyncResult<Void>> asyncResults = new ArrayList<>();
+
+        doIfEnabled(caret, dataContext, (itCaret, context) -> {
+          AsyncResult<Void> result = AsyncResult.undefined();
+          asyncResults.add(result);
+
+          doExecuteAsync(itCaret.getEditor(), itCaret, context, result);
+        });
+
+        AsyncResult.merge(asyncResults).notify(asyncResult);
       });
     }
     else {
       if (contextCaret == null) {
-        doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, (caret, context) -> doExecute(caret.getEditor(), null, context));
+        doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, (caret, context) -> doExecuteAsync(caret.getEditor(), null, context, asyncResult));
       }
       else {
-        doExecute(editor, contextCaret, dataContext);
+        doExecuteAsync(editor, contextCaret, dataContext, asyncResult);
       }
     }
+  }
+
+  /**
+   * Executes the action in the context of given caret. If the caret is <code>null</code>, and the handler is a 'per-caret' handler,
+   * it's executed for all carets.
+   *
+   * @param editor      the editor in which the action is invoked.
+   * @param dataContext the data context for the action.
+   */
+  public final void execute(@Nonnull Editor editor, @Nullable final Caret contextCaret, final DataContext dataContext) {
+    executeAsync(editor, contextCaret, dataContext, AsyncResult.resolved());
   }
 
   void setWorksInInjected(boolean worksInInjected) {

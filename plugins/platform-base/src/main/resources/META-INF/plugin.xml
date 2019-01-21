@@ -1417,6 +1417,9 @@
     <projectService serviceInterface="com.intellij.util.indexing.FileBasedIndexScanRunnableCollector"
                     serviceImplementation="com.intellij.util.indexing.FileBasedIndexScanRunnableCollectorImpl"/>
 
+    <projectService serviceInterface="com.intellij.psi.PsiDocumentManager"
+                    serviceImplementation="com.intellij.psi.impl.PsiDocumentManagerImpl" lazy="false" />
+
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>
     <applicationService serviceInterface="com.intellij.openapi.options.colors.ColorSettingsPages"

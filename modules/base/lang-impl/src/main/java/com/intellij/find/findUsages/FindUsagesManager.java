@@ -39,7 +39,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.impl.ProgressManagerImpl;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -296,7 +296,7 @@ public class FindUsagesManager {
       }
     };
 
-    ((ProgressManagerImpl)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(task, indicator, onComplete);
+    ((CoreProgressManager)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(task, indicator, onComplete);
 
     return indicator;
   }

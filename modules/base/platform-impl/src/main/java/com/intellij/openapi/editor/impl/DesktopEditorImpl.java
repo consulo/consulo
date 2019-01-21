@@ -2976,6 +2976,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       return !isViewer();
     }
 
+    @RequiredUIAccess
     private void executeAction(@Nonnull String actionId, @Nonnull DataContext dataContext) {
       EditorAction action = (EditorAction)ActionManager.getInstance().getAction(actionId);
       if (action != null) {
@@ -4364,12 +4365,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     @Override
     public void beforeDocumentChange(@Nonnull DocumentEvent e) {
-      myUiAccess.give(() -> beforeChangedUpdate());
+      myUiAccess.giveAndWait(() -> beforeChangedUpdate());
     }
 
     @Override
     public void documentChanged(@Nonnull DocumentEvent e) {
-      myUiAccess.give(() -> changedUpdate(e));
+      myUiAccess.giveAndWait(() -> changedUpdate(e));
     }
 
     @Override

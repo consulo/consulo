@@ -61,11 +61,11 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.TransactionGuardEx;
 import consulo.psi.impl.ExternalChangeMarker;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.TestOnly;
 
@@ -517,20 +517,28 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
 
   @Nonnull
   @Override
-  public AsyncResult<Boolean> requestWritingAsync(@Nonnull Document document, @Nonnull UIAccess uiAccess, @Nullable Project project) {
+  public AsyncResult<Void> requestWritingAsync(@Nonnull Document document, @Nonnull UIAccess uiAccess, @Nullable Project project) {
     final VirtualFile file = getInstance().getFile(document);
     if (project != null && file != null && file.isValid()) {
-      AsyncResult<Boolean> resultFromStatusHandler = ReadonlyStatusHandler.ensureFilesWritableAsync(project, uiAccess, file);
+      AsyncResult<Void> resultFromStatusHandler = ReadonlyStatusHandler.ensureFilesWritableAsync(project, uiAccess, file);
 
-      AsyncResult<Boolean> result = new AsyncResult<>();
-      resultFromStatusHandler.doWhenDone((value) -> result.setDone(!file.getFileType().isBinary() && value));
+      AsyncResult<Void> result = AsyncResult.undefined();
+      resultFromStatusHandler.doWhenDone(() -> {
+        if (!file.getFileType().isBinary()) {
+          result.setDone();
+        }
+        else {
+          result.setRejected();
+        }
+      });
+      resultFromStatusHandler.doWhenRejected((Runnable)result::setRejected);
       return result;
     }
     if (document.isWritable()) {
-      return AsyncResult.resolved(Boolean.TRUE);
+      return AsyncResult.resolved();
     }
     document.fireReadOnlyModificationAttempt();
-    return AsyncResult.resolved(Boolean.FALSE);
+    return AsyncResult.rejected();
   }
 
   @RequiredUIAccess

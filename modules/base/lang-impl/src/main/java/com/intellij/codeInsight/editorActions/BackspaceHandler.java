@@ -27,25 +27,25 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.util.PsiUtilBase;
-import consulo.annotations.RequiredWriteAction;
+import consulo.editor.actionSystem.DocumentEditorActionHandler;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 
-public class BackspaceHandler extends EditorWriteActionHandler {
+public class BackspaceHandler extends DocumentEditorActionHandler {
   protected final EditorActionHandler myOriginalHandler;
 
   @Inject
@@ -54,11 +54,14 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     myOriginalHandler = originalHandler;
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   @Override
-  public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+  public void executeDocumentAction(Editor editor, @Nullable Caret caret, @Nullable DataContext dataContext, @Nonnull AsyncResult<Void> asyncResult) {
     if (!handleBackspace(editor, caret, dataContext, false)) {
-      myOriginalHandler.execute(editor, caret, dataContext);
+      myOriginalHandler.executeAsync(editor, caret, dataContext, asyncResult);
+    }
+    else {
+      asyncResult.setDone();
     }
   }
 
@@ -88,7 +91,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
       }
     }
 
-    final BackspaceHandlerDelegate[] delegates = Extensions.getExtensions(BackspaceHandlerDelegate.EP_NAME);
+    final BackspaceHandlerDelegate[] delegates = BackspaceHandlerDelegate.EP_NAME.getExtensions();
     if (!toWordStart) {
       for(BackspaceHandlerDelegate delegate: delegates) {
         delegate.beforeCharDeleted(c, file, editor);

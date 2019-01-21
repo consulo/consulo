@@ -45,20 +45,27 @@ public abstract class ReadonlyStatusHandler {
 
   @Nonnull
   @RequiredReadAction
-  public static AsyncResult<Boolean> ensureFilesWritableAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull VirtualFile... files) {
+  public static AsyncResult<Void> ensureFilesWritableAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull VirtualFile... files) {
     AsyncResult<OperationStatus> result = getInstance(project).ensureFilesWritableAsync(uiAccess, files);
-    AsyncResult<Boolean> boolResult = new AsyncResult<>();
-    result.doWhenDone((s) -> boolResult.setDone(!s.hasReadonlyFiles()));
+    AsyncResult<Void> boolResult = AsyncResult.undefined();
+    result.doWhenDone((s) -> {
+      if (!s.hasReadonlyFiles()) {
+        boolResult.setDone();
+      }
+      else {
+        boolResult.setRejected();
+      }
+    });
     return boolResult;
   }
 
   @Nonnull
   @RequiredReadAction
-  public static AsyncResult<Boolean> ensureDocumentWritableAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull Document document) {
+  public static AsyncResult<Void> ensureDocumentWritableAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull Document document) {
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
-    AsyncResult<Boolean> okWritable;
+    AsyncResult<Void> okWritable;
     if (psiFile == null) {
-      okWritable = AsyncResult.resolved(document.isWritable());
+      okWritable = document.isWritable() ? AsyncResult.resolved() : AsyncResult.rejected();
     }
     else {
       final VirtualFile virtualFile = psiFile.getVirtualFile();
@@ -66,7 +73,7 @@ public abstract class ReadonlyStatusHandler {
         okWritable = ensureFilesWritableAsync(project, uiAccess, virtualFile);
       }
       else {
-        okWritable = AsyncResult.resolved(psiFile.isWritable());
+        okWritable = psiFile.isWritable() ? AsyncResult.resolved() : AsyncResult.rejected();
       }
     }
     return okWritable;

@@ -41,6 +41,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
@@ -51,6 +52,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -122,8 +124,7 @@ public class DesktopEditorFactoryImpl extends EditorFactory {
       ((DesktopEditorImpl)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
     }
     else {
-      throw new RuntimeException("Editor of " + editor.getClass() +
-                                 " and the following text hasn't been released:\n" + editor.getDocument().getText());
+      throw new RuntimeException("Editor of " + editor.getClass() + " and the following text hasn't been released:\n" + editor.getDocument().getText());
     }
   }
 
@@ -262,7 +263,7 @@ public class DesktopEditorFactoryImpl extends EditorFactory {
 
   @Override
   public void addEditorFactoryListener(@Nonnull EditorFactoryListener listener, @Nonnull Disposable parentDisposable) {
-    myEditorFactoryEventDispatcher.addListener(listener,parentDisposable);
+    myEditorFactoryEventDispatcher.addListener(listener, parentDisposable);
   }
 
   @Override
@@ -284,15 +285,14 @@ public class DesktopEditorFactoryImpl extends EditorFactory {
       myDelegate = delegate;
     }
 
+    @RequiredUIAccess
+    @Nonnull
     @Override
-    public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+    public AsyncResult<Void> executeAsync(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
       editor.putUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
-      try {
-        myDelegate.execute(editor, charTyped, dataContext);
-      }
-      finally {
-        editor.putUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, null);
-      }
+      AsyncResult<Void> result = myDelegate.executeAsync(editor, charTyped, dataContext);
+      result.doWhenDone(() -> editor.putUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, null));
+      return result;
     }
 
     @Override

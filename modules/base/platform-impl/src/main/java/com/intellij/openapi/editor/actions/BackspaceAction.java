@@ -29,11 +29,13 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.MacUIUtil;
-import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.application.CallChain;
+import consulo.editor.actionSystem.DocumentEditorActionHandler;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,14 +45,14 @@ public class BackspaceAction extends EditorAction {
     super(new Handler());
   }
 
-  private static class Handler extends EditorWriteActionHandler {
+  private static class Handler extends DocumentEditorActionHandler {
     private Handler() {
       super(true);
     }
 
-    @RequiredWriteAction
+    @RequiredUIAccess
     @Override
-    public AsyncResult<Void> executeActionAsync(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    public void executeDocumentAction(Editor editor, @Nullable Caret caret, @Nullable DataContext dataContext, @Nonnull AsyncResult<Void> asyncResult) {
       MacUIUtil.hideCursor();
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
       if (editor instanceof EditorWindow) {
@@ -60,14 +62,15 @@ public class BackspaceAction extends EditorAction {
       }
 
       final Editor finalEditor = editor;
-      return doBackSpaceAtCaret(finalEditor);
+      doBackSpaceAtCaret(finalEditor, asyncResult);
     }
   }
 
-  private static AsyncResult<Void> doBackSpaceAtCaret(@Nonnull Editor editor) {
+  private static void doBackSpaceAtCaret(@Nonnull Editor editor, @Nonnull AsyncResult<Void> asyncResult) {
     if (editor.getSelectionModel().hasSelection()) {
       EditorModificationUtil.deleteSelectedText(editor);
-      return AsyncResult.resolved();
+      asyncResult.setDone();
+      return;
     }
 
     int lineNumber = editor.getCaretModel().getLogicalPosition().line;
@@ -90,29 +93,33 @@ public class BackspaceAction extends EditorAction {
           editor.getCaretModel().moveToOffset(region.getStartOffset());
         }
         else {
-          AccessRule.writeAsync(() -> document.deleteString(offset - 1, offset)).getResultSync();
-
-          editor.getCaretModel().moveToOffset(offset - 1, true);
+          CallChain.first(UIAccess.current())
+                  .linkWrite(() -> document.deleteString(offset - 1, offset))
+                  .linkUI(() -> editor.getCaretModel().moveToOffset(offset - 1, true))
+                  .toss(o -> asyncResult.setDone());
         }
       }
     }
     else if (lineNumber > 0) {
-      int navigateOffset = AccessRule.writeAsync(() -> {
+      AccessRule.writeAsync(() -> {
         int separatorLength = document.getLineSeparatorLength(lineNumber - 1);
         int lineEnd = document.getLineEndOffset(lineNumber - 1) + separatorLength;
         document.deleteString(lineEnd - separatorLength, lineEnd);
 
         return lineEnd - separatorLength;
-      }).getResultSync();
-
-      editor.getCaretModel().moveToOffset(navigateOffset);
-      EditorModificationUtil.scrollToCaret(editor);
-      editor.getSelectionModel().removeSelection();
-      // Do not group delete newline and other deletions.
-      CommandProcessor commandProcessor = CommandProcessor.getInstance();
-      commandProcessor.setCurrentCommandGroupId(null);
+      }).doWhenDone(navigateOffset -> {
+        try {
+          editor.getCaretModel().moveToOffset(navigateOffset);
+          EditorModificationUtil.scrollToCaret(editor);
+          editor.getSelectionModel().removeSelection();
+          // Do not group delete newline and other deletions.
+          CommandProcessor commandProcessor = CommandProcessor.getInstance();
+          commandProcessor.setCurrentCommandGroupId(null);
+        }
+        finally {
+          asyncResult.setDone();
+        }
+      });
     }
-
-    return AsyncResult.resolved();
   }
 }

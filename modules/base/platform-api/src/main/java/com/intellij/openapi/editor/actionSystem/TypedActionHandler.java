@@ -17,6 +17,9 @@ package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.AsyncResult;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -33,5 +36,23 @@ public interface TypedActionHandler {
    * @param charTyped   the typed character.
    * @param dataContext the current data context.
    */
-  void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext);
+  @Deprecated
+  default void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+    throw new UnsupportedOperationException("dead method");
+  }
+
+  /**
+   * Processes a key typed in the editor. The handler is responsible for delegating to
+   * the previously registered handler if it did not handle the typed key.
+   *
+   * @param editor      the editor in which the key was typed.
+   * @param charTyped   the typed character.
+   * @param dataContext the current data context.
+   */
+  @Nonnull
+  @RequiredUIAccess
+  default AsyncResult<Void> executeAsync(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+    execute(editor, charTyped, dataContext);
+    return AsyncResult.resolved();
+  }
 }

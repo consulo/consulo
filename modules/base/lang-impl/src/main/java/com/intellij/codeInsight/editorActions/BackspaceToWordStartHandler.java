@@ -19,21 +19,27 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import consulo.annotations.RequiredWriteAction;
+import com.intellij.openapi.util.AsyncResult;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author yole
  */
 public class BackspaceToWordStartHandler extends BackspaceHandler {
+  @Inject
   public BackspaceToWordStartHandler(EditorActionHandler originalHandler) {
     super(originalHandler);
   }
 
-  @RequiredWriteAction
+  @RequiredUIAccess
   @Override
-  public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+  public void executeDocumentAction(Editor editor, @Nullable Caret caret, @Nullable DataContext dataContext, @Nonnull AsyncResult<Void> asyncResult) {
     if (!handleBackspace(editor, caret, dataContext, true)) {
-      myOriginalHandler.execute(editor, caret, dataContext);
+      myOriginalHandler.executeAsync(editor, caret, dataContext, asyncResult);
     }
   }
 }

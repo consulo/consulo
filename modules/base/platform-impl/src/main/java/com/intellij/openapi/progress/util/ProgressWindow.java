@@ -223,10 +223,11 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
       return;
     }
 
-    myDialog.show();
-    if (myDialog != null) {
-      myDialog.myRepaintRunnable.run();
-    }
+    myDialog.show().doWhenProcessed(() -> {
+      if (myDialog != null) {
+        myDialog.myRepaintRunnable.run();
+      }
+    });
   }
 
   @Override
