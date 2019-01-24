@@ -158,6 +158,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
   }
 
   @Nonnull
+  @RequiredUIAccess
   public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, final String title, final String description) {
     FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
     chooserDescriptor.setDescription(description);
@@ -175,24 +176,18 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     else {
       initialDir = null;
     }
-    final AsyncResult<String> result = new AsyncResult<>();
-    FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir, new FileChooser.FileChooserConsumer() {
-      @Override
-      public void consume(List<VirtualFile> files) {
-        VirtualFile file = files.get(0);
-        if (file.isDirectory()) {
-          result.setDone(file.getPath() + '/' + new File(DEFAULT_PATH).getName());
-        }
-        else {
-          result.setDone(file.getPath());
-        }
+    final AsyncResult<String> result = AsyncResult.undefined();
+    AsyncResult<VirtualFile[]> filesResult = FileChooser.chooseFilesAsync(chooserDescriptor, null, parent, initialDir);
+    filesResult.doWhenDone((files) -> {
+      VirtualFile file = files[0];
+      if (file.isDirectory()) {
+        result.setDone(file.getPath() + '/' + new File(DEFAULT_PATH).getName());
       }
-
-      @Override
-      public void cancelled() {
-        result.setRejected();
+      else {
+        result.setDone(file.getPath());
       }
     });
+    filesResult.doWhenRejected((Runnable)result::setRejected);
     return result;
   }
 
