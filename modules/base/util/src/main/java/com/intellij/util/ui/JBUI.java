@@ -40,7 +40,7 @@ import static com.intellij.util.ui.JBUI.ScaleType.*;
  */
 @SuppressWarnings("UseJBColor")
 public class JBUI {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.ui.JBUI");
+  private static final Logger LOG = Logger.getInstance(JBUI.class);
 
   public static final String USER_SCALE_FACTOR_PROPERTY = "JBUI.userScaleFactor";
 

@@ -17,7 +17,6 @@
 package com.maddyhome.idea.copyright.ui;
 
 import com.intellij.lang.Commenter;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -38,13 +37,14 @@ import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.application.AccessRule;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.copyright.generate.TemplateCopyrightCommenter;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -352,7 +352,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
 
     initEditor();
-    WriteAction.run(() -> myDocument.setText(defaultCopyrightText));
+    AccessRule.writeAsync(() -> myDocument.setText(defaultCopyrightText));
   }
 
   @Override

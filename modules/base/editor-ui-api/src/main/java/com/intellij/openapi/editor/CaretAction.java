@@ -15,11 +15,19 @@
  */
 package com.intellij.openapi.editor;
 
+import java.util.function.Consumer;
+
 /**
  * Action to be performed on a specific editor caret
  *
  * @see com.intellij.openapi.editor.CaretModel#runForEachCaret(com.intellij.openapi.editor.CaretAction)
  */
-public interface CaretAction {
+@Deprecated
+public interface CaretAction extends Consumer<Caret> {
   void perform(Caret caret);
+
+  @Override
+  default void accept(Caret caret) {
+    perform(caret);
+  }
 }

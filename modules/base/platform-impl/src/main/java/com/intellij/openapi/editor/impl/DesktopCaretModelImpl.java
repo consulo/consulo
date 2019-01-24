@@ -45,6 +45,7 @@ import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentListener, Disposable, Dumpable, InlayModel.Listener {
   private final DesktopEditorImpl myEditor;
@@ -343,12 +344,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
   }
 
   @Override
-  public void runForEachCaret(@Nonnull final CaretAction action) {
-    runForEachCaret(action, false);
-  }
-
-  @Override
-  public void runForEachCaret(@Nonnull final CaretAction action, final boolean reverseOrder) {
+  public void runForEachCaret(@Nonnull final Consumer<Caret> action, final boolean reverseOrder) {
     DesktopEditorImpl.assertIsDispatchThread();
     if (myCurrentCaret != null) {
       throw new IllegalStateException("Recursive runForEachCaret invocations are not allowed");
@@ -361,7 +357,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
         }
         for (Caret caret : sortedCarets) {
           myCurrentCaret = (DesktopCaretImpl)caret;
-          action.perform(caret);
+          action.accept(caret);
         }
       }
       finally {

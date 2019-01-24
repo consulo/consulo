@@ -16,16 +16,17 @@
 package com.intellij.openapi.editor.textarea;
 
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.JTextComponent;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -217,13 +218,8 @@ public class TextComponentCaretModel implements CaretModel {
   }
 
   @Override
-  public void runForEachCaret(@Nonnull CaretAction action) {
-    action.perform(myCaret);
-  }
-
-  @Override
-  public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
-    action.perform(myCaret);
+  public void runForEachCaret(@Nonnull Consumer<Caret> action, boolean reverseOrder) {
+    action.accept(myCaret);
   }
 
   @Override

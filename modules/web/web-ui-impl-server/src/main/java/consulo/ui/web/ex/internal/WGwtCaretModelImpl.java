@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -182,12 +183,7 @@ public class WGwtCaretModelImpl implements CaretModel {
   }
 
   @Override
-  public void runForEachCaret(@Nonnull CaretAction action) {
-
-  }
-
-  @Override
-  public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
+  public void runForEachCaret(@Nonnull Consumer<Caret> action, boolean reverseOrder) {
 
   }
 

@@ -34,16 +34,15 @@ import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-@SuppressWarnings("NonStaticInitializer")
 public class ProgressWindow extends ProgressIndicatorBase implements BlockingProgressIndicator, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.util.ProgressWindow");
+  private static final Logger LOG = Logger.getInstance(ProgressWindow.class);
 
   /**
    * This constant defines default delay for showing progress dialog (in millis).

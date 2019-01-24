@@ -73,7 +73,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
 
     myConfigureParameterHintsButton.addActionListener(e -> {
       ParameterNameHintsConfigurable configurable = new ParameterNameHintsConfigurable();
-      configurable.show();
+      configurable.showAsync();
     });
   }
 

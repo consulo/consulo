@@ -17,27 +17,31 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Provides services for moving the caret and retrieving information about caret position.
- *
+ * <p>
  * May support several carets existing simultaneously in a document. {@link #supportsMultipleCarets()} method can be used to find out
  * whether particular instance of CaretModel does it. If it does, query and update methods for caret position operate on a certain 'primary'
  * caret. There exists a way to perform the same operation(s) on each caret - see
- * {@link #runForEachCaret(CaretAction)} method. Within its context, query and update methods operate on the
+ * {@link #runForEachCaret(Consumer)} method. Within its context, query and update methods operate on the
  * current caret in that iteration. This behaviour can change in future though, so using caret and selection query and update methods in
  * actions that need to operate on multiple carets is discouraged - methods on {@link Caret} instances obtained
- * via {@link #getAllCarets()} or {@link #runForEachCaret(CaretAction)} should be used instead.
+ * via {@link #getAllCarets()} or {@link #runForEachCaret(Consumer)} should be used instead.
  * <p>
  * How 'primary' caret is determined by the model is not defined (currently it's the most recently added caret, but that can change).
  * <p>
  * At all times at least one caret will exist in a document.
  * <p>
- * Update methods, {@link #runBatchCaretOperation(Runnable)} and {@link #runForEachCaret(CaretAction)} methods
+ * Update methods, {@link #runBatchCaretOperation(Runnable)} and {@link #runForEachCaret(Consumer)} methods
  * should only be run from EDT. Query methods can be run from any thread, when called not from EDT, those methods are 'not aware' of
  * 'runForEachCaret' scope - they will always return information about primary caret.
  *
@@ -53,11 +57,7 @@ public interface CaretModel {
    * @param blockSelection This parameter is currently ignored.
    * @param scrollToCaret  if true, the document should be scrolled so that the caret is visible after the move.
    */
-  void moveCaretRelatively(int columnShift,
-                           int lineShift,
-                           boolean withSelection,
-                           boolean blockSelection,
-                           boolean scrollToCaret);
+  void moveCaretRelatively(int columnShift, int lineShift, boolean withSelection, boolean blockSelection, boolean scrollToCaret);
 
   /**
    * Moves the caret to the specified logical position.
@@ -77,7 +77,7 @@ public interface CaretModel {
   /**
    * Short hand for calling {@link #moveToOffset(int, boolean)} with <code>'false'</code> as a second argument.
    *
-   * @param offset      the offset to move to
+   * @param offset the offset to move to
    */
   void moveToOffset(int offset);
 
@@ -85,11 +85,11 @@ public interface CaretModel {
    * Moves the caret to the specified offset in the document.
    * If corresponding position is in the folded region currently, the region will be expanded.
    *
-   * @param offset                  the offset to move to.
-   * @param locateBeforeSoftWrap    there is a possible case that there is a soft wrap at the given offset, hence, the same offset
-   *                                corresponds to two different visual positions - just before soft wrap and just after soft wrap.
-   *                                We may want to clearly indicate where to put the caret then. Given parameter allows to do that.
-   *                                <b>Note:</b> it's ignored if there is no soft wrap at the given offset
+   * @param offset               the offset to move to.
+   * @param locateBeforeSoftWrap there is a possible case that there is a soft wrap at the given offset, hence, the same offset
+   *                             corresponds to two different visual positions - just before soft wrap and just after soft wrap.
+   *                             We may want to clearly indicate where to put the caret then. Given parameter allows to do that.
+   *                             <b>Note:</b> it's ignored if there is no soft wrap at the given offset
    */
   void moveToOffset(int offset, boolean locateBeforeSoftWrap);
 
@@ -100,7 +100,7 @@ public interface CaretModel {
    * <p/>
    * Current method allows to check that.
    *
-   * @return    <code>true</code> if caret position is up-to-date for now; <code>false</code> otherwise
+   * @return <code>true</code> if caret position is up-to-date for now; <code>false</code> otherwise
    */
   boolean isUpToDate();
 
@@ -142,12 +142,12 @@ public interface CaretModel {
   void removeCaretListener(@Nonnull CaretListener listener);
 
   /**
-   * @return    document offset for the start of the logical line where caret is located
+   * @return document offset for the start of the logical line where caret is located
    */
   int getVisualLineStart();
 
   /**
-   * @return    document offset that points to the first symbol shown at the next visual line after the one with caret on it
+   * @return document offset that points to the first symbol shown at the next visual line after the one with caret on it
    */
   int getVisualLineEnd();
 
@@ -166,9 +166,9 @@ public interface CaretModel {
 
   /**
    * Returns current caret - the one, query and update methods in the model operate at the moment. In the current implementation this is
-   * either an iteration-current caret within the context of {@link #runForEachCaret(CaretAction)} method, or the 'primary' caret without that
-   * context. Users {@link #runForEachCaret(CaretAction)} method should use caret parameter passed to
-   * {@link CaretAction#perform(Caret)} method instead of this method, as the definition of current caret (as
+   * either an iteration-current caret within the context of {@link #runForEachCaret(Consumer)} method, or the 'primary' caret without that
+   * context. Users {@link #runForEachCaret(Consumer)} method should use caret parameter passed to
+   * {@link Consumer#accept(Caret)} method instead of this method, as the definition of current caret (as
    * well as caret instance operated on by model methods) can potentially change.
    */
   @Nonnull
@@ -194,7 +194,7 @@ public interface CaretModel {
   /**
    * Returns a caret at the given position in the document, or <code>null</code>, if there's no caret there.
    */
-  @javax.annotation.Nullable
+  @Nullable
   Caret getCaretAt(@Nonnull VisualPosition pos);
 
   /**
@@ -210,7 +210,7 @@ public interface CaretModel {
    * Does nothing if multiple carets are not supported, a caret already exists at specified location or selection of existing caret
    * includes the specified location, <code>null</code> is returned in this case.
    */
-  @javax.annotation.Nullable
+  @Nullable
   Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary);
 
   /**
@@ -266,10 +266,21 @@ public interface CaretModel {
   @Nonnull
   List<CaretState> getCaretsAndSelections();
 
+  @Nonnull
+  default AsyncResult<Void> runForEachCaret(@Nonnull Function<Caret, AsyncResult<Void>> asyncSuplier) {
+    List<AsyncResult<Void>> results = new ArrayList<>();
+    runForEachCaret(caret -> {
+      results.add(asyncSuplier.apply(caret));
+    });
+    return AsyncResult.merge(results);
+  }
+
   /**
-   * Same as {@link #runForEachCaret(CaretAction, boolean)} with <code>reverseOrder</code> set to <code>false</code>
+   * Same as {@link #runForEachCaret(Consumer, boolean)} with <code>reverseOrder</code> set to <code>false</code>
    */
-  void runForEachCaret(@Nonnull CaretAction action);
+  default void runForEachCaret(@Nonnull Consumer<Caret> action) {
+    runForEachCaret(action, false);
+  }
 
   /**
    * Executes the given task for each existing caret. Set of carets to iterate over is
@@ -280,7 +291,7 @@ public interface CaretModel {
    * Carets are iterated in position order (top-to-bottom) if <code>reverseOrder</code> is <code>false</code>, and in reverse order
    * if it's <code>true</code>.
    */
-  void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder);
+  void runForEachCaret(@Nonnull Consumer<Caret> action, boolean reverseOrder);
 
   /**
    * Executes the given task, performing caret merging afterwards. Caret merging will not happen until the operation is finished.

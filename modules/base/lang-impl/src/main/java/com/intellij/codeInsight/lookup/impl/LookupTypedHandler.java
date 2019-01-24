@@ -40,9 +40,12 @@ import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -54,20 +57,24 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
     super(originalHandler);
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public void execute(@Nonnull Editor originalEditor, char charTyped, @Nonnull DataContext dataContext) {
+  public AsyncResult<Void> executeAsync(@Nonnull Editor originalEditor, char charTyped, @Nonnull DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     PsiFile file = project == null ? null : PsiUtilBase.getPsiFileInEditor(originalEditor, project);
 
     if (file == null) {
-      if (myOriginalHandler != null){
-        myOriginalHandler.execute(originalEditor, charTyped, dataContext);
+      if (myOriginalHandler != null) {
+        return myOriginalHandler.executeAsync(originalEditor, charTyped, dataContext);
       }
-      return;
+      else {
+        return AsyncResult.resolved();
+      }
     }
 
     if (!EditorModificationUtil.checkModificationAllowed(originalEditor)) {
-      return;
+      return AsyncResult.resolved();
     }
 
     CompletionPhase oldPhase = CompletionServiceImpl.getCompletionPhase();
@@ -82,11 +89,14 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
     }
 
     if (originalEditor.isInsertMode() && beforeCharTyped(charTyped, project, originalEditor, editor, file)) {
-      return;
+      return AsyncResult.resolved();
     }
 
     if (myOriginalHandler != null) {
-      myOriginalHandler.execute(originalEditor, charTyped, dataContext);
+      return myOriginalHandler.executeAsync(originalEditor, charTyped, dataContext);
+    }
+    else {
+      return AsyncResult.resolved();
     }
   }
 

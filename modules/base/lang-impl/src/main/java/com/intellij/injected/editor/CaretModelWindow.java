@@ -22,13 +22,14 @@ import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.function.Consumer;
 
 /**
  * @author Alexey
@@ -46,11 +47,7 @@ public class CaretModelWindow implements CaretModel {
   }
 
   @Override
-  public void moveCaretRelatively(final int columnShift,
-                                  final int lineShift,
-                                  final boolean withSelection,
-                                  final boolean blockSelection,
-                                  final boolean scrollToCaret) {
+  public void moveCaretRelatively(final int columnShift, final int lineShift, final boolean withSelection, final boolean blockSelection, final boolean scrollToCaret) {
     myDelegate.moveCaretRelatively(columnShift, lineShift, withSelection, blockSelection, scrollToCaret);
   }
 
@@ -102,15 +99,14 @@ public class CaretModelWindow implements CaretModel {
   }
 
   private final ListenerWrapperMap<CaretListener> myCaretListeners = new ListenerWrapperMap<CaretListener>();
+
   @Override
   public void addCaretListener(@Nonnull final CaretListener listener) {
     CaretListener wrapper = new CaretAdapter() {
       @Override
       public void caretPositionChanged(CaretEvent e) {
         if (!myEditorWindow.getDocument().isValid()) return; // injected document can be destroyed by now
-        CaretEvent event = new CaretEvent(myEditorWindow, createInjectedCaret(e.getCaret()),
-                                          myEditorWindow.hostToInjected(e.getOldPosition()),
-                                          myEditorWindow.hostToInjected(e.getNewPosition()));
+        CaretEvent event = new CaretEvent(myEditorWindow, createInjectedCaret(e.getCaret()), myEditorWindow.hostToInjected(e.getOldPosition()), myEditorWindow.hostToInjected(e.getNewPosition()));
         listener.caretPositionChanged(event);
       }
     };
@@ -231,9 +227,7 @@ public class CaretModelWindow implements CaretModel {
   private List<CaretState> convertCaretStates(List<CaretState> caretStates) {
     List<CaretState> convertedStates = new ArrayList<CaretState>(caretStates.size());
     for (CaretState state : caretStates) {
-      convertedStates.add(new CaretState(injectedToHost(state.getCaretPosition()),
-                                         injectedToHost(state.getSelectionStart()),
-                                         injectedToHost(state.getSelectionEnd())));
+      convertedStates.add(new CaretState(injectedToHost(state.getCaretPosition()), injectedToHost(state.getSelectionStart()), injectedToHost(state.getSelectionEnd())));
     }
     return convertedStates;
   }
@@ -248,9 +242,7 @@ public class CaretModelWindow implements CaretModel {
     List<CaretState> caretsAndSelections = myDelegate.getCaretsAndSelections();
     List<CaretState> convertedStates = new ArrayList<CaretState>(caretsAndSelections.size());
     for (CaretState state : caretsAndSelections) {
-      convertedStates.add(new CaretState(hostToInjected(state.getCaretPosition()),
-                                         hostToInjected(state.getSelectionStart()),
-                                         hostToInjected(state.getSelectionEnd())));
+      convertedStates.add(new CaretState(hostToInjected(state.getCaretPosition()), hostToInjected(state.getSelectionStart()), hostToInjected(state.getSelectionEnd())));
     }
     return convertedStates;
   }
@@ -274,23 +266,8 @@ public class CaretModelWindow implements CaretModel {
   }
 
   @Override
-  public void runForEachCaret(final @Nonnull CaretAction action) {
-    myDelegate.runForEachCaret(new CaretAction() {
-      @Override
-      public void perform(Caret caret) {
-        action.perform(createInjectedCaret(caret));
-      }
-    });
-  }
-
-  @Override
-  public void runForEachCaret(@Nonnull final CaretAction action, boolean reverseOrder) {
-    myDelegate.runForEachCaret(new CaretAction() {
-      @Override
-      public void perform(Caret caret) {
-        action.perform(createInjectedCaret(caret));
-      }
-    }, reverseOrder);
+  public void runForEachCaret(@Nonnull final Consumer<Caret> action, boolean reverseOrder) {
+    myDelegate.runForEachCaret(caret -> action.accept(createInjectedCaret(caret)), reverseOrder);
   }
 
   @Override
