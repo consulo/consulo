@@ -20,6 +20,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtConnectorConstants;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
@@ -28,7 +29,7 @@ import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState
  * @author VISTALL
  * @since 12-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowStripeButton")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".ex.WGwtToolWindowStripeButton")
 public class GwtToolWindowStripeButtonConnector extends AbstractComponentConnector {
   @Override
   protected void init() {

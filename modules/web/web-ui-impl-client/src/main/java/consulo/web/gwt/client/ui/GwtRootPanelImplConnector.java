@@ -24,7 +24,7 @@ import consulo.web.gwt.shared.ui.state.RootPanelState;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtRootPanelImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtRootPanelImpl")
 public class GwtRootPanelImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

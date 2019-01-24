@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.ui.web.internal.ex;
 
 import com.intellij.util.containers.ContainerUtil;
 import com.vaadin.shared.Connector;
@@ -26,6 +26,7 @@ import consulo.ui.shared.Size;
 import consulo.ui.web.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,7 @@ import java.util.List;
  * @since 19-Oct-17
  */
 public class WGwtThreeComponentSplitLayout extends AbstractComponent implements HasComponents, Layout, VaadinWrapper {
-  public void setLeftComponent(@javax.annotation.Nullable Component component) {
+  public void setLeftComponent(@Nullable Component component) {
     com.vaadin.ui.Component vaadin = (com.vaadin.ui.Component)component;
 
     reset(getState().myLeftComponent);
@@ -48,7 +49,7 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
     getState().myLeftComponent = vaadin;
   }
 
-  public void setRightComponent(@javax.annotation.Nullable Component component) {
+  public void setRightComponent(@Nullable Component component) {
     com.vaadin.ui.Component vaadin = (com.vaadin.ui.Component)component;
 
     reset(getState().myRightComponent);
@@ -60,7 +61,7 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
     getState().myRightComponent = vaadin;
   }
 
-  public void setCenterComponent(@javax.annotation.Nullable Component component) {
+  public void setCenterComponent(@Nullable Component component) {
     com.vaadin.ui.Component vaadin = (com.vaadin.ui.Component)component;
 
     reset(getState().myCenterComponent);
@@ -72,7 +73,7 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
     getState().myCenterComponent = vaadin;
   }
 
-  private void reset(@javax.annotation.Nullable Connector connector) {
+  private void reset(@Nullable Connector connector) {
     if (connector != null) {
       com.vaadin.ui.Component component = (com.vaadin.ui.Component)connector;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.ui.web.internal.ex;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.wm.ToolWindowAnchor;
@@ -24,6 +24,9 @@ import com.vaadin.ui.AbstractComponentContainer;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.ex.ToolWindowPanel;
+import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.web.internal.VaadinWrapper;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;

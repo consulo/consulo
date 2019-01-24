@@ -20,13 +20,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtConnectorConstants;
 import consulo.web.gwt.client.util.GwtUIUtil;
 
 /**
  * @author VISTALL
  * @since 23-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.ex.internal.WGwtLoadingPanelImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".ex.WGwtLoadingPanelImpl")
 public class GwtLoadingPanelImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateComponentSize() {

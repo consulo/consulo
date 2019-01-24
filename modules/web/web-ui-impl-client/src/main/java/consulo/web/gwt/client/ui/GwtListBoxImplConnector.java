@@ -33,7 +33,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtListBoxImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtListBoxImpl")
 public class GwtListBoxImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateComponentSize() {

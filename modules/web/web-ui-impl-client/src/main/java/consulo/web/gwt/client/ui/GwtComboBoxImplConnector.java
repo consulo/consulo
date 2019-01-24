@@ -27,7 +27,7 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtComboBoxImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtComboBoxImpl")
 public class GwtComboBoxImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateComponentSize() {

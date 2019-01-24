@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.ui.web.internal.ex;
 
-import com.vaadin.shared.ui.Connect;
+import com.vaadin.ui.AbstractComponent;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 25-Sep-17
  */
-@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtHorizontalSplitLayoutImpl")
-public class GwtHorizontalSplitLayoutImplConnector extends GwtSplitLayoutImplConnector {
-  @Override
-  public GwtHorizontalSplitLayoutImpl getWidget() {
-    return (GwtHorizontalSplitLayoutImpl)super.getWidget();
-  }
+public class WGwtToolWindowCenterPanel extends AbstractComponent{
 }

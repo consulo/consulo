@@ -23,6 +23,7 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtConnectorConstants;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
 
@@ -32,7 +33,7 @@ import java.util.List;
  * @author VISTALL
  * @since 23-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtThreeComponentSplitLayout")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".ex.WGwtThreeComponentSplitLayout")
 public class GwtThreeComponentSplitLayoutConnector extends AbstractComponentConnector implements HasComponentsConnector {
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {

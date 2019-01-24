@@ -26,7 +26,7 @@ import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.web.ex.internal.WGwtLoadingPanelImpl;
+import consulo.ui.web.internal.ex.WGwtLoadingPanelImpl;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import consulo.web.application.impl.VaadinWebSessionImpl;

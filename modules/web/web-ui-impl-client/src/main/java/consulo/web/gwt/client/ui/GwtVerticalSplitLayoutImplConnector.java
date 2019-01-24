@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.Connect;
  * @author VISTALL
  * @since 13-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtVerticalSplitLayoutImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtVerticalSplitLayoutImpl")
 public class GwtVerticalSplitLayoutImplConnector extends GwtSplitLayoutImplConnector {
   @Override
   public GwtVerticalSplitLayoutImpl getWidget() {

@@ -23,6 +23,7 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtConnectorConstants;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
@@ -34,7 +35,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtTreeImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtTreeImpl")
 public class GwtTreeImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateWidgetStyleNames() {

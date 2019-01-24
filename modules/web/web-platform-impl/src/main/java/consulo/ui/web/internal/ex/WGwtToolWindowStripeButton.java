@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.ui.web.internal.ex;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.vaadin.ui.AbstractComponent;
+import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;

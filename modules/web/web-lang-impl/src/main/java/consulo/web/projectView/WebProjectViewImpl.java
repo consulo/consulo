@@ -203,7 +203,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private LibraryOrderEntry getSelectedLibrary() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       DefaultMutableTreeNode node = viewPane != null ? viewPane.getSelectedNode() : null;
@@ -257,7 +257,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
       }, title, null);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private Module[] getSelectedModules() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       if (viewPane == null) return null;
@@ -312,7 +312,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
    * => MODULE_CONTEXT should be only available for the module node
    * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
    */
-  @javax.annotation.Nullable
+  @Nullable
   private Module moduleBySingleContentRoot(@Nonnull VirtualFile file) {
     if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
       Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);

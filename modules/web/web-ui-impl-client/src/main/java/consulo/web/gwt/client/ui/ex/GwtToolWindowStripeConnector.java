@@ -18,6 +18,7 @@ package consulo.web.gwt.client.ui.ex;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtConnectorConstants;
 import consulo.web.gwt.client.ui.GwtLayoutConnector;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeState;
@@ -28,7 +29,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowStripe")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".ex.WGwtToolWindowStripe")
 public class GwtToolWindowStripeConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

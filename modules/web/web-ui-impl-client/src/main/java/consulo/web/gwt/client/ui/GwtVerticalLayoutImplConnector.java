@@ -23,7 +23,7 @@ import consulo.web.gwt.client.util.GwtUIUtil;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtVerticalLayoutImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtVerticalLayoutImpl")
 public class GwtVerticalLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

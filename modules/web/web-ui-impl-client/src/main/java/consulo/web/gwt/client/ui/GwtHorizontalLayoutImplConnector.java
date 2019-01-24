@@ -26,7 +26,7 @@ import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtHorizontalLayoutImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtHorizontalLayoutImpl")
 public class GwtHorizontalLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

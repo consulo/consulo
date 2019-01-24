@@ -17,6 +17,7 @@ package consulo.web.gwt.client.ui.ex;
 
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtConnectorConstants;
 import consulo.web.gwt.client.ui.GwtLayoutConnector;
 import consulo.web.gwt.client.util.GwtUIUtil;
 
@@ -24,7 +25,7 @@ import consulo.web.gwt.client.util.GwtUIUtil;
  * @author VISTALL
  * @since 25-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowPanel")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".ex.WGwtToolWindowPanel")
 public class GwtToolWindowPanelConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

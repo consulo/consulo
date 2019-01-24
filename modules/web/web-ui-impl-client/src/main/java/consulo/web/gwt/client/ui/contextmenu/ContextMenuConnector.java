@@ -1,8 +1,5 @@
 package consulo.web.gwt.client.ui.contextmenu;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
@@ -16,11 +13,14 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VMenuBar;
 import com.vaadin.client.ui.VMenuBar.CustomMenuItem;
+import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.shared.ui.contextmenu.client.ContextMenuClientRpc;
 import consulo.web.gwt.shared.ui.contextmenu.client.ContextMenuServerRpc;
 import consulo.web.gwt.shared.ui.contextmenu.client.MenuSharedState;
 import consulo.web.gwt.shared.ui.contextmenu.client.MenuSharedState.MenuItemState;
-import com.vaadin.shared.ui.Connect;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 @SuppressWarnings("serial")
 @Connect(canonicalName = "consulo.ui.internal.contextmenu.ContextMenu")

@@ -33,7 +33,7 @@ import java.util.function.IntConsumer;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtTabbedLayoutImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtTabbedLayoutImpl")
 public class GwtTabbedLayoutImplConnector extends GwtLayoutConnector implements IntConsumer {
   @Override
   protected void init() {

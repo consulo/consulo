@@ -30,7 +30,7 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
  * @author VISTALL
  * @since 2018-05-11
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtHyperlinkImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtHyperlinkImpl")
 public class GwtHyperlinkImplConnector extends AbstractComponentConnector implements ClickHandler {
   @Override
   protected void updateWidgetStyleNames() {

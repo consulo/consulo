@@ -18,6 +18,7 @@ package consulo.web.gwt.client.ui.ex;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtConnectorConstants;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorClientRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
@@ -26,7 +27,7 @@ import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
  * @author VISTALL
  * @since 13-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.ex.internal.WGwtEditorImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".ex.WGwtEditorImpl")
 public class GwtEditorImplConnector extends AbstractComponentConnector {
   @Override
   protected void init() {

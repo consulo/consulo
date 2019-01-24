@@ -31,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtDockLayoutImpl")
+@Connect(canonicalName = GwtConnectorConstants.PACKAGE_NAME + ".WGwtDockLayoutImpl")
 public class GwtDockLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
