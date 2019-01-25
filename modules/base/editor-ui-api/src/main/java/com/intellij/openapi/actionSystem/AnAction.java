@@ -127,8 +127,10 @@ public abstract class AnAction implements PossiblyDumbAware {
     this(text, description, (Icon)icon);
   }
 
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    this(text, description, TargetAWT.to(icon));
+  @Deprecated
+  @DeprecationInfo("Use contructor with ui image")
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+    this(text, description, TargetAWT.from(icon));
   }
 
   /**
@@ -140,9 +142,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *                    the status bar when presentation has focus
    * @param icon        Action's icon
    */
-  @Deprecated
-  @DeprecationInfo("Use contructor with ui image")
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     myShortcutSet = CustomShortcutSet.EMPTY;
     myEnabledInModalContext = false;
     Presentation presentation = getTemplatePresentation();

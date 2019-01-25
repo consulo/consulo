@@ -1,0 +1,584 @@
+/*
+ * Copyright 2013-2019 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.intellij.openapi.wm.impl;
+
+import com.intellij.ide.DataManager;
+import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.impl.DataManagerImpl;
+import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.UISettingsListener;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.impl.ActionMenu;
+import com.intellij.openapi.actionSystem.impl.WeakTimerListener;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.wm.impl.status.ClockPanel;
+import com.intellij.ui.ColorUtil;
+import com.intellij.ui.Gray;
+import com.intellij.ui.ScreenUtil;
+import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.util.ui.Animator;
+import com.intellij.util.ui.UIUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.RoundRectangle2D;
+import java.util.List;
+
+/**
+ * @author Anton Katilin
+ * @author Vladimir Kondratyev
+ */
+public class DesktopIdeMenuBar extends BaseIdeMenuBar {
+
+  private class MyAnimator extends Animator {
+    public MyAnimator() {
+      super("MenuBarAnimator", 16, 300, false);
+    }
+
+    @Override
+    public void paintNow(int frame, int totalFrames, int cycle) {
+      myProgress = (1 - Math.cos(Math.PI * ((float)frame / totalFrames))) / 2;
+      getMenuBar().revalidate();
+      getMenuBar().repaint();
+    }
+
+    @Override
+    protected void paintCycleEnd() {
+      myProgress = 1;
+      switch (myState) {
+        case COLLAPSING:
+          setState(State.COLLAPSED);
+          break;
+        case EXPANDING:
+          setState(State.TEMPORARY_EXPANDED);
+          break;
+        default:
+      }
+      getMenuBar(). revalidate();
+      if (myState == State.COLLAPSED) {
+        //we should repaint parent, to clear 1px on top when menu is collapsed
+        getMenuBar().getParent().repaint();
+      }
+      else {
+        getMenuBar().repaint();
+      }
+    }
+  }
+
+  private class MyActionListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      if (myState == State.EXPANDED || myState == State.EXPANDING) {
+        return;
+      }
+      boolean activated = isActivated();
+      if (myActivated && !activated && myState == State.TEMPORARY_EXPANDED) {
+        myActivated = false;
+        setState(State.COLLAPSING);
+        restartAnimator();
+      }
+      if (activated) {
+        myActivated = true;
+      }
+    }
+  }
+
+  private static class MyMouseListener extends MouseAdapter {
+    @Override
+    public void mousePressed(MouseEvent e) {
+      Component c = e.getComponent();
+      if (c instanceof MenuBarEx) {
+        Dimension size = c.getSize();
+        Insets insets = ((MenuBarEx)c).getInsets();
+        Point p = e.getPoint();
+        if (p.y < insets.top || p.y >= size.height - insets.bottom) {
+          Component item = ((MenuBarEx)c).findComponentAt(p.x, size.height / 2);
+          if (item instanceof JMenuItem) {
+            // re-target border clicks as a menu item ones
+            item.dispatchEvent(new MouseEvent(item, e.getID(), e.getWhen(), e.getModifiers(), 1, 1, e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+            e.consume();
+            return;
+          }
+        }
+      }
+
+      super.mouseClicked(e);
+    }
+  }
+
+  private static class MyExitFullScreenButton extends JButton {
+    private MyExitFullScreenButton() {
+      setFocusable(false);
+      addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Window window = SwingUtilities.getWindowAncestor(MyExitFullScreenButton.this);
+          if (window instanceof IdeFrameEx) {
+            ((IdeFrameEx)window).toggleFullScreen(false);
+          }
+        }
+      });
+      addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+          model.setRollover(true);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+          model.setRollover(false);
+        }
+      });
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+      int height;
+      Container parent = getParent();
+      if (isVisible() && parent != null) {
+        height = parent.getSize().height - parent.getInsets().top - parent.getInsets().bottom;
+      }
+      else {
+        height = super.getPreferredSize().height;
+      }
+      return new Dimension(height, height);
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+      return getPreferredSize();
+    }
+
+    @Override
+    public void paint(Graphics g) {
+      Graphics2D g2d = (Graphics2D)g.create();
+      try {
+        g2d.setColor(UIManager.getColor("Label.background"));
+        g2d.fillRect(0, 0, getWidth() + 1, getHeight() + 1);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        double s = (double)getHeight() / 13;
+        g2d.translate(s, s);
+        Shape plate = new RoundRectangle2D.Double(0, 0, s * 11, s * 11, s, s);
+        Color color = UIManager.getColor("Label.foreground");
+        boolean hover = model.isRollover() || model.isPressed();
+        g2d.setColor(ColorUtil.withAlpha(color, hover ? .25 : .18));
+        g2d.fill(plate);
+        g2d.setColor(ColorUtil.withAlpha(color, hover ? .4 : .33));
+        g2d.draw(plate);
+        g2d.setColor(ColorUtil.withAlpha(color, hover ? .7 : .66));
+        GeneralPath path = new GeneralPath();
+        path.moveTo(s * 2, s * 6);
+        path.lineTo(s * 5, s * 6);
+        path.lineTo(s * 5, s * 9);
+        path.lineTo(s * 4, s * 8);
+        path.lineTo(s * 2, s * 10);
+        path.quadTo(s * 2 - s / Math.sqrt(2), s * 9 + s / Math.sqrt(2), s, s * 9);
+        path.lineTo(s * 3, s * 7);
+        path.lineTo(s * 2, s * 6);
+        path.closePath();
+        g2d.fill(path);
+        g2d.draw(path);
+        path = new GeneralPath();
+        path.moveTo(s * 6, s * 2);
+        path.lineTo(s * 6, s * 5);
+        path.lineTo(s * 9, s * 5);
+        path.lineTo(s * 8, s * 4);
+        path.lineTo(s * 10, s * 2);
+        path.quadTo(s * 9 + s / Math.sqrt(2), s * 2 - s / Math.sqrt(2), s * 9, s);
+        path.lineTo(s * 7, s * 3);
+        path.lineTo(s * 6, s * 2);
+        path.closePath();
+        g2d.fill(path);
+        g2d.draw(path);
+      }
+      finally {
+        g2d.dispose();
+      }
+    }
+  }
+
+  private final class MyTimerListener implements TimerListener {
+    @Override
+    public ModalityState getModalityState() {
+      return ModalityState.stateForComponent(getMenuBar());
+    }
+
+    @Override
+    public void run() {
+      if (!getMenuBar().isShowing()) {
+        return;
+      }
+
+      final Window myWindow = SwingUtilities.windowForComponent(getMenuBar());
+      if (myWindow != null && !myWindow.isActive()) return;
+
+      // do not update when a popup menu is shown (if popup menu contains action which is also in the menu bar, it should not be enabled/disabled)
+      final MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
+      final MenuElement[] selectedPath = menuSelectionManager.getSelectedPath();
+      if (selectedPath.length > 0) {
+        return;
+      }
+
+      // don't update toolbar if there is currently active modal dialog
+      final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+      if (window instanceof Dialog) {
+        if (((Dialog)window).isModal()) {
+          return;
+        }
+      }
+
+      updateMenuActions();
+      if (UIUtil.isWinLafOnVista()) {
+        getMenuBar().repaint();
+      }
+    }
+  }
+
+  private IdeEventQueue.EventDispatcher myEventDispatcher = e -> {
+    if (e instanceof MouseEvent) {
+      MouseEvent mouseEvent = (MouseEvent)e;
+      Component component = findActualComponent(mouseEvent);
+
+      if (myState != State.EXPANDED /*&& !myState.isInProgress()*/) {
+        boolean mouseInside = myActivated || UIUtil.isDescendingFrom(component, getMenuBar());
+        if (e.getID() == MouseEvent.MOUSE_EXITED && e.getSource() == SwingUtilities.windowForComponent(getMenuBar()) && !myActivated) mouseInside = false;
+        if (mouseInside && myState == State.COLLAPSED) {
+          setState(State.EXPANDING);
+          restartAnimator();
+        }
+        else if (!mouseInside && myState != State.COLLAPSING && myState != State.COLLAPSED) {
+          setState(State.COLLAPSING);
+          restartAnimator();
+        }
+      }
+    }
+    return false;
+  };
+
+  private class MenuBarEx extends JMenuBar {
+    @Override
+    public void addNotify() {
+      super.addNotify();
+
+      updateMenuActions();
+
+      // Add updater for menus
+      myActionManager.addTimerListener(1000, new WeakTimerListener(myActionManager, myTimerListener));
+      UISettingsListener UISettingsListener = new UISettingsListener() {
+        @Override
+        public void uiSettingsChanged(final UISettings source) {
+          updateMnemonicsVisibility();
+          myPresentationFactory.reset();
+        }
+      };
+      UISettings.getInstance().addUISettingsListener(UISettingsListener, myDisposable);
+      Disposer.register(ApplicationManager.getApplication(), myDisposable);
+      IdeEventQueue.getInstance().addDispatcher(myEventDispatcher, myDisposable);
+    }
+
+    @Override
+    public void removeNotify() {
+      if (ScreenUtil.isStandardAddRemoveNotify(this)) {
+        if (myAnimator != null) {
+          myAnimator.suspend();
+        }
+        Disposer.dispose(myDisposable);
+      }
+      super.removeNotify();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+      Dimension dimension = super.getPreferredSize();
+      if (myState.isInProgress()) {
+        dimension.height = COLLAPSED_HEIGHT + (int)((myState == State.COLLAPSING ? (1 - myProgress) : myProgress) * (dimension.height - COLLAPSED_HEIGHT));
+      }
+      else if (myState == State.COLLAPSED) {
+        dimension.height = COLLAPSED_HEIGHT;
+      }
+      return dimension;
+    }
+
+    @Override
+    public Border getBorder() {
+      //avoid moving lines
+      if (myState == State.EXPANDING || myState == State.COLLAPSING) {
+        return new EmptyBorder(0, 0, 0, 0);
+      }
+
+      //fix for Darcula double border
+      if (myState == State.TEMPORARY_EXPANDED && UIUtil.isUnderDarcula()) {
+        return new CustomLineBorder(Gray._75, 0, 0, 1, 0);
+      }
+
+      //save 1px for mouse handler
+      if (myState == State.COLLAPSED) {
+        return new EmptyBorder(0, 0, 1, 0);
+      }
+
+      return UISettings.getInstance().SHOW_MAIN_TOOLBAR || UISettings.getInstance().SHOW_NAVIGATION_BAR ? super.getBorder() : null;
+    }
+
+    @Override
+    public void paint(Graphics g) {
+      //otherwise, there will be 1px line on top
+      if (myState == State.COLLAPSED) {
+        return;
+      }
+      super.paint(g);
+    }
+
+    @Override
+    public void doLayout() {
+      super.doLayout();
+      if (myClockPanel != null && myButton != null) {
+        if (myState != State.EXPANDED) {
+          myClockPanel.setVisible(true);
+          myButton.setVisible(true);
+          Dimension preferredSize = myButton.getPreferredSize();
+          myButton.setBounds(getBounds().width - preferredSize.width, 0, preferredSize.width, preferredSize.height);
+          preferredSize = myClockPanel.getPreferredSize();
+          myClockPanel.setBounds(getBounds().width - preferredSize.width - myButton.getWidth(), 0, preferredSize.width, preferredSize.height);
+        }
+        else {
+          myClockPanel.setVisible(false);
+          myButton.setVisible(false);
+        }
+      }
+    }
+
+    @Override
+    protected void paintChildren(Graphics g) {
+      if (myState.isInProgress()) {
+        Graphics2D g2 = (Graphics2D)g;
+        AffineTransform oldTransform = g2.getTransform();
+        AffineTransform newTransform = oldTransform != null ? new AffineTransform(oldTransform) : new AffineTransform();
+        newTransform.concatenate(AffineTransform.getTranslateInstance(0, getHeight() - super.getPreferredSize().height));
+        g2.setTransform(newTransform);
+        super.paintChildren(g2);
+        g2.setTransform(oldTransform);
+      }
+      else if (myState != State.COLLAPSED) {
+        super.paintChildren(g);
+      }
+    }
+
+    @Override
+    public void menuSelectionChanged(boolean isIncluded) {
+      if (!isIncluded && myState == State.TEMPORARY_EXPANDED) {
+        myActivated = false;
+        setState(State.COLLAPSING);
+        restartAnimator();
+        return;
+      }
+      if (isIncluded && myState == State.COLLAPSED) {
+        myActivated = true;
+        setState(State.TEMPORARY_EXPANDED);
+        revalidate();
+        repaint();
+        //noinspection SSBasedInspection
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            JMenu menu = getMenu(getSelectionModel().getSelectedIndex());
+            if (menu.isPopupMenuVisible()) {
+              menu.setPopupMenuVisible(false);
+              menu.setPopupMenuVisible(true);
+            }
+          }
+        });
+      }
+      super.menuSelectionChanged(isIncluded);
+    }
+
+    @Override
+    public int getMenuCount() {
+      int menuCount = super.getMenuCount();
+      return myClockPanel != null ? menuCount - 2 : menuCount;
+    }
+  }
+
+  @Nullable
+  private final ClockPanel myClockPanel;
+
+  @Nullable
+  private final MyExitFullScreenButton myButton;
+  @Nullable
+  private final Animator myAnimator;
+
+  @Nullable
+  private final Timer myActivationWatcher;
+
+  private JMenuBar myMenuBar = new MenuBarEx();
+
+  protected final MyTimerListener myTimerListener;
+
+  public DesktopIdeMenuBar(ActionManager actionManager, DataManager dataManager) {
+    super(actionManager, dataManager);
+    myTimerListener = new MyTimerListener();
+
+    if (WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported()) {
+      myAnimator = new MyAnimator();
+      myActivationWatcher = new Timer(100, new MyActionListener());
+      myClockPanel = new ClockPanel();
+      myButton = new MyExitFullScreenButton();
+
+      myMenuBar.add(myClockPanel);
+      myMenuBar.add(myButton);
+      myMenuBar.addPropertyChangeListener(WindowManagerEx.FULL_SCREEN, evt -> updateState());
+      myMenuBar.addMouseListener(new MyMouseListener());
+    }
+    else {
+      myAnimator = null;
+      myActivationWatcher = null;
+      myClockPanel = null;
+      myButton = null;
+    }
+  }
+
+  private boolean isActivated() {
+    int index = myMenuBar.getSelectionModel().getSelectedIndex();
+    if (index == -1) {
+      return false;
+    }
+    return myMenuBar.getMenu(index).isPopupMenuVisible();
+  }
+
+  private void updateState() {
+    if (myAnimator != null) {
+      Window window = SwingUtilities.getWindowAncestor(myMenuBar);
+      if (window instanceof IdeFrameEx) {
+        boolean fullScreen = ((IdeFrameEx)window).isInFullScreen();
+        if (fullScreen) {
+          setState(State.COLLAPSING);
+          restartAnimator();
+        }
+        else {
+          myAnimator.suspend();
+          setState(State.EXPANDED);
+          if (myClockPanel != null) {
+            myClockPanel.setVisible(false);
+            myButton.setVisible(false);
+          }
+        }
+      }
+    }
+  }
+
+  private void updateMnemonicsVisibility() {
+    JMenuBar menuBar = getMenuBar();
+    final boolean enabled = !UISettings.getInstance().DISABLE_MNEMONICS;
+    for (int i = 0; i < menuBar.getMenuCount(); i++) {
+      ((ActionMenu)menuBar.getMenu(i)).setMnemonicEnabled(enabled);
+    }
+  }
+
+  private void setState(@Nonnull State state) {
+    myState = state;
+    if (myState == State.EXPANDING && myActivationWatcher != null && !myActivationWatcher.isRunning()) {
+      myActivationWatcher.start();
+    }
+    else if (myActivationWatcher != null && myActivationWatcher.isRunning()) {
+      if (state == State.EXPANDED || state == State.COLLAPSED) {
+        myActivationWatcher.stop();
+      }
+    }
+  }
+
+
+  private void restartAnimator() {
+    if (myAnimator != null) {
+      myAnimator.reset();
+      myAnimator.resume();
+    }
+  }
+
+  private Component findActualComponent(MouseEvent mouseEvent) {
+    Component component = mouseEvent.getComponent();
+    Component deepestComponent;
+    if (myState != State.EXPANDED && !myState.isInProgress() && myMenuBar.contains(SwingUtilities.convertPoint(component, mouseEvent.getPoint(), myMenuBar))) {
+      deepestComponent = myMenuBar;
+    }
+    else {
+      deepestComponent = SwingUtilities.getDeepestComponentAt(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+    }
+    if (deepestComponent != null) {
+      component = deepestComponent;
+    }
+    return component;
+  }
+
+  @Override
+  protected void updateMenuActions() {
+    myNewVisibleActions.clear();
+
+    if (!myDisabled) {
+      DataContext dataContext = ((DataManagerImpl)myDataManager).getDataContextTest(myMenuBar);
+      expandActionGroup(dataContext, myNewVisibleActions, myActionManager);
+    }
+
+    if (!myNewVisibleActions.equals(myVisibleActions)) {
+      // should rebuild UI
+      final boolean changeBarVisibility = myNewVisibleActions.isEmpty() || myVisibleActions.isEmpty();
+
+      final List<AnAction> temp = myVisibleActions;
+      myVisibleActions = myNewVisibleActions;
+      myNewVisibleActions = temp;
+
+      myMenuBar.removeAll();
+      final boolean enableMnemonics = !UISettings.getInstance().DISABLE_MNEMONICS;
+      for (final AnAction action : myVisibleActions) {
+        myMenuBar.add(new ActionMenu(null, ActionPlaces.MAIN_MENU, (ActionGroup)action, myPresentationFactory, enableMnemonics, true));
+      }
+
+      updateMnemonicsVisibility();
+      if (myClockPanel != null) {
+        myMenuBar.add(myClockPanel);
+        myMenuBar.add(myButton);
+      }
+      myMenuBar.validate();
+
+      if (changeBarVisibility) {
+        myMenuBar.invalidate();
+        final JFrame frame = (JFrame)SwingUtilities.getAncestorOfClass(JFrame.class, myMenuBar);
+        if (frame != null) {
+          frame.validate();
+        }
+      }
+    }
+  }
+
+  @Nonnull
+  public JMenuBar getMenuBar() {
+    return myMenuBar;
+  }
+}

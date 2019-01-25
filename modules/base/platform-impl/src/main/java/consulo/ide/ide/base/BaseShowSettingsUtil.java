@@ -62,4 +62,13 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
     return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
   }
 
+  @Override
+  public <T extends Configurable> T findApplicationConfigurable(final Class<T> confClass) {
+    return ConfigurableExtensionPointUtil.findApplicationConfigurable(confClass);
+  }
+
+  @Override
+  public <T extends Configurable> T findProjectConfigurable(final Project project, final Class<T> confClass) {
+    return ConfigurableExtensionPointUtil.findProjectConfigurable(project, confClass);
+  }
 }

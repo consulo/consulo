@@ -99,10 +99,10 @@ public final class Presentation implements Cloneable {
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
   private String myText;
   private String myDescription;
-  private Icon myIcon;
-  private Icon myDisabledIcon;
-  private Icon myHoveredIcon;
-  private Icon mySelectedIcon;
+  private Image myIcon;
+  private Image myDisabledIcon;
+  private Image myHoveredIcon;
+  private Image mySelectedIcon;
   private int myMnemonic;
   private int myDisplayedMnemonicIndex = -1;
   private boolean myVisible = true;
@@ -223,74 +223,42 @@ public final class Presentation implements Cloneable {
     myChangeSupport.firePropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
   }
 
-  public Icon getIcon() {
+  public Image getIconUI() {
     return myIcon;
   }
 
   public void setIcon(@Nullable Image image) {
-    setIcon(TargetAWT.to(image));
-  }
+    Image oldIcon = myIcon;
+    if (oldIcon == image) return;
 
-  public void setIcon(@Nullable SwingImageRef image) {
-    setIcon((Icon)image);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use setIcon with ui image")
-  public void setIcon(@Nullable Icon icon) {
-    Icon oldIcon = myIcon;
-    if (oldIcon == icon) return;
-
-    myIcon = icon;
+    myIcon = image;
     myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, myIcon);
   }
 
-  public Icon getDisabledIcon() {
-    return myDisabledIcon;
-  }
-
-  public void setDisabledIcon(@Nullable Icon icon) {
-    Icon oldDisabledIcon = myDisabledIcon;
+  public void setDisabledIcon(@Nullable Image icon) {
+    Image oldDisabledIcon = myDisabledIcon;
     myDisabledIcon = icon;
     myChangeSupport.firePropertyChange(PROP_DISABLED_ICON, oldDisabledIcon, myDisabledIcon);
   }
 
-  public Icon getHoveredIcon() {
-    return myHoveredIcon;
-  }
-
-  public void setHoveredIcon(@Nullable final SwingImageRef hoveredIcon) {
-    setHoveredIcon((Icon)hoveredIcon);
+  @Nullable
+  public Image getDisabledIconUI() {
+    return myDisabledIcon;
   }
 
   public void setHoveredIcon(@Nullable final Image hoveredIcon) {
-    setHoveredIcon(TargetAWT.to(hoveredIcon));
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use setHoveredIcon with ui image")
-  public void setHoveredIcon(@Nullable final Icon hoveredIcon) {
-    Icon old = myHoveredIcon;
+    Image old = myHoveredIcon;
     myHoveredIcon = hoveredIcon;
     myChangeSupport.firePropertyChange(PROP_HOVERED_ICON, old, myHoveredIcon);
   }
 
-  public Icon getSelectedIcon() {
-    return mySelectedIcon;
+  @Nullable
+  public Image getHoveredIconUI() {
+    return myHoveredIcon;
   }
 
-  public void setSelectedIcon(@Nullable final SwingImageRef hoveredIcon) {
-    setSelectedIcon((Icon)hoveredIcon);
-  }
-
-  public void setSelectedIcon(@Nullable final Image hoveredIcon) {
-    setSelectedIcon(TargetAWT.to(hoveredIcon));
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use setSelectedIcon with ui image")
-  public void setSelectedIcon(Icon selectedIcon) {
-    Icon old = mySelectedIcon;
+  public void setSelectedIcon(@Nullable Image selectedIcon) {
+    Image old = mySelectedIcon;
     mySelectedIcon = selectedIcon;
     myChangeSupport.firePropertyChange(PROP_SELECTED_ICON, old, mySelectedIcon);
   }
@@ -356,9 +324,9 @@ public final class Presentation implements Cloneable {
   public void copyFrom(Presentation presentation) {
     setText(presentation.getTextWithMnemonic(), presentation.myDisplayedMnemonicIndex > -1);
     setDescription(presentation.getDescription());
-    setIcon(presentation.getIcon());
-    setDisabledIcon(presentation.getDisabledIcon());
-    setHoveredIcon(presentation.getHoveredIcon());
+    setIcon(presentation.getIconUI());
+    setDisabledIcon(presentation.getDisabledIconUI());
+    setHoveredIcon(presentation.getHoveredIconUI());
     setVisible(presentation.isVisible());
     setEnabled(presentation.isEnabled());
   }
@@ -396,4 +364,73 @@ public final class Presentation implements Cloneable {
   public boolean isEnabledAndVisible() {
     return isEnabled() && isVisible();
   }
+
+  // region Deprecated stuff
+
+  @Nullable
+  @Deprecated
+  public Icon getIcon() {
+    return TargetAWT.to(myIcon);
+  }
+
+  @Deprecated
+  public void setIcon(@Nullable SwingImageRef image) {
+    setIcon((Icon)image);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use setIcon with ui image")
+  public void setIcon(@Nullable Icon icon) {
+    setIcon(TargetAWT.from(icon));
+  }
+
+  @Deprecated
+  public Icon getDisabledIcon() {
+    return TargetAWT.to(myDisabledIcon);
+  }
+
+  @Deprecated
+  public void setDisabledIcon(@Nullable SwingImageRef icon) {
+    setDisabledIcon(TargetAWT.from(icon));
+  }
+
+  @Deprecated
+  public void setHoveredIcon(@Nullable final SwingImageRef hoveredIcon) {
+    setHoveredIcon((Icon)hoveredIcon);
+  }
+
+  @Deprecated
+  public void setDisabledIcon(@Nullable Icon icon) {
+    setDisabledIcon(TargetAWT.from(icon));
+  }
+
+  @Deprecated
+  public Icon getHoveredIcon() {
+    return TargetAWT.to(myHoveredIcon);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use setHoveredIcon with ui image")
+  public void setHoveredIcon(@Nullable final Icon hoveredIcon) {
+    setHoveredIcon(TargetAWT.from(hoveredIcon));
+  }
+
+  @Nullable
+  @Deprecated
+  public Icon getSelectedIcon() {
+    return TargetAWT.to(mySelectedIcon);
+  }
+
+  @Deprecated
+  public void setSelectedIcon(@Nullable final SwingImageRef selectedImage) {
+    setSelectedIcon((Icon)selectedImage);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use setSelectedIcon with ui image")
+  public void setSelectedIcon(Icon selectedIcon) {
+    setSelectedIcon(TargetAWT.from(selectedIcon));
+  }
+
+  // endregion
 }

@@ -30,6 +30,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -40,6 +41,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 24-Sep-17
  */
+@Singleton
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
 public class WebWindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
   private final Map<Project, WebIdeFrameImpl> myProject2Frame = new HashMap<>();
@@ -69,7 +71,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
 
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Window suggestParentWindow(@Nullable Project project) {
     return null;
@@ -93,7 +95,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public IdeFrameEx getIdeFrame(@javax.annotation.Nullable Project project) {
+  public IdeFrameEx getIdeFrame(@Nullable Project project) {
     return myProject2Frame.get(project);
   }
 

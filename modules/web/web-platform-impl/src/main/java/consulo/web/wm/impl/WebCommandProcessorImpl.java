@@ -30,7 +30,7 @@ public class WebCommandProcessorImpl extends CommandProcessorBase {
   @Nonnull
   @Override
   protected AsyncResult<Void> invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> condition) {
-    AsyncResult<Void> actionCallback = new AsyncResult<>();
+    AsyncResult<Void> actionCallback = AsyncResult.undefined();
 
     WebApplication.invokeOnCurrentSession(() -> {
       try {

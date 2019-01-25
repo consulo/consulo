@@ -26,7 +26,9 @@ import java.awt.event.InputEvent;
 import java.util.Comparator;
 
 
+@Deprecated
 public abstract class ActionManagerEx extends ActionManager {
+  @Deprecated
   public static ActionManagerEx getInstanceEx() {
     return (ActionManagerEx)getInstance();
   }

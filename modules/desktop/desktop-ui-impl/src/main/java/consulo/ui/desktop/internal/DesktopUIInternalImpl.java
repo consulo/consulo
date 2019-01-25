@@ -66,6 +66,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public Image _ImageEffects_trim(@Nonnull Image original, int width, int height) {
+    return new DesktopTrimImageImpl(TargetAWT.to(original), width, height);
+  }
+
+  @Override
   public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
     DesktopAppendImageImpl image = new DesktopAppendImageImpl(2);
     image.setIcon(TargetAWT.to(i0), 0);

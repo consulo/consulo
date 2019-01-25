@@ -89,11 +89,11 @@ public class WebToolWindowManagerImpl extends BaseToolWindowManager {
 
   @RequiredUIAccess
   private void projectOpened() {
-    myFrame = myWindowManager.allocateFrame(myProject);
-
     WGwtToolWindowPanel toolWindowPanel = new WGwtToolWindowPanel();
 
     myToolWindowPanel = toolWindowPanel;
+
+    myFrame = myWindowManager.allocateFrame(myProject);
 
     WGwtRootPanelImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
 

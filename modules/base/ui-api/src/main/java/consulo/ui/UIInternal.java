@@ -97,6 +97,8 @@ public abstract class UIInternal {
 
   public abstract Image _ImageEffects_grayed(@Nonnull Image original);
 
+  public abstract Image _ImageEffects_trim(@Nonnull Image original, int width, int height);
+
   public abstract Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1);
 
   public abstract Image _ImageEffects_empty(int width, int height);

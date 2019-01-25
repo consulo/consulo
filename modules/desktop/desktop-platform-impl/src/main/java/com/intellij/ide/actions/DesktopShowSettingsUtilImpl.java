@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
@@ -214,16 +213,6 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
   @Override
   public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
     return editConfigurable(title, project, createDimensionKey(configurable), configurable);
-  }
-
-  @Override
-  public <T extends Configurable> T findApplicationConfigurable(final Class<T> confClass) {
-    return ConfigurableExtensionPointUtil.findApplicationConfigurable(confClass);
-  }
-
-  @Override
-  public <T extends Configurable> T findProjectConfigurable(final Project project, final Class<T> confClass) {
-    return ConfigurableExtensionPointUtil.findProjectConfigurable(project, confClass);
   }
 
   @RequiredUIAccess

@@ -18,10 +18,10 @@ package com.intellij.openapi.ui;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.project.Project;
@@ -34,8 +34,8 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeMenuBar;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import com.intellij.openapi.wm.impl.IdeMenuBar;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.FocusTrackback;
@@ -369,6 +369,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     private String myFrameTitle;
     private String myFileTitle;
     private File myFile;
+    private DesktopIdeMenuBar myMenuBar;
 
     private MyJFrame(FrameWrapper owner, IdeFrame parent) throws HeadlessException {
       myOwner = owner;
@@ -392,7 +393,8 @@ public class FrameWrapper implements Disposable, DataProvider {
       }
 
       if (setMenuOnFrame) {
-        setJMenuBar(new IdeMenuBar(ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
+        myMenuBar = new DesktopIdeMenuBar(ActionManager.getInstance(), DataManager.getInstance());
+        setJMenuBar(myMenuBar.getMenuBar());
       }
 
       MouseGestureManager.getInstance().add(this);
@@ -462,6 +464,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       Disposer.dispose(owner);
       super.dispose();
       rootPane = null;
+      myMenuBar = null;
       setMenuBar(null);
     }
 

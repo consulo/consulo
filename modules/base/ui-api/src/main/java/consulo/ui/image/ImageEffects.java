@@ -50,6 +50,11 @@ public final class ImageEffects {
     return UIInternal.get()._ImageEffects_grayed(original);
   }
 
+  @Nonnull
+  public static Image trim(@Nonnull Image original, int width, int height) {
+    return UIInternal.get()._ImageEffects_trim(original, width, height);
+  }
+
   /**
    * Return composize image, where height is max of i0&i1, and width is sum of both
    * Return will be displayed like [i0][i1]

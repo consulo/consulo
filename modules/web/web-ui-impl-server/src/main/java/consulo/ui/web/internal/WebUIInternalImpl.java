@@ -31,6 +31,7 @@ import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.web.internal.image.WGwtImageImpl;
 import consulo.ui.web.internal.image.WGwtTransparentImageImpl;
+import consulo.ui.web.internal.image.WGwtTrimImageImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -172,6 +173,11 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public Image _ImageEffects_grayed(@Nonnull Image original) {
     return null;
+  }
+
+  @Override
+  public Image _ImageEffects_trim(@Nonnull Image original, int width, int height) {
+    return new WGwtTrimImageImpl(original, width, height);
   }
 
   @Override

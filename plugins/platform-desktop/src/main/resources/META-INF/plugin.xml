@@ -89,14 +89,15 @@
     <fileSaveDialogProvider implementation="consulo.fileChooser.impl.system.MacFileSaveDialogProvider"/>
     <fileSaveDialogProvider implementation="consulo.fileChooser.impl.DesktopFileSaveDialogProvider" order="last"/>
 
-    <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.DesktopPsiAwareTextEditorProvider" />
+    <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.DesktopPsiAwareTextEditorProvider"/>
 
-    <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false" />
-    <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopWindowManagerImpl" lazy="false" />
-    <applicationService serviceImplementation="consulo.desktop.impl.ide.MacOSDefaultMenuInitializer" lazy="false" />
+    <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
+    <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
+    <applicationService serviceImplementation="consulo.desktop.impl.ide.MacOSDefaultMenuInitializer" lazy="false"/>
+    <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil" serviceImplementation="com.intellij.ide.actions.DesktopShowSettingsUtilImpl"/>
 
-    <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.fileEditor.impl.DesktopPsiAwareFileEditorManagerImpl" lazy="false" />
+    <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.fileEditor.impl.DesktopPsiAwareFileEditorManagerImpl" lazy="false"/>
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
-    <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false" />
+    <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
   </extensions>
 </idea-plugin>

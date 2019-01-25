@@ -97,8 +97,8 @@ public class ActionStub extends AnAction {
   public final void initAction(@Nonnull AnAction targetAction) {
     Presentation sourcePresentation = getTemplatePresentation();
     Presentation targetPresentation = targetAction.getTemplatePresentation();
-    if (targetPresentation.getIcon() == null && sourcePresentation.getIcon() != null) {
-      targetPresentation.setIcon(sourcePresentation.getIcon());
+    if (targetPresentation.getIconUI() == null && sourcePresentation.getIconUI() != null) {
+      targetPresentation.setIcon(sourcePresentation.getIconUI());
     }
     if (targetPresentation.getText() == null && sourcePresentation.getText() != null) {
       targetPresentation.setText(sourcePresentation.getText());
