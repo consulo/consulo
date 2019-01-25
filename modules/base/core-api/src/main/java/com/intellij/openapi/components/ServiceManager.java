@@ -19,7 +19,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
-import com.intellij.util.NotNullFunction;
 
 import javax.annotation.Nonnull;
 
@@ -50,13 +49,8 @@ public class ServiceManager {
    * @param <T>          Service class type.
    * @return Key instance.
    */
+  @Nonnull
   public static <T> NotNullLazyKey<T, Project> createLazyKey(@Nonnull final Class<T> serviceClass) {
-    return NotNullLazyKey.create("Service: " + serviceClass.getName(), new NotNullFunction<Project, T>() {
-      @Override
-      @Nonnull
-      public T fun(Project project) {
-        return getService(project, serviceClass);
-      }
-    });
+    return NotNullLazyKey.create("Service: " + serviceClass.getName(), project -> getService(project, serviceClass));
   }
 }
