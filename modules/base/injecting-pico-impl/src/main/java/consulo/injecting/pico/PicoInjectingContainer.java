@@ -15,8 +15,6 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
-import com.intellij.util.pico.DefaultPicoContainer;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.key.InjectingKey;

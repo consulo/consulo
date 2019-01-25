@@ -26,7 +26,7 @@ import javax.inject.Provider;
  * @author VISTALL
  * @since 2018-08-26
  */
-public class ProviderParameter implements Parameter {
+class ProviderParameter implements Parameter {
   private final Class<?> myType;
 
   public ProviderParameter(Class<?> type) {

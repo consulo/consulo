@@ -17,7 +17,6 @@ package consulo.injecting.pico;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import org.picocontainer.*;

@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.pico;
+package consulo.injecting.pico;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.injecting.pico.ProviderParameter;
 import org.picocontainer.*;
 import org.picocontainer.Parameter;
 import org.picocontainer.defaults.*;
@@ -36,7 +35,7 @@ import java.util.*;
  * A drop-in replacement of {@link org.picocontainer.defaults.ConstructorInjectionComponentAdapter}
  * The same code (generified and cleaned up) but without constructor caching (hence taking up less memory).
  */
-public class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter {
+class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter {
   private static final Logger LOGGER = Logger.getInstance(ConstructorInjectionComponentAdapter.class);
 
   private static final ThreadLocal<Set<ConstructorInjectionComponentAdapter>> ourGuard = new ThreadLocal<>();
