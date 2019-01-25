@@ -18,9 +18,12 @@ package consulo.injecting.pico;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.RootInjectingContainerFactory;
+import consulo.injecting.key.InjectingKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -38,6 +41,12 @@ public class PicoRootInjectingContainerFactory implements RootInjectingContainer
     @Override
     public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
       throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public List<InjectingKey<?>> getKeys() {
+      return Collections.emptyList();
     }
 
     @Nonnull

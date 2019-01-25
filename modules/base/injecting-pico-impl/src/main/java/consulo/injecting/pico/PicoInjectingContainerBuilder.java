@@ -28,23 +28,21 @@ import java.util.Map;
  * @author VISTALL
  * @since 2018-08-23
  */
-public class PicoInjectingContainerBuilder implements InjectingContainerBuilder {
-  private boolean myLocked;
-
-  private final Map<InjectingKey, PicoInjectingPoint> myPoints = new THashMap<>();
-
-  private final PicoInjectingContainer myContainer;
+class PicoInjectingContainerBuilder implements InjectingContainerBuilder {
+  private PicoInjectingContainer myParent;
+  private Map<InjectingKey, PicoInjectingPoint> myPoints = new THashMap<>();
 
   public PicoInjectingContainerBuilder(PicoInjectingContainer parent) {
-    myContainer = new PicoInjectingContainer(parent);
+    myParent = parent;
   }
 
   @Nonnull
   @Override
   @SuppressWarnings("unchecked")
   public <T> InjectingPoint<T> bind(@Nonnull InjectingKey<T> key) {
-    if (myLocked) {
-      throw new IllegalArgumentException("locked");
+    // null points mean free builder
+    if (myPoints == null) {
+      throw new IllegalArgumentException("Already build container");
     }
 
     PicoInjectingPoint<T> point = myPoints.get(key);
@@ -60,9 +58,16 @@ public class PicoInjectingContainerBuilder implements InjectingContainerBuilder 
   @Nonnull
   @Override
   public InjectingContainer build() {
-    myLocked = true;
-    for (PicoInjectingPoint point : myPoints.values()) {
-      myContainer.getContainer().registerComponent(point.getAdapter());
+    Map<InjectingKey, PicoInjectingPoint> points = myPoints;
+    PicoInjectingContainer parent = myParent;
+
+    // free resources
+    myPoints = null;
+    myParent = null;
+
+    PicoInjectingContainer myContainer = new PicoInjectingContainer(parent, points.size());
+    for (Map.Entry<InjectingKey, PicoInjectingPoint> entry : points.entrySet()) {
+      myContainer.add(entry.getKey(), entry.getValue());
     }
     return myContainer;
   }

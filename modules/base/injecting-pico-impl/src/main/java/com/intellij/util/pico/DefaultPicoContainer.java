@@ -242,7 +242,8 @@ public class DefaultPicoContainer implements MutablePicoContainer {
 
   @Override
   public void dispose() {
-    throw new UnsupportedOperationException();
+    myInterfaceClassToAdapter.clear();
+    myComponentAdapters.clear();
   }
 
   @Nonnull
@@ -317,6 +318,13 @@ public class DefaultPicoContainer implements MutablePicoContainer {
         if (!synchronizedSet.contains(element)) {
           copySyncSetIfExposedAsImmutable().add(element);
         }
+      }
+    }
+
+    public void clear() {
+      synchronized (lock) {
+        immutableSet = null;
+        synchronizedSet.clear();
       }
     }
 

@@ -28,13 +28,12 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-08-23
  */
-public class PicoInjectingPoint<T> implements InjectingPoint<T> {
+class PicoInjectingPoint<T> implements InjectingPoint<T> {
   private final InjectingKey<T> myKey;
 
   private boolean myLocked;
 
   private ComponentAdapter myAdapter;
-
 
   public PicoInjectingPoint(InjectingKey<T> key) {
     myKey = key;

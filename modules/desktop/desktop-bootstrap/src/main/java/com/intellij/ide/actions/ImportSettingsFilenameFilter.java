@@ -31,7 +31,7 @@ import java.util.Set;
  */
 public class ImportSettingsFilenameFilter implements FilenameFilter {
   @NonNls
-  static final String SETTINGS_JAR_MARKER = "Consulo Global Settings";
+  static final String SETTINGS_ZIP_MARKER = "Consulo Global Settings";
 
   private final Set<String> myRelativeNamesToExtract;
 
@@ -41,7 +41,7 @@ public class ImportSettingsFilenameFilter implements FilenameFilter {
 
   @Override
   public boolean accept(File dir, String name) {
-    if (name.equals(SETTINGS_JAR_MARKER)) return false;
+    if (name.equals(SETTINGS_ZIP_MARKER)) return false;
     final File configPath = new File(PathManager.getConfigPath());
     final String rPath = FileUtil.getRelativePath(configPath, new File(dir, name));
     assert rPath != null;

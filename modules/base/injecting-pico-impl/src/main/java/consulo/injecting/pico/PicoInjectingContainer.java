@@ -19,25 +19,42 @@ import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import com.intellij.util.pico.DefaultPicoContainer;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.injecting.key.InjectingKey;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
-public class PicoInjectingContainer implements InjectingContainer {
+class PicoInjectingContainer implements InjectingContainer {
   private final MutablePicoContainer myContainer;
+  private final List<InjectingKey<?>> myKeys;
 
-  public PicoInjectingContainer(@Nullable PicoInjectingContainer parent) {
+  public PicoInjectingContainer(@Nullable PicoInjectingContainer parent, int size) {
     myContainer = new DefaultPicoContainer(parent == null ? null : parent.myContainer);
+    myKeys = new ArrayList<>(size);
   }
 
   @Nonnull
   public MutablePicoContainer getContainer() {
     return myContainer;
+  }
+
+  void add(InjectingKey<?> key, PicoInjectingPoint point) {
+    myKeys.add(key);
+    myContainer.registerComponent(point.getAdapter());
+  }
+
+  @Nonnull
+  @Override
+  public List<InjectingKey<?>> getKeys() {
+    return Collections.unmodifiableList(myKeys);
   }
 
   @Nonnull
@@ -71,5 +88,7 @@ public class PicoInjectingContainer implements InjectingContainer {
 
   @Override
   public void dispose() {
+    myKeys.clear();
+    myContainer.dispose();
   }
 }

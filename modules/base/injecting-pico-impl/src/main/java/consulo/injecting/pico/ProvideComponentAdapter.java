@@ -25,7 +25,7 @@ import javax.inject.Provider;
  * @author VISTALL
  * @since 2018-08-24
  */
-public class ProvideComponentAdapter<T> implements ComponentAdapter {
+class ProvideComponentAdapter<T> implements ComponentAdapter {
   private final InjectingKey<T> myInterfaceKey;
   private final Provider<T> myValue;
 

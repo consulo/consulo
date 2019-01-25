@@ -31,7 +31,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-08-23
  */
-public class BaseComponentAdapter<T> implements ComponentAdapter {
+class BaseComponentAdapter<T> implements ComponentAdapter {
   private static final Logger LOGGER = Logger.getInstance(BaseComponentAdapter.class);
 
   private final InjectingKey<T> myInterfaceKey;

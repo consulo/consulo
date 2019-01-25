@@ -67,7 +67,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
 
       ZipEntry magicEntry;
       try (ZipFile zipFile = new ZipFile(saveFile)) {
-        magicEntry = zipFile.getEntry(ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
+        magicEntry = zipFile.getEntry(ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER);
       }
 
       if (magicEntry == null) {

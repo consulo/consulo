@@ -27,7 +27,7 @@ public class LazyInjectingKey<T> implements InjectingKey<T> {
 
   private Class<T> myResolvedClass;
 
-  public LazyInjectingKey(String className, ClassLoader classLoader) {
+  LazyInjectingKey(String className, ClassLoader classLoader) {
     myClassName = className;
     myClassLoader = classLoader;
   }
