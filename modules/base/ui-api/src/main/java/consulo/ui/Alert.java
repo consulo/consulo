@@ -42,7 +42,7 @@ public interface Alert<V> {
   }
 
   @Nonnull
-  Alert<V> rememeber(@Nonnull AlertBuilderRemember<V> remember);
+  Alert<V> rememeber(@Nonnull AlertValueRemember<V> remember);
 
   @Nonnull
   Alert<V> asWarning();

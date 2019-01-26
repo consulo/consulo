@@ -484,7 +484,7 @@ public class DesktopApplicationImpl extends BaseApplicationWithOwnWriteThread im
     }
 
     alert.text(ApplicationBundle.message("exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName()));
-    alert.rememeber(new AlertBuilderRemember<Boolean>() {
+    alert.rememeber(new AlertValueRemember<Boolean>() {
       @Override
       public void setValue(@Nonnull Boolean value) {
         if (value) {

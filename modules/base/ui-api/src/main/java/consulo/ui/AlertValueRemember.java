@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-01-16
  */
-public interface AlertBuilderRemember<V> {
+public interface AlertValueRemember<V> {
   void setValue(@Nonnull V value);
 
   /**

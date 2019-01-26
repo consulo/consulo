@@ -19,12 +19,12 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.Alert;
-import consulo.ui.AlertBuilderRemember;
+import consulo.ui.AlertValueRemember;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOption, AlertBuilderRemember<Integer> {
+public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOption, AlertValueRemember<Integer> {
   public static final ProjectNewWindowDoNotAskOption INSTANCE = new ProjectNewWindowDoNotAskOption();
 
   @Override
