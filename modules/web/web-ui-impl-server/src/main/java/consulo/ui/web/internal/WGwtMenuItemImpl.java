@@ -19,7 +19,11 @@ import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.MenuItem;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.image.WGwtImageUrlCache;
+import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,6 +34,17 @@ import javax.annotation.Nullable;
 public class WGwtMenuItemImpl extends AbstractComponent implements MenuItem, VaadinWrapper {
   public WGwtMenuItemImpl(String text) {
     getState().caption = text;
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    getState().myImageState = icon == null ? null : WGwtImageUrlCache.map(icon).getState();
+    markAsDirty();
+  }
+
+  @Override
+  protected MenuItemState getState() {
+    return (MenuItemState)super.getState();
   }
 
   @Nonnull

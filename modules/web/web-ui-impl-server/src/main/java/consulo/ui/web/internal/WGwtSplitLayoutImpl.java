@@ -22,6 +22,7 @@ import consulo.ui.shared.Size;
 import consulo.ui.SplitLayout;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -101,7 +102,7 @@ public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements S
     return list.iterator();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Component getParentComponent() {
     return (Component)getParent();

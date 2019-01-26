@@ -20,7 +20,10 @@ import com.vaadin.ui.Component;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.image.WGwtImageUrlCache;
+import consulo.web.gwt.shared.ui.state.menu.MenuState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +40,17 @@ public class WGwtMenuImpl extends AbstractComponentContainer implements Menu, Va
 
   public WGwtMenuImpl(String text) {
     getState().caption = text;
+  }
+
+  @Override
+  protected MenuState getState() {
+    return (MenuState)super.getState();
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    getState().myImageState = icon == null ? null : WGwtImageUrlCache.map(icon).getState();
+    markAsDirty();
   }
 
   @RequiredUIAccess

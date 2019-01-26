@@ -19,6 +19,7 @@ import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.shared.Size;
 
 import javax.annotation.Nonnull;
@@ -35,6 +36,11 @@ public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuSepa
   @Nonnull
   @Override
   public String getText() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
     throw new UnsupportedOperationException();
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.web.gwt.shared.ui.state.menu;
 
-import consulo.ui.image.Image;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.vaadin.shared.AbstractComponentState;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2019-01-26
  */
-public interface MenuItem extends Component {
-  @Nonnull
-  static MenuItem create(@Nonnull String text) {
-    return UIInternal.get()._MenuItem_create(text);
-  }
-
-  @Nonnull
-  String getText();
-
-  void setIcon(@Nullable Image icon);
+public class MenuItemState extends AbstractComponentState {
+  public MultiImageState myImageState;
 }

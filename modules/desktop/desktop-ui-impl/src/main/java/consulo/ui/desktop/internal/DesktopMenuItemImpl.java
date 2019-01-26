@@ -15,8 +15,11 @@
  */
 package consulo.ui.desktop.internal;
 
+import consulo.awt.TargetAWT;
 import consulo.ui.MenuItem;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -26,5 +29,10 @@ import javax.swing.*;
 public class DesktopMenuItemImpl extends JMenuItem implements MenuItem, SwingWrapper {
   public DesktopMenuItemImpl(String text) {
     super(text);
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    setIcon(TargetAWT.to(icon));
   }
 }
