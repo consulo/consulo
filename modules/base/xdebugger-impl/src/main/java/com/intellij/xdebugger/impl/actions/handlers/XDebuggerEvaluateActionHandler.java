@@ -25,7 +25,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
@@ -40,6 +39,7 @@ import com.intellij.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * @author nik
@@ -75,7 +75,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
       if (value != null) {
         value.calculateEvaluationExpression().doWhenDone(new Consumer<XExpression>() {
           @Override
-          public void consume(final XExpression expression) {
+          public void accept(final XExpression expression) {
             if (expression != null) {
               AppUIUtil.invokeOnEdt(new Runnable() {
                 @Override

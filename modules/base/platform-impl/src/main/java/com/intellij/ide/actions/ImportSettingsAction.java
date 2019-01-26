@@ -25,6 +25,7 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
@@ -77,7 +78,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         return;
       }
 
-      MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents = ExportSettingsAction.getExportableComponentsMap(false);
+      MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents = ExportSettingsAction.getExportableComponentsMap(Application.get(), false);
       List<ExportSettingsAction.ExportableItem> components = getComponentsStored(saveFile, fileToComponents.values());
       fileToComponents.values().retainAll(components);
       final ChooseComponentsToExportDialog dialog =

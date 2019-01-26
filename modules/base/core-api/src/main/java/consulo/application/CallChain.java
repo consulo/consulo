@@ -137,7 +137,7 @@ public final class CallChain {
 
     @Nonnull
     public AsyncResult<NewValue> tossAsync() {
-      AsyncResult<NewValue> result = new AsyncResult<>();
+      AsyncResult<NewValue> result = AsyncResult.undefined();
       toss(result::setDone);
       return result;
     }

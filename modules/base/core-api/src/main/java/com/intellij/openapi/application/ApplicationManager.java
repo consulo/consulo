@@ -33,6 +33,7 @@ public class ApplicationManager {
    * @return <code>Application</code>
    */
   @Nullable
+  @Deprecated
   public static Application getApplication() {
     return ourApplication;
   }

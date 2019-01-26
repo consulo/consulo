@@ -29,7 +29,6 @@ import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
@@ -44,13 +43,16 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.application.CallChain;
 import consulo.application.ex.ApplicationEx2;
 import consulo.injecting.key.InjectingKey;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,61 +61,68 @@ import java.util.*;
 import java.util.zip.ZipOutputStream;
 
 public class ExportSettingsAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  private final Application myApplication;
+
+  @Inject
+  public ExportSettingsAction(Application application) {
+    myApplication = application;
+  }
+
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nullable AnActionEvent e) {
-    ApplicationManager.getApplication().saveSettings();
-
-    ChooseComponentsToExportDialog dialog =
-            new ChooseComponentsToExportDialog(getExportableComponentsMap(true), true, IdeBundle.message("title.select.components.to.export"),
-                                               IdeBundle.message("prompt.please.check.all.components.to.export"));
-    if (!dialog.showAndGet()) {
-      return;
-    }
-
-    Set<ExportableItem> markedComponents = dialog.getExportableComponents();
-    if (markedComponents.isEmpty()) {
-      return;
-    }
-
-    Set<File> exportFiles = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
-    for (ExportableItem markedComponent : markedComponents) {
-      ContainerUtil.addAll(exportFiles, markedComponent.getExportFiles());
-    }
-
-    final File saveFile = dialog.getExportFile();
-    try {
-      if (saveFile.exists()) {
-        final int ret = Messages.showOkCancelDialog(IdeBundle.message("prompt.overwrite.settings.file", FileUtil.toSystemDependentName(saveFile.getPath())),
-                                                    IdeBundle.message("title.file.already.exists"), Messages.getWarningIcon());
-        if (ret != Messages.OK) return;
-      }
-      try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
-        final File configPath = new File(PathManager.getConfigPath());
-        final HashSet<String> writtenItemRelativePaths = new HashSet<>();
-        for (File file : exportFiles) {
-          final String rPath = FileUtil.getRelativePath(configPath, file);
-          assert rPath != null;
-          final String relativePath = FileUtil.toSystemIndependentName(rPath);
-          if (file.exists()) {
-            ZipUtil.addFileOrDirRecursively(output, saveFile, file, relativePath, null, writtenItemRelativePaths);
-          }
+    CallChain.Link<Void, Void> link = CallChain.first(UIAccess.current());
+    link.linkWrite(myApplication::saveSettings);
+    link.linkUI(() -> {
+      ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(getExportableComponentsMap(myApplication, true), true, IdeBundle.message("title.select.components.to.export"),
+                                                                                 IdeBundle.message("prompt.please.check.all.components.to.export"));
+      dialog.showAsync().doWhenDone(() -> {
+        Set<ExportableItem> markedComponents = dialog.getExportableComponents();
+        if (markedComponents.isEmpty()) {
+          return;
         }
 
-        exportInstalledPlugins(saveFile, output, writtenItemRelativePaths);
+        Set<File> exportFiles = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+        for (ExportableItem markedComponent : markedComponents) {
+          ContainerUtil.addAll(exportFiles, markedComponent.getExportFiles());
+        }
 
-        final File magicFile = new File(FileUtil.getTempDirectory(), ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER);
-        FileUtil.createIfDoesntExist(magicFile);
-        magicFile.deleteOnExit();
-        ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
-      }
-      ShowFilePathAction
-              .showDialog(getEventProject(e), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"),
-                          saveFile, null);
-    }
-    catch (IOException e1) {
-      Messages.showErrorDialog(IdeBundle.message("error.writing.settings", e1.toString()), IdeBundle.message("title.error.writing.file"));
-    }
+        final File saveFile = dialog.getExportFile();
+        try {
+          if (saveFile.exists()) {
+            final int ret =
+                    Messages.showOkCancelDialog(IdeBundle.message("prompt.overwrite.settings.file", FileUtil.toSystemDependentName(saveFile.getPath())), IdeBundle.message("title.file.already.exists"),
+                                                Messages.getWarningIcon());
+            if (ret != Messages.OK) return;
+          }
+          try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
+            final File configPath = new File(PathManager.getConfigPath());
+            final HashSet<String> writtenItemRelativePaths = new HashSet<>();
+            for (File file : exportFiles) {
+              final String rPath = FileUtil.getRelativePath(configPath, file);
+              assert rPath != null;
+              final String relativePath = FileUtil.toSystemIndependentName(rPath);
+              if (file.exists()) {
+                ZipUtil.addFileOrDirRecursively(output, saveFile, file, relativePath, null, writtenItemRelativePaths);
+              }
+            }
+
+            exportInstalledPlugins(saveFile, output, writtenItemRelativePaths);
+
+            final File magicFile = new File(FileUtil.getTempDirectory(), ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER);
+            FileUtil.createIfDoesntExist(magicFile);
+            magicFile.deleteOnExit();
+            ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
+          }
+          ShowFilePathAction.showDialog(getEventProject(e), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"), saveFile, null);
+        }
+        catch (IOException e1) {
+          Messages.showErrorDialog(IdeBundle.message("error.writing.settings", e1.toString()), IdeBundle.message("title.error.writing.file"));
+        }
+      });
+    });
+
+    link.toss();
   }
 
   private static void exportInstalledPlugins(File saveFile, ZipOutputStream output, HashSet<String> writtenItemRelativePaths) throws IOException {
@@ -132,11 +141,10 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
   }
 
   @Nonnull
-  public static MultiMap<File, ExportableItem> getExportableComponentsMap(final boolean onlyExisting) {
+  public static MultiMap<File, ExportableItem> getExportableComponentsMap(Application application, boolean onlyExisting) {
     final MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
 
-    ApplicationEx2 application = (ApplicationEx2)Application.get();
-    final StateStorageManager storageManager = application.getStateStore().getStateStorageManager();
+    final StateStorageManager storageManager = ((ApplicationEx2)application).getStateStore().getStateStorageManager();
     for (InjectingKey<?> key : application.getInjectingContainer().getKeys()) {
       Class<?> targetClass = key.getTargetClass();
       State stateAnnotation = targetClass.getAnnotation(State.class);
@@ -200,7 +208,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     IdeaPluginDescriptor pluginDescriptor = null;
     ClassLoader classLoader = aClass.getClassLoader();
 
-    if(classLoader instanceof PluginClassLoader) {
+    if (classLoader instanceof PluginClassLoader) {
       pluginDescriptor = PluginManager.getPlugin(((PluginClassLoader)classLoader).getPluginId());
     }
 
