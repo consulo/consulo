@@ -38,6 +38,7 @@ import javax.swing.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -46,8 +47,13 @@ import java.util.function.Consumer;
 @Internal
 public class DesktopUIInternalImpl extends UIInternal {
   @Override
-  public Image _Images_image(URL url) {
+  public Image _Image_create(URL url) {
     return new DesktopImageImpl(url);
+  }
+
+  @Override
+  public Image _Image_lazy(Supplier<Image> imageSupplier) {
+    return new DesktopLazyImageImpl(imageSupplier);
   }
 
   @Override
