@@ -56,6 +56,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.extensions.ListOfElementsEP;
 import consulo.platform.impl.action.LastActionTracker;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
@@ -504,11 +505,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       final Class actionClass = Class.forName(className, true, loader);
       setIconFromClass(actionClass, loader, iconPath, className, presentation, pluginId);
     }
-    catch (ClassNotFoundException e) {
-      LOG.error(e);
-      reportActionError(pluginId, "class with name \"" + className + "\" not found");
-    }
-    catch (NoClassDefFoundError e) {
+    catch (ClassNotFoundException | NoClassDefFoundError e) {
       LOG.error(e);
       reportActionError(pluginId, "class with name \"" + className + "\" not found");
     }
@@ -521,9 +518,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                                        final Presentation presentation,
                                        final PluginId pluginId) {
 
-    Icon lazyIcon = IconLoader.createLazyIcon(() -> {
+    Image lazyIcon = Image.lazy(() -> {
       //try to find icon in idea class path
-      Icon icon = IconLoader.findIcon(iconPath, actionClass, true);
+      Image icon = IconLoader.findIcon(iconPath, actionClass, true);
       if (icon == null) {
         icon = IconLoader.findIcon(iconPath, classLoader);
       }

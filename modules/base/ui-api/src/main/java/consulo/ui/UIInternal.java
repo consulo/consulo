@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -89,7 +90,9 @@ public abstract class UIInternal {
 
   abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
 
-  public abstract Image _Images_image(URL url);
+  public abstract Image _Image_create(URL url);
+
+  public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
 
   public abstract Image _ImageEffects_layered(Image[] images);
 

@@ -19,6 +19,7 @@ import consulo.ui.UIInternal;
 import javax.annotation.Nonnull;
 
 import java.net.URL;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -29,7 +30,11 @@ public interface Image {
 
   @Nonnull
   static Image create(@Nonnull URL url) {
-    return UIInternal.get()._Images_image(url);
+    return UIInternal.get()._Image_create(url);
+  }
+
+  static Image lazy(@Nonnull Supplier<Image> imageSupplier) {
+    return UIInternal.get()._Image_lazy(imageSupplier);
   }
 
   int getHeight();
