@@ -25,6 +25,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
@@ -34,10 +35,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.components.impl.stores.StateStorageManager;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
@@ -46,84 +44,79 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.application.CallChain;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ex.ApplicationEx2;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
+import consulo.injecting.key.InjectingKey;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.jar.JarOutputStream;
+import java.util.zip.ZipOutputStream;
 
 public class ExportSettingsAction extends AnAction implements DumbAware {
-  private final Application myApplication;
-
-  @Inject
-  public ExportSettingsAction(Application application) {
-    myApplication = application;
-  }
-
-  @RequiredUIAccess
+  @RequiredDispatchThread
   @Override
   public void actionPerformed(@Nullable AnActionEvent e) {
-    CallChain.first(UIAccess.current()).linkWrite(myApplication::saveSettings).linkUI(() -> {
-      ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(getExportableComponentsMap(true), true, IdeBundle.message("title.select.components.to.export"),
-                                                                                 IdeBundle.message("prompt.please.check.all.components.to.export"));
-      dialog.showAsync().doWhenDone(() -> {
-        Set<ExportableItem> markedComponents = dialog.getExportableComponents();
-        if (markedComponents.isEmpty()) {
-          return;
-        }
+    ApplicationManager.getApplication().saveSettings();
 
-        Set<File> exportFiles = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
-        for (ExportableItem markedComponent : markedComponents) {
-          ContainerUtil.addAll(exportFiles, markedComponent.getExportFiles());
-        }
+    ChooseComponentsToExportDialog dialog =
+            new ChooseComponentsToExportDialog(getExportableComponentsMap(true), true, IdeBundle.message("title.select.components.to.export"),
+                                               IdeBundle.message("prompt.please.check.all.components.to.export"));
+    if (!dialog.showAndGet()) {
+      return;
+    }
 
-        final File saveFile = dialog.getExportFile();
-        try {
-          if (saveFile.exists()) {
-            final int ret =
-                    Messages.showOkCancelDialog(IdeBundle.message("prompt.overwrite.settings.file", FileUtil.toSystemDependentName(saveFile.getPath())), IdeBundle.message("title.file.already.exists"),
-                                                Messages.getWarningIcon());
-            if (ret != Messages.OK) return;
+    Set<ExportableItem> markedComponents = dialog.getExportableComponents();
+    if (markedComponents.isEmpty()) {
+      return;
+    }
+
+    Set<File> exportFiles = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    for (ExportableItem markedComponent : markedComponents) {
+      ContainerUtil.addAll(exportFiles, markedComponent.getExportFiles());
+    }
+
+    final File saveFile = dialog.getExportFile();
+    try {
+      if (saveFile.exists()) {
+        final int ret = Messages.showOkCancelDialog(IdeBundle.message("prompt.overwrite.settings.file", FileUtil.toSystemDependentName(saveFile.getPath())),
+                                                    IdeBundle.message("title.file.already.exists"), Messages.getWarningIcon());
+        if (ret != Messages.OK) return;
+      }
+      try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
+        final File configPath = new File(PathManager.getConfigPath());
+        final HashSet<String> writtenItemRelativePaths = new HashSet<>();
+        for (File file : exportFiles) {
+          final String rPath = FileUtil.getRelativePath(configPath, file);
+          assert rPath != null;
+          final String relativePath = FileUtil.toSystemIndependentName(rPath);
+          if (file.exists()) {
+            ZipUtil.addFileOrDirRecursively(output, saveFile, file, relativePath, null, writtenItemRelativePaths);
           }
-          try (JarOutputStream output = new JarOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
-            final File configPath = new File(PathManager.getConfigPath());
-            final HashSet<String> writtenItemRelativePaths = new HashSet<>();
-            for (File file : exportFiles) {
-              final String rPath = FileUtil.getRelativePath(configPath, file);
-              assert rPath != null;
-              final String relativePath = FileUtil.toSystemIndependentName(rPath);
-              if (file.exists()) {
-                ZipUtil.addFileOrDirRecursively(output, saveFile, file, relativePath, null, writtenItemRelativePaths);
-              }
-            }
-
-            exportInstalledPlugins(saveFile, output, writtenItemRelativePaths);
-
-            final File magicFile = new File(FileUtil.getTempDirectory(), ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
-            FileUtil.createIfDoesntExist(magicFile);
-            magicFile.deleteOnExit();
-            ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER, writtenItemRelativePaths, null);
-          }
-          ShowFilePathAction.showDialog(getEventProject(e), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"), saveFile, null);
         }
-        catch (IOException e1) {
-          Messages.showErrorDialog(IdeBundle.message("error.writing.settings", e1.toString()), IdeBundle.message("title.error.writing.file"));
-        }
-      });
-    }).toss();
+
+        exportInstalledPlugins(saveFile, output, writtenItemRelativePaths);
+
+        final File magicFile = new File(FileUtil.getTempDirectory(), ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER);
+        FileUtil.createIfDoesntExist(magicFile);
+        magicFile.deleteOnExit();
+        ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
+      }
+      ShowFilePathAction
+              .showDialog(getEventProject(e), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"),
+                          saveFile, null);
+    }
+    catch (IOException e1) {
+      Messages.showErrorDialog(IdeBundle.message("error.writing.settings", e1.toString()), IdeBundle.message("title.error.writing.file"));
+    }
   }
 
-  private static void exportInstalledPlugins(File saveFile, JarOutputStream output, HashSet<String> writtenItemRelativePaths) throws IOException {
+  private static void exportInstalledPlugins(File saveFile, ZipOutputStream output, HashSet<String> writtenItemRelativePaths) throws IOException {
     final List<String> oldPlugins = new ArrayList<>();
     for (IdeaPluginDescriptor descriptor : PluginManagerCore.getPlugins()) {
       if (!descriptor.isBundled() && descriptor.isEnabled()) {
@@ -142,10 +135,11 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
   public static MultiMap<File, ExportableItem> getExportableComponentsMap(final boolean onlyExisting) {
     final MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
 
-    ApplicationEx2 application = (ApplicationEx2)ApplicationManager.getApplication();
+    ApplicationEx2 application = (ApplicationEx2)Application.get();
     final StateStorageManager storageManager = application.getStateStore().getStateStorageManager();
-    ServiceManagerImpl.processAllImplementationClasses((ComponentManagerImpl)application, (aClass, pluginDescriptor) -> {
-      State stateAnnotation = aClass.getAnnotation(State.class);
+    for (InjectingKey<?> key : application.getInjectingContainer().getKeys()) {
+      Class<?> targetClass = key.getTargetClass();
+      State stateAnnotation = targetClass.getAnnotation(State.class);
       if (stateAnnotation != null && !StringUtil.isEmpty(stateAnnotation.name())) {
         int storageIndex;
         Storage[] storages = stateAnnotation.storages();
@@ -156,7 +150,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
           storageIndex = storages.length - 1;
         }
         else {
-          return true;
+          continue;
         }
 
         Storage storage = storages[storageIndex];
@@ -164,7 +158,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
           String fileSpec = storageManager.buildFileSpec(storage);
 
           if (!fileSpec.startsWith(StoragePathMacros.APP_CONFIG)) {
-            return true;
+            continue;
           }
 
           File file = new File(storageManager.expandMacros(fileSpec));
@@ -186,7 +180,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
             else {
               files = fileExists ? new File[]{file, additionalExportFile} : new File[]{additionalExportFile};
             }
-            ExportableItem item = new ExportableItem(files, getComponentPresentableName(stateAnnotation, aClass, pluginDescriptor));
+            ExportableItem item = new ExportableItem(files, getComponentPresentableName(stateAnnotation, targetClass));
             result.putValue(file, item);
             if (additionalExportFile != null) {
               result.putValue(additionalExportFile, item);
@@ -194,17 +188,24 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
           }
         }
       }
-      return true;
-    });
+    }
     return result;
   }
 
   @Nonnull
-  private static String getComponentPresentableName(@Nonnull State state, @Nonnull Class<?> aClass, @Nullable PluginDescriptor pluginDescriptor) {
+  private static String getComponentPresentableName(@Nonnull State state, @Nonnull Class<?> aClass) {
     String defaultName = state.name();
     String resourceBundleName;
-    if (pluginDescriptor != null && pluginDescriptor instanceof IdeaPluginDescriptor && !PluginManagerCore.CORE_PLUGIN.equals(pluginDescriptor.getPluginId())) {
-      resourceBundleName = ((IdeaPluginDescriptor)pluginDescriptor).getResourceBundleBaseName();
+
+    IdeaPluginDescriptor pluginDescriptor = null;
+    ClassLoader classLoader = aClass.getClassLoader();
+
+    if(classLoader instanceof PluginClassLoader) {
+      pluginDescriptor = PluginManager.getPlugin(((PluginClassLoader)classLoader).getPluginId());
+    }
+
+    if (pluginDescriptor != null && !PluginManagerCore.CORE_PLUGIN.equals(pluginDescriptor.getPluginId())) {
+      resourceBundleName = pluginDescriptor.getResourceBundleBaseName();
     }
     else {
       resourceBundleName = OptionsBundle.PATH_TO_BUNDLE;
@@ -214,8 +215,6 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
       return defaultName;
     }
 
-    ClassLoader classLoader = pluginDescriptor == null ? null : pluginDescriptor.getPluginClassLoader();
-    classLoader = classLoader == null ? aClass.getClassLoader() : classLoader;
     if (classLoader != null) {
       ResourceBundle bundle = AbstractBundle.getResourceBundle(resourceBundleName, classLoader);
       if (bundle != null) {

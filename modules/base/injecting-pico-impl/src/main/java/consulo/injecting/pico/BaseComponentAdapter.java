@@ -18,7 +18,6 @@ package consulo.injecting.pico;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import org.picocontainer.*;
@@ -32,7 +31,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-08-23
  */
-public class BaseComponentAdapter<T> implements ComponentAdapter {
+class BaseComponentAdapter<T> implements ComponentAdapter {
   private static final Logger LOGGER = Logger.getInstance(BaseComponentAdapter.class);
 
   private final InjectingKey<T> myInterfaceKey;

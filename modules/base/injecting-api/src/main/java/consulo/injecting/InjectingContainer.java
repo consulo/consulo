@@ -15,8 +15,11 @@
  */
 package consulo.injecting;
 
+import consulo.injecting.key.InjectingKey;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.ServiceLoader;
 
 /**
@@ -37,6 +40,9 @@ public interface InjectingContainer {
 
   @Nonnull
   <T> T getUnbindedInstance(@Nonnull Class<T> clazz);
+
+  @Nonnull
+  List<InjectingKey<?>> getKeys();
 
   @Nonnull
   InjectingContainerBuilder childBuilder();

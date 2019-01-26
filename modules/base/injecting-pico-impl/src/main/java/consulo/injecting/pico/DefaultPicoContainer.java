@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.pico;
+package consulo.injecting.pico;
 
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class DefaultPicoContainer implements MutablePicoContainer {
+class DefaultPicoContainer implements MutablePicoContainer {
   private final PicoContainer parent;
 
   private final Map<String, ComponentAdapter> myInterfaceClassToAdapter = new THashMap<>();
@@ -242,7 +242,8 @@ public class DefaultPicoContainer implements MutablePicoContainer {
 
   @Override
   public void dispose() {
-    throw new UnsupportedOperationException();
+    myInterfaceClassToAdapter.clear();
+    myComponentAdapters.clear();
   }
 
   @Nonnull
@@ -317,6 +318,13 @@ public class DefaultPicoContainer implements MutablePicoContainer {
         if (!synchronizedSet.contains(element)) {
           copySyncSetIfExposedAsImmutable().add(element);
         }
+      }
+    }
+
+    public void clear() {
+      synchronized (lock) {
+        immutableSet = null;
+        synchronizedSet.clear();
       }
     }
 

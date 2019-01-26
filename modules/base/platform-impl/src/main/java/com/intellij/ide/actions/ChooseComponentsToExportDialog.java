@@ -46,12 +46,12 @@ import java.util.*;
 import java.util.List;
 
 public class ChooseComponentsToExportDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.ChooseComponentsToExportDialog");
+  private static final Logger LOG = Logger.getInstance(ChooseComponentsToExportDialog.class);
 
   private final ElementsChooser<ComponentElementProperties> myChooser;
   private final FieldPanel myPathPanel;
   @NonNls
-  public static final String DEFAULT_PATH = FileUtil.toSystemDependentName(PathManager.getConfigPath() + "/" + "settings.jar");
+  public static final String DEFAULT_PATH = FileUtil.toSystemDependentName(PathManager.getConfigPath() + "/" + "settings.zip");
   private final boolean myShowFilePath;
   private final String myDescription;
 

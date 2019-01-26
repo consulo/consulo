@@ -15,15 +15,16 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import com.intellij.util.NotNullFunction;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
-public class NotNullLazyKey<T,H extends UserDataHolder> extends Key<T>{
-  private final NotNullFunction<H,T> myFunction;
+public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
+  private final NotNullFunction<H, T> myFunction;
 
   private NotNullLazyKey(@Nonnull @NonNls String name, @Nonnull NotNullFunction<H, T> function) {
     super(name);
@@ -39,7 +40,7 @@ public class NotNullLazyKey<T,H extends UserDataHolder> extends Key<T>{
     return data;
   }
 
-  public static <T,H extends UserDataHolder> NotNullLazyKey<T,H> create(@NonNls @Nonnull String name, @Nonnull NotNullFunction<H, T> function) {
-    return new NotNullLazyKey<T,H>(name, function);
+  public static <T, H extends UserDataHolder> NotNullLazyKey<T, H> create(@NonNls @Nonnull String name, @Nonnull NotNullFunction<H, T> function) {
+    return new NotNullLazyKey<T, H>(name, function);
   }
 }

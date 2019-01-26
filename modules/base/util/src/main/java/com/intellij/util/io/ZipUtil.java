@@ -105,16 +105,16 @@ public class ZipUtil {
     return true;
   }
 
-  public static boolean addFileOrDirRecursively(@Nonnull ZipOutputStream jarOutputStream,
+  public static boolean addFileOrDirRecursively(@Nonnull ZipOutputStream zipOutputStream,
                                                 @Nullable File jarFile,
                                                 @Nonnull File file,
                                                 @Nonnull String relativePath,
                                                 @Nullable FileFilter fileFilter,
                                                 @Nullable Set<String> writtenItemRelativePaths) throws IOException {
     if (file.isDirectory()) {
-      return addDirToZipRecursively(jarOutputStream, jarFile, file, relativePath, fileFilter, writtenItemRelativePaths);
+      return addDirToZipRecursively(zipOutputStream, jarFile, file, relativePath, fileFilter, writtenItemRelativePaths);
     }
-    addFileToZip(jarOutputStream, file, relativePath, writtenItemRelativePaths, fileFilter);
+    addFileToZip(zipOutputStream, file, relativePath, writtenItemRelativePaths, fileFilter);
     return true;
   }
 
