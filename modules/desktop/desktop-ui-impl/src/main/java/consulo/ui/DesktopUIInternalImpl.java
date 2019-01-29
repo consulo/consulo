@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
+import consulo.ui.desktop.internal.image.DesktopLazyImageImpl;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
@@ -36,6 +37,7 @@ import javax.swing.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -44,8 +46,13 @@ import java.util.function.Consumer;
 @Internal
 public class DesktopUIInternalImpl extends UIInternal {
   @Override
-  public Image _Images_image(URL url) {
+  public Image _Image_create(URL url) {
     return new DesktopImageImpl(url);
+  }
+
+  @Override
+  public Image _Image_lazy(Supplier<Image> imageSupplier) {
+    return new DesktopLazyImageImpl(imageSupplier);
   }
 
   @Override

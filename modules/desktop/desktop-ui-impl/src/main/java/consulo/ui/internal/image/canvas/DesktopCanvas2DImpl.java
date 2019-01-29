@@ -7,6 +7,7 @@ import com.intellij.util.ui.JBUI;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;
 import consulo.awt.TargetAWT;
+import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.image.canvas.Canvas2DFont;
@@ -121,7 +122,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     /**
      *
      */
-    protected ColorValue fillColorValue;
+    protected ColorValue fillColorValue = StandardColors.BLACK;
 
     /**
      *
@@ -525,7 +526,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   }
 
   @Nonnull
-  private Color convertColor(ColorValue colorValue) {
+  private Color convertColor(@Nonnull ColorValue colorValue) {
     RGBColor rgbColor = colorValue.toRGB();
     float[] floatValues = rgbColor.getFloatValues();
     return new Color(floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
@@ -979,8 +980,8 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     if (state.myFont == null) {
       Canvas2DFont fontStyle = state.myFontStyle;
       int style = 0;
-      style = BitUtil.set(style, Font.ITALIC, BitUtil.isSet(fontStyle.getFontStyle(), consulo.ui.TextAttribute.STYLE_ITALIC));
-      style = BitUtil.set(style, Font.BOLD, BitUtil.isSet(fontStyle.getFontStyle(), consulo.ui.TextAttribute.STYLE_BOLD));
+      style = BitUtil.set(style, Font.ITALIC, BitUtil.isSet(fontStyle.getFontStyle(), TextAttribute.STYLE_ITALIC));
+      style = BitUtil.set(style, Font.BOLD, BitUtil.isSet(fontStyle.getFontStyle(), TextAttribute.STYLE_BOLD));
 
       state.myFont = createFont(fontStyle.getFontName(), style, fontStyle.getFontSize());
 

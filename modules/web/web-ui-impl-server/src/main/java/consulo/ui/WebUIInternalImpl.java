@@ -37,6 +37,7 @@ import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -155,8 +156,13 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _Images_image(URL url) {
+  public Image _Image_create(URL url) {
     return new WGwtImageImpl(url);
+  }
+
+  @Override
+  public Image _Image_lazy(Supplier<Image> imageSupplier) {
+    return imageSupplier.get();
   }
 
   @Override
