@@ -22,27 +22,26 @@ import gnu.trove.THashMap;
 import org.picocontainer.*;
 import org.picocontainer.defaults.AmbiguousComponentResolutionException;
 import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
-import org.picocontainer.defaults.InstanceComponentAdapter;
 import org.picocontainer.defaults.VerifyingVisitor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-class DefaultPicoContainer implements MutablePicoContainer {
+class DefaultPicoContainer implements PicoContainer {
   private final PicoContainer myParent;
 
   private final Map<String, ComponentAdapter> myInterfaceClassToAdapter = new THashMap<>();
 
-  private final LinkedHashSetWrapper<ComponentAdapter> myComponentAdapters = new LinkedHashSetWrapper<>();
+  private final List<ComponentAdapter> myComponentAdapters = new ArrayList<>();
 
-  public DefaultPicoContainer(@Nullable PicoContainer parent) {
+  DefaultPicoContainer(@Nullable PicoContainer parent) {
     myParent = parent;
   }
 
   @Override
   public Collection<ComponentAdapter> getComponentAdapters() {
-    return myComponentAdapters.getImmutableSet();
+    return myComponentAdapters;
   }
 
   @Override
@@ -114,7 +113,6 @@ class DefaultPicoContainer implements MutablePicoContainer {
     return myInterfaceClassToAdapter.containsKey(key) || myParent instanceof DefaultPicoContainer && ((DefaultPicoContainer)myParent).contains(key);
   }
 
-  @Override
   public ComponentAdapter registerComponent(@Nonnull ComponentAdapter componentAdapter) {
     String componentKey = toKey(componentAdapter.getComponentKey());
 
@@ -137,11 +135,6 @@ class DefaultPicoContainer implements MutablePicoContainer {
     }
 
     throw new UnsupportedOperationException("Unknown key type " + value);
-  }
-
-  @Override
-  public ComponentAdapter unregisterComponent(@Nonnull Object componentKey) {
-    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -220,12 +213,6 @@ class DefaultPicoContainer implements MutablePicoContainer {
   }
 
   @Override
-  @Nullable
-  public ComponentAdapter unregisterComponentByInstance(@Nonnull Object componentInstance) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void verify() {
     new VerifyingVisitor().traverse(this);
   }
@@ -246,24 +233,6 @@ class DefaultPicoContainer implements MutablePicoContainer {
     myComponentAdapters.clear();
   }
 
-  @Nonnull
-  @Override
-  public MutablePicoContainer makeChildContainer() {
-    DefaultPicoContainer pc = new DefaultPicoContainer(this);
-    addChildContainer(pc);
-    return pc;
-  }
-
-  @Override
-  public boolean addChildContainer(@Nonnull PicoContainer child) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean removeChildContainer(@Nonnull PicoContainer child) {
-    throw new UnsupportedOperationException();
-  }
-
   @Override
   public void accept(PicoVisitor visitor) {
     visitor.visitContainer(this);
@@ -274,93 +243,7 @@ class DefaultPicoContainer implements MutablePicoContainer {
   }
 
   @Override
-  public ComponentAdapter registerComponentInstance(@Nonnull Object component) {
-    return registerComponentInstance(component.getClass(), component);
-  }
-
-  @Override
-  public ComponentAdapter registerComponentInstance(@Nonnull Object componentKey, @Nonnull Object componentInstance) {
-    return registerComponent(new InstanceComponentAdapter(componentKey, componentInstance));
-  }
-
-  @Override
-  public ComponentAdapter registerComponentImplementation(@Nonnull Class componentImplementation) {
-    return registerComponentImplementation(componentImplementation, componentImplementation);
-  }
-
-  @Override
-  public ComponentAdapter registerComponentImplementation(@Nonnull Object componentKey, @Nonnull Class componentImplementation) {
-    return registerComponentImplementation(componentKey, componentImplementation, null);
-  }
-
-  @Override
-  public ComponentAdapter registerComponentImplementation(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public PicoContainer getParent() {
     return myParent;
-  }
-
-  /**
-   * A linked hash set that's copied on write operations.
-   *
-   * @param <T>
-   */
-  private static class LinkedHashSetWrapper<T> {
-    private final Object lock = new Object();
-    private volatile Set<T> immutableSet;
-    private LinkedHashSet<T> synchronizedSet = new LinkedHashSet<>();
-
-    public void add(@Nonnull T element) {
-      synchronized (lock) {
-        if (!synchronizedSet.contains(element)) {
-          copySyncSetIfExposedAsImmutable().add(element);
-        }
-      }
-    }
-
-    public void clear() {
-      synchronized (lock) {
-        immutableSet = null;
-        synchronizedSet.clear();
-      }
-    }
-
-    private LinkedHashSet<T> copySyncSetIfExposedAsImmutable() {
-      if (immutableSet != null) {
-        immutableSet = null;
-        synchronizedSet = new LinkedHashSet<>(synchronizedSet);
-      }
-      return synchronizedSet;
-    }
-
-    public void remove(@Nullable T element) {
-      synchronized (lock) {
-        copySyncSetIfExposedAsImmutable().remove(element);
-      }
-    }
-
-    @Nonnull
-    public Set<T> getImmutableSet() {
-      Set<T> res = immutableSet;
-      if (res == null) {
-        synchronized (lock) {
-          res = immutableSet;
-          if (res == null) {
-            // Expose the same set as immutable. It should be never modified again. Next add/remove operations will copy synchronizedSet
-            immutableSet = res = Collections.unmodifiableSet(synchronizedSet);
-          }
-        }
-      }
-
-      return res;
-    }
-  }
-
-  @Override
-  public String toString() {
-    return "DefaultPicoContainer" + (getParent() == null ? " (root)" : " (parent=" + getParent() + ")");
   }
 }

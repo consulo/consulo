@@ -18,7 +18,6 @@ package consulo.injecting.pico;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.key.InjectingKey;
-import org.picocontainer.MutablePicoContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,17 +30,12 @@ import java.util.List;
  * @since 2018-08-23
  */
 class PicoInjectingContainer implements InjectingContainer {
-  private final MutablePicoContainer myContainer;
+  private final DefaultPicoContainer myContainer;
   private final List<InjectingKey<?>> myKeys;
 
   public PicoInjectingContainer(@Nullable PicoInjectingContainer parent, int size) {
     myContainer = new DefaultPicoContainer(parent == null ? null : parent.myContainer);
     myKeys = new ArrayList<>(size);
-  }
-
-  @Nonnull
-  public MutablePicoContainer getContainer() {
-    return myContainer;
   }
 
   void add(InjectingKey<?> key, PicoInjectingPoint point) {
@@ -71,7 +65,7 @@ class PicoInjectingContainer implements InjectingContainer {
   @SuppressWarnings("unchecked")
   public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
     Object componentInstance = myContainer.getComponentInstance(clazz);
-    if(componentInstance != null) {
+    if (componentInstance != null) {
       return (T)componentInstance;
     }
     ConstructorInjectionComponentAdapter adapter = new ConstructorInjectionComponentAdapter(clazz.getName(), clazz);

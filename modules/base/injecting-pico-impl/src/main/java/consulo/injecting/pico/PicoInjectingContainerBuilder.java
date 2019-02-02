@@ -65,10 +65,10 @@ class PicoInjectingContainerBuilder implements InjectingContainerBuilder {
     myPoints = null;
     myParent = null;
 
-    PicoInjectingContainer myContainer = new PicoInjectingContainer(parent, points.size());
+    PicoInjectingContainer container = new PicoInjectingContainer(parent, points.size());
     for (Map.Entry<InjectingKey, PicoInjectingPoint> entry : points.entrySet()) {
-      myContainer.add(entry.getKey(), entry.getValue());
+      container.add(entry.getKey(), entry.getValue());
     }
-    return myContainer;
+    return container;
   }
 }
