@@ -20,7 +20,7 @@ import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
@@ -28,7 +28,6 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
-import consulo.ui.app.impl.settings.SettingsDialog;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
@@ -123,11 +122,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     }
 
     projectActionLayout.add(Button.create("Settings", () -> {
-      Configurable[] configurables = ShowSettingsUtilImpl.buildConfigurables(null);
-
-      SettingsDialog settingsDialog = new SettingsDialog(configurables);
-
-      settingsDialog.show();
+      ShowSettingsUtil.getInstance().showSettingsDialog(null);
     }));
 
     layout.center(projectActionLayout);

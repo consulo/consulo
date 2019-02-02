@@ -44,6 +44,9 @@
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="consulo.vfs.newvfs.NewRefreshQueueImpl"/>
 
+    <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
+                        serviceImplementation="consulo.web.options.WebShowSettingsUtil" />
+
     <fileChooseDialogProvider implementation="consulo.web.fileChooser.impl.WebFileChooseDialogProvider" order="last"/>
 
     <fileEditorProvider implementation="consulo.web.fileEditor.impl.text.WebTextEditorProvider" />
