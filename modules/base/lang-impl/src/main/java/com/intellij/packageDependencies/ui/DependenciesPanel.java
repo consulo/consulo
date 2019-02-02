@@ -67,6 +67,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -659,11 +660,9 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      boolean applied = ShowSettingsUtil.getInstance().editConfigurable(DependenciesPanel.this, new DependencyConfigurable(myProject));
-      if (applied) {
-        rebuild();
-      }
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      ShowSettingsUtil.getInstance().editConfigurable(DependenciesPanel.this, new DependencyConfigurable(myProject)).doWhenDone(() -> rebuild());
     }
   }
 

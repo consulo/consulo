@@ -22,7 +22,6 @@ import com.intellij.Patches;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.AboutAction;
 import com.intellij.ide.actions.OpenFileAction;
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -73,7 +72,7 @@ public class MacOSDefaultMenuInitializer {
         @Override
         public void handlePreferences(ApplicationEvent applicationEvent) {
           final Project project = getNotNullProject();
-          final ShowSettingsUtilImpl showSettingsUtil = (ShowSettingsUtilImpl)ShowSettingsUtil.getInstance();
+          final ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
           if (!showSettingsUtil.isAlreadyShown()) {
             TransactionGuard.submitTransaction(project, () -> showSettingsUtil.showSettingsDialog(project));
           }
@@ -142,7 +141,7 @@ public class MacOSDefaultMenuInitializer {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
           final Project project = getNotNullProject();
-          final ShowSettingsUtilImpl showSettingsUtil = (ShowSettingsUtilImpl)ShowSettingsUtil.getInstance();
+          final ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
           if (!showSettingsUtil.isAlreadyShown()) {
             TransactionGuard.submitTransaction(project, () -> showSettingsUtil.showSettingsDialog(project));
           }

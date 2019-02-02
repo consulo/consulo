@@ -30,6 +30,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -176,7 +177,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
       TransactionGuard.getInstance().submitTransactionLater(project != null ? project : ApplicationManager.getApplication(), new Runnable() {
         @Override
         public void run() {
-          ShowSettingsUtilImpl.showSettingsDialog(project, configurableId, enteredText);
+          ShowSettingsUtil.getInstance().showSettingsDialog(project, configurableId, enteredText);
         }
       });
     }

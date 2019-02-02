@@ -27,7 +27,6 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
@@ -36,6 +35,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -76,9 +76,9 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         if (context != null || object != null) {
           requestModelUpdateFromContextOrObject(context, object);
         } else {
-          DataManager.getInstance().getDataContextFromFocus().doWhenDone(new Consumer<DataContext>() {
+          DataManager.getInstance().getDataContextFromFocus().doWhenDone(new java.util.function.Consumer<DataContext>() {
             @Override
-            public void consume(DataContext dataContext) {
+            public void accept(DataContext dataContext) {
               requestModelUpdateFromContextOrObject(dataContext, null);
             }
           });
@@ -240,7 +240,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         if (hint != null) {
           myPanel.getHintContainerShowPoint().doWhenDone(new Consumer<RelativePoint>() {
             @Override
-            public void consume(final RelativePoint relativePoint) {
+            public void accept(final RelativePoint relativePoint) {
               hint.setSize(myPanel.getPreferredSize());
               hint.setLocation(relativePoint);
               if (after != null) {

@@ -15,68 +15,102 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.CommonBundle;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableEP;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
+import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
-import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author max
  */
 @Singleton
-public class ShowSettingsUtilImpl extends ShowSettingsUtil {
-  private static final Logger LOG = Logger.getInstance(ShowSettingsUtilImpl.class);
-  private AtomicBoolean myShown = new AtomicBoolean(false);
+public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
+  private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
 
+  private final AtomicBoolean myShown = new AtomicBoolean(false);
+
+  private final DefaultProjectFactory myDefaultProjectFactory;
+
+  @Inject
+  DesktopShowSettingsUtilImpl(DefaultProjectFactory defaultProjectFactory) {
+    myDefaultProjectFactory = defaultProjectFactory;
+  }
+
+  @RequiredUIAccess
   @Override
   public void showSettingsDialog(@Nullable Project project) {
-    try {
-      myShown.set(true);
-      Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
-      Configurable[] configurables = buildConfigurables(project);
-      _showSettingsDialog(actualProject, configurables, null);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-    finally {
-      myShown.set(false);
-    }
+    showSettingsImpl(project, UIAccess.current(), null);
   }
 
-  private static void _showSettingsDialog(@Nonnull final Project project, @Nonnull Configurable[] configurables, @Nullable Configurable toSelect) {
+  @SuppressWarnings("deprecation")
+  private void showSettingsImpl(@Nullable Project tempProject, @Nonnull UIAccess uiAccess, @Nullable Configurable toSelect) {
+    Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
+
+    new Task.Backgroundable(actualProject, "Opening " + CommonBundle.settingsTitle() + "...") {
+      private Configurable[] myConfigurables;
+
+      @Override
+      public void run(@Nonnull ProgressIndicator indicator) {
+        myConfigurables = buildConfigurables(actualProject);
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void onFinished() {
+        try {
+          myShown.set(true);
+
+          DesktopSettingsDialog dialog;
+          if (ModalityPerProjectEAPDescriptor.is()) {
+            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect, true);
+          }
+          else {
+            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect);
+          }
+
+          dialog.showAsync().doWhenDone(() -> myShown.set(false));
+        }
+        catch (Exception e) {
+          LOG.error(e);
+        }
+      }
+    }.queue();
+  }
+
+  @RequiredUIAccess
+  private static AsyncResult<Void> _showSettingsDialog(@Nonnull final Project project, @Nonnull Configurable[] configurables, @Nullable Configurable toSelect) {
     if (ModalityPerProjectEAPDescriptor.is()) {
-      new OptionsEditorDialog(project, configurables, toSelect, true).show();
+      return new DesktopSettingsDialog(project, configurables, toSelect, true).showAsync();
     }
     else {
-      new OptionsEditorDialog(project, configurables, toSelect).show();
+      return new DesktopSettingsDialog(project, configurables, toSelect).showAsync();
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void showSettingsDialog(@Nullable final Project project, final Class configurableClass) {
     assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
@@ -101,38 +135,41 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public void showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
     Configurable[] configurables = buildConfigurables(project);
 
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
 
-    OptionsEditorDialog dialog;
+    DesktopSettingsDialog dialog;
     if (ModalityPerProjectEAPDescriptor.is()) {
-      dialog = new OptionsEditorDialog(actualProject, configurables, nameToSelect, true);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, nameToSelect, true);
     }
     else {
-      dialog = new OptionsEditorDialog(actualProject, configurables, nameToSelect);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, nameToSelect);
     }
     dialog.show();
   }
 
-  public static void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
+  @Override
+  @RequiredUIAccess
+  public void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
     Configurable[] configurables = buildConfigurables(project);
 
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
 
     final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
-    final OptionsEditorDialog dialog;
+    final DesktopSettingsDialog dialog;
     if (ModalityPerProjectEAPDescriptor.is()) {
-      dialog = new OptionsEditorDialog(actualProject, configurables, configurable2Select, true);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, configurable2Select, true);
     }
     else {
-      dialog = new OptionsEditorDialog(actualProject, configurables, configurable2Select);
+      dialog = new DesktopSettingsDialog(actualProject, configurables, configurable2Select);
     }
 
-    new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable.Adapter() {
+    new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
       @Override
       public void showNotify() {
         final OptionsEditor editor = dialog.getDataUnchecked(OptionsEditor.KEY);
@@ -140,25 +177,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
         editor.select(configurable2Select, filter);
       }
     });
-    dialog.show();
-  }
-
-  @Nonnull
-  public static Configurable[] buildConfigurables(@Nullable Project project) {
-    if (project == null) {
-      project = ProjectManager.getInstance().getDefaultProject();
-    }
-
-    final Project tempProject = project;
-
-    List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<>();
-    Collections.addAll(configurableEPs, Configurable.APPLICATION_CONFIGURABLE.getExtensions());
-    Collections.addAll(configurableEPs, Configurable.PROJECT_CONFIGURABLE.getExtensions(project));
-
-    List<Configurable> result = ConfigurableExtensionPointUtil
-            .buildConfigurablesList(configurableEPs, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
-
-    return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
+    dialog.showAsync();
   }
 
   @Nullable
@@ -184,58 +203,49 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect) {
     _showSettingsDialog(project, buildConfigurables(project), toSelect);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
-  public boolean editConfigurable(@Nullable String title, Project project, Configurable configurable) {
+  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
     return editConfigurable(title, project, createDimensionKey(configurable), configurable);
   }
 
+  @RequiredUIAccess
   @Override
-  public <T extends Configurable> T findApplicationConfigurable(final Class<T> confClass) {
-    return ConfigurableExtensionPointUtil.findApplicationConfigurable(confClass);
-  }
-
-  @Override
-  public <T extends Configurable> T findProjectConfigurable(final Project project, final Class<T> confClass) {
-    return ConfigurableExtensionPointUtil.findProjectConfigurable(project, confClass);
-  }
-
-  @RequiredDispatchThread
-  @Override
-  public boolean editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @Nonnull Configurable configurable) {
+  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @Nonnull Configurable configurable) {
     return editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
   }
 
   @Override
-  @RequiredDispatchThread
-  public boolean editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
+  @RequiredUIAccess
+  public AsyncResult<Void> editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
     return editConfigurable(null, project, configurable, title, createDimensionKey(configurable), advancedInitialization);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
-  public boolean editConfigurable(Component parent, Configurable configurable) {
+  public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
     return editConfigurable(parent, configurable, null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
-  public boolean editConfigurable(final Component parent, final Configurable configurable, @Nullable final Runnable advancedInitialization) {
+  public AsyncResult<Void> editConfigurable(final Component parent, final Configurable configurable, @Nullable final Runnable advancedInitialization) {
     return editConfigurable(parent, null, configurable, null, createDimensionKey(configurable), advancedInitialization);
   }
 
-  @RequiredDispatchThread
-  private static boolean editConfigurable(@Nullable Component parent,
-                                          @Nullable Project project,
-                                          Configurable configurable,
-                                          String title,
-                                          String dimensionKey,
-                                          @Nullable final Runnable advancedInitialization) {
+  @RequiredUIAccess
+  private static AsyncResult<Void> editConfigurable(@Nullable Component parent,
+                                                    @Nullable Project project,
+                                                    Configurable configurable,
+                                                    String title,
+                                                    String dimensionKey,
+                                                    @Nullable final Runnable advancedInitialization) {
     SingleConfigurableEditor editor;
     if (parent != null) {
       editor = new SingleConfigurableEditor(parent, configurable, title, dimensionKey, true, DialogWrapper.IdeModalityType.IDE);
@@ -244,31 +254,23 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
       editor = new SingleConfigurableEditor(project, configurable, title, dimensionKey, true, DialogWrapper.IdeModalityType.IDE);
     }
     if (advancedInitialization != null) {
-      new UiNotifyConnector.Once(editor.getContentPane(), new Activatable.Adapter() {
+      new UiNotifyConnector.Once(editor.getContentPane(), new Activatable() {
         @Override
         public void showNotify() {
           advancedInitialization.run();
         }
       });
     }
-    editor.show();
-    return editor.isOK();
+    return editor.showAsync();
   }
 
-  public static String createDimensionKey(@Nonnull Configurable configurable) {
-    String displayName = configurable.getDisplayName();
-    if (displayName == null) {
-      displayName = configurable.getClass().getName();
-    }
-    return '#' + StringUtil.replaceChar(StringUtil.replaceChar(displayName, '\n', '_'), ' ', '_');
-  }
-
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
-  public boolean editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
+  public AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
     return editConfigurable(parent, null, configurable, null, dimensionServiceKey, null);
   }
 
+  @Override
   public boolean isAlreadyShown() {
     return myShown.get();
   }

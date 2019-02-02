@@ -55,6 +55,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import sun.swing.SwingUtilities2;
@@ -67,8 +69,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -187,7 +189,7 @@ public abstract class DialogWrapper {
       DialogWrapper.this.dispose();
     }
   };
-  private final List<JBOptionButton> myOptionsButtons = new ArrayList<JBOptionButton>();
+  private final List<JBOptionButton> myOptionsButtons = new ArrayList<>();
   private int myCurrentOptionsButtonIndex = -1;
   private boolean myResizeInProgress = false;
   private ComponentAdapter myResizeListener;
@@ -571,7 +573,7 @@ public abstract class DialogWrapper {
 
   @Nonnull
   private Action[] filter(@Nonnull Action[] actions) {
-    ArrayList<Action> answer = new ArrayList<Action>();
+    ArrayList<Action> answer = new ArrayList<>();
     for (Action action : actions) {
       if (action != null && (ApplicationInfo.contextHelpAvailable() || action != getHelpAction())) {
         answer.add(action);
@@ -619,7 +621,7 @@ public abstract class DialogWrapper {
   @Nonnull
   private JPanel createButtons(@Nonnull Action[] actions, @Nonnull Map<Action, JButton> buttons) {
     if (!UISettings.getShadowInstance().ALLOW_MERGE_BUTTONS) {
-      final List<Action> actionList = new ArrayList<Action>();
+      final List<Action> actionList = new ArrayList<>();
       for (Action action : actions) {
         actionList.add(action);
         if (action instanceof OptionAction) {
@@ -1612,7 +1614,7 @@ public abstract class DialogWrapper {
    */
   @Nonnull
   public AsyncResult<Boolean> showAndGetOk() {
-    final AsyncResult<Boolean> result = new AsyncResult<Boolean>();
+    final AsyncResult<Boolean> result = new AsyncResult<>();
 
     ensureEventDispatchThread();
     registerKeyboardShortcuts();
@@ -1623,16 +1625,41 @@ public abstract class DialogWrapper {
       Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
     }
 
-    Disposer.register(myDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        result.setDone(isOK());
-      }
-    });
+    Disposer.register(myDisposable, () -> result.setDone(isOK()));
 
     myPeer.show();
 
     return result;
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public AsyncResult<Void> showAsync() {
+    UIAccess uiAccess = UIAccess.get();
+
+    AsyncResult<Void> result = new AsyncResult<>();
+    showInternal().doWhenProcessed(() -> {
+      if (isOK()) {
+        result.setDone();
+      }
+      else {
+        result.setRejected();
+      }
+    });
+    return result;
+  }
+
+  @NonNls
+  private AsyncResult<Void> showInternal() {
+    ensureEventDispatchThread();
+
+    registerKeyboardShortcuts();
+
+    final Disposable uiParent = Disposer.get("ui");
+    if (uiParent != null) { // may be null if no app yet (license agreement)
+      Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
+    }
+    return myPeer.showAsync();
   }
 
   /**

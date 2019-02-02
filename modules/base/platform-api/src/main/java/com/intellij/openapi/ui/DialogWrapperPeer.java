@@ -16,6 +16,7 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nullable;
 
@@ -142,6 +143,8 @@ public abstract class DialogWrapperPeer {
   public abstract void setLocation(int x, int y);
 
   public abstract ActionCallback show();
+
+  public abstract AsyncResult<Void> showAsync();
 
   public abstract void setContentPane(JComponent content);
 

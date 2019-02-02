@@ -82,6 +82,9 @@
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"/>
 
+    <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
+                        serviceImplementation="com.intellij.ide.actions.DesktopShowSettingsUtilImpl" />
+
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.system.WindowsFileChooseDialogProvider"/>
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.system.MacFileChooseDialogProvider"/>
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.DesktopFileChooseDialogProvider" order="last"/>

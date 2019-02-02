@@ -285,7 +285,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
     AtomicBoolean runConfigurators = new AtomicBoolean(true);
 
-    Consumer<Project> afterProjectAction = project -> {
+    java.util.function.Consumer<Project> afterProjectAction = project -> {
       openProjectToolWindow(project);
       openFileFromCommandLineAsync(project, virtualFile, line, uiAccess);
       if (!projectManager.openProjectAsync(project, uiAccess)) {

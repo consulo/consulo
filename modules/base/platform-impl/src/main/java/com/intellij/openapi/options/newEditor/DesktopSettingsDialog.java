@@ -36,9 +36,9 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.WholeWestDialogWrapper;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -48,7 +48,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataProvider{
+public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider{
 
   private Project myProject;
   private Configurable[] myConfigurables;
@@ -63,8 +63,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
    *  will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
    *  @deprecated
    */
-  public OptionsEditorDialog(Project project, Configurable[] configurables,
-                             @Nullable Configurable preselectedConfigurable, boolean applicationModalIfPossible) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable, boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
     init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
   }
@@ -73,18 +72,17 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
    *  will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
    *  @deprecated
    */
-  public OptionsEditorDialog(Project project, Configurable[] configurables,
-                             @Nonnull String preselectedConfigurableDisplayName, boolean applicationModalIfPossible) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull String preselectedConfigurableDisplayName, boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
     init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }
 
-  public OptionsEditorDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable) {
     super(project, true);
     init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
   }
 
-  public OptionsEditorDialog(Project project, Configurable[] configurables, @Nonnull String preselectedConfigurableDisplayName) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull String preselectedConfigurableDisplayName) {
     super(project, true);
     init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }

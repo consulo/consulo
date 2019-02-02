@@ -15,10 +15,9 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -89,7 +88,7 @@ class ExecutionCallback {
       }
       else {
         if (myRunnables == null) {
-          myRunnables = new SmartList<Runnable>();
+          myRunnables = new ArrayList<>();
         }
 
         myRunnables.add(runnable);

@@ -16,8 +16,9 @@
 package consulo.roots.ui.configuration;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
-import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
+import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.util.Couple;
@@ -29,12 +30,12 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ui.StripeTabPanel;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -60,7 +61,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   public static boolean show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
     ProjectStructureDialog dialog =
-            new ProjectStructureDialog(project, configurable, OptionsEditorDialog.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
+            new ProjectStructureDialog(project, configurable, ShowSettingsUtil.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
     if (configurableConsumer != null) {
       new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable.Adapter() {
         @Override
@@ -115,7 +116,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
   @Override
   protected String getDimensionServiceKey() {
-    return OptionsEditorDialog.DIMENSION_KEY;
+    return DesktopSettingsDialog.DIMENSION_KEY;
   }
 
   @Nonnull

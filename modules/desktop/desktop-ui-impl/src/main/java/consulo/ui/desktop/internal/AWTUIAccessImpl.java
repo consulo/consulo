@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.desktop.internal;
+
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.AsyncResult;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -26,18 +30,28 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class AWTUIAccessImpl implements UIAccess {
   public static UIAccess ourInstance = new AWTUIAccessImpl();
-
-  private AWTUIAccessImpl() {
-  }
+  private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
 
   @Override
   public boolean isValid() {
     return true;
   }
 
+  @Nonnull
   @Override
-  public void give(@RequiredUIAccess @Nonnull Runnable runnable) {
-    SwingUtilities.invokeLater(runnable);
+  public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
+    AsyncResult<T> asyncResult = new AsyncResult<>();
+    SwingUtilities.invokeLater(() -> {
+      try {
+        T result = supplier.get();
+        asyncResult.setDone(result);
+      }
+      catch (Throwable e) {
+        LOGGER.error(e);
+        asyncResult.rejectWithThrowable(e);
+      }
+    });
+    return asyncResult;
   }
 
   @Override

@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
+import consulo.ui.desktop.internal.AWTUIAccessImpl;
 import consulo.ui.desktop.internal.image.DesktopLazyImageImpl;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;

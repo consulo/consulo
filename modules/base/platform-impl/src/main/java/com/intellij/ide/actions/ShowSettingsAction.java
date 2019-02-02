@@ -21,18 +21,18 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.SystemInfo;
 
-import javax.swing.*;
-
 public class ShowSettingsAction extends AnAction implements DumbAware {
-  public ShowSettingsAction() {
+  private final ShowSettingsUtil myShowSettingsUtil;
+
+  public ShowSettingsAction(ShowSettingsUtil showSettingsUtil) {
     super(CommonBundle.settingsAction(), CommonBundle.settingsActionDescription(), AllIcons.General.Settings);
+    myShowSettingsUtil = showSettingsUtil;
   }
 
   @Override
@@ -52,15 +52,6 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
       project = ProjectManager.getInstance().getDefaultProject();
     }
 
-    final long startTime = System.nanoTime();
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        final long endTime = System.nanoTime();
-        if (Application.get().isInternal()) {
-          System.out.println("Displaying settings dialog took " + ((endTime - startTime) / 1000000) + " ms");
-        }
-      }
-    });
-    ShowSettingsUtil.getInstance().showSettingsDialog(project);
+    myShowSettingsUtil.showSettingsDialog(project);
   }
 }

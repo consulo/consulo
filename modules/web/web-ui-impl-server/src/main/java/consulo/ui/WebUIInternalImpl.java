@@ -31,6 +31,7 @@ import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
+import consulo.ui.web.internal.VaadinUIAccessImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,15 +15,18 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.Consumer;
-import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NonNls;
+import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
+@Deprecated
+@DeprecationInfo("Use AsyncResult")
 public class ActionCallback {
   public static final ActionCallback DONE = new Done();
   public static final ActionCallback REJECTED = new Rejected();
@@ -139,7 +142,7 @@ public class ActionCallback {
   public final ActionCallback doWhenRejectedWithThrowable(@Nonnull final Consumer<Throwable> consumer) {
     myRejected.doWhenExecuted(() -> {
       if (myThrowable != null) {
-        consumer.consume(myThrowable);
+        consumer.accept(myThrowable);
       }
     });
     return this;
@@ -147,7 +150,7 @@ public class ActionCallback {
 
   @Nonnull
   public final ActionCallback doWhenRejected(@Nonnull final Consumer<String> consumer) {
-    myRejected.doWhenExecuted(() -> consumer.consume(myError));
+    myRejected.doWhenExecuted(() -> consumer.accept(myError));
     return this;
   }
 
@@ -194,7 +197,6 @@ public class ActionCallback {
     }
   }
 
-  @NonNls
   @Override
   public String toString() {
     final String name = myName != null ? myName : super.toString();
@@ -252,15 +254,14 @@ public class ActionCallback {
       return true;
     }
 
-    final Semaphore semaphore = new Semaphore();
-    semaphore.down();
-    doWhenProcessed(semaphore::up);
+    final CountDownLatch countDownLatch = new CountDownLatch(1);
+    doWhenProcessed(countDownLatch::countDown);
 
     try {
       if (msTimeout == -1) {
-        semaphore.waitForUnsafe();
+        countDownLatch.await();
       }
-      else if (!semaphore.waitForUnsafe(msTimeout)) {
+      else if (!countDownLatch.await(msTimeout, TimeUnit.MILLISECONDS)) {
         reject("Time limit exceeded");
         return false;
       }

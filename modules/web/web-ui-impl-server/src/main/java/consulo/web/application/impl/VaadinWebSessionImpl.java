@@ -15,7 +15,11 @@
  */
 package consulo.web.application.impl;
 
-import consulo.ui.*;
+import consulo.ui.Label;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+import consulo.ui.Window;
+import consulo.ui.web.internal.VaadinUIAccessImpl;
 import consulo.web.application.WebSession;
 
 import javax.annotation.Nonnull;

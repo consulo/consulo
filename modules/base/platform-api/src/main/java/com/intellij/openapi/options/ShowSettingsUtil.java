@@ -17,59 +17,69 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 
 public abstract class ShowSettingsUtil {
+  public static final String DIMENSION_KEY = "OptionsEditor";
+
   public static ShowSettingsUtil getInstance() {
     return ServiceManager.getService(ShowSettingsUtil.class);
   }
 
+  @RequiredUIAccess
   public abstract void showSettingsDialog(@Nullable Project project);
 
+  @RequiredUIAccess
   public abstract void showSettingsDialog(@Nullable Project project, Class toSelect);
 
+  @RequiredUIAccess
   public abstract void showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect);
 
+  @RequiredUIAccess
+  public abstract void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter);
+
+  @RequiredUIAccess
   public abstract void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect);
 
-  @RequiredDispatchThread
-  public boolean editConfigurable(Project project, Configurable configurable) {
+  @RequiredUIAccess
+  public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {
     return editConfigurable(null, project, configurable);
   }
 
-  @RequiredDispatchThread
-  public abstract boolean editConfigurable(@Nullable String title, Project project, Configurable configurable);
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable);
 
-  @RequiredDispatchThread
-  public boolean editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
+  @RequiredUIAccess
+  public AsyncResult<Void> editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
     return editConfigurable(null, project, configurable, advancedInitialization);
   }
 
-  @RequiredDispatchThread
-  public abstract boolean editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
 
-  @RequiredDispatchThread
-  public abstract boolean editConfigurable(Component parent, Configurable configurable);
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable);
 
-  @RequiredDispatchThread
-  public abstract boolean editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
 
-  @RequiredDispatchThread
-  public boolean editConfigurable(Project project, @NonNls String dimensionServiceKey, Configurable configurable) {
+  @RequiredUIAccess
+  public AsyncResult<Void> editConfigurable(Project project, @NonNls String dimensionServiceKey, Configurable configurable) {
     return editConfigurable(null, project, dimensionServiceKey, configurable);
   }
 
-  @RequiredDispatchThread
-  public abstract boolean editConfigurable(@Nullable String title, Project project, @NonNls String dimensionServiceKey, Configurable configurable);
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, @NonNls String dimensionServiceKey, Configurable configurable);
 
-  @RequiredDispatchThread
-  public abstract boolean editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
 
   /**
    * @deprecated create a new instance of configurable instead
@@ -80,6 +90,8 @@ public abstract class ShowSettingsUtil {
    * @deprecated create a new instance of configurable instead
    */
   public abstract <T extends Configurable> T findApplicationConfigurable(Class<T> confClass);
+
+  public abstract boolean isAlreadyShown();
 
   @Nonnull
   public static String getSettingsMenuName() {

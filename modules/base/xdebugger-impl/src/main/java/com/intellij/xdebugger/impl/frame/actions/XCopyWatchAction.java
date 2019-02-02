@@ -16,7 +16,6 @@
 package com.intellij.xdebugger.impl.frame.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
@@ -26,6 +25,7 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author egor
@@ -43,7 +43,7 @@ public class XCopyWatchAction extends XWatchesTreeActionBase {
     for (final XValueNodeImpl node : getSelectedNodes(tree, XValueNodeImpl.class)) {
       node.getValueContainer().calculateEvaluationExpression().doWhenDone(new Consumer<XExpression>() {
         @Override
-        public void consume(XExpression expr) {
+        public void accept(XExpression expr) {
           final XExpression watchExpression = expr != null ? expr : XExpressionImpl.fromText(node.getName());
           if (watchExpression != null) {
             DebuggerUIUtil.invokeLater(new Runnable() {

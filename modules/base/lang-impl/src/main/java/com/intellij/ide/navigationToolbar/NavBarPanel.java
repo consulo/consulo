@@ -42,7 +42,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -58,12 +61,11 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupOwner;
-import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
@@ -73,8 +75,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -757,7 +759,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     myUpdateQueue.rebuildUi();
     if (editor == null) {
       myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
-      getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)relativePoint -> {
+      getHintContainerShowPoint().doWhenDone(relativePoint -> {
         final Component owner = focusManager.getFocusOwner();
         final Component cmp = relativePoint.getComponent();
         if (cmp instanceof JComponent && cmp.isShowing()) {
@@ -768,7 +770,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     }
     else {
       myHintContainer = editor.getContentComponent();
-      getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)rp -> {
+      getHintContainerShowPoint().doWhenDone(rp -> {
         Point p = rp.getPointOn(myHintContainer).getPoint();
         final HintHint hintInfo = new HintHint(editor, p);
         HintManagerImpl.getInstanceImpl().showEditorHint(myHint, editor, p, HintManager.HIDE_BY_ESCAPE, 0, true, hintInfo);
@@ -791,7 +793,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
           myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(DataManager.getInstance().getDataContext(myContextComponent));
         }
         else {
-          DataManager.getInstance().getDataContextFromFocus().doWhenDone((Consumer<DataContext>)dataContext -> {
+          DataManager.getInstance().getDataContextFromFocus().doWhenDone(dataContext -> {
             myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
             myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(DataManager.getInstance().getDataContext(myContextComponent));
           });

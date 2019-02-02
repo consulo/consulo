@@ -26,6 +26,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
@@ -78,7 +79,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
                      myShortName);
   }
 
-  public boolean editToolSettings(final Project project,
+  public AsyncResult<Void> editToolSettings(final Project project,
                                   final InspectionProfileImpl inspectionProfile,
                                   final boolean canChooseDifferentProfiles) {
     return editToolSettings(project,
@@ -87,10 +88,10 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
                             myShortName);
   }
 
-  public static boolean editToolSettings(final Project project,
-                                         final InspectionProfile inspectionProfile,
-                                         final boolean canChooseDifferentProfile,
-                                         final String selectedToolShortName) {
+  public static AsyncResult<Void> editToolSettings(final Project project,
+                                             final InspectionProfile inspectionProfile,
+                                             final boolean canChooseDifferentProfile,
+                                             final String selectedToolShortName) {
     final ShowSettingsUtil settingsUtil = ShowSettingsUtil.getInstance();
     final ErrorsConfigurable errorsConfigurable;
     if (!canChooseDifferentProfile) {

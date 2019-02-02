@@ -58,6 +58,7 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;
@@ -470,6 +471,70 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
       myDialog.getFocusManager().doWhenFocusSettlesDown(result.createSetDoneRunnable());
     }
+
+    return result;
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Void> showAsync() {
+    LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
+    if (myTypeAheadCallback != null) {
+      IdeFocusManager.getInstance(myProject).typeAheadUntil(myTypeAheadCallback);
+    }
+
+    final AnCancelAction anCancelAction = new AnCancelAction();
+    final JRootPane rootPane = getRootPane();
+    SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
+    anCancelAction.registerCustomShortcutSet(CommonShortcuts.ESCAPE, rootPane);
+    myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
+
+    if (!myCanBeParent && myWindowManager != null) {
+      myWindowManager.doNotSuggestAsParent(myDialog.getWindow());
+    }
+
+    final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+    final boolean appStarted = commandProcessor != null;
+
+    boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog(); // ProgressWindow starts a modality state itself
+    Project project = myProject;
+
+    UIAccess uiAccess = UIAccess.current();
+
+    AsyncResult<Void> result = AsyncResult.undefined();
+
+    uiAccess.give(() -> {
+      if (changeModalityState) {
+        commandProcessor.enterModal();
+
+        if (ModalityPerProjectEAPDescriptor.is()) {
+          LaterInvocator.enterModal(project, myDialog.getWindow());
+        }
+        else {
+          LaterInvocator.enterModal(myDialog);
+        }
+      }
+
+      if (appStarted) {
+        hidePopupsIfNeeded();
+      }
+
+      try {
+        myDialog.show();
+      }
+      finally {
+        if (changeModalityState) {
+          commandProcessor.leaveModal();
+
+          if (ModalityPerProjectEAPDescriptor.is()) {
+            LaterInvocator.leaveModal(project, myDialog.getWindow());
+          }
+          else {
+            LaterInvocator.leaveModal(myDialog);
+          }
+        }
+      }
+    }).notify(result);
 
     return result;
   }

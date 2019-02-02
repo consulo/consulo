@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.web.internal;
 
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.AsyncResult;
 import com.vaadin.ui.UI;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
 public class VaadinUIAccessImpl implements UIAccess {
+  private static final Logger LOGGER = Logger.getInstance(VaadinUIAccessImpl.class);
+
   private final UI myUI;
 
   public VaadinUIAccessImpl(UI ui) {
@@ -35,10 +42,23 @@ public class VaadinUIAccessImpl implements UIAccess {
   }
 
   @Override
-  public void give(@RequiredUIAccess @Nonnull Runnable runnable) {
+  public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
+    AsyncResult<T> result = new AsyncResult<>();
     if (isValid()) {
-      myUI.access(runnable);
+      myUI.access(() -> {
+        try {
+          result.setDone(supplier.get());
+        }
+        catch (Throwable e) {
+          LOGGER.error(e);
+          result.rejectWithThrowable(e);
+        }
+      });
     }
+    else {
+      result.setDone();
+    }
+    return result;
   }
 
   @Override

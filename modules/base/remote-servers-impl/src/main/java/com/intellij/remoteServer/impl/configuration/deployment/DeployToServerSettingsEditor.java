@@ -72,9 +72,9 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
       @Override
       public void actionPerformed(ActionEvent e) {
         RemoteServerListConfigurable configurable = RemoteServerListConfigurable.createConfigurable(type);
-        if (ShowSettingsUtil.getInstance().editConfigurable(myServerComboBox, configurable)) {
+        ShowSettingsUtil.getInstance().editConfigurable(myServerComboBox, configurable).doWhenDone(() -> {
           fillApplicationServersList(configurable.getLastSelectedServer());
-        }
+        });
       }
     });
     myServerComboBox.getComboBox().setRenderer(new ColoredListCellRenderer<String>() {

@@ -15,7 +15,10 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -29,6 +32,13 @@ public interface UIAccess {
     return UIInternal.get()._UIAccess_isUIThread();
   }
 
+  @RequiredUIAccess
+  @Nonnull
+  @Deprecated
+  static UIAccess get() {
+    return current();
+  }
+
   /**
    * If we inside ui thread, we can get ui access
    *
@@ -36,7 +46,7 @@ public interface UIAccess {
    */
   @RequiredUIAccess
   @Nonnull
-  static UIAccess get() {
+  static UIAccess current() {
     assertIsUIThread();
 
     return UIInternal.get()._UIAccess_get();
@@ -51,9 +61,27 @@ public interface UIAccess {
 
   boolean isValid();
 
-  void give(@RequiredUIAccess @Nonnull Runnable runnable);
+  @Nonnull
+  default AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
+    return give(() -> {
+      runnable.run();
+      return null;
+    });
+  }
 
-  void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable);
+  @Nonnull
+  <T> AsyncResult<T> give(@RequiredUIAccess @Nonnull Supplier<T> supplier);
+
+  default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
+    give(runnable).getResultSync();
+  }
+
+  @SuppressWarnings("unchecked")
+  default <T> T giveAndWait(@RequiredUIAccess @Nonnull Supplier<T> supplier) {
+    Object[] value = new Object[1];
+    giveAndWaitIfNeed(() -> value[0] = supplier.get());
+    return (T)value[0];
+  }
 
   default void giveIfNeed(@RequiredUIAccess @Nonnull Runnable runnable) {
     if (isUIThread()) {
