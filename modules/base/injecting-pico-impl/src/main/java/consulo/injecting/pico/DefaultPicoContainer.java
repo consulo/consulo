@@ -30,14 +30,14 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 class DefaultPicoContainer implements MutablePicoContainer {
-  private final PicoContainer parent;
+  private final PicoContainer myParent;
 
   private final Map<String, ComponentAdapter> myInterfaceClassToAdapter = new THashMap<>();
 
   private final LinkedHashSetWrapper<ComponentAdapter> myComponentAdapters = new LinkedHashSetWrapper<>();
 
   public DefaultPicoContainer(@Nullable PicoContainer parent) {
-    this.parent = parent == null ? null : parent;
+    myParent = parent;
   }
 
   @Override
@@ -49,8 +49,8 @@ class DefaultPicoContainer implements MutablePicoContainer {
   @Nullable
   public final ComponentAdapter getComponentAdapter(Object componentKey) {
     ComponentAdapter adapter = findByKey(componentKey);
-    if (adapter == null && parent != null) {
-      return parent.getComponentAdapter(componentKey);
+    if (adapter == null && myParent != null) {
+      return myParent.getComponentAdapter(componentKey);
     }
     return adapter;
   }
@@ -84,7 +84,7 @@ class DefaultPicoContainer implements MutablePicoContainer {
       return found.get(0);
     }
     if (found.isEmpty()) {
-      return parent == null ? null : parent.getComponentAdapterOfType(componentType);
+      return myParent == null ? null : myParent.getComponentAdapterOfType(componentType);
     }
 
     Class[] foundClasses = new Class[found.size()];
@@ -111,7 +111,7 @@ class DefaultPicoContainer implements MutablePicoContainer {
   }
 
   private boolean contains(String key) {
-    return myInterfaceClassToAdapter.containsKey(key) || parent instanceof DefaultPicoContainer && ((DefaultPicoContainer)parent).contains(key);
+    return myInterfaceClassToAdapter.containsKey(key) || myParent instanceof DefaultPicoContainer && ((DefaultPicoContainer)myParent).contains(key);
   }
 
   @Override
@@ -172,10 +172,10 @@ class DefaultPicoContainer implements MutablePicoContainer {
     if (adapter != null) {
       return getLocalInstance(adapter);
     }
-    if (parent != null) {
-      adapter = parent.getComponentAdapter(componentKey);
+    if (myParent != null) {
+      adapter = myParent.getComponentAdapter(componentKey);
       if (adapter != null) {
-        return parent.getComponentInstance(adapter.getComponentKey());
+        return myParent.getComponentInstance(adapter.getComponentKey());
       }
     }
     return null;
@@ -193,8 +193,8 @@ class DefaultPicoContainer implements MutablePicoContainer {
     if (getComponentAdapters().contains(componentAdapter)) {
       return getLocalInstance(componentAdapter);
     }
-    if (parent != null) {
-      return parent.getComponentInstance(componentAdapter.getComponentKey());
+    if (myParent != null) {
+      return myParent.getComponentInstance(componentAdapter.getComponentKey());
     }
 
     return null;
@@ -209,8 +209,8 @@ class DefaultPicoContainer implements MutablePicoContainer {
       firstLevelException = e;
     }
 
-    if (parent != null) {
-      Object instance = parent.getComponentInstance(componentAdapter.getComponentKey());
+    if (myParent != null) {
+      Object instance = myParent.getComponentInstance(componentAdapter.getComponentKey());
       if (instance != null) {
         return instance;
       }
@@ -300,7 +300,7 @@ class DefaultPicoContainer implements MutablePicoContainer {
 
   @Override
   public PicoContainer getParent() {
-    return parent;
+    return myParent;
   }
 
   /**
