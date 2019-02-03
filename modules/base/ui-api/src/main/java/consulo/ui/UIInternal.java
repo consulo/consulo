@@ -46,49 +46,49 @@ public abstract class UIInternal {
     return ourInstance;
   }
 
-  abstract CheckBox _Components_checkBox();
+  public abstract CheckBox _Components_checkBox();
 
-  abstract DockLayout _Layouts_dock();
+  public abstract DockLayout _Layouts_dock();
 
-  abstract WrappedLayout _Layouts_wrapped();
+  public abstract WrappedLayout _Layouts_wrapped();
 
-  abstract VerticalLayout _Layouts_vertical();
+  public abstract VerticalLayout _Layouts_vertical();
 
   public abstract SwipeLayout _Layouts_swipe();
 
-  abstract SplitLayout _Layouts_horizontalSplit();
+  public abstract SplitLayout _Layouts_horizontalSplit();
 
-  abstract SplitLayout _Layouts_verticalSplit();
+  public abstract SplitLayout _Layouts_verticalSplit();
 
-  abstract TabbedLayout _Layouts_tabbed();
+  public abstract TabbedLayout _Layouts_tabbed();
 
-  abstract LabeledLayout _Layouts_labeled(String label);
+  public abstract LabeledLayout _Layouts_labeled(String label);
 
-  abstract TableLayout _Layouts_table(StaticPosition fillOption);
+  public abstract TableLayout _Layouts_table(StaticPosition fillOption);
 
-  abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
+  public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
 
-  abstract Label _Components_label(String text);
+  public abstract Label _Components_label(String text);
 
-  abstract HtmlLabel _Components_htmlLabel(String html);
+  public abstract HtmlLabel _Components_htmlLabel(String html);
 
-  abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
+  public abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
-  abstract TextBox _Components_textBox(String text);
+  public abstract TextBox _Components_textBox(String text);
 
-  abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
+  public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
 
-  abstract RadioButton _Components_radioButton(String text, boolean selected);
+  public abstract RadioButton _Components_radioButton(String text, boolean selected);
 
-  abstract Button _Components_button(String text);
+  public abstract Button _Components_button(String text);
 
-  abstract Hyperlink _Components_hyperlink(String text);
+  public abstract Hyperlink _Components_hyperlink(String text);
 
-  abstract ImageBox _Components_imageBox(Image image);
+  public abstract ImageBox _Components_imageBox(Image image);
 
-  abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
+  public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
-  abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
+  public abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
 
   public abstract Image _Image_create(URL url);
 
@@ -106,15 +106,15 @@ public abstract class UIInternal {
 
   public abstract Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer);
 
-  abstract MenuItem _MenuItem_create(String text);
+  public abstract MenuItem _MenuItem_create(String text);
 
-  abstract Menu _Menu_create(String text);
+  public abstract Menu _Menu_create(String text);
 
-  abstract MenuSeparator _MenuSeparator_create();
+  public abstract MenuSeparator _MenuSeparator_create();
 
-  abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
+  public abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
 
-  abstract MenuBar _MenuItems_menuBar();
+  public abstract MenuBar _MenuItems_menuBar();
 
   @Nonnull
   public abstract StyleManager _StyleManager_get();
@@ -130,7 +130,7 @@ public abstract class UIInternal {
 
   @RequiredUIAccess
   @Nonnull
-  abstract UIAccess _UIAccess_get();
+  public abstract UIAccess _UIAccess_get();
 
-  abstract boolean _UIAccess_isUIThread();
+  public abstract boolean _UIAccess_isUIThread();
 }

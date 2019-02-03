@@ -47,22 +47,22 @@ import java.util.function.Supplier;
 @Internal
 public class WebUIInternalImpl extends UIInternal {
   @Override
-  CheckBox _Components_checkBox() {
+  public CheckBox _Components_checkBox() {
     return new WGwtCheckBoxImpl();
   }
 
   @Override
-  DockLayout _Layouts_dock() {
+  public DockLayout _Layouts_dock() {
     return new WGwtDockLayoutImpl();
   }
 
   @Override
-  WrappedLayout _Layouts_wrapped() {
+  public WrappedLayout _Layouts_wrapped() {
     return new WGwtWrappedLayoutImpl();
   }
 
   @Override
-  VerticalLayout _Layouts_vertical() {
+  public VerticalLayout _Layouts_vertical() {
     return new WGwtVerticalLayoutImpl();
   }
 
@@ -72,87 +72,87 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  SplitLayout _Layouts_horizontalSplit() {
+  public SplitLayout _Layouts_horizontalSplit() {
     return new WGwtHorizontalSplitLayoutImpl();
   }
 
   @Override
-  SplitLayout _Layouts_verticalSplit() {
+  public SplitLayout _Layouts_verticalSplit() {
     return new WGwtVerticalSplitLayoutImpl();
   }
 
   @Override
-  TabbedLayout _Layouts_tabbed() {
+  public TabbedLayout _Layouts_tabbed() {
     return new WGwtTabbedLayoutImpl();
   }
 
   @Override
-  LabeledLayout _Layouts_labeled(String label) {
+  public LabeledLayout _Layouts_labeled(String label) {
     return new WGwtLabeledLayoutImpl(label);
   }
 
   @Override
-  TableLayout _Layouts_table(StaticPosition fillOption) {
+  public TableLayout _Layouts_table(StaticPosition fillOption) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  Label _Components_label(String text) {
+  public Label _Components_label(String text) {
     return new WGwtLabelImpl(text);
   }
 
   @Override
-  HtmlLabel _Components_htmlLabel(String html) {
+  public HtmlLabel _Components_htmlLabel(String html) {
     return new WGwtHtmlLabelImpl(html);
   }
 
   @Override
-  <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+  public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
     return new WGwtComboBoxImpl<>(model);
   }
 
   @Override
-  TextBox _Components_textBox(String text) {
+  public TextBox _Components_textBox(String text) {
     return new WGwtTextBoxImpl(text);
   }
 
   @Override
-  <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+  public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
     return new WGwtListBoxImpl<>(model);
   }
 
   @Override
-  RadioButton _Components_radioButton(String text, boolean selected) {
+  public RadioButton _Components_radioButton(String text, boolean selected) {
     return new WGwtRadioButtonImpl(selected, text);
   }
 
   @Override
-  Button _Components_button(String text) {
+  public Button _Components_button(String text) {
     return new WGwtButtonImpl(text, null);
   }
 
   @Override
-  Hyperlink _Components_hyperlink(String text) {
+  public Hyperlink _Components_hyperlink(String text) {
     return new WGwtHyperlinkImpl(text);
   }
 
   @Override
-  HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
+  public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
     return new WGwtHorizontalLayoutImpl(gapInPixesl);
   }
 
   @Override
-  ImageBox _Components_imageBox(Image image) {
+  public ImageBox _Components_imageBox(Image image) {
     return new WGwtImageBoxImpl(image);
   }
 
   @Override
-  ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
+  public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
     throw new UnsupportedOperationException(); //TODO [VISTALL]
   }
 
   @Override
-  <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
+  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
     return new WGwtTreeImpl<>(rootValue, model);
   }
 
@@ -197,17 +197,17 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  MenuItem _MenuItem_create(String text) {
+  public MenuItem _MenuItem_create(String text) {
     return new WGwtMenuItemImpl(text);
   }
 
   @Override
-  Menu _Menu_create(String text) {
+  public Menu _Menu_create(String text) {
     return new WGwtMenuImpl(text);
   }
 
   @Override
-  MenuSeparator _MenuSeparator_create() {
+  public MenuSeparator _MenuSeparator_create() {
     return new WGwtMenuSeparatorImpl();
   }
 
@@ -229,7 +229,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  MenuBar _MenuItems_menuBar() {
+  public MenuBar _MenuItems_menuBar() {
     return new WGwtMenuBarImpl();
   }
 
@@ -265,7 +265,7 @@ public class WebUIInternalImpl extends UIInternal {
   @RequiredUIAccess
   @Nonnull
   @Override
-  UIAccess _UIAccess_get() {
+  public UIAccess _UIAccess_get() {
     UI ui = UI.getCurrent();
     assert ui != null;
     Object data = ui.getData();
@@ -280,7 +280,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  boolean _UIAccess_isUIThread() {
+  public boolean _UIAccess_isUIThread() {
     return UI.getCurrent() != null;
   }
 }
