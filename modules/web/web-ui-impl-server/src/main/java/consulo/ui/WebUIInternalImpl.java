@@ -212,7 +212,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  ValueGroup<Boolean> _ValueGroups_boolGroup() {
+  public ValueGroup<Boolean> _ValueGroups_boolGroup() {
     return new ValueGroup<Boolean>() {
       @RequiredUIAccess
       @Override

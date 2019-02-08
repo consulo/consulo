@@ -18,6 +18,8 @@ package consulo.ui.internal;
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.VaadinUIAccessImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
