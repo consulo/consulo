@@ -42,12 +42,12 @@ import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.roots.ToolbarPanel;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -398,14 +398,12 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
       myDescriptor.putUserData(FileChooserKeys.DELETE_ACTION_AVAILABLE, false);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
-      FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir, new Consumer<List<VirtualFile>>() {
-        @Override
-        public void consume(List<VirtualFile> files) {
-          myLastSelectedDir = files.get(0);
-          addContentEntries(VfsUtilCore.toVirtualFileArray(files));
-        }
+      FileChooser.chooseFilesAsync(myDescriptor, myProject, myLastSelectedDir).doWhenDone(virtualFiles -> {
+        myLastSelectedDir = virtualFiles[0];
+        addContentEntries(virtualFiles);
       });
     }
 

@@ -152,31 +152,33 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
     }
 
     private void addPath(FileChooserDescriptor descriptor) {
-      int selected = -1 /*myExcludedTable.getSelectedRow() + 1*/;
-      if(selected < 0) {
-        selected = myExcludeEntryDescriptions.size();
-      }
-      int savedSelected = selected;
-      VirtualFile[] chosen = FileChooser.chooseFiles(descriptor, myProject, null);
-      for (final VirtualFile chosenFile : chosen) {
-        if (isFileExcluded(chosenFile)) {
-          continue;
+      FileChooser.chooseFilesAsync(descriptor, myProject, null).doWhenDone(chosen -> {
+        int selected = -1 /*myExcludedTable.getSelectedRow() + 1*/;
+        if (selected < 0) {
+          selected = myExcludeEntryDescriptions.size();
         }
-        ExcludeEntryDescription description;
-        if (chosenFile.isDirectory()) {
-          description = new ExcludeEntryDescription(chosenFile, true, false, myProject);
+        int savedSelected = selected;
+
+        for (final VirtualFile chosenFile : chosen) {
+          if (isFileExcluded(chosenFile)) {
+            continue;
+          }
+          ExcludeEntryDescription description;
+          if (chosenFile.isDirectory()) {
+            description = new ExcludeEntryDescription(chosenFile, true, false, myProject);
+          }
+          else {
+            description = new ExcludeEntryDescription(chosenFile, false, true, myProject);
+          }
+          myExcludeEntryDescriptions.add(selected, description);
+          selected++;
         }
-        else {
-          description = new ExcludeEntryDescription(chosenFile, false, true, myProject);
+        if (selected > savedSelected) { // actually added something
+          AbstractTableModel model = (AbstractTableModel)myExcludedTable.getModel();
+          model.fireTableRowsInserted(savedSelected, selected - 1);
+          myExcludedTable.setRowSelectionInterval(savedSelected, selected - 1);
         }
-        myExcludeEntryDescriptions.add(selected, description);
-        selected++;
-      }
-      if (selected > savedSelected) { // actually added something
-        AbstractTableModel model = (AbstractTableModel)myExcludedTable.getModel();
-        model.fireTableRowsInserted(savedSelected, selected-1);
-        myExcludedTable.setRowSelectionInterval(savedSelected, selected - 1);
-      }
+      });
     }
 
     private boolean isFileExcluded(VirtualFile file) {

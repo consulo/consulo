@@ -42,12 +42,10 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
-import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
@@ -92,20 +90,14 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-    FileChooser.chooseFiles(descriptor, project, userHomeDir, new Consumer<List<VirtualFile>>() {
-      @Override
-      public void consume(final List<VirtualFile> files) {
-        for (VirtualFile file : files) {
-          if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
-            Messages.showInfoMessage(project,
-                                     file.getPresentableUrl() + " contains no " +
-                                     ApplicationNamesInfo.getInstance().getFullProductName() + " project",
-                                     "Cannot Open Project");
-            return;
-          }
+    FileChooser.chooseFilesAsync(descriptor, project, userHomeDir).doWhenDone(files -> {
+      for (VirtualFile file : files) {
+        if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
+          Messages.showInfoMessage(project, file.getPresentableUrl() + " contains no " + ApplicationNamesInfo.getInstance().getFullProductName() + " project", "Cannot Open Project");
+          return;
         }
-        doOpenFile(project, files);
       }
+      doOpenFile(project, files);
     });
   }
 
@@ -118,7 +110,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   }
 
   private static void doOpenFile(@Nullable final Project project,
-                                 @Nonnull final List<VirtualFile> result) {
+                                 @Nonnull final VirtualFile[] result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
         Project openedProject = ProjectUtil.open(file.getPath(), project, false);

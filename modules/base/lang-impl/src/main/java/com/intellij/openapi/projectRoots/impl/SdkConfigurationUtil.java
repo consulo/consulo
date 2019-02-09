@@ -30,6 +30,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -178,6 +180,7 @@ public class SdkConfigurationUtil {
     return newSdkName;
   }
 
+  @RequiredUIAccess
   public static void selectSdkHome(final SdkType sdkType, @Nonnull final Consumer<String> consumer) {
     final FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -186,19 +189,17 @@ public class SdkConfigurationUtil {
       consumer.consume(sdk.getHomePath());
       return;
     }
-    FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType), new Consumer<List<VirtualFile>>() {
-      @Override
-      public void consume(final List<VirtualFile> chosen) {
-        final String path = chosen.get(0).getPath();
-        if (sdkType.isValidSdkHome(path)) {
-          consumer.consume(path);
-          return;
-        }
 
-        final String adjustedPath = sdkType.adjustSelectedSdkHome(path);
-        if (sdkType.isValidSdkHome(adjustedPath)) {
-          consumer.consume(adjustedPath);
-        }
+    FileChooser.chooseFilesAsync(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {
+      final String path = virtualFiles[0].getPath();
+      if (sdkType.isValidSdkHome(path)) {
+        consumer.consume(path);
+        return;
+      }
+
+      final String adjustedPath = sdkType.adjustSelectedSdkHome(path);
+      if (sdkType.isValidSdkHome(adjustedPath)) {
+        consumer.consume(adjustedPath);
       }
     });
   }
