@@ -19,18 +19,15 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
 import consulo.ui.*;
-import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
 import consulo.web.fileChooser.FileTreeComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -46,9 +43,12 @@ public class WebPathChooserDialog implements PathChooserDialog {
     myProject = project;
   }
 
+  @Nonnull
   @Override
   @RequiredUIAccess
-  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
+
     Window fileTree = Window.createModal("Select file");
     fileTree.setSize(new Size(400, 400));
     fileTree.setContent(Label.create("Test"));
@@ -68,13 +68,17 @@ public class WebPathChooserDialog implements PathChooserDialog {
       fileTree.close();
 
       VirtualFile file = component.getSelectedNode().getValue().getFile();
-      
-      UIAccess.get().give(() -> callback.consume(Arrays.asList(file)));
+
+      UIAccess.current().give(() -> result.setDone(new VirtualFile[] {file}));
     });
     ok.setEnabled(false);
     rightButtons.add(ok);
     consulo.ui.Button cancel = Button.create("Cancel");
-    cancel.addClickListener(fileTree::close);
+    cancel.addClickListener(() -> {
+      fileTree.close();
+
+      UIAccess.current().give((Runnable)result::setRejected);
+    });
 
     component.addSelectListener(node -> {
       VirtualFile file = node.getValue().getFile();
@@ -87,5 +91,7 @@ public class WebPathChooserDialog implements PathChooserDialog {
     fileTree.setContent(dockLayout);
 
     fileTree.show();
+
+    return result;
   }
 }

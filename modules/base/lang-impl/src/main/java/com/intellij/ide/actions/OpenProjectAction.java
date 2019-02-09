@@ -52,9 +52,9 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    FileChooser.chooseFiles(descriptor, project, userHomeDir, files -> {
-      if (files.size() == 1) {
-        Platform.hacky(() -> ProjectUtil.open(files.get(0).getPath(), project, false), () -> ProjectUtil.openAsync(files.get(0).getPath(), project, false, UIAccess.get()));
+    FileChooser.chooseFilesAsync(descriptor, project, userHomeDir).doWhenDone((files) -> {
+      if (files.length == 1) {
+        Platform.hacky(() -> ProjectUtil.open(files[0].getPath(), project, false), () -> ProjectUtil.openAsync(files[0].getPath(), project, false, UIAccess.current()));
       }
     });
   }

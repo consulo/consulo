@@ -26,17 +26,21 @@ import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.OwnerOptional;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -175,19 +179,105 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Nonnull
-  private static FileDialog createFileDialogWithoutOwner(String title, int load) {
-    // This is bad. But sometimes we do not have any windows at all.
-    // On the other hand, it is a bit strange to show a file dialog without an owner
-    // Therefore we should minimize usage of this case.
-    return new FileDialog((Frame)null, title, load);
-  }
-
-  @Nonnull
   @Override
   public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelectFiles) {
     VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
     choose(toSelect, files -> {
     });
     return virtualFiles;
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  @Override
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelectFiles) {
+    VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
+    return chooseAsync(toSelect);
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+    if (toSelect != null && toSelect.getParent() != null) {
+      String directoryName;
+      String fileName = null;
+      if (toSelect.isDirectory()) {
+        directoryName = toSelect.getCanonicalPath();
+      }
+      else {
+        directoryName = toSelect.getParent().getCanonicalPath();
+        fileName = toSelect.getPath();
+      }
+      myFileDialog.setDirectory(directoryName);
+      myFileDialog.setFile(fileName);
+    }
+
+
+    myFileDialog.setFilenameFilter((dir, name) -> {
+      File file = new File(dir, name);
+      return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
+    });
+
+    myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
+
+    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
+    SwingUtilities.invokeLater(() -> {
+      final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+      final boolean appStarted = commandProcessor != null;
+
+      if (appStarted) {
+        commandProcessor.enterModal();
+        LaterInvocator.enterModal(myFileDialog);
+      }
+
+      Component parent = myParent.get();
+      try {
+        myFileDialog.setVisible(true);
+      }
+      finally {
+        if (appStarted) {
+          commandProcessor.leaveModal();
+          LaterInvocator.leaveModal(myFileDialog);
+          if (parent != null) {
+            IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+              IdeFocusManager.getGlobalInstance().requestFocus(parent, true);
+            });
+          }
+        }
+      }
+
+      File[] files = myFileDialog.getFiles();
+      List<VirtualFile> virtualFileList = getChosenFiles(Stream.of(files));
+      virtualFiles = virtualFileList.toArray(VirtualFile.EMPTY_ARRAY);
+
+      if (!virtualFileList.isEmpty()) {
+        try {
+          if (virtualFileList.size() == 1) {
+            myFileChooserDescriptor.isFileSelectable(virtualFileList.get(0));
+          }
+          myFileChooserDescriptor.validateSelectedFiles(virtualFiles);
+        }
+        catch (Exception e) {
+          if (parent == null) {
+            Messages.showErrorDialog(myProject, e.getMessage(), myTitle);
+          }
+          else {
+            Messages.showErrorDialog(parent, e.getMessage(), myTitle);
+          }
+
+          result.setRejected();
+          return;
+        }
+
+        if (!ArrayUtil.isEmpty(files)) {
+          result.setDone(VfsUtil.toVirtualFileArray(virtualFileList));
+        }
+        else {
+          result.setRejected();
+        }
+      }
+    });
+    return result;
   }
 }

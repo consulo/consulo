@@ -16,9 +16,9 @@
 package com.intellij.openapi.fileChooser.ex;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.DesktopSaveAndSyncHandlerImpl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.SaveAndSyncHandler;
-import com.intellij.ide.DesktopSaveAndSyncHandlerImpl;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.actionSystem.*;
@@ -32,6 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
@@ -57,10 +58,11 @@ import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -122,7 +124,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   @Override
   @Nonnull
-  public VirtualFile[] choose(@javax.annotation.Nullable final Project project, @Nonnull final VirtualFile... toSelect) {
+  public VirtualFile[] choose(@Nullable final Project project, @Nonnull final VirtualFile... toSelect) {
     init();
     if ((myProject == null) && (project != null)) {
       myProject = project;
@@ -153,6 +155,59 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     else if (callback instanceof FileChooser.FileChooserConsumer) {
       ((FileChooser.FileChooserConsumer)callback).cancelled();
     }
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  @Override
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelect) {
+    init();
+    if ((myProject == null) && (project != null)) {
+      myProject = project;
+    }
+    if (toSelect.length == 1) {
+      restoreSelection(toSelect[0]);
+    }
+    else if (toSelect.length == 0) {
+      restoreSelection(null); // select last opened file
+    }
+    else {
+      selectInTree(toSelect, true);
+    }
+
+    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
+    AsyncResult<Void> showAsync = showAsync();
+    showAsync.doWhenDone(() -> {
+      if (myChosenFiles.length > 0) {
+        result.setDone(myChosenFiles);
+      }
+      else {
+        result.setRejected();
+      }
+    });
+    showAsync.doWhenRejected((Runnable)result::setRejected);
+    return result;
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+    init();
+    restoreSelection(toSelect);
+
+    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
+    AsyncResult<Void> showAsync = showAsync();
+    showAsync.doWhenDone(() -> {
+      if (myChosenFiles.length > 0) {
+        result.setDone(myChosenFiles);
+      }
+      else {
+        result.setRejected();
+      }
+    });
+    showAsync.doWhenRejected((Runnable)result::setRejected);
+    return result;
   }
 
   protected void restoreSelection(@Nullable VirtualFile toSelect) {
@@ -277,14 +332,13 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     syncAction.registerCustomShortcutSet(original.getShortcutSet(), tree, myDisposable);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected final JComponent createTitlePane() {
     final String description = myChooserDescriptor.getDescription();
     if (StringUtil.isEmptyOrSpaces(description)) return null;
 
     final JLabel label = new JLabel(description);
-    label.setBorder(
-            BorderFactory.createCompoundBorder(new SideBorder(UIUtil.getPanelBackground().darker(), SideBorder.BOTTOM), JBUI.Borders.empty(0, 5, 10, 5)));
+    label.setBorder(BorderFactory.createCompoundBorder(new SideBorder(UIUtil.getPanelBackground().darker(), SideBorder.BOTTOM), JBUI.Borders.empty(0, 5, 10, 5)));
     return label;
   }
 
@@ -319,8 +373,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     myPathTextFieldWrapper = new JPanel(new BorderLayout());
     myPathTextFieldWrapper.setBorder(JBUI.Borders.emptyBottom(2));
-    myPathTextField = new FileTextFieldImpl.Vfs(FileChooserFactoryImpl.getMacroMap(), getDisposable(),
-                                                new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
+    myPathTextField = new FileTextFieldImpl.Vfs(FileChooserFactoryImpl.getMacroMap(), getDisposable(), new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
       protected void onTextChanged(final String newValue) {
         myUiUpdater.cancelAllUpdates();
         updateTreeFromPath(newValue);
@@ -353,13 +406,12 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     hintLabel.setFont(JBUI.Fonts.smallFont());
     panel.add(hintLabel, BorderLayout.SOUTH);
 
-    ApplicationManager.getApplication().getMessageBus().connect(getDisposable())
-            .subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
-              @Override
-              public void applicationActivated(IdeFrame ideFrame) {
-                ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.current());
-              }
-            });
+    ApplicationManager.getApplication().getMessageBus().connect(getDisposable()).subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
+      @Override
+      public void applicationActivated(IdeFrame ideFrame) {
+        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.current());
+      }
+    });
 
     return panel;
   }

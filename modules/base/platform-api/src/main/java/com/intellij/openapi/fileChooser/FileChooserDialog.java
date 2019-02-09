@@ -16,8 +16,11 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -25,7 +28,7 @@ public interface FileChooserDialog {
   Key<Boolean> PREFER_LAST_OVER_TO_SELECT = PathChooserDialog.PREFER_LAST_OVER_EXPLICIT;
 
   /**
-   * @deprecated Please use {@link #choose(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile...)} because
+   * @deprecated Please use {@link #choose(Project, VirtualFile...)} because
    * it supports several selections
    */
   @Deprecated
@@ -42,5 +45,18 @@ public interface FileChooserDialog {
    * @return files chosen by user
    */
   @Nonnull
+  @Deprecated
   VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect);
+
+  /**
+   * Choose one or more files
+   *
+   * @param project  use this project (you may pass null if you already set project in ctor)
+   * @param toSelect files to be selected automatically.
+   */
+  @RequiredUIAccess
+  @Nonnull
+  default AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelect) {
+    throw new AbstractMethodError();
+  }
 }
