@@ -323,6 +323,10 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     Set<String> notReloadableComponents = null;
     for (String componentName : componentNames) {
       StateComponentInfo<?> component = myComponents.get(componentName);
+      if (component == null) {
+        continue;
+      }
+
       if (!component.getState().reloadable()) {
         if (notReloadableComponents == null) {
           notReloadableComponents = new LinkedHashSet<>();
