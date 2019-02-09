@@ -35,6 +35,7 @@ import com.intellij.usages.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -245,7 +246,7 @@ public class ConflictsDialog extends DialogWrapper{
         }
 
         @Override
-        public Icon getIcon() {
+        public Image getIcon() {
           return usagePresentation.getIcon();
         }
 
@@ -271,7 +272,7 @@ public class ConflictsDialog extends DialogWrapper{
 
           @Override
           @Nullable
-          public Icon getIcon() {
+          public Image getIcon() {
             return null;
           }
 

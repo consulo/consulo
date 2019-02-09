@@ -25,12 +25,10 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
-import consulo.awt.TargetAWT;
-import consulo.ui.migration.SwingImageRef;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -41,7 +39,7 @@ import java.util.List;
 public class PresentationData implements ColoredItemPresentation, ComparableObject, LocationPresentation {
   protected final List<PresentableNodeDescriptor.ColoredFragment> myColoredText = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  private Icon myIcon;
+  private Image myIcon;
 
   private String myLocationString;
   private String myPresentableText;
@@ -70,20 +68,12 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
    *                        in a non-tree view.
    * @param attributesKey   the attributes for rendering the item text.
    */
-  public PresentationData(String presentableText, String locationString, Icon icon, @Nullable TextAttributesKey attributesKey) {
+  public PresentationData(String presentableText, String locationString, Image icon, @Nullable TextAttributesKey attributesKey) {
     myIcon = icon;
     myLocationString = locationString;
     myPresentableText = presentableText;
     myAttributesKey = attributesKey;
   }
-
-  /**
-   * @deprecated Use constructor with single icon instead.
-   */
-  public PresentationData(String presentableText, String locationString, Icon openIcon, Icon closedIcon, @Nullable TextAttributesKey attributesKey) {
-    this(presentableText, locationString, closedIcon, attributesKey);
-  }
-
 
   /**
    * Creates an instance with no parameters specified.
@@ -92,7 +82,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
   }
 
   @Override
-  public Icon getIcon(boolean open) {
+  public Image getIcon() {
     return myIcon;
   }
 
@@ -115,16 +105,8 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     return myPresentableText;
   }
 
-  public void setIcon(Icon icon) {
+  public void setIcon(Image icon) {
     myIcon = icon;
-  }
-
-  public void setIcon(SwingImageRef icon) {
-    myIcon = icon;
-  }
-
-  public void setIcon(consulo.ui.image.Image icon) {
-    myIcon = TargetAWT.to(icon);
   }
 
   /**
@@ -148,46 +130,12 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
   }
 
   /**
-   * @param closedIcon the closed icon for the node.
-   * @see #setIcons(javax.swing.Icon)
-   * @deprecated Different icons for open/closed no longer supported. Use setIcon instead
-   * Sets the icon shown for the node when it is collapsed in a tree, or when it is displayed
-   * in a non-tree view.
-   */
-  public void setClosedIcon(Icon closedIcon) {
-    setIcon(closedIcon);
-  }
-
-
-  /**
-   * @param openIcon the open icon for the node.
-   * @see #setIcons(javax.swing.Icon)
-   * @deprecated Different icons for open/closed no longer supported. This function is no op.
-   * Sets the icon shown for the node when it is expanded in the tree.
-   */
-  @Deprecated
-  public void setOpenIcon(Icon openIcon) {
-  }
-
-  /**
-   * @param icon the icon for the node.
-   * @see #setOpenIcon(javax.swing.Icon)
-   * @see #setClosedIcon(javax.swing.Icon)
-   * @deprecated Different icons for open/closed no longer supported. Use setIcon instead.
-   * Sets both the open and closed icons of the node to the specified icon.
-   */
-
-  public void setIcons(Icon icon) {
-    setIcon(icon);
-  }
-
-  /**
    * Copies the presentation parameters from the specified presentation instance.
    *
    * @param presentation the instance to copy the parameters from.
    */
   public void updateFrom(ItemPresentation presentation) {
-    setIcon(presentation.getIcon(false));
+    setIcon(presentation.getIcon());
     setPresentableText(presentation.getPresentableText());
     setLocationString(presentation.getLocationString());
     if (presentation instanceof ColoredItemPresentation) {

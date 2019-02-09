@@ -50,9 +50,9 @@ import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.PsiElementUsageTarget;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.impl.UsageViewImpl;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -65,7 +65,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   protected final FindUsagesOptions myOptions;
 
   private String myPresentableText;
-  private Icon myIcon;
+  private Image myIcon;
 
   public PsiElement2UsageTargetAdapter(@Nonnull PsiElement element, @Nonnull FindUsagesOptions options) {
     myOptions = options;
@@ -247,7 +247,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   private void update(PsiElement element) {
     if (element != null && element.isValid()) {
       final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
-      myIcon = presentation == null ? null : presentation.getIcon(false);
+      myIcon = presentation == null ? null : presentation.getIcon();
       myPresentableText = presentation == null ? UsageViewUtil.createNodeText(element) : presentation.getPresentableText();
       if (myIcon == null) {
         if (element instanceof PsiMetaOwner) {
@@ -262,7 +262,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
           final PsiFile psiFile = (PsiFile)element;
           final VirtualFile virtualFile = psiFile.getVirtualFile();
           if (virtualFile != null) {
-            myIcon = VirtualFilePresentation.getAWTIcon(virtualFile);
+            myIcon = VirtualFilePresentation.getIcon(virtualFile);
           }
         }
       }
@@ -280,7 +280,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   }
 
   @Override
-  public Icon getIcon(boolean open) {
+  public Image getIcon() {
     return myIcon;
   }
 }

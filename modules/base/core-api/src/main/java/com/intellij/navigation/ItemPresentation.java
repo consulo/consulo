@@ -16,9 +16,9 @@
 package com.intellij.navigation;
 
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * The presentation of an item in a tree, list or similar view.
@@ -49,7 +49,7 @@ public interface ItemPresentation {
    * Returns the icon representing the object.
    */
   @Nullable
-  default Icon getIcon() {
+  default Image getIcon() {
     return getIcon(false);
   }
 
@@ -61,7 +61,7 @@ public interface ItemPresentation {
   @Nullable
   @Deprecated
   @DeprecationInfo("Use #getIcon()")
-  default Icon getIcon(boolean unused) {
+  default Image getIcon(boolean unused) {
     return getIcon();
   }
 }

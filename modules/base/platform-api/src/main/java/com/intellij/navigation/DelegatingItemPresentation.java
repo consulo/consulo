@@ -16,9 +16,9 @@
 package com.intellij.navigation;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -27,7 +27,7 @@ public class DelegatingItemPresentation implements ColoredItemPresentation {
   private final ItemPresentation myBase;
   private String myPresentableText;
   private String myLocationString;
-  private Icon myIcon;
+  private Image myIcon;
   private boolean myCustomLocationString;
   
   public DelegatingItemPresentation(ItemPresentation base) {
@@ -45,7 +45,7 @@ public class DelegatingItemPresentation implements ColoredItemPresentation {
     return this;
   }
 
-  public DelegatingItemPresentation withIcon(Icon icon) {
+  public DelegatingItemPresentation withIcon(Image icon) {
     myIcon = icon;
     return this;
   }
@@ -67,11 +67,11 @@ public class DelegatingItemPresentation implements ColoredItemPresentation {
   }
 
   @Override
-  public Icon getIcon(boolean open) {
+  public Image getIcon() {
     if (myIcon != null) {
       return myIcon;
     }
-    return myBase.getIcon(open);
+    return myBase.getIcon();
   }
 
   @Override

@@ -280,7 +280,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     @Override
     protected void update(PresentationData presentation) {
       //todo[nik] this is workaround for bug in getTemplatePresentation().setIcons()
-      presentation.setIcon(getTemplatePresentation().getIcon(false));
+      presentation.setIcon(getTemplatePresentation().getIcon());
     }
   }
 
@@ -293,7 +293,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
   private static class ProjectDescriptor extends LibrariesTreeNodeBase<Project> {
     protected ProjectDescriptor(final Project project, final Project element) {
       super(project, null, element);
-      getTemplatePresentation().setIcon(TargetAWT.to(Application.get().getIcon()));
+      getTemplatePresentation().setIcon(Application.get().getIcon());
       getTemplatePresentation().addText(notEmpty(getElement().getName()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
   }
@@ -319,7 +319,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
       final SimpleColoredComponent coloredComponent = new SimpleColoredComponent();
       appearance.customize(coloredComponent);
       final PresentationData templatePresentation = getTemplatePresentation();
-      templatePresentation.setIcon(coloredComponent.getIcon());
+      templatePresentation.setIcon(TargetAWT.from(coloredComponent.getIcon()));
       templatePresentation.addText(notEmpty(appearance.getText()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
   }

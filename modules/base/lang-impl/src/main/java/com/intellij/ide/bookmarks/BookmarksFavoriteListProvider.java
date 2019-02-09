@@ -104,7 +104,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         @Override
         protected void update(PresentationData presentation) {
           presentation.setPresentableText(bookmark.toString());
-          presentation.setIcon(TargetAWT.to(bookmark.getIcon()));
+          presentation.setIcon(bookmark.getIcon());
         }
       };
       child.setParent(myNode);

@@ -15,16 +15,16 @@
  */
 package com.intellij.xdebugger.stepping;
 
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public abstract class XSmartStepIntoVariant {
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

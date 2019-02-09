@@ -28,6 +28,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.search.TodoAttributes;
 import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoPattern;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,7 +119,7 @@ class PatternDialog extends DialogWrapper{
     myPattern.setCaseSensitive(myCaseSensitiveCheckBox.isSelected());
 
     final TodoAttributes attrs = myPattern.getAttributes();
-    attrs.setIcon((Icon)myIconComboBox.getSelectedItem());
+    attrs.setIcon((Image)myIconComboBox.getSelectedItem());
     attrs.setUseCustomTodoColor(useCustomTodoColor(), TodoAttributesUtil.getDefaultColorSchemeTextAttributes());
 
     if (useCustomTodoColor()) {

@@ -23,11 +23,11 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface ColoredItemPresentation extends ItemPresentation {
-    /**
-     * Returns the text attributes for rendering the item text.
-     *
-     * @return the text attributes, or null if default text attributes should be used
-     */
-    @Nullable
-    TextAttributesKey getTextAttributesKey();
+  /**
+   * Returns the text attributes for rendering the item text.
+   *
+   * @return the text attributes, or null if default text attributes should be used
+   */
+  @Nullable
+  TextAttributesKey getTextAttributesKey();
 }

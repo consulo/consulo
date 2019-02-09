@@ -64,6 +64,7 @@ import com.intellij.util.PatternUtil;
 import com.intellij.util.Processor;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -477,7 +478,7 @@ public class FindInProjectUtil {
     }
 
     @Override
-    public Icon getIcon(boolean open) {
+    public Image getIcon() {
       return AllIcons.Actions.Menu_find;
     }
 

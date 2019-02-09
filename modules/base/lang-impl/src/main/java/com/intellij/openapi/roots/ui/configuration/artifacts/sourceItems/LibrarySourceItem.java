@@ -125,7 +125,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
         final VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
         if (files.length > 0) {
           final VirtualFile file = files[0];
-          presentationData.setIcon(VirtualFilePresentation.getAWTIcon(file));
+          presentationData.setIcon(VirtualFilePresentation.getIcon(file));
           presentationData.addText(file.getName(), mainAttributes);
         }
         else {

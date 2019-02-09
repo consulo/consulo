@@ -19,9 +19,9 @@ package com.intellij.xdebugger.stepping;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiNamedElement;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
 * @author Maxim.Mossienko
@@ -36,14 +36,15 @@ public class PsiBackedSmartStepIntoVariant<T extends PsiNamedElement & Navigatio
     assert myPresentation != null: "Invalid presentation:" + myElement;
   }
 
+  @Override
   public String getText() {
     String location = myPresentation.getLocationString();
     return myPresentation.getPresentableText() + (location != null ? " " + location: "");
   }
 
   @Override
-  public Icon getIcon() {
-    return myPresentation.getIcon(false);
+  public Image getIcon() {
+    return myPresentation.getIcon();
   }
 
   public T getElement() {

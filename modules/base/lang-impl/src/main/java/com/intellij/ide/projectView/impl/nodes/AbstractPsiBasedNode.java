@@ -154,7 +154,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
       try {
         Image icon = IconDescriptorUpdaters.getIcon(value, flags);
-        data.setIcon(TargetAWT.to(icon));
+        data.setIcon(icon);
       }
       catch (IndexNotReadyException ignored) {
       }
@@ -169,7 +169,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
       }
 
       updateImpl(data);
-      data.setIcon(patchIcon(myProject, TargetAWT.from(data.getIcon()), getVirtualFile()));
+      data.setIcon(patchIcon(myProject, data.getIcon(), getVirtualFile()));
 
       for (ProjectViewNodeDecorator decorator : Extensions.getExtensions(ProjectViewNodeDecorator.EP_NAME, myProject)) {
         decorator.decorate(AbstractPsiBasedNode.this, data);

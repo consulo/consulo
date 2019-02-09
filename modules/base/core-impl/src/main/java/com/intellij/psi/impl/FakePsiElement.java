@@ -25,11 +25,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
@@ -141,7 +141,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
   @Override
   @Nullable
-  public Icon getIcon(boolean open) {
+  public Image getIcon() {
     return null;
   }
 

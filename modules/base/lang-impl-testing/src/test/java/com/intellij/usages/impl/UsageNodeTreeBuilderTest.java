@@ -39,9 +39,10 @@ import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageGroupingRuleProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -313,7 +314,7 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
         }
 
         @Override
-        public Icon getIcon() {
+        public Image getIcon() {
           return null;
         }
 

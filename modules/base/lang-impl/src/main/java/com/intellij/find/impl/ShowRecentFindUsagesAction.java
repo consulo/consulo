@@ -30,6 +30,8 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.UsageView;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -71,7 +73,7 @@ public class ShowRecentFindUsagesAction extends AnAction {
               @Override
               public Icon getIconFor(final ConfigurableUsageTarget data) {
                 ItemPresentation presentation = data == null ? null : data.getPresentation();
-                return presentation == null ? null : presentation.getIcon(false);
+                return presentation == null ? null : TargetAWT.to(presentation.getIcon());
               }
 
               @Override

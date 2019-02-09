@@ -24,7 +24,6 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.awt.TargetAWT;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.pointers.NamedPointer;
 
@@ -75,7 +74,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
                      SimpleTextAttributes mainAttributes,
                      SimpleTextAttributes commentAttributes) {
     final Module module = findModule();
-    presentationData.setIcon(TargetAWT.to(myContentFolderType.getIcon()));
+    presentationData.setIcon(myContentFolderType.getIcon());
 
     String moduleName;
     if (module != null) {

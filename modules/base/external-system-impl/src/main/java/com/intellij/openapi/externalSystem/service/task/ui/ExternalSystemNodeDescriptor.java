@@ -17,7 +17,6 @@ package com.intellij.openapi.externalSystem.service.task.ui;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -50,7 +49,7 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
   @Override
   protected void update(PresentationData presentation) {
     presentation.setPresentableText(myName);
-    presentation.setIcon(TargetAWT.to(getIcon()));
+    presentation.setIcon(getIcon());
     presentation.setTooltip(myDescription);
   }
   

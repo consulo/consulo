@@ -36,13 +36,12 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.awt.TargetAWT;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.vfs.util.ArchiveVfsUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText {
@@ -73,7 +72,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
   protected void updateImpl(PresentationData data) {
     PsiFile value = getValue();
     data.setPresentableText(value.getName());
-    data.setIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_READ_STATUS)));
+    data.setIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_READ_STATUS));
 
     VirtualFile file = getVirtualFile();
     if (file != null && file.is(VFileProperty.SYMLINK)) {

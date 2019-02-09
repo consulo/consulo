@@ -126,7 +126,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         }
         final String text = presentation.getPresentableText();
         append(text == null ? "" : text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        setIcon(presentation.getIcon(expanded));
+        setIcon(presentation.getIcon());
       }
       else if (treeNode instanceof GroupNode) {
         GroupNode node = (GroupNode)treeNode;

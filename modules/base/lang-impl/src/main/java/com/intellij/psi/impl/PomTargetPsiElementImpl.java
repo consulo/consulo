@@ -28,13 +28,12 @@ import com.intellij.psi.PsiTarget;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author peter
@@ -91,12 +90,12 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
   }
 
   @Override
-  public Icon getIcon() {
-    Icon icon = TargetAWT.to(TypePresentationService.getInstance().getIcon(myTarget));
+  public Image getIcon() {
+    Image icon = TypePresentationService.getInstance().getIcon(myTarget);
     if (icon != null) return icon;
 
     if (myTarget instanceof PsiTarget) {
-      return TargetAWT.to(IconDescriptorUpdaters.getIcon(((PsiTarget)myTarget).getNavigationElement(), 0));
+      return IconDescriptorUpdaters.getIcon(((PsiTarget)myTarget).getNavigationElement(), 0);
     }
     return null;
   }

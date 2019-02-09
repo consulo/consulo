@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.meta;
 
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -26,5 +26,5 @@ public interface PsiPresentableMetaData extends PsiMetaData {
   String getTypeName();
 
   @Nullable
-  Icon getIcon();
+  Image getIcon();
 }

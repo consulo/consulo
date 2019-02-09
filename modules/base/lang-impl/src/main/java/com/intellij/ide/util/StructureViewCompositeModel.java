@@ -26,10 +26,10 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.Disposable;
 import com.intellij.psi.PsiFile;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -147,7 +147,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
 
           @Nullable
           @Override
-          public Icon getIcon(boolean unused) {
+          public Image getIcon() {
             return view.icon;
           }
         };

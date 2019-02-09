@@ -38,7 +38,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
-import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.orderEntry.OrderEntryType;
@@ -103,7 +102,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
       final Sdk sdk = sdkOrderEntry.getSdk();
-      presentation.setIcon(TargetAWT.to(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk())));
+      presentation.setIcon(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk()));
       if (sdk != null) { //jdk not specified
         final String path = sdk.getHomePath();
         if (path != null) {

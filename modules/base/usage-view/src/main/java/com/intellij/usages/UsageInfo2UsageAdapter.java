@@ -38,11 +38,10 @@ import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.rules.*;
 import com.intellij.util.*;
 import consulo.application.AccessRule;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.util.Arrays;
@@ -62,7 +61,7 @@ public class UsageInfo2UsageAdapter
   private Object myMergedUsageInfos; // contains all merged infos, including myUsageInfo. Either UsageInfo or UsageInfo[]
   private final int myLineNumber;
   private final int myOffset;
-  protected Icon myIcon;
+  protected Image myIcon;
   private volatile Reference<TextChunk[]> myTextChunks; // allow to be gced and recreated on-demand because it requires a lot of memory
   private volatile UsageType myUsageType;
 
@@ -461,11 +460,11 @@ public class UsageInfo2UsageAdapter
   }
 
   @Override
-  public Icon getIcon() {
-    Icon icon = myIcon;
+  public Image getIcon() {
+    Image icon = myIcon;
     if (icon == null) {
       PsiElement psiElement = getElement();
-      myIcon = icon = psiElement != null && psiElement.isValid() ? TargetAWT.to(IconDescriptorUpdaters.getIcon(psiElement, 0)) : null;
+      myIcon = icon = psiElement != null && psiElement.isValid() ? IconDescriptorUpdaters.getIcon(psiElement, 0) : null;
     }
     return icon;
   }

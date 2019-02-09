@@ -14,6 +14,7 @@ import javax.swing.*;
  */
 public class VirtualFilePresentation {
   @Nonnull
+  @Deprecated
   public static Icon getAWTIcon(VirtualFile vFile) {
     return TargetAWT.to(getIcon(vFile));
   }

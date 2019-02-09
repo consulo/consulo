@@ -25,11 +25,11 @@ import com.intellij.psi.meta.PsiMetaOwner;
 import com.intellij.psi.meta.PsiPresentableMetaData;
 import com.intellij.util.ArrayUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author peter
@@ -43,8 +43,8 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
 
   @Nullable
   @Override
-  public Icon getIcon() {
-    return getIcon(false);
+  public Image getIcon() {
+    return null;
   }
 
   @Override
@@ -97,12 +97,6 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
   @Override
   public Object[] getDependences() {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
-
-  @Override
-  @Nullable
-  public final Icon getIcon(final boolean open) {
-    return getIcon();
   }
 
   @Override

@@ -15,9 +15,10 @@
  */
 package com.intellij.usages;
 
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -29,7 +30,8 @@ public interface UsagePresentation {
   @Nonnull
   String getPlainText();
 
-  Icon getIcon();
+  @Nullable
+  Image getIcon();
 
   String getTooltipText();
 }

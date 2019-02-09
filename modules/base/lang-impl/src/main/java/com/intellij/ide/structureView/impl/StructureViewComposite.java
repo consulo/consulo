@@ -20,8 +20,9 @@ import com.intellij.ide.structureView.StructureView;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Disposer;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -35,9 +36,9 @@ public class StructureViewComposite implements StructureView {
   public static class StructureViewDescriptor {
     public final String title;
     public final StructureView structureView;
-    public final Icon icon;
+    public final Image icon;
 
-    public StructureViewDescriptor(final String title, @Nonnull StructureView structureView, Icon icon) {
+    public StructureViewDescriptor(final String title, @Nonnull StructureView structureView, Image icon) {
       this.title = title;
       this.structureView = structureView;
       this.icon = icon;

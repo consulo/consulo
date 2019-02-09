@@ -62,10 +62,10 @@ import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.lang.LanguageVersion;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -1043,8 +1043,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
       }
 
       @Override
-      public Icon getIcon(final boolean open) {
-        return TargetAWT.to(IconDescriptorUpdaters.getIcon(PsiFileImpl.this, 0));
+      public Image getIcon() {
+        return IconDescriptorUpdaters.getIcon(PsiFileImpl.this, 0);
       }
     };
   }

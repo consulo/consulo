@@ -151,7 +151,7 @@ class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiElement>
     renderer.append(item + " ", nameAttributes);
     ItemPresentation itemPresentation = item.getPresentation();
     assert itemPresentation != null;
-    renderer.setIcon(itemPresentation.getIcon(true));
+    renderer.setIcon(itemPresentation.getIcon());
 
     String locationString = itemPresentation.getLocationString();
     if (!StringUtil.isEmpty(locationString)) {

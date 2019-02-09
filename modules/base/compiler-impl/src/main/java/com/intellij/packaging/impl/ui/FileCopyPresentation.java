@@ -63,7 +63,7 @@ public class FileCopyPresentation extends PackagingElementPresentation {
 
   public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     if (myFile != null && !myFile.isDirectory()) {
-      presentationData.setIcon(VirtualFilePresentation.getAWTIcon(myFile));
+      presentationData.setIcon(VirtualFilePresentation.getIcon(myFile));
       presentationData.addText(myOutputFileName, mainAttributes);
       presentationData.addText(" (" + mySourcePath + ")", commentAttributes);
     }

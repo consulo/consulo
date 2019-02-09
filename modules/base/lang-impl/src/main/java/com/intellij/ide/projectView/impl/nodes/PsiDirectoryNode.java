@@ -41,11 +41,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.util.Collection;
 
 public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements NavigatableWithText {
@@ -119,8 +117,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
   protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
-    final Icon icon = TargetAWT.to(VfsIconUtil.getIcon(virtualFile, 0, myProject));
-    data.setIcon(icon);
+    data.setIcon(VfsIconUtil.getIcon(virtualFile, 0, myProject));
   }
 
   @Override

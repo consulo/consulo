@@ -27,13 +27,12 @@ import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.remoteServer.runtime.deployment.DeploymentRuntime;
 import com.intellij.remoteServer.runtime.deployment.DeploymentStatus;
 import com.intellij.remoteServer.runtime.deployment.DeploymentTask;
-import com.intellij.ui.LayeredIcon;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import icons.RemoteServersIcons;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -53,15 +52,12 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
     myRootElement = new ServersTreeRootNode();
   }
 
-  public static Icon getServerNodeIcon(@Nonnull Icon itemIcon, @Nullable Icon statusIcon) {
+  public static Image getServerNodeIcon(@Nonnull Image itemIcon, @Nullable Image statusIcon) {
     if (statusIcon == null) {
       return itemIcon;
     }
 
-    LayeredIcon icon = new LayeredIcon(2);
-    icon.setIcon(itemIcon, 0);
-    icon.setIcon(statusIcon, 1, itemIcon.getIconWidth() - statusIcon.getIconWidth(), itemIcon.getIconHeight() - statusIcon.getIconHeight());
-    return icon;
+    return ImageEffects.layered(itemIcon, statusIcon);
   }
 
   @Override
@@ -143,7 +139,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       RemoteServer<?> server = getValue();
       ServerConnection connection = getConnection();
       presentation.setPresentableText(server.getName());
-      presentation.setIcon(getServerNodeIcon(TargetAWT.to(server.getType().getIcon()), connection != null ? getStatusIcon(connection.getStatus()) : null));
+      presentation.setIcon(getServerNodeIcon(server.getType().getIcon(), connection != null ? getStatusIcon(connection.getStatus()) : null));
       presentation.setTooltip(connection != null ? connection.getStatusText() : null);
     }
 
@@ -201,7 +197,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
     }
 
     @Nullable
-    private Icon getStatusIcon(final ConnectionStatus status) {
+    private Image getStatusIcon(final ConnectionStatus status) {
       switch (status) {
         case CONNECTED: return RemoteServersIcons.ResumeScaled;
         case DISCONNECTED: return RemoteServersIcons.SuspendScaled;
@@ -312,7 +308,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
     }
 
     @Nullable
-    private Icon getStatusIcon(DeploymentStatus status) {
+    private Image getStatusIcon(DeploymentStatus status) {
       switch (status) {
         case DEPLOYED: return AllIcons.RunConfigurations.TestPassed;
         case NOT_DEPLOYED: return AllIcons.RunConfigurations.TestIgnored;

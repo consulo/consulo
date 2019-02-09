@@ -26,7 +26,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,7 +97,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
 
     Color oldColor = myColor;
     String oldName = myName;
-    consulo.ui.image.Image oldIcon = getIcon();
+    Image oldIcon = getIcon();
     List<ColoredFragment> oldFragments = new ArrayList<ColoredFragment>(presentation.getColoredText());
 
     myColor = UIUtil.getTreeTextForeground();
@@ -112,7 +112,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
                                              new Object[]{oldIcon, oldName, oldFragments, oldColor}));
 
     presentation.setForcedTextForeground(myColor);
-    presentation.setIcon(TargetAWT.to(getIcon()));
+    presentation.setIcon(getIcon());
   }
 
   protected void updateFileStatus() {

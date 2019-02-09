@@ -33,10 +33,11 @@ import com.intellij.usages.impl.UsageNode;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.usages.impl.UsageViewManagerImpl;
 import com.intellij.usages.rules.UsageInFile;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -104,8 +105,8 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
       TextChunk[] text = presentation.getText();
 
       if (column == 1) {
-        final Icon icon = presentation.getIcon();
-        textChunks.setIcon(icon == null ? EmptyIcon.ICON_16 : icon);
+        final Image icon = presentation.getIcon();
+        textChunks.setIcon(icon == null ? ImageEffects.empty(16) : icon);
         if (text.length != 0) {
           SimpleTextAttributes attributes = isSelected ?
                                             new SimpleTextAttributes(bg, fg, fg, SimpleTextAttributes.STYLE_ITALIC) :

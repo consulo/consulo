@@ -20,11 +20,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
@@ -63,7 +62,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
   }
 
   protected final boolean apply(PresentationData presentation, @Nullable PresentationData before) {
-    setIcon(presentation.getIcon(false));
+    setIcon(presentation.getIcon());
     myName = presentation.getPresentableText();
     myColor = presentation.getForcedTextForeground();
     boolean updated = before == null || !presentation.equals(before);

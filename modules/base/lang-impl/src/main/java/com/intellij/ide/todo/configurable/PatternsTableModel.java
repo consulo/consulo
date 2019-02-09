@@ -19,6 +19,7 @@ package com.intellij.ide.todo.configurable;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.util.ui.ItemRemovable;
 import com.intellij.ide.IdeBundle;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -84,7 +85,7 @@ final class PatternsTableModel extends AbstractTableModel implements ItemRemovab
     TodoPattern pattern=myPatterns.get(row);
     switch(column){
       case 0:{
-        pattern.getAttributes().setIcon((Icon)value);
+        pattern.getAttributes().setIcon((Image)value);
         break;
       }case 1:{
         pattern.setCaseSensitive(((Boolean)value).booleanValue());
