@@ -32,9 +32,9 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 public class DisableInspectionToolAction implements IntentionAction, Iconable {
@@ -87,7 +87,7 @@ public class DisableInspectionToolAction implements IntentionAction, Iconable {
   }
 
   @Override
-  public Icon getIcon(int flags) {
+  public Image getIcon(int flags) {
     return AllIcons.Actions.Cancel;
   }
 }

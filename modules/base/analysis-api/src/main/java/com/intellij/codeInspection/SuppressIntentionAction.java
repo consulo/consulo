@@ -30,17 +30,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 public abstract class SuppressIntentionAction implements Iconable, IntentionAction {
   private String myText = "";
   public static SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];
 
   @Override
-  public Icon getIcon(int flags) {
+  public Image getIcon(int flags) {
     return AllIcons.General.InspectionsOff;
   }
 

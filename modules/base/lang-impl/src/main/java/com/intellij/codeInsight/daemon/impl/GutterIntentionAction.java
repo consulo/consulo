@@ -29,15 +29,14 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.IconUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,10 +49,10 @@ import static com.intellij.util.containers.ContainerUtil.ar;
 class GutterIntentionAction extends AbstractIntentionAction implements Comparable<IntentionAction>, Iconable, ShortcutProvider {
   private final AnAction myAction;
   private final int myOrder;
-  private final Icon myIcon;
+  private final Image myIcon;
   private String myText;
 
-  private GutterIntentionAction(AnAction action, int order, Icon icon) {
+  private GutterIntentionAction(AnAction action, int order, Image icon) {
     myAction = action;
     myOrder = order;
     myIcon = icon;
@@ -139,9 +138,9 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
         addActions(children[i], descriptors, renderer, i + order, event);
       }
     }
-    Icon icon = action.getTemplatePresentation().getIcon();
-    if (icon == null) icon = TargetAWT.to(renderer.getIcon());
-    if (icon.getIconWidth() < 16) icon = IconUtil.toSize(icon, 16, 16);
+    Image icon = TargetAWT.from(action.getTemplatePresentation().getIcon());
+    if (icon == null) icon = renderer.getIcon();
+    if (icon.getWidth() < 16) icon = ImageEffects.resize(icon, 16, 16);
     final GutterIntentionAction gutterAction = new GutterIntentionAction(action, order, icon);
     if (!gutterAction.isAvailable(event)) return;
     descriptors.add(new HighlightInfo.IntentionActionDescriptor(gutterAction, Collections.emptyList(), null, icon) {
@@ -163,7 +162,7 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
   }
 
   @Override
-  public Icon getIcon(@IconFlags int flags) {
+  public Image getIcon(@IconFlags int flags) {
     return myIcon;
   }
 

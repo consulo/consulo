@@ -46,6 +46,7 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.BitUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -120,7 +121,7 @@ public class HighlightInfo implements Segment {
     setFlag(FROM_INJECTION_MASK, fromInjection);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getToolTip() {
     String toolTip = this.toolTip;
     String description = this.description;
@@ -190,7 +191,7 @@ public class HighlightInfo implements Segment {
     return isFlagSet(AFTER_END_OF_LINE_MASK);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public TextAttributes getTextAttributes(@Nullable final PsiElement element, @Nullable final EditorColorsScheme editorColorsScheme) {
     if (forcedTextAttributes != null) {
       return forcedTextAttributes;
@@ -205,7 +206,7 @@ public class HighlightInfo implements Segment {
     return getAttributesByType(element, type, colorsScheme);
   }
 
-  public static TextAttributes getAttributesByType(@javax.annotation.Nullable final PsiElement element,
+  public static TextAttributes getAttributesByType(@Nullable final PsiElement element,
                                                    @Nonnull HighlightInfoType type,
                                                    @Nonnull TextAttributesScheme colorsScheme) {
     final SeverityRegistrar severityRegistrar = SeverityRegistrar
@@ -220,7 +221,7 @@ public class HighlightInfo implements Segment {
 
   @Nullable
   Color getErrorStripeMarkColor(@Nonnull PsiElement element,
-                                @javax.annotation.Nullable final EditorColorsScheme colorsScheme) { // if null global scheme will be used
+                                @Nullable final EditorColorsScheme colorsScheme) { // if null global scheme will be used
     if (forcedTextAttributes != null) {
       return forcedTextAttributes.getErrorStripeColor();
     }
@@ -265,9 +266,9 @@ public class HighlightInfo implements Segment {
     return EditorColorsManager.getInstance().getGlobalScheme();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @NonNls
-  private static String htmlEscapeToolTip(@javax.annotation.Nullable String unescapedTooltip) {
+  private static String htmlEscapeToolTip(@Nullable String unescapedTooltip) {
     return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(unescapedTooltip));
   }
 
@@ -279,13 +280,13 @@ public class HighlightInfo implements Segment {
     return isFlagSet(NEEDS_UPDATE_ON_TYPING_MASK);
   }
 
-  HighlightInfo(@javax.annotation.Nullable TextAttributes forcedTextAttributes,
+  HighlightInfo(@Nullable TextAttributes forcedTextAttributes,
                 @Nullable TextAttributesKey forcedTextAttributesKey,
                 @Nonnull HighlightInfoType type,
                 int startOffset,
                 int endOffset,
-                @javax.annotation.Nullable String escapedDescription,
-                @javax.annotation.Nullable String escapedToolTip,
+                @Nullable String escapedDescription,
+                @Nullable String escapedToolTip,
                 @Nonnull HighlightSeverity severity,
                 boolean afterEndOfLine,
                 @Nullable Boolean needsUpdateOnTyping,
@@ -621,7 +622,7 @@ public class HighlightInfo implements Segment {
       return this;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public HighlightInfo create() {
       HighlightInfo info = createUnconditionally();
@@ -650,7 +651,7 @@ public class HighlightInfo implements Segment {
     return gutterIconRenderer;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public ProblemGroup getProblemGroup() {
     return myProblemGroup;
   }
@@ -661,7 +662,7 @@ public class HighlightInfo implements Segment {
   }
 
   @Nonnull
-  static HighlightInfo fromAnnotation(@Nonnull Annotation annotation, @javax.annotation.Nullable TextRange fixedRange, boolean batchMode) {
+  static HighlightInfo fromAnnotation(@Nonnull Annotation annotation, @Nullable TextRange fixedRange, boolean batchMode) {
     final TextAttributes forcedAttributes = annotation.getEnforcedTextAttributes();
     TextAttributesKey key = annotation.getTextAttributes();
     final TextAttributesKey forcedAttributesKey = forcedAttributes == null ? (key == HighlighterColors.NO_HIGHLIGHTING ? null : key) : null;
@@ -678,7 +679,7 @@ public class HighlightInfo implements Segment {
 
   private static final String ANNOTATOR_INSPECTION_SHORT_NAME = "Annotator";
 
-  private static void appendFixes(@Nullable TextRange fixedRange, @Nonnull HighlightInfo info, @javax.annotation.Nullable List<Annotation.QuickFixInfo> fixes) {
+  private static void appendFixes(@Nullable TextRange fixedRange, @Nonnull HighlightInfo info, @Nullable List<Annotation.QuickFixInfo> fixes) {
     if (fixes != null) {
       for (final Annotation.QuickFixInfo quickFixInfo : fixes) {
         TextRange range = fixedRange != null ? fixedRange : quickFixInfo.textRange;
@@ -750,31 +751,31 @@ public class HighlightInfo implements Segment {
     private final ProblemGroup myProblemGroup;
     private final HighlightSeverity mySeverity;
     private final String myDisplayName;
-    private final Icon myIcon;
+    private final Image myIcon;
     private Boolean myCanCleanup;
 
     IntentionActionDescriptor(@Nonnull IntentionAction action, final List<IntentionAction> options, final String displayName) {
       this(action, options, displayName, null);
     }
 
-    public IntentionActionDescriptor(@Nonnull IntentionAction action, final Icon icon) {
+    public IntentionActionDescriptor(@Nonnull IntentionAction action, final Image icon) {
       this(action, null, null, icon);
     }
 
     IntentionActionDescriptor(@Nonnull IntentionAction action,
-                              @javax.annotation.Nullable final List<IntentionAction> options,
+                              @Nullable final List<IntentionAction> options,
                               @Nullable final String displayName,
-                              @javax.annotation.Nullable Icon icon) {
+                              @Nullable Image icon) {
       this(action, options, displayName, icon, null, null, null);
     }
 
     public IntentionActionDescriptor(@Nonnull IntentionAction action,
                                      @Nullable final List<IntentionAction> options,
-                                     @javax.annotation.Nullable final String displayName,
-                                     @javax.annotation.Nullable Icon icon,
-                                     @javax.annotation.Nullable HighlightDisplayKey key,
-                                     @javax.annotation.Nullable ProblemGroup problemGroup,
-                                     @javax.annotation.Nullable HighlightSeverity severity) {
+                                     @Nullable final String displayName,
+                                     @Nullable Image icon,
+                                     @Nullable HighlightDisplayKey key,
+                                     @Nullable ProblemGroup problemGroup,
+                                     @Nullable HighlightSeverity severity) {
       myAction = action;
       myOptions = options;
       myDisplayName = displayName;
@@ -807,8 +808,8 @@ public class HighlightInfo implements Segment {
       return myCanCleanup;
     }
 
-    @javax.annotation.Nullable
-    public List<IntentionAction> getOptions(@Nonnull PsiElement element, @javax.annotation.Nullable Editor editor) {
+    @Nullable
+    public List<IntentionAction> getOptions(@Nonnull PsiElement element, @Nullable Editor editor) {
       if (editor != null && Boolean.FALSE.equals(editor.getUserData(IntentionManager.SHOW_INTENTION_OPTIONS_KEY))) {
         return null;
       }
@@ -887,7 +888,7 @@ public class HighlightInfo implements Segment {
       return options;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public String getDisplayName() {
       return myDisplayName;
     }
@@ -899,8 +900,8 @@ public class HighlightInfo implements Segment {
       return "descriptor: " + (text.isEmpty() ? getAction().getClass() : text);
     }
 
-    @javax.annotation.Nullable
-    public Icon getIcon() {
+    @Nullable
+    public Image getIcon() {
       return myIcon;
     }
 
@@ -939,9 +940,9 @@ public class HighlightInfo implements Segment {
     return highlighter.getDocument().getText(TextRange.create(highlighter));
   }
 
-  public void registerFix(@javax.annotation.Nullable IntentionAction action,
-                          @javax.annotation.Nullable List<IntentionAction> options,
-                          @javax.annotation.Nullable String displayName,
+  public void registerFix(@Nullable IntentionAction action,
+                          @Nullable List<IntentionAction> options,
+                          @Nullable String displayName,
                           @Nullable TextRange fixRange,
                           @Nullable HighlightDisplayKey key) {
     if (action == null) return;

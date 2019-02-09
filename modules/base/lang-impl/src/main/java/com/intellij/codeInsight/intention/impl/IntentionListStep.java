@@ -36,12 +36,14 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -314,7 +316,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     };
   }
 
-  private static Icon getIcon(IntentionAction optionIntention) {
+  private static Image getIcon(IntentionAction optionIntention) {
     return optionIntention instanceof Iconable ? ((Iconable)optionIntention).getIcon(0) : null;
   }
 
@@ -420,7 +422,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
   @Override
   public Icon getIconFor(final IntentionActionWithTextCaching value) {
     if (value.getIcon() != null) {
-      return value.getIcon();
+      return TargetAWT.to(value.getIcon());
     }
 
     final IntentionAction action = value.getAction();
@@ -435,9 +437,9 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     }
 
     if (iconable instanceof Iconable) {
-      final Icon icon = ((Iconable)iconable).getIcon(0);
+      final Image icon = ((Iconable)iconable).getIcon(0);
       if (icon != null) {
-        return icon;
+        return TargetAWT.to(icon);
       }
     }
 

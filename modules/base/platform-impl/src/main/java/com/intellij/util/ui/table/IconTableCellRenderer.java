@@ -1,8 +1,10 @@
 package com.intellij.util.ui.table;
 
 import com.intellij.openapi.util.Iconable;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -13,16 +15,16 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
   public static final IconTableCellRenderer<Iconable> ICONABLE = new IconTableCellRenderer<Iconable>() {
     @Nullable
     @Override
-    protected Icon getIcon(@Nonnull Iconable value, JTable table, int row) {
+    protected Image getIcon(@Nonnull Iconable value, JTable table, int row) {
       return value.getIcon(Iconable.ICON_FLAG_VISIBILITY);
     }
   };
 
-  public static TableCellRenderer create(@Nonnull final Icon icon) {
+  public static TableCellRenderer create(@Nonnull final Image icon) {
     return new IconTableCellRenderer() {
       @Nullable
       @Override
-      protected Icon getIcon(@Nonnull Object value, JTable table, int row) {
+      protected Image getIcon(@Nonnull Object value, JTable table, int row) {
         return icon;
       }
     };
@@ -32,7 +34,7 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
   public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focus, int row, int column) {
     super.getTableCellRendererComponent(table, value, selected, focus, row, column);
     //noinspection unchecked
-    setIcon(value == null ? null : getIcon((T)value, table, row));
+    setIcon(value == null ? null : TargetAWT.to(getIcon((T)value, table, row)));
     if (isCenterAlignment()) {
       setHorizontalAlignment(CENTER);
       setVerticalAlignment(CENTER);
@@ -45,5 +47,5 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
   }
 
   @Nullable
-  protected abstract Icon getIcon(@Nonnull T value, JTable table, int row);
+  protected abstract Image getIcon(@Nonnull T value, JTable table, int row);
 }

@@ -6,10 +6,10 @@ import com.intellij.ide.browsers.chrome.ChromeSettings;
 import com.intellij.ide.browsers.firefox.FirefoxSettings;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.SystemInfo;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public enum BrowserFamily implements Iconable {
   CHROME(IdeBundle.message("browsers.chrome"), "chrome", "google-chrome", "Google Chrome", AllIcons.Xml.Browsers.Chrome16) {
@@ -32,13 +32,13 @@ public enum BrowserFamily implements Iconable {
   private final String myWindowsPath;
   private final String myUnixPath;
   private final String myMacPath;
-  private final Icon myIcon;
+  private final Image myIcon;
 
   BrowserFamily(@Nonnull String name,
                 @Nonnull final String windowsPath,
                 @Nullable final String unixPath,
                 @Nullable final String macPath,
-                @Nonnull Icon icon) {
+                @Nonnull Image icon) {
     myName = name;
     myWindowsPath = windowsPath;
     myUnixPath = unixPath;
@@ -68,7 +68,7 @@ public enum BrowserFamily implements Iconable {
     return myName;
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
@@ -78,7 +78,7 @@ public enum BrowserFamily implements Iconable {
   }
 
   @Override
-  public Icon getIcon(@IconFlags int flags) {
+  public Image getIcon(@IconFlags int flags) {
     return getIcon();
   }
 }

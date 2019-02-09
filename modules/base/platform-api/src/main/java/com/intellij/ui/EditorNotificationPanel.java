@@ -33,7 +33,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -184,7 +186,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     }
 
     @Override
-    public Icon getIcon(@IconFlags int flags) {
+    public Image getIcon(@IconFlags int flags) {
       return AllIcons.Actions.IntentionBulb;
     }
   }
@@ -265,8 +267,8 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     }
 
     @Override
-    public Icon getIcon(@IconFlags int flags) {
-      return myLabel.getIcon();
+    public Image getIcon(@IconFlags int flags) {
+      return TargetAWT.from(myLabel.getIcon());
     }
   }
 }

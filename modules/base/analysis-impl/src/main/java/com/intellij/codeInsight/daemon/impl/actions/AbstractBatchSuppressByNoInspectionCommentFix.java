@@ -30,10 +30,10 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThreeState;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,7 +79,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
   @Override
-  public Icon getIcon(int flags) {
+  public Image getIcon(int flags) {
     return AllIcons.General.InspectionsOff;
   }
 

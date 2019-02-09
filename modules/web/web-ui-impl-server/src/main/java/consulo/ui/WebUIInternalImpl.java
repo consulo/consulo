@@ -22,6 +22,7 @@ import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
+import consulo.ui.internal.image.WGwtResizeImageImpl;
 import consulo.ui.internal.image.WGwtTransparentImageImpl;
 import consulo.ui.layout.SwipeLayout;
 import consulo.ui.model.ImmutableListModelImpl;
@@ -148,7 +149,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
-    throw new UnsupportedOperationException(); //TODO [VISTALL]
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -178,22 +179,27 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_grayed(@Nonnull Image original) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public Image _ImageEffects_empty(int width, int height) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
     return null;
+  }
+
+  @Override
+  public Image _ImageEffects_resize(Image original, int width, int height) {
+    return new WGwtResizeImageImpl(original, width, height);
   }
 
   @Override
@@ -249,7 +255,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public AlertBuilder _Alerts_builder() {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override

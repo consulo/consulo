@@ -19,10 +19,9 @@ import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public interface Iconable {
   int ICON_FLAG_VISIBILITY = 0x0001;
@@ -32,7 +31,8 @@ public interface Iconable {
   @interface IconFlags {
   }
 
-  Icon getIcon(@IconFlags int flags);
+  @Nullable
+  Image getIcon(@IconFlags int flags);
 
   class LastComputedIcon {
     private static final Key<ConcurrentIntObjectMap<Image>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");

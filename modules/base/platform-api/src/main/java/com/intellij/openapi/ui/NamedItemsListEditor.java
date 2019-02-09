@@ -30,7 +30,6 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.*;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import gnu.trove.Equality;
 
@@ -237,7 +236,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         @Override
         public Image getIcon(boolean expanded) {
             if (myShowIcons && myConfigurable instanceof Iconable) {
-              return TargetAWT.from(((Iconable)myConfigurable).getIcon(0));
+              return ((Iconable)myConfigurable).getIcon(0);
             }
             return null;
         }

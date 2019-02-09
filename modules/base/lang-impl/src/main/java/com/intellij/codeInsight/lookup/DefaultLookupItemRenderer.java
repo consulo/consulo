@@ -71,7 +71,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     }
 
     if (o instanceof Iconable && !(o instanceof PsiElement)) {
-      return ((Iconable)o).getIcon(Iconable.ICON_FLAG_VISIBILITY);
+      return TargetAWT.to(((Iconable)o).getIcon(Iconable.ICON_FLAG_VISIBILITY));
     }
 
     final PsiElement element = item.getPsiElement();

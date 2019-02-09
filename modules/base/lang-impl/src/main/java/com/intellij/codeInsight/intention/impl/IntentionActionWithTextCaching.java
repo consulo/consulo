@@ -30,11 +30,11 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -50,7 +50,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
   private final String myText;
   private final IntentionAction myAction;
   private final String myDisplayName;
-  private final Icon myIcon;
+  private final Image myIcon;
 
   IntentionActionWithTextCaching(@Nonnull IntentionAction action){
     this(action, action.getText(), null, null);
@@ -60,7 +60,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     this(descriptor.getAction(), descriptor.getDisplayName(), descriptor.getIcon(), markInvoked);
   }
 
-  private IntentionActionWithTextCaching(@Nonnull IntentionAction action, String displayName, @Nullable Icon icon, @Nullable BiConsumer<IntentionActionWithTextCaching, IntentionAction> markInvoked) {
+  private IntentionActionWithTextCaching(@Nonnull IntentionAction action, String displayName, @Nullable Image icon, @Nullable BiConsumer<IntentionActionWithTextCaching, IntentionAction> markInvoked) {
     myIcon = icon;
     myText = action.getText();
     // needed for checking errors in user written actions
@@ -127,7 +127,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     return Comparing.compare(getText(), other.getText());
   }
 
-  Icon getIcon() {
+  Image getIcon() {
     return myIcon;
   }
 

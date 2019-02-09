@@ -8,9 +8,9 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class CustomEditInspectionToolsSettingsAction implements IntentionAction, Iconable {
   private final EditInspectionToolsSettingsAction myEditInspectionToolsSettingsAction;   // we delegate due to priority
@@ -49,7 +49,7 @@ public class CustomEditInspectionToolsSettingsAction implements IntentionAction,
   }
 
   @Override
-  public Icon getIcon(@IconFlags int flags) {
+  public Image getIcon(@IconFlags int flags) {
     return myEditInspectionToolsSettingsAction.getIcon(flags);
   }
 }

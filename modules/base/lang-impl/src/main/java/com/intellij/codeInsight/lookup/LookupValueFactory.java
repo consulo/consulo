@@ -17,10 +17,10 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.Iconable;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
@@ -33,20 +33,20 @@ public class LookupValueFactory {
   }
 
   @Nonnull
-  public static Object createLookupValue(@Nonnull String name, @Nullable Icon icon) {
+  public static Object createLookupValue(@Nonnull String name, @Nullable Image icon) {
     return icon == null ? name : new LookupValueWithIcon(name, icon);
   }
 
   @Nonnull
-  public static Object createLookupValueWithHint(@Nonnull String name, @Nullable Icon icon, String hint) {
+  public static Object createLookupValueWithHint(@Nonnull String name, @Nullable Image icon, String hint) {
     return new LookupValueWithIconAndHint(name, icon, hint);
   }
 
   public static class LookupValueWithIcon implements PresentableLookupValue, Iconable {
     private final String myName;
-    private final Icon myIcon;
+    private final Image myIcon;
 
-    protected LookupValueWithIcon(@Nonnull String name, @Nullable Icon icon) {
+    protected LookupValueWithIcon(@Nonnull String name, @Nullable Image icon) {
       myName = name;
       myIcon = icon;
     }
@@ -56,7 +56,7 @@ public class LookupValueFactory {
     }
 
     @Override
-    public Icon getIcon(int flags) {
+    public Image getIcon(int flags) {
       return myIcon;
     }
 
@@ -74,7 +74,7 @@ public class LookupValueFactory {
 
     private final String myHint;
 
-    protected LookupValueWithIconAndHint(final String name, final Icon icon, String hint) {
+    protected LookupValueWithIconAndHint(final String name, final Image icon, String hint) {
       super(name, icon);
       myHint = hint;
     }

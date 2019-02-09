@@ -22,6 +22,8 @@ import com.intellij.ui.SimpleColoredRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -102,7 +104,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
         return ((CustomPresentation)value).getIcon(index, 0);
       }
       if (value instanceof Iconable) {
-        return ((Iconable)value).getIcon(0);
+        return TargetAWT.to(((Iconable)value).getIcon(0));
       }
 
       return null;

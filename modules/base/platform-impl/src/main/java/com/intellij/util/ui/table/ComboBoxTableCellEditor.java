@@ -16,12 +16,10 @@
 package com.intellij.util.ui.table;
 
 import com.intellij.openapi.util.Iconable;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.EnumComboBoxModel;
-import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.PopupMenuListenerAdapter;
+import com.intellij.ui.*;
 import com.intellij.util.ListWithSelection;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import java.awt.*;
@@ -56,9 +54,9 @@ public class ComboBoxTableCellEditor extends DefaultCellEditor {
     });
 
     //noinspection unchecked
-    comboBox.setRenderer(new ListCellRendererWrapper() {
+    comboBox.setRenderer(new ColoredListCellRenderer() {
       @Override
-      public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         setIcon(value instanceof Iconable ? ((Iconable)value).getIcon(Iconable.ICON_FLAG_VISIBILITY) : null);
       }
     });

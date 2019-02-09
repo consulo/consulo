@@ -34,8 +34,9 @@ import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -121,7 +122,7 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   }
 
   @Override
-  public Icon getIcon(int flags) {
+  public Image getIcon(int flags) {
     return AllIcons.General.Settings;
   }
 }

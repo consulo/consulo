@@ -22,9 +22,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -75,7 +75,7 @@ public final class EmptyIntentionAction extends AbstractEmptyIntentionAction imp
   }
 
   @Override
-  public Icon getIcon(@IconFlags int flags) {
+  public Image getIcon(@IconFlags int flags) {
     return AllIcons.Actions.RealIntentionBulb;
   }
 }

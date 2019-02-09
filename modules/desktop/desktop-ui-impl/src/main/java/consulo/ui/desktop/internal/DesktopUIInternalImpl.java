@@ -88,6 +88,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public Image _ImageEffects_resize(Image original, int width, int height) {
+    return new DesktopResizeImageImpl(TargetAWT.to(original), width, height);
+  }
+
+  @Override
   public MenuItem _MenuItem_create(String text) {
     return new DesktopMenuItemImpl(text);
   }
