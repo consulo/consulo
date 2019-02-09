@@ -60,9 +60,9 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,7 +97,7 @@ public abstract class FormatterTestCase extends LightPlatformTestCase {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void setUp() throws Exception {
     super.setUp();

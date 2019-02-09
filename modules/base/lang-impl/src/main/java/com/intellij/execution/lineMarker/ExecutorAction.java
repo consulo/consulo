@@ -30,7 +30,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -62,7 +62,7 @@ public class ExecutorAction extends AnAction {
     copyFrom(origin);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     String name = getActionName(e.getDataContext(), myExecutor);
@@ -70,7 +70,7 @@ public class ExecutorAction extends AnAction {
     e.getPresentation().setText(name);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     myOrigin.actionPerformed(e);

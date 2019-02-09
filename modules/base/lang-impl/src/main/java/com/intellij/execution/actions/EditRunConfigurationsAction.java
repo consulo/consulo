@@ -22,14 +22,14 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class EditRunConfigurationsAction extends AnAction {
   public EditRunConfigurationsAction() {
     getTemplatePresentation().setIcon(AllIcons.Actions.EditSource);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
@@ -44,7 +44,7 @@ public class EditRunConfigurationsAction extends AnAction {
     dialog.show();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent e) {
     Presentation presentation = e.getPresentation();

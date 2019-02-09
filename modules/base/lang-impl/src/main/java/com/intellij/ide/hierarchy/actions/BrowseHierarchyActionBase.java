@@ -36,7 +36,7 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 
 import java.awt.*;
@@ -53,7 +53,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
     myExtension = extension;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
@@ -103,7 +103,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
     return hierarchyBrowser;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent e) {
     if (!myExtension.hasAnyExtensions()) {

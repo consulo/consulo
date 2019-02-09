@@ -29,7 +29,7 @@ import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nullable;
@@ -65,7 +65,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return languageByID == null ? myExtensionPoint.getKey() : languageByID.getDisplayName();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -99,7 +99,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return splitter;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     int size = myCheckBoxList.getItemsCount();
@@ -113,7 +113,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     int size = myCheckBoxList.getItemsCount();
@@ -129,7 +129,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     int size = myCheckBoxList.getItemsCount();
@@ -141,7 +141,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if(myPostfixDescriptionPanel != null) {

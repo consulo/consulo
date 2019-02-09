@@ -41,7 +41,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.ui.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.options.PathMacrosService;
@@ -141,13 +141,13 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     throw new UnsupportedOperationException();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull Runnable action) {
     throw new UnsupportedOperationException();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T> T runWriteAction(@Nonnull Computable<T> computation) {
     throw new UnsupportedOperationException();
@@ -171,7 +171,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread() {
 
@@ -192,7 +192,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void saveAll() {
 
@@ -296,7 +296,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     return 0;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public long getIdleTime() {
     return 0;
@@ -351,14 +351,14 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     throw new UnsupportedOperationException();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     throw new UnsupportedOperationException();

@@ -19,7 +19,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.messages.Topic;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.JDOMException;
 import javax.annotation.Nonnull;
@@ -104,7 +103,7 @@ public abstract class ProjectManager {
    * @throws InvalidDataException if the project file contained invalid data
    */
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract Project loadAndOpenProject(@Nonnull String filePath) throws IOException, JDOMException, InvalidDataException;
 
   /**
@@ -113,7 +112,7 @@ public abstract class ProjectManager {
    * @param project the project to close.
    * @return true if the project was closed successfully, false if the closing was disallowed by the close listeners.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract boolean closeProject(@Nonnull Project project);
 
   @RequiredUIAccess

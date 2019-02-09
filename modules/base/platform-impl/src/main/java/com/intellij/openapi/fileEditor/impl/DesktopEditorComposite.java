@@ -47,7 +47,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorComposite;
 
 import javax.annotation.Nonnull;
@@ -490,7 +490,7 @@ public abstract class DesktopEditorComposite implements EditorComposite {
     myFocusWatcher.deinstall(myFocusWatcher.getTopComponent());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void addEditor(@Nonnull FileEditor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myEditors = ArrayUtil.append(myEditors, editor);

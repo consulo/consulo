@@ -22,7 +22,7 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * Represents some data that probably can be compared with some other.
@@ -42,7 +42,7 @@ public interface DiffContent extends UserDataHolder {
   /**
    * @see DiffRequest#onAssigned(boolean)
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void onAssigned(boolean isAssigned);
 
   @Nullable

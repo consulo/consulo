@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * The validator for input dialogs.
@@ -33,7 +33,7 @@ public interface InputValidator {
    * @param inputString the input to check
    * @return true if input string is valid
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   boolean checkInput(String inputString);
 
   /**
@@ -43,6 +43,6 @@ public interface InputValidator {
    * @param inputString the input to check
    * @return true if the dialog could be closed, false otherwhise.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   boolean canClose(String inputString);
 }

@@ -37,7 +37,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.actionSystem.ex.ComboBoxButton;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
@@ -54,7 +54,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   public static final Icon CHECKED_SELECTED_ICON = new SizedIcon(AllIcons.Actions.Checked_selected, 16, 16);
   public static final Icon EMPTY_ICON = EmptyIcon.ICON_16;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
@@ -189,7 +189,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       presentation.setIcon(AllIcons.Actions.Menu_saveall);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       final Project project = e.getData(CommonDataKeys.PROJECT);
@@ -202,7 +202,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
@@ -256,7 +256,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       presentation.setSelectedIcon(selected ? CHECKED_SELECTED_ICON : EMPTY_ICON);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       ExecutionTargetManager.setActiveTarget(myProject, myTarget);
@@ -288,14 +288,14 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       setConfigurationIcon(presentation, myConfiguration, myProject);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       RunManager.getInstance(myProject).setSelectedConfiguration(myConfiguration);
       updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), myConfiguration, myProject, e.getPresentation());
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       super.update(e);

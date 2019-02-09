@@ -51,7 +51,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.StringInterner;
 import com.intellij.util.graph.*;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -514,7 +514,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void fireModuleAddedInWriteAction(final Module module) {
     ApplicationManager.getApplication().runWriteAction(() -> {
       ((ModuleEx)module).moduleAdded();

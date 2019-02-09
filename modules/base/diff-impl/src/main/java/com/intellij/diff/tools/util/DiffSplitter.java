@@ -28,7 +28,7 @@ import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,7 +96,7 @@ public class DiffSplitter extends Splitter {
     setOrientation(false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setPainter(@Nullable Painter painter) {
     myPainter = painter;
   }

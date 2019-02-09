@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
   private final String myErrorTitle;
@@ -121,13 +121,13 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void onCancel() {
     commonFinish();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void onSuccess() {
     commonFinish();

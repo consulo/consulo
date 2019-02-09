@@ -24,5 +24,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
+@Deprecated
+@DeprecationInfo("Use consulo.ui.RequiredUIAccess")
 public @interface RequiredDispatchThread {
 }

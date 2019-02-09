@@ -19,7 +19,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import java.awt.event.*;
@@ -29,7 +30,7 @@ import java.util.concurrent.Future;
  * @author Konstantin Bulenkov
  */
 public class ShowSplashAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DesktopSplash splash = new DesktopSplash(true);

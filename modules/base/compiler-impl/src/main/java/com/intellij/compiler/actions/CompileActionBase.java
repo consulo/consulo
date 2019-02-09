@@ -24,10 +24,10 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class CompileActionBase extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
@@ -43,10 +43,10 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
     doAction(dataContext, project);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract void doAction(final DataContext dataContext, final Project project);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent e) {
     super.update(e);

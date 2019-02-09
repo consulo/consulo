@@ -30,7 +30,7 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
@@ -52,7 +52,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     myCheckBoxIndent = calculateCheckBoxIndent();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     super.update(e);
@@ -61,7 +61,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     e.getPresentation().setIcon((inspectionProfile != null && inspectionProfile.isProfileLocked()) ? ImageEffects.layered(icon, AllIcons.Nodes.Locked) : icon);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     final ListPopupImpl actionGroupPopup =

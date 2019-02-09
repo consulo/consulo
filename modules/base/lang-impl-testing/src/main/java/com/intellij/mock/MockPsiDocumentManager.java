@@ -12,7 +12,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.Collection;
@@ -48,7 +48,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
     return FileDocumentManager.getInstance().getCachedDocument(vFile);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void commitAllDocuments() {
   }
@@ -79,7 +79,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @Nonnull
   public Document[] getUncommittedDocuments() {
@@ -132,7 +132,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
             "Method doPostponedOperationsAndUnblockDocument is not yet implemented in " + getClass().getName());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean performWhenAllCommitted(@Nonnull Runnable action) {
     throw new UnsupportedOperationException();

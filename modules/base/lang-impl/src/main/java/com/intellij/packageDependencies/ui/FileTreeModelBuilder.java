@@ -43,7 +43,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -164,7 +164,7 @@ public class FileTreeModelBuilder {
             buildingRunnable.run();
           }
 
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void onSuccess() {
             if (project.isDisposed()) return;

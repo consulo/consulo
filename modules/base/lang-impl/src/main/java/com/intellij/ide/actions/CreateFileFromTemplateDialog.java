@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -56,7 +56,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     init();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   protected ValidationInfo doValidate() {
@@ -113,7 +113,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     super.doOKAction();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return getNameField();

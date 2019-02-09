@@ -27,7 +27,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.packageDependencies.DependencyUISettings;
 import consulo.psi.PsiPackageSupportProviders;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public final class FlattenPackagesAction extends ToggleAction {
   private final Runnable myUpdate;
@@ -39,7 +39,7 @@ public final class FlattenPackagesAction extends ToggleAction {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     super.update(e);
     Project project = e.getProject();

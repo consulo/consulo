@@ -29,7 +29,7 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -127,7 +127,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
 
     private static GutterIconNavigationHandler<PsiElement> getCommonNavigationHandler(@Nonnull final List<MergeableLineMarkerInfo> markers) {
       return new GutterIconNavigationHandler<PsiElement>() {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void navigate(final MouseEvent e, PsiElement elt) {
           final List<LineMarkerInfo> infos = new ArrayList<LineMarkerInfo>(markers);

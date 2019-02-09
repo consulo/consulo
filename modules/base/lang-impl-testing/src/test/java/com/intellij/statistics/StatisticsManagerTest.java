@@ -8,8 +8,8 @@ import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.psi.statistics.impl.StatisticsManagerImpl;
 import com.intellij.testFramework.LightPlatformTestCase;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author peter
@@ -17,7 +17,7 @@ import consulo.annotations.RequiredDispatchThread;
 public abstract class StatisticsManagerTest extends LightPlatformTestCase {
   @NonNls private static final String TEST_CONTEXT = "testContext";
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void setUp() throws Exception {
     super.setUp();

@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashMap;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -44,7 +44,7 @@ import static com.intellij.diff.util.DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_T
 
 public class VcsDiffUtil {
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void showDiffFor(@Nonnull Project project,
                                  @Nonnull final Collection<Change> changes,
                                  @Nonnull final String revNumTitle1,
@@ -85,7 +85,7 @@ public class VcsDiffUtil {
            (localMark ? " (" + VcsBundle.message("diff.title.local") + ")" : "");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void showChangesDialog(@Nonnull Project project, @Nonnull String title, @Nonnull List<Change> changes) {
     DialogBuilder dialogBuilder = new DialogBuilder(project);
 

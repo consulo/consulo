@@ -17,11 +17,12 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 public class ShowHideRecycledAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
@@ -37,7 +38,7 @@ public class ShowHideRecycledAction extends AnAction {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {

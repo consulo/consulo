@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -88,7 +88,7 @@ public interface Application extends ComponentManager {
    *
    * @param action the action to run
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void runWriteAction(@Nonnull Runnable action);
 
   /**
@@ -99,7 +99,7 @@ public interface Application extends ComponentManager {
    * @param computation the computation to run
    * @return the result returned by the computation.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   <T> T runWriteAction(@Nonnull Computable<T> computation);
 
   /**
@@ -111,7 +111,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @throws E re-frown from ThrowableComputable
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
 
   /**
@@ -138,7 +138,7 @@ public interface Application extends ComponentManager {
   /**
    * Asserts whether the method is being called from the event dispatch thread.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void assertIsDispatchThread();
 
   /**
@@ -166,7 +166,7 @@ public interface Application extends ComponentManager {
   /**
    * Saves all open documents and projects.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void saveAll();
 
   /**
@@ -332,7 +332,7 @@ public interface Application extends ComponentManager {
    *
    * @return the idle time of IDE.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   long getIdleTime();
 
   /**
@@ -444,7 +444,7 @@ public interface Application extends ComponentManager {
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use runWriteAction(Runnable)")
-  @RequiredDispatchThread
+  @RequiredUIAccess
   AccessToken acquireWriteActionLock(@Nonnull Class marker);
 
   @Deprecated

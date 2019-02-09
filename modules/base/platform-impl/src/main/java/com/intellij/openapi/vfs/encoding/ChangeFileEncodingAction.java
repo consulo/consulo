@@ -34,7 +34,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,7 +55,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     this.allowDirectories = allowDirectories;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private boolean checkEnabled(@Nonnull VirtualFile virtualFile) {
     if (allowDirectories && virtualFile.isDirectory()) return true;
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
@@ -65,7 +65,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     return EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile).second == null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     VirtualFile myFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -74,7 +74,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     e.getPresentation().setVisible(myFile != null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void actionPerformed(final AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
@@ -86,7 +86,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public ListPopup createPopup(@Nonnull DataContext dataContext) {
     final VirtualFile virtualFile = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) return null;
@@ -118,7 +118,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     final String text = document == null ? null : document.getText();
 
     return new ChooseFileEncodingAction(myFile) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(@Nonnull final AnActionEvent e) {
       }
@@ -199,14 +199,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
       else if (dialog.getExitCode() == IncompatibleEncodingDialog.CONVERT_EXIT_CODE) {
         undo = new Runnable() {
           @Override
-          @RequiredDispatchThread
+          @RequiredUIAccess
           public void run() {
             EncodingUtil.saveIn(document, editor, virtualFile, oldCharset);
           }
         };
         redo = new Runnable() {
           @Override
-          @RequiredDispatchThread
+          @RequiredUIAccess
           public void run() {
             EncodingUtil.saveIn(document, editor, virtualFile, charset);
           }

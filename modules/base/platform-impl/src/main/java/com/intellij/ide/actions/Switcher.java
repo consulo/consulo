@@ -61,7 +61,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
@@ -143,14 +143,14 @@ public class Switcher extends AnAction implements DumbAware {
   @NonNls private static final String SWITCHER_TITLE = "Switcher";
   @NonNls private static InputEvent INIT_EVENT;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(e.getProject() != null);
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();
     if (project == null) return;
@@ -628,7 +628,7 @@ public class Switcher extends AnAction implements DumbAware {
 
       if (isPinnedMode()) {
         new AnAction(null, null, null) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             if (mySpeedSearch != null && mySpeedSearch.isPopupActive()) {
@@ -641,7 +641,7 @@ public class Switcher extends AnAction implements DumbAware {
         }.registerCustomShortcutSet(CustomShortcutSet.fromString("ESCAPE"), this, myPopup);
       }
       new AnAction(null, null, null) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           //suppress all actions to activate a toolwindow : IDEA-71277

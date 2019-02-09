@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,7 +65,7 @@ public abstract class VcsBackgroundTask<T> extends Task.ConditionalModal {
     return myExceptions.isEmpty();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void onSuccess() {
     if (!myExceptions.isEmpty()) {
       AbstractVcsHelper.getInstance(myProject).showErrors(myExceptions, myTitle);

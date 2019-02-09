@@ -43,8 +43,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import consulo.annotations.Exported;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -72,7 +73,7 @@ public class ConfigurationContext {
   private List<ConfigurationFromContext> myConfigurationsFromContext;
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static ConfigurationContext getFromContext(DataContext dataContext) {
     final ConfigurationContext context = new ConfigurationContext(dataContext);
     final DataManager dataManager = DataManager.getInstance();
@@ -87,7 +88,7 @@ public class ConfigurationContext {
     return sharedContext;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private ConfigurationContext(final DataContext dataContext) {
     myRuntimeConfiguration = dataContext.getData(RunConfiguration.DATA_KEY);
     myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
@@ -232,7 +233,7 @@ public class ConfigurationContext {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static PsiElement getSelectedPsiElement(final DataContext dataContext, final Project project) {
     PsiElement element = null;
     final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);

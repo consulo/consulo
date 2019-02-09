@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class ThreesideContentPanel extends JPanel {
     add(mySplitter, BorderLayout.CENTER);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setPainter(@javax.annotation.Nullable DiffSplitter.Painter painter, @Nonnull Side side) {
     mySplitter.setPainter(painter, side);
   }

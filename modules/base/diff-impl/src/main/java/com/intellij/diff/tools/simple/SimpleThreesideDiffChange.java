@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.List;
 
@@ -52,13 +52,13 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
     reinstallHighlighters();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void destroy() {
     destroyHighlighters();
     destroyInnerHighlighters();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void reinstallHighlighters() {
     destroyHighlighters();
     installHighlighters();

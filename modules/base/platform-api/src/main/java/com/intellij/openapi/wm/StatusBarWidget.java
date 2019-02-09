@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -76,7 +76,7 @@ public interface StatusBarWidget extends Disposable {
     ListPopup getPopupStep();
 
     @Nullable
-    @RequiredDispatchThread
+    @RequiredUIAccess
     String getSelectedValue();
 
     @Nonnull

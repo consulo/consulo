@@ -61,7 +61,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
@@ -1247,13 +1247,13 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       return 0;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public JComponent createComponent() {
       return createPanel().getPanel();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean isModified() {
       createPanel();
@@ -1279,13 +1279,13 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void apply() throws ConfigurationException {
       ColorAndFontOptions.this.apply();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void reset() {
       if (!mySubInitInvoked) {
@@ -1299,7 +1299,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void disposeUIResources() {
       if (mySubPanel != null) {

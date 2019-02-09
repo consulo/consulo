@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * User : ktisha
@@ -26,7 +26,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
   }
   private static class Handler implements CodeInsightActionHandler {
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
 

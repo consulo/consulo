@@ -28,7 +28,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class ImplementMethodsAction extends BaseCodeInsightAction {
   @Nonnull
@@ -44,7 +44,7 @@ public class ImplementMethodsAction extends BaseCodeInsightAction {
     return codeInsightActionHandler != null && codeInsightActionHandler.isValidFor(editor, file);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
     if (CodeInsightActions.IMPLEMENT_METHOD.hasAnyExtensions()) {

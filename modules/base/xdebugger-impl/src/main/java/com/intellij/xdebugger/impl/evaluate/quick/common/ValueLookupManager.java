@@ -33,7 +33,7 @@ import com.intellij.util.Alarm;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -68,7 +68,7 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void mouseDragged(EditorMouseEvent e) {
   }
@@ -78,7 +78,7 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
     myAlarm.cancelAllRequests();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void mouseMoved(EditorMouseEvent e) {
     if (e.isConsumed()) {

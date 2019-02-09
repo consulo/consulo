@@ -45,7 +45,7 @@ import com.intellij.ui.roots.ToolbarPanel;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -398,7 +398,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
       myDescriptor.putUserData(FileChooserKeys.DELETE_ACTION_AVAILABLE, false);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       FileChooser.chooseFilesAsync(myDescriptor, myProject, myLastSelectedDir).doWhenDone(virtualFiles -> {

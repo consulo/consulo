@@ -51,7 +51,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;
@@ -152,7 +152,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     });
     myTree.setCellRenderer(new ColoredTreeCellRenderer() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row,
                                         boolean hasFocus) {
@@ -420,7 +420,7 @@ class RunConfigurable extends BaseConfigurable {
     myRunDialog = runDialog;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void updateRightPanel(final Configurable configurable) {
     myRightPanel.removeAll();
     mySelectedConfigurable = configurable;
@@ -601,7 +601,7 @@ class RunConfigurable extends BaseConfigurable {
     return configurationTypeNode != null ? (ConfigurationType)configurationTypeNode.getUserObject() : null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     for (RunConfigurationsSettings each : Extensions.getExtensions(RunConfigurationsSettings.EXTENSION_POINT)) {
@@ -643,7 +643,7 @@ class RunConfigurable extends BaseConfigurable {
     return mySplitter;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     final RunManagerEx manager = getRunManager();
@@ -662,7 +662,7 @@ class RunConfigurable extends BaseConfigurable {
     return mySelectedConfigurable;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     updateActiveConfigurationFromSelected();
@@ -896,7 +896,7 @@ class RunConfigurable extends BaseConfigurable {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     isDisposed = true;
@@ -1132,7 +1132,7 @@ class RunConfigurable extends BaseConfigurable {
       registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       showAddPopup(true);
@@ -1279,7 +1279,7 @@ class RunConfigurable extends BaseConfigurable {
       registerCustomShortcutSet(CommonShortcuts.getDelete(), myTree);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       doRemove();
@@ -1385,7 +1385,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       boolean enabled = isEnabled(e);
@@ -1420,7 +1420,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
@@ -1444,7 +1444,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
@@ -1458,7 +1458,7 @@ class RunConfigurable extends BaseConfigurable {
       super(ExecutionBundle.message("action.name.save.configuration"), null, AllIcons.Actions.Menu_saveall);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable = getSelectedConfiguration();
@@ -1477,7 +1477,7 @@ class RunConfigurable extends BaseConfigurable {
       myTree.repaint();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       final SingleConfigurationConfigurable<RunConfiguration> configuration = getSelectedConfiguration();
@@ -1535,7 +1535,7 @@ class RunConfigurable extends BaseConfigurable {
       myDirection = direction;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       doMove();
@@ -1553,7 +1553,7 @@ class RunConfigurable extends BaseConfigurable {
       doMove();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       e.getPresentation().setEnabled(isEnabled(e));
@@ -1571,7 +1571,7 @@ class RunConfigurable extends BaseConfigurable {
             ExecutionBundle.message("run.configuration.edit.default.configuration.settings.description"), AllIcons.General.Settings);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       TreeNode defaults = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot);
@@ -1591,7 +1591,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       boolean isEnabled = TreeUtil.findNodeWithObject(DEFAULTS, myTree.getModel(), myRoot) != null;
@@ -1616,7 +1616,7 @@ class RunConfigurable extends BaseConfigurable {
             ExecutionBundle.message("run.configuration.create.folder.description"), AllIcons.Nodes.Folder);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       final ConfigurationType type = getSelectedConfigurationType();
@@ -1649,7 +1649,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       boolean isEnabled = false;

@@ -33,7 +33,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -50,7 +50,7 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
     super(title, description, icon);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();

@@ -54,7 +54,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -81,7 +81,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     myView = view;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final ListPopup popup = JBPopupFactory.getInstance().createListPopup(

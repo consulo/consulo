@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -105,7 +105,7 @@ public interface ActionToolbar {
   /**
    * Forces update of the all actions in the toolbars. Actions, however, normally updated automatially every 500msec.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void updateActionsImmediately();
 
   boolean hasVisibleActions();

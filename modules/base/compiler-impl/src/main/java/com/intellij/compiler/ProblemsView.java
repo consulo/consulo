@@ -24,7 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ArrayUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,7 +71,7 @@ public abstract class ProblemsView {
     addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showOrHide(boolean hide);
 
   public abstract boolean isHideWarnings();

@@ -25,7 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
@@ -42,7 +43,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
 
   public void setScope(@Nonnull final DependencyScope scope, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
@@ -57,7 +58,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
 
   public void setExported(final boolean exported, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
@@ -121,7 +122,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     }
     for (final ExportableOrderEntry dependency : toRemove) {
       ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void execute() {
           ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);

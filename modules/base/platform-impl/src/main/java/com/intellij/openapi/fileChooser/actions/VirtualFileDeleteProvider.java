@@ -31,7 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -83,13 +83,13 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
           }
         }
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void onSuccess() {
           reportProblems();
         }
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void onCancel() {
           reportProblems();

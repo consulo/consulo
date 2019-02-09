@@ -37,7 +37,7 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.TestOnly;
 
@@ -110,7 +110,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     beforeChange(false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void dropPsiCaches() {
     dropResolveCaches();

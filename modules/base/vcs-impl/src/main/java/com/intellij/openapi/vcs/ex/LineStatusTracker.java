@@ -31,7 +31,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -92,17 +93,17 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public Mode getMode() {
     return myMode;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean isSilentMode() {
     return myMode == Mode.SILENT;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setMode(@Nonnull Mode mode) {
     if (myMode == mode) return;
     myMode = mode;
@@ -111,13 +112,13 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean isDetectWhitespaceChangedLines() {
     return myMode == Mode.SMART;
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void installNotification(@Nonnull String text) {
     final FileEditor[] editors = myFileEditorManager.getAllEditors(myVirtualFile);
     for (FileEditor editor : editors) {
@@ -131,7 +132,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void destroyNotification() {
     final FileEditor[] editors = myFileEditorManager.getEditors(myVirtualFile);
     for (FileEditor editor : editors) {
@@ -144,7 +145,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void createHighlighter(@Nonnull Range range) {
     myApplication.assertIsDispatchThread();
 
@@ -173,7 +174,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void fireFileUnchanged() {
     // later to avoid saving inside document change event processing.
     TransactionGuard.getInstance().submitTransactionLater(getProject(), () -> {

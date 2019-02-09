@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.options;
 
-import consulo.annotations.RequiredDispatchThread;
-import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Component;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public interface UnnamedConfigurable {
    * @return the component instance.
    */
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   default JComponent createComponent() {
     return null;
   }
@@ -52,25 +52,25 @@ public interface UnnamedConfigurable {
    *
    * @return true if the settings were modified, false otherwise.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   boolean isModified();
 
   /**
    * Store the settings from configurable to other components.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void apply() throws ConfigurationException;
 
   /**
    * Load settings from other components to configurable.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void reset();
 
   /**
    * Disposes the Swing components used for displaying the configuration.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   default void disposeUIResources() {
   }
 }

@@ -32,7 +32,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     myRequestFocus = requestFocus;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     invoke(project, editor, file, -1, null, myRequestFocus);
@@ -63,7 +63,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static PsiElement findAnyElementAt(@Nonnull PsiFile file, int offset) {
     PsiElement element = file.findElementAt(offset);
     if (element == null && offset > 0) element = file.findElementAt(offset - 1);
@@ -73,17 +73,17 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   /**
    * @deprecated use {@link #invoke(Project, Editor, PsiFile, int, Object, boolean)} instead
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement) {
     invoke(project, editor, file, lbraceOffset, highlightedElement, false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement, boolean requestFocus) {
     invoke(project, editor, file, lbraceOffset, highlightedElement, requestFocus, false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement, boolean requestFocus, boolean singleParameterHint) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiDocumentManager.getInstance(project).commitAllDocuments();

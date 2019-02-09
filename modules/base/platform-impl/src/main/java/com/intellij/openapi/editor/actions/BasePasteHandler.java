@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.Producer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 
 import java.awt.datatransfer.Transferable;
@@ -37,7 +37,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
     return !editor.isViewer();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     // We capture the contents to paste here, so it that it won't be affected by possible clipboard operations later (e.g. during unlocking

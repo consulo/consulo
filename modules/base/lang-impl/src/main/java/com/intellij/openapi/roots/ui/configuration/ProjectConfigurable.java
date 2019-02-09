@@ -43,7 +43,7 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
 import com.intellij.ui.ScrollPaneFactory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.compiler.CompilerConfiguration;
 import consulo.roots.ui.configuration.WholeWestConfigurable;
 import consulo.ui.image.Image;
@@ -151,12 +151,12 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     myPanel.add(ScrollPaneFactory.createScrollPane(myErrorsComponent, true));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     myFreeze = true;
@@ -178,7 +178,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   }
 
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     final CompilerConfiguration compilerProjectExtension = CompilerConfiguration.getInstance(myProject);
@@ -247,7 +247,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     return "reference.settingsdialog.project.structure.general";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @SuppressWarnings({"SimplifiableIfStatement"})
   public boolean isModified() {

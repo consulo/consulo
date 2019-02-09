@@ -33,7 +33,7 @@ import com.intellij.util.containers.Convertor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     mySeparator = separator;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
@@ -76,7 +76,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
     final Project project = event.getData(CommonDataKeys.PROJECT);

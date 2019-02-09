@@ -15,7 +15,7 @@
  */
 package com.intellij.diff;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class DiffContextEx extends DiffContext {
   /*
@@ -24,7 +24,7 @@ public abstract class DiffContextEx extends DiffContext {
    * perform the same procedure as on switching between DiffRequests or between DiffViewers.
    * this can be used, if some change in request or settings was made, and we need to reopen DiffViewer to apply them.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void reopenDiffRequest();
 
   /*
@@ -33,12 +33,12 @@ public abstract class DiffContextEx extends DiffContext {
    * perform the same procedure as on opening DiffRequests for the first time.
    * this can be used, if some change in request or settings was made, and we need to reload DiffRequest to apply them.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void reloadDiffRequest();
 
   /*
    * Show indeterminate progress near status panel.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showProgressBar(boolean enabled);
 }

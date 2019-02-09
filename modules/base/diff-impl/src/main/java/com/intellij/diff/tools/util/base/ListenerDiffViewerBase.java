@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,16 +108,16 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
   // Abstract
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDocumentChange(@Nonnull DocumentEvent event) {
     scheduleRediff();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onBeforeDocumentChange(@Nonnull DocumentEvent event) {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onFileChange(@Nonnull VirtualFileEvent event) {
     scheduleRediff();
   }

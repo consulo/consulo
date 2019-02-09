@@ -49,7 +49,7 @@ import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
@@ -174,7 +174,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     builder.bind(TransactionGuard.class).to(transactionGuard());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private boolean disposeSelf(final boolean checkCanCloseProject) {
     final ProjectManagerImpl manager = (ProjectManagerImpl)ProjectManagerEx.getInstanceEx();
     if (manager != null) {
@@ -241,13 +241,13 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myInvokator.invokeLater(transactionGuard().wrapLaterInvocation(runnable, state), state, expired);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
                                                      @Nonnull final String progressTitle,
@@ -257,7 +257,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, parentComponent, null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
                                                      @Nonnull final String progressTitle,
@@ -368,7 +368,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     return ModalityState.NON_MODAL;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public long getIdleTime() {
     assertIsDispatchThread();
@@ -419,7 +419,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
       Runnable runnable = new Runnable() {
         @Override
-        @RequiredDispatchThread
+        @RequiredUIAccess
         public void run() {
           if (!force && !confirmExitIfNeeded(exitConfirmed)) {
             saveAll();
@@ -445,7 +445,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private boolean doExit(boolean allowListenersToCancel, boolean restart) {
     saveSettings();
 
@@ -589,7 +589,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     return myLock.isReadLockedByThisThread() || myWriteActionThread == Thread.currentThread();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread() {
     if (isDispatchThread()) return;
@@ -619,7 +619,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                          describe(getEventQueueThread()), dump);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread(@Nullable final JComponent component) {
     if (component == null) return;

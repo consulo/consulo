@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
@@ -65,19 +65,19 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     return (WebStartupProgressImpl)mySplashRef.get();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T> T runWriteAction(@Nonnull Computable<T> computation) {
     return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull Runnable action) {
     AccessRule.writeAsync(action::run).getResultSync(-1);
@@ -97,7 +97,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread() {
     if (!isDispatchThread()) {
@@ -159,7 +159,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     return ModalityState.NON_MODAL;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public long getIdleTime() {
     return 0;
@@ -200,19 +200,19 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable Project project, JComponent parentComponent) {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                                      @Nonnull String progressTitle,
@@ -241,7 +241,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void assertIsDispatchThread(@Nullable JComponent component) {
 

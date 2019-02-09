@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -79,12 +79,12 @@ public abstract class ActionGroup extends AnAction {
   /**
    * This method can be called in popup menus if {@link #canBePerformed(DataContext)} is true
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e){
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);

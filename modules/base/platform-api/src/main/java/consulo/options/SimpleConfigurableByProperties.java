@@ -18,9 +18,8 @@ package consulo.options;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NotNullComputable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 import javax.annotation.Nonnull;
 
@@ -128,7 +127,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void disposeUIResources(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) {
     super.disposeUIResources(component);

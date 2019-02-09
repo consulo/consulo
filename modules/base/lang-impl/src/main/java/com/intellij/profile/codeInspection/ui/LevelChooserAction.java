@@ -28,7 +28,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.table.SeverityRenderer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.SortedSet;
@@ -63,7 +63,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     }
     group.addSeparator();
     group.add(new DumbAwareAction("Edit severities...") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull final AnActionEvent e) {
         final SeverityEditorDialog dlg = new SeverityEditorDialog(context.getData(CommonDataKeys.PROJECT), myChosen, mySeverityRegistrar);

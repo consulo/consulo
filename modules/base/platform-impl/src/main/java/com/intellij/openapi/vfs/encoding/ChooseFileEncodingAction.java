@@ -30,7 +30,7 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,7 +49,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
     myVirtualFile = virtualFile;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public abstract void update(@Nonnull final AnActionEvent e);
 

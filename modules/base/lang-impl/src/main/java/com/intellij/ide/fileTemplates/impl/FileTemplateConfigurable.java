@@ -61,7 +61,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -158,7 +158,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myMainPanel = new JPanel(new GridBagLayout());
@@ -278,7 +278,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     myChangeListeners.remove(listener);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     if (myModified) {
@@ -300,7 +300,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (myTemplate != null) {
@@ -332,7 +332,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     return FileUtil.ensureCanCreateFile(tempFile);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     final String text = (myTemplate == null) ? "" : myTemplate.getText();
@@ -388,7 +388,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     return file;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myMainPanel = null;

@@ -19,7 +19,7 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +37,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
     myDataContext = DataManager.getInstance().getDataContext(parent);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     RunContentDescriptor descriptor = myDataContext.getData(LangDataKeys.RUN_CONTENT_DESCRIPTOR);

@@ -21,14 +21,14 @@ import com.intellij.ide.hierarchy.LanguageCallHierarchy;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public final class BrowseCallHierarchyAction extends BrowseHierarchyActionBase {
   public BrowseCallHierarchyAction() {
     super(LanguageCallHierarchy.INSTANCE);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void update(final AnActionEvent event){
     final Presentation presentation = event.getPresentation();

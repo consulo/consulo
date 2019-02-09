@@ -40,7 +40,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.WeakList;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
 
@@ -169,7 +169,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
             (DumbAwareRunnable)() -> EditorFactory.getInstance().getEventMulticaster().addEditorMouseMotionListener(myMouseMotionListener, myProject));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void releaseFoldings(@Nonnull Editor editor) {
     Application.get().assertIsDispatchThread();
@@ -187,7 +187,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     EditorFoldingInfo.get(editor).dispose();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void buildInitialFoldings(@Nonnull final Editor editor) {
     final Project project = editor.getProject();
@@ -328,7 +328,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     return file == null ? null : FoldingUpdate.updateFoldRegions(editor, file, applyDefaultState, quick);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public CodeFoldingState saveFoldingState(@Nonnull Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -339,7 +339,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     return info;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void restoreFoldingState(@Nonnull Editor editor, @Nonnull CodeFoldingState state) {
     ApplicationManager.getApplication().assertIsDispatchThread();

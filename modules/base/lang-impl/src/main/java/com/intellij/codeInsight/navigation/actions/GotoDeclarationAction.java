@@ -53,7 +53,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 
 import javax.annotation.Nullable;
@@ -81,7 +81,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -300,7 +300,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return Pair.empty();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
     InputEvent inputEvent = event.getInputEvent();

@@ -38,7 +38,8 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -126,13 +127,13 @@ public abstract class MergeRequestProcessor implements Disposable {
   // Update
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void init() {
     setTitle(myRequest.getTitle());
     initViewer();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void initViewer() {
     myContentPanel.setContent(myViewer.getComponent());
 
@@ -143,7 +144,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     myCloseHandler = toolbarComponents.closeHandler;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void destroyViewer() {
     Disposer.dispose(myViewer);
 
@@ -231,7 +232,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void applyRequestResult(@Nonnull MergeResult result) {
     if (myConflictResolved) return;
     myConflictResolved = true;
@@ -243,7 +244,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void reopenWithTool(@Nonnull MergeTool tool) {
     if (myConflictResolved) {
       LOG.warn("Can't reopen with " + tool + " - conflict already resolved");
@@ -279,7 +280,7 @@ public abstract class MergeRequestProcessor implements Disposable {
   // Abstract
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     applyRequestResult(MergeResult.CANCEL);
   }
@@ -325,7 +326,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     return myContext;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean checkCloseAction() {
     return myConflictResolved || myCloseHandler == null || myCloseHandler.get();
   }
@@ -493,7 +494,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void reopenWithTool(@Nonnull MergeTool tool) {
       MergeRequestProcessor.this.reopenWithTool(tool);
     }

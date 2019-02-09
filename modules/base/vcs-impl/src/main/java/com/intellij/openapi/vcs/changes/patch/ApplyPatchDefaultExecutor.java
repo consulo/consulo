@@ -30,7 +30,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -49,7 +50,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply(@Nonnull List<FilePatch> remaining, @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
                     @javax.annotation.Nullable LocalChangeList localList,

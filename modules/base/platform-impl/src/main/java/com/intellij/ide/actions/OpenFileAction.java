@@ -42,20 +42,20 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class OpenFileAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     @Nullable final Project project = e.getData(CommonDataKeys.PROJECT);
     final boolean showFiles = project != null;
 
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public boolean isFileSelectable(VirtualFile file) {
         if (super.isFileSelectable(file)) {
@@ -101,7 +101,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (WelcomeFrame.isFromWelcomeFrame(e)) {

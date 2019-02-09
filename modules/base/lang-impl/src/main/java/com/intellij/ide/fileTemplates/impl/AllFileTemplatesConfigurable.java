@@ -41,7 +41,7 @@ import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -178,7 +178,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myUIDisposable = Disposer.newDisposable();
@@ -250,13 +250,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     DefaultActionGroup group = new DefaultActionGroup();
     AnAction removeAction = new AnAction(IdeBundle.message("action.remove.template"), null, AllIcons.General.Remove) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         onRemove();
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(@Nonnull AnActionEvent e) {
         super.update(e);
@@ -265,13 +265,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       }
     };
     AnAction addAction = new AnAction(IdeBundle.message("action.create.template"), null, AllIcons.General.Add) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         onAdd();
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(@Nonnull AnActionEvent e) {
         super.update(e);
@@ -279,13 +279,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       }
     };
     AnAction cloneAction = new AnAction(IdeBundle.message("action.copy.template"), null, AllIcons.Actions.Copy) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         onClone();
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(@Nonnull AnActionEvent e) {
         super.update(e);
@@ -294,13 +294,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       }
     };
     AnAction resetAction = new AnAction(IdeBundle.message("action.reset.to.default"), null, AllIcons.Actions.Reset) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         onReset();
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(@Nonnull AnActionEvent e) {
         super.update(e);
@@ -404,7 +404,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private boolean applyEditor(FileTemplate prevTemplate) {
     if (myEditor.isModified()) {
       try {
@@ -490,7 +490,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myScheme != myManager.getCurrentScheme() || !myChangesCache.isEmpty() || isSchemeModified();
@@ -547,7 +547,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (myEditor != null && myEditor.isModified()) {
@@ -594,7 +594,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     myEditor.reset();
@@ -603,7 +603,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     myModified = false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myCurrentTab != null) {

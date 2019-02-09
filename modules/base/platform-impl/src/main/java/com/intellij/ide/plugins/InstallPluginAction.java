@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginDialog;
 import consulo.ide.updateSettings.impl.PlatformOrPluginNode;
@@ -56,7 +56,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
     myInstalledPluginPanel = installedPluginPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
@@ -88,13 +88,13 @@ public class InstallPluginAction extends AnAction implements DumbAware {
     presentation.setEnabled(enabled);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     install(e.getProject(), null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void install(@Nullable Project project, @Nullable final Runnable onSuccess) {
     IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
 

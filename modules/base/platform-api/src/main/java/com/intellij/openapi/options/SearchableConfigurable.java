@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.options;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +44,7 @@ public interface SearchableConfigurable extends Configurable {
     abstract class Abstract implements Parent {
       private Configurable[] myKids;
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public JComponent createComponent() {
         return null;
@@ -56,23 +56,23 @@ public interface SearchableConfigurable extends Configurable {
       }
 
       
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public boolean isModified() {
         return false;
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void apply() throws ConfigurationException {
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void reset() {
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void disposeUIResources() {
         myKids = null;

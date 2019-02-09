@@ -21,7 +21,7 @@ import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.AnAction;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +51,7 @@ public class TwosideContentPanel extends JPanel {
     mySplitter.setTopAction(value);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setPainter(@javax.annotation.Nullable DiffSplitter.Painter painter) {
     mySplitter.setPainter(painter);
   }

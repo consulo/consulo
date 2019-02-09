@@ -23,7 +23,7 @@ import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.awt.*;
 
@@ -36,7 +36,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
     super(project, parentDescriptor);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final boolean update() {
     if (shouldUpdateData()) {

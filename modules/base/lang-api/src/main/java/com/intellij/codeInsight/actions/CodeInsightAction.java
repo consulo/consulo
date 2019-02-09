@@ -27,13 +27,13 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class CodeInsightAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
@@ -44,12 +44,12 @@ public abstract class CodeInsightAction extends AnAction {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project) {
     return dataContext.getData(CommonDataKeys.EDITOR);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void actionPerformedImpl(@Nonnull final Project project, final Editor editor) {
     if (editor == null) return;
     //final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -76,7 +76,7 @@ public abstract class CodeInsightAction extends AnAction {
     }, getCommandName(), DocCommandGroupId.noneGroupId(editor.getDocument()));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();

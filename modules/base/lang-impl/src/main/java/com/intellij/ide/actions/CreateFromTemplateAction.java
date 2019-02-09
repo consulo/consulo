@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.module.extension.ModuleExtension;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -58,7 +58,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     super(text, description, icon);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull AnActionEvent e) {
     final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
@@ -95,7 +95,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void postProcess(T createdElement, String templateName, Map<String, String> customProperties) {
   }
 
@@ -120,7 +120,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (!e.getPresentation().isVisible()) {

@@ -17,7 +17,8 @@ package consulo.ide.newProject.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -25,7 +26,7 @@ import javax.annotation.Nonnull;
  * @since 14-Oct-17
  */
 public class NewProjectAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     //TODO [VISTALL] stub until we not merge with desktop implementation

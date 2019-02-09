@@ -21,7 +21,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;
 import com.intellij.util.text.SyncDateFormat;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
@@ -37,7 +37,7 @@ public class PackageFileAction extends AnAction {
     super(CompilerBundle.message("action.name.package.file"), CompilerBundle.message("action.description.package.file"), null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     boolean visible = false;
@@ -77,7 +77,7 @@ public class PackageFileAction extends AnAction {
     return result;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent event) {
     final Project project = event.getData(CommonDataKeys.PROJECT);

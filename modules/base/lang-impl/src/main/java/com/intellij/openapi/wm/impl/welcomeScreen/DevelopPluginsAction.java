@@ -19,9 +19,9 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author yole
@@ -30,7 +30,7 @@ public class DevelopPluginsAction extends AnAction implements DumbAware {
   @NonNls
   private static final String PLUGIN_WEBSITE = "https://github.com/consulo/consulo/wiki/Plugin-Development-Starter-Guide";
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     BrowserUtil.browse(PLUGIN_WEBSITE);

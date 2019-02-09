@@ -35,7 +35,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 
@@ -204,7 +204,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       myExecutor = executor;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
@@ -281,7 +281,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
       final Project project = e.getProject();

@@ -32,7 +32,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.extensions.CompositeExtensionPointName;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -129,7 +129,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void postProcess(PsiFile createdElement, String templateName, Map<String, String> customProperties) {
     super.postProcess(createdElement, templateName, customProperties);

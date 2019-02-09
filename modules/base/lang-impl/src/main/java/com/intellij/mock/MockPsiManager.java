@@ -28,7 +28,7 @@ import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.util.PsiModificationTracker;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -129,7 +129,7 @@ public class MockPsiManager extends PsiManagerEx {
     getFileManager().cleanupForNextTest();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void dropPsiCaches() {
     dropResolveCaches();

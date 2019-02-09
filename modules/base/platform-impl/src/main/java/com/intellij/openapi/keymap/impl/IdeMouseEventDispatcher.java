@@ -34,7 +34,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nullable;
@@ -142,7 +142,7 @@ public final class IdeMouseEventDispatcher {
    *         If the method returns <code>false</code> then it means that the event should be delivered
    *         to normal event dispatching.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean dispatchMouseEvent(MouseEvent e) {
     Component c = e.getComponent();
 

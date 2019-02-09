@@ -51,7 +51,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.editor.impl.DesktopEditorErrorPanel;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
@@ -254,7 +254,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void doClick(final MouseEvent e) {
     RangeHighlighter marker = getNearestRangeHighlighter(e);
     int offset;
@@ -319,7 +319,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     return myErrorPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void setErrorPanelPopupHandler(@Nonnull PopupHandler handler) {
     Application.get().assertIsDispatchThread();
@@ -346,7 +346,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     return myEditor;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
     assertIsDispatchThread();
@@ -360,7 +360,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     repaintVerticalScrollBar();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static void assertIsDispatchThread() {
     Application.get().assertIsDispatchThread();
   }
@@ -395,7 +395,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     return myEditor.isMirrored();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void fireErrorMarkerClicked(RangeHighlighter marker, MouseEvent e) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     ErrorStripeEvent event = new ErrorStripeEvent(getEditor(), e, marker);

@@ -15,7 +15,7 @@
  */
 package consulo.internal.actions;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @since 10.05.14
  */
 public class ShowStartupManagerAction extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     FirstStartCustomizeUtil.show(false);

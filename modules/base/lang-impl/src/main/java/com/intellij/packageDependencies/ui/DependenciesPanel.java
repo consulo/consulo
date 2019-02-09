@@ -66,7 +66,6 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -1048,7 +1047,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       return group;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull final AnActionEvent e) {
       super.update(e);

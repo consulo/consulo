@@ -31,7 +31,8 @@ import com.intellij.ui.content.MessageView;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -129,7 +130,7 @@ public class ProblemsViewImpl extends ProblemsView {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void showOrHide(final boolean hide) {
     ToolWindow toolWindow = MessageView.SERVICE.getInstance(myProject).getToolWindow();

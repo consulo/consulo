@@ -42,7 +42,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.Immutable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -143,7 +143,7 @@ public class TargetElementUtil {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static PsiElement findTargetElement(Editor editor, @Nonnull Set<String> flags) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 

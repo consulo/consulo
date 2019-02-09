@@ -21,7 +21,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +41,7 @@ public class ThreeDiffSplitter extends JPanel {
     addAll(myDividers);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setPainter(@javax.annotation.Nullable Painter painter, @Nonnull Side side) {
     getDivider(side).setPainter(painter);
   }
@@ -102,7 +102,7 @@ public class ThreeDiffSplitter extends JPanel {
       if (myPainter != null) myPainter.paint(g, this);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void setPainter(@javax.annotation.Nullable Painter painter) {
       myPainter = painter;
     }

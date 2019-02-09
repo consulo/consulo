@@ -54,7 +54,7 @@ import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.moduleImport.ModuleImportProviders;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -313,7 +313,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     final Set<MyNode> roots = new HashSet<MyNode>();
     roots.add(myRoot);
@@ -330,7 +330,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void disposeUIResources() {
     super.disposeUIResources();
     myContext.myModulesConfigurator.disposeUIResources();
@@ -593,7 +593,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       super("", "", AllIcons.ObjectBrowser.CompactEmptyPackages);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       super.update(e);
@@ -798,13 +798,13 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       myImport = anImport;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       addModule(myImport);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       super.update(e);

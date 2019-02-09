@@ -37,7 +37,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     ApplicationManager.getApplication().assertIsDispatchThread();

@@ -38,7 +38,7 @@ import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import net.miginfocom.swing.MigLayout;
 
 import javax.annotation.Nonnull;
@@ -336,7 +336,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
       registerCustomShortcutSet(new CustomShortcutSet(new KeyboardShortcut(stroke, null)), myTextArea);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed("find.recent.search");
@@ -368,7 +368,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
       super(null, null, myHelper.getClearIcon());
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       myTextArea.setText("");
@@ -380,7 +380,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
       super(null, "New line (" + KeymapUtil.getKeystrokeText(NEW_LINE_KEYSTROKE) + ")", AllIcons.Actions.SearchNewLine);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       new DefaultEditorKit.InsertBreakAction().actionPerformed(new ActionEvent(myTextArea, 0, "action"));

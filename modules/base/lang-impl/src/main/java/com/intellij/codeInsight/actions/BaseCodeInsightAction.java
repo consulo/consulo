@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class BaseCodeInsightAction extends CodeInsightAction {
   private final boolean myLookForInjectedEditor;
@@ -42,7 +42,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     myLookForInjectedEditor = lookForInjectedEditor;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @Nullable
   protected Editor getEditor(@Nonnull final DataContext dataContext, @Nonnull final Project project) {
@@ -51,12 +51,12 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     return getInjectedEditor(project, editor);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor) {
     return getInjectedEditor(project, editor, true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor, boolean commit) {
     Editor injectedEditor = editor;
     if (editor != null) {
@@ -75,7 +75,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     return super.getEditor(dataContext, project);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();

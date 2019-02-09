@@ -62,7 +62,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ex.ApplicationEx2;
@@ -544,7 +544,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return !(indicator instanceof NonCancelableSection);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public Project loadAndOpenProject(@Nonnull final String filePath) throws IOException {
     final Project project = convertAndLoadProject(filePath);
@@ -708,7 +708,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void openTestProject(@Nonnull final Project project) {
     assert ApplicationManager.getApplication().isUnitTestMode();
     openProject(project);
@@ -716,7 +716,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public Collection<Project> closeTestProject(@Nonnull Project project) {
     assert ApplicationManager.getApplication().isUnitTestMode();
     closeProject(project, false, false, false);
@@ -787,12 +787,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean closeProject(@Nonnull final Project project) {
     return closeProject(project, true, false, true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
     if (isLight(project)) {
       removeFromOpened(project);
@@ -835,12 +835,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean closeProjectAsync(@Nonnull final Project project) {
     return closeProjectAsync(project, true, false, true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean closeProjectAsync(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
     if (isLight(project)) {
       removeFromOpened(project);
@@ -893,7 +893,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return ApplicationManager.getApplication().isUnitTestMode() && project.toString().contains("light_temp_");
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean closeAndDispose(@Nonnull final Project project) {
     return closeProject(project, true, true, true);

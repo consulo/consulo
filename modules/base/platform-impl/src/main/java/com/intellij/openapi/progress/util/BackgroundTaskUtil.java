@@ -37,7 +37,7 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
@@ -71,7 +71,7 @@ public class BackgroundTaskUtil {
    * This period can be very short and looks like 'jumping' if background operation is fast.
    */
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static ProgressIndicator executeAndTryWait(@Nonnull Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask, @Nullable Runnable onSlowAction, long waitMillis, boolean forceEDT) {
     ModalityState modality = ModalityState.current();
 
@@ -107,7 +107,7 @@ public class BackgroundTaskUtil {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static void finish(@Nonnull Runnable result, @Nonnull ProgressIndicator indicator) {
     if (!indicator.isCanceled()) result.run();
   }
@@ -120,7 +120,7 @@ public class BackgroundTaskUtil {
    * </ul>
    */
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static <T> T tryComputeFast(@Nonnull Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
     Pair<T, ProgressIndicator> pair = computeInBackgroundAndTryWait(backgroundTask, (result, indicator) -> {
     }, ModalityState.defaultModalityState(), waitMillis);

@@ -16,7 +16,6 @@
 package consulo.ide.newProject.actions;
 
 import com.intellij.CommonBundle;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
@@ -30,11 +29,10 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
@@ -93,7 +91,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     Project project = e.getProject();
@@ -113,7 +111,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected static Project generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
     final File location = new File(projectPanel.getLocationText());
     final int childCount = location.exists() ? location.list().length : 0;

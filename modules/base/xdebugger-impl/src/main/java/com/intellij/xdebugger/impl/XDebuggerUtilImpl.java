@@ -68,7 +68,7 @@ import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
@@ -218,7 +218,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
               }
 
               @Override
-              @RequiredDispatchThread
+              @RequiredUIAccess
               public PopupStep onChosen(final XLineBreakpointType.XLineBreakpointVariant selectedValue, boolean finalChoice) {
                 selectionListener.clearHighlighter();
                 ApplicationManager.getApplication().runWriteAction(new Runnable() {

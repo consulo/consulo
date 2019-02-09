@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.WeakFactoryMap;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 
 import javax.annotation.Nonnull;
@@ -85,17 +85,17 @@ public class LightFileDocumentManager extends FileDocumentManager {
     return document.getUserData(MOCK_VIRTUAL_FILE_KEY);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void saveAllDocuments() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void saveDocument(@Nonnull Document document) {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void saveDocumentAsIs(@Nonnull Document document) {
   }
@@ -116,12 +116,12 @@ public class LightFileDocumentManager extends FileDocumentManager {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reloadFromDisk(@Nonnull Document document) {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reloadFiles(final VirtualFile... files) {
   }

@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -81,7 +81,7 @@ abstract class DocumentsSynchronizer {
 
   protected abstract void onDocumentChanged2(@Nonnull DocumentEvent event);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void replaceString(@Nonnull final Document document,
                                final int startOffset,
                                final int endOffset,

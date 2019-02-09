@@ -34,9 +34,10 @@ import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -122,7 +123,7 @@ public class FileTypeChooser extends DialogWrapper {
     return myPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myList;
@@ -150,7 +151,7 @@ public class FileTypeChooser extends DialogWrapper {
    * Speculates if file with newName would have known file type
    */
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile parent, @Nonnull String newName, @Nullable Project project) {
     return getKnownFileTypeOrAssociate(new FakeVirtualFile(parent, newName), project);
   }
@@ -162,7 +163,7 @@ public class FileTypeChooser extends DialogWrapper {
    * @return Known file type or null. Never returns {@link UnknownFileType#INSTANCE}.
    */
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nullable Project project) {
     if (project != null && !(file instanceof FakeVirtualFile)) {
       PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
@@ -175,7 +176,7 @@ public class FileTypeChooser extends DialogWrapper {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static FileType getKnownFileTypeOrAssociate(@Nonnull String fileName) {
     FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     FileType type = fileTypeManager.getFileTypeByFileName(fileName);
@@ -186,7 +187,7 @@ public class FileTypeChooser extends DialogWrapper {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static FileType associateFileType(@Nonnull final String fileName) {
     final FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
     if (!chooser.showAndGet()) {

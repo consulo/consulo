@@ -33,7 +33,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -132,7 +132,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onSuccess() {
         final AbstractVcsHelper instance = AbstractVcsHelper.getInstance(project);

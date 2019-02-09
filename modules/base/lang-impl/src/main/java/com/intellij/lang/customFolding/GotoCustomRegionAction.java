@@ -33,8 +33,9 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashSet;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,7 +46,7 @@ import java.util.Set;
  * @author Rustam Vishnyakov
  */
 public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Project project = e.getProject();
@@ -72,7 +73,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();

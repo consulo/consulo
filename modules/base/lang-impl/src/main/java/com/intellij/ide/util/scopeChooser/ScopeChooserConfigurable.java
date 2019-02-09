@@ -38,7 +38,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -116,7 +116,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     return result;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     reloadTree();
@@ -124,7 +124,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     final Set<MyNode> roots = new HashSet<MyNode>();
@@ -162,7 +162,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     return (ScopeChooserConfigurableState)myState;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     final List<String> order = getScopesState().myOrder;
@@ -348,7 +348,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   private void createScope(final boolean isLocal, String title, final PackageSet set) {
     final String newName = Messages.showInputDialog(myTree, IdeBundle.message("add.scope.name.label"), title, Messages.getInformationIcon(), createUniqueName(), new InputValidator() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public boolean checkInput(String inputString) {
         final NamedScopesHolder holder = isLocal ? myLocalScopesManager : mySharedScopesManager;
@@ -360,7 +360,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         return inputString.trim().length() > 0;
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public boolean canClose(String inputString) {
         return checkInput(inputString);
@@ -399,7 +399,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     }
 
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
@@ -414,14 +414,14 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       if (myChildren == null) {
         myChildren = new AnAction[2];
         myChildren[0] = new AnAction(IdeBundle.message("add.local.scope.action.text"), IdeBundle.message("add.local.scope.action.text"), myLocalScopesManager.getIcon()) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(AnActionEvent e) {
             createScope(true, IdeBundle.message("add.scope.dialog.title"), null);
           }
         };
         myChildren[1] = new AnAction(IdeBundle.message("add.shared.scope.action.text"), IdeBundle.message("add.shared.scope.action.text"), mySharedScopesManager.getIcon()) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(AnActionEvent e) {
             createScope(false, IdeBundle.message("add.scope.dialog.title"), null);
@@ -470,13 +470,13 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       myDirection = direction;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       TreeUtil.moveSelectedRow(myTree, myDirection);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
@@ -502,7 +502,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK)), myTree);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       NamedScope scope = (NamedScope)getSelectedObject();
@@ -513,7 +513,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(getSelectedObject() instanceof NamedScope);
@@ -525,7 +525,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       super(ExecutionBundle.message("action.name.save.as.configuration"), ExecutionBundle.message("action.name.save.as.configuration"), AllIcons.Actions.Menu_saveall);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       final TreePath selectionPath = myTree.getSelectionPath();
@@ -547,7 +547,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       }
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(getSelectedObject() instanceof NamedScope);

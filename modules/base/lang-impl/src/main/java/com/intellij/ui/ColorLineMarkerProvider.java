@@ -26,7 +26,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
@@ -48,7 +48,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     public MyInfo(@Nonnull final PsiElement element, ColorValue color, final ElementColorProvider colorProvider) {
       super(element, element.getTextRange(), ImageEffects.colorFilled(12, 12, color), Pass.UPDATE_ALL, FunctionUtil.nullConstant(), new GutterIconNavigationHandler<PsiElement>() {
         @Override
-        @RequiredDispatchThread
+        @RequiredUIAccess
         public void navigate(MouseEvent e, PsiElement elt) {
           if (!elt.isWritable()) return;
 

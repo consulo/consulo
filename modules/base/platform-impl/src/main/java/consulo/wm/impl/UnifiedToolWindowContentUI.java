@@ -32,9 +32,8 @@ import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.DockLayout;
 import consulo.wm.impl.layout.UnifiedComboContentLayout;
 import consulo.wm.impl.layout.UnifiedContentLayout;
 import consulo.wm.impl.layout.UnifiedTabContentLayout;
@@ -336,7 +335,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
 
   private static AnAction createSplitTabsAction(final TabbedContent content) {
     return new DumbAwareAction("Split '" + content.getTitlePrefix() + "' group") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         content.split();
@@ -346,7 +345,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
 
   private static AnAction createMergeTabsAction(final ContentManager manager, final String tabPrefix) {
     return new DumbAwareAction("Merge tabs to '" + tabPrefix + "' group") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final Content selectedContent = manager.getSelectedContent();
@@ -457,7 +456,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         for (int j = 0; j < tabActions.length; j++) {
           final int index = j;
           tabActions[j] = new DumbAwareAction(tabs.get(index).first) {
-            @RequiredDispatchThread
+            @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
               myManager.setSelectedContent(tabbedContent);
@@ -479,7 +478,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
       }
       else {
         actions[i] = new DumbAwareAction(content.getTabName()) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             myManager.setSelectedContent(content, true, true);

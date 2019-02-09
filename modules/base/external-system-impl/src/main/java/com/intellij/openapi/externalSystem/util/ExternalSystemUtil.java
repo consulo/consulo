@@ -96,7 +96,7 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowBase;
 import javax.annotation.Nonnull;
 
@@ -848,7 +848,7 @@ public class ExternalSystemUtil {
         systemSettings.setLinkedProjectsSettings(projects);
         ensureToolWindowInitialized(project, externalSystemId);
         ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
-          @RequiredDispatchThread
+          @RequiredUIAccess
           @Override
           public void execute() {
             ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {
@@ -930,7 +930,7 @@ public class ExternalSystemUtil {
         myExternalModulePaths.add(node.getData().getLinkedExternalProjectPath());
       }
       ExternalSystemApiUtil.executeProjectChangeAction(true, new DisposeAwareProjectChange(myProject) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void execute() {
           ProjectRootManagerEx.getInstanceEx(myProject).mergeRootsChangesDuring(new Runnable() {

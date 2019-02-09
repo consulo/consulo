@@ -34,7 +34,7 @@ import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.List;
@@ -69,7 +69,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyEditorHolder();
     super.onDispose();

@@ -47,7 +47,7 @@ import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
@@ -330,7 +330,7 @@ public class DirectoryChooser extends DialogWrapper {
       myFragments = fragments;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Nonnull
     @Deprecated
     @DeprecationInfo(value = "Use #getIcon()")
@@ -338,7 +338,7 @@ public class DirectoryChooser extends DialogWrapper {
       return getIcon();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Nonnull
     public Image getIcon() {
       if (myDirectory != null) {

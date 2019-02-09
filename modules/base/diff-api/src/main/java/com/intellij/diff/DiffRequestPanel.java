@@ -18,7 +18,8 @@ package com.intellij.diff;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -38,6 +39,6 @@ public interface DiffRequestPanel extends Disposable {
   @javax.annotation.Nullable
   JComponent getPreferredFocusedComponent();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   <T> void putContextHints(@Nonnull Key<T> key, @javax.annotation.Nullable T value);
 }

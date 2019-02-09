@@ -15,11 +15,10 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.CheckBox;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +34,7 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
     super(id, moduleRootLayer);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {

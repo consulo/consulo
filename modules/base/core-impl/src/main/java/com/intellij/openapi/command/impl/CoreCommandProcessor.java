@@ -29,7 +29,6 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.Nls;
@@ -216,7 +215,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public Object startCommand(@Nonnull final Project project, @Nls final String name, final Object groupId, @Nonnull final UndoConfirmationPolicy undoConfirmationPolicy) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (project.isDisposed()) return null;
@@ -244,7 +243,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     fireCommandFinished();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void fireCommandFinished() {
     UIAccess.assertIsUIThread();
 
@@ -275,7 +274,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void enterModal() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
@@ -286,7 +285,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void leaveModal() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandLog.LOG.assertTrue(myCurrentCommand == null, "Command must not run: " + myCurrentCommand);
@@ -298,7 +297,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setCurrentCommandName(String name) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
@@ -307,7 +306,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void setCurrentCommandGroupId(Object groupId) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
@@ -397,7 +396,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void fireCommandStarted() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;

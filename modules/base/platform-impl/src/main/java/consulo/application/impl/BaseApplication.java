@@ -60,7 +60,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
@@ -317,7 +317,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void saveAll() {
     if (myDoNotSave) return;
@@ -454,7 +454,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void dispose() {
     fireApplicationExiting();
@@ -663,14 +663,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public AccessToken acquireWriteActionLock(@Nonnull Class clazz) {
     return new WriteAccessToken(clazz);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull final Runnable action) {
     Class<? extends Runnable> clazz = action.getClass();
@@ -683,7 +683,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T> T runWriteAction(@Nonnull final Computable<T> computation) {
     Class<? extends Computable> clazz = computation.getClass();
@@ -696,7 +696,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     Class<? extends ThrowableComputable> clazz = computation.getClass();
@@ -709,7 +709,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
     assertReadAccessAllowed();

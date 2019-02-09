@@ -29,7 +29,7 @@ import com.intellij.ui.EditorNotifications;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
@@ -44,7 +44,7 @@ public class ForcedSoftWrapsNotificationProvider implements EditorNotificationPr
   }
 
   @RequiredReadAction
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nullable
   @Override
   public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull final FileEditor fileEditor) {

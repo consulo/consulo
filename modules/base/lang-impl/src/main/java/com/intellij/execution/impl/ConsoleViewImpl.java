@@ -72,7 +72,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -1079,7 +1079,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void doUpdateFolding(@Nonnull List<FoldRegion> toAdd) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 

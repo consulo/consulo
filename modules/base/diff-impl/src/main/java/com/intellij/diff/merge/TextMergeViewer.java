@@ -61,10 +61,11 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+
 import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
@@ -311,7 +312,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void rediff(boolean trySync) {
       if (myInitialRediffStarted) return;
       myInitialRediffStarted = true;
@@ -325,7 +326,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       throw new UnsupportedOperationException();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     private void doRediff() {
       myStatusPanel.setBusy(true);
 
@@ -443,7 +444,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void destroyChangedBlocks() {
       super.destroyChangedBlocks();
       myInnerDiffWorker.stop();
@@ -471,12 +472,12 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
       private boolean myEnabled = false;
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void scheduleRediff(@Nonnull TextMergeChange change) {
         scheduleRediff(Collections.singletonList(change));
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void scheduleRediff(@Nonnull Collection<TextMergeChange> changes) {
         if (!myEnabled) return;
 
@@ -484,7 +485,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         schedule();
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void onSettingsChanged() {
         boolean enabled = getHighlightPolicy() == HighlightPolicy.BY_WORD;
         if (myEnabled == enabled) return;
@@ -506,7 +507,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void stop() {
         if (myProgress != null) myProgress.cancel();
         myProgress = null;
@@ -514,7 +515,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         myAlarm.cancelAllRequests();
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       private void putChanges(@Nonnull Collection<TextMergeChange> changes) {
         for (TextMergeChange change : changes) {
           if (change.isResolved()) continue;
@@ -522,7 +523,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         }
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       private void schedule() {
         if (myProgress != null) return;
         if (myScheduled.isEmpty()) return;
@@ -531,7 +532,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         myAlarm.addRequest(this::launchRediff, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       private void launchRediff() {
         myStatusPanel.setBusy(true);
         myProgress = new EmptyProgressIndicator();
@@ -579,7 +580,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     //
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void onBeforeDocumentChange(@Nonnull DocumentEvent e) {
       super.onBeforeDocumentChange(e);
       if (myInitialRediffFinished) myContentModified = true;
@@ -689,7 +690,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       executeMergeCommand(commandName, false, affected, task);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void markChangeResolved(@Nonnull TextMergeChange change) {
       if (change.isResolved()) return;
       change.setResolved(Side.LEFT, true);
@@ -699,7 +700,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       myModel.invalidateHighlighters(change.getIndex());
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void markChangeResolved(@Nonnull TextMergeChange change, @Nonnull Side side) {
       if (change.isResolved(side)) return;
       change.setResolved(side, true);
@@ -970,7 +971,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       }
 
       @Nonnull
-      @RequiredDispatchThread
+      @RequiredUIAccess
       private List<TextMergeChange> getSelectedChanges(@Nonnull ThreeSide side) {
         final BitSet lines = DiffUtil.getSelectedLines(getEditor(side));
         List<TextMergeChange> changes = getChanges();

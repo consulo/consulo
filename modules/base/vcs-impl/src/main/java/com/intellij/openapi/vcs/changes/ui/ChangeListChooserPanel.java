@@ -37,7 +37,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,7 +106,7 @@ public class ChangeListChooserPanel extends JPanel {
       }
 
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       protected void nameChanged(String errorMessage) {
         //invoke later because of undo manager problem: when you try to undo changelist after description was already changed manually
         ApplicationManager.getApplication().invokeLater(() -> updateDescription(), ModalityState.current());

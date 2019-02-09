@@ -31,7 +31,7 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
   @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
@@ -47,7 +47,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new CodeInsightActionHandler() {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
@@ -65,7 +65,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
@@ -121,7 +121,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);

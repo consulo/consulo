@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.continuation.*;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author irengrig
@@ -98,13 +98,13 @@ public class TestContinuationAction extends AnAction {
           finalBlock});
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onCancel() {
         Messages.showInfoMessage("cancel!", myTitle);
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onSuccess() {
         Messages.showInfoMessage("success!", myTitle);

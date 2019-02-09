@@ -42,13 +42,13 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -242,7 +242,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         performInspectionsWithProgress(scope, false, false);
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void onSuccess() {
         notifyInspectionsFinished();

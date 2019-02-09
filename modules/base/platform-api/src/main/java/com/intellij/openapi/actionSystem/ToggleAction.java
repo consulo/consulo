@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 
@@ -61,7 +61,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
   public abstract void setSelected(AnActionEvent e, boolean state);
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(final AnActionEvent e){
     final Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
     final Presentation presentation = e.getPresentation();

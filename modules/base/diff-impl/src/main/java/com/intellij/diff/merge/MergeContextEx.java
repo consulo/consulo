@@ -16,12 +16,12 @@
 package com.intellij.diff.merge;
 
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class MergeContextEx extends MergeContext {
   /*
    * Destroy active MergeViewer and reopen current MergeRequest in the new one
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void reopenWithTool(@Nonnull MergeTool tool);
 }

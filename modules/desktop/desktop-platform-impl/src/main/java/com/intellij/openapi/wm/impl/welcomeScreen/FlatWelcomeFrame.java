@@ -34,14 +34,13 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
@@ -69,7 +68,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
   private final FlatWelcomeScreen myScreen;
   private boolean myDisposed;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public FlatWelcomeFrame() {
     final JRootPane rootPane = getRootPane();
     myScreen = new FlatWelcomeScreen(this);

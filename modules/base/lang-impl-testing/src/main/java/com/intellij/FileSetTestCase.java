@@ -13,8 +13,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.RequiredUIAccess;
 import junit.framework.TestSuite;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public abstract class FileSetTestCase extends TestSuite {
       myTestName = testName;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     protected void setUp() throws Exception {
       super.setUp();

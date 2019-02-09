@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.awt.*;
 import java.util.List;
@@ -74,7 +74,7 @@ public class InitialScrollPositionSupport {
       return doGetVisiblePositions(getEditors());
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected boolean doScrollToPosition() {
       List<? extends Editor> editors = getEditors();
       if (myCaretPosition == null || myCaretPosition.length != editors.size()) return false;
@@ -122,7 +122,7 @@ public class InitialScrollPositionSupport {
       request.putUserData(DiffUserDataKeysEx.NAVIGATION_CONTEXT, null);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void onSlowRediff() {
       if (wasScrolled(getEditors())) myShouldScroll = false;
       if (myScrollToChange != null) return;
@@ -131,7 +131,7 @@ public class InitialScrollPositionSupport {
       if (myShouldScroll) myShouldScroll = !doScrollToPosition();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void onRediff() {
       if (wasScrolled(getEditors())) myShouldScroll = false;
       if (myShouldScroll) myShouldScroll = !doScrollToChange();
@@ -142,16 +142,16 @@ public class InitialScrollPositionSupport {
       myShouldScroll = false;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected abstract boolean doScrollToChange();
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected abstract boolean doScrollToFirstChange();
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected abstract boolean doScrollToContext();
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected abstract boolean doScrollToLine();
   }
 
@@ -186,13 +186,13 @@ public class InitialScrollPositionSupport {
       myShouldScroll = false;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected abstract boolean doScrollToChange();
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected abstract boolean doScrollToFirstChange();
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected abstract boolean doScrollToLine();
 
     @Nonnull

@@ -29,7 +29,7 @@ import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -59,7 +59,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     myProject = project;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myModel = ensureModel();
@@ -75,7 +75,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myPanels != null) {
@@ -97,7 +97,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public synchronized void reset() {
     if (!myInitResetInvoked) {
@@ -168,7 +168,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (!myApplyCompleted) {
@@ -266,7 +266,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     return "reference.settingsdialog.IDE.globalcodestyle";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     if (myModel != null) {
@@ -329,13 +329,13 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       return myPanel;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public JComponent createComponent() {
       return ensurePanel();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public boolean isModified() {
       boolean someSchemeModified = myPanel != null && myPanel.isModified();
@@ -346,7 +346,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       return someSchemeModified;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void apply() throws ConfigurationException {
       CodeStyleSchemesConfigurable.this.apply();
@@ -363,7 +363,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       return myProvider.getClass().getName();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void reset() {
       if (!myInitialResetInvoked) {
@@ -385,7 +385,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       return "preferences.sourceCode." + getDisplayName();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void disposeUIResources() {
       if (myPanel != null) {

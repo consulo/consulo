@@ -24,7 +24,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -45,7 +45,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
     myConsoleProperties = consoleProperties;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void customizeCellRenderer(final JTree tree,
                                     final Object value,

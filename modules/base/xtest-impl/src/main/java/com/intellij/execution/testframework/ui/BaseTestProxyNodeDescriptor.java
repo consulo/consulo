@@ -20,7 +20,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author Roman.Chernyatchik
@@ -50,7 +50,7 @@ public class BaseTestProxyNodeDescriptor<T extends AbstractTestProxy> extends No
     return !getElement().isLeaf();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean update() {
     return false;

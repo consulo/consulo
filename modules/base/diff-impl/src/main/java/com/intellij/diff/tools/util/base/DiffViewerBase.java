@@ -35,7 +35,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,7 +87,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public final void dispose() {
     if (myDisposed) return;
     if (!ApplicationManager.getApplication().isDispatchThread()) LOG.warn(new Throwable("dispose() not from EDT"));
@@ -105,15 +105,15 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void processContextHints() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void updateContextHints() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public final void scheduleRediff() {
     if (isDisposed()) return;
 
@@ -121,19 +121,19 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     myTaskAlarm.addRequest(this::rediff, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public final void abortRediff() {
     myTaskExecutor.abort();
     myTaskAlarm.cancelAllRequests();
     fireEvent(EventType.REDIFF_ABORTED);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public final void rediff() {
     rediff(false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void rediff(boolean trySync) {
     if (isDisposed()) return;
     abortRediff();
@@ -184,12 +184,12 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Abstract
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean tryRediffSynchronously() {
     return myContext.isWindowFocused();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected boolean forceRediffSynchronously() {
     // most of performRediff implementations take ReadLock inside. If EDT is holding write lock - this will never happen,
     // and diff will not be calculated. This could happen for diff from FileDocumentManager.
@@ -213,19 +213,19 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     return null;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onSlowRediff() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onBeforeRediff() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onAfterRediff() {
   }
 
@@ -233,7 +233,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @Nonnull
   protected abstract Runnable performRediff(@Nonnull ProgressIndicator indicator);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     Disposer.dispose(myTaskAlarm);
   }
@@ -247,23 +247,23 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Listeners
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void addListener(@Nonnull DiffViewerListener listener) {
     myListeners.add(listener);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void removeListener(@Nonnull DiffViewerListener listener) {
     myListeners.remove(listener);
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected List<DiffViewerListener> getListeners() {
     return myListeners;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void fireEvent(@Nonnull EventType type) {
     for (DiffViewerListener listener : myListeners) {
       switch (type) {

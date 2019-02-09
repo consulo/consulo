@@ -34,7 +34,7 @@ import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -71,21 +71,21 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyEditorHolders();
     super.onDispose();
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void processContextHints() {
     super.processContextHints();
     myFocusTrackerSupport.processContextHints(myRequest, myContext);
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void updateContextHints() {
     super.updateContextHints();
     myFocusTrackerSupport.updateContextHints(myRequest, myContext);

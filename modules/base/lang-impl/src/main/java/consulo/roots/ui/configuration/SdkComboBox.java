@@ -44,7 +44,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Exported;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
@@ -208,7 +208,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
                              @Nullable final Condition<Sdk> additionalSetup) {
     setUpButton.addActionListener(new ActionListener() {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void actionPerformed(ActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup();
         sdksModel.createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {

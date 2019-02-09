@@ -33,10 +33,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.util.Set;
@@ -54,7 +55,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
     if (Extensions.getExtensions(TypeDeclarationProvider.EP_NAME).length == 0) {
@@ -66,7 +67,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 

@@ -32,7 +32,7 @@ import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.laf.MorphColor;
@@ -57,7 +57,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
       myGearProducer = gearProducer;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       final InputEvent inputEvent = e.getInputEvent();
@@ -77,13 +77,13 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
   private class HideAction extends DumbAwareAction {
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       hideToolWindow();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public final void update(@Nonnull final AnActionEvent event) {
       Presentation presentation = event.getPresentation();

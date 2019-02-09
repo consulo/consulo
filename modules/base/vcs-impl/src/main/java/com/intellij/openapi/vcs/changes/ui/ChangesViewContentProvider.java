@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 
@@ -23,7 +23,7 @@ import javax.swing.*;
  * @author yole
  */
 public interface ChangesViewContentProvider {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   JComponent initContent();
 
   void disposeContent();

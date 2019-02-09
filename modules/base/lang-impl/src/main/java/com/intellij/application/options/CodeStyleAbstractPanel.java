@@ -50,7 +50,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -189,7 +189,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     final Project finalProject = ProjectUtil.guessCurrentProject(getPanel());
     CommandProcessor.getInstance().executeCommand(finalProject, new Runnable() {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void run() {
         replaceText(finalProject);
       }
@@ -207,7 +207,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
   protected abstract int getRightMargin();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void replaceText(final Project project) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override

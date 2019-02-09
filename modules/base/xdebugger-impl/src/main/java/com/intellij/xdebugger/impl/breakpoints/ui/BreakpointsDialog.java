@@ -43,7 +43,7 @@ import com.intellij.xdebugger.impl.breakpoints.XBreakpointsDialogState;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemNode;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.WholeWestDialogWrapper;
 
@@ -115,7 +115,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     return getDimensionServiceKey() + ".splitter";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
@@ -246,7 +246,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     }, ActionPlaces.UNKNOWN, ActionManager.getInstance());
 
     new AnAction("BreakpointDialog.GoToSource") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         navigate(true);
@@ -255,7 +255,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), tree);
 
     new AnAction("BreakpointDialog.ShowSource") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         navigate(true);
@@ -398,7 +398,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       getTemplatePresentation().setText(type.getTitle());
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       saveCurrentItem();
@@ -435,7 +435,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
       myGroup = null;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       String groupName = myGroup;

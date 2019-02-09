@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class BackgroundableActionLock {
   @Nonnull
@@ -31,17 +31,17 @@ public class BackgroundableActionLock {
     myKeys = keys;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean isLocked() {
     return isLocked(myProject, myKeys);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void lock() {
     lock(myProject, myKeys);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void unlock() {
     unlock(myProject, myKeys);
   }
@@ -52,17 +52,17 @@ public class BackgroundableActionLock {
     return new BackgroundableActionLock(project, keys);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static boolean isLocked(@Nonnull Project project, @Nonnull Object... keys) {
     return getManager(project).isBackgroundTaskRunning(keys);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void lock(@Nonnull Project project, @Nonnull Object... keys) {
     getManager(project).startBackgroundTask(keys);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void unlock(@Nonnull Project project, @Nonnull Object... keys) {
     getManager(project).stopBackgroundTask(keys);
   }

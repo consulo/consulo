@@ -21,8 +21,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
+
 import javax.annotation.Nullable;
 
 /**
@@ -40,7 +41,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void doExecute(final Editor editor, @Nullable final Caret caret, final DataContext dataContext) {
     if (editor.isViewer()) return;
 

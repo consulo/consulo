@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
 
@@ -93,7 +93,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
   public void importLibrary(@Nonnull final String libraryName, @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles, @Nonnull final Project project, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         // Is assumed to be called from the EDT.
@@ -151,7 +151,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
@@ -199,7 +199,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         Library.ModifiableModel model = ideLibrary.getModifiableModel();

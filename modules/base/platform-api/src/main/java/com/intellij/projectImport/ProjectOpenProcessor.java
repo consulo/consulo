@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.Language;
@@ -50,7 +50,7 @@ public abstract class ProjectOpenProcessor {
   public abstract boolean canOpenProject(@Nonnull File file);
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Use #doOpenProjectAsync()")
   public abstract Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);

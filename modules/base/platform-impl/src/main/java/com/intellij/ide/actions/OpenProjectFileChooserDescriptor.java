@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.image.Image;
 
@@ -33,7 +33,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     super(chooseFiles, true, chooseFiles, chooseFiles, false, false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isFileSelectable(final VirtualFile file) {
     if (file == null) return false;

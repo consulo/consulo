@@ -33,7 +33,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -118,7 +118,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     return label;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void executeAction(final String actionId) {
     final AnAction action = ActionManager.getInstance().getAction(actionId);
     final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(),

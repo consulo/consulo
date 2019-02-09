@@ -28,7 +28,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiUtilCore;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.IconDescriptorUpdaters;
 
 import javax.annotation.Nonnull;
@@ -62,7 +62,7 @@ public class SmartElementDescriptor extends NodeDescriptor{
   }
 
   // Should be called in atomic action
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean update() {
     PsiElement element = mySmartPointer.getElement();

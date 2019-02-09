@@ -34,7 +34,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
@@ -393,7 +393,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void dispose() {
     Application.get().assertIsDispatchThread();
 

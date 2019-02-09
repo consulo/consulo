@@ -51,7 +51,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageTargetUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.codeInsight.TargetElementUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -165,7 +165,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
   }
 
   @Nullable
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private static PsiElement getTargetElement(Editor editor, PsiFile file) {
     PsiElement target = TargetElementUtil.findTargetElement(editor, TargetElementUtil.getReferenceSearchFlags());
 

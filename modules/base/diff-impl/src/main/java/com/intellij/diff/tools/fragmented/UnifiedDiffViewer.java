@@ -55,12 +55,13 @@ import com.intellij.openapi.util.*;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.TIntFunction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+
 import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
@@ -143,7 +144,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
     super.onInit();
     installEditorListeners();
@@ -153,14 +154,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     super.onDispose();
     EditorFactory.getInstance().releaseEditor(myEditor);
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void processContextHints() {
     super.processContextHints();
     Side side = DiffUtil.getUserData(myRequest, myContext, DiffUserDataKeys.MASTER_SIDE);
@@ -170,14 +171,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void updateContextHints() {
     super.updateContextHints();
     myInitialScrollHelper.updateContext(myRequest);
     myFoldingModel.updateContext(myRequest, getFoldingModelSettings());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void updateEditorCanBeTyped() {
     myEditor.setViewer(mySuppressEditorTyping || !isEditable(myMasterSide, true));
   }
@@ -195,7 +196,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @Nonnull
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public List<AnAction> createToolbarActions() {
     List<AnAction> group = new ArrayList<>();
 
@@ -214,7 +215,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @Nonnull
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public List<AnAction> createPopupActions() {
     List<AnAction> group = new ArrayList<>();
 
@@ -246,7 +247,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     return group;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void installEditorListeners() {
     new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
   }
@@ -256,7 +257,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   //
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onSlowRediff() {
     super.onSlowRediff();
     myStatusPanel.setBusy(true);
@@ -340,13 +341,13 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     updateEditorCanBeTyped();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void markSuppressEditorTyping() {
     mySuppressEditorTyping = true;
     updateEditorCanBeTyped();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void markStateIsOutOfDate() {
     myStateIsOutOfDate = true;
     if (myChangedBlockData != null) {
@@ -468,7 +469,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   /*
    * This convertor returns -1 if exact matching is impossible
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public int transferLineToOnesideStrict(@Nonnull Side side, int line) {
     if (myChangedBlockData == null) return -1;
 
@@ -479,7 +480,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   /*
    * This convertor returns -1 if exact matching is impossible
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public int transferLineFromOnesideStrict(@Nonnull Side side, int line) {
     if (myChangedBlockData == null) return -1;
 
@@ -490,7 +491,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   /*
    * This convertor returns 'good enough' position, even if exact matching is impossible
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public int transferLineToOneside(@Nonnull Side side, int line) {
     if (myChangedBlockData == null) return line;
 
@@ -501,7 +502,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   /*
    * This convertor returns 'good enough' position, even if exact matching is impossible
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   public Pair<int[], Side> transferLineFromOneside(int line) {
     int[] lines = new int[2];
@@ -534,7 +535,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     return Pair.create(lines, side);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void destroyChangedBlockData() {
     if (myChangedBlockData == null) return;
 
@@ -867,7 +868,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     return getContent(Side.RIGHT);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @javax.annotation.Nullable
   protected List<UnifiedDiffChange> getDiffChanges() {
     return myChangedBlockData == null ? null : myChangedBlockData.getDiffChanges();
@@ -892,7 +893,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     return myStatusPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean isEditable(@Nonnull Side side, boolean respectReadOnlyLock) {
     if (myReadOnlyLockSet && respectReadOnlyLock) return false;
     if (side.select(myForceReadOnlyFlags)) return false;
@@ -918,7 +919,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     return getNavigatable(myEditor.getCaretModel().getOffset());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @javax.annotation.Nullable
   protected UnifiedDiffChange getCurrentChange() {
     if (myChangedBlockData == null) return null;
@@ -931,7 +932,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private List<UnifiedDiffChange> getSelectedChanges() {
     if (myChangedBlockData == null) return Collections.emptyList();
     final BitSet lines = DiffUtil.getSelectedLines(myEditor);
@@ -950,7 +951,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     return affectedChanges;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @javax.annotation.Nullable
   protected Navigatable getNavigatable(int offset) {
     LogicalPosition position = myEditor.offsetToLogicalPosition(offset);

@@ -40,7 +40,7 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +82,7 @@ public class ExecutionPointHighlighter {
     updateRequested.set(false);
     AppUIUtil.invokeLaterIfProjectAlive(myProject, new Runnable() {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void run() {
         updateRequested.set(false);
 
@@ -160,7 +160,7 @@ public class ExecutionPointHighlighter {
     });
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void doShow(boolean navigate) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (ApplicationManager.getApplication().isUnitTestMode()) return;

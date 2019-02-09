@@ -28,8 +28,9 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.ui.laf.LafWithColorScheme;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -59,7 +60,7 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     UISettings settings = UISettings.getInstance();
@@ -129,7 +130,7 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     return myComponent.myPanel;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() {
     initComponent();
@@ -281,7 +282,7 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     return value;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     initComponent();
@@ -332,7 +333,7 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     myComponent.updateCombo();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     initComponent();
@@ -391,7 +392,7 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     return isModified;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myComponent = null;

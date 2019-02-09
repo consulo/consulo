@@ -22,7 +22,7 @@ import com.intellij.openapi.components.impl.stores.StateStorageManagerImpl;
 import com.intellij.openapi.components.impl.stores.StorageData;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertThat;
 public abstract class StateStorageManagerImplTest extends LightPlatformLangTestCase {
   private StateStorageManagerImpl myStateStorageManager;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void setUp() throws Exception {
     super.setUp();

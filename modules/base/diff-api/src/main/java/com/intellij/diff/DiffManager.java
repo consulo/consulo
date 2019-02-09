@@ -23,7 +23,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.awt.*;
 
@@ -37,18 +37,18 @@ public abstract class DiffManager {
   // Usage
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
 
   @Nonnull
   public abstract DiffRequestPanel createRequestPanel(@javax.annotation.Nullable Project project, @Nonnull Disposable parent, @Nullable Window window);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void showMerge(@Nullable Project project, @Nonnull MergeRequest request);
 }

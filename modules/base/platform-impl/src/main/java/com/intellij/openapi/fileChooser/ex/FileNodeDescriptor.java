@@ -20,7 +20,7 @@ import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
@@ -45,7 +45,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean update() {
     boolean changed = false;
 

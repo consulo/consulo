@@ -22,13 +22,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 
 public interface CodeInsightActionHandler {
   abstract class WriteActionAdapter implements CodeInsightActionHandler{
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public final void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
@@ -47,7 +47,7 @@ public interface CodeInsightActionHandler {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
 
   @Deprecated

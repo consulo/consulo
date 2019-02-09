@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,14 +67,14 @@ public abstract class Task implements TaskInfo, Progressive {
    * <p>
    * Callback executed when run() throws {@link ProcessCanceledException} or if its {@link ProgressIndicator} was canceled.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void onCancel() {
   }
 
   /**
    * This callback will be invoked on AWT dispatch thread.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void onSuccess() {
   }
 
@@ -107,7 +107,7 @@ public abstract class Task implements TaskInfo, Progressive {
   /**
    * This callback will be invoked on AWT dispatch thread, after other specific handlers
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void onFinished() {
   }
 
@@ -230,7 +230,7 @@ public abstract class Task implements TaskInfo, Progressive {
           consumer.accept(indicator);
         }
 
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void onSuccess() {
           onSuccess.run();

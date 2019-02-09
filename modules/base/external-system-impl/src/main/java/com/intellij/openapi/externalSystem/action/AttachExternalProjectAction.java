@@ -32,11 +32,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.projectImport.ProjectImportProvider;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.externalSystem.service.module.wizard.AbstractExternalModuleImportProvider;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
 import consulo.moduleImport.LegacyModuleImportProvider;
+
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -52,7 +53,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.attach.external.project.description", "external"));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
@@ -65,7 +66,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     e.getPresentation().setIcon(SystemInfoRt.isMac ? AllIcons.ToolbarDecorator.Mac.Add : AllIcons.ToolbarDecorator.Add);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);

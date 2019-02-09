@@ -36,14 +36,14 @@ import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class CompileAction extends CompileActionBase {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void doAction(DataContext dataContext, Project project) {
     final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     if (module != null) {
@@ -58,7 +58,7 @@ public class CompileAction extends CompileActionBase {
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();

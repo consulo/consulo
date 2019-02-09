@@ -39,7 +39,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.awt.RelativePoint;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -233,18 +233,18 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void mouseClicked(final MouseEvent e) {
     CommandProcessor.getInstance().executeCommand(myEditor.getProject(), new Runnable() {
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void run() {
         doMouseClicked(e);
       }
     }, EditorBundle.message("move.caret.command.name"), DocCommandGroupId.noneGroupId(myEditor.getDocument()), UndoConfirmationPolicy.DEFAULT, myEditor.getDocument());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void doMouseClicked(MouseEvent e) {
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
       IdeFocusManager.getGlobalInstance().requestFocus(myEditor.getContentComponent(), true);

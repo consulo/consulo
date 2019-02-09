@@ -91,7 +91,7 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IndexableFileSet;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.ui.UIAccess;
@@ -312,7 +312,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     ((VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance()).storePointers();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected static Module createMainModule() {
     return ApplicationManager.getApplication().runWriteAction(new Computable<Module>() {
       @Override
@@ -330,7 +330,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void setUp() throws Exception {
     super.setUp();
     initApplication();
@@ -352,7 +352,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     return TestModuleDescriptor.EMPTY;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void doSetup(@Nonnull TestModuleDescriptor descriptor,
                              @Nonnull LocalInspectionTool[] localInspectionTools,
                              @Nonnull final Map<String, InspectionToolWrapper> availableInspectionTools) throws Exception {
@@ -748,7 +748,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     PsiDocumentManager.getInstance(getProject()).commitDocument(document);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected static void commitAllDocuments() {
     PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
   }
@@ -788,7 +788,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
       public void run() {
         ShutDownTracker.invokeAndWait(true, true, new Runnable() {
           @Override
-          @RequiredDispatchThread
+          @RequiredUIAccess
           public void run() {
             ApplicationManager.getApplication().runWriteAction(new Runnable() {
               @Override

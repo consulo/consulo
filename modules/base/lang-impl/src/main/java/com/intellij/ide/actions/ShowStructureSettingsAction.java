@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
@@ -30,7 +30,7 @@ public class ShowStructureSettingsAction extends AnAction implements DumbAware {
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);

@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class DelegateMethodsAction extends BaseCodeInsightAction {
 
@@ -48,7 +48,7 @@ public class DelegateMethodsAction extends BaseCodeInsightAction {
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
     if (CodeInsightActions.DELEGATE_METHODS.hasAnyExtensions()) {

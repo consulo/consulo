@@ -34,7 +34,7 @@ import com.intellij.testFramework.TestDataFile;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.FileComparisonFailure;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
 import consulo.testFramework.util.TestPathUtil;
@@ -92,7 +92,7 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void tearDown() throws Exception {
     super.tearDown();
     myFile = null;

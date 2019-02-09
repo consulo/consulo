@@ -23,7 +23,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.fileTypes.impl.VfsIconUtil;
@@ -229,7 +229,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   /**
    * Defines whether file can be chosen or not
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean isFileSelectable(VirtualFile file) {
     if (file == null) return false;
 

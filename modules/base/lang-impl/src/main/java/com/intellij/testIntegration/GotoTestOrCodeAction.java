@@ -29,7 +29,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class GotoTestOrCodeAction extends BaseCodeInsightAction {
   @Override
@@ -38,7 +38,7 @@ public class GotoTestOrCodeAction extends BaseCodeInsightAction {
     return new GotoTestOrCodeHandler();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent event) {
     Presentation p = event.getPresentation();

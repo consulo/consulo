@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.SavingRequestor;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 
 public abstract class FileDocumentManager implements SavingRequestor {
@@ -40,16 +40,16 @@ public abstract class FileDocumentManager implements SavingRequestor {
   @Nullable
   public abstract VirtualFile getFile(@Nonnull Document document);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void saveAllDocuments();
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void saveDocument(@Nonnull Document document);
 
   /**
    * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.
    * @param document the document to save.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void saveDocumentAsIs(@Nonnull Document document);
   
   @Nonnull
@@ -57,7 +57,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
   public abstract boolean isDocumentUnsaved(@Nonnull Document document);
   public abstract boolean isFileModified(@Nonnull VirtualFile file);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void reloadFromDisk(@Nonnull Document document);
 
   @Nonnull
@@ -77,6 +77,6 @@ public abstract class FileDocumentManager implements SavingRequestor {
     return getInstance().requestWriting(document, project);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void reloadFiles(VirtualFile... files);
 }

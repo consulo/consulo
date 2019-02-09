@@ -37,10 +37,10 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -67,14 +67,14 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
     super.onInit();
     installEditorListeners();
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
     destroyEditorListeners();
     super.onDispose();
@@ -116,12 +116,12 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
   // Listeners
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void installEditorListeners() {
     new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void destroyEditorListeners() {
   }
 
@@ -155,7 +155,7 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
   // Abstract
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void scrollToLine(int line) {
     DiffUtil.scrollEditor(getEditor(), line, false);
   }

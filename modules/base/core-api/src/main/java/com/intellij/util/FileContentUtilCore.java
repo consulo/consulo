@@ -23,10 +23,11 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+
 import consulo.annotations.RequiredWriteAction;
 
 import java.util.*;
@@ -37,12 +38,12 @@ import java.util.*;
 public class FileContentUtilCore {
   @NonNls public static final String FORCE_RELOAD_REQUESTOR = "FileContentUtilCore.saveOrReload";
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void reparseFiles(@Nonnull VirtualFile... files) {
     reparseFiles(Arrays.asList(files));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public static void reparseFiles(@Nonnull final Collection<VirtualFile> files) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override

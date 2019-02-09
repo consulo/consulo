@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,7 +45,7 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
     myCurrentlySelected = new AtomicReference<Id>(null);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void updateSelection(@javax.annotation.Nullable final Id id, boolean force) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myIsDisposed) return;
@@ -61,7 +61,7 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
     myValueConsumer.setCacheConsumer(cacheConsumer);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void take(Id id, Data data) throws AlreadyDisposedException {
     ApplicationManager.getApplication().assertIsDispatchThread();

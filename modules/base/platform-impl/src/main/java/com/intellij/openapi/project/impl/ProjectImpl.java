@@ -48,7 +48,7 @@ import com.intellij.util.Function;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.injecting.InjectingContainerBuilder;
 import org.jetbrains.annotations.NonNls;
 
@@ -336,7 +336,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void dispose() {
     Application application = Application.get();

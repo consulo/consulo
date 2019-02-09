@@ -33,7 +33,8 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
@@ -83,7 +84,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
                          final boolean synchronous)
   {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void execute() {
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);

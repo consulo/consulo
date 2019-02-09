@@ -56,7 +56,7 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.OpenSourceUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.psi.PsiPackageSupportProviders;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -606,7 +606,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       super(IdeBundle.message("action.group.by.packages"), null, PlatformIcons.GROUP_BY_PACKAGES);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
@@ -649,7 +649,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       super(IdeBundle.message("action.flatten.packages"), null, PlatformIcons.FLATTEN_PACKAGES_ICON);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);

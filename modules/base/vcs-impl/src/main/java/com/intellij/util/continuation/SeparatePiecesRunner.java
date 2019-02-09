@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -44,7 +44,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void ping() {
     clearSuspend();
     final Application application = ApplicationManager.getApplication();
@@ -61,7 +61,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void pingImpl() {
     while (true) {
       myCurrentWrapper.set(null);
@@ -120,19 +120,19 @@ public class SeparatePiecesRunner extends GeneralRunner {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void doInAwtIfFail(Exception e) {
       doInAwtIfCancel();
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void doInAwtIfCancel() {
       onCancel();
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void doInAwtIfSuccess() {
       if (! mySuspended) {
         ping();

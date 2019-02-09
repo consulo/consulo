@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
 import com.intellij.vcsUtil.VcsUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -393,13 +393,13 @@ public class MockChangeListManager extends ChangeListManagerEx {
     return addChangeList(name, comment);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void blockModalNotifications() {
     throw new UnsupportedOperationException();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void unblockModalNotifications() {
     throw new UnsupportedOperationException();

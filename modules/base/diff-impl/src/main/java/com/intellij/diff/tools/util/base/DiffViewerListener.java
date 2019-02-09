@@ -15,26 +15,26 @@
  */
 package com.intellij.diff.tools.util.base;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class DiffViewerListener {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onInit() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onDispose() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onBeforeRediff() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onAfterRediff() {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void onRediffAborted() {
   }
 }

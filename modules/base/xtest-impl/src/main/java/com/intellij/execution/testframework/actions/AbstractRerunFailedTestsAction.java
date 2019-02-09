@@ -45,7 +45,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
@@ -88,7 +88,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     myModelProvider = modelProvider;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public final void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(isActive(e));
@@ -139,7 +139,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     return Filter.FAILED_OR_INTERRUPTED.and(Filter.IGNORED.not());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ExecutionEnvironment environment = e.getData(LangDataKeys.EXECUTION_ENVIRONMENT);

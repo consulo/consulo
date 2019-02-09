@@ -22,12 +22,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public class MakeModuleAction extends CompileActionBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.actions.MakeModuleAction");
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected void doAction(DataContext dataContext, Project project) {
     Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     Module module;
@@ -46,7 +46,7 @@ public class MakeModuleAction extends CompileActionBase {
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event){
     super.update(event);
     Presentation presentation = event.getPresentation();

@@ -20,9 +20,9 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.Disposer;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -46,7 +46,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
     return ID;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     if (myComponent == null) {
@@ -56,25 +56,25 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
     return myComponent;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myComponent != null && myComponent.isModified();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     myComponent.apply();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     myComponent.reset();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if(myComponent != null) {

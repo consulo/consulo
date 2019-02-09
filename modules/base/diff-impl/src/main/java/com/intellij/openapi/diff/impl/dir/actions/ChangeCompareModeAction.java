@@ -20,7 +20,7 @@ import com.intellij.ide.diff.DirDiffSettings;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
@@ -41,14 +41,14 @@ class ChangeCompareModeAction extends AnAction {
     myMode = mode;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     myModel.setCompareMode(myMode);
     myModel.reloadModel(false);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     final boolean on = myModel.getCompareMode() == myMode;

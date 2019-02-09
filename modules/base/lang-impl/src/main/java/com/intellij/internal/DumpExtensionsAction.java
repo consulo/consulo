@@ -25,7 +25,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import java.util.List;
  * @author nik
  */
 public class DumpExtensionsAction extends DumbAwareAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     List<AreaInstance> areas = new ArrayList<>();

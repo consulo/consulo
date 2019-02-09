@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.util.IconUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.ui.image.Image;
 
@@ -72,7 +72,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
     @Override
     protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
       AnActionButton specifyUrlButton = new AnActionButton(ProjectBundle.message("sdk.paths.specify.url.button"), IconUtil.getAddLinkIcon()) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           onSpecifyUrlButtonClicked();

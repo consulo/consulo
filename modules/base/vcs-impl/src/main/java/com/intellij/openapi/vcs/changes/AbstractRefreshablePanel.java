@@ -31,7 +31,7 @@ import com.intellij.util.Ticket;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 
@@ -83,14 +83,14 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     return false;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void dataChanged() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myTicket.increment();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void refresh() {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -109,12 +109,12 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
 
   protected abstract T loadImpl() throws VcsException;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   protected abstract JPanel dataToPresentation(final T t);
 
   protected abstract void disposeImpl();
   
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void acceptData(final T t) {
     final JPanel panel = dataToPresentation(t);
     myDetailsPanel.data(panel);
@@ -141,7 +141,7 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void doInAwtIfFail(Exception e) {
       final Exception cause;
       if (e instanceof MyRuntime && e.getCause() != null) {
@@ -156,12 +156,12 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void doInAwtIfCancel() {
     }
 
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     protected void doInAwtIfSuccess() {
       if (myDisposed) return;
       try {

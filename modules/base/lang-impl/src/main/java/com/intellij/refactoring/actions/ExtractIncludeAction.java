@@ -26,7 +26,7 @@ import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.LanguageExtractInclude;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @author ven
@@ -47,7 +47,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
     return true;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent e) {
     super.update(e);

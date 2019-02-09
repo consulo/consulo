@@ -32,8 +32,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.indexing.IdFilter;
 import com.intellij.util.indexing.IdIterator;
 import consulo.annotations.Exported;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -156,7 +157,7 @@ public abstract class StubIndex {
                                                     @Nonnull Project project,
                                                     @Nonnull final GlobalSearchScope scope);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @RequiredReadAction
   protected <Psi extends PsiElement> void reportStubPsiMismatch(Psi psi, VirtualFile file, Class<Psi> requiredClass) {
     LOG.error("Invalid stub element type in index: " + file + ". found: " + psi + ". expected: " + requiredClass);

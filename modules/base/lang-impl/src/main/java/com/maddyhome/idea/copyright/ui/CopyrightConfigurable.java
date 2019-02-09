@@ -36,7 +36,7 @@ import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.copyright.PredefinedCopyrightTextEP;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -118,7 +118,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     JComponent editorComponent = myCopyrightEditor.getComponent();
 
     group.add(new AnAction("Preview", null, AllIcons.Actions.Preview) {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         try {
@@ -134,13 +134,13 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     PredefinedCopyrightTextEP[] extensions = PredefinedCopyrightTextEP.EP_NAME.getExtensions();
     if (extensions.length > 0) {
       group.add(new AnAction("Reset To", null, AllIcons.Actions.Reset) {
-        @RequiredDispatchThread
+        @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           DefaultActionGroup actionGroup = new DefaultActionGroup();
           for (PredefinedCopyrightTextEP extension : extensions) {
             actionGroup.add(new AnAction(extension.name) {
-              @RequiredDispatchThread
+              @RequiredUIAccess
               @Override
               public void actionPerformed(@Nonnull AnActionEvent e) {
                 String text = extension.getText();
@@ -216,7 +216,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public boolean isModified() {
     return myModified ||
            !Comparing.strEqual(EntityUtil.encode(myCopyrightDocument.getText().trim()), myCopyrightProfile.getNotice()) ||
@@ -230,7 +230,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     myCopyrightProfile.setNotice(EntityUtil.encode(myCopyrightDocument.getText().trim()));
     myCopyrightProfile.setKeyword(myKeywordField.getText());
@@ -241,7 +241,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
   }
 
   @Override
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void reset() {
     myDisplayName = myCopyrightProfile.getName();
     WriteAction.run(() -> myCopyrightDocument.setText(EntityUtil.decode(myCopyrightProfile.getNotice())));
@@ -249,7 +249,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     myAllowReplaceTextField.setText(myCopyrightProfile.getAllowReplaceKeyword());
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     EditorFactory.getInstance().releaseEditor(myCopyrightEditor);

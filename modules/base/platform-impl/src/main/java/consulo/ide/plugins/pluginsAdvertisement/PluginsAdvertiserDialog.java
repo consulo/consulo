@@ -23,7 +23,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
 import javax.annotation.Nonnull;
 
@@ -60,7 +60,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     init();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {

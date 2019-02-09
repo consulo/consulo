@@ -20,8 +20,9 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -94,7 +95,7 @@ public abstract class PsiDocumentManager {
    * Before a modified document is committed, accessing its PSI may return elements
    * corresponding to original (unmodified) state of the document.
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void commitAllDocuments();
 
   /**
@@ -146,7 +147,7 @@ public abstract class PsiDocumentManager {
    * @see #commitDocument(Document)
    */
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract Document[] getUncommittedDocuments();
 
   /**
@@ -253,7 +254,7 @@ public abstract class PsiDocumentManager {
    * @param action to run when all documents committed
    * @return true if action was run immediately (i.e. all documents are already committed)
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract boolean performWhenAllCommitted(@Nonnull Runnable action);
 
   /**

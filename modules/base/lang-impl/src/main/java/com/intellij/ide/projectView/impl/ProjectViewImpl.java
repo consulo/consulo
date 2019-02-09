@@ -87,10 +87,9 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
-import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowContentUI;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -347,14 +346,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       mySubId = subId;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       AbstractProjectViewPane pane = getProjectViewPaneById(myId);
       e.getPresentation().setText(pane.getTitle() + (mySubId != null ? (" - " + pane.getPresentableSubIdName(mySubId)) : ""));
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       changeView(myId, mySubId);
@@ -637,7 +636,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
 
       @Override
-      @RequiredDispatchThread
+      @RequiredUIAccess
       public void update(AnActionEvent e) {
         super.update(e);
         Project project = e.getProject();
@@ -666,7 +665,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         super.setSelected(event, flag);
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(AnActionEvent e) {
         super.update(e);
@@ -698,7 +697,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         setPaneOption(myOptionsMap, flag, myCurrentViewId, true);
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(AnActionEvent e) {
         super.update(e);
@@ -1680,7 +1679,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       return super.isSelected(event);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
@@ -1957,7 +1956,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       setManualOrder(getCurrentViewId(), flag);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       super.update(e);
@@ -1982,7 +1981,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       setSortByType(getCurrentViewId(), flag);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       super.update(e);
@@ -2007,7 +2006,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       setFoldersAlwaysOnTop(flag);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       super.update(e);
@@ -2023,7 +2022,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       getTemplatePresentation().setHoveredIcon(AllIcons.General.LocateHover);
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myAutoScrollFromSourceHandler.scrollFromSource();

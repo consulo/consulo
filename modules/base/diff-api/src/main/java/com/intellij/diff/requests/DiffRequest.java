@@ -20,7 +20,7 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 public abstract class DiffRequest implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
@@ -37,7 +37,7 @@ public abstract class DiffRequest implements UserDataHolder {
    * @param isAssigned true means request processing started, false means processing has stopped.
    *                   Total number of calls with true should be same as for false
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void onAssigned(boolean isAssigned) {
   }
 

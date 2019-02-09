@@ -21,7 +21,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -34,7 +35,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class XDebuggerTreeActionBase extends AnAction {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
     XValueNodeImpl node = getSelectedNode(e.getDataContext());
@@ -48,7 +49,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
 
   protected abstract void perform(final XValueNodeImpl node, @Nonnull String nodeName, final AnActionEvent e);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent e) {
     XValueNodeImpl node = getSelectedNode(e.getDataContext());

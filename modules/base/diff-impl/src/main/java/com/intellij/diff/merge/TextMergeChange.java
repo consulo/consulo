@@ -31,13 +31,12 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +61,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
 
   @Nullable private MergeInnerDifferences myInnerFragments; // warning: might be out of date
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public TextMergeChange(int index, @Nonnull MergeLineFragment fragment, @Nonnull MergeConflictType conflictType, @Nonnull TextMergeViewer viewer) {
     super(conflictType);
     myMergeViewer = viewer;
@@ -74,14 +73,14 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     reinstallHighlighters();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void destroy() {
     destroyHighlighters();
     destroyOperations();
     destroyInnerHighlighters();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public void reinstallHighlighters() {
     destroyHighlighters();
     installHighlighters();
@@ -100,7 +99,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     return myIndex;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void setResolved(@Nonnull Side side, boolean value) {
     myResolved[side.getIndex()] = value;
 
@@ -200,7 +199,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
   // Gutter actions
   //
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void installOperations() {
     ContainerUtil.addIfNotNull(myOperations, createOperation(ThreeSide.BASE, OperationType.RESOLVE));
     ContainerUtil.addIfNotNull(myOperations, createOperation(ThreeSide.LEFT, OperationType.APPLY));
@@ -209,7 +208,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     ContainerUtil.addIfNotNull(myOperations, createOperation(ThreeSide.RIGHT, OperationType.IGNORE));
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void destroyOperations() {
     for (MyGutterOperation operation : myOperations) {
       operation.dispose();

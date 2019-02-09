@@ -20,7 +20,7 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 /**
  * @see com.intellij.diff.DiffRequestFactory
@@ -36,7 +36,7 @@ public abstract class MergeRequest implements UserDataHolder {
    *
    * MergeRequest should keep initial state of its content and restore it on {@link MergeResult.CANCEL}
    */
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public abstract void applyResult(@Nonnull MergeResult result);
 
   @javax.annotation.Nullable

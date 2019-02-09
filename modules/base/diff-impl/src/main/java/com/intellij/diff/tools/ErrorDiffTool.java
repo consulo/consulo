@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.List;
 public class ErrorDiffTool implements FrameDiffTool {
   public static final ErrorDiffTool INSTANCE = new ErrorDiffTool();
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
@@ -109,7 +109,7 @@ public class ErrorDiffTool implements FrameDiffTool {
       return null;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Nonnull
     @Override
     public ToolbarComponents init() {
@@ -131,7 +131,7 @@ public class ErrorDiffTool implements FrameDiffTool {
       return new ToolbarComponents();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void dispose() {
     }

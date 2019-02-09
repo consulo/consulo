@@ -41,7 +41,7 @@ import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
@@ -71,7 +71,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER).exists();
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   @Nullable
   public Project doOpenProject(@Nonnull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {

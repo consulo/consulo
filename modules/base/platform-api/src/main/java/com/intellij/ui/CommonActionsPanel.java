@@ -24,7 +24,7 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
@@ -189,13 +189,13 @@ public class CommonActionsPanel extends JPanel {
 
   private static void registerDeleteHook(final MyActionButton removeButton) {
     new AnAction("Delete Hook") {
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         removeButton.actionPerformed(e);
       }
 
-      @RequiredDispatchThread
+      @RequiredUIAccess
       @Override
       public void update(@Nonnull AnActionEvent e) {
         final JComponent contextComponent = removeButton.getContextComponent();
@@ -230,7 +230,7 @@ public class CommonActionsPanel extends JPanel {
       myListener = listener;
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myButton.performAction(myListener);

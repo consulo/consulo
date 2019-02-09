@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,19 +42,19 @@ public class MockCommandProcessor extends CommandProcessor {
                              boolean shouldRecordCommandForActiveDocument) {
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId) {
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document) {
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void executeCommandAsync(@Nullable Project project,
                                   @Nonnull Supplier<AsyncResult<Void>> runnable,
@@ -64,7 +64,7 @@ public class MockCommandProcessor extends CommandProcessor {
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void executeCommandAsync(@Nullable Project project,
                                   @Nonnull Supplier<AsyncResult<Void>> command,
@@ -75,7 +75,7 @@ public class MockCommandProcessor extends CommandProcessor {
 
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void executeCommandAsync(@Nullable Project project,
                                   @Nonnull Supplier<AsyncResult<Void>> command,

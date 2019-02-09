@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.ui.PopupHandler;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -30,14 +30,14 @@ public interface EditorMarkupModel extends MarkupModel {
 
   void setErrorStripeVisible(boolean val);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void setErrorStripeRenderer(ErrorStripeRenderer renderer);
 
   ErrorStripeRenderer getErrorStripeRenderer();
 
   void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent);
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void setErrorPanelPopupHandler(@Nonnull PopupHandler handler);
 
   void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider);

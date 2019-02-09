@@ -33,7 +33,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ui.SwingUIDecorator;
 
@@ -59,7 +59,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
   private JBList<Object> myList;
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public NewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     super(parentDisposable, virtualFile);
     myProject = project;
@@ -139,7 +139,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
     return ScrollPaneFactory.createScrollPane(myList, true);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Nonnull
   @Override
   protected JComponent createRightComponent(VirtualFile param) {

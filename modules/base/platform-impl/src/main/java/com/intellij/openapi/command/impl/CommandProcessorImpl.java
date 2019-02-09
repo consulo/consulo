@@ -23,14 +23,14 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 
 @Singleton
 public class CommandProcessorImpl extends CoreCommandProcessor {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void finishCommand(final Project project, final Object command, final Throwable throwable) {
     if (myCurrentCommand != command) return;

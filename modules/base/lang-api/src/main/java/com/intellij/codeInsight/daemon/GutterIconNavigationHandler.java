@@ -20,11 +20,11 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import java.awt.event.MouseEvent;
 
 public interface GutterIconNavigationHandler<T extends PsiElement> {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   void navigate(MouseEvent e, T elt);
 }

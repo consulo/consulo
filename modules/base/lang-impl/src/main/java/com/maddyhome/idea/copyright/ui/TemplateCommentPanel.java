@@ -38,7 +38,7 @@ import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.copyright.generate.TemplateCopyrightCommenter;
@@ -366,7 +366,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     return "copyright.filetypes";
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     initEditor();
@@ -386,7 +386,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myEditor != null) {
@@ -395,7 +395,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     if (myFileType == null) {
@@ -406,7 +406,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     final CopyrightFileConfigManager copyrightFileConfigManager = myManager.getCopyrightFileConfigManager();
@@ -418,7 +418,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void reset() {
     final CopyrightFileConfig options = myFileType == null

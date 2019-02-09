@@ -44,7 +44,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.application.ex.ApplicationEx2;
 import consulo.injecting.key.InjectingKey;
 import gnu.trove.THashSet;
@@ -59,7 +59,7 @@ import java.util.*;
 import java.util.zip.ZipOutputStream;
 
 public class ExportSettingsAction extends AnAction implements DumbAware {
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nullable AnActionEvent e) {
     ApplicationManager.getApplication().saveSettings();

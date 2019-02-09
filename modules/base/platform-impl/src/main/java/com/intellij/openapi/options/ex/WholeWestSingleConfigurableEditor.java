@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.WholeWestDialogWrapper;
@@ -266,14 +266,14 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   protected void initRootPanel(@Nonnull JPanel rootPanel) {
     myRootPanel = rootPanel;
     super.initRootPanel(rootPanel);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent) {

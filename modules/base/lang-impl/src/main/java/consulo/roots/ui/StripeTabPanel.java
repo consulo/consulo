@@ -27,7 +27,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class StripeTabPanel extends JPanel {
   public static interface SelectListener extends EventListener {
-    @RequiredDispatchThread
+    @RequiredUIAccess
     void selected(@Nonnull TabInfo tabInfo);
   }
 
@@ -79,7 +79,7 @@ public class StripeTabPanel extends JPanel {
       return myButton.isSelected();
     }
 
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void select() {
       myButton.setSelected(true);
     }
@@ -94,7 +94,7 @@ public class StripeTabPanel extends JPanel {
   private final ButtonGroup myButtonGroup = new ButtonGroup();
   private final ItemListener myItemListener = new ItemListener() {
     @Override
-    @RequiredDispatchThread
+    @RequiredUIAccess
     public void itemStateChanged(ItemEvent e) {
       if (e.getStateChange() == ItemEvent.SELECTED) {
         StaticAnchoredButton source = (StaticAnchoredButton)e.getSource();
@@ -135,13 +135,13 @@ public class StripeTabPanel extends JPanel {
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public TabInfo addTab(@Nonnull String tabName, @Nonnull JComponent component) {
     return addTab(tabName, component, component);
   }
 
   @Nonnull
-  @RequiredDispatchThread
+  @RequiredUIAccess
   public TabInfo addTab(@Nonnull String tabName, @Nonnull JComponent component, @Nullable JComponent preferredFocusableComponent) {
     StaticAnchoredButton button = new StaticAnchoredButton(tabName, ToolWindowAnchor.LEFT);
 

@@ -66,7 +66,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -309,7 +309,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     return actions.toArray(new Action[actions.size()]);
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void runExecutor(ApplyPatchExecutor executor) {
     final Collection<AbstractFilePatchInProgress> included = getIncluded();
     if (included.isEmpty()) return;
@@ -421,7 +421,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     return reader;
   }
 
-  @RequiredDispatchThread
+  @RequiredUIAccess
   private void syncUpdatePatchFileAndScheduleReloadIfNeeded(@Nullable VirtualFile eventFile) {
     // if dialog is modal and refresh called not from dispatch thread then
     // fireEvents in RefreshQueueImpl will not be triggered because of wrong modality state inside those thread -> defaultMS == NON_MODAL
