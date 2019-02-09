@@ -51,11 +51,13 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
+import com.intellij.openapi.project.impl.DefaultProjectFactoryImpl;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -91,9 +93,9 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IndexableFileSet;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import junit.framework.TestCase;
@@ -608,7 +610,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     documentManager.clearUncommittedDocuments();
 
     ProjectManagerImpl projectManager = (ProjectManagerImpl)ProjectManager.getInstance();
-    if (projectManager.isDefaultProjectInitialized()) {
+    if (((DefaultProjectFactoryImpl)DefaultProjectFactory.getInstance()).isDefaultProjectInitialized()) {
       Project defaultProject = projectManager.getDefaultProject();
       ((PsiDocumentManagerImpl)PsiDocumentManager.getInstance(defaultProject)).clearUncommittedDocuments();
     }

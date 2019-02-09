@@ -27,5 +27,6 @@ public abstract class DefaultProjectFactory {
     return ServiceManager.getService(DefaultProjectFactory.class);
   }
 
+  @Nonnull
   public abstract Project getDefaultProject();
 }

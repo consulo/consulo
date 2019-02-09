@@ -16,16 +16,30 @@
 package com.intellij.openapi.project.impl;
 
 import com.intellij.openapi.project.ProjectManager;
+import org.jdom.Element;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
-public class DefaultProject extends ProjectImpl {
+public class DefaultProjectImpl extends ProjectImpl {
   private static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
-  protected DefaultProject(@Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
+  private Element myStateElement;
+
+  DefaultProjectImpl(@Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
     super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
+  }
+
+  @Nullable
+  public Element getStateElement() {
+    return myStateElement;
+  }
+
+  public void setStateElement(@Nullable Element stateElement) {
+    myStateElement = stateElement;
   }
 
   @Override

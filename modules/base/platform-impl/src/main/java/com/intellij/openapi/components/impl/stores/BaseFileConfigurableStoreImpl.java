@@ -18,8 +18,8 @@ package com.intellij.openapi.components.impl.stores;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StateStorageException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
@@ -38,11 +38,7 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
 
   @Override
   public void load() throws IOException, StateStorageException {
-    getMainStorageData(); //load it
-  }
-
-  public StorageData getMainStorageData() {
-    return getMainStorage().getStorageData();
+    getMainStorage().getStorageData();
   }
 
   @Nonnull
