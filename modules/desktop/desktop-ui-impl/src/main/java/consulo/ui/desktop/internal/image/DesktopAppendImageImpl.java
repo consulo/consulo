@@ -17,16 +17,12 @@ package consulo.ui.desktop.internal.image;
 
 import com.intellij.ui.RowIcon;
 import consulo.ui.image.Image;
-import consulo.awt.internal.SwingIconWrapper;
-
-import javax.annotation.Nonnull;
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 2018-05-07
  */
-public class DesktopAppendImageImpl extends RowIcon implements SwingIconWrapper, Image {
+public class DesktopAppendImageImpl extends RowIcon implements Image {
   public DesktopAppendImageImpl(int iconCount) {
     super(iconCount, Alignment.CENTER);        
   }
@@ -39,11 +35,5 @@ public class DesktopAppendImageImpl extends RowIcon implements SwingIconWrapper,
   @Override
   public int getWidth() {
     return getIconWidth();
-  }
-
-  @Nonnull
-  @Override
-  public Icon toSwingIcon() {
-    return this;
   }
 }

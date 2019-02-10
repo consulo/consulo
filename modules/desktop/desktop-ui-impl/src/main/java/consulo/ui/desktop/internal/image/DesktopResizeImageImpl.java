@@ -16,17 +16,15 @@
 package consulo.ui.desktop.internal.image;
 
 import com.intellij.ui.SizedIcon;
-import consulo.awt.internal.SwingIconWrapper;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 2019-02-09
  */
-public class DesktopResizeImageImpl extends SizedIcon implements Image, SwingIconWrapper {
+public class DesktopResizeImageImpl extends SizedIcon implements Image {
   public DesktopResizeImageImpl(Icon delegate, int width, int height) {
     super(delegate, width, height);
   }
@@ -39,11 +37,5 @@ public class DesktopResizeImageImpl extends SizedIcon implements Image, SwingIco
   @Override
   public int getWidth() {
     return getIconWidth();
-  }
-
-  @Nonnull
-  @Override
-  public Icon toSwingIcon() {
-    return this;
   }
 }

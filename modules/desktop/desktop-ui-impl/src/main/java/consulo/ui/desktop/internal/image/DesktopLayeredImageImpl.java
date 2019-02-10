@@ -18,7 +18,6 @@ package consulo.ui.desktop.internal.image;
 import com.intellij.ui.LayeredIcon;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.awt.internal.SwingIconWrapper;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -29,7 +28,7 @@ import java.util.Arrays;
  * @since 11-Sep-17
  */
 @SuppressWarnings("deprecation")
-public class DesktopLayeredImageImpl extends LayeredIcon implements SwingIconWrapper, Image {
+public class DesktopLayeredImageImpl extends LayeredIcon implements Image {
   @Nonnull
   public static Icon[] remap(Image[] icons) {
     return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
@@ -37,12 +36,6 @@ public class DesktopLayeredImageImpl extends LayeredIcon implements SwingIconWra
 
   public DesktopLayeredImageImpl(@Nonnull Image... images) {
     super(remap(images));
-  }
-
-  @Nonnull
-  @Override
-  public Icon toSwingIcon() {
-    return this;
   }
 
   @Override

@@ -19,17 +19,15 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.ui.image.Image;
-import consulo.awt.internal.SwingIconWrapper;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
  * @since 2018-05-07
  */
-public class DesktopEmptyImageImpl extends EmptyIcon implements Image, SwingIconWrapper {
+public class DesktopEmptyImageImpl extends EmptyIcon implements Image {
   private static final ConcurrentMap<Pair<Integer, Integer>, DesktopEmptyImageImpl> cache = ConcurrentFactoryMap.createMap(p -> new DesktopEmptyImageImpl(p.getFirst(), p.getSecond()));
 
   @Nonnull
@@ -50,11 +48,5 @@ public class DesktopEmptyImageImpl extends EmptyIcon implements Image, SwingIcon
   @Override
   public int getWidth() {
     return getIconWidth();
-  }
-
-  @Nonnull
-  @Override
-  public Icon toSwingIcon() {
-    return this;
   }
 }
