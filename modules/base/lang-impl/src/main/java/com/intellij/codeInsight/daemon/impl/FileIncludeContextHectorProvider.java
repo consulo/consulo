@@ -23,6 +23,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.include.FileIncludeManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * @author mike
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
 public class FileIncludeContextHectorProvider implements HectorComponentPanelsProvider {
   private final FileIncludeManager myIncludeManager;
 
+  @Inject
   public FileIncludeContextHectorProvider(final FileIncludeManager includeManager) {
     myIncludeManager = includeManager;
   }
@@ -45,5 +47,4 @@ public class FileIncludeContextHectorProvider implements HectorComponentPanelsPr
     }
     return null;
   }
-
 }
