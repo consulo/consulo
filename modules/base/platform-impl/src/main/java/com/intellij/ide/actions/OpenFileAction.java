@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
@@ -43,6 +42,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,7 +90,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-    FileChooser.chooseFilesAsync(descriptor, project, userHomeDir).doWhenDone(files -> {
+    FileChooser.chooseFiles(descriptor, project, userHomeDir).doWhenDone(files -> {
       for (VirtualFile file : files) {
         if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
           Messages.showInfoMessage(project, file.getPresentableUrl() + " contains no " + ApplicationNamesInfo.getInstance().getFullProductName() + " project", "Cannot Open Project");

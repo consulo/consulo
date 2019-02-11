@@ -20,7 +20,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
 import com.intellij.openapi.module.Module;
@@ -46,6 +45,7 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -401,7 +401,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-      FileChooser.chooseFilesAsync(myDescriptor, myProject, myLastSelectedDir).doWhenDone(virtualFiles -> {
+      FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir).doWhenDone(virtualFiles -> {
         myLastSelectedDir = virtualFiles[0];
         addContentEntries(virtualFiles);
       });

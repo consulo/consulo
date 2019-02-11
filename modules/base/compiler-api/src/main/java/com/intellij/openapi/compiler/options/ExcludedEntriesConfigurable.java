@@ -18,7 +18,6 @@ package com.intellij.openapi.compiler.options;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.project.Project;
@@ -29,6 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
+import consulo.ui.fileChooser.FileChooser;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -152,7 +152,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
     }
 
     private void addPath(FileChooserDescriptor descriptor) {
-      FileChooser.chooseFilesAsync(descriptor, myProject, null).doWhenDone(chosen -> {
+      FileChooser.chooseFiles(descriptor, myProject, null).doWhenDone(chosen -> {
         int selected = -1 /*myExcludedTable.getSelectedRow() + 1*/;
         if (selected < 0) {
           selected = myExcludeEntryDescriptions.size();

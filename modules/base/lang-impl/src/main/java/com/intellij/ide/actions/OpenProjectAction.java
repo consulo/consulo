@@ -20,7 +20,6 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.DumbAware;
@@ -34,6 +33,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
+import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 
@@ -52,7 +52,7 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    FileChooser.chooseFilesAsync(descriptor, project, userHomeDir).doWhenDone((files) -> {
+    FileChooser.chooseFiles(descriptor, project, userHomeDir).doWhenDone((files) -> {
       if (files.length == 1) {
         Platform.hacky(() -> ProjectUtil.open(files[0].getPath(), project, false), () -> ProjectUtil.openAsync(files[0].getPath(), project, false, UIAccess.current()));
       }

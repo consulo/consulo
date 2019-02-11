@@ -17,7 +17,6 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -31,6 +30,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -190,7 +190,7 @@ public class SdkConfigurationUtil {
       return;
     }
 
-    FileChooser.chooseFilesAsync(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {
+    FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {
       final String path = virtualFiles[0].getPath();
       if (sdkType.isValidSdkHome(path)) {
         consumer.consume(path);
