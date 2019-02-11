@@ -34,11 +34,11 @@ import java.util.Collection;
  * @since 11-Feb-17
  */
 public class ExternalStorageStreamProvider extends StreamProvider {
-  private ExternalStorage myStorage;
-  private StateStorageManager myStateStorageManager;
+  private final ExternalStorage myStorage;
+  private final StateStorageManager myStateStorageManager;
 
-  public ExternalStorageStreamProvider(ExternalStorage storage, StateStorageManager stateStorageManager) {
-    myStorage = storage;
+  public ExternalStorageStreamProvider(StateStorageManager stateStorageManager) {
+    myStorage = new ExternalStorage();
     myStateStorageManager = stateStorageManager;
   }
 

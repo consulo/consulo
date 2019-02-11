@@ -25,8 +25,7 @@ public abstract class StreamProvider {
 
   /**
    * @param fileSpec
-   * @param content bytes of content, size of array is not actual size of data, you must use {@code size}
-   * @param size actual size of data
+   * @param content bytes of content
    * @param roamingType
    */
   public abstract void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, @Nonnull RoamingType roamingType) throws IOException;

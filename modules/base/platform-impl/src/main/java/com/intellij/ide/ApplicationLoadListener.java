@@ -15,11 +15,11 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
 
 
 public interface ApplicationLoadListener {
   ExtensionPointName<ApplicationLoadListener> EP_NAME = ExtensionPointName.create("com.intellij.applicationLoadListener");
-  void beforeApplicationLoaded(Application application);
+
+  void beforeApplicationLoaded();
 }
