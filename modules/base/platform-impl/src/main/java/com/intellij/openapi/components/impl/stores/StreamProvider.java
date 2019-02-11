@@ -29,7 +29,7 @@ public abstract class StreamProvider {
    * @param size actual size of data
    * @param roamingType
    */
-  public abstract void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, int size, @Nonnull RoamingType roamingType) throws IOException;
+  public abstract void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, @Nonnull RoamingType roamingType) throws IOException;
 
   @Nullable
   public abstract InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException;

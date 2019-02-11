@@ -23,13 +23,23 @@ import consulo.components.impl.stores.StateComponentInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 public interface IComponentStore {
+  class SaveCancelledException extends RuntimeException {
+    public SaveCancelledException() {
+    }
+  }
+
+  void load() throws IOException, StateStorageException;
+
+  void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
+
+  void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
+
   /**
    * Return storable info about component
    */
@@ -39,35 +49,10 @@ public interface IComponentStore {
   void reinitComponents(@Nonnull Set<String> componentNames, boolean reloadData);
 
   @Nonnull
-  Collection<String> getNotReloadableComponents(@Nonnull Collection<String> componentNames);
-
-  boolean isReloadPossible(@Nonnull Set<String> componentNames);
-
-  void load() throws IOException, StateStorageException;
-
-  @Nonnull
   StateStorageManager getStateStorageManager();
 
-  class SaveCancelledException extends RuntimeException {
-    public SaveCancelledException() {
-    }
-
-    public SaveCancelledException(final String s) {
-      super(s);
-    }
-  }
-
-  void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
-
-  void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
-
-  interface Reloadable extends IComponentStore {
-    /**
-     * null if reloaded
-     * empty list if nothing to reload
-     * list of not reloadable components (reload is not performed)
-     */
-    @Nullable
-    Collection<String> reload(@Nonnull Collection<? extends StateStorage> changedStorages);
-  }
+  /**
+   * @return true is reloaded - false if not reloaded
+   */
+  boolean reload(@Nonnull Collection<? extends StateStorage> changedStorages);
 }

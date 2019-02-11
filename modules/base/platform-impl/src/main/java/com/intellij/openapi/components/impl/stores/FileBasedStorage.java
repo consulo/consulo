@@ -25,7 +25,6 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
@@ -119,7 +118,7 @@ public class FileBasedStorage extends XmlElementStorage {
         myLineSeparator = isUseLfLineSeparatorByDefault() ? LineSeparator.LF : LineSeparator.getSystemLineSeparator();
       }
 
-      BufferExposingByteArrayOutputStream content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
+      byte[] content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
       try {
         if (myStreamProvider != null && myStreamProvider.isEnabled()) {
           // stream provider always use LF separator
@@ -150,7 +149,7 @@ public class FileBasedStorage extends XmlElementStorage {
         myLineSeparator = isUseLfLineSeparatorByDefault() ? LineSeparator.LF : LineSeparator.getSystemLineSeparator();
       }
 
-      BufferExposingByteArrayOutputStream content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
+      byte[] content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
 
       try {
         if (myStreamProvider != null && myStreamProvider.isEnabled()) {

@@ -16,15 +16,16 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @see com.intellij.openapi.project.ex.ProjectEx#getStateStore()
+ * @see ProjectEx#getStateStore()
  */
-public interface IProjectStore extends IComponentStore.Reloadable {
+public interface IProjectStore extends IComponentStore {
   void setProjectFilePathNoUI(@Nonnull String filePath);
 
   void setProjectFilePath(@Nonnull String filePath);

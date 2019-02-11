@@ -19,16 +19,13 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import com.intellij.util.io.UnsyncByteArrayOutputStream;
-import consulo.externalStorage.ExternalStorageUtil;
-import org.iq80.snappy.SnappyInputStream;
-import org.iq80.snappy.SnappyOutputStream;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -46,33 +43,39 @@ public class ExternalStorage {
 
   private File myProxyDirectory;
 
-  private final ExternalStorageQueue myQueue = new ExternalStorageQueue();
+  private final ExternalStorageQueue myQueue = new ExternalStorageQueue(this);
 
   public ExternalStorage() {
     myProxyDirectory = new File(PathManager.getSystemPath(), "externalStorage");
   }
 
-  @javax.annotation.Nullable
+  File getProxyDirectory() {
+    return myProxyDirectory;
+  }
+
+  @Nullable
   public InputStream loadContent(String fileSpec, RoamingType roamingType, StateStorageManager stateStorageManager) throws IOException {
     Ref<byte[]> ref = myQueue.getContent(fileSpec, roamingType);
     if (ref != null) {
       byte[] bytes = ref.get();
-      return bytes == null ? null : new SnappyInputStream(new UnsyncByteArrayInputStream(bytes));
+      if (bytes == null) {
+        return null;
+      }
+      else {
+        Pair<byte[], Integer> pair = DataCompressor.uncompress(new UnsyncByteArrayInputStream(bytes));
+        return new UnsyncByteArrayInputStream(pair.getFirst());
+      }
     }
 
     InputStream stream = null;
     int mod = -1;
     File file = new File(myProxyDirectory, buildFileSpec(roamingType, fileSpec));
     if (file.exists()) {
-      stream = new SnappyInputStream(new FileInputStream(file));
+      try (FileInputStream inputStream = new FileInputStream(file)) {
+        Pair<byte[], Integer> compressedPair = DataCompressor.uncompress(inputStream);
 
-      File modFile = ExternalStorageUtil.getModCountFile(file);
-      if (modFile.exists()) {
-        try {
-          mod = Integer.parseInt(FileUtil.loadFile(modFile));
-        }
-        catch (IOException ignored) {
-        }
+        stream = new UnsyncByteArrayInputStream(compressedPair.getFirst());
+        mod = compressedPair.getSecond();
       }
     }
 
@@ -80,15 +83,11 @@ public class ExternalStorage {
     return stream;
   }
 
-  public void saveContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType, byte[] content, int size) throws IOException {
-    UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream(size);
-    try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(out)) {
-      snappyOutputStream.write(content, 0, size);
-    }
+  public void saveContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType, byte[] content) throws IOException {
+    // compress data with -1 mod count - for local, server wull update it after pushing data
+    byte[] compress = DataCompressor.compress(content, -1);
 
-    byte[] compressedContent = out.toByteArray();
-
-    myQueue.wantSave(myProxyDirectory, fileSpec, roamingType, compressedContent);
+    myQueue.wantSaveToServer(myProxyDirectory, fileSpec, roamingType, compress);
   }
 
   @Nonnull
@@ -102,11 +101,22 @@ public class ExternalStorage {
     return Collections.emptyList();
   }
 
-  public void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+  public boolean delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+    boolean deleted = deleteWithoutServer(fileSpec, roamingType);
+
+    myQueue.deleteFromServer(fileSpec, roamingType);
+
+    return deleted;
+  }
+
+  public boolean deleteWithoutServer(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
     fileSpec = buildFileSpec(roamingType, fileSpec);
 
     File file = new File(myProxyDirectory, fileSpec);
-    file.delete();
+    if (file.exists()) {
+      return file.delete();
+    }
+    return false;
   }
 
   @Nonnull

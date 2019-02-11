@@ -25,7 +25,6 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
@@ -35,9 +34,9 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -291,7 +290,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
               storeElement.setAttribute(StorageData.NAME, componentName);
               storeElement.addContent(element);
 
-              BufferExposingByteArrayOutputStream byteOut;
+              byte[] byteOut;
               VirtualFile file = getFile(fileName, dir, MySaveSession.this);
               if (file.exists()) {
                 byteOut = StorageUtil.writeToBytes(storeElement, StorageUtil.loadFile(file).second);

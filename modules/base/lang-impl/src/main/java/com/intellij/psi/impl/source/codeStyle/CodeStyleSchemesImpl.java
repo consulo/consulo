@@ -26,18 +26,18 @@ import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
-  @NonNls public static final String DEFAULT_SCHEME_NAME = "Default";
+  @NonNls
+  public static final String DEFAULT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
 
   @SuppressWarnings("SpellCheckingInspection")
   static final String CODE_STYLES_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/codestyles";
 
-  public String CURRENT_SCHEME_NAME = DEFAULT_SCHEME_NAME;
   private boolean myIsInitialized = false;
 
   private final SchemesManager<CodeStyleScheme, CodeStyleSchemeImpl> mySchemesManager;
@@ -88,7 +88,6 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
   public void setCurrentScheme(CodeStyleScheme scheme) {
     String schemeName = scheme == null ? null : scheme.getName();
     mySchemesManager.setCurrentSchemeName(schemeName);
-    CURRENT_SCHEME_NAME = schemeName;
   }
 
   @SuppressWarnings("ForLoopThatDoesntUseLoopVariable")

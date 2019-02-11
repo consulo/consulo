@@ -22,14 +22,23 @@ import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import consulo.application.ex.ApplicationEx2;
 import consulo.externalStorage.storage.ExternalStorage;
 
+import javax.inject.Inject;
+
 /**
  * @author VISTALL
  * @since 11-Feb-17
  */
 public class ExternalStorageAppListener implements ApplicationLoadListener {
+  private final Application myApplication;
+
+  @Inject
+  public ExternalStorageAppListener(Application application) {
+    myApplication = application;
+  }
+
   @Override
   public void beforeApplicationLoaded(Application application) {
-    ApplicationEx2 applicationEx = (ApplicationEx2)application;
+    ApplicationEx2 applicationEx = (ApplicationEx2)myApplication;
 
     IApplicationStore stateStore = applicationEx.getStateStore();
 

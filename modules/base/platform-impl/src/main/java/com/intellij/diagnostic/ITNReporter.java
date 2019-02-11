@@ -16,7 +16,7 @@
 package com.intellij.diagnostic;
 
 import com.intellij.errorreport.ErrorReportSender;
-import com.intellij.errorreport.bean.ErrorBean;
+import consulo.external.api.ErrorReportBean;
 import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.errorreport.error.UpdateAvailableException;
 import com.intellij.errorreport.error.WebServiceException;
@@ -71,7 +71,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                                    String additionalInfo,
                                    final Component parentComponent,
                                    final Consumer<SubmittedReportInfo> callback) {
-    ErrorBean errorBean = new ErrorBean(event.getThrowable(), LastActionTracker.ourLastActionId);
+    ErrorReportBean errorBean = new ErrorReportBean(event.getThrowable(), LastActionTracker.ourLastActionId);
 
     return doSubmit(event, parentComponent, callback, errorBean, additionalInfo);
   }
@@ -79,7 +79,7 @@ public class ITNReporter extends ErrorReportSubmitter {
   private static boolean doSubmit(final IdeaLoggingEvent event,
                                   final Component parentComponent,
                                   final Consumer<SubmittedReportInfo> callback,
-                                  final ErrorBean errorBean,
+                                  final ErrorReportBean errorBean,
                                   final String description) {
     final DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);

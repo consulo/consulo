@@ -23,6 +23,7 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
 import consulo.auth.ServiceAuthConfiguration;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 
@@ -75,7 +76,7 @@ public class ServiceAuthDialog extends DialogWrapper {
     init();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   protected JComponent createCenterPanel() {
     return myRoot;

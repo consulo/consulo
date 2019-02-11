@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.externalStorage.storage;
 
-import javax.annotation.Nonnull;
+import consulo.external.api.InformationBean;
 
-public interface IApplicationStore extends IComponentStore {
-  void setOptionsPath(@Nonnull String path);
+import java.util.Base64;
 
-  @Nonnull
-  String getConfigPath();
+/**
+ * @author VISTALL
+ * @since 2019-02-11
+ */
+public class PushFileRequestBean extends InformationBean {
+  private String bytes;
+  private String filePath;
 
-  void setConfigPath(@Nonnull String configPath);
+  public PushFileRequestBean(String filePath, byte[] data) {
+    this.filePath = filePath;
+    bytes = Base64.getEncoder().encodeToString(data);
+  }
 }

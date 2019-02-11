@@ -22,6 +22,8 @@ import consulo.util.pointers.Named;
  * Date: Jul 19, 2002
  */
 public interface CodeStyleScheme extends Named {
+  String DEFAULT_SCHEME_NAME = "Default";
+
   boolean isDefault();
 
   CodeStyleSettings getCodeStyleSettings();
