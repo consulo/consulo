@@ -18,20 +18,20 @@ package com.intellij.ide.todo;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.NamedComponent;
+import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.psi.search.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -42,7 +42,8 @@ import java.util.List;
  * @author Vladimir Kondratyev
  */
 @Singleton
-public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
+@State(name = "TodoConfiguration", storages = @Storage("editor.xml"))
+public class TodoConfiguration implements PersistentStateComponent<Element> {
   private TodoPattern[] myTodoPatterns;
   private TodoFilter[] myTodoFilters;
   private IndexPattern[] myIndexPatterns;
@@ -79,12 +80,6 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
 
   public static TodoConfiguration getInstance() {
     return ServiceManager.getService(TodoConfiguration.class);
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "TodoConfiguration";
   }
 
   @Nonnull
@@ -160,10 +155,10 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   }
 
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  public void loadState(Element state) {
     List<TodoPattern> patternsList = new ArrayList<TodoPattern>();
     List<TodoFilter> filtersList = new ArrayList<TodoFilter>();
-    for (Element child : element.getChildren()) {
+    for (Element child : state.getChildren()) {
       if (ELEMENT_PATTERN.equals(child.getName())) {
         TodoPattern pattern = new TodoPattern(TodoAttributesUtil.createDefault());
         pattern.readExternal(child, TodoAttributesUtil.getDefaultColorSchemeTextAttributes());
@@ -180,19 +175,22 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
     setTodoFilters(filtersList.toArray(new TodoFilter[filtersList.size()]));
   }
 
+  @Nullable
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
+  public Element getState() {
+    Element stateElement = new Element("state");
     final TodoPattern[] todoPatterns = myTodoPatterns;
     for (TodoPattern pattern : todoPatterns) {
       Element child = new Element(ELEMENT_PATTERN);
       pattern.writeExternal(child);
-      element.addContent(child);
+      stateElement.addContent(child);
     }
     for (TodoFilter filter : myTodoFilters) {
       Element child = new Element(ELEMENT_FILTER);
       filter.writeExternal(child, todoPatterns);
-      element.addContent(child);
+      stateElement.addContent(child);
     }
+    return stateElement;
   }
 
   public void colorSettingsChanged() {
