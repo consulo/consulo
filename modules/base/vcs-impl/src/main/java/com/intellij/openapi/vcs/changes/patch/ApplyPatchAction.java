@@ -33,7 +33,6 @@ import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -58,10 +57,10 @@ import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import javax.annotation.Nonnull;
-
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -104,15 +103,12 @@ public class ApplyPatchAction extends DumbAwareAction {
       final VirtualFile toSelect = settings.PATCH_STORAGE_LOCATION == null ? null :
                                    LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(settings.PATCH_STORAGE_LOCATION));
 
-      FileChooser.chooseFile(descriptor, project, toSelect, new Consumer<VirtualFile>() {
-        @Override
-        public void consume(VirtualFile file) {
-          final VirtualFile parent = file.getParent();
-          if (parent != null) {
-            settings.PATCH_STORAGE_LOCATION = FileUtil.toSystemDependentName(parent.getPath());
-          }
-          showApplyPatch(project, file);
+      FileChooser.chooseFile(descriptor, project, toSelect).doWhenDone(file -> {
+        final VirtualFile parent = file.getParent();
+        if (parent != null) {
+          settings.PATCH_STORAGE_LOCATION = FileUtil.toSystemDependentName(parent.getPath());
         }
+        showApplyPatch(project, file);
       });
     }
   }

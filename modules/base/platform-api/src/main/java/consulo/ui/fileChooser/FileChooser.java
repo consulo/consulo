@@ -33,7 +33,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2019-02-11
  */
-public class FileChooser {
+public final class FileChooser {
   private static final Logger LOG = Logger.getInstance(FileChooser.class);
 
   private FileChooser() {

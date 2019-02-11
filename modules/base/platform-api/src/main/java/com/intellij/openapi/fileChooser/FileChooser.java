@@ -18,8 +18,10 @@ package com.intellij.openapi.fileChooser;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -28,6 +30,7 @@ import java.awt.*;
 import java.util.List;
 
 @Deprecated
+@DeprecationInfo("Use consulo.ui.fileChooser.FileChooser")
 public class FileChooser {
   private static final Logger LOG = Logger.getInstance(FileChooser.class);
 
@@ -77,7 +80,6 @@ public class FileChooser {
    * @param project    project
    * @param toSelect   file to preselect
    * @param callback   callback will be invoked after user have closed dialog and only if there are files selected
-   * @see FileChooserConsumer
    * @since 11.1
    */
   @Deprecated
@@ -106,8 +108,9 @@ public class FileChooser {
                                  @Nullable final Component parent,
                                  @Nullable final VirtualFile toSelect,
                                  @Nonnull final Consumer<List<VirtualFile>> callback) {
+    Component parentComponent = parent == null ? WindowManager.getInstance().suggestParentWindow(project) : parent;
     final FileChooserFactory factory = FileChooserFactory.getInstance();
-    final PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
+    final PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parentComponent);
     pathChooser.choose(toSelect, callback);
   }
 

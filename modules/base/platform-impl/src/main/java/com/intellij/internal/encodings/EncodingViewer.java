@@ -16,15 +16,13 @@
 package com.intellij.internal.encodings;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.fileChooser.FileChooser;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -44,17 +42,13 @@ public class EncodingViewer extends DialogWrapper {
   public EncodingViewer() {
     super(false);
     initEncodings();
-    myLoadFile.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), myPanel, null, null);
-        if (file != null) {
-          loadFrom(file);
-        }
-      }
-    });
+    myLoadFile.addActionListener(e -> FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), myPanel, null, null).doWhenDone(file -> {
+      loadFrom(file);
+    }));
     init();
   }
 
+  @Override
   protected String getDimensionServiceKey() {
     return "EncodingViewer";
   }
@@ -82,7 +76,7 @@ public class EncodingViewer extends DialogWrapper {
   }
 
   private String getSelectedCharset() {
-    return ((Charset) myEncoding.getSelectedItem()).name();
+    return ((Charset)myEncoding.getSelectedItem()).name();
   }
 
   private void initEncodings() {

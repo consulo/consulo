@@ -32,7 +32,6 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalS
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
@@ -54,6 +53,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -283,6 +285,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(ActionEvent e) {
       if (myPathField == null) {
         assert false;
@@ -297,12 +300,12 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
       if (!StringUtil.isEmpty(pathToStart)) {
         fileToStart = LocalFileSystem.getInstance().findFileByPath(pathToStart);
       }
-      VirtualFile file = FileChooser.chooseFile(myDescriptor, myProject, fileToStart);
-      if (file != null) {
+
+      FileChooser.chooseFile(myDescriptor, myProject, fileToStart).doWhenDone(file -> {
         String path = ExternalSystemApiUtil.getLocalFileSystemPath(file);
         myPathField.setText(path);
         component.setValue(PROJECT_FILE_TO_START_WITH_KEY, path);
-      }
+      });
     }
   }
   

@@ -20,7 +20,6 @@ import com.intellij.ide.util.ElementsChooser;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -33,17 +32,18 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.containers.MultiMap;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class ChooseComponentsToExportDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance(ChooseComponentsToExportDialog.class);
@@ -55,10 +55,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
   private final boolean myShowFilePath;
   private final String myDescription;
 
-  public ChooseComponentsToExportDialog(MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents,
-                                        boolean showFilePath,
-                                        final String title,
-                                        String description) {
+  public ChooseComponentsToExportDialog(MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents, boolean showFilePath, final String title, String description) {
     super(false);
     myDescription = description;
     myShowFilePath = showFilePath;
@@ -83,8 +80,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     final ActionListener browseAction = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        chooseSettingsFile(myPathPanel.getText(), getWindow(), IdeBundle.message("title.export.file.location"),
-                           IdeBundle.message("prompt.choose.export.settings.file.path"))
+        chooseSettingsFile(myPathPanel.getText(), getWindow(), IdeBundle.message("title.export.file.location"), IdeBundle.message("prompt.choose.export.settings.file.path"))
                 .doWhenDone(path -> myPathPanel.setText(FileUtil.toSystemDependentName(path)));
       }
     };
@@ -158,6 +154,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
   }
 
   @Nonnull
+  @RequiredUIAccess
   public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, final String title, final String description) {
     FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
     chooserDescriptor.setDescription(description);
@@ -175,24 +172,18 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     else {
       initialDir = null;
     }
-    final AsyncResult<String> result = new AsyncResult<>();
-    FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir, new FileChooser.FileChooserConsumer() {
-      @Override
-      public void consume(List<VirtualFile> files) {
-        VirtualFile file = files.get(0);
-        if (file.isDirectory()) {
-          result.setDone(file.getPath() + '/' + new File(DEFAULT_PATH).getName());
-        }
-        else {
-          result.setDone(file.getPath());
-        }
+    final AsyncResult<String> result = AsyncResult.undefined();
+    AsyncResult<VirtualFile[]> fileAsyncResult = FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir);
+    fileAsyncResult.doWhenDone(files -> {
+      VirtualFile file = files[0];
+      if (file.isDirectory()) {
+        result.setDone(file.getPath() + '/' + new File(DEFAULT_PATH).getName());
       }
-
-      @Override
-      public void cancelled() {
-        result.setRejected();
+      else {
+        result.setDone(file.getPath());
       }
     });
+    fileAsyncResult.doWhenRejected((Runnable)result::setRejected);
     return result;
   }
 

@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -29,14 +28,18 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author irengrig
- *         Date: 2/25/11
- *         Time: 2:23 PM
+ * Date: 2/25/11
+ * Time: 2:23 PM
  */
 public class ImportIntoShelfAction extends DumbAwareAction {
   public ImportIntoShelfAction() {
@@ -49,57 +52,52 @@ public class ImportIntoShelfAction extends DumbAwareAction {
     e.getPresentation().setEnabled(project != null);
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true);
-    FileChooser.chooseFiles(descriptor, project, null, new Consumer<List<VirtualFile>>() {
-      @Override
-      public void consume(final List<VirtualFile> files) {
-        //gatherPatchFiles
-        final ProgressManager pm = ProgressManager.getInstance();
-        final ShelveChangesManager shelveChangesManager = ShelveChangesManager.getInstance(project);
+    FileChooser.chooseFiles(descriptor, project, null).doWhenDone(files -> {
+      //gatherPatchFiles
+      final ProgressManager pm = ProgressManager.getInstance();
+      final ShelveChangesManager shelveChangesManager = ShelveChangesManager.getInstance(project);
 
-        final List<VirtualFile> patchTypeFiles = new ArrayList<VirtualFile>();
-        final boolean filesFound = pm.runProcessWithProgressSynchronously(new Runnable() {
-          @Override
-          public void run() {
-            patchTypeFiles.addAll(shelveChangesManager.gatherPatchFiles(files));
-          }
-        }, "Looking for patch files...", true, project);
-        if (!filesFound || patchTypeFiles.isEmpty()) return;
-        if (!patchTypeFiles.equals(files)) {
-          final String message = "Found " + (patchTypeFiles.size() == 1 ?
-                                             "one patch file (" + patchTypeFiles.get(0).getPath() + ")." :
-                                             (patchTypeFiles.size() + " patch files.")) +
-                                 "\nContinue with import?";
-          final int toImport = Messages.showYesNoDialog(project, message, "Import Patches", Messages.getQuestionIcon());
-          if (toImport == Messages.NO) return;
+      final List<VirtualFile> patchTypeFiles = new ArrayList<VirtualFile>();
+      final boolean filesFound = pm.runProcessWithProgressSynchronously(new Runnable() {
+        @Override
+        public void run() {
+          patchTypeFiles.addAll(shelveChangesManager.gatherPatchFiles(Arrays.asList(files)));
         }
-        pm.runProcessWithProgressSynchronously(new Runnable() {
-          @Override
-          public void run() {
-            final List<VcsException> exceptions = new ArrayList<VcsException>();
-            final List<ShelvedChangeList> lists =
-              shelveChangesManager.importChangeLists(patchTypeFiles, new Consumer<VcsException>() {
-                @Override
-                public void consume(VcsException e) {
-                  exceptions.add(e);
-                }
-              });
-            if (!lists.isEmpty()) {
-              ShelvedChangesViewManager.getInstance(project).activateView(lists.get(lists.size() - 1));
-            }
-            if (!exceptions.isEmpty()) {
-              AbstractVcsHelper.getInstance(project).showErrors(exceptions, "Import patches into shelf");
-            }
-            if (lists.isEmpty() && exceptions.isEmpty()) {
-              VcsBalloonProblemNotifier.showOverChangesView(project, "No patches found", MessageType.WARNING);
-            }
-          }
-        }, "Import patches into shelf", true, project);
+      }, "Looking for patch files...", true, project);
+      if (!filesFound || patchTypeFiles.isEmpty()) return;
+      if (!patchTypeFiles.equals(files)) {
+        final String message =
+                "Found " + (patchTypeFiles.size() == 1 ? "one patch file (" + patchTypeFiles.get(0).getPath() + ")." : (patchTypeFiles.size() + " patch files.")) + "\nContinue with import?";
+        final int toImport = Messages.showYesNoDialog(project, message, "Import Patches", Messages.getQuestionIcon());
+        if (toImport == Messages.NO) return;
       }
+      pm.runProcessWithProgressSynchronously(new Runnable() {
+        @Override
+        public void run() {
+          final List<VcsException> exceptions = new ArrayList<VcsException>();
+          final List<ShelvedChangeList> lists = shelveChangesManager.importChangeLists(patchTypeFiles, new Consumer<VcsException>() {
+            @Override
+            public void consume(VcsException e) {
+              exceptions.add(e);
+            }
+          });
+          if (!lists.isEmpty()) {
+            ShelvedChangesViewManager.getInstance(project).activateView(lists.get(lists.size() - 1));
+          }
+          if (!exceptions.isEmpty()) {
+            AbstractVcsHelper.getInstance(project).showErrors(exceptions, "Import patches into shelf");
+          }
+          if (lists.isEmpty() && exceptions.isEmpty()) {
+            VcsBalloonProblemNotifier.showOverChangesView(project, "No patches found", MessageType.WARNING);
+          }
+        }
+      }, "Import patches into shelf", true, project);
     });
   }
 }

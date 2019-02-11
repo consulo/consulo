@@ -32,11 +32,12 @@ import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +45,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.List;
 
 public class FindPopupDirectoryChooser extends JPanel {
@@ -85,7 +87,7 @@ public class FindPopupDirectoryChooser extends JPanel {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setUseApplicationDialog();
         myFindPopupPanel.getCanClose().set(false);
-        FileChooser.chooseFiles(descriptor, myProject, myFindPopupPanel, null,
+        FileChooser.chooseFiles(descriptor, myProject, null, VfsUtil.findFileByIoFile(new File(getDirectory()), true),
                                 new FileChooser.FileChooserConsumer() {
                                   @Override
                                   public void consume(List<VirtualFile> files) {
