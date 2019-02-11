@@ -32,7 +32,7 @@ import java.util.*;
  * from kotlin
  */
 @Singleton
-@State(name = "ParameterNameHintsSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "parameter.hints.xml")})
+@State(name = "ParameterNameHintsSettings", storages = @Storage("parameter.hints.xml"))
 public class ParameterNameHintsSettings implements PersistentStateComponent<Element> {
   private static final String BLACKLISTS = "blacklists";
   private static final String LANGUAGE_LIST = "blacklist";
