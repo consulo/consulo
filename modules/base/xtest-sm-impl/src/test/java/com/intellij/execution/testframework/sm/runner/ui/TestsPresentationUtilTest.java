@@ -25,6 +25,7 @@ import com.intellij.execution.testframework.ui.TestsProgressAnimator;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.HashSet;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -713,7 +714,7 @@ public abstract class TestsPresentationUtilTest extends BaseSMTRunnerTestCase {
   }
 
   private void assertIsAnimatorProgressIcon(final Icon icon) {
-    for (Icon frame : TestsProgressAnimator.FRAMES) {
+    for (Image frame : TestsProgressAnimator.FRAMES) {
       if (icon == frame) {
         return;
       }
