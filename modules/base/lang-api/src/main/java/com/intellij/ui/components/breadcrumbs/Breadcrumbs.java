@@ -28,6 +28,7 @@ import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventHandler;
+import consulo.awt.TargetAWT;
 import org.intellij.lang.annotations.JdkConstants.FontStyle;
 
 import javax.swing.*;
@@ -370,7 +371,7 @@ public class Breadcrumbs extends JBPanelWithEmptyText {
     }
 
     private void update() {
-      icon = crumb.getIcon();
+      icon = TargetAWT.to(crumb.getIcon());
       text = crumb.getText();
       font = getFont(crumb);
       foreground = getForeground(crumb);

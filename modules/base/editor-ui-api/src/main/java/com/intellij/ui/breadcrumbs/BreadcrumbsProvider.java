@@ -18,13 +18,12 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
+import java.util.Collections;
 import java.util.List;
-
-import static java.util.Collections.emptyList;
 
 /**
  * @author Alexey.Pegov
@@ -57,7 +56,7 @@ public interface BreadcrumbsProvider {
    * @return an icon for the specified element
    */
   @Nullable
-  default Icon getElementIcon(@Nonnull PsiElement element) {
+  default Image getElementIcon(@Nonnull PsiElement element) {
     return null;
   }
 
@@ -85,6 +84,6 @@ public interface BreadcrumbsProvider {
    */
   @Nonnull
   default List<PsiElement> getChildren(@Nonnull PsiElement element) {
-    return emptyList();
+    return Collections.emptyList();
   }
 }

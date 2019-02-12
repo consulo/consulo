@@ -15,31 +15,31 @@
  */
 package com.intellij.ui.components.breadcrumbs;
 
-import javax.swing.Icon;
+import consulo.ui.image.Image;
 
 /**
  * @author Sergey.Malenkov
  */
 public interface Crumb {
-  default Icon getIcon() { return null; }
+  default Image getIcon() { return null; }
 
   default String getText() { return toString(); }
 
   default String getTooltip() { return null; }
 
   class Impl implements Crumb {
-    private final Icon icon;
+    private final Image icon;
     private final String text;
     private final String tooltip;
 
-    public Impl(Icon icon, String text, String tooltip) {
+    public Impl(Image icon, String text, String tooltip) {
       this.icon = icon;
       this.text = text;
       this.tooltip = tooltip;
     }
 
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return icon;
     }
 
