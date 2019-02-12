@@ -16,6 +16,8 @@
 package com.intellij.openapi.actionSystem;
 
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +74,17 @@ public abstract class ActionGroup extends AnAction {
     setPopup(popup);
   }
 
+  @Deprecated
   public ActionGroup(String text, String description, Icon icon) {
+    super(text, description, icon);
+  }
+
+  @Deprecated
+  public ActionGroup(String text, String description, SwingImageRef icon) {
+    super(text, description, icon);
+  }
+
+  public ActionGroup(String text, String description, Image icon) {
     super(text, description, icon);
   }
 

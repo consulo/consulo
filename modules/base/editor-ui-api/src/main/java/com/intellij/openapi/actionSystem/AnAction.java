@@ -26,8 +26,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import org.intellij.lang.annotations.JdkConstants;
@@ -123,6 +123,8 @@ public abstract class AnAction implements PossiblyDumbAware {
     this(text, null, null);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use contructor with ui image")
   public AnAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
     this(text, description, (Icon)icon);
   }
