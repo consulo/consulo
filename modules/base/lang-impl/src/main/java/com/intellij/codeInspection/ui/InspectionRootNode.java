@@ -44,7 +44,7 @@ public class InspectionRootNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon(boolean expanded) {
+  public Icon getIcon() {
     return TargetAWT.to(Application.get().getIcon());
   }
 }

@@ -22,8 +22,6 @@
  */
 package com.intellij.find.actions;
 
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -34,8 +32,9 @@ import com.intellij.usages.TextChunk;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsagePresentation;
 import com.intellij.usages.rules.UsageInFile;
-import javax.annotation.Nonnull;
+import consulo.ide.IconDescriptorUpdaters;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 public class UsageListCellRenderer extends ColoredListCellRenderer {
@@ -57,10 +56,10 @@ public class UsageListCellRenderer extends ColoredListCellRenderer {
     VirtualFile virtualFile = getVirtualFile(usage);
     if (virtualFile != null) {
       append(virtualFile.getName() + ": ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      setIcon(TargetAWT.to(virtualFile.getFileType().getIcon()));
+      setIcon(virtualFile.getFileType().getIcon());
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
       if (psiFile != null) {
-        setIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon(psiFile, 0)));
+        setIcon(IconDescriptorUpdaters.getIcon(psiFile, 0));
       }
     }
 

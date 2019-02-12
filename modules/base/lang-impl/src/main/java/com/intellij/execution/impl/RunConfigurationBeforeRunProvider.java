@@ -369,7 +369,7 @@ public class RunConfigurationBeforeRunProvider
           if (value instanceof RunnerAndConfigurationSettings) {
             RunnerAndConfigurationSettings settings = (RunnerAndConfigurationSettings)value;
             RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
-            setIcon(TargetAWT.to(runManager.getConfigurationIcon(settings)));
+            setIcon(runManager.getConfigurationIcon(settings));
             RunConfiguration configuration = settings.getConfiguration();
             append(configuration.getName(), settings.isTemporary()
                                             ? SimpleTextAttributes.GRAY_ATTRIBUTES

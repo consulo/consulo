@@ -303,7 +303,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         append(path);
         final VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(new File(path));
         if (file != null) {
-          setIcon(TargetAWT.to(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null)));
+          setIcon(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null));
         }
       }
     });

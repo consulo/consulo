@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -24,8 +25,6 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 
@@ -68,10 +67,10 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
       appendCount(renderer);
     }
     if (file.isDirectory()) {
-      renderer.setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
+      renderer.setIcon(AllIcons.Nodes.TreeClosed);
     }
     else {
-      renderer.setIcon(TargetAWT.to(file.getFileType().getIcon()));
+      renderer.setIcon(file.getFileType().getIcon());
     }
   }
 

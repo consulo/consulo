@@ -46,7 +46,7 @@ public class InspectionNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon(boolean expanded) {
+  public Icon getIcon() {
     return TOOL;
   }
 

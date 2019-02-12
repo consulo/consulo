@@ -27,6 +27,8 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -106,7 +108,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     String description = descriptionInfo.getFirst();
 
     for (CommittedChangeListDecorator decorator : myDecorators) {
-      final Icon icon = decorator.decorate(changeList);
+      final Image icon = decorator.decorate(changeList);
       if (icon != null) {
         setIcon(icon);
       }

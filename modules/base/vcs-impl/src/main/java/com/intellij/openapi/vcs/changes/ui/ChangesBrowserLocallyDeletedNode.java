@@ -15,18 +15,16 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.changes.LocallyDeletedChange;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 import static com.intellij.util.FontUtil.spaceAndThinSpace;
 
@@ -65,18 +63,19 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<Locally
     renderer.setIcon(getIcon());
   }
 
+  @Override
   @Nullable
   public String getTooltip() {
     return getUserObject().getDescription();
   }
 
-  @javax.annotation.Nullable
-  private Icon getIcon() {
-    Icon result = getUserObject().getAddIcon();
+  @Nullable
+  private Image getIcon() {
+    Image result = getUserObject().getAddIcon();
 
     if (result == null) {
       FilePath filePath = getUserObject().getPath();
-      result = filePath.isDirectory() || !isLeaf() ? PlatformIcons.DIRECTORY_CLOSED_ICON : TargetAWT.to(filePath.getFileType().getIcon());
+      result = filePath.isDirectory() || !isLeaf() ? AllIcons.Nodes.TreeClosed : filePath.getFileType().getIcon();
     }
 
     return result;

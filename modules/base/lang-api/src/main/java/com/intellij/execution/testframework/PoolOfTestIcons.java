@@ -16,19 +16,18 @@
 package com.intellij.execution.testframework;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ui.LayeredIcon;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 public interface PoolOfTestIcons {
-  Icon SKIPPED_ICON = AllIcons.RunConfigurations.TestSkipped;
-  Icon PASSED_ICON = AllIcons.RunConfigurations.TestPassed;
-  Icon FAILED_ICON = AllIcons.RunConfigurations.TestFailed;
-  Icon ERROR_ICON = AllIcons.RunConfigurations.TestError;
-  Icon NOT_RAN = AllIcons.RunConfigurations.TestNotRan;
-  Icon LOADING_ICON = AllIcons.RunConfigurations.LoadingTree;
-  Icon TERMINATED_ICON = AllIcons.RunConfigurations.TestTerminated;
-  Icon IGNORED_ICON = AllIcons.RunConfigurations.TestIgnored;
-  Icon ERROR_ICON_MARK = AllIcons.Nodes.ErrorMark;
-  Icon TEAR_DOWN_FAILURE = new LayeredIcon(PASSED_ICON, ERROR_ICON_MARK);
+  Image SKIPPED_ICON = AllIcons.RunConfigurations.TestSkipped;
+  Image PASSED_ICON = AllIcons.RunConfigurations.TestPassed;
+  Image FAILED_ICON = AllIcons.RunConfigurations.TestFailed;
+  Image ERROR_ICON = AllIcons.RunConfigurations.TestError;
+  Image NOT_RAN = AllIcons.RunConfigurations.TestNotRan;
+  Image LOADING_ICON = AllIcons.RunConfigurations.LoadingTree;
+  Image TERMINATED_ICON = AllIcons.RunConfigurations.TestTerminated;
+  Image IGNORED_ICON = AllIcons.RunConfigurations.TestIgnored;
+  Image ERROR_ICON_MARK = AllIcons.Nodes.ErrorMark;
+  Image TEAR_DOWN_FAILURE = ImageEffects.layered(PASSED_ICON, ERROR_ICON_MARK);
 }

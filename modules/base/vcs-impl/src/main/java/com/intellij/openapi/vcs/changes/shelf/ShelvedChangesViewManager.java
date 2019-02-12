@@ -60,7 +60,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -443,7 +442,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
         
         final String date = DateFormatUtil.formatPrettyDateTime(changeListData.DATE);
         append(" (" + date + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-        setIcon(TargetAWT.to(PatchFileType.INSTANCE.getIcon()));
+        setIcon(PatchFileType.INSTANCE.getIcon());
       }
       else if (nodeValue instanceof ShelvedChange) {
         ShelvedChange change = (ShelvedChange) nodeValue;
@@ -479,7 +478,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
         append(movedMessage, SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
       append(" ("+ directory + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-      setIcon(TargetAWT.to(FileTypeManager.getInstance().getFileTypeByFileName(fileName).getIcon()));
+      setIcon(FileTypeManager.getInstance().getFileTypeByFileName(fileName).getIcon());
     }
   }
 

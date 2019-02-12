@@ -78,7 +78,7 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon(boolean expanded) {
+  public Icon getIcon() {
     if (myDescriptor instanceof ProblemDescriptorBase) {
       ProblemHighlightType problemHighlightType = ((ProblemDescriptorBase)myDescriptor).getHighlightType();
       if (problemHighlightType == ProblemHighlightType.ERROR) return AllIcons.General.Error;

@@ -17,7 +17,7 @@ public class InspectionModuleNode extends InspectionTreeNode{
   }
 
   @Override
-  public Icon getIcon(boolean expanded) {
+  public Icon getIcon() {
     return AllIcons.Nodes.Module;
   }
 

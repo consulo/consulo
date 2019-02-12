@@ -23,9 +23,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -128,7 +129,7 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
   protected abstract boolean showStatistics();
 
   @NonNls
-  public abstract Icon getIcon(boolean expanded);
+  public abstract Image getIcon();
 
   @Nonnull
   public abstract Collection<VirtualFile> getVirtualFiles();

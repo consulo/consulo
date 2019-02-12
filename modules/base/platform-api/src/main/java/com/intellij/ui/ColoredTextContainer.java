@@ -14,6 +14,7 @@ public interface ColoredTextContainer {
 
   void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag);
 
+  @Deprecated
   void setIcon(@Nullable Icon icon);
 
   default void setIcon(@Nullable Image image) {

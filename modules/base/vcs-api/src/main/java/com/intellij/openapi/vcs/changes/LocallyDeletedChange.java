@@ -16,10 +16,10 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.FilePath;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 public class LocallyDeletedChange {
   private final String myPresentableUrl;
@@ -35,7 +35,7 @@ public class LocallyDeletedChange {
   }
 
   @Nullable
-  public Icon getAddIcon() {
+  public Image getAddIcon() {
     return null;
   }
 

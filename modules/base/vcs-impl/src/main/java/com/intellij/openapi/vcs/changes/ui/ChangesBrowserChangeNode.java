@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
@@ -25,13 +26,10 @@ import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 import static com.intellij.util.FontUtil.spaceAndThinSpace;
 
@@ -39,7 +37,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
 
   @Nonnull
   private final Project myProject;
-  @javax.annotation.Nullable
+  @Nullable
   private final ChangeNodeDecorator myDecorator;
 
   protected ChangesBrowserChangeNode(@Nonnull Project project, @Nonnull Change userObject, @Nullable ChangeNodeDecorator decorator) {
@@ -98,18 +96,18 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     }
   }
 
-  @javax.annotation.Nullable
-  private Icon getIcon(@Nonnull Change change, @Nonnull FilePath filePath) {
-    Icon result = change.getAdditionalIcon();
+  @Nullable
+  private Image getIcon(@Nonnull Change change, @Nonnull FilePath filePath) {
+    Image result = change.getAdditionalIcon();
 
     if (result == null) {
-      result = filePath.isDirectory() || !isLeaf() ? PlatformIcons.DIRECTORY_CLOSED_ICON : TargetAWT.to(filePath.getFileType().getIcon());
+      result = filePath.isDirectory() || !isLeaf() ? AllIcons.Nodes.TreeClosed : filePath.getFileType().getIcon();
     }
 
     return result;
   }
 
-  private void appendSwitched(@Nonnull ChangesBrowserNodeRenderer renderer, @javax.annotation.Nullable VirtualFile file) {
+  private void appendSwitched(@Nonnull ChangesBrowserNodeRenderer renderer, @Nullable VirtualFile file) {
     if (file != null && !myProject.isDefault()) {
       String branch = ChangeListManager.getInstance(myProject).getSwitchedBranch(file);
       if (branch != null) {

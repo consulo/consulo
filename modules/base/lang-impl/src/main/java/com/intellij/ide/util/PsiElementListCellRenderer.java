@@ -46,12 +46,12 @@ import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -255,8 +255,8 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
   @Iconable.IconFlags
   protected abstract int getIconFlags();
 
-  protected Icon getIcon(PsiElement element) {
-    return TargetAWT.to(IconDescriptorUpdaters.getIcon(element, getIconFlags()));
+  protected Image getIcon(PsiElement element) {
+    return IconDescriptorUpdaters.getIcon(element, getIconFlags());
   }
 
   public Comparator<T> getComparator() {

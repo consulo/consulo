@@ -266,7 +266,7 @@ public class InspectionTree extends Tree {
       if (!node.isValid()) {
         append(" " + InspectionsBundle.message("inspection.invalid.node.text"), patchAttr(node, SimpleTextAttributes.ERROR_ATTRIBUTES));
       } else {
-        setIcon(node.getIcon(expanded));
+        setIcon(node.getIcon());
       }
     }
 

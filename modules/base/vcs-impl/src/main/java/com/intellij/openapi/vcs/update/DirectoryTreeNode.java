@@ -19,9 +19,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +47,7 @@ public class DirectoryTreeNode extends FileOrDirectoryTreeNode{
     return true;
   }
 
-  public Icon getIcon(boolean expanded) {
+  public Image getIcon() {
     return AllIcons.Nodes.Folder;
   }
 

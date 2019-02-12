@@ -90,7 +90,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   public void setUI(final TreeUI ui) {
     super.setUI(ui);
     final int fontHeight = getFontMetrics(getFont()).getHeight();
-    final int iconHeight = PoolOfTestIcons.PASSED_ICON.getIconHeight();
+    final int iconHeight = PoolOfTestIcons.PASSED_ICON.getHeight();
     setRowHeight(Math.max(fontHeight, iconHeight) + 2);
     setLargeModel(true);
   }

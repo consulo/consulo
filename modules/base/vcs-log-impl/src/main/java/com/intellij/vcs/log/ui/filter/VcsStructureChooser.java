@@ -15,6 +15,7 @@
  */
 package com.intellij.vcs.log.ui.filter;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.formove.FilePathComparator;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -28,6 +29,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
+import com.intellij.openapi.vcs.changes.ui.PlusMinus;
 import com.intellij.openapi.vcs.changes.ui.VirtualFileListCellRenderer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
@@ -35,18 +37,14 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.PlatformIcons;
-import com.intellij.openapi.vcs.changes.ui.PlusMinus;
-import com.intellij.util.treeWithCheckedNodes.TreeNodeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.treeWithCheckedNodes.SelectionManager;
+import com.intellij.util.treeWithCheckedNodes.TreeNodeState;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -57,8 +55,8 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author irengrig
@@ -422,14 +420,14 @@ public class VcsStructureChooser extends DialogWrapper {
     protected void renderIcon(@Nonnull FilePath path) {
       String module = myModules.get(path.getVirtualFile());
       if (module != null) {
-        setIcon(PlatformIcons.CONTENT_ROOT_ICON_CLOSED);
+        setIcon(AllIcons.Nodes.Module);
       }
       else {
         if (path.isDirectory()) {
-          setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
+          setIcon(AllIcons.Nodes.TreeClosed);
         }
         else {
-          setIcon(TargetAWT.to(path.getFileType().getIcon()));
+          setIcon(path.getFileType().getIcon());
         }
       }
     }

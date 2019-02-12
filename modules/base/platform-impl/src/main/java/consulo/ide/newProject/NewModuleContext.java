@@ -16,9 +16,9 @@
 package consulo.ide.newProject;
 
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +41,7 @@ public class NewModuleContext {
       myName = name;
     }
 
-    public void add(String name, Icon icon, NewModuleBuilderProcessor<?> processor) {
+    public void add(String name, Image icon, NewModuleBuilderProcessor<?> processor) {
       myItems.add(new Item(name, icon, processor));
     }
 
@@ -76,10 +76,10 @@ public class NewModuleContext {
 
   public static class Item implements Comparable<Item> {
     private String myName;
-    private Icon myIcon;
+    private Image myIcon;
     private NewModuleBuilderProcessor<?> myProcessor;
 
-    public Item(String name, Icon icon, NewModuleBuilderProcessor<?> processor) {
+    public Item(String name, Image icon, NewModuleBuilderProcessor<?> processor) {
       myName = name;
       myIcon = icon;
       myProcessor = processor;
@@ -89,7 +89,7 @@ public class NewModuleContext {
       return myName;
     }
 
-    public Icon getIcon() {
+    public Image getIcon() {
       return myIcon;
     }
 

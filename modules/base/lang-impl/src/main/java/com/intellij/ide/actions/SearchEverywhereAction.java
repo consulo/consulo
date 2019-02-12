@@ -1149,7 +1149,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
           else {
             append(file.getName());
           }
-          setIcon(TargetAWT.to(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, myProject)));
+          setIcon(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, myProject));
         }
         else if (isActionValue(value)) {
           final GotoActionModel.ActionWrapper actionWithParentGroup =

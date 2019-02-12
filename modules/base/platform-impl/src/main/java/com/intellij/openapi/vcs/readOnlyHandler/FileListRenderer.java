@@ -21,15 +21,17 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 public class FileListRenderer extends ColoredListCellRenderer {
-  protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+  @Override
+  protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
     // paint selection only as a focus rectangle
     mySelected = false;
     setBackground(null);
     VirtualFile vf = (VirtualFile) value;
-    setIcon(VirtualFilePresentation.getAWTIcon(vf));
+    setIcon(VirtualFilePresentation.getIcon(vf));
     append(vf.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     VirtualFile parent = vf.getParent();
     if (parent != null) {

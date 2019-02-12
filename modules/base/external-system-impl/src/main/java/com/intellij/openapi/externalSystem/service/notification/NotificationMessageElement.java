@@ -25,6 +25,8 @@ import com.intellij.ui.LoadingNode;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,8 +72,8 @@ public class NotificationMessageElement extends NavigatableMessageElement {
       }
 
       @Nonnull
-      private Icon getIcon(@Nonnull ErrorTreeElementKind kind) {
-        Icon icon = AllIcons.General.Mdot_empty;
+      private Image getIcon(@Nonnull ErrorTreeElementKind kind) {
+        Image icon = AllIcons.General.Mdot_empty;
         switch (kind) {
           case INFO:
             icon = AllIcons.General.Information;

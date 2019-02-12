@@ -293,6 +293,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    * @param icon icon
    */
   @Override
+  @Deprecated
   public final void setIcon(@Nullable final Icon icon) {
     myIcon = icon;
     revalidateAndRepaint();

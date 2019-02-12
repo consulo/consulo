@@ -18,10 +18,10 @@ package com.intellij.execution.testframework.sm.runner.ui;
 import com.intellij.execution.testframework.PoolOfTestIcons;
 import com.intellij.execution.testframework.ui.TestsProgressAnimator;
 import com.intellij.icons.AllIcons;
-import com.intellij.ui.LayeredIcon;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
@@ -29,24 +29,24 @@ import javax.swing.*;
 public class SMPoolOfTestIcons implements PoolOfTestIcons {
   // Error flag icon
 
-  public static final Icon SKIPPED_E_ICON = addErrorMarkTo(SKIPPED_ICON);
-  public static final Icon PASSED_E_ICON = addErrorMarkTo(PASSED_ICON);
-  public static final Icon FAILED_E_ICON = addErrorMarkTo(FAILED_ICON);
-  public static final Icon TERMINATED_E_ICON = addErrorMarkTo(TERMINATED_ICON);
-  public static final Icon IGNORED_E_ICON = addErrorMarkTo(IGNORED_ICON);
+  public static final Image SKIPPED_E_ICON = addErrorMarkTo(SKIPPED_ICON);
+  public static final Image PASSED_E_ICON = addErrorMarkTo(PASSED_ICON);
+  public static final Image FAILED_E_ICON = addErrorMarkTo(FAILED_ICON);
+  public static final Image TERMINATED_E_ICON = addErrorMarkTo(TERMINATED_ICON);
+  public static final Image IGNORED_E_ICON = addErrorMarkTo(IGNORED_ICON);
 
   // Test Progress
-  public static final Icon PAUSED_E_ICON = addErrorMarkTo(AllIcons.RunConfigurations.TestPaused);
-  public static final Icon[] FRAMES_E = new Icon[TestsProgressAnimator.FRAMES.length];
+  public static final Image PAUSED_E_ICON = addErrorMarkTo(AllIcons.RunConfigurations.TestPaused);
+  public static final Image[] FRAMES_E = new Image[TestsProgressAnimator.FRAMES.length];
+
   static {
-    for (int i = 0, length = FRAMES_E.length; i < length; i++){
+    for (int i = 0, length = FRAMES_E.length; i < length; i++) {
       FRAMES_E[i] = addErrorMarkTo(TestsProgressAnimator.FRAMES[i]);
     }
   }
 
   @Nonnull
-  public static Icon addErrorMarkTo(@Nonnull
-                                    final Icon baseIcon) {
-    return new LayeredIcon(baseIcon, ERROR_ICON_MARK);
+  public static Image addErrorMarkTo(@Nonnull Image baseIcon) {
+    return ImageEffects.layered(baseIcon, ERROR_ICON_MARK);
   }
 }

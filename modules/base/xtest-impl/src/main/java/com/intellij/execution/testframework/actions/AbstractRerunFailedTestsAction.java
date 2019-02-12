@@ -46,7 +46,6 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.RequiredUIAccess;
-import consulo.awt.TargetAWT;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -187,7 +186,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
         @Override
         protected void customizeCellRenderer(@Nonnull JList<? extends Executor> list, Executor value, int index, boolean selected, boolean hasFocus) {
           append(UIUtil.removeMnemonic(value.getStartActionText()));
-          setIcon(TargetAWT.to(value.getIcon()));
+          setIcon(value.getIcon());
         }
       });
       //noinspection ConstantConditions

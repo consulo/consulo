@@ -39,7 +39,7 @@ public class InspectionSeverityGroupNode extends InspectionTreeNode{
   }
 
   @Override
-  public Icon getIcon(boolean expanded) {
+  public Icon getIcon() {
     return myLevel.getIcon();
   }
 

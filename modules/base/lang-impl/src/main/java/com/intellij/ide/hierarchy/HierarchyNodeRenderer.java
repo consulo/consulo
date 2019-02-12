@@ -50,7 +50,7 @@ public final class HierarchyNodeRenderer extends NodeRenderer {
       if (object instanceof HierarchyNodeDescriptor) {
         final HierarchyNodeDescriptor descriptor = (HierarchyNodeDescriptor)object;
         descriptor.getHighlightedText().customize(this);
-        setIcon(TargetAWT.to(descriptor.getIcon()));
+        setIcon(descriptor.getIcon());
       }
     }
   }

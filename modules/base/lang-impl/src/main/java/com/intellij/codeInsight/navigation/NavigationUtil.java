@@ -62,6 +62,8 @@ import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -314,8 +316,8 @@ public final class NavigationUtil {
       }
 
       @Override
-      protected Icon getIcon(PsiElement element) {
-        Icon customIcon = itemsMap.get(element).getCustomIcon();
+      protected Image getIcon(PsiElement element) {
+        Image customIcon = itemsMap.get(element).getCustomIcon();
         return customIcon != null ? customIcon : super.getIcon(element);
       }
 

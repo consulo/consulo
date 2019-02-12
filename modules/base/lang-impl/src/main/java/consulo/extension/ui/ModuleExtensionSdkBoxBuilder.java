@@ -33,6 +33,8 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.roots.ui.configuration.SdkComboBox;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -68,7 +70,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   private String myLabelText = "SDK";
 
-  private Icon myNullItemIcon = null;
+  private Image myNullItemIcon = null;
 
   private String myNullItemName = ProjectBundle.message("sdk.combo.box.item");
 
@@ -130,7 +132,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   @Nonnull
   @Exported
-  public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Icon icon) {
+  public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Image icon) {
     myNullItemName = name;
     myNullItemIcon = icon;
     return this;

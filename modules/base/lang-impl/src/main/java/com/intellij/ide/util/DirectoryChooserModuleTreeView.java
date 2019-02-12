@@ -37,7 +37,6 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import consulo.ui.RequiredUIAccess;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -253,7 +252,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
           append(fragment.getText(),
                  fragment.isCommon() ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
         }
-        setIcon(TargetAWT.to(wrapper.getIcon()));
+        setIcon(wrapper.getIcon());
       }
       else if (value instanceof Module) {
         final Module module = (Module)value;

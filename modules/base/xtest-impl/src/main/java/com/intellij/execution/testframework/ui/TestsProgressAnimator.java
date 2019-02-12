@@ -20,16 +20,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.Alarm;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public class TestsProgressAnimator implements Runnable, Disposable {
   private static final int FRAMES_COUNT = 8;
   private static final int MOVIE_TIME = 800;
   private static final int FRAME_TIME = MOVIE_TIME / FRAMES_COUNT;
 
-  public static final Icon[] FRAMES = new Icon[FRAMES_COUNT];
+  public static final Image[] FRAMES = new Image[FRAMES_COUNT];
 
   private long myLastInvocationTime = -1;
 
@@ -57,7 +57,7 @@ public class TestsProgressAnimator implements Runnable, Disposable {
     return (int) ((System.currentTimeMillis() % MOVIE_TIME) / FRAME_TIME);
   }
 
-  public static Icon getCurrentFrame() {
+  public static Image getCurrentFrame() {
     return FRAMES[getCurrentFrameIndex()];
   }
 

@@ -21,7 +21,6 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
-import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 
@@ -38,7 +37,7 @@ class BreakpointsTreeCellRenderer  {
     }
     else if (value instanceof BreakpointsGroupNode) {
       XBreakpointGroup group = ((BreakpointsGroupNode)value).getGroup();
-      renderer.setIcon(TargetAWT.to(group.getIcon(expanded)));
+      renderer.setIcon(group.getIcon(expanded));
       renderer.append(group.getName(), SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES);
     }
   }

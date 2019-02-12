@@ -31,10 +31,10 @@ import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -472,9 +472,9 @@ public class ModuleDependenciesAnalyzer {
      * @return icon for the classpath
      */
     @Nullable
-    public Icon getIcon() {
+    public Image getIcon() {
       VirtualFile file = getLocalFile();
-      return file == null ? AllIcons.General.Error : VirtualFilePresentation.getAWTIcon(file);
+      return file == null ? AllIcons.General.Error : VirtualFilePresentation.getIcon(file);
     }
 
     /**

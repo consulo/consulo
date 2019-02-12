@@ -31,10 +31,11 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.Set;
@@ -76,7 +77,7 @@ public class TestsPresentationUtil {
                                               final int testsTotal,
                                               final int testsCount,
                                               final int failuresCount,
-                                              @javax.annotation.Nullable final Set<String> allCategories,
+                                              @Nullable final Set<String> allCategories,
                                               final boolean isFinished) {
     final StringBuilder sb = new StringBuilder();
     if (endTime == 0) {
@@ -133,7 +134,7 @@ public class TestsPresentationUtil {
     return sb.toString();
   }
 
-  public static boolean hasNonDefaultCategories(@javax.annotation.Nullable Set<String> allCategories) {
+  public static boolean hasNonDefaultCategories(@Nullable Set<String> allCategories) {
     if (allCategories == null) {
       return false;
     }
@@ -268,9 +269,9 @@ public class TestsPresentationUtil {
     return name;
   }
 
-  @javax.annotation.Nullable
-  private static Icon getIcon(final SMTestProxy testProxy,
-                              final TestConsoleProperties consoleProperties) {
+  @Nullable
+  private static Image getIcon(final SMTestProxy testProxy,
+                               final TestConsoleProperties consoleProperties) {
     final TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
 
     final boolean hasErrors = testProxy.hasErrors();
@@ -303,7 +304,7 @@ public class TestsPresentationUtil {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static String getTestStatusPresentation(final SMTestProxy proxy) {
     return proxy.getMagnitudeInfo().getTitle();
   }
@@ -386,7 +387,7 @@ public class TestsPresentationUtil {
    * @param proxy Test or Suite
    * @return Duration presentation for given proxy
    */
-  @javax.annotation.Nullable
+  @Nullable
   public static String getDurationPresentation(final SMTestProxy proxy) {
     switch (proxy.getMagnitudeInfo()) {
       case COMPLETE_INDEX:

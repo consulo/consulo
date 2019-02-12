@@ -26,10 +26,10 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.impl.VcsPathPresenter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsFilePathUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,11 +60,11 @@ public class Change {
   // if null, vcs's is used. intended: for property conflict case
   private Getter<MergeTexts> myMergeProvider;
 
-  public Change(@javax.annotation.Nullable final ContentRevision beforeRevision, @Nullable final ContentRevision afterRevision) {
+  public Change(@Nullable final ContentRevision beforeRevision, @Nullable final ContentRevision afterRevision) {
     this(beforeRevision, afterRevision, convertStatus(beforeRevision, afterRevision));
   }
 
-  public Change(@Nullable final ContentRevision beforeRevision, @javax.annotation.Nullable final ContentRevision afterRevision, @Nullable FileStatus fileStatus) {
+  public Change(@Nullable final ContentRevision beforeRevision, @Nullable final ContentRevision afterRevision, @Nullable FileStatus fileStatus) {
     assert beforeRevision != null || afterRevision != null;
     myBeforeRevision = beforeRevision;
     myAfterRevision = afterRevision;
@@ -131,12 +131,12 @@ public class Change {
     return myType;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public ContentRevision getBeforeRevision() {
     return myBeforeRevision;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public ContentRevision getAfterRevision() {
     return myAfterRevision;
   }
@@ -145,7 +145,7 @@ public class Change {
     return myFileStatus;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public VirtualFile getVirtualFile() {
     return myAfterRevision == null ? null : myAfterRevision.getFile().getVirtualFile();
   }
@@ -257,7 +257,7 @@ public class Change {
     return VcsBundle.message("change.file.renamed.from.text", myBeforeRevision.getFile().getName());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected String getMovedText(final Project project) {
     return VcsBundle.message("change.file.moved.from.text", getMoveRelativePath(project));
   }
@@ -270,8 +270,8 @@ public class Change {
     myIsReplaced = isReplaced;
   }
 
-  @javax.annotation.Nullable
-  public Icon getAdditionalIcon() {
+  @Nullable
+  public Image getAdditionalIcon() {
     return null;
   }
 

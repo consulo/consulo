@@ -16,10 +16,9 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.awt.TargetAWT;
 import consulo.ui.ItemPresentation;
-import consulo.ui.desktop.internal.TargetAWTImpl;
 import consulo.ui.TextAttribute;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,8 +38,8 @@ public class DesktopItemPresentationImpl<E> implements ItemPresentation {
   }
 
   @Override
-  public void setIcon(@Nullable consulo.ui.image.Image icon) {
-    myRenderer.setIcon(TargetAWT.to(icon));
+  public void setIcon(@Nullable Image icon) {
+    myRenderer.setIcon(icon);
   }
 
   @Override

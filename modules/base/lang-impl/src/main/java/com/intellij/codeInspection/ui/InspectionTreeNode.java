@@ -33,7 +33,7 @@ public abstract class InspectionTreeNode extends DefaultMutableTreeNode {
   }
 
   @Nullable
-  public abstract Icon getIcon(boolean expanded);
+  public abstract Icon getIcon();
 
   public int getProblemCount() {
     int sum = 0;

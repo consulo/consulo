@@ -15,13 +15,14 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import org.jetbrains.annotations.Nls;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
@@ -30,7 +31,7 @@ import java.awt.*;
  * @author Vladimir Kondratyev
  */
 public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent implements TreeCellRenderer{
-  private static final Icon LOADING_NODE_ICON = new EmptyIcon(8, 16);
+  private static final Image LOADING_NODE_ICON = ImageEffects.empty(8, 16);
 
   /**
    * Defines whether the tree is selected or not

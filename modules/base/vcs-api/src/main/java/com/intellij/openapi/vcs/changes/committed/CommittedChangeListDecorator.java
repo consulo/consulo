@@ -16,11 +16,11 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public interface CommittedChangeListDecorator {
   @Nullable
-  Icon decorate(final CommittedChangeList list);
+  Image decorate(final CommittedChangeList list);
 }

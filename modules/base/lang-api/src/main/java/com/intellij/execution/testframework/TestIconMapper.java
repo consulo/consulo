@@ -16,9 +16,10 @@
 package com.intellij.execution.testframework;
 
 import com.intellij.execution.testframework.sm.runner.states.TestStateInfo;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,8 +40,8 @@ public class TestIconMapper implements PoolOfTestIcons {
     return magnitudes.get(value);
   }
 
-  @javax.annotation.Nullable
-  public static Icon getIcon(@Nonnull TestStateInfo.Magnitude magnitude) {
+  @Nullable
+  public static Image getIcon(@Nonnull TestStateInfo.Magnitude magnitude) {
     switch (magnitude) {
       case SKIPPED_INDEX:
         return SKIPPED_ICON;

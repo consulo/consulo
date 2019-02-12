@@ -57,7 +57,7 @@ public class RefElementNode extends InspectionTreeNode {
 
   @Override
   @Nullable
-  public Icon getIcon(boolean expanded) {
+  public Icon getIcon() {
     return myIcon;
   }
 

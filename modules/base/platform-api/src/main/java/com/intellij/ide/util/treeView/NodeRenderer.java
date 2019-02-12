@@ -54,7 +54,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
       if (userObject instanceof NodeDescriptor) {
         descriptor = (NodeDescriptor)userObject;
         color = descriptor.getColor();
-        setIcon(TargetAWT.to(descriptor.getIcon()));
+        setIcon(descriptor.getIcon());
       }
     }
 

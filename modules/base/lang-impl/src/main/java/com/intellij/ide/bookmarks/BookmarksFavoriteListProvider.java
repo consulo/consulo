@@ -190,7 +190,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                                 int row,
                                 boolean hasFocus) {
     renderer.clear();
-    renderer.setIcon(TargetAWT.to(Bookmark.getDefaultIcon()));
+    renderer.setIcon(Bookmark.getDefaultIcon());
     if (value instanceof Bookmark) {
       Bookmark bookmark = (Bookmark)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
@@ -202,7 +202,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         renderer.setIcon(icon);
       }
       else {
-        renderer.setIcon(TargetAWT.to(bookmark.getIcon()));
+        renderer.setIcon(bookmark.getIcon());
       }
     }
     else {

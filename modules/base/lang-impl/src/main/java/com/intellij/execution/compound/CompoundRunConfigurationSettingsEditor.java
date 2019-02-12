@@ -62,7 +62,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
       @Override
       protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         RunConfiguration configuration = myModel.get(index);
-        setIcon(TargetAWT.to(configuration.getType().getIcon()));
+        setIcon(configuration.getType().getIcon());
         append(configuration.getType().getDisplayName() + " '" + configuration.getName() + "'");
       }
     });

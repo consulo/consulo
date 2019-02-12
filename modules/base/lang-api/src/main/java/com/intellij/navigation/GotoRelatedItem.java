@@ -17,10 +17,10 @@ package com.intellij.navigation;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.util.PsiNavigateUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +35,7 @@ public class GotoRelatedItem {
   private final PsiElement myElement;
   public static final String DEFAULT_GROUP_NAME = "";
 
-  protected GotoRelatedItem(@javax.annotation.Nullable PsiElement element, String group, final int mnemonic) {
+  protected GotoRelatedItem(@Nullable PsiElement element, String group, final int mnemonic) {
     myElement = element;
     myGroup = group;
     myMnemonic = mnemonic;
@@ -58,17 +58,17 @@ public class GotoRelatedItem {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getCustomContainerName() {
     return null;
   }
 
   @Nullable
-  public Icon getCustomIcon() {
+  public Image getCustomIcon() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public PsiElement getElement() {
     return myElement;
   }

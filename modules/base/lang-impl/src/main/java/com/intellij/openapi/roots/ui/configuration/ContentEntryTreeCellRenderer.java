@@ -57,7 +57,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
           if (file != null && file.isDirectory()) {
             final ContentEntry contentEntry = editor.getContentEntry();
             if (contentEntry != null) {
-              setIcon(TargetAWT.to(updateIcon(contentEntry, file, TargetAWT.from(getIcon()))));
+              setIcon(updateIcon(contentEntry, file, TargetAWT.from(getIcon())));
             }
           }
         }

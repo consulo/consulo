@@ -16,14 +16,13 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 
@@ -55,7 +54,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
       if (!isLeaf()) {
         appendCount(renderer);
       }
-      renderer.setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
+      renderer.setIcon(AllIcons.Nodes.TreeClosed);
     }
     else {
       if (renderer.isShowFlatten()) {
@@ -66,7 +65,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
       else {
         renderer.append(getRelativePath(path), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
-      renderer.setIcon(TargetAWT.to(path.getFileType().getIcon()));
+      renderer.setIcon(path.getFileType().getIcon());
     }
   }
 

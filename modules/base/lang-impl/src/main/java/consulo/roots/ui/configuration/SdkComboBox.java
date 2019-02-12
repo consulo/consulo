@@ -41,16 +41,16 @@ import com.intellij.util.Consumer;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Exported;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
-import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,8 +58,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
@@ -106,14 +106,14 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      @Nullable final String nullItemName,
-                     @Nullable final Icon nullIcon) {
+                     @Nullable final Image nullIcon) {
     super(new SdkComboBoxModel(sdksModel, getSdkFilter(filter), nullItemName));
     myFilter = filter;
     myCreationFilter = creationFilter;
     setRenderer(new ColoredListCellRendererWrapper<SdkComboBoxItem>() {
       @Override
       public void doCustomize(JList list, SdkComboBoxItem value, int index, boolean selected, boolean hasFocus) {
-        setIcon(EmptyIcon.ICON_16);    // to fix vertical size
+        setIcon(ImageEffects.empty(16));    // to fix vertical size
         if (value instanceof InvalidSdkComboBoxItem) {
           setIcon(AllIcons.Toolbar.Unknown);
           append(value.getSdkName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
@@ -145,7 +145,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
           Sdk sdk = value.getSdk();
           String sdkName = value.getSdkName();
           assert sdkName != null;
-          setIcon(sdk == null ? AllIcons.Toolbar.Unknown : TargetAWT.to(SdkUtil.getIcon(sdk)));
+          setIcon(sdk == null ? AllIcons.Toolbar.Unknown : SdkUtil.getIcon(sdk));
           append(sdkName, sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
           String version = sdk == null ? null : sdk.getVersionString();
           if (version != null) {
@@ -269,7 +269,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   @Exported
-  public void insertCustomSdkItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Icon icon) {
+  public void insertCustomSdkItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Image icon) {
     CustomSdkComboBoxItem sdkComboBoxItem = new CustomSdkComboBoxItem(key, presentableName, icon);
     int itemCount = getItemCount();
     if(itemCount > 0) {
@@ -563,9 +563,9 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   public static class CustomSdkComboBoxItem extends SdkComboBoxItem {
     private final String myKey;
     private final String myPresentableName;
-    private final Icon myIcon;
+    private final Image myIcon;
 
-    public CustomSdkComboBoxItem(String key, String presentableName, Icon icon) {
+    public CustomSdkComboBoxItem(String key, String presentableName, Image icon) {
       super(null);
       myKey = key;
       myPresentableName = presentableName;
@@ -573,7 +573,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
 
     @Nonnull
-    public Icon getIcon() {
+    public Image getIcon() {
       return myIcon;
     }
 
