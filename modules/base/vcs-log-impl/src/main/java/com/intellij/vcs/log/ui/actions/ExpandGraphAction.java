@@ -16,10 +16,10 @@
 package com.intellij.vcs.log.ui.actions;
 
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import consulo.ui.image.Image;
 import icons.VcsLogIcons;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class ExpandGraphAction extends CollapseOrExpandGraphAction {
   @Nonnull
@@ -36,13 +36,13 @@ public class ExpandGraphAction extends CollapseOrExpandGraphAction {
 
   @Nonnull
   @Override
-  protected Icon getMergesIcon() {
+  protected Image getMergesIcon() {
     return VcsLogIcons.ExpandMerges;
   }
 
   @Nonnull
   @Override
-  protected Icon getBranchesIcon() {
+  protected Image getBranchesIcon() {
     return VcsLogIcons.ExpandMerges;
   }
 

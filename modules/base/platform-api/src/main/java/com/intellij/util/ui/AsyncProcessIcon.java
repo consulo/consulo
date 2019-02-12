@@ -18,6 +18,7 @@ package com.intellij.util.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.LayeredIcon;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -55,6 +56,11 @@ public class AsyncProcessIcon extends AnimatedIcon {
   }
 
   public AsyncProcessIcon(@NonNls String name, Icon[] icons, Icon passive) {
+    super(name, icons, passive, CYCLE_LENGTH);
+    setUseMask(false);
+  }
+
+  public AsyncProcessIcon(@NonNls String name, Image[] icons, Image passive) {
     super(name, icons, passive, CYCLE_LENGTH);
     setUseMask(false);
   }

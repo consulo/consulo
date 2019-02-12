@@ -25,10 +25,10 @@ import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import consulo.ui.image.Image;
 import consulo.wm.impl.ToolWindowContentUI;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   private static final String LINEAR_BRANCHES = "Linear Branches";
@@ -88,10 +88,10 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   protected abstract void executeAction(@Nonnull VcsLogUiImpl vcsLogUi);
 
   @Nonnull
-  protected abstract Icon getMergesIcon();
+  protected abstract Image getMergesIcon();
 
   @Nonnull
-  protected abstract Icon getBranchesIcon();
+  protected abstract Image getBranchesIcon();
 
   @Nonnull
   protected abstract String getPrefix();

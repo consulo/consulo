@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.util.ui.EmptyIcon;
-
-import static icons.DvcsImplIcons.*;
+import consulo.awt.TargetAWT;
+import icons.DvcsImplIcons;
 
 public abstract class BranchActionGroup extends ActionGroup implements DumbAware {
 
@@ -30,8 +30,8 @@ public abstract class BranchActionGroup extends ActionGroup implements DumbAware
 
   public BranchActionGroup() {
     super("", true);
-    myIcon = new LayeredIcon(Favorite, EmptyIcon.ICON_16);
-    myHoveredIcon = new LayeredIcon(FavoriteOnHover, NotFavoriteOnHover);
+    myIcon = new LayeredIcon(TargetAWT.to(DvcsImplIcons.Favorite), EmptyIcon.ICON_16);
+    myHoveredIcon = new LayeredIcon(TargetAWT.to(DvcsImplIcons.FavoriteOnHover), TargetAWT.to(DvcsImplIcons.NotFavoriteOnHover));
     getTemplatePresentation().setIcon(myIcon);
     getTemplatePresentation().setHoveredIcon(myHoveredIcon);
     updateIcons();

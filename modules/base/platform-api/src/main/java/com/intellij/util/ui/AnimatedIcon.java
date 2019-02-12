@@ -18,9 +18,12 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * @author Kirill Kalishev
@@ -44,6 +47,10 @@ public class AnimatedIcon extends JComponent implements Disposable {
   private final String myName;
 
   //private boolean myPaintingBgNow;
+
+  public AnimatedIcon(final String name, Image[] icons, Image passiveIcon, int cycleLength) {
+    this(name, Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new), TargetAWT.to(passiveIcon), cycleLength);
+  }
 
   public AnimatedIcon(final String name, Icon[] icons, Icon passiveIcon, int cycleLength) {
     myName = name;
@@ -69,7 +76,8 @@ public class AnimatedIcon extends JComponent implements Disposable {
 
     if (icons.length > 0) {
       myEmptyPassiveIcon = EmptyIcon.create(icons[0]);
-    } else {
+    }
+    else {
       myEmptyPassiveIcon = EmptyIcon.ICON_0;
     }
 
@@ -85,7 +93,8 @@ public class AnimatedIcon extends JComponent implements Disposable {
 
     if (running) {
       myAnimator.resume();
-    } else {
+    }
+    else {
       myAnimator.suspend();
     }
 
@@ -158,7 +167,8 @@ public class AnimatedIcon extends JComponent implements Disposable {
 
     if (myAnimator.isRunning()) {
       icon = myIcons[myCurrentIconIndex];
-    } else {
+    }
+    else {
       icon = getPassiveIcon();
     }
 

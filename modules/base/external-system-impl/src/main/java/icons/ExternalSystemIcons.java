@@ -16,16 +16,16 @@
 package icons;
 
 import com.intellij.openapi.util.IconLoader;
-import consulo.ui.migration.SwingImageRef;
+import consulo.ui.image.Image;
 
 /**
  * NOTE THIS FILE IS AUTO-GENERATED
  * DO NOT EDIT IT BY HAND, run build/scripts/icons.gant instead
  */
 public class ExternalSystemIcons {
-  private static SwingImageRef load(String path) {
+  private static Image load(String path) {
     return IconLoader.getIcon(path, ExternalSystemIcons.class);
   }
 
-  public static final SwingImageRef Task = load("/icons/task.png"); // 16x16
+  public static final Image Task = load("/icons/task.png"); // 16x16
 }

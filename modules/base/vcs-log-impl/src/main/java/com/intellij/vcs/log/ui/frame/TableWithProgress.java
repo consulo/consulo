@@ -17,6 +17,7 @@ package com.intellij.vcs.log.ui.frame;
 
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.image.Image;
 import icons.VcsLogIcons;
 import javax.annotation.Nonnull;
 
@@ -65,7 +66,7 @@ public class TableWithProgress extends JBTable {
   private class LastRowLoadingIcon extends AsyncProcessIcon {
     public LastRowLoadingIcon() {
       super(TableWithProgress.this.toString(),
-            new Icon[]{VcsLogIcons.Process.Dots_2, VcsLogIcons.Process.Dots_3, VcsLogIcons.Process.Dots_4, VcsLogIcons.Process.Dots_5},
+            new Image[]{VcsLogIcons.Process.Dots_2, VcsLogIcons.Process.Dots_3, VcsLogIcons.Process.Dots_4, VcsLogIcons.Process.Dots_5},
             VcsLogIcons.Process.Dots_1);
       setUseMask(false);
     }
