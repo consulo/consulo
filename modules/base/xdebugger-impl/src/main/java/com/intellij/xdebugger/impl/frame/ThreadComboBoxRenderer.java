@@ -15,23 +15,20 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.xdebugger.frame.XExecutionStack;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author nik
  */
-public class ThreadComboBoxRenderer extends ListCellRendererWrapper<XExecutionStack> {
-  public ThreadComboBoxRenderer(JComboBox comboBox) {
-    super();
-  }
-
+public class ThreadComboBoxRenderer extends ColoredListCellRenderer<XExecutionStack> {
   @Override
-  public void customize(JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
+  protected void customizeCellRenderer(@Nonnull JList<? extends XExecutionStack> list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
     if (value != null) {
-      setText(value.getDisplayName());
+      append(value.getDisplayName());
       setIcon(value.getIcon());
     }
   }

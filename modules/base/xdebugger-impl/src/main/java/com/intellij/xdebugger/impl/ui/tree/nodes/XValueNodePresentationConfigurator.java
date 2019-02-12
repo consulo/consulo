@@ -23,43 +23,43 @@ import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.swing.*;
-
 public final class XValueNodePresentationConfigurator {
   public interface ConfigurableXValueNode {
-    void applyPresentation(@Nullable Icon icon,
+    void applyPresentation(@Nullable Image icon,
                            @Nonnull XValuePresentation valuePresenter,
                            boolean hasChildren);
   }
 
   public static abstract class ConfigurableXValueNodeImpl implements ConfigurableXValueNode, XValueNode {
     @Override
-    public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren) {
+    public void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren) {
       XValueNodePresentationConfigurator.setPresentation(icon, type, value, hasChildren, this);
     }
 
     @Override
-    public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull String separator,
+    public void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull String separator,
                                 @NonNls @Nullable String value, boolean hasChildren) {
       XValueNodePresentationConfigurator.setPresentation(icon, type, separator, value, hasChildren, this);
     }
 
     @Override
-    public void setPresentation(@Nullable Icon icon, @Nonnull XValuePresentation presentation, boolean hasChildren) {
+    public void setPresentation(@Nullable Image icon, @Nonnull XValuePresentation presentation, boolean hasChildren) {
       XValueNodePresentationConfigurator.setPresentation(icon, presentation, hasChildren, this);
     }
   }
 
-  public static void setPresentation(@Nullable Icon icon, @Nonnull XValuePresentation presentation, boolean hasChildren,
+  public static void setPresentation(@Nullable Image icon, @Nonnull XValuePresentation presentation, boolean hasChildren,
                                      ConfigurableXValueNode node) {
     doSetPresentation(icon, presentation, hasChildren, node);
   }
 
-  public static void setPresentation(@Nullable Icon icon,
+  public static void setPresentation(@Nullable Image icon,
                                      @NonNls @Nullable String type,
                                      @NonNls @Nonnull String value,
                                      boolean hasChildren,
@@ -67,12 +67,12 @@ public final class XValueNodePresentationConfigurator {
     doSetPresentation(icon, new XRegularValuePresentation(value, type), hasChildren, node);
   }
 
-  public static void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull final String separator,
+  public static void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull final String separator,
                                      @NonNls @Nullable String value, boolean hasChildren, ConfigurableXValueNode node) {
     doSetPresentation(icon, new XRegularValuePresentation(StringUtil.notNullize(value), type, separator), hasChildren, node);
   }
 
-  public static void setPresentation(@Nullable Icon icon,
+  public static void setPresentation(@Nullable Image icon,
                                      @NonNls @Nullable String type,
                                      @NonNls @Nonnull String value,
                                      @Nullable NotNullFunction<String, String> valuePresenter,
@@ -82,7 +82,7 @@ public final class XValueNodePresentationConfigurator {
                       hasChildren, node);
   }
 
-  private static void doSetPresentation(@Nullable final Icon icon,
+  private static void doSetPresentation(@Nullable final Image icon,
                                         @Nonnull final XValuePresentation presentation,
                                         final boolean hasChildren,
                                         final ConfigurableXValueNode node) {

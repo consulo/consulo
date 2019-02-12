@@ -17,11 +17,11 @@ package com.intellij.xdebugger.frame;
 
 import com.intellij.xdebugger.XSourcePosition;
 
+import javax.annotation.Nullable;
+
 /**
  * @author nik
  */
 public interface XNavigatable {
-
-  void setSourcePosition(@javax.annotation.Nullable XSourcePosition sourcePosition);
-
+  void setSourcePosition(@Nullable XSourcePosition sourcePosition);
 }

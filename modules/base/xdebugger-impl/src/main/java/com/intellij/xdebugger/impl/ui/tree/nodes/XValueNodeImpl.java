@@ -39,11 +39,11 @@ import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.ValueMarkup;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
 
@@ -81,12 +81,12 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren) {
+  public void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren) {
     XValueNodePresentationConfigurator.setPresentation(icon, type, value, hasChildren, this);
   }
 
   @Override
-  public void setPresentation(@Nullable Icon icon,
+  public void setPresentation(@Nullable Image icon,
                               @NonNls @Nullable String type,
                               @NonNls @Nonnull String separator,
                               @NonNls @Nullable String value,
@@ -95,12 +95,12 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  public void setPresentation(@Nullable Icon icon, @Nonnull XValuePresentation presentation, boolean hasChildren) {
+  public void setPresentation(@Nullable Image icon, @Nonnull XValuePresentation presentation, boolean hasChildren) {
     XValueNodePresentationConfigurator.setPresentation(icon, presentation, hasChildren, this);
   }
 
   @Override
-  public void applyPresentation(@Nullable Icon icon, @Nonnull XValuePresentation valuePresentation, boolean hasChildren) {
+  public void applyPresentation(@Nullable Image icon, @Nonnull XValuePresentation valuePresentation, boolean hasChildren) {
     // extra check for obsolete nodes - tree root was changed
     // too dangerous to put this into isObsolete - it is called from anywhere, not only EDT
     if (isObsolete()) return;

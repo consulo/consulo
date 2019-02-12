@@ -19,9 +19,9 @@ import com.intellij.execution.process.ProcessInfo;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class XDefaultLocalAttachGroup implements XLocalAttachGroup {
   @Override
@@ -37,7 +37,7 @@ public class XDefaultLocalAttachGroup implements XLocalAttachGroup {
 
   @Nonnull
   @Override
-  public Icon getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+  public Image getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
     return AllIcons.RunConfigurations.Application;
   }
 

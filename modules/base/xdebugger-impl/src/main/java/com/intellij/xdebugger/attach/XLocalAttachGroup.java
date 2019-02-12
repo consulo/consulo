@@ -18,9 +18,9 @@ package com.intellij.xdebugger.attach;
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public interface XLocalAttachGroup {
   int getOrder();
@@ -34,7 +34,7 @@ public interface XLocalAttachGroup {
    * @return an icon to be shown in popup menu for your debugger item
    */
   @Nonnull
-  Icon getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder);
+  Image getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder);
 
   /**
    * @param dataHolder you may put your specific data into the holder at previous step in method @{@link XLocalAttachDebuggerProvider#getAvailableDebuggers(Project, ProcessInfo, UserDataHolder)}

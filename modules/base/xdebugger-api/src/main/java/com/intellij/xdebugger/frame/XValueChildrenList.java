@@ -24,10 +24,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents chunk of values which can be added to a {@link com.intellij.xdebugger.frame.XCompositeNode composite node}
+ * Represents chunk of values which can be added to a {@link XCompositeNode composite node}
  *
  * @author nik
- * @see com.intellij.xdebugger.frame.XCompositeNode#addChildren(XValueChildrenList, boolean)
+ * @see XCompositeNode#addChildren(XValueChildrenList, boolean)
  */
 public class XValueChildrenList {
   public static XValueChildrenList singleton(String name, @Nonnull XValue value) {

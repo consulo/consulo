@@ -17,10 +17,10 @@ package com.intellij.xdebugger.frame;
 
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.Obsolescent;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * Represents a node with children in a debugger tree. This interface isn't supposed to be implemented by a plugin.
@@ -68,5 +68,5 @@ public interface XCompositeNode extends Obsolescent {
    */
   void setErrorMessage(@Nonnull String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link);
 
-  void setMessage(@Nonnull String message, final @Nullable Icon icon, final @Nonnull SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link);
+  void setMessage(@Nonnull String message, final @Nullable Image icon, final @Nonnull SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link);
 }

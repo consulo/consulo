@@ -23,10 +23,10 @@ import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.enumeration.EmptyEnumeration;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
@@ -39,7 +39,7 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
   private final XDebuggerTreeNode myParent;
   private boolean myLeaf;
   protected final SimpleColoredText myText = new SimpleColoredText();
-  private Icon myIcon;
+  private Image myIcon;
   private TreePath myPath;
 
   protected XDebuggerTreeNode(final XDebuggerTree tree, final @Nullable XDebuggerTreeNode parent, final boolean leaf) {
@@ -90,7 +90,7 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
   @Nonnull
   public abstract List<? extends TreeNode> getChildren();
 
-  protected void setIcon(final Icon icon) {
+  protected void setIcon(Image icon) {
     myIcon = icon;
   }
 
@@ -109,7 +109,7 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

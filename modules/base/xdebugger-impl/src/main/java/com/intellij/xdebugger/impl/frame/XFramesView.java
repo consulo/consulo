@@ -113,8 +113,7 @@ public class XFramesView extends XDebugView {
     myMainPanel.add(ScrollPaneFactory.createScrollPane(myFramesList), BorderLayout.CENTER);
 
     myThreadComboBox = new ComboBox();
-    //noinspection unchecked
-    myThreadComboBox.setRenderer(new ThreadComboBoxRenderer(myThreadComboBox));
+    myThreadComboBox.setRenderer(new ThreadComboBoxRenderer());
     myThreadComboBox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(final ItemEvent e) {

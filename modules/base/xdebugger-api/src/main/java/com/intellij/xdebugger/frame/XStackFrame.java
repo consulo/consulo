@@ -46,7 +46,7 @@ public abstract class XStackFrame extends XValueContainer {
    * Implement to support evaluation in debugger (conditional breakpoints, logging message on breakpoint, "Evaluate" action, watches)
    * @return evaluator instance
    */
-  @javax.annotation.Nullable
+  @Nullable
   public XDebuggerEvaluator getEvaluator() {
     return null;
   }

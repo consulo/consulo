@@ -26,10 +26,10 @@ import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
@@ -180,7 +180,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
 
   @Override
   public void setMessage(@Nonnull final String message,
-                         final Icon icon,
+                         final Image icon,
                          @Nonnull final SimpleTextAttributes attributes,
                          @Nullable final XDebuggerTreeNodeHyperlink link) {
     invokeNodeUpdate(() -> setMessageNodes(MessageTreeNode.createMessages(myTree, this, message, link, icon, attributes), false));
@@ -211,7 +211,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Nonnull
-  public XDebuggerTreeNode addTemporaryEditorNode(@Nullable Icon icon, @Nullable String text) {
+  public XDebuggerTreeNode addTemporaryEditorNode(@Nullable Image icon, @Nullable String text) {
     if (isLeaf()) {
       setLeaf(false);
     }

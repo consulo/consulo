@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import com.intellij.util.EventDispatcher;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.util.EventListener;
@@ -45,7 +46,7 @@ public abstract class AbstractBreakpointPanel<B> {
 
   public abstract void dispose();
 
-  public abstract Icon getTabIcon();
+  public abstract Image getTabIcon();
 
   public abstract void resetBreakpoints();
 

@@ -46,11 +46,13 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.attach.XLocalAttachDebugger;
 import com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider;
 import com.intellij.xdebugger.attach.XLocalAttachGroup;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -339,7 +341,7 @@ public class AttachToLocalProcessAction extends AnAction {
     }
 
     @Nullable
-    public Icon getIcon(@Nonnull Project project) {
+    public Image getIcon(@Nonnull Project project) {
       return myGroup.getProcessIcon(project, myProcessInfo, myDataHolder);
     }
 
@@ -425,7 +427,7 @@ public class AttachToLocalProcessAction extends AnAction {
 
     @Override
     public Icon getIconFor(AttachItem value) {
-      return value.getIcon(myProject);
+      return TargetAWT.to(value.getIcon(myProject));
     }
 
     @Nonnull

@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.frame;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +32,7 @@ public abstract class XSuspendContext {
    * Returned execution stack will be selected by default in 'Frames' panel of 'Debug' tool window. Also it will be used to obtain current
    * stack frame to perform 'Evaluate' action, for example
    */
-  @javax.annotation.Nullable
+  @Nullable
   public XExecutionStack getActiveExecutionStack() {
     return null;
   }

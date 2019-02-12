@@ -18,6 +18,8 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 
 import javax.swing.*;
 
@@ -25,8 +27,15 @@ import javax.swing.*;
  * @author yole
  */
 public abstract class ToggleActionButton extends AnActionButton implements Toggleable {
-  @SuppressWarnings("NullableProblems")
   public ToggleActionButton(String text, Icon icon) {
+    super(text, null, icon);
+  }
+
+  public ToggleActionButton(String text, SwingImageRef icon) {
+    super(text, null, icon);
+  }
+
+  public ToggleActionButton(String text, Image icon) {
     super(text, null, icon);
   }
 

@@ -18,9 +18,11 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashSet;
@@ -41,22 +43,40 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     super(text);
   }
 
+  @Deprecated
   public AnActionButton(String text, String description, @Nullable Icon icon) {
     super(text, description, icon);
   }
 
-  @SuppressWarnings("NullableProblems")
+  @Deprecated
   public AnActionButton(String text, Icon icon) {
+    this(text, null, icon);
+  }
+
+  @Deprecated
+  public AnActionButton(String text, String description, @Nullable SwingImageRef icon) {
+    super(text, description, icon);
+  }
+
+  @Deprecated
+  public AnActionButton(String text, SwingImageRef icon) {
+    this(text, null, icon);
+  }
+
+  public AnActionButton(String text, String description, @Nullable Image icon) {
+    super(text, description, icon);
+  }
+
+  public AnActionButton(String text, Image icon) {
     this(text, null, icon);
   }
 
   public AnActionButton() {
   }
-  
+
   public static AnActionButton fromAction(final AnAction action) {
     final Presentation presentation = action.getTemplatePresentation();
-    return action instanceof CheckedActionGroup ? new CheckedAnActionButton(presentation, action)
-                                                   : new AnActionButtonWrapper(presentation, action);
+    return action instanceof CheckedActionGroup ? new CheckedAnActionButton(presentation, action) : new AnActionButtonWrapper(presentation, action);
   }
 
   public boolean isEnabled() {
@@ -79,7 +99,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
   public final void update(AnActionEvent e) {
     boolean myActionVisible = true;
     boolean myActionEnabled = true;
-    if (myAction != null) {      
+    if (myAction != null) {
       myAction.update(e);
       myActionEnabled = e.getPresentation().isEnabled();
       myActionVisible = e.getPresentation().isVisible();
@@ -100,7 +120,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
       updateButton(e);
     }
   }
-  
+
   public final void addCustomUpdater(@Nonnull AnActionButtonUpdater updater) {
     if (myUpdaters == null) {
       myUpdaters = new HashSet<AnActionButtonUpdater>();
@@ -131,16 +151,14 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
   }
 
   private boolean isContextComponentOk() {
-    return myContextComponent == null
-           || (myContextComponent.isVisible() && UIUtil.getParentOfType(JLayeredPane.class, myContextComponent) != null);
+    return myContextComponent == null || (myContextComponent.isVisible() && UIUtil.getParentOfType(JLayeredPane.class, myContextComponent) != null);
   }
 
   public final RelativePoint getPreferredPopupPoint() {
     Container c = myContextComponent;
     ActionToolbar toolbar = null;
     while ((c = c.getParent()) != null) {
-      if (c instanceof JComponent
-          && (toolbar = (ActionToolbar)((JComponent)c).getClientProperty(ActionToolbar.ACTION_TOOLBAR_PROPERTY_KEY)) != null) {
+      if (c instanceof JComponent && (toolbar = (ActionToolbar)((JComponent)c).getClientProperty(ActionToolbar.ACTION_TOOLBAR_PROPERTY_KEY)) != null) {
         break;
       }
     }

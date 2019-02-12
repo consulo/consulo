@@ -19,10 +19,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -57,7 +57,7 @@ public class XBreakpointCustomGroupingRule<B> extends XBreakpointGroupingRule<B,
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.NewFolder;
   }
 }

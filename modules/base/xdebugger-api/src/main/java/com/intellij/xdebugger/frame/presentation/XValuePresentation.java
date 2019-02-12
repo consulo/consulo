@@ -17,13 +17,14 @@ package com.intellij.xdebugger.frame.presentation;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Determines how a value is shown in debugger trees. Use one of the standard implementations (for {@link com.intellij.xdebugger.frame.presentation.XStringValuePresentation strings},
  * {@link com.intellij.xdebugger.frame.presentation.XNumericValuePresentation numbers}, {@link com.intellij.xdebugger.frame.presentation.XKeywordValuePresentation keywords}
  * and for {@link com.intellij.xdebugger.frame.presentation.XRegularValuePresentation other values}) or override this class if you need something special
  *
- * @see com.intellij.xdebugger.frame.XValueNode#setPresentation(javax.swing.Icon, XValuePresentation, boolean)
+ * @see com.intellij.xdebugger.frame.XValueNode#setPresentation(consulo.ui.image.Image, XValuePresentation, boolean)
  */
 public abstract class XValuePresentation {
   protected static final String DEFAULT_SEPARATOR = " = ";
@@ -45,7 +46,7 @@ public abstract class XValuePresentation {
   /**
    * @return optional type of the value, it is shown in gray color and surrounded by braces
    */
-  @javax.annotation.Nullable
+  @Nullable
   public String getType() {
     return null;
   }
@@ -84,7 +85,7 @@ public abstract class XValuePresentation {
      * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
      * @param maxLength maximum number of characters to show
      */
-    void renderStringValue(@Nonnull String value, @javax.annotation.Nullable String additionalSpecialCharsToHighlight, int maxLength);
+    void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength);
 
     /**
      * Appends {@code value} surrounded by quotes to the node text colored as a string
@@ -92,7 +93,7 @@ public abstract class XValuePresentation {
      * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
      * @param maxLength maximum number of characters to show
      */
-    void renderStringValue(@Nonnull String value, @javax.annotation.Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength);
+    void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength);
 
     /**
      * Appends gray colored {@code comment}

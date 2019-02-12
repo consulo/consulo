@@ -60,6 +60,8 @@ import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XEvaluationCallbackBase;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodePresentationConfigurator;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -168,7 +170,7 @@ public class XValueHint extends AbstractValueHint {
           private boolean myShown = false;
 
           @Override
-          public void applyPresentation(@Nullable Icon icon,
+          public void applyPresentation(@Nullable Image icon,
                                         @Nonnull XValuePresentation valuePresenter,
                                         boolean hasChildren) {
             if (isHintHidden()) {

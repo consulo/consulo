@@ -18,10 +18,10 @@ package com.intellij.xdebugger.frame;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.Obsolescent;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -33,7 +33,7 @@ import java.util.List;
 public abstract class XExecutionStack {
   public static final XExecutionStack[] EMPTY_ARRAY = new XExecutionStack[0];
   private final String myDisplayName;
-  private final Icon myIcon;
+  private final Image myIcon;
 
   /**
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
@@ -46,7 +46,7 @@ public abstract class XExecutionStack {
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
    * @param icon icon to be shown in the combobox in 'Frames' tab
    */
-  protected XExecutionStack(final @Nonnull String displayName, final @Nullable Icon icon) {
+  protected XExecutionStack(final @Nonnull String displayName, final @Nullable Image icon) {
     myDisplayName = displayName;
     myIcon = icon;
   }
@@ -57,7 +57,7 @@ public abstract class XExecutionStack {
   }
 
   @Nullable
-  public final Icon getIcon() {
+  public final Image getIcon() {
     return myIcon;
   }
 

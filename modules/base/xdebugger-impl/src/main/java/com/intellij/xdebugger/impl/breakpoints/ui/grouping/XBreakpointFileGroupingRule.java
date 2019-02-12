@@ -22,10 +22,10 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointsGroupingPriorities;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -61,7 +61,7 @@ public class XBreakpointFileGroupingRule<B> extends XBreakpointGroupingRule<B, X
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.FileTypes.Text;
   }
 }

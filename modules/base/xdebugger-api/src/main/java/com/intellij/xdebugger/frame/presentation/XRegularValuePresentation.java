@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 /**
  * Renders a value using default color. If you only need to show {@code value} and {@code type}
- * use {@link com.intellij.xdebugger.frame.XValueNode#setPresentation(javax.swing.Icon, String, String, boolean) setPresentation} method instead
+ * use {@link com.intellij.xdebugger.frame.XValueNode#setPresentation(consulo.ui.image.Image, String, String, boolean) setPresentation} method instead
  *
  * @author nik
 */
@@ -33,7 +33,7 @@ public class XRegularValuePresentation extends XValuePresentation {
     this(value, type, DEFAULT_SEPARATOR);
   }
 
-  public XRegularValuePresentation(@Nonnull String value, @javax.annotation.Nullable String type, final @Nonnull String separator) {
+  public XRegularValuePresentation(@Nonnull String value, @Nullable String type, final @Nonnull String separator) {
     myValue = value;
     myType = type;
     mySeparator = separator;

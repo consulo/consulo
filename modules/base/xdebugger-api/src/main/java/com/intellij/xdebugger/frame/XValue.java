@@ -21,6 +21,8 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XInstanceEvaluator;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public abstract class XValue extends XValueContainer {
   /**
-   * Start computing presentation of the value in the debugger tree and call {@link XValueNode#setPresentation(javax.swing.Icon, String, String, boolean)}
+   * Start computing presentation of the value in the debugger tree and call {@link XValueNode#setPresentation(Image, String, String, boolean)}
    * when computation is finished.
    * Note that this method is called from the Event Dispatch thread so it should return quickly.
    * @param node node

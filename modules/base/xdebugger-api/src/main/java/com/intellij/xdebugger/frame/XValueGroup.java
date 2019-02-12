@@ -15,10 +15,10 @@
  */
 package com.intellij.xdebugger.frame;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * Represents a group of values in a debugger tree.
@@ -36,7 +36,7 @@ public abstract class XValueGroup extends XValueContainer {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

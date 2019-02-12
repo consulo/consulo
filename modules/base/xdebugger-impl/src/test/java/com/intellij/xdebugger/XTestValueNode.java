@@ -4,10 +4,10 @@ import com.intellij.xdebugger.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodePresentationConfigurator;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.concurrent.Semaphore;
 
 public class XTestValueNode extends XValueNodePresentationConfigurator.ConfigurableXValueNodeImpl {
@@ -21,7 +21,7 @@ public class XTestValueNode extends XValueNodePresentationConfigurator.Configura
   private final Semaphore myFinished = new Semaphore(0);
 
   @Override
-  public void applyPresentation(@Nullable Icon icon,
+  public void applyPresentation(@Nullable Image icon,
                                 @Nonnull XValuePresentation valuePresentation,
                                 boolean hasChildren) {
     myType = valuePresentation.getType();

@@ -20,9 +20,9 @@ import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -33,8 +33,8 @@ public class XDebuggerUIConstants {
   public static final String EVALUATING_EXPRESSION_MESSAGE = XDebuggerBundle.message("xdebugger.evaluating.expression.node.message");
   public static final String MODIFYING_VALUE_MESSAGE = XDebuggerBundle.message("xdebugger.modifiyng.value.node.message");
 
-  public static final Icon ERROR_MESSAGE_ICON = AllIcons.General.Error;
-  public static final Icon INFORMATION_MESSAGE_ICON = AllIcons.General.Information;
+  public static final Image ERROR_MESSAGE_ICON = AllIcons.General.Error;
+  public static final Image INFORMATION_MESSAGE_ICON = AllIcons.General.Information;
 
   public static final SimpleTextAttributes COLLECTING_DATA_HIGHLIGHT_ATTRIBUTES = get(new JBColor(Color.lightGray, Color.lightGray));
   public static final SimpleTextAttributes EVALUATING_EXPRESSION_HIGHLIGHT_ATTRIBUTES = get(new JBColor(Color.lightGray, Color.lightGray));

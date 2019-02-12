@@ -15,11 +15,12 @@
  */
 package com.intellij.xdebugger.breakpoints.ui;
 
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -61,11 +62,11 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
     return XBreakpointsGroupingPriorities.DEFAULT;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract G getGroup(@Nonnull B breakpoint, @Nonnull Collection<G> groups);
 
-  @javax.annotation.Nullable
-  public Icon getIcon() {
+  @Nullable
+  public Image getIcon() {
     return null;
   }
 }

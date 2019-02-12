@@ -45,7 +45,7 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
   @Nullable
   XSourcePosition getSourcePosition();
 
-  @javax.annotation.Nullable
+  @Nullable
   Navigatable getNavigatable();
 
   @Nonnull
@@ -64,26 +64,26 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
   @Nullable
   String getLogExpression();
 
-  void setLogExpression(@javax.annotation.Nullable String expression);
+  void setLogExpression(@Nullable String expression);
 
   @Nullable
   XExpression getLogExpressionObject();
 
-  void setLogExpressionObject(@javax.annotation.Nullable XExpression expression);
+  void setLogExpressionObject(@Nullable XExpression expression);
 
   /**
    * @deprecated use {@link #getConditionExpression()} instead
    */
   @Deprecated
-  @javax.annotation.Nullable
+  @Nullable
   String getCondition();
 
-  void setCondition(@javax.annotation.Nullable String condition);
+  void setCondition(@Nullable String condition);
 
-  @javax.annotation.Nullable
+  @Nullable
   XExpression getConditionExpression();
 
-  void setConditionExpression(@javax.annotation.Nullable XExpression condition);
+  void setConditionExpression(@Nullable XExpression condition);
 
   long getTimeStamp();
 }

@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.frame;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -32,7 +33,7 @@ public abstract class XValueModifier {
   /**
    * @return return text to show in expression editor when "Set Value" action is invoked
    */
-  @javax.annotation.Nullable
+  @Nullable
   public String getInitialValueEditorText() {
     return null;
   }
