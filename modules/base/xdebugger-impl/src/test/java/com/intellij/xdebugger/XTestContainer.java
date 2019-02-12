@@ -19,10 +19,10 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.SmartList;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -42,7 +42,7 @@ public class XTestContainer<T> {
 
 
   public void setMessage(@Nonnull String message,
-                         final Icon icon, @Nonnull final SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link) {
+                         final Image icon, @Nonnull final SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link) {
   }
 
   public void setErrorMessage(@Nonnull String message, @Nullable XDebuggerTreeNodeHyperlink link) {
