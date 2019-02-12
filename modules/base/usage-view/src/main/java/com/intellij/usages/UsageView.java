@@ -74,7 +74,7 @@ public interface UsageView extends Disposable {
   @Nonnull
   Set<Usage> getExcludedUsages();
 
-  @javax.annotation.Nullable
+  @Nullable
   Set<Usage> getSelectedUsages();
   @Nonnull
   Set<Usage> getUsages();

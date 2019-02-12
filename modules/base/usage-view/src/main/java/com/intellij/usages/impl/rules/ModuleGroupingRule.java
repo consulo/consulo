@@ -30,9 +30,9 @@ import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageInLibrary;
 import com.intellij.usages.rules.UsageInModule;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -68,7 +68,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return AllIcons.Nodes.PpLibFolder;
     }
 
@@ -145,7 +145,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return myModule.isDisposed() ? null : AllIcons.Nodes.Module;
     }
 

@@ -22,9 +22,9 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -34,7 +34,7 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
   private final UsageViewImpl myView;
   private boolean myState;
 
-  public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Icon icon) {
+  public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Image icon) {
     super(text, null, icon);
     myView = (UsageViewImpl)view;
     myState = getOptionValue();

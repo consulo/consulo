@@ -17,21 +17,22 @@ package com.intellij.usages;
 
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.pom.Navigatable;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.swing.*;
-
 public interface UsageGroup extends Comparable<UsageGroup>, Navigatable {
   @Nullable
-  Icon getIcon(boolean isOpen);
+  Image getIcon();
 
   @Nonnull
-  String getText(@javax.annotation.Nullable UsageView view);
+  String getText(@Nullable UsageView view);
 
-  @javax.annotation.Nullable
+  @Nullable
   FileStatus getFileStatus();
 
   boolean isValid();
+
   void update();
 }

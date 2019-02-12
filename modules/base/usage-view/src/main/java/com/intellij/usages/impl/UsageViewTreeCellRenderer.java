@@ -136,7 +136,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         }
         else {
           append(node.getGroup().getText(myView), patchAttrs(node, showAsReadOnly ? ourReadOnlyAttributes : SimpleTextAttributes.REGULAR_ATTRIBUTES));
-          setIcon(node.getGroup().getIcon(expanded));
+          setIcon(node.getGroup().getIcon());
         }
 
         int count = node.getRecursiveUsageCount();

@@ -218,7 +218,7 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
     if (node.canNavigateToSource()) {
       SimpleColoredComponent renderer = new SimpleColoredComponent();
 
-      renderer.setIcon(group.getIcon(false));
+      renderer.setIcon(group.getIcon());
       SimpleTextAttributes attributes = deriveAttributesWithColor(SimpleTextAttributes.REGULAR_ATTRIBUTES, fileBgColor);
       renderer.append(group.getText(myUsageView), attributes);
       renderer.append(" ", attributes);

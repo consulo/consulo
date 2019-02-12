@@ -2,9 +2,9 @@ package com.intellij.usages.impl.rules;
 
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.usages.UsageGroup;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -26,7 +26,7 @@ public abstract class UsageGroupBase implements UsageGroup {
   }
 
   @Override
-  public Icon getIcon(boolean isOpen) {
+  public Image getIcon() {
     return null;
   }
 

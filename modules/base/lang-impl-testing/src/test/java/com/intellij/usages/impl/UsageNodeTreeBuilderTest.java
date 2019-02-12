@@ -43,7 +43,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -159,7 +158,7 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
     }
 
     @Override
-    public Icon getIcon(boolean isOpen) { return null; }
+    public Image getIcon() { return null; }
     @Override
     @Nonnull
     public String getText(UsageView view) { return String.valueOf(myPower); }
@@ -204,7 +203,7 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
   private static class OddEvenGroupingRule extends SingleParentUsageGroupingRule {
     private static final UsageGroup EVEN = new UsageGroup() {
       @Override
-      public Icon getIcon(boolean isOpen) { return null; }
+      public Image getIcon() { return null; }
       @Override
       @Nonnull
       public String getText(UsageView view) { return "Even"; }
@@ -240,7 +239,7 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
 
     private static final UsageGroup ODD = new UsageGroup() {
       @Override
-      public Icon getIcon(boolean isOpen) { return null; }
+      public Image getIcon() { return null; }
       @Override
       @Nonnull
       public String getText(UsageView view) { return "Odd"; }

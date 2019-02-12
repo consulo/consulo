@@ -17,16 +17,16 @@ package com.intellij.usages;
 
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiNamedElement;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
  */
 public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> extends PsiElementUsageGroupBase<T> {
 
-  public PsiNamedElementUsageGroupBase(@Nonnull T element, Icon icon) {
+  public PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
     super(element, icon);
   }
 

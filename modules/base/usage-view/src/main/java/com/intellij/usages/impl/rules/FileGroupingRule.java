@@ -32,12 +32,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.usages.*;
 import com.intellij.usages.rules.SingleParentUsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
-import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author max
@@ -63,7 +62,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     private final Project myProject;
     private final VirtualFile myFile;
     private String myPresentableName;
-    private Icon myIcon;
+    private Image myIcon;
 
     public FileUsageGroup(@Nonnull Project project, @Nonnull VirtualFile file) {
       myProject = project;
@@ -72,8 +71,8 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
       update();
     }
 
-    private Icon getIconImpl() {
-      return TargetAWT.to(VfsIconUtil.getIcon(myFile, Iconable.ICON_FLAG_READ_STATUS, myProject));
+    private Image getIconImpl() {
+      return VfsIconUtil.getIcon(myFile, Iconable.ICON_FLAG_READ_STATUS, myProject);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return myIcon;
     }
 

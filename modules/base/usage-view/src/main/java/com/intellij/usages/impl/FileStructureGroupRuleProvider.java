@@ -20,9 +20,11 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.usages.rules.UsageGroupingRule;
 
+import javax.annotation.Nullable;
+
 public interface FileStructureGroupRuleProvider {
   ExtensionPointName<FileStructureGroupRuleProvider> EP_NAME = new ExtensionPointName<FileStructureGroupRuleProvider>("com.intellij.fileStructureGroupRuleProvider");
 
-  @javax.annotation.Nullable
+  @Nullable
   UsageGroupingRule getUsageGroupingRule(final Project project);
 }

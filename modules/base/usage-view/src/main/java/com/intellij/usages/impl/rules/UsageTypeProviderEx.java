@@ -18,12 +18,13 @@ package com.intellij.usages.impl.rules;
 import com.intellij.psi.PsiElement;
 import com.intellij.usages.UsageTarget;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public interface UsageTypeProviderEx extends UsageTypeProvider {
-  @javax.annotation.Nullable
+  @Nullable
   UsageType
   getUsageType(PsiElement element, @Nonnull UsageTarget[] targets);
 }

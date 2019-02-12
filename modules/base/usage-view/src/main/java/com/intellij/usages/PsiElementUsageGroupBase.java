@@ -26,11 +26,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.usageView.UsageInfo;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -38,9 +37,9 @@ import javax.swing.*;
 public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> implements UsageGroup, NamedPresentably {
   private final SmartPsiElementPointer myElementPointer;
   private final String myName;
-  private final Icon myIcon;
+  private final Image myIcon;
 
-  public PsiElementUsageGroupBase(@Nonnull T element, Icon icon) {
+  public PsiElementUsageGroupBase(@Nonnull T element, Image icon) {
     String myName = element.getName();
     if (myName == null) myName = "<anonymous>";
     this.myName = myName;
@@ -50,11 +49,11 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   }
 
   public PsiElementUsageGroupBase(@Nonnull T element) {
-    this(element, TargetAWT.to(IconDescriptorUpdaters.getIcon(element, 0)));
+    this(element, IconDescriptorUpdaters.getIcon(element, 0));
   }
 
   @Override
-  public Icon getIcon(boolean isOpen) {
+  public Image getIcon() {
     return myIcon;
   }
 

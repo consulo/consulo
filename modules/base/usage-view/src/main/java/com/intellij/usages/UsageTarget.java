@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -46,7 +47,7 @@ public interface UsageTarget extends NavigationItem {
   /**
    * @return the files this usage target is in. Might be null if usage target is not file-based
    */
-  @javax.annotation.Nullable
+  @Nullable
   VirtualFile[] getFiles();
 
   void update();

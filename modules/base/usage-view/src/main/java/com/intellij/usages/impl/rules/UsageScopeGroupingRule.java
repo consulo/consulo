@@ -27,9 +27,9 @@ import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageGroupingRule;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -57,7 +57,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
 
   private static final UsageScopeGroup TEST = new UsageScopeGroup(0) {
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return AllIcons.Nodes.TestPackage;
     }
 
@@ -69,7 +69,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
   };
   private static final UsageScopeGroup PRODUCTION = new UsageScopeGroup(1) {
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return AllIcons.Nodes.Package;
     }
 
@@ -81,7 +81,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
   };
   private static final UsageScopeGroup LIBRARY = new UsageScopeGroup(2) {
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return AllIcons.Nodes.PpLib;
     }
 

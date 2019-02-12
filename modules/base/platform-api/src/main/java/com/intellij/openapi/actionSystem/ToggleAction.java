@@ -15,9 +15,12 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import javax.annotation.Nullable;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -26,19 +29,30 @@ import javax.swing.*;
  */
 public abstract class ToggleAction extends AnAction implements Toggleable {
 
-  public ToggleAction(){
+  public ToggleAction() {
   }
 
-  public ToggleAction(@Nullable final String text){
+  public ToggleAction(@Nullable final String text) {
     super(text);
   }
 
-  public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final Icon icon){
+  @Deprecated
+  public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final Icon icon) {
     super(text, description, icon);
   }
 
+  @Deprecated
+  public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final SwingImageRef icon) {
+    super(text, description, icon);
+  }
+
+  public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final Image icon) {
+    super(text, description, icon);
+  }
+
+  @RequiredUIAccess
   @Override
-  public final void actionPerformed(final AnActionEvent e){
+  public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final boolean state = !isSelected(e);
     setSelected(e, state);
     final Boolean selected = state ? Boolean.TRUE : Boolean.FALSE;
@@ -48,6 +62,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
 
   /**
    * Returns the selected (checked, pressed) state of the action.
+   *
    * @param e the action event representing the place and context in which the selected state is queried.
    * @return true if the action is selected, false otherwise
    */
@@ -55,6 +70,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
 
   /**
    * Sets the selected state of the action to the specified value.
+   *
    * @param e     the action event which caused the state change.
    * @param state the new selected state of the action.
    */
@@ -62,7 +78,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
 
   @Override
   @RequiredUIAccess
-  public void update(final AnActionEvent e){
+  public void update(@Nonnull final AnActionEvent e) {
     final Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
     final Presentation presentation = e.getPresentation();
     presentation.putClientProperty(SELECTED_PROPERTY, selected);

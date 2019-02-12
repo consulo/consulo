@@ -17,7 +17,10 @@ package com.intellij.usages.impl.rules;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.DataSink;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
@@ -32,9 +35,9 @@ import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -87,7 +90,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return AllIcons.Nodes.TreeClosed;
     }
 
@@ -174,7 +177,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public Icon getIcon(boolean isOpen) {
+    public Image getIcon() {
       return AllIcons.Nodes.Package;
     }
 
