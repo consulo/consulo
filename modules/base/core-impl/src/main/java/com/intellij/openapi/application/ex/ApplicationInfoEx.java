@@ -25,11 +25,9 @@
 package com.intellij.openapi.application.ex;
 
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 
-import javax.swing.*;
 import java.awt.*;
 
 public abstract class ApplicationInfoEx extends ApplicationInfo {
@@ -50,10 +48,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   @DeprecationInfo("Do not use this method. Use SandboxUtil.getAppIcon()")
   public String getSmallIconUrl() {
     return getUrl("/icon16");
-  }
-
-  public static Icon getWelcomeScreenLogo() {
-    return IconLoader.getIcon(getUrl("/Logo_welcomeScreen"));
   }
 
   private static String getUrl(String prefix) {
