@@ -15,18 +15,18 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import java.io.File;
 
 public final class ReadOnlyModificationException extends RuntimeException {
-  private final VirtualFile myFile;
+  private final File myFile;
 
-  public ReadOnlyModificationException(@Nonnull VirtualFile file) {
+  public ReadOnlyModificationException(@Nonnull File file) {
     myFile = file;
   }
 
   @Nonnull
-  public VirtualFile getFile() {
+  public File getFile() {
     return myFile;
   }
 }

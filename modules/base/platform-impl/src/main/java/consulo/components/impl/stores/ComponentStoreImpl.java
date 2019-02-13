@@ -19,24 +19,24 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.JDOMXIncluder;
 import consulo.application.AccessRule;
+import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -72,7 +72,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public final void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
+  public final void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
@@ -97,7 +97,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public final void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
+  public final void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
@@ -121,7 +121,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     doSaveAsync(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
   }
 
-  protected void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
+  protected void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     if (saveSessions != null) {
       for (SaveSession session : saveSessions) {
         executeSave(session, readonlyFiles);
@@ -129,7 +129,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  protected static void executeSave(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
+  protected static void executeSave(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     try {
       session.save();
     }
@@ -138,7 +138,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  protected void doSaveAsync(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
+  protected void doSaveAsync(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     if (saveSessions != null) {
       for (SaveSession session : saveSessions) {
         executeSaveAsync(session, readonlyFiles);
@@ -146,7 +146,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  protected static void executeSaveAsync(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
+  protected static void executeSaveAsync(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     try {
       session.saveAsync();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,11 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
+import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.LineSeparator;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.StreamProvider;
@@ -40,57 +38,31 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.util.Set;
 
 /**
- * File storage - based on Consulo VFS
+ * @author VISTALL
+ * @since 2019-02-13
  */
-public final class VfsFileBasedStorage extends XmlElementStorage {
+public final class IoFileBasedStorage extends XmlElementStorage {
   private final String myFilePath;
   private final boolean myUseXmlProlog;
   private final File myFile;
-  private volatile VirtualFile myCachedVirtualFile;
   private LineSeparator myLineSeparator;
 
-  public VfsFileBasedStorage(@Nonnull String filePath,
-                             @Nonnull String fileSpec,
-                             @Nullable RoamingType roamingType,
-                             @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                             @Nonnull String rootElementName,
-                             @Nonnull Disposable parentDisposable,
-                             @Nullable final Listener listener,
-                             @Nullable StreamProvider streamProvider,
-                             boolean useXmlProlog) {
+  public IoFileBasedStorage(@Nonnull String filePath,
+                            @Nonnull String fileSpec,
+                            @Nullable RoamingType roamingType,
+                            @Nullable TrackingPathMacroSubstitutor pathMacroManager,
+                            @Nonnull String rootElementName,
+                            @Nonnull Disposable parentDisposable,
+                            @Nullable final Listener listener,
+                            @Nullable StreamProvider streamProvider,
+                            boolean useXmlProlog) {
     super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider);
 
     myFilePath = filePath;
     myUseXmlProlog = useXmlProlog;
     myFile = new File(filePath);
-
-    if (listener != null) {
-      VirtualFileTracker virtualFileTracker = ServiceManager.getService(VirtualFileTracker.class);
-      virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myFile.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
-        @Override
-        public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
-          myCachedVirtualFile = null;
-        }
-
-        @Override
-        public void fileDeleted(@Nonnull VirtualFileEvent event) {
-          myCachedVirtualFile = null;
-        }
-
-        @Override
-        public void fileCreated(@Nonnull VirtualFileEvent event) {
-          myCachedVirtualFile = event.getFile();
-        }
-
-        @Override
-        public void contentsChanged(@Nonnull final VirtualFileEvent event) {
-          listener.storageFileChanged(event, VfsFileBasedStorage.this);
-        }
-      }, false, parentDisposable);
-    }
   }
 
   protected boolean isUseXmlProlog() {
@@ -104,13 +76,6 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
   @Override
   protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
     return new FileSaveSession(storageData);
-  }
-
-  public void forceSave() {
-    XmlElementStorageSaveSession externalizationSession = startExternalization();
-    if (externalizationSession != null) {
-      externalizationSession.forceSave();
-    }
   }
 
   private class FileSaveSession extends XmlElementStorageSaveSession {
@@ -136,16 +101,12 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
       }
 
       if (content == null) {
-        StorageUtil.deleteFile(myFile, this, getVirtualFile());
-        myCachedVirtualFile = null;
+        StorageUtil.deleteFile(myFile);
       }
       else {
-        VirtualFile file = getVirtualFile();
-        if (file == null || !file.exists()) {
-          FileUtil.createParentDirs(myFile);
-          file = null;
-        }
-        myCachedVirtualFile = StorageUtil.writeFile(myFile, this, file, content, isUseXmlProlog() ? myLineSeparator : null);
+        FileUtil.createParentDirs(myFile);
+
+        StorageUtil.writeFile(myFile, content, isUseXmlProlog() ? myLineSeparator : null);
       }
     }
 
@@ -168,17 +129,12 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
       }
 
       if (content == null) {
-        StorageUtil.deleteFile(myFile, this, getVirtualFile());
-        myCachedVirtualFile = null;
+        StorageUtil.deleteFile(myFile);
       }
       else {
-        VirtualFile file = getVirtualFile();
-        if (file == null || !file.exists()) {
-          FileUtil.createParentDirs(myFile);
-          file = null;
-        }
+        FileUtil.createParentDirs(myFile);
 
-        StorageUtil.writeFileAsync(myFile, this, file, content, isUseXmlProlog() ? myLineSeparator : null).doWhenDone((f) -> myCachedVirtualFile = f);
+        StorageUtil.writeFile(myFile, content, isUseXmlProlog() ? myLineSeparator : null);
       }
     }
   }
@@ -187,15 +143,6 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
   @Nonnull
   protected StorageData createStorageData() {
     return new StorageData(myRootElementName);
-  }
-
-  @Nullable
-  public VirtualFile getVirtualFile() {
-    VirtualFile virtualFile = myCachedVirtualFile;
-    if (virtualFile == null) {
-      myCachedVirtualFile = virtualFile = LocalFileSystem.getInstance().findFileByIoFile(myFile);
-    }
-    return virtualFile;
   }
 
   @Nonnull
@@ -213,18 +160,17 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
   protected Element loadLocalData() {
     myBlockSavingTheContent = false;
     try {
-      VirtualFile file = getVirtualFile();
-      if (file == null || file.isDirectory() || !file.isValid()) {
+      if (!myFile.exists()) {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("Document was not loaded for " + myFileSpec + " file is " + (file == null ? "null" : "directory"));
+          LOG.debug("Document was not loaded for " + myFileSpec + " file not exists ");
         }
         return null;
       }
-      if (file.getLength() == 0) {
+      if (myFile.length() == 0) {
         return processReadException(null);
       }
 
-      CharBuffer charBuffer = CharsetToolkit.UTF8_CHARSET.decode(ByteBuffer.wrap(file.contentsToByteArray()));
+      CharBuffer charBuffer = CharsetToolkit.UTF8_CHARSET.decode(ByteBuffer.wrap(FileUtil.loadFileBytes(myFile)));
       myLineSeparator = StorageUtil.detectLineSeparators(charBuffer, isUseLfLineSeparatorByDefault() ? null : LineSeparator.LF);
       return JDOMUtil.loadDocument(charBuffer).getRootElement();
     }
@@ -244,11 +190,12 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
       if (e != null) {
         LOG.info(e);
       }
-      new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Load Settings",
-                       "Cannot load settings from file '" +
-                       myFile.getPath() + "': " +
-                       (e == null ? "content truncated" : e.getMessage()) + "\n" +
-                       (myBlockSavingTheContent ? "Please correct the file content" : "File content will be recreated"),
+      new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Load Settings", "Cannot load settings from file '" +
+                                                                                myFile.getPath() +
+                                                                                "': " +
+                                                                                (e == null ? "content truncated" : e.getMessage()) +
+                                                                                "\n" +
+                                                                                (myBlockSavingTheContent ? "Please correct the file content" : "File content will be recreated"),
                        NotificationType.WARNING).notify(null);
     }
     return null;
@@ -258,34 +205,6 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
   public void setDefaultState(@Nonnull Element element) {
     element.setName(myRootElementName);
     super.setDefaultState(element);
-  }
-
-  public void updatedFromStreamProvider(@Nonnull Set<String> changedComponentNames, boolean deleted) {
-    if (myRoamingType == RoamingType.DISABLED) {
-      // storage roaming was changed to DISABLED, but settings repository has old state
-      return;
-    }
-
-    try {
-      Element newElement = deleted ? null : loadDataFromStreamProvider();
-      if (newElement == null) {
-        StorageUtil.deleteFile(myFile, this, myCachedVirtualFile);
-        // if data was loaded, mark as changed all loaded components
-        if (myLoadedData != null) {
-          changedComponentNames.addAll(myLoadedData.getComponentNames());
-          myLoadedData = null;
-        }
-      }
-      else if (myLoadedData != null) {
-        StorageData newStorageData = createStorageData();
-        loadState(newStorageData, newElement);
-        changedComponentNames.addAll(myLoadedData.getChangedComponentNames(newStorageData, myPathMacroSubstitutor));
-        myLoadedData = newStorageData;
-      }
-    }
-    catch (Throwable e) {
-      LOG.error(e);
-    }
   }
 
   @Override

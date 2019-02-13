@@ -23,22 +23,26 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.util.text.StringUtilRt;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
-import consulo.components.impl.stores.*;
+import com.intellij.util.containers.StringInterner;
+import consulo.application.options.PathMacrosService;
+import consulo.components.impl.stores.DefaultStateSerializer;
+import consulo.components.impl.stores.ReadOnlyModificationException;
+import consulo.components.impl.stores.StorageUtil;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -62,7 +66,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
     mySplitter = splitter;
 
     VirtualFileTracker virtualFileTracker = ServiceManager.getService(VirtualFileTracker.class);
-    if (virtualFileTracker != null && listener != null) {
+    if (listener != null) {
       virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
         @Override
         public void contentsChanged(@Nonnull VirtualFileEvent event) {
@@ -84,7 +88,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
 
         private void notifyIfNeed(@Nonnull VirtualFileEvent event) {
           // storage directory will be removed if the only child was removed
-          if (event.getFile().isDirectory() || DirectoryStorageData.isStorageFile(event.getFile())) {
+          if (event.getFile().isDirectory() || isStorageFile(event.getFile())) {
             listener.storageFileChanged(event, VfsDirectoryBasedStorage.this);
           }
         }
@@ -116,8 +120,55 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
   @Nonnull
   private DirectoryStorageData loadState() {
     DirectoryStorageData storageData = new DirectoryStorageData();
-    storageData.loadFrom(getVirtualFile(), myPathMacroSubstitutor);
+    loadFrom(storageData, getVirtualFile(), myPathMacroSubstitutor);
     return storageData;
+  }
+
+  public void loadFrom(@Nonnull DirectoryStorageData data, @Nullable VirtualFile dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
+    if (dir == null || !dir.exists()) {
+      return;
+    }
+
+    StringInterner interner = new StringInterner();
+    for (VirtualFile file : dir.getChildren()) {
+      if (!isStorageFile(file)) {
+        continue;
+      }
+
+      try {
+        Element element = JDOMUtil.loadDocument(file.contentsToByteArray()).getRootElement();
+        String name = StorageData.getComponentNameIfValid(element);
+        if (name == null) {
+          continue;
+        }
+
+        if (!element.getName().equals(StorageData.COMPONENT)) {
+          LOG.error("Incorrect root tag name (" + element.getName() + ") in " + file.getPresentableUrl());
+          continue;
+        }
+
+        List<Element> elementChildren = element.getChildren();
+        if (elementChildren.isEmpty()) {
+          continue;
+        }
+
+        Element state = (Element)elementChildren.get(0).detach();
+        JDOMUtil.internStringsInElement(state, interner);
+        if (pathMacroSubstitutor != null) {
+          pathMacroSubstitutor.expandPaths(state);
+          pathMacroSubstitutor.addUnknownMacros(name, PathMacrosService.getInstance().getMacroNames(state));
+        }
+        data.setState(name, file.getName(), state);
+      }
+      catch (IOException | JDOMException e) {
+        LOG.info("Unable to load state", e);
+      }
+    }
+  }
+
+  public static boolean isStorageFile(@Nonnull VirtualFile file) {
+    // ignore system files like .DS_Store on Mac
+    return StringUtilRt.endsWithIgnoreCase(file.getNameSequence(), DirectoryStorageData.DEFAULT_EXT);
   }
 
   @Nullable
@@ -334,7 +385,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
       file.delete(requestor);
     }
     catch (FileNotFoundException ignored) {
-      throw new ReadOnlyModificationException(file);
+      throw new ReadOnlyModificationException(VfsUtil.virtualToIoFile(file));
     }
     catch (IOException e) {
       throw new StateStorageException(e);

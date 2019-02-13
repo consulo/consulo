@@ -23,7 +23,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.*;
-import consulo.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -42,10 +41,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.util.Function;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.*;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.RequiredUIAccess;
@@ -458,7 +457,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
            myName;
   }
 
-  public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, final VirtualFile[] readOnlyFiles) {
+  public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {
     final UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
     if (notifications.length == 0) {
       Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
@@ -467,9 +466,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   public static class UnableToSaveProjectNotification extends Notification {
     private Project myProject;
-    private final String[] myFileNames;
+    private final List<String> myFileNames;
 
-    private UnableToSaveProjectNotification(@Nonnull final Project project, final VirtualFile[] readOnlyFiles) {
+    private UnableToSaveProjectNotification(@Nonnull final Project project, final Collection<File> readOnlyFiles) {
       super("Project Settings", "Could not save project!", buildMessage(), NotificationType.ERROR, new NotificationListener() {
         @Override
         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
@@ -484,15 +483,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       });
 
       myProject = project;
-      myFileNames = ContainerUtil.map(readOnlyFiles, new Function<VirtualFile, String>() {
-        @Override
-        public String fun(VirtualFile file) {
-          return file.getPresentableUrl();
-        }
-      }, new String[readOnlyFiles.length]);
+      myFileNames = ContainerUtil.map(readOnlyFiles, File::getPath);
     }
 
-    public String[] getFileNames() {
+    public List<String> getFileNames() {
       return myFileNames;
     }
 

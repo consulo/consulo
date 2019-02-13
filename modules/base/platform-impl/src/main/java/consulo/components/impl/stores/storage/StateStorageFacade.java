@@ -42,7 +42,7 @@ public enum StateStorageFacade {
                                                @Nullable StateStorage.Listener listener,
                                                @Nullable StreamProvider streamProvider,
                                                boolean useXmlProlog) {
-      return null;
+      return new IoFileBasedStorage(filePath, fileSpec, roamingType, pathMacroManager, rootElementName, parentDisposable, listener, streamProvider, useXmlProlog);
     }
 
     @Nonnull
@@ -52,7 +52,7 @@ public enum StateStorageFacade {
                                                     @Nonnull StateSplitterEx splitter,
                                                     @Nonnull Disposable parentDisposable,
                                                     @Nullable StateStorage.Listener listener) {
-      return null;
+      return new IoDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener);
     }
   },
   CONSULO_VFS {

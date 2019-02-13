@@ -16,23 +16,15 @@
 package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.StateSplitterEx;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.text.StringUtilRt;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.StringInterner;
-import consulo.application.options.PathMacrosService;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
-import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,53 +53,6 @@ public class DirectoryStorageData extends StorageDataBase {
 
   public boolean isEmpty() {
     return myStates.isEmpty();
-  }
-
-  public static boolean isStorageFile(@Nonnull VirtualFile file) {
-    // ignore system files like .DS_Store on Mac
-    return StringUtilRt.endsWithIgnoreCase(file.getNameSequence(), DEFAULT_EXT);
-  }
-
-  public void loadFrom(@Nullable VirtualFile dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
-    if (dir == null || !dir.exists()) {
-      return;
-    }
-
-    StringInterner interner = new StringInterner();
-    for (VirtualFile file : dir.getChildren()) {
-      if (!isStorageFile(file)) {
-        continue;
-      }
-
-      try {
-        Element element = JDOMUtil.loadDocument(file.contentsToByteArray()).getRootElement();
-        String name = StorageData.getComponentNameIfValid(element);
-        if (name == null) {
-          continue;
-        }
-
-        if (!element.getName().equals(StorageData.COMPONENT)) {
-          LOG.error("Incorrect root tag name (" + element.getName() + ") in " + file.getPresentableUrl());
-          continue;
-        }
-
-        List<Element> elementChildren = element.getChildren();
-        if (elementChildren.isEmpty()) {
-          continue;
-        }
-
-        Element state = (Element)elementChildren.get(0).detach();
-        JDOMUtil.internStringsInElement(state, interner);
-        if (pathMacroSubstitutor != null) {
-          pathMacroSubstitutor.expandPaths(state);
-          pathMacroSubstitutor.addUnknownMacros(name, PathMacrosService.getInstance().getMacroNames(state));
-        }
-        setState(name, file.getName(), state);
-      }
-      catch (IOException | JDOMException e) {
-        LOG.info("Unable to load state", e);
-      }
-    }
   }
 
   @Nullable

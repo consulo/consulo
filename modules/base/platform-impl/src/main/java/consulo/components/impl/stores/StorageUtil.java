@@ -33,10 +33,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.*;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
@@ -154,7 +151,7 @@ public class StorageUtil {
         throw e;
       }
       else {
-        throw new ReadOnlyModificationException(virtualFile);
+        throw new ReadOnlyModificationException(file);
       }
     }
     finally {
@@ -162,12 +159,28 @@ public class StorageUtil {
     }
   }
 
+  public static void writeFile(@Nullable File file, @Nonnull byte[] content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
+    try {
+
+      try (OutputStream out = new FileOutputStream(file)) {
+        if (lineSeparatorIfPrependXmlProlog != null) {
+          out.write(XML_PROLOG);
+          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
+        }
+        out.write(content);
+      }
+    }
+    catch (FileNotFoundException e) {
+      throw new ReadOnlyModificationException(file);
+    }
+  }
+
   @Nonnull
   public static AsyncResult<VirtualFile> writeFileAsync(@Nullable File file,
-                                           @Nonnull Object requestor,
-                                           @Nullable final VirtualFile fileRef,
-                                           @Nonnull byte[] content,
-                                           @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
+                                                        @Nonnull Object requestor,
+                                                        @Nullable final VirtualFile fileRef,
+                                                        @Nonnull byte[] content,
+                                                        @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
     return AccessRule.writeAsync(() -> {
       VirtualFile virtualFile = fileRef;
 
@@ -201,13 +214,19 @@ public class StorageUtil {
     }
   }
 
+  public static void deleteFile(@Nonnull File file) throws IOException {
+    if (file.exists()) {
+      FileUtil.delete(file);
+    }
+  }
+
   public static void deleteFile(@Nonnull Object requestor, @Nonnull VirtualFile virtualFile) throws IOException {
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
       virtualFile.delete(requestor);
     }
     catch (FileNotFoundException e) {
-      throw new ReadOnlyModificationException(virtualFile);
+      throw new ReadOnlyModificationException(VfsUtil.virtualToIoFile(virtualFile));
     }
     finally {
       token.finish();
