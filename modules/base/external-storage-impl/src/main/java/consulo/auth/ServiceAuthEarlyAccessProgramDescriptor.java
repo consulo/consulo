@@ -26,17 +26,12 @@ public class ServiceAuthEarlyAccessProgramDescriptor extends EarlyAccessProgramD
   @Nonnull
   @Override
   public String getName() {
-    return "hub.consulo.io authorization & external storage support";
+    return "hub.consulo.io authorization";
   }
 
   @Nonnull
   @Override
   public String getDescription() {
-    return "Enabled support for hub.consulo.io. Provide support for storing settings at hub.consulo.io";
-  }
-
-  @Override
-  public boolean isRestartRequired() {
-    return true;
+    return "Enabled autorizatin for hub.consulo.io.";
   }
 }
