@@ -28,10 +28,6 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import consulo.components.impl.stores.storage.VfsFileBasedStorage;
-import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.components.impl.stores.StorageUtil;
-import consulo.components.impl.stores.storage.StateStorageBase;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.*;
@@ -62,7 +58,10 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
-import consulo.application.ex.ApplicationEx2;
+import consulo.components.impl.stores.StorageUtil;
+import consulo.components.impl.stores.storage.StateStorageBase;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.components.impl.stores.storage.VfsFileBasedStorage;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
@@ -91,13 +90,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   private final MultiMap<Project, StateStorage> myChangedProjectFiles = MultiMap.createSet();
   private final SingleAlarm myChangedFilesAlarm;
-  private final List<StateStorage> myChangedApplicationFiles = new SmartList<>();
   private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
 
   private final ProgressManager myProgressManager;
 
   private final Runnable restartApplicationOrReloadProjectTask = () -> {
-    if (isReloadUnblocked() && tryToReloadApplication()) {
+    if (isReloadUnblocked()) {
       askToReloadProjectIfConfigFilesChangedExternally();
     }
   };
@@ -110,18 +108,15 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   }
 
   @Inject
-  public ProjectManagerImpl(@Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
+  public ProjectManagerImpl(@Nonnull Application app, @Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
     myProgressManager = progressManager;
-    Application app = ApplicationManager.getApplication();
     MessageBus messageBus = app.getMessageBus();
-
-    messageBus.connect(app).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, null));
 
     final ProjectManagerListener busPublisher = messageBus.syncPublisher(TOPIC);
     addProjectManagerListener(new ProjectManagerListener() {
       @Override
       public void projectOpened(final Project project) {
-        project.getMessageBus().connect(project).subscribe(StateStorage.PROJECT_STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, project));
+        project.getMessageBus().connect(project).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, project));
 
         busPublisher.projectOpened(project);
         for (ProjectManagerListener listener : getListeners(project)) {
@@ -173,7 +168,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     myChangedFilesAlarm = new SingleAlarm(restartApplicationOrReloadProjectTask, 300);
   }
 
-  private void projectStorageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage, @Nullable Project project) {
+  private void projectStorageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage, @Nonnull Project project) {
     VirtualFile file = event.getFile();
     if (!StorageUtil.isChangedByStorageOrSaveSession(event) && !(event.getRequestor() instanceof ProjectManagerImpl)) {
       registerProjectToReload(project, file, storage);
@@ -603,29 +598,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
   }
 
-  private boolean tryToReloadApplication() {
-    if (ApplicationManager.getApplication().isDisposed()) {
-      return false;
-    }
-    if (myChangedApplicationFiles.isEmpty()) {
-      return true;
-    }
-
-    Set<StateStorage> causes = new THashSet<>(myChangedApplicationFiles);
-    myChangedApplicationFiles.clear();
-
-    WriteAction.run(() -> {
-      try {
-        ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().reload(causes);
-      }
-      catch (Exception e) {
-        Messages.showWarningDialog(ProjectBundle.message("project.reload.failed", e.getMessage()), ProjectBundle.message("project.reload.failed.title"));
-      }
-    });
-
-    return true;
-  }
-
   private boolean shouldReloadProject(@Nonnull Project project) {
     if (project.isDisposed()) {
       return false;
@@ -642,6 +614,31 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       }
     }
 
+    if(causes.isEmpty()) {
+      return false;
+    }
+
+
+    return askToRestart(causes);
+  }
+
+  private static boolean askToRestart(@Nullable Collection<? extends StateStorage> changedStorages) {
+    StringBuilder message = new StringBuilder();
+    message.append("Project components were changed externally and cannot be reloaded");
+
+    message.append("\nWould you like to ");
+    message.append("reload project?");
+
+    if (Messages.showYesNoDialog(message.toString(), "Project Files Changed", Messages.getQuestionIcon()) == Messages.YES) {
+      if (changedStorages != null) {
+        for (StateStorage storage : changedStorages) {
+          if (storage instanceof StateStorageBase) {
+            ((StateStorageBase)storage).disableSaving();
+          }
+        }
+      }
+      return true;
+    }
     return false;
   }
 
@@ -694,17 +691,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
   }
 
-  private void registerProjectToReload(@Nullable Project project, @Nonnull VirtualFile file, @Nonnull StateStorage storage) {
+  private void registerProjectToReload(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull StateStorage storage) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("[RELOAD] Registering project to reload: " + file, new Exception());
     }
 
-    if (project == null) {
-      myChangedApplicationFiles.add(storage);
-    }
-    else {
-      myChangedProjectFiles.putValue(project, storage);
-    }
+    myChangedProjectFiles.putValue(project, storage);
 
     if (storage instanceof StateStorageBase) {
       ((StateStorageBase)storage).disableSaving();

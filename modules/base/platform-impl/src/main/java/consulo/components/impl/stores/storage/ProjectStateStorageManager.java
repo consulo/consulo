@@ -36,10 +36,4 @@ public class ProjectStateStorageManager extends StateStorageManagerImpl {
   protected String getConfigurationMacro(boolean directorySpec) {
     return StoragePathMacros.PROJECT_CONFIG_DIR;
   }
-
-  @Nonnull
-  @Override
-  protected StateStorage.Listener createStorageTopicListener() {
-    return myMessageBusSupplier.get().syncPublisher(StateStorage.PROJECT_STORAGE_TOPIC);
-  }
 }

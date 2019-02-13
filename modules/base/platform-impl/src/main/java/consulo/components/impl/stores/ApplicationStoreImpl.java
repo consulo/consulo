@@ -49,7 +49,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Inject
   public ApplicationStoreImpl(ApplicationEx2 application, ApplicationPathMacroManager pathMacroManager) {
     myApplication = application;
-    myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application::getMessageBus, StateStorageFacade.JAVA_IO) {
+    myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, () -> null, StateStorageFacade.JAVA_IO) {
       @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {

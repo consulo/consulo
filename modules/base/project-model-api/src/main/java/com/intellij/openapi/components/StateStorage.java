@@ -23,11 +23,7 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 public interface StateStorage {
-  // app storage files changed
-  Topic<Listener> STORAGE_TOPIC = new Topic<Listener>("STORAGE_LISTENER", Listener.class, Topic.BroadcastDirection.NONE);
-  // project storage files changes (project or modules, it is reason why we use broadcast TO_PARENT - to be notified when some module storage file changed
-  //  even if listen only project message bus)
-  Topic<Listener> PROJECT_STORAGE_TOPIC = new Topic<Listener>("PROJECT_STORAGE_LISTENER", Listener.class, Topic.BroadcastDirection.NONE);
+  Topic<Listener> STORAGE_TOPIC = Topic.create("STORAGE_LISTENER", Listener.class, Topic.BroadcastDirection.NONE);
 
   @Nullable
   <T> T getState(@Nullable Object component, @Nonnull String componentName, @Nonnull Class<T> stateClass, @Nullable T mergeInto) throws StateStorageException;
