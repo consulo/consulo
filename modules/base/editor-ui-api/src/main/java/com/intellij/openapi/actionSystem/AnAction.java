@@ -123,8 +123,6 @@ public abstract class AnAction implements PossiblyDumbAware {
     this(text, null, null);
   }
 
-  @Deprecated
-  @DeprecationInfo("Use contructor with ui image")
   public AnAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
     this(text, description, (Icon)icon);
   }
