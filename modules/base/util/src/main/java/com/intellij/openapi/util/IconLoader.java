@@ -189,24 +189,6 @@ public final class IconLoader {
     return ourIconLoaderFacade.getDisabledIcon(icon);
   }
 
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use ImageEffects#transparent()")
-  public static Icon getTransparentIcon(@Nonnull final Icon icon) {
-    return ourIconLoaderFacade.getTransparentIcon(icon, 0.5f);
-  }
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use ImageEffects#transparent()")
-  public static Icon getTransparentIcon(@Nonnull final Icon icon, final float alpha) {
-    return ourIconLoaderFacade.getTransparentIcon(icon, alpha);
-  }
-
-  public static Icon createLazyIcon(@Nonnull Computable<Icon> computable) {
-    return ourIconLoaderFacade.createLazyIcon(computable);
-  }
-
   /**
    * Gets a snapshot of the icon, immune to changes made by these calls:
    * {@link {@link IconLoader#resetDark()}
@@ -217,11 +199,6 @@ public final class IconLoader {
   @Nonnull
   public static Icon getIconSnapshot(@Nonnull Icon icon) {
     return ourIconLoaderFacade.getIconSnapshot(icon);
-  }
-
-  @Nullable
-  public static Image toImage(@Nonnull Icon icon) {
-    return toImage(icon, null);
   }
 
   @Nullable

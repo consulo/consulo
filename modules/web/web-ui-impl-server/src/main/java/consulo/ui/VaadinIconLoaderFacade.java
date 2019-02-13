@@ -15,9 +15,7 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.util.Computable;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 
@@ -48,23 +46,13 @@ public class VaadinIconLoaderFacade implements IconLoaderFacade {
   }
 
   @Override
-  public Icon getTransparentIcon(@Nonnull Icon icon, float alpha) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public Icon getIconSnapshot(@Nonnull Icon icon) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Icon createLazyIcon(Computable<Icon> iconComputable) {
-    return iconComputable.compute();
-  }
-
-  @Override
   public SwingImageRef findIcon(URL url, boolean useCache) {
-    return new WGwtImageImpl(url);
+    return (SwingImageRef)consulo.ui.image.Image.fromUrl(url);
   }
 
   @Override

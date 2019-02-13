@@ -17,8 +17,6 @@ package consulo.ui.migration.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.RetrievableIcon;
@@ -34,8 +32,11 @@ import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.desktop.internal.image.DesktopLazyImageImpl;
+import consulo.ui.laf.UIModificationTracker;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -55,7 +56,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
@@ -72,15 +72,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   /**
    * This cache contains mapping between icons and disabled icons.
    */
-  private final Map<Icon, Icon> myIcon2DisabledIcon = new WeakHashMap<Icon, Icon>(200);
-
-  private static ClearableLazyValue<Boolean> ourDarkValue = new ClearableLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return UIUtil.isUnderDarkTheme();
-    }
-  };
+  private final Map<Icon, Icon> myIcon2DisabledIcon = new WeakHashMap<>(200);
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
     @NonNls
@@ -89,11 +81,12 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
   };
 
+  private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
+
   private static boolean ourIsActivated = false;
 
   @Override
   public void resetDark() {
-    ourDarkValue.drop();
     clearCache();
   }
 
@@ -144,6 +137,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     return icon;
   }
 
+  @Override
   public void activate() {
     ourIsActivated = true;
   }
@@ -275,12 +269,12 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   @Override
   @Nullable
   public Icon getDisabledIcon(@Nullable Icon icon) {
-    if (icon instanceof LazyIcon) icon = ((LazyIcon)icon).getOrComputeIcon();
+    if (icon instanceof DesktopLazyImageImpl) icon = ((DesktopLazyImageImpl)icon).getOrComputeIcon();
     if (icon == null) return null;
 
     Icon disabledIcon = myIcon2DisabledIcon.get(icon);
     if (disabledIcon == null) {
-      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(ourDarkValue.getValue()), null);
+      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark()), null);
       myIcon2DisabledIcon.put(icon, disabledIcon);
     }
     return disabledIcon;
@@ -291,7 +285,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
    */
   @Nullable
   public static Icon filterIcon(@Nonnull Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
-    if (icon instanceof LazyIcon) icon = ((LazyIcon)icon).getOrComputeIcon();
+    if (icon instanceof DesktopLazyImageImpl) icon = ((DesktopLazyImageImpl)icon).getOrComputeIcon();
     if (icon == null) return null;
 
     if (!isGoodSize(icon)) {
@@ -325,36 +319,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       icon = new JBImageIcon(img);
     }
     return icon;
-  }
-
-  @Override
-  public Icon getTransparentIcon(@Nonnull final Icon icon, final float alpha) {
-    return new RetrievableIcon() {
-      @Nullable
-      @Override
-      public Icon retrieveIcon() {
-        return icon;
-      }
-
-      @Override
-      public int getIconHeight() {
-        return icon.getIconHeight();
-      }
-
-      @Override
-      public int getIconWidth() {
-        return icon.getIconWidth();
-      }
-
-      @Override
-      public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-        final Graphics2D g2 = (Graphics2D)g;
-        final Composite saveComposite = g2.getComposite();
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-        icon.paintIcon(c, g2, x, y);
-        g2.setComposite(saveComposite);
-      }
-    };
   }
 
   @Override
@@ -398,16 +362,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     return icon;
   }
 
-  @Override
-  public Icon createLazyIcon(final Computable<Icon> iconComputable) {
-    return new LazyIcon() {
-      @Override
-      protected Icon compute() {
-        return iconComputable.compute();
-      }
-    };
-  }
-
   public static final class CachedImageIcon extends JBUI.RasterJBIcon implements ScalableIcon, SwingImageRef, consulo.ui.image.Image {
     private static final Supplier<ImageFilter>[] EMPTY_FILTER_ARRAY = new Supplier[0];
 
@@ -416,9 +370,10 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     private ClassLoader myClassLoader;
     @Nonnull
     private URL myUrl;
-    private volatile boolean dark;
     private final boolean svg;
     private final boolean useCacheOnLoad;
+
+    private volatile long myModificationCount;
 
     private Supplier<ImageFilter>[] myFilters = EMPTY_FILTER_ARRAY;
     private final MyScaledIconsCache myScaledIconsCache = new MyScaledIconsCache();
@@ -438,7 +393,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       myOriginalPath = icon.myOriginalPath;
       myClassLoader = icon.myClassLoader;
       myUrl = icon.myUrl;
-      dark = icon.dark;
+      myModificationCount = icon.myModificationCount;
       svg = myOriginalPath != null && myOriginalPath.toLowerCase().endsWith("svg");
       useCacheOnLoad = icon.useCacheOnLoad;
     }
@@ -449,7 +404,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
     public CachedImageIcon(@Nonnull URL url, boolean useCacheOnLoad) {
       myUrl = url;
-      dark = ourDarkValue.getValue();
+      myModificationCount = ourUIModificationTracker.getModificationCount();
       svg = url.toString().endsWith("svg");
       this.useCacheOnLoad = useCacheOnLoad;
     }
@@ -474,7 +429,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       if (!isValid()) {
         if (isLoaderDisabled()) return EMPTY_ICON;
         myRealIcon = null;
-        dark = ourDarkValue.getValue();
+        myModificationCount = ourUIModificationTracker.getModificationCount();
         myScaledIconsCache.clear();
       }
 
@@ -487,14 +442,14 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
       Icon icon = myScaledIconsCache.getOrScaleIcon(1f);
       if (icon != null) {
-        myRealIcon = icon.getIconWidth() < 50 && icon.getIconHeight() < 50 ? icon : new SoftReference<Icon>(icon);
+        myRealIcon = icon.getIconWidth() < 50 && icon.getIconHeight() < 50 ? icon : new SoftReference<>(icon);
         return icon;
       }
       return EMPTY_ICON;
     }
 
     private boolean isValid() {
-      return dark == ourDarkValue.getValue();
+      return myModificationCount == ourUIModificationTracker.getModificationCount();
     }
 
     @Override
@@ -542,7 +497,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       icon.myFilters = new Supplier[]{new Supplier() {
         @Override
         public Object get() {
-          return UIUtil.getGrayFilter(ourDarkValue.getValue());
+          return UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark());
         }
       }};
       return icon;
@@ -573,7 +528,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       });
 
       private Couple<Double> key(@Nonnull JBUI.ScaleContext ctx) {
-        return new Couple<Double>(ctx.getScale(USR_SCALE) * ctx.getScale(OBJ_SCALE), ctx.getScale(SYS_SCALE));
+        return new Couple<>(ctx.getScale(USR_SCALE) * ctx.getScale(OBJ_SCALE), ctx.getScale(SYS_SCALE));
       }
 
       /**
@@ -594,7 +549,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
           icon = svgIcon;
           try {
             URI uri = myUrl.toURI();
-            if (dark) {
+            if (StyleManager.get().getCurrentStyle().isDark()) {
               String path = uri.toString();
               path = path.replace(".svg", "_dark.svg");
               uri = new URI(path);
@@ -620,7 +575,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
         }
 
         if (icon != null && icon.getIconWidth() * icon.getIconHeight() * 4 < ImageLoader.CACHED_IMAGE_MAX_SIZE) {
-          scaledIconsCache.put(key(ctx), new SoftReference<Icon>(icon));
+          scaledIconsCache.put(key(ctx), new SoftReference<>(icon));
         }
         return icon;
       }
@@ -628,69 +583,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       public void clear() {
         scaledIconsCache.clear();
       }
-    }
-  }
-
-  public abstract static class LazyIcon extends JBUI.RasterJBIcon {
-    private boolean myWasComputed;
-    private Icon myIcon;
-    private boolean isDarkVariant = ourDarkValue.getValue();
-
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      if (updateScaleContext(JBUI.ScaleContext.create((Graphics2D)g))) {
-        myIcon = null;
-      }
-      final Icon icon = getOrComputeIcon();
-      if (icon != null) {
-        icon.paintIcon(c, g, x, y);
-      }
-    }
-
-    @Override
-    public int getIconWidth() {
-      final Icon icon = getOrComputeIcon();
-      return icon != null ? icon.getIconWidth() : 0;
-    }
-
-    @Override
-    public int getIconHeight() {
-      final Icon icon = getOrComputeIcon();
-      return icon != null ? icon.getIconHeight() : 0;
-    }
-
-    protected final synchronized Icon getOrComputeIcon() {
-      if (!myWasComputed || isDarkVariant != ourDarkValue.getValue() || myIcon == null) {
-        isDarkVariant = ourDarkValue.getValue();
-        myWasComputed = true;
-        myIcon = compute();
-      }
-
-      return myIcon;
-    }
-
-    public final void load() {
-      getIconWidth();
-    }
-
-    protected abstract Icon compute();
-  }
-
-  /**
-   * Do something with the temporarily registry value.
-   */
-  private static <T> T doWithTmpRegValue(@Nonnull String key, @Nonnull Boolean tempValue, @Nonnull Callable<T> action) {
-    RegistryValue regVal = Registry.get(key);
-    boolean regValOrig = regVal.asBoolean();
-    if (regValOrig != tempValue) regVal.setValue(tempValue);
-    try {
-      return action.call();
-    }
-    catch (Exception ignore) {
-      return null;
-    }
-    finally {
-      if (regValOrig != tempValue) regVal.setValue(regValOrig);
     }
   }
 

@@ -15,7 +15,6 @@
  */
 package consulo.ui.migration;
 
-import com.intellij.openapi.util.Computable;
 import com.intellij.util.ui.JBUI;
 
 import javax.annotation.Nonnull;
@@ -36,11 +35,7 @@ public interface IconLoaderFacade {
 
   Icon getDisabledIcon(@Nullable Icon icon);
 
-  Icon getTransparentIcon(@Nonnull final Icon icon, final float alpha);
-
   Icon getIconSnapshot(@Nonnull Icon icon);
-
-  Icon createLazyIcon(Computable<Icon> iconComputable);
 
   SwingImageRef findIcon(URL url, boolean useCache);
 

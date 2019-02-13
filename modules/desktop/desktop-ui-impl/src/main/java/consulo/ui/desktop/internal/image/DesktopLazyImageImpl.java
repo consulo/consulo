@@ -65,7 +65,7 @@ public class DesktopLazyImageImpl extends JBUI.RasterJBIcon implements Image {
     return icon != null ? icon.getIconHeight() : 0;
   }
 
-  protected final synchronized Icon getOrComputeIcon() {
+  public final synchronized Icon getOrComputeIcon() {
     long modificationCount = ourTracker.getModificationCount();
 
     if (!myWasComputed || myModificationCount != modificationCount || myIcon == null) {
