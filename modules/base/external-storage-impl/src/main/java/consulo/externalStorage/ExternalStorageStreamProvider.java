@@ -23,6 +23,7 @@ import consulo.externalStorage.storage.ExternalStorage;
 import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServicesConfiguration;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +34,11 @@ import java.util.Collection;
  * @since 11-Feb-17
  */
 public class ExternalStorageStreamProvider extends StreamProvider {
-  private ExternalStorage myStorage;
-  private StateStorageManager myStateStorageManager;
+  private final ExternalStorage myStorage;
+  private final StateStorageManager myStateStorageManager;
 
-  public ExternalStorageStreamProvider(ExternalStorage storage, StateStorageManager stateStorageManager) {
-    myStorage = storage;
+  public ExternalStorageStreamProvider(StateStorageManager stateStorageManager) {
+    myStorage = new ExternalStorage();
     myStateStorageManager = stateStorageManager;
   }
 
@@ -53,11 +54,11 @@ public class ExternalStorageStreamProvider extends StreamProvider {
   }
 
   @Override
-  public void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, int size, @Nonnull RoamingType roamingType) throws IOException {
-    myStorage.saveContent(fileSpec, roamingType, content, size);
+  public void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, @Nonnull RoamingType roamingType) throws IOException {
+    myStorage.saveContent(fileSpec, roamingType, content);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException {
     return myStorage.loadContent(fileSpec, roamingType, myStateStorageManager);

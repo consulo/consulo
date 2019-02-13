@@ -23,12 +23,8 @@ import com.intellij.openapi.components.ServiceManager;
  */
 public abstract class CodeStyleSchemes {
 
-  public static CodeStyleSchemes getInstance(){
-    CodeStyleSchemes schemes = ServiceManager.getService(CodeStyleSchemes.class);
-    if (!schemes.isLoaded()) {
-      schemes.loadSettings();
-    }
-    return schemes;
+  public static CodeStyleSchemes getInstance() {
+    return ServiceManager.getService(CodeStyleSchemes.class);
   }
 
   public abstract CodeStyleScheme[] getSchemes();
@@ -48,7 +44,7 @@ public abstract class CodeStyleSchemes {
    *
    * @param preferredSchemeName The scheme name to find or null for the currently selected scheme.
    * @return A found scheme or a default scheme if the scheme name was not found or, if neither exists or the scheme name is null, the
-   *         currently selected scheme.
+   * currently selected scheme.
    */
   public CodeStyleScheme findPreferredScheme(@javax.annotation.Nullable String preferredSchemeName) {
     CodeStyleScheme scheme = null;
@@ -67,9 +63,5 @@ public abstract class CodeStyleSchemes {
   public abstract CodeStyleScheme getDefaultScheme();
 
   public abstract void addScheme(CodeStyleScheme currentScheme);
-
-  public abstract boolean isLoaded();
-
-  public abstract void loadSettings();
 }
 

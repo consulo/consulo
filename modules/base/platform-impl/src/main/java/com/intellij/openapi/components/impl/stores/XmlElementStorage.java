@@ -22,7 +22,6 @@ import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.store.StateStorageBase;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
@@ -269,7 +268,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       doSave(element);
     }
 
-    protected void saveForProvider(@Nullable BufferExposingByteArrayOutputStream content, @Nullable Element element) throws IOException {
+    protected void saveForProvider(@Nullable byte[] content, @Nullable Element element) throws IOException {
       if (!myStreamProvider.isApplicable(myFileSpec, myRoamingType)) {
         return;
       }
@@ -282,12 +281,12 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       }
     }
 
-    private void doSaveForProvider(@Nonnull Element element, @Nonnull RoamingType roamingType, @Nullable BufferExposingByteArrayOutputStream content) throws IOException {
+    private void doSaveForProvider(@Nonnull Element element, @Nonnull RoamingType roamingType, @Nullable byte[] content) throws IOException {
       if (content == null) {
         StorageUtil.sendContent(myStreamProvider, myFileSpec, element, roamingType);
       }
       else {
-        myStreamProvider.saveContent(myFileSpec, content.getInternalBuffer(), content.size(), myRoamingType);
+        myStreamProvider.saveContent(myFileSpec, content, myRoamingType);
       }
     }
   }

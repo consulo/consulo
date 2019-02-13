@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide;
+package consulo.externalStorage.storage;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.external.api.InformationBean;
 
+import java.util.Base64;
 
-public interface ApplicationLoadListener {
-  ExtensionPointName<ApplicationLoadListener> EP_NAME = ExtensionPointName.create("com.intellij.applicationLoadListener");
+/**
+ * @author VISTALL
+ * @since 2019-02-11
+ */
+public class PushFileRequestBean extends InformationBean {
+  private String bytes;
+  private String filePath;
 
-  void beforeApplicationLoaded();
+  public PushFileRequestBean(String filePath, byte[] data) {
+    this.filePath = filePath;
+    bytes = Base64.getEncoder().encodeToString(data);
+  }
 }

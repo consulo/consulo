@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.errorreport.bean;
+package consulo.external.api;
 
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.SystemProperties;
-import consulo.ide.updateSettings.UpdateChannel;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class ErrorBean {
+public class ErrorReportBean extends InformationBean {
   private static class AttachmentBean {
     private final String name;
     private final String path;
@@ -57,19 +52,6 @@ public class ErrorBean {
     }
   }
 
-  private final String osName = SystemProperties.getOsName();
-  private final String osVersion = SystemProperties.getOsVersion();
-  private final String javaVersion = SystemProperties.getJavaVersion();
-  private final String javaVmVendor = SystemProperties.getJavaVmVendor();
-  private final String locale = Locale.getDefault().toString();
-
-  private final String appName = ApplicationNamesInfo.getInstance().getFullProductName();
-  private final UpdateChannel appUpdateChannel;
-  private final String appBuild;
-  private final String appVersionMajor;
-  private final String appVersionMinor;
-  private final String appBuildDate;
-
   private String lastAction;
   private String previousException;
   private String message;
@@ -81,15 +63,7 @@ public class ErrorBean {
 
   private List<AttachmentBean> attachments = Collections.emptyList();
 
-  public ErrorBean(Throwable throwable, String lastAction) {
-    appUpdateChannel = consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel();
-
-    ApplicationInfoEx appInfo = (ApplicationInfoEx)ApplicationInfo.getInstance();
-    appBuild = appInfo.getBuild().asString();
-    appVersionMajor = appInfo.getMajorVersion();
-    appVersionMinor = appInfo.getMinorVersion();
-    appBuildDate = appInfo.getBuildDate() == null ? null : String.valueOf(appInfo.getBuildDate().getTimeInMillis());
-
+  public ErrorReportBean(Throwable throwable, String lastAction) {
     if (throwable != null) {
       message = throwable.getMessage();
       stackTrace = ExceptionUtil.getThrowableText(throwable);

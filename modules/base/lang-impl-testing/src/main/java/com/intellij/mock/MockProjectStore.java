@@ -26,10 +26,8 @@ import consulo.components.impl.stores.StateComponentInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -50,17 +48,6 @@ public class MockProjectStore implements IProjectStore {
   @Override
   public void reinitComponents(@Nonnull Set<String> componentNames, boolean reloadData) {
     throw new UnsupportedOperationException("Method reinitComponents is not yet implemented in " + getClass().getName());
-  }
-
-  @Nonnull
-  @Override
-  public Collection<String> getNotReloadableComponents(@Nonnull Collection<String> componentNames) {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public boolean isReloadPossible(@Nonnull Set<String> componentNames) {
-    throw new UnsupportedOperationException("Method isReloadPossible is not yet implemented in " + getClass().getName());
   }
 
   @Override
@@ -133,10 +120,9 @@ public class MockProjectStore implements IProjectStore {
     throw new UnsupportedOperationException("Method getPresentableUrl not implemented in " + getClass());
   }
 
-  @Nullable
   @Override
-  public Collection<String> reload(@Nonnull Collection<? extends StateStorage> changedStorages) {
-    return null;
+  public boolean reload(@Nonnull Collection<? extends StateStorage> changedStorages) {
+    return false;
   }
 
   @Nonnull

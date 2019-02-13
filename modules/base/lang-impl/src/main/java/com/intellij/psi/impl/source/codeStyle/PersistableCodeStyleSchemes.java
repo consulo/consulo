@@ -15,14 +15,15 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.util.xmlb.Accessor;
 import com.intellij.util.xmlb.SerializationFilter;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,60 +34,38 @@ import javax.inject.Singleton;
  * @author Rustam Vishnyakov
  */
 @Singleton
-@State(name = "CodeStyleSchemeSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
-                                                                    "/" +
-                                                                    PersistableCodeStyleSchemes.CODE_STYLE_SCHEMES_FILE), additionalExportFile = CodeStyleSchemesImpl.CODE_STYLES_DIR_PATH)
+@State(name = "CodeStyleSchemeSettings", storages = @Storage("code.style.schemes.xml"), additionalExportFile = CodeStyleSchemesImpl.CODE_STYLES_DIR_PATH)
 public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements PersistentStateComponent<Element> {
-  @NonNls
-  static final String CODE_STYLE_SCHEMES_FILE = "code.style.schemes.xml";
-
-  private boolean isLoaded;
+  public String CURRENT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
 
   @Inject
-  public PersistableCodeStyleSchemes(SchemesManagerFactory schemesManagerFactory) {
-    super(schemesManagerFactory);
+  public PersistableCodeStyleSchemes(@Nonnull SchemesManagerFactory schemeManagerFactory) {
+    super(schemeManagerFactory);
   }
 
   @Nullable
   @Override
   public Element getState() {
+    CodeStyleScheme currentScheme = getCurrentScheme();
+    CURRENT_SCHEME_NAME = currentScheme == null ? null : currentScheme.getName();
     return XmlSerializer.serialize(this, new SerializationFilter() {
       @Override
-      public boolean accepts(@Nonnull Accessor accessor, Object bean) {
-        return accessor.getValueClass().equals(String.class);
+      public boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean) {
+        if ("CURRENT_SCHEME_NAME".equals(accessor.getName())) {
+          return !CodeStyleScheme.DEFAULT_SCHEME_NAME.equals(accessor.read(bean));
+        }
+        else {
+          return accessor.getValueClass().equals(String.class);
+        }
       }
     });
   }
 
   @Override
-  public void loadState(Element state) {
-    init();
+  public void loadState(@Nonnull Element state) {
+    CURRENT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
     XmlSerializer.deserializeInto(this, state);
-    isLoaded = true;
-    updateCurrentScheme();
-  }
-
-  @Override
-  public boolean isLoaded() {
-    return isLoaded;
-  }
-
-  @Override
-  public void loadSettings() {
-    init();
-    LegacyCodeStyleSchemesSettings legacySettings = ServiceManager.getService(LegacyCodeStyleSchemesSettings.class);
-    if (legacySettings != null) {
-      CURRENT_SCHEME_NAME = legacySettings.CURRENT_SCHEME_NAME;
-    }
-    isLoaded = true;
-    updateCurrentScheme();
-  }
-
-  private void updateCurrentScheme() {
     CodeStyleScheme current = CURRENT_SCHEME_NAME == null ? null : findSchemeByName(CURRENT_SCHEME_NAME);
-    if (current == null) {
-      current = getDefaultScheme();
-    }
-    setCurrentScheme(current);
+    setCurrentScheme(current == null ? getDefaultScheme() : current);
   }
 }

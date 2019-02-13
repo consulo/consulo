@@ -37,7 +37,6 @@ import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -48,8 +47,8 @@ import com.intellij.util.Function;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.ui.RequiredUIAccess;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -434,23 +433,16 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             components.addAll(substitutor.getComponents(macros2invalidate));
           }
 
-          if (stateStore.isReloadPossible(components)) {
-            for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
-              substitutor.invalidateUnknownMacros(macros2invalidate);
-            }
-
-            final UnknownMacroNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, this);
-            for (final UnknownMacroNotification notification : notifications) {
-              if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
-            }
-
-            ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
+          for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
+            substitutor.invalidateUnknownMacros(macros2invalidate);
           }
-          else {
-            if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed", Messages.getQuestionIcon()) == Messages.YES) {
-              ProjectManagerEx.getInstanceEx().reloadProject(this);
-            }
+
+          final UnknownMacroNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, this);
+          for (final UnknownMacroNotification notification : notifications) {
+            if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
           }
+
+          ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
         }
       }
     }

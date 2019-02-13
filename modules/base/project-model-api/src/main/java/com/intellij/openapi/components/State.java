@@ -25,7 +25,5 @@ public @interface State {
 
   Storage[] storages();
 
-  boolean reloadable() default true;
-
   String additionalExportFile() default "";
 }

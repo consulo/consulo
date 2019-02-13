@@ -88,11 +88,6 @@ public class SimpleState implements State {
   }
 
   @Override
-  public boolean reloadable() {
-    return true;
-  }
-
-  @Override
   public String additionalExportFile() {
     return null;
   }

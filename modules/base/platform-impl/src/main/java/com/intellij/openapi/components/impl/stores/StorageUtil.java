@@ -32,7 +32,6 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -42,6 +41,7 @@ import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
 import org.jdom.Document;
@@ -133,7 +133,7 @@ public class StorageUtil {
   public static VirtualFile writeFile(@Nullable File file,
                                       @Nonnull Object requestor,
                                       @Nullable VirtualFile virtualFile,
-                                      @Nonnull BufferExposingByteArrayOutputStream content,
+                                      @Nonnull byte[] content,
                                       @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
@@ -141,16 +141,12 @@ public class StorageUtil {
         virtualFile = getOrCreateVirtualFile(requestor, file);
       }
       assert virtualFile != null;
-      OutputStream out = virtualFile.getOutputStream(requestor);
-      try {
+      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
         if (lineSeparatorIfPrependXmlProlog != null) {
           out.write(XML_PROLOG);
           out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
         }
-        content.writeTo(out);
-      }
-      finally {
-        out.close();
+        out.write(content);
       }
       return virtualFile;
     }
@@ -171,7 +167,7 @@ public class StorageUtil {
   public static AsyncResult<VirtualFile> writeFileAsync(@Nullable File file,
                                            @Nonnull Object requestor,
                                            @Nullable final VirtualFile fileRef,
-                                           @Nonnull BufferExposingByteArrayOutputStream content,
+                                           @Nonnull byte[] content,
                                            @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
     return AccessRule.writeAsync(() -> {
       VirtualFile virtualFile = fileRef;
@@ -185,7 +181,7 @@ public class StorageUtil {
           out.write(XML_PROLOG);
           out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
         }
-        content.writeTo(out);
+        out.write(content);
       }
       return virtualFile;
     });
@@ -220,10 +216,10 @@ public class StorageUtil {
   }
 
   @Nonnull
-  public static BufferExposingByteArrayOutputStream writeToBytes(@Nonnull Parent element, @Nonnull String lineSeparator) throws IOException {
-    BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream(512);
+  public static byte[] writeToBytes(@Nonnull Parent element, @Nonnull String lineSeparator) throws IOException {
+    UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream(256);
     JDOMUtil.writeParent(element, out, lineSeparator);
-    return out;
+    return out.toByteArray();
   }
 
   @Nonnull
@@ -274,34 +270,6 @@ public class StorageUtil {
   }
 
   @Nullable
-  public static BufferExposingByteArrayOutputStream newContentIfDiffers(@Nonnull Parent element, @Nullable VirtualFile file) {
-    try {
-      Pair<byte[], String> pair = loadFile(file);
-      BufferExposingByteArrayOutputStream out = writeToBytes(element, pair.second);
-      return pair.first != null && equal(pair.first, out) ? null : out;
-    }
-    catch (IOException e) {
-      LOG.debug(e);
-      return null;
-    }
-  }
-
-  public static boolean equal(byte[] a1, @Nonnull BufferExposingByteArrayOutputStream out) {
-    int length = out.size();
-    if (a1.length != length) {
-      return false;
-    }
-
-    byte[] internalBuffer = out.getInternalBuffer();
-    for (int i = 0; i < length; i++) {
-      if (a1[i] != internalBuffer[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  @Nullable
   public static Document loadDocument(final byte[] bytes) {
     try {
       return bytes == null || bytes.length == 0 ? null : JDOMUtil.loadDocument(new ByteArrayInputStream(bytes));
@@ -337,7 +305,7 @@ public class StorageUtil {
   }
 
   @Nonnull
-  public static BufferExposingByteArrayOutputStream elementToBytes(@Nonnull Parent element, boolean useSystemLineSeparator) throws IOException {
+  public static byte[] elementToBytes(@Nonnull Parent element, boolean useSystemLineSeparator) throws IOException {
     return writeToBytes(element, useSystemLineSeparator ? SystemProperties.getLineSeparator() : "\n");
   }
 
@@ -365,8 +333,8 @@ public class StorageUtil {
    */
   public static void doSendContent(@Nonnull StreamProvider provider, @Nonnull String fileSpec, @Nonnull Parent element, @Nonnull RoamingType type) throws IOException {
     // we should use standard line-separator (\n) - stream provider can share file content on any OS
-    BufferExposingByteArrayOutputStream content = elementToBytes(element, false);
-    provider.saveContent(fileSpec, content.getInternalBuffer(), content.size(), type);
+    byte[] content = elementToBytes(element, false);
+    provider.saveContent(fileSpec, content, type);
   }
 
   public static boolean isProjectOrModuleFile(@Nonnull String fileSpec) {

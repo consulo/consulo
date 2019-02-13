@@ -27,6 +27,7 @@ import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.event.ActionListener;
 
 /**
  * @author VISTALL
@@ -79,9 +80,9 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> impl
   @Nonnull
   @Override
   public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    DesktopValueListenerAsItemListenerImpl<Boolean> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false);
-    myComponent.addItemListener(listener);
-    return () -> myComponent.removeItemListener(listener);
+    ActionListener listener = e -> valueListener.valueChanged(new ValueEvent<>(this, myComponent.isSelected()));
+    myComponent.addActionListener(listener);
+    return () -> myComponent.removeActionListener(listener);
   }
 
   @Override

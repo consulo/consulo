@@ -18,7 +18,7 @@ package com.intellij.errorreport;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.intellij.diagnostic.DiagnosticBundle;
-import com.intellij.errorreport.bean.ErrorBean;
+import consulo.external.api.ErrorReportBean;
 import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.errorreport.error.UpdateAvailableException;
 import com.intellij.errorreport.error.WebServiceException;
@@ -57,7 +57,7 @@ public class ErrorReportSender {
   private ErrorReportSender() {
   }
 
-  public static void sendReport(Project project, ErrorBean errorBean, final java.util.function.Consumer<String> callback, final Consumer<Exception> errback) {
+  public static void sendReport(Project project, ErrorReportBean errorBean, final java.util.function.Consumer<String> callback, final Consumer<Exception> errback) {
     Task.Backgroundable.queue(project, DiagnosticBundle.message("title.submitting.error.report"), indicator -> {
       try {
         HttpConfigurable.getInstance().prepareURL(WebServiceApi.MAIN.buildUrl());
@@ -73,7 +73,7 @@ public class ErrorReportSender {
   }
 
   @Nonnull
-  public static String sendAndHandleResult(@Nonnull ErrorBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
+  public static String sendAndHandleResult(@Nonnull ErrorReportBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
     String reply = doPost(WebServiceApi.ERROR_REPORTER_API.buildUrl("create"), error);
 
     Map<String, String> map = new Gson().fromJson(reply, new TypeToken<Map<String, String>>() {
@@ -108,7 +108,7 @@ public class ErrorReportSender {
     }
   }
 
-  private static String doPost(String url, ErrorBean errorBean) throws IOException {
+  private static String doPost(String url, ErrorReportBean errorBean) throws IOException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpPost post = new HttpPost(url);
       post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));

@@ -38,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemplatesConfigurable.Layout> implements Configurable.Composite, SearchableConfigurable {
-  protected static class Layout implements NotNullComputable<consulo.ui.Component> {
+  protected static class Layout implements NotNullComputable<Component> {
     private final CheckBox myPostfixTemplatesEnabled;
     private final CheckBox myCompletionEnabledCheckbox;
     private final ComboBox<Character> myShortcutComboBox;
@@ -54,7 +54,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
       myCompletionEnabledCheckbox = CheckBox.create("&Show postfix templates in completion autopopup");
       myLayout.add(myCompletionEnabledCheckbox);
 
-      consulo.ui.ComboBox.Builder<Character> builder = consulo.ui.ComboBox.<Character>builder();
+      ComboBox.Builder<Character> builder = ComboBox.<Character>builder();
       builder.add(TemplateSettings.SPACE_CHAR, CodeInsightBundle.message("template.shortcut.space"));
       builder.add(TemplateSettings.ENTER_CHAR, CodeInsightBundle.message("template.shortcut.enter"));
       builder.add(TemplateSettings.TAB_CHAR, CodeInsightBundle.message("template.shortcut.tab"));
@@ -147,6 +147,8 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
     component.myPostfixTemplatesEnabled.setValue(templatesSettings.isPostfixTemplatesEnabled());
     component.myCompletionEnabledCheckbox.setValue(templatesSettings.isTemplatesCompletionEnabled());
     component.myShortcutComboBox.setValue((char)templatesSettings.getShortcut());
+
+    component.updateComponents();
   }
 
   @RequiredUIAccess

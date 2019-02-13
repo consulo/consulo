@@ -17,7 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import javax.annotation.Nonnull;
 
-public interface IApplicationStore extends IComponentStore.Reloadable {
+public interface IApplicationStore extends IComponentStore {
   void setOptionsPath(@Nonnull String path);
 
   @Nonnull

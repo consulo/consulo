@@ -64,7 +64,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Override
       @Nullable
       protected Element loadLocalData() {
-        return getProject().getStateElement();
+        return getStateCopy();
       }
 
       @Override

@@ -289,7 +289,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   private void fireBeforeApplicationLoaded() {
     for (ApplicationLoadListener listener : ApplicationLoadListener.EP_NAME.getExtensions()) {
       try {
-        listener.beforeApplicationLoaded(this);
+        listener.beforeApplicationLoaded();
       }
       catch (Exception e) {
         LOG.error(e);

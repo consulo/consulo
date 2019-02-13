@@ -32,7 +32,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
@@ -42,15 +41,15 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.UniqueNameGenerator;
-import gnu.trove.THashSet;
 import consulo.util.pointers.Named;
+import gnu.trove.THashSet;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -520,7 +519,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     myFilesToDelete.remove(fileNameWithoutExtension);
 
     // stream provider always use LF separator
-    final BufferExposingByteArrayOutputStream byteOut = StorageUtil.writeToBytes(element, "\n");
+    final byte[] byteOut = StorageUtil.writeToBytes(element, "\n");
 
     // if another new scheme uses old name of this scheme, so, we must not delete it (as part of rename operation)
     boolean renamed = currentFileNameWithoutExtension != null && fileNameWithoutExtension != currentFileNameWithoutExtension && nameGenerator.value(currentFileNameWithoutExtension);
@@ -548,12 +547,8 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
       AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
       try {
-        OutputStream out = file.getOutputStream(this);
-        try {
-          byteOut.writeTo(out);
-        }
-        finally {
-          out.close();
+        try (OutputStream out = file.getOutputStream(this)) {
+          out.write(byteOut);
         }
       }
       finally {
@@ -571,7 +566,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     if (myProvider != null && myProvider.isEnabled()) {
       String fileSpec = getFileFullPath(fileName);
       if (myProvider.isApplicable(fileSpec, myRoamingType)) {
-        myProvider.saveContent(fileSpec, byteOut.getInternalBuffer(), byteOut.size(), myRoamingType);
+        myProvider.saveContent(fileSpec, byteOut, myRoamingType);
       }
     }
   }
