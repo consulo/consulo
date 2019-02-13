@@ -31,12 +31,10 @@ import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.ClickListener;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.xdebugger.XDebuggerBundle;
@@ -48,13 +46,14 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.evaluate.CodeFragmentInputComponent;
-import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -233,11 +232,9 @@ public abstract class XDebuggerEditorBase {
     //myChooseFactory.setEnabled(many && languages.contains(language));
 
     if (language != null && language.getAssociatedFileType() != null) {
-      LayeredIcon icon = new LayeredIcon(2);
-      icon.setIcon(TargetAWT.to(language.getAssociatedFileType().getIcon()), 0);
-      icon.setIcon(AllIcons.General.Dropdown, 1, 3, 0);
-      myChooseFactory.setIcon(icon);
-      myChooseFactory.setDisabledIcon(IconLoader.getDisabledIcon(icon));
+      Image fileTypeIcon = ImageEffects.layered(language.getAssociatedFileType().getIcon(), AllIcons.General.Dropdown);
+      myChooseFactory.setIcon(TargetAWT.to(fileTypeIcon));
+      myChooseFactory.setDisabledIcon(TargetAWT.to(ImageEffects.grayed(fileTypeIcon)));
     }
 
     doSetText(text);
