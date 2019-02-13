@@ -26,6 +26,7 @@ import consulo.components.impl.stores.StateComponentInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -105,13 +106,13 @@ public class MockProjectStore implements IProjectStore {
   }
 
   @Override
-  public void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
-    throw new UnsupportedOperationException();
+  public void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+
   }
 
   @Override
-  public void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles) {
-    throw new UnsupportedOperationException();
+  public void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+
   }
 
   @Override
