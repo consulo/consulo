@@ -234,7 +234,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       roamingType = RoamingType.DISABLED;
     }
 
-    beforeFileBasedStorageCreate();
     return myStateStorageFacade
             .createFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
                                     isUseXmlProlog());
@@ -248,9 +247,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   protected boolean isUseXmlProlog() {
     return true;
-  }
-
-  protected void beforeFileBasedStorageCreate() {
   }
 
   @Nullable

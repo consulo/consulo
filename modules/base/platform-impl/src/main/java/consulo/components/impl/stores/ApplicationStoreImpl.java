@@ -22,9 +22,6 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
 import consulo.components.impl.stores.storage.DirectoryStorageData;
@@ -53,8 +50,6 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   public ApplicationStoreImpl(ApplicationEx2 application, ApplicationPathMacroManager pathMacroManager) {
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application::getMessageBus, StateStorageFacade.JAVA_IO) {
-      private boolean myConfigDirectoryRefreshed;
-
       @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
@@ -70,21 +65,6 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
       @Override
       protected boolean isUseXmlProlog() {
         return false;
-      }
-
-      @Override
-      protected void beforeFileBasedStorageCreate() {
-        if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
-          try {
-            VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
-            if (configDir != null) {
-              VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
-            }
-          }
-          finally {
-            myConfigDirectoryRefreshed = true;
-          }
-        }
       }
     };
   }
