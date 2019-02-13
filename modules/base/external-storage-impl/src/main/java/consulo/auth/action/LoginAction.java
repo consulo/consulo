@@ -22,15 +22,14 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.ObjectUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.auth.ServiceAuthConfiguration;
 import consulo.auth.ServiceAuthEarlyAccessProgramDescriptor;
 import consulo.auth.ui.ServiceAuthDialog;
 import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -61,7 +60,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
     else {
       presentation.setText("Logged as '" + email + "'");
 
-      Icon userIcon = configuration.getUserIcon();
+      Image userIcon = configuration.getUserIcon();
       presentation.setIcon(ObjectUtil.notNull(userIcon, AllIcons.Actions.LoginAvator));
     }
   }

@@ -51,7 +51,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Image _Image_fromBytes(byte[] bytes, int width, int height) {
-    return null;
+    return new DesktopFromBytesImageImpl(bytes, width, height);
   }
 
   @Override

@@ -16,24 +16,18 @@
 package consulo.auth;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.ImageLoader;
-import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.io.HttpRequests;
-import com.intellij.util.io.UnsyncByteArrayInputStream;
-import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.ui.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -46,7 +40,7 @@ import java.util.Base64;
 public class ServiceAuthConfiguration implements PersistentStateComponent<ServiceAuthConfiguration.State> {
   private static final Logger LOGGER = Logger.getInstance(ServiceAuthConfiguration.class);
 
-  protected static class State {
+  public static class State {
     public String email;
     public String iconBytes;
   }
@@ -57,7 +51,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
   }
 
   private final State myState = new State();
-  private Icon myUserIcon;
+  private Image myUserIcon;
 
   public void updateIcon() {
     myUserIcon = null;
@@ -70,7 +64,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
 
     // get node size
     int size = (int)Math.ceil(AllIcons.Actions.Find.getIconHeight() * JBUI.sysScale());
-    ApplicationManager.getApplication().executeOnPooledThread(() -> {
+    Application.get().executeOnPooledThread(() -> {
       String emailHash = DigestUtils.md5Hex(email.toLowerCase().trim());
 
       try {
@@ -85,7 +79,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
   }
 
   @Nullable
-  public Icon getUserIcon() {
+  public Image getUserIcon() {
     if (myUserIcon != null) {
       return myUserIcon;
     }
@@ -93,10 +87,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
     String iconBytes = myState.iconBytes;
     if (iconBytes != null) {
       byte[] bytes = Base64.getDecoder().decode(iconBytes);
-      Image image = ImageLoader.loadFromStream(new UnsyncByteArrayInputStream(bytes));
-      int iconHeight = AllIcons.Actions.Find.getIconHeight();
-      JBHiDPIScaledImage icon = new JBHiDPIScaledImage(image, iconHeight, iconHeight, BufferedImage.TYPE_INT_ARGB);
-      myUserIcon = new JBImageIcon(icon);
+      myUserIcon = Image.fromBytes(bytes, AllIcons.Actions.Find.getWidth(), AllIcons.Actions.Find.getHeight());
     }
     return myUserIcon;
   }
