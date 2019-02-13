@@ -28,9 +28,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
 import consulo.components.impl.stores.storage.DirectoryStorageData;
+import consulo.components.impl.stores.storage.StateStorageFacade;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.StateStorageManagerImpl;
-import consulo.components.impl.stores.storage.StorageData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,18 +52,13 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Inject
   public ApplicationStoreImpl(ApplicationEx2 application, ApplicationPathMacroManager pathMacroManager) {
     myApplication = application;
-    myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application::getMessageBus) {
+    myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application::getMessageBus, StateStorageFacade.JAVA_IO) {
       private boolean myConfigDirectoryRefreshed;
 
       @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
         return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
-      }
-
-      @Override
-      protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
-        return new StorageData(ROOT_ELEMENT_NAME);
       }
 
       @Override

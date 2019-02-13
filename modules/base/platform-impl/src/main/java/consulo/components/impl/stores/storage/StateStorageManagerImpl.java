@@ -33,9 +33,9 @@ import com.intellij.util.messages.MessageBus;
 import consulo.components.impl.stores.StreamProvider;
 import gnu.trove.THashMap;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -57,6 +57,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Lock myStorageLock = new ReentrantLock();
   private final Map<String, StateStorage> myStorages = new THashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
+  @Nonnull
+  private final StateStorageFacade myStateStorageFacade;
   private final String myRootTagName;
   protected final Supplier<MessageBus> myMessageBusSupplier;
 
@@ -65,10 +67,12 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
                                  String rootTagName,
                                  @Nullable Disposable parentDisposable,
-                                 @Nonnull Supplier<MessageBus> messageBusSupplier) {
+                                 @Nonnull Supplier<MessageBus> messageBusSupplier,
+                                 @Nonnull StateStorageFacade stateStorageFacade) {
     myMessageBusSupplier = messageBusSupplier;
     myRootTagName = rootTagName;
     myPathMacroSubstitutor = pathMacroSubstitutor;
+    myStateStorageFacade = stateStorageFacade;
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, this);
     }
@@ -105,7 +109,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createStateStorage(@Nonnull Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
       StateSplitterEx splitter = ReflectionUtil.newInstance(storageSpec.stateSplitter());
-      return new VfsDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener());
+      return myStateStorageFacade.createDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener());
     }
     else {
       return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
@@ -231,19 +235,9 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
 
     beforeFileBasedStorageCreate();
-    return new VfsFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this,
-                                   createStorageTopicListener(), myStreamProvider) {
-      @Override
-      @Nonnull
-      protected StorageData createStorageData() {
-        return StateStorageManagerImpl.this.createStorageData(myFileSpec, getFilePath());
-      }
-
-      @Override
-      protected boolean isUseXmlProlog() {
-        return StateStorageManagerImpl.this.isUseXmlProlog();
-      }
-    };
+    return myStateStorageFacade
+            .createFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
+                                    isUseXmlProlog());
   }
 
   @Nullable
@@ -268,8 +262,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
     return myPathMacroSubstitutor;
   }
-
-  protected abstract StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath);
 
   private static final Pattern MACRO_PATTERN = Pattern.compile("(\\$[^\\$]*\\$)");
 

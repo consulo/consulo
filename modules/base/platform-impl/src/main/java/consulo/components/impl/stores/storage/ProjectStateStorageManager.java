@@ -28,18 +28,13 @@ public class ProjectStateStorageManager extends StateStorageManagerImpl {
   protected static final String ROOT_TAG_NAME = "project";
 
   public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor) {
-    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus);
+    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, StateStorageFacade.CONSULO_VFS);
   }
 
   @Nonnull
   @Override
   protected String getConfigurationMacro(boolean directorySpec) {
     return StoragePathMacros.PROJECT_CONFIG_DIR;
-  }
-
-  @Override
-  protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
-    return new StorageData(ROOT_TAG_NAME);
   }
 
   @Nonnull

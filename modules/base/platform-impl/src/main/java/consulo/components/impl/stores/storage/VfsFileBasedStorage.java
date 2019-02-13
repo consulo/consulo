@@ -42,8 +42,12 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.Set;
 
-public class VfsFileBasedStorage extends XmlElementStorage {
+/**
+ * File storage - based on Consulo VFS
+ */
+public final class VfsFileBasedStorage extends XmlElementStorage {
   private final String myFilePath;
+  private final boolean myUseXmlProlog;
   private final File myFile;
   private volatile VirtualFile myCachedVirtualFile;
   private LineSeparator myLineSeparator;
@@ -55,10 +59,12 @@ public class VfsFileBasedStorage extends XmlElementStorage {
                              @Nonnull String rootElementName,
                              @Nonnull Disposable parentDisposable,
                              @Nullable final Listener listener,
-                             @Nullable StreamProvider streamProvider) {
+                             @Nullable StreamProvider streamProvider,
+                             boolean useXmlProlog) {
     super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider);
 
     myFilePath = filePath;
+    myUseXmlProlog = useXmlProlog;
     myFile = new File(filePath);
 
     if (listener != null) {
@@ -90,7 +96,7 @@ public class VfsFileBasedStorage extends XmlElementStorage {
   }
 
   protected boolean isUseXmlProlog() {
-    return false;
+    return myUseXmlProlog;
   }
 
   protected boolean isUseLfLineSeparatorByDefault() {

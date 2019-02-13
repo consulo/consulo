@@ -18,10 +18,10 @@ package com.intellij.openapi.components.impl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
-import consulo.components.impl.stores.storage.StateStorageManagerImpl;
-import consulo.components.impl.stores.storage.StorageData;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
+import consulo.components.impl.stores.storage.StateStorageFacade;
+import consulo.components.impl.stores.storage.StateStorageManagerImpl;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -40,16 +40,11 @@ public abstract class StateStorageManagerImplTest extends LightPlatformLangTestC
   @Override
   public final void setUp() throws Exception {
     super.setUp();
-    myStateStorageManager = new StateStorageManagerImpl(null, "foo", null, () -> Application.get().getMessageBus()) {
+    myStateStorageManager = new StateStorageManagerImpl(null, "foo", null, () -> Application.get().getMessageBus(), StateStorageFacade.CONSULO_VFS) {
       @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
         throw new UnsupportedOperationException();
-      }
-
-      @Override
-      protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
-        throw new UnsupportedOperationException("Method createStorageData not implemented in " + getClass());
       }
     };
     myStateStorageManager.addMacro("$MACRO1$", "/temp/m1");

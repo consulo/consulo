@@ -44,7 +44,7 @@ import java.util.Set;
 /**
  * Directory storage - based on Consulo VFS
  */
-public class VfsDirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
+public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
   private final File myDir;
   private volatile VirtualFile myVirtualFile;
   private final StateSplitterEx mySplitter;
