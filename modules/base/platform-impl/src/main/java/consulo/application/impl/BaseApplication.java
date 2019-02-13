@@ -34,7 +34,7 @@ import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
+import consulo.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
 import com.intellij.openapi.components.impl.stores.StoreUtil;

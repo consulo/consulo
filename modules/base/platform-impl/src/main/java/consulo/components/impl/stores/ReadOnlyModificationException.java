@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.store;
+package consulo.components.impl.stores;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;

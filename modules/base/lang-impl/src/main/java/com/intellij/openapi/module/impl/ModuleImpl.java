@@ -19,7 +19,7 @@ package com.intellij.openapi.module.impl;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
-import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
+import consulo.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;

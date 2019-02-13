@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl;
+package consulo.components.impl;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.AccessToken;
@@ -21,6 +21,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.stores.IComponentStore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.storage.HeavyProcessLatch;

@@ -19,7 +19,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.components.store.StateStorageBase;
+import consulo.components.impl.stores.StateStorageBase;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
