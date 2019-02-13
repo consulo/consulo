@@ -16,11 +16,8 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
-import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;
@@ -30,7 +27,7 @@ public abstract class NodeDescriptor<E> {
   private final NodeDescriptor myParentDescriptor;
 
   protected String myName;
-  protected consulo.ui.image.Image myIcon;
+  protected Image myIcon;
 
   protected java.awt.Color myColor;
 
@@ -125,19 +122,8 @@ public abstract class NodeDescriptor<E> {
     myColor = desc.myColor;
   }
 
-  public void setIcon(consulo.ui.image.Image closedIcon) {
+  public void setIcon(@Nullable Image closedIcon) {
     myIcon = closedIcon;
-  }
-
-  // not deprecated - but will be dropped when method lower deleted
-  public void setIcon(SwingImageRef closedIcon) {
-    setIcon((Image)closedIcon);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use setIcon(Image)")
-  public void setIcon(javax.swing.Icon closedIcon) {
-    myIcon = TargetAWT.from(closedIcon);
   }
 
   public abstract static class NodeComparator<T extends NodeDescriptor> implements Comparator<T> {
