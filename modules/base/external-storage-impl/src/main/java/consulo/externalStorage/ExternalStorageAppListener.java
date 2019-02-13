@@ -29,18 +29,16 @@ import javax.inject.Inject;
  * @since 11-Feb-17
  */
 public class ExternalStorageAppListener implements ApplicationLoadListener {
-  private final Application myApplication;
+  private final ApplicationEx2 myApplication;
 
   @Inject
   public ExternalStorageAppListener(@Nonnull Application application) {
-    myApplication = application;
+    myApplication = (ApplicationEx2)application;
   }
 
   @Override
   public void beforeApplicationLoaded() {
-    ApplicationEx2 applicationEx = (ApplicationEx2)myApplication;
-
-    IApplicationStore stateStore = applicationEx.getStateStore();
+    IApplicationStore stateStore = myApplication.getStateStore();
 
     StateStorageManager stateStorageManager = stateStore.getStateStorageManager();
 
