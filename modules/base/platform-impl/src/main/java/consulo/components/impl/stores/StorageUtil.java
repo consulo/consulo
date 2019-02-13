@@ -42,7 +42,6 @@ import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.Parent;
 
 import javax.annotation.Nonnull;
@@ -285,41 +284,6 @@ public class StorageUtil {
       }
     }
     return defaultSeparator == null ? LineSeparator.getSystemLineSeparator() : defaultSeparator;
-  }
-
-  @Nullable
-  public static Document loadDocument(final byte[] bytes) {
-    try {
-      return bytes == null || bytes.length == 0 ? null : JDOMUtil.loadDocument(new ByteArrayInputStream(bytes));
-    }
-    catch (JDOMException e) {
-      return null;
-    }
-    catch (IOException e) {
-      return null;
-    }
-  }
-
-  @Nullable
-  public static Document loadDocument(@Nullable InputStream stream) {
-    if (stream == null) {
-      return null;
-    }
-
-    try {
-      try {
-        return JDOMUtil.loadDocument(stream);
-      }
-      finally {
-        stream.close();
-      }
-    }
-    catch (JDOMException e) {
-      return null;
-    }
-    catch (IOException e) {
-      return null;
-    }
   }
 
   @Nonnull
