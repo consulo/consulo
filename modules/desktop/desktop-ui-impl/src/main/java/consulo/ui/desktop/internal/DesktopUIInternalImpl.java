@@ -45,8 +45,13 @@ import java.util.function.Supplier;
 @Internal
 public class DesktopUIInternalImpl extends UIInternal {
   @Override
-  public Image _Image_create(URL url) {
+  public Image _Image_fromUrl(URL url) {
     return new DesktopImageImpl(url);
+  }
+
+  @Override
+  public Image _Image_fromBytes(byte[] bytes, int width, int height) {
+    return null;
   }
 
   @Override

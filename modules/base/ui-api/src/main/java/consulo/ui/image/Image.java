@@ -29,10 +29,22 @@ public interface Image {
   Image[] EMPTY_ARRAY = new Image[0];
 
   @Nonnull
+  @Deprecated
   static Image create(@Nonnull URL url) {
-    return UIInternal.get()._Image_create(url);
+    return fromUrl(url);
   }
 
+  @Nonnull
+  static Image fromUrl(@Nonnull URL url) {
+    return UIInternal.get()._Image_fromUrl(url);
+  }
+
+  @Nonnull
+  static Image fromBytes(@Nonnull byte[] bytes, int width, int height) {
+    return UIInternal.get()._Image_fromBytes(bytes, width, height);
+  }
+
+  @Nonnull
   static Image lazy(@Nonnull Supplier<Image> imageSupplier) {
     return UIInternal.get()._Image_lazy(imageSupplier);
   }

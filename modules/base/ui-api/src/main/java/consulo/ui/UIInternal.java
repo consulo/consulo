@@ -90,7 +90,9 @@ public abstract class UIInternal {
 
   public abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
 
-  public abstract Image _Image_create(URL url);
+  public abstract Image _Image_fromUrl(URL url);
+
+  public abstract Image _Image_fromBytes(byte[] bytes, int width, int height);
 
   public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
 
