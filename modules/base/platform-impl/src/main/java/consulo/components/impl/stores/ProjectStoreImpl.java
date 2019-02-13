@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.components.impl.stores.ProjectStateStorageManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Pair;
