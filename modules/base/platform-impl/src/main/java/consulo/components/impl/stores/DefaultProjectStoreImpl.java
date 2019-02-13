@@ -89,12 +89,6 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
           }
         };
       }
-
-      @Override
-      @Nonnull
-      protected StorageData createStorageData() {
-        return new StorageData(ROOT_TAG_NAME);
-      }
     };
 
     //noinspection deprecation
