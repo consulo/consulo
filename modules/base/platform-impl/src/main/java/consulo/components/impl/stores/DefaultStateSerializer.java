@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
@@ -36,8 +36,8 @@ public class DefaultStateSerializer {
   private DefaultStateSerializer() {
   }
 
-  @javax.annotation.Nullable
-  static Element serializeState(@Nonnull Object state, @javax.annotation.Nullable final Storage storage) throws WriteExternalException {
+  @Nullable
+  static Element serializeState(@Nonnull Object state, @Nullable final Storage storage) throws WriteExternalException {
     if (state instanceof Element) {
       return (Element)state;
     }
@@ -52,7 +52,7 @@ public class DefaultStateSerializer {
   }
 
   @SuppressWarnings({"unchecked"})
-  @javax.annotation.Nullable
+  @Nullable
   public static <T> T deserializeState(@Nullable Element stateElement, Class <T> stateClass, @Nullable T mergeInto) throws StateStorageException {
     if (stateElement == null) return mergeInto;
 

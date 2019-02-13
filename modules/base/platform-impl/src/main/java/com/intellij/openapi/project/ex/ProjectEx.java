@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.project.ex;
 
-import com.intellij.openapi.components.impl.stores.IProjectStore;
+import consulo.components.impl.stores.IProjectStore;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 import javax.annotation.Nonnull;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.PathMacroSubstitutor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -27,17 +27,19 @@ import consulo.application.options.PathMacrosService;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
-import static com.intellij.openapi.components.impl.stores.StateMap.getNewByteIfDiffers;
+import static consulo.components.impl.stores.StateMap.getNewByteIfDiffers;
 
 public class StorageData extends StorageDataBase {
   private static final Logger LOG = Logger.getInstance(StorageData.class);
-  @NonNls public static final String COMPONENT = "component";
-  @NonNls public static final String NAME = "name";
+  @NonNls
+  public static final String COMPONENT = "component";
+  @NonNls
+  public static final String NAME = "name";
 
   private final StateMap myStates;
 

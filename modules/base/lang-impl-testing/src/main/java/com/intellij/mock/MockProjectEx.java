@@ -17,7 +17,7 @@ package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.impl.stores.IProjectStore;
+import consulo.components.impl.stores.IProjectStore;
 import com.intellij.openapi.project.ex.ProjectEx;
 import javax.annotation.Nonnull;
 

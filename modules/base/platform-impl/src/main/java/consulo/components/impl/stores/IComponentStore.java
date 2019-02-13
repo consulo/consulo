@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.components.impl.stores.StateComponentInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

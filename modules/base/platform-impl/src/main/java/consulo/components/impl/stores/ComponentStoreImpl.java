@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import com.intellij.openapi.components.impl.stores.StateStorageManager.ExternalizationSession;
-import consulo.components.impl.stores.ReadOnlyModificationException;
+import consulo.components.impl.stores.StateStorageManager.ExternalizationSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
@@ -32,7 +31,6 @@ import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.JDOMXIncluder;
 import consulo.application.AccessRule;
-import consulo.components.impl.stores.StateComponentInfo;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;

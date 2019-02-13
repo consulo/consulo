@@ -16,8 +16,8 @@
 package consulo.externalStorage;
 
 import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.impl.stores.StateStorageManager;
-import com.intellij.openapi.components.impl.stores.StreamProvider;
+import consulo.components.impl.stores.StateStorageManager;
+import consulo.components.impl.stores.StreamProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.externalStorage.storage.ExternalStorage;
 import consulo.ide.webService.WebServiceApi;

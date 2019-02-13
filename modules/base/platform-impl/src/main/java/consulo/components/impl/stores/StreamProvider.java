@@ -1,4 +1,4 @@
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.RoamingType;
 import javax.annotation.Nonnull;

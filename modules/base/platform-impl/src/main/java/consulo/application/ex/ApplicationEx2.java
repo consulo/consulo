@@ -17,7 +17,7 @@ package consulo.application.ex;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
-import com.intellij.openapi.components.impl.stores.IApplicationStore;
+import consulo.components.impl.stores.IApplicationStore;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 

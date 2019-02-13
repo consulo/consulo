@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.intellij.openapi.components.impl.stores.StateMap.getNewByteIfDiffers;
+import static consulo.components.impl.stores.StateMap.getNewByteIfDiffers;
 
 public class DirectoryStorageData extends StorageDataBase {
   private static final Logger LOG = Logger.getInstance(DirectoryStorageData.class);

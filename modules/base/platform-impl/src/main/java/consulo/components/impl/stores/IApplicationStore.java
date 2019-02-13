@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
 import javax.annotation.Nonnull;
 
-import java.util.Set;
+public interface IApplicationStore extends IComponentStore {
+  void setOptionsPath(@Nonnull String path);
 
-public abstract class StorageDataBase {
   @Nonnull
-  public abstract Set<String> getComponentNames();
+  String getConfigPath();
 
-  public abstract boolean hasState(@Nonnull String componentName);
+  void setConfigPath(@Nonnull String configPath);
 }

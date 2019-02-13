@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.components.impl.stores;
 
-import com.intellij.util.messages.Topic;
+import javax.annotation.Nonnull;
 
-public interface BatchUpdateListener {
-  Topic<BatchUpdateListener> TOPIC = new Topic<>("batch update listener", BatchUpdateListener.class);
+import java.util.Set;
 
-  void onBatchUpdateStarted();
-  void onBatchUpdateFinished();
+public abstract class StorageDataBase {
+  @Nonnull
+  public abstract Set<String> getComponentNames();
+
+  public abstract boolean hasState(@Nonnull String componentName);
 }
