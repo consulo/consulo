@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
+import consulo.components.impl.stores.*;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 
@@ -40,18 +41,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
 
-public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
+/**
+ * Directory storage - based on Consulo VFS
+ */
+public class VfsDirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
   private final File myDir;
   private volatile VirtualFile myVirtualFile;
   private final StateSplitterEx mySplitter;
 
   private DirectoryStorageData myStorageData;
 
-  public DirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                               @Nonnull String dir,
-                               @Nonnull StateSplitterEx splitter,
-                               @Nonnull Disposable parentDisposable,
-                               @Nullable final Listener listener) {
+  public VfsDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
+                                  @Nonnull String dir,
+                                  @Nonnull StateSplitterEx splitter,
+                                  @Nonnull Disposable parentDisposable,
+                                  @Nullable final Listener listener) {
     super(pathMacroSubstitutor);
 
     myDir = new File(dir);
@@ -81,7 +85,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
         private void notifyIfNeed(@Nonnull VirtualFileEvent event) {
           // storage directory will be removed if the only child was removed
           if (event.getFile().isDirectory() || DirectoryStorageData.isStorageFile(event.getFile())) {
-            listener.storageFileChanged(event, DirectoryBasedStorage.this);
+            listener.storageFileChanged(event, VfsDirectoryBasedStorage.this);
           }
         }
       }, false, parentDisposable);
@@ -161,7 +165,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
       return file;
     }
 
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DirectoryBasedStorage.class);
+    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(VfsDirectoryBasedStorage.class);
     try {
       return parentVirtualFile.createChildData(requestor, fileName);
     }
@@ -174,14 +178,14 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
   }
 
   private static class MySaveSession implements SaveSession, ExternalizationSession {
-    private final DirectoryBasedStorage storage;
+    private final VfsDirectoryBasedStorage storage;
     private final DirectoryStorageData originalStorageData;
     private DirectoryStorageData copiedStorageData;
 
     private final Set<String> dirtyFileNames = new SmartHashSet<String>();
     private final Set<String> removedFileNames = new SmartHashSet<String>();
 
-    private MySaveSession(@Nonnull DirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
+    private MySaveSession(@Nonnull VfsDirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
       this.storage = storage;
       originalStorageData = storageData;
     }
@@ -311,7 +315,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     }
 
     private void deleteFiles(@Nonnull VirtualFile dir) {
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DirectoryBasedStorage.class);
+      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(VfsDirectoryBasedStorage.class);
       try {
         for (VirtualFile file : dir.getChildren()) {
           if (removedFileNames.contains(file.getName())) {

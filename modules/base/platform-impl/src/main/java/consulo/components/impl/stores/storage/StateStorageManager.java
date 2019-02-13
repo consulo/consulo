@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Couple;
+import consulo.components.impl.stores.StreamProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,7 +41,7 @@ public interface StateStorageManager {
   StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType);
 
   @Nonnull
-  Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted);
+  Couple<Collection<VfsFileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted);
 
   @Nonnull
   Collection<String> getStorageFileNames();

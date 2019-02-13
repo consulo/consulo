@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.components.impl.stores.storage;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -29,6 +29,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.LineSeparator;
+import consulo.components.impl.stores.StorageUtil;
+import consulo.components.impl.stores.StreamProvider;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -40,20 +42,20 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.Set;
 
-public class FileBasedStorage extends XmlElementStorage {
+public class VfsFileBasedStorage extends XmlElementStorage {
   private final String myFilePath;
   private final File myFile;
   private volatile VirtualFile myCachedVirtualFile;
   private LineSeparator myLineSeparator;
 
-  public FileBasedStorage(@Nonnull String filePath,
-                          @Nonnull String fileSpec,
-                          @Nullable RoamingType roamingType,
-                          @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                          @Nonnull String rootElementName,
-                          @Nonnull Disposable parentDisposable,
-                          @Nullable final Listener listener,
-                          @Nullable StreamProvider streamProvider) {
+  public VfsFileBasedStorage(@Nonnull String filePath,
+                             @Nonnull String fileSpec,
+                             @Nullable RoamingType roamingType,
+                             @Nullable TrackingPathMacroSubstitutor pathMacroManager,
+                             @Nonnull String rootElementName,
+                             @Nonnull Disposable parentDisposable,
+                             @Nullable final Listener listener,
+                             @Nullable StreamProvider streamProvider) {
     super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider);
 
     myFilePath = filePath;
@@ -80,7 +82,7 @@ public class FileBasedStorage extends XmlElementStorage {
 
           @Override
           public void contentsChanged(@Nonnull final VirtualFileEvent event) {
-            listener.storageFileChanged(event, FileBasedStorage.this);
+            listener.storageFileChanged(event, VfsFileBasedStorage.this);
           }
         }, false, parentDisposable);
       }

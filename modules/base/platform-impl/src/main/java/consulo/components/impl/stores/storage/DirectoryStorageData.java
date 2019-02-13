@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static consulo.components.impl.stores.StateMap.getNewByteIfDiffers;
+import static consulo.components.impl.stores.storage.StateMap.getNewByteIfDiffers;
 
 public class DirectoryStorageData extends StorageDataBase {
   private static final Logger LOG = Logger.getInstance(DirectoryStorageData.class);
@@ -59,7 +59,7 @@ public class DirectoryStorageData extends StorageDataBase {
     return myStates.keySet();
   }
 
-  boolean isEmpty() {
+  public boolean isEmpty() {
     return myStates.isEmpty();
   }
 
@@ -218,7 +218,7 @@ public class DirectoryStorageData extends StorageDataBase {
     fileToState.put(fileName, state);
   }
 
-  void processComponent(@Nonnull String componentName, @Nonnull TObjectObjectProcedure<String, Object> consumer) {
+  public void processComponent(@Nonnull String componentName, @Nonnull TObjectObjectProcedure<String, Object> consumer) {
     StateMap map = myStates.get(componentName);
     if (map != null) {
       map.forEachEntry(consumer);

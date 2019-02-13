@@ -18,7 +18,7 @@ package com.intellij.mock;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import consulo.components.impl.stores.IProjectStore;
-import consulo.components.impl.stores.StateStorageManager;
+import consulo.components.impl.stores.storage.StateStorageManager;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;

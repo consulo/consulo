@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.diagnostic.Logger;

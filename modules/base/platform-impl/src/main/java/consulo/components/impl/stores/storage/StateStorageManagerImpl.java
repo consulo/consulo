@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
@@ -30,6 +30,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
+import consulo.components.impl.stores.StreamProvider;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -104,7 +105,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createStateStorage(@Nonnull Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
       StateSplitterEx splitter = ReflectionUtil.newInstance(storageSpec.stateSplitter());
-      return new DirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener());
+      return new VfsDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener());
     }
     else {
       return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
@@ -165,7 +166,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Nonnull
   @Override
-  public Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted) {
+  public Couple<Collection<VfsFileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted) {
     myStorageLock.lock();
     try {
       return Couple.of(getCachedFileStorages(changed), getCachedFileStorages(deleted));
@@ -176,22 +177,22 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
   @Nonnull
-  private Collection<FileBasedStorage> getCachedFileStorages(@Nonnull Collection<String> fileSpecs) {
+  private Collection<VfsFileBasedStorage> getCachedFileStorages(@Nonnull Collection<String> fileSpecs) {
     if (fileSpecs.isEmpty()) {
       return Collections.emptyList();
     }
 
-    List<FileBasedStorage> result = null;
+    List<VfsFileBasedStorage> result = null;
     for (String fileSpec : fileSpecs) {
       StateStorage storage = myStorages.get(fileSpec);
-      if (storage instanceof FileBasedStorage) {
+      if (storage instanceof VfsFileBasedStorage) {
         if (result == null) {
           result = new SmartList<>();
         }
-        result.add((FileBasedStorage)storage);
+        result.add((VfsFileBasedStorage)storage);
       }
     }
-    return result == null ? Collections.<FileBasedStorage>emptyList() : result;
+    return result == null ? Collections.<VfsFileBasedStorage>emptyList() : result;
   }
 
   @Nonnull
@@ -230,8 +231,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
 
     beforeFileBasedStorageCreate();
-    return new FileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this,
-                                createStorageTopicListener(), myStreamProvider) {
+    return new VfsFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this,
+                                   createStorageTopicListener(), myStreamProvider) {
       @Override
       @Nonnull
       protected StorageData createStorageData() {

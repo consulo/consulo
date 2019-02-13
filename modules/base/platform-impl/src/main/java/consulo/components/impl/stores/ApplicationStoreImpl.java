@@ -27,6 +27,10 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
+import consulo.components.impl.stores.storage.DirectoryStorageData;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.components.impl.stores.storage.StateStorageManagerImpl;
+import consulo.components.impl.stores.storage.StorageData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

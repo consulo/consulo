@@ -28,10 +28,10 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import consulo.components.impl.stores.FileBasedStorage;
-import consulo.components.impl.stores.StateStorageManager;
+import consulo.components.impl.stores.storage.VfsFileBasedStorage;
+import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.StorageUtil;
-import consulo.components.impl.stores.StateStorageBase;
+import consulo.components.impl.stores.storage.StateStorageBase;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.*;
@@ -686,8 +686,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   public void saveChangedProjectFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     StateStorageManager storageManager = ((ProjectEx)project).getStateStore().getStateStorageManager();
     String fileSpec = storageManager.collapseMacros(file.getPath());
-    Couple<Collection<FileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
-    FileBasedStorage storage = ContainerUtil.getFirstItem(storages.first);
+    Couple<Collection<VfsFileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
+    VfsFileBasedStorage storage = ContainerUtil.getFirstItem(storages.first);
     // if empty, so, storage is not yet loaded, so, we don't have to reload
     if (storage != null) {
       registerProjectToReload(project, file, storage);

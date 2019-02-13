@@ -33,6 +33,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.AccessRule;
+import consulo.components.impl.stores.storage.VfsFileBasedStorage;
+import consulo.components.impl.stores.storage.ProjectStateStorageManager;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.components.impl.stores.storage.XmlElementStorage;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -138,11 +142,11 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     //we are not yet initialized completely ("open directory", etc)
     StateStorage storage = getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.PER_USER);
-    if (!(storage instanceof FileBasedStorage)) {
+    if (!(storage instanceof VfsFileBasedStorage)) {
       return null;
     }
 
-    return getBasePath(((FileBasedStorage)storage).getFile());
+    return getBasePath(((VfsFileBasedStorage)storage).getFile());
   }
 
   private String getBasePath(@Nonnull File file) {
@@ -193,7 +197,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   public VirtualFile getProjectFile() {
-    return myProject.isDefault() ? null : ((FileBasedStorage)getDefaultFileStorage()).getVirtualFile();
+    return myProject.isDefault() ? null : ((VfsFileBasedStorage)getDefaultFileStorage()).getVirtualFile();
   }
 
   @Nonnull
@@ -207,7 +211,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Override
   public VirtualFile getWorkspaceFile() {
     if (myProject.isDefault()) return null;
-    final FileBasedStorage storage = (FileBasedStorage)getStateStorageManager().getStateStorage(StoragePathMacros.WORKSPACE_FILE, RoamingType.DISABLED);
+    final VfsFileBasedStorage storage = (VfsFileBasedStorage)getStateStorageManager().getStateStorage(StoragePathMacros.WORKSPACE_FILE, RoamingType.DISABLED);
     assert storage != null;
     return storage.getVirtualFile();
   }
@@ -225,7 +229,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Nonnull
   @Override
   public String getProjectFilePath() {
-    return myProject.isDefault() ? "" : ((FileBasedStorage)getDefaultFileStorage()).getFilePath();
+    return myProject.isDefault() ? "" : ((VfsFileBasedStorage)getDefaultFileStorage()).getFilePath();
   }
 
   @Nonnull

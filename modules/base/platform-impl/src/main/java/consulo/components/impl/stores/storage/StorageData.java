@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.PathMacroSubstitutor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -31,8 +31,6 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-
-import static consulo.components.impl.stores.StateMap.getNewByteIfDiffers;
 
 public class StorageData extends StorageDataBase {
   private static final Logger LOG = Logger.getInstance(StorageData.class);
@@ -101,7 +99,7 @@ public class StorageData extends StorageDataBase {
   }
 
   @Nullable
-  protected Element save(@Nonnull Map<String, Element> newLiveStates) {
+  public Element save(@Nonnull Map<String, Element> newLiveStates) {
     if (myStates.isEmpty()) {
       return null;
     }
@@ -148,7 +146,7 @@ public class StorageData extends StorageDataBase {
   }
 
   @Nullable
-  static StorageData setStateAndCloneIfNeed(@Nonnull String componentName, @Nullable Element newState, @Nonnull StorageData storageData, @Nonnull Map<String, Element> newLiveStates) {
+  public static StorageData setStateAndCloneIfNeed(@Nonnull String componentName, @Nullable Element newState, @Nonnull StorageData storageData, @Nonnull Map<String, Element> newLiveStates) {
     Object oldState = storageData.myStates.get(componentName);
     if (newState == null || JDOMUtil.isEmpty(newState)) {
       if (oldState == null) {
@@ -171,7 +169,7 @@ public class StorageData extends StorageDataBase {
       }
     }
     else if (oldState != null) {
-      newBytes = getNewByteIfDiffers(componentName, newState, (byte[])oldState);
+      newBytes = StateMap.getNewByteIfDiffers(componentName, newState, (byte[])oldState);
       if (newBytes == null) {
         return null;
       }
@@ -183,7 +181,7 @@ public class StorageData extends StorageDataBase {
   }
 
   @Nullable
-  final Object setState(@Nonnull String componentName, @Nullable Element newState, @Nonnull Map<String, Element> newLiveStates) {
+  public final Object setState(@Nonnull String componentName, @Nullable Element newState, @Nonnull Map<String, Element> newLiveStates) {
     if (newState == null || JDOMUtil.isEmpty(newState)) {
       return myStates.remove(componentName);
     }
@@ -201,7 +199,7 @@ public class StorageData extends StorageDataBase {
       }
     }
     else if (oldState != null) {
-      newBytes = getNewByteIfDiffers(componentName, newState, (byte[])oldState);
+      newBytes = StateMap.getNewByteIfDiffers(componentName, newState, (byte[])oldState);
       if (newBytes == null) {
         return null;
       }

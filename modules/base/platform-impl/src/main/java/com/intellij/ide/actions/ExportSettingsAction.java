@@ -35,7 +35,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import consulo.components.impl.stores.StateStorageManager;
+import consulo.components.impl.stores.storage.StateStorageManager;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;

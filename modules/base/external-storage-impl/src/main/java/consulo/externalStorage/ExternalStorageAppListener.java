@@ -18,7 +18,7 @@ package consulo.externalStorage;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.openapi.application.Application;
 import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.StateStorageManager;
+import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.application.ex.ApplicationEx2;
 
 import javax.annotation.Nonnull;

@@ -21,8 +21,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.components.impl.stores.DirectoryBasedStorage;
-import consulo.components.impl.stores.DirectoryStorageData;
+import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
+import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.StreamProvider;
 import com.intellij.openapi.diagnostic.Logger;
@@ -540,9 +540,9 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
       if (file == null) {
         if (myDir == null || !myDir.isValid()) {
-          myDir = DirectoryBasedStorage.createDir(myIoDir, this);
+          myDir = VfsDirectoryBasedStorage.createDir(myIoDir, this);
         }
-        file = DirectoryBasedStorage.getFile(fileName, myDir, this);
+        file = VfsDirectoryBasedStorage.getFile(fileName, myDir, this);
       }
 
       AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
@@ -595,7 +595,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
       try {
         for (VirtualFile file : dir.getChildren()) {
           if (myFilesToDelete.contains(file.getNameWithoutExtension())) {
-            DirectoryBasedStorage.deleteFile(file, this);
+            VfsDirectoryBasedStorage.deleteFile(file, this);
           }
         }
         myFilesToDelete.clear();

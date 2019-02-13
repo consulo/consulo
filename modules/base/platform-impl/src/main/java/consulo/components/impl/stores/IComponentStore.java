@@ -19,6 +19,7 @@ import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.components.impl.stores.storage.StateStorageManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

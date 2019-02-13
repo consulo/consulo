@@ -24,7 +24,7 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
 import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.StateStorageManager;
+import consulo.components.impl.stores.storage.StateStorageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;

@@ -37,7 +37,7 @@ public class DefaultStateSerializer {
   }
 
   @Nullable
-  static Element serializeState(@Nonnull Object state, @Nullable final Storage storage) throws WriteExternalException {
+  public static Element serializeState(@Nonnull Object state, @Nullable final Storage storage) throws WriteExternalException {
     if (state instanceof Element) {
       return (Element)state;
     }

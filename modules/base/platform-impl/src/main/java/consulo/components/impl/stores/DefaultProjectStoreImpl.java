@@ -22,6 +22,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.DefaultProjectImpl;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.components.impl.stores.storage.StorageData;
+import consulo.components.impl.stores.storage.VfsFileBasedStorage;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.components.impl.stores.storage.XmlElementStorage;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -126,8 +130,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
       @Nonnull
       @Override
-      public Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted) {
-        return new Couple<>(Collections.<FileBasedStorage>emptyList(), Collections.<FileBasedStorage>emptyList());
+      public Couple<Collection<VfsFileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted) {
+        return new Couple<>(Collections.<VfsFileBasedStorage>emptyList(), Collections.<VfsFileBasedStorage>emptyList());
       }
 
       @Override
