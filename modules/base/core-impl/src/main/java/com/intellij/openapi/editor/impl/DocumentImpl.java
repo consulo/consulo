@@ -44,13 +44,13 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import consulo.application.TransactionGuardEx;
 import gnu.trove.TIntObjectHashMap;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

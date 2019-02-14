@@ -26,6 +26,8 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.ReflectionUtil;
 import consulo.ui.SwingUIDecorator;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,8 +38,6 @@ import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 
 /**

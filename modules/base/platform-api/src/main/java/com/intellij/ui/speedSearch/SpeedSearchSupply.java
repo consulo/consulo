@@ -17,12 +17,12 @@ package com.intellij.ui.speedSearch;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author spLeaner

@@ -46,6 +46,7 @@ import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorClientRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
+import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -56,7 +57,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.function.IntFunction;
 

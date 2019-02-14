@@ -42,13 +42,15 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Internal;
-import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ide.ui.laf.JBEditorTabsUI;
+import consulo.ui.RequiredUIAccess;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -56,10 +58,8 @@ import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 

@@ -93,6 +93,11 @@
       <groupId>org.iq80.snappy</groupId>
       <artifactId>snappy</artifactId>
     </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>kava.beans</artifactId>
+      <optional>true</optional>
+    </dependency>
     <!--Internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>

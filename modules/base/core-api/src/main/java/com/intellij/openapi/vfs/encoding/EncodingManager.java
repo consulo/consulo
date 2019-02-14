@@ -19,11 +19,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.VirtualFile;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.beans.PropertyChangeListener;
 import java.nio.charset.Charset;
 import java.util.Collection;
 

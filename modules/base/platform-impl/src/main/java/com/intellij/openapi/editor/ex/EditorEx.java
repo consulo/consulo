@@ -36,6 +36,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 
@@ -44,7 +45,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.function.IntFunction;
 

@@ -48,12 +48,12 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.shared.Rectangle2D;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 
 @SuppressWarnings("ConstantConditions")

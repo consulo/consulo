@@ -32,11 +32,13 @@ import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.DockLayout;
+import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.layout.UnifiedComboContentLayout;
 import consulo.wm.impl.layout.UnifiedContentLayout;
 import consulo.wm.impl.layout.UnifiedTabContentLayout;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -44,8 +46,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 

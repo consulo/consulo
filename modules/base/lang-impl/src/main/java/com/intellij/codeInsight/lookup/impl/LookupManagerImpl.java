@@ -41,13 +41,13 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
 import com.intellij.util.messages.MessageBus;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 @Singleton
 public class LookupManagerImpl extends LookupManager {

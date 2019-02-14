@@ -21,7 +21,7 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 
-import java.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeListener;
 
 public class ContentManagerWatcher {
   private final ToolWindow myToolWindow;

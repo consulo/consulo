@@ -21,12 +21,12 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
+import kava.beans.PropertyChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author yole

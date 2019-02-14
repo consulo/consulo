@@ -2,12 +2,11 @@
 package com.intellij.util.ui;
 
 import com.intellij.ui.paint.PaintUtil.RoundingMode;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import java.util.List;
 

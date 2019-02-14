@@ -17,9 +17,9 @@ package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.EditorEventMulticaster;
-import javax.annotation.Nonnull;
+import kava.beans.PropertyChangeListener;
 
-import java.beans.PropertyChangeListener;
+import javax.annotation.Nonnull;
 
 public interface EditorEventMulticasterEx extends EditorEventMulticaster{
   void addErrorStripeListener(@Nonnull ErrorStripeListener listener);

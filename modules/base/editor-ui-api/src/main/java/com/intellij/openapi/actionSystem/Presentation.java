@@ -24,13 +24,13 @@ import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 import java.util.Set;
 
@@ -141,7 +141,7 @@ public final class Presentation implements Cloneable {
    */
   public void fireAllProperties() {
     PropertyChangeSupport changeSupport = myChangeSupport;
-    if(changeSupport == null) {
+    if (changeSupport == null) {
       return;
     }
 

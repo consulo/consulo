@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeListener;
 
 /**
  * @author nik

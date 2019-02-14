@@ -27,10 +27,10 @@ import com.intellij.pom.Navigatable;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ex.internal.WGwtEditorImpl;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author VISTALL

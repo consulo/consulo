@@ -22,6 +22,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 import sun.swing.SwingUtilities2;
 
 import javax.annotation.Nonnull;
@@ -29,8 +31,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

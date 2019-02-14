@@ -27,13 +27,13 @@ import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.AlertIcon;
 import consulo.ui.image.Image;
+import kava.beans.PropertyChangeSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeSupport;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;

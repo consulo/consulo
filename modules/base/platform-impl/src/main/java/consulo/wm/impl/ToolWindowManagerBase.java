@@ -49,13 +49,13 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.image.Image;
 import consulo.ui.shared.Rectangle2D;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 
 /**

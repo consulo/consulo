@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.util.containers.HashSet;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 

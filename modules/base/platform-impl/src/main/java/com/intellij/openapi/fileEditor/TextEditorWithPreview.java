@@ -15,6 +15,8 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.JBSplitter;
 import com.intellij.util.ui.JBUI;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,8 +24,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

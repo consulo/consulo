@@ -16,13 +16,13 @@
 
 package com.intellij.util.ui;
 
-import javax.annotation.Nonnull;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 

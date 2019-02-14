@@ -24,11 +24,11 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.Component;
 import consulo.ui.image.Image;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
 
 /**
  * Represents a tab or pane displayed in a toolwindow or in another content manager.

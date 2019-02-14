@@ -21,11 +21,11 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.beans.PropertyChangeListener;
 
 public abstract class LookupManager {
   public static LookupManager getInstance(Project project){

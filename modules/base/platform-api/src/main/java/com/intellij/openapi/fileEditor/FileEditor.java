@@ -22,11 +22,11 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Anton Katilin

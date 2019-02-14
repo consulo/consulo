@@ -33,8 +33,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 
 public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;

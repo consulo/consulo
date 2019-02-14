@@ -29,11 +29,11 @@ import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.DeprecationInfo;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 

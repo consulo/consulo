@@ -40,8 +40,8 @@ import consulo.ui.shared.Rectangle2D;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 
 /**
  * @author VISTALL

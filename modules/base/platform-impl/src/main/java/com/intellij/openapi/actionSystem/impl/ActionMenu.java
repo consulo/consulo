@@ -27,6 +27,8 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;
 import com.intellij.util.ui.UIUtil;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -35,8 +37,6 @@ import javax.swing.event.MenuListener;
 import javax.swing.plaf.MenuItemUI;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public final class ActionMenu extends JMenu {
   private final String myPlace;
@@ -249,7 +249,7 @@ public final class ActionMenu extends JMenu {
 
   @Override
   public int getMenuComponentCount() {
-    if(isTopMenuBarAfterOpenJDKMemLeakFix()) {
+    if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
       return getMenuComponents().length;
     }
     return super.getMenuComponentCount();
@@ -260,15 +260,15 @@ public final class ActionMenu extends JMenu {
   }
 
   private boolean isTopMenuBarAfterOpenJDKMemLeakFix() {
-    if(isTopMenuBar()) {
+    if (isTopMenuBar()) {
       // looks like openjdk backport fix from jdk 10
       // 181 - when bug from jdk 10 reported. maybe build lower
-      if(SystemInfo.isJavaVersionAtLeast(8, 0, 181)) {
+      if (SystemInfo.isJavaVersionAtLeast(8, 0, 181)) {
         return true;
       }
 
       // jdk 10 have initial change in screen menu
-      if(SystemInfo.isJavaVersionAtLeast(10, 0, 0)) {
+      if (SystemInfo.isJavaVersionAtLeast(10, 0, 0)) {
         return true;
       }
     }

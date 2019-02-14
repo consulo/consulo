@@ -20,10 +20,10 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.util.EventDispatcher;
-import javax.annotation.Nonnull;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
 
-import java.beans.PropertyChangeListener;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

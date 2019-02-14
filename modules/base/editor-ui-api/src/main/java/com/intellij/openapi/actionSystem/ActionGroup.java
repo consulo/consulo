@@ -18,13 +18,13 @@ package com.intellij.openapi.actionSystem;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +48,8 @@ public abstract class ActionGroup extends AnAction {
   /**
    * The actual value is a Boolean.
    */
-  @NonNls public static final String PROP_POPUP = "popup";
+  @NonNls
+  public static final String PROP_POPUP = "popup";
 
   private Boolean myDumbAware;
 
@@ -56,7 +57,7 @@ public abstract class ActionGroup extends AnAction {
    * Creates a new <code>ActionGroup</code> with shortName set to <code>null</code> and
    * popup set to false.
    */
-  public ActionGroup(){
+  public ActionGroup() {
     this(null, false);
   }
 
@@ -65,11 +66,10 @@ public abstract class ActionGroup extends AnAction {
    * and popup.
    *
    * @param shortName Text that represents a short name for this action group
-   *
-   * @param popup <code>true</code> if this group is a popup, <code>false</code>
-   *  otherwise
+   * @param popup     <code>true</code> if this group is a popup, <code>false</code>
+   *                  otherwise
    */
-  public ActionGroup(String shortName, boolean popup){
+  public ActionGroup(String shortName, boolean popup) {
     super(shortName);
     setPopup(popup);
   }
@@ -93,7 +93,7 @@ public abstract class ActionGroup extends AnAction {
    */
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e){
+  public void actionPerformed(@Nonnull AnActionEvent e) {
   }
 
   @RequiredUIAccess
@@ -114,7 +114,7 @@ public abstract class ActionGroup extends AnAction {
    *
    * @return <code>true</code> if the group is a popup, <code>false</code> otherwise
    */
-  public boolean isPopup(){
+  public boolean isPopup() {
     return myPopup;
   }
 
@@ -123,21 +123,21 @@ public abstract class ActionGroup extends AnAction {
    *
    * @param popup If <code>true</code> the group will be shown as a popup in menus
    */
-  public final void setPopup(boolean popup){
+  public final void setPopup(boolean popup) {
     boolean oldPopup = myPopup;
     myPopup = popup;
-    firePropertyChange(PROP_POPUP, oldPopup?Boolean.TRUE:Boolean.FALSE, myPopup?Boolean.TRUE:Boolean.FALSE);
+    firePropertyChange(PROP_POPUP, oldPopup ? Boolean.TRUE : Boolean.FALSE, myPopup ? Boolean.TRUE : Boolean.FALSE);
   }
 
-  public final void addPropertyChangeListener(PropertyChangeListener l){
+  public final void addPropertyChangeListener(PropertyChangeListener l) {
     myChangeSupport.addPropertyChangeListener(l);
   }
 
-  public final void removePropertyChangeListener(PropertyChangeListener l){
+  public final void removePropertyChangeListener(PropertyChangeListener l) {
     myChangeSupport.removePropertyChangeListener(l);
   }
 
-  protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue){
+  protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
     myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -154,7 +154,8 @@ public abstract class ActionGroup extends AnAction {
       if (mySecondaryActions != null) {
         mySecondaryActions.remove(action);
       }
-    } else {
+    }
+    else {
       if (mySecondaryActions == null) {
         mySecondaryActions = new HashSet<AnAction>();
       }
@@ -185,7 +186,8 @@ public abstract class ActionGroup extends AnAction {
     boolean dumbAware = super.isDumbAware();
     if (dumbAware) {
       myDumbAware = Boolean.valueOf(dumbAware);
-    } else {
+    }
+    else {
       if (myDumbAware == null) {
         try {
           Method updateMethod = getClass().getMethod("update", AnActionEvent.class);

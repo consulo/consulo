@@ -40,13 +40,13 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import kava.beans.PropertyChangeListener;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 

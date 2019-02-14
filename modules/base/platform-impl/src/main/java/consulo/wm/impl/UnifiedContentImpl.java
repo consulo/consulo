@@ -29,12 +29,12 @@ import consulo.ui.Component;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.wm.ContentEx;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;

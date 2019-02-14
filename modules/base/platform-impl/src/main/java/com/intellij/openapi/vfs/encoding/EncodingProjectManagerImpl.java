@@ -48,6 +48,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -55,7 +56,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;

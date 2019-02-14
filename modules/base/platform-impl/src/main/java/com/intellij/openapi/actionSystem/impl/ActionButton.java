@@ -28,15 +28,15 @@ import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
 import javax.accessibility.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static java.awt.event.KeyEvent.VK_SPACE;
 

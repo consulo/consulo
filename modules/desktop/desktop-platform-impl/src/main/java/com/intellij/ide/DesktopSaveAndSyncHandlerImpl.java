@@ -39,8 +39,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 

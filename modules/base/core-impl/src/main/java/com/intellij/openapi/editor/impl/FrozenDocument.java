@@ -29,10 +29,10 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
+import kava.beans.PropertyChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 

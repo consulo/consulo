@@ -22,10 +22,10 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import javax.annotation.Nonnull;
 
 abstract class DocumentsSynchronizer {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.DocumentsSynchonizer");

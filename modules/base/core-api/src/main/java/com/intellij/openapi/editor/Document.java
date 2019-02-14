@@ -19,12 +19,12 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolder;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeListener;
 
 /**
  * Represents the contents of a text file loaded into memory, and possibly opened in an IDEA

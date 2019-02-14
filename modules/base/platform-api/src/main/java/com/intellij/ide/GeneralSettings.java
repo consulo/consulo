@@ -26,8 +26,8 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 
 @Singleton
 @State(name = "GeneralSettings", storages = @Storage("ide.general.xml"))

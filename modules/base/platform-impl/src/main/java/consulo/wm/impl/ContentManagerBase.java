@@ -29,11 +29,11 @@ import com.intellij.util.SmartList;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.wm.ContentEx;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
