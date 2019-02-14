@@ -32,6 +32,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * The presentation of an action in a specific place in the user interface.
@@ -40,8 +41,6 @@ import java.util.Objects;
  * @see ActionPlaces
  */
 public final class Presentation implements Cloneable {
-  private SmartFMap<String, Object> myUserMap = SmartFMap.emptyMap();
-
   /**
    * Defines tool tip for button at tool bar or text for element at menu
    * value: String
@@ -98,6 +97,8 @@ public final class Presentation implements Cloneable {
   public static final double HIGHER_WEIGHT = 42;
   public static final double EVEN_HIGHER_WEIGHT = 239;
 
+  private SmartFMap<String, Object> myUserMap = SmartFMap.emptyMap();
+
   @Nullable
   private PropertyChangeSupport myChangeSupport;
   private String myText;
@@ -132,6 +133,22 @@ public final class Presentation implements Cloneable {
     PropertyChangeSupport support = myChangeSupport;
     if (support != null) {
       support.removePropertyChangeListener(l);
+    }
+  }
+
+  /**
+   * Fire listeners about current client properties. This need when presentation created and initialized before component added
+   */
+  public void fireAllProperties() {
+    PropertyChangeSupport changeSupport = myChangeSupport;
+    if(changeSupport == null) {
+      return;
+    }
+
+    Set<String> strings = myUserMap.keySet();
+    for (String key : strings) {
+      Object clientProperty = getClientProperty(key);
+      changeSupport.firePropertyChange(key, null, clientProperty);
     }
   }
 

@@ -30,15 +30,14 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SizedIcon;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.actionSystem.ex.ComboBoxButton;
-import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,12 +105,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     try {
       Icon icon = TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings));
       ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
-      List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(new Condition<RunnerAndConfigurationSettings>() {
-        @Override
-        public boolean value(RunnerAndConfigurationSettings s) {
-          return s == settings;
-        }
-      });
+      List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(s -> s == settings);
       if (runningDescriptors.size() == 1) {
         icon = ExecutionUtil.getLiveIndicator(icon);
       }

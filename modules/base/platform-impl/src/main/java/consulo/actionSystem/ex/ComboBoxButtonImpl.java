@@ -235,7 +235,6 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   private Runnable myCurrentPopupCanceler;
   private PropertyChangeListener myButtonSynchronizer;
 
-  private boolean myLikeButton;
   private Runnable myOnClickListener;
 
   public ComboBoxButtonImpl(ComboBoxAction comboBoxAction, Presentation presentation) {
@@ -278,7 +277,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   private void showPopup0() {
     hidePopup0();
 
-    if(myLikeButton && myOnClickListener != null) {
+    if (myOnClickListener != null) {
       myOnClickListener.run();
 
       myCurrentPopupCanceler = null;
@@ -312,21 +311,22 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   }
 
   @Override
+  public void addNotify() {
+    super.addNotify();
+    if (myButtonSynchronizer == null) {
+      myButtonSynchronizer = new MyButtonSynchronizer();
+      myPresentation.addPropertyChangeListener(myButtonSynchronizer);
+      myPresentation.fireAllProperties();
+    }
+  }
+
+  @Override
   public void removeNotify() {
     if (myButtonSynchronizer != null) {
       myPresentation.removePropertyChangeListener(myButtonSynchronizer);
       myButtonSynchronizer = null;
     }
     super.removeNotify();
-  }
-
-  @Override
-  public void addNotify() {
-    super.addNotify();
-    if (myButtonSynchronizer == null) {
-      myButtonSynchronizer = new MyButtonSynchronizer();
-      myPresentation.addPropertyChangeListener(myButtonSynchronizer);
-    }
   }
 
   private class MyButtonSynchronizer implements PropertyChangeListener {
@@ -346,7 +346,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         setEnabled(((Boolean)evt.getNewValue()).booleanValue());
       }
       else if (ComboBoxButton.LIKE_BUTTON.equals(propertyName)) {
-        setLikeButton(true, (Runnable)evt.getNewValue());
+        setLikeButton((Runnable)evt.getNewValue());
       }
     }
   }
@@ -363,7 +363,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     setUI(new HackyComboBoxUI(comboBoxUI));
 
     // refresh state
-    setLikeButton(myLikeButton, myOnClickListener);
+    setLikeButton(myOnClickListener);
 
     SwingUIDecorator.apply(SwingUIDecorator::decorateToolbarComboBox, this);
   }
@@ -374,9 +374,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     return myComboBoxAction;
   }
 
-  @Override
-  public void setLikeButton(boolean value, @Nullable Runnable onClick) {
-    myLikeButton = value;
+  private void setLikeButton(@Nullable Runnable onClick) {
     myOnClickListener = onClick;
   }
 }
