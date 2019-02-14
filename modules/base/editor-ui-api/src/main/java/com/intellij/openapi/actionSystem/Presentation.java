@@ -17,6 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 /**
  * The presentation of an action in a specific place in the user interface.
@@ -96,7 +98,8 @@ public final class Presentation implements Cloneable {
   public static final double HIGHER_WEIGHT = 42;
   public static final double EVEN_HIGHER_WEIGHT = 239;
 
-  private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
+  @Nullable
+  private PropertyChangeSupport myChangeSupport;
   private String myText;
   private String myDescription;
   private Icon myIcon;
@@ -117,11 +120,18 @@ public final class Presentation implements Cloneable {
   }
 
   public void addPropertyChangeListener(PropertyChangeListener l) {
-    myChangeSupport.addPropertyChangeListener(l);
+    PropertyChangeSupport support = myChangeSupport;
+    if (support == null) {
+      support = myChangeSupport = new PropertyChangeSupport(this);
+    }
+    support.addPropertyChangeListener(l);
   }
 
   public void removePropertyChangeListener(PropertyChangeListener l) {
-    myChangeSupport.removePropertyChangeListener(l);
+    PropertyChangeSupport support = myChangeSupport;
+    if (support != null) {
+      support.removePropertyChangeListener(l);
+    }
   }
 
   @Nullable
@@ -177,12 +187,12 @@ public final class Presentation implements Cloneable {
       myText = null;
     }
 
-    myChangeSupport.firePropertyChange(PROP_TEXT, oldText, myText);
+    fireObjectPropertyChange(PROP_TEXT, oldText, myText);
     if (myMnemonic != oldMnemonic) {
-      myChangeSupport.firePropertyChange(PROP_MNEMONIC_KEY, new Integer(oldMnemonic), new Integer(myMnemonic));
+      fireObjectPropertyChange(PROP_MNEMONIC_KEY, oldMnemonic, myMnemonic);
     }
     if (myDisplayedMnemonicIndex != oldDisplayedMnemonicIndex) {
-      myChangeSupport.firePropertyChange(PROP_MNEMONIC_INDEX, new Integer(oldDisplayedMnemonicIndex), new Integer(myDisplayedMnemonicIndex));
+      fireObjectPropertyChange(PROP_MNEMONIC_INDEX, oldDisplayedMnemonicIndex, myDisplayedMnemonicIndex);
     }
   }
 
@@ -220,7 +230,7 @@ public final class Presentation implements Cloneable {
   public void setDescription(String description) {
     String oldDescription = myDescription;
     myDescription = description;
-    myChangeSupport.firePropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
+    fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
   }
 
   public Icon getIcon() {
@@ -242,7 +252,7 @@ public final class Presentation implements Cloneable {
     if (oldIcon == icon) return;
 
     myIcon = icon;
-    myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, myIcon);
+    fireObjectPropertyChange(PROP_ICON, oldIcon, myIcon);
   }
 
   public Icon getDisabledIcon() {
@@ -252,7 +262,7 @@ public final class Presentation implements Cloneable {
   public void setDisabledIcon(@Nullable Icon icon) {
     Icon oldDisabledIcon = myDisabledIcon;
     myDisabledIcon = icon;
-    myChangeSupport.firePropertyChange(PROP_DISABLED_ICON, oldDisabledIcon, myDisabledIcon);
+    fireObjectPropertyChange(PROP_DISABLED_ICON, oldDisabledIcon, myDisabledIcon);
   }
 
   public Icon getHoveredIcon() {
@@ -272,7 +282,7 @@ public final class Presentation implements Cloneable {
   public void setHoveredIcon(@Nullable final Icon hoveredIcon) {
     Icon old = myHoveredIcon;
     myHoveredIcon = hoveredIcon;
-    myChangeSupport.firePropertyChange(PROP_HOVERED_ICON, old, myHoveredIcon);
+    fireObjectPropertyChange(PROP_HOVERED_ICON, old, myHoveredIcon);
   }
 
   public Icon getSelectedIcon() {
@@ -292,7 +302,7 @@ public final class Presentation implements Cloneable {
   public void setSelectedIcon(Icon selectedIcon) {
     Icon old = mySelectedIcon;
     mySelectedIcon = selectedIcon;
-    myChangeSupport.firePropertyChange(PROP_SELECTED_ICON, old, mySelectedIcon);
+    fireObjectPropertyChange(PROP_SELECTED_ICON, old, mySelectedIcon);
   }
 
   public int getMnemonic() {
@@ -310,7 +320,7 @@ public final class Presentation implements Cloneable {
   public void setVisible(boolean visible) {
     boolean oldVisible = myVisible;
     myVisible = visible;
-    firePropertyChange(PROP_VISIBLE, oldVisible, myVisible);
+    fireBooleanPropertyChange(PROP_VISIBLE, oldVisible, myVisible);
   }
 
   /**
@@ -332,7 +342,7 @@ public final class Presentation implements Cloneable {
   public void setEnabled(boolean enabled) {
     boolean oldEnabled = myEnabled;
     myEnabled = enabled;
-    firePropertyChange(PROP_ENABLED, oldEnabled, myEnabled);
+    fireBooleanPropertyChange(PROP_ENABLED, oldEnabled, myEnabled);
   }
 
   public final void setEnabledAndVisible(boolean enabled) {
@@ -340,17 +350,30 @@ public final class Presentation implements Cloneable {
     setVisible(enabled);
   }
 
-  private void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
-    if (oldValue != newValue) {
-      myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+  private void fireBooleanPropertyChange(String propertyName, boolean oldValue, boolean newValue) {
+    PropertyChangeSupport support = myChangeSupport;
+    if (oldValue != newValue && support != null) {
+      support.firePropertyChange(propertyName, oldValue, newValue);
+    }
+  }
+
+  private void fireObjectPropertyChange(String propertyName, Object oldValue, Object newValue) {
+    PropertyChangeSupport support = myChangeSupport;
+    if (support != null && !Objects.equals(oldValue, newValue)) {
+      support.firePropertyChange(propertyName, oldValue, newValue);
     }
   }
 
   @Override
   public Presentation clone() {
-    Presentation presentation = new Presentation();
-    presentation.copyFrom(this);
-    return presentation;
+    try {
+      Presentation clone = (Presentation)super.clone();
+      clone.myChangeSupport = null;
+      return clone;
+    }
+    catch (CloneNotSupportedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void copyFrom(Presentation presentation) {
@@ -364,6 +387,16 @@ public final class Presentation implements Cloneable {
   }
 
   @Nullable
+  public <T> T getClientProperty(@Nonnull Key<T> key) {
+    //noinspection unchecked
+    return (T)myUserMap.get(key.toString());
+  }
+
+  public <T> void putClientProperty(@Nonnull Key<T> key, @Nullable T value) {
+    putClientProperty(key.toString(), value);
+  }
+
+  @Nullable
   public Object getClientProperty(@NonNls @Nonnull String key) {
     return myUserMap.get(key);
   }
@@ -372,7 +405,7 @@ public final class Presentation implements Cloneable {
     Object oldValue = myUserMap.get(key);
     if (Comparing.equal(oldValue, value)) return;
     myUserMap = value == null ? myUserMap.minus(key) : myUserMap.plus(key, value);
-    myChangeSupport.firePropertyChange(key, oldValue, value);
+    fireObjectPropertyChange(key, oldValue, value);
   }
 
   public double getWeight() {
