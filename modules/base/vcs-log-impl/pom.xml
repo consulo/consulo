@@ -62,10 +62,5 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>kava.beans</artifactId>
-      <optional>true</optional>
-    </dependency>
   </dependencies>
 </project>

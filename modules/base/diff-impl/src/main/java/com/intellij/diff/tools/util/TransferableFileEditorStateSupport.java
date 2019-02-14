@@ -33,11 +33,11 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.containers.ContainerUtil;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

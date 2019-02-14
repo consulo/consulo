@@ -22,9 +22,9 @@ import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.util.UserDataHolderBase;
 import consulo.ui.Component;
 import consulo.ui.Label;
-import javax.annotation.Nonnull;
+import kava.beans.PropertyChangeListener;
 
-import java.beans.PropertyChangeListener;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

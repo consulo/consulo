@@ -47,11 +47,5 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>kava.beans</artifactId>
-      <optional>true</optional>
-    </dependency>
   </dependencies>
 </project>

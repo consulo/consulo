@@ -41,10 +41,10 @@ import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.RequiredUIAccess;
+import kava.beans.PropertyChangeEvent;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
