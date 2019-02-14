@@ -20,10 +20,10 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
+import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeListener;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;

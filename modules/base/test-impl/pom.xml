@@ -56,5 +56,10 @@
       <artifactId>consulo-injecting-pico-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>kava.beans</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>
