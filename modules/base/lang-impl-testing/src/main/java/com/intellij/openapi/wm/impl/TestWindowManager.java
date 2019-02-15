@@ -253,7 +253,7 @@ public final class TestWindowManager extends WindowManagerEx {
   }
 
   @Override
-  public final DesktopIdeFrameImpl getFrame(final Project project) {
+  public final JFrame getFrame(final Project project) {
     return null;
   }
 

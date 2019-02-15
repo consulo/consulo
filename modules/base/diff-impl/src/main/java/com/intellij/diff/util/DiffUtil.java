@@ -87,7 +87,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
@@ -112,8 +112,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.nio.charset.Charset;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class DiffUtil {
   private static final Logger LOG = Logger.getInstance(DiffUtil.class);
@@ -1184,7 +1184,7 @@ public class DiffUtil {
   }
 
   public static void closeWindow(@Nonnull Window window, boolean modalOnly) {
-    if (window instanceof DesktopIdeFrameImpl) return;
+    if (window instanceof IdeFrame) return;
     if (modalOnly && window instanceof Frame) return;
 
     if (window instanceof DialogWrapperDialog) {
