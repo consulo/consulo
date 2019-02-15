@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.project;
 
+import consulo.ui.UIAccess;
+
 import java.util.EventListener;
 
 /**
@@ -28,6 +30,17 @@ public interface ProjectManagerListener extends EventListener {
    *
    * @param project opening project
    */
+  default void projectOpened(Project project, UIAccess uiAccess) {
+    projectOpened(project);
+  }
+
+
+  /**
+   * Invoked on project open.
+   *
+   * @param project opening project
+   */
+  @Deprecated
   default void projectOpened(Project project) {
   }
 

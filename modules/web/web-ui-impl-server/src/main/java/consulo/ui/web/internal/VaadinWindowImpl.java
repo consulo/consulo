@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
+import consulo.ui.internal.VaadinWrapper;
+import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Size;
-import consulo.ui.web.internal.VaadinUIAccessImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +35,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
   public VaadinWindowImpl(boolean modal) {
     setModal(modal);
     setContent((com.vaadin.ui.Component)myRootPanel);
+    addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
   }
 
   @RequiredUIAccess
@@ -43,7 +45,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
       throw new IllegalArgumentException("Window already disposed");
     }
 
-    VaadinUIAccessImpl uiAccess = (VaadinUIAccessImpl)UIAccess.get();
+    VaadinUIAccessImpl uiAccess = (VaadinUIAccessImpl)UIAccess.current();
 
     uiAccess.getUI().addWindow(this);
   }

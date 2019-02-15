@@ -255,6 +255,11 @@ public final class Presentation implements Cloneable {
     return myIcon;
   }
 
+  @Nullable
+  public Image getUIIcon() {
+    return TargetAWT.from(myIcon);
+  }
+
   public void setIcon(@Nullable Image image) {
     setIcon(TargetAWT.to(image));
   }

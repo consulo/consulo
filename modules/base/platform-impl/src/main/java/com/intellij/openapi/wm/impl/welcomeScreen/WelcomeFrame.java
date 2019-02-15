@@ -19,47 +19,28 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.annotations.DeprecationInfo;
 import consulo.start.WelcomeFrameManager;
-import javax.annotation.Nonnull;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nullable;
+
+@Deprecated
+@DeprecationInfo("Use WelcomeFrameManager")
 public class WelcomeFrame {
-  static final String DIMENSION_KEY = "WELCOME_SCREEN";
-  private static IdeFrame ourInstance;
-
+  @Nullable
+  @RequiredUIAccess
   public static IdeFrame getInstance() {
-    return ourInstance;
+    return WelcomeFrameManager.getInstance().getCurrentFrame();
   }
 
-  public static void resetInstance() {
-    ourInstance = null;
-  }
-
+  @RequiredUIAccess
   public static void showNow() {
-    if (ourInstance == null) {
-      ourInstance = (IdeFrame)WelcomeFrameManager.getInstance().openFrame();
-    }
+    WelcomeFrameManager.getInstance().showFrame();
   }
 
   public static void showIfNoProjectOpened() {
-    ApplicationManager.getApplication().invokeLater((DumbAwareRunnable)() -> {
-      WindowManagerEx windowManager = (WindowManagerEx)WindowManager.getInstance();
-      windowManager.disposeRootFrame();
-      IdeFrame[] frames = windowManager.getAllProjectFrames();
-      if (frames.length == 0) {
-        showNow();
-      }
-    }, ModalityState.NON_MODAL);
-  }
-
-  public static boolean isFromWelcomeFrame(@Nonnull AnActionEvent e) {
-    return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
+    WelcomeFrameManager.getInstance().showIfNoProjectOpened();
   }
 }

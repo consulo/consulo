@@ -22,10 +22,10 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.openapi.vcs.checkout.CheckoutAction;
 import com.intellij.ui.UIBundle;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.util.Arrays;
 
 public class GetFromVcsAction extends WelcomePopupAction{
@@ -55,7 +55,7 @@ public class GetFromVcsAction extends WelcomePopupAction{
   @Override
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(Extensions.getExtensions(CheckoutProvider.EXTENSION_POINT_NAME).length > 0);
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+    if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.FromVCS);
     }
   }

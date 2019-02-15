@@ -39,8 +39,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 
@@ -104,7 +104,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+    if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
     }
   }

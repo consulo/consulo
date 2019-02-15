@@ -59,7 +59,7 @@
                         serviceImplementation="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
 
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
-                        serviceImplementation="consulo.start.DesktopWelcomeFrameManager"/>
+                        serviceImplementation="consulo.desktop.start.DesktopWelcomeFrameManager"/>
 
     <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
                         serviceImplementation="com.intellij.ui.content.ContentFactoryImpl"/>

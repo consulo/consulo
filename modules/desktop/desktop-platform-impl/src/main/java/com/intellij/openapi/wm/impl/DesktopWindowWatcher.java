@@ -24,10 +24,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.containers.WeakHashMap;
+import consulo.wm.ex.DesktopIdeFrame;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -233,7 +234,8 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
       Window window = getFocusedWindowForProject(project);
       if (window == null) {
         if (project != null) {
-          return (Window)WindowManagerEx.getInstanceEx().findFrameFor(project);
+          DesktopIdeFrame frameFor = (DesktopIdeFrame)WindowManagerEx.getInstanceEx().findFrameFor(project);
+          return frameFor == null ? null : frameFor.getJWindow();
         }
         else {
           return null;

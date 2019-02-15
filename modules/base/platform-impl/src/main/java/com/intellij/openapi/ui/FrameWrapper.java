@@ -30,7 +30,6 @@ import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.*;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
@@ -47,6 +46,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import consulo.ui.shared.Rectangle2D;
+import consulo.wm.ex.DesktopIdeFrame;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -361,7 +361,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myStatusBar = statusBar;
   }
 
-  private static class MyJFrame extends JFrame implements DataProvider, IdeFrame.Child, IdeFrameEx {
+  private static class MyJFrame extends JFrame implements DataProvider, IdeFrame.Child, DesktopIdeFrame {
 
     private FrameWrapper myOwner;
     private final IdeFrame myParent;
@@ -398,6 +398,12 @@ public class FrameWrapper implements Disposable, DataProvider {
       MouseGestureManager.getInstance().add(this);
       setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    @Nonnull
+    @Override
+    public Window getJWindow() {
+      return this;
     }
 
     @Override
@@ -480,7 +486,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
   }
 
-  private static class MyJDialog extends JDialog implements DataProvider, IdeFrame.Child, IdeFrameEx {
+  private static class MyJDialog extends JDialog implements DataProvider, IdeFrame.Child, DesktopIdeFrame {
 
     private FrameWrapper myOwner;
     private final IdeFrame myParent;
@@ -495,6 +501,12 @@ public class FrameWrapper implements Disposable, DataProvider {
       MouseGestureManager.getInstance().add(this);
       setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    @Nonnull
+    @Override
+    public Window getJWindow() {
+      return this;
     }
 
     @Override

@@ -43,7 +43,9 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
+import consulo.wm.ex.DesktopIdeFrame;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -203,7 +205,14 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   @Override
   public JFrame findVisibleFrame() {
     IdeFrameImpl[] frames = getAllProjectFrames();
-    return frames.length > 0 ? frames[0] : (JFrame)WelcomeFrame.getInstance();
+    if (frames.length > 0) {
+      return frames[0];
+    }
+    DesktopIdeFrame desktopIdeFrame = (DesktopIdeFrame)WelcomeFrameManager.getInstance().getCurrentFrame();
+    if (desktopIdeFrame == null) {
+      throw new UnsupportedOperationException("Welcome frame not showing. Possible bug?");
+    }
+    return (JFrame)desktopIdeFrame.getJWindow();
   }
 
   @Override

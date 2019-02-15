@@ -32,16 +32,15 @@ import com.intellij.openapi.extensions.impl.PluginExtensionInitializationExcepti
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ApplicationProperties;
+import consulo.wm.ex.DesktopIdeFrame;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;
 import java.io.IOException;
@@ -157,8 +156,8 @@ public class PluginManager extends PluginManagerCore {
             String description = event.getDescription();
             if (EDIT.equals(description)) {
               PluginManagerConfigurable configurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
-              IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-              ShowSettingsUtil.getInstance().editConfigurable((JFrame)ideFrame, configurable);
+              DesktopIdeFrame ideFrame = (DesktopIdeFrame)WindowManagerEx.getInstanceEx().findFrameFor(null);
+              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : ideFrame.getJWindow(), configurable);
               return;
             }
 

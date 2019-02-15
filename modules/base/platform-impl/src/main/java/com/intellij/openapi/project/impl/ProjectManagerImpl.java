@@ -115,12 +115,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     final ProjectManagerListener busPublisher = messageBus.syncPublisher(TOPIC);
     addProjectManagerListener(new ProjectManagerListener() {
       @Override
-      public void projectOpened(final Project project) {
+      public void projectOpened(final Project project, UIAccess uiAccess) {
         project.getMessageBus().connect(project).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, project));
 
-        busPublisher.projectOpened(project);
+        busPublisher.projectOpened(project, uiAccess);
         for (ProjectManagerListener listener : getListeners(project)) {
-          listener.projectOpened(project);
+          listener.projectOpened(project, uiAccess);
         }
       }
 
@@ -342,7 +342,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
 
     Runnable process = () -> {
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> fireProjectOpened(project));
+      TransactionGuard.getInstance().submitTransactionAndWait(() -> fireProjectOpened(project, uiAccess));
 
       final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
       startupManager.runStartupActivities(uiAccess);
@@ -418,7 +418,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
 
     Runnable process = () -> {
-      uiAccess.giveAndWait(() -> fireProjectOpened(project));
+      uiAccess.giveAndWait(() -> fireProjectOpened(project, uiAccess));
 
       final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
       startupManager.runStartupActivities(uiAccess);
@@ -898,14 +898,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     LOG.assertTrue(removed);
   }
 
-  public void fireProjectOpened(Project project) {
+  public void fireProjectOpened(Project project, UIAccess uiAccess) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("projectOpened");
     }
 
     for (ProjectManagerListener listener : myListeners) {
       try {
-        listener.projectOpened(project);
+        listener.projectOpened(project, uiAccess);
       }
       catch (Exception e) {
         LOG.error(e);

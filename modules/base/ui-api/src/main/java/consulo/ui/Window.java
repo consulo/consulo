@@ -16,12 +16,18 @@
 package consulo.ui;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.EventListener;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface Window extends Component {
+  static interface CloseListener extends EventListener {
+    void onClose();
+  }
+
   @Nonnull
   static Window createModal(@Nonnull String title) {
     return UIInternal.get()._Windows_modalWindow(title);
@@ -34,7 +40,7 @@ public interface Window extends Component {
   void setContent(@Nonnull Component content);
 
   @RequiredUIAccess
-  void setMenuBar(@javax.annotation.Nullable MenuBar menuBar);
+  void setMenuBar(@Nullable MenuBar menuBar);
 
   void setResizable(boolean value);
 

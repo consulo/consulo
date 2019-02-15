@@ -40,7 +40,6 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.status.*;
@@ -53,6 +52,7 @@ import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.shared.Rectangle2D;
+import consulo.wm.ex.DesktopIdeFrame;
 import consulo.wm.impl.status.ModuleLayerWidget;
 
 import javax.accessibility.AccessibleContext;
@@ -70,7 +70,7 @@ import java.lang.reflect.Field;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContextAccessor, DataProvider {
+public class IdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleContextAccessor, DataProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.IdeFrameImpl");
 
   private static final String FULL_SCREEN = "FullScreen";
@@ -581,6 +581,12 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
       }
     }
     return false;
+  }
+
+  @Nonnull
+  @Override
+  public Window getJWindow() {
+    return this;
   }
 
   @Override
