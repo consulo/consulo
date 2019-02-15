@@ -81,7 +81,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
 
   @Nonnull
   @Override
-  public Alert<V> rememeber(@Nonnull AlertValueRemember<V> remember) {
+  public Alert<V> remember(@Nonnull AlertValueRemember<V> remember) {
     myRemember = remember;
     return this;
   }
