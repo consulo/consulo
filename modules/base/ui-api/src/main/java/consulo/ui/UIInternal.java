@@ -126,7 +126,7 @@ public abstract class UIInternal {
   @Nonnull
   public abstract Window _Windows_modalWindow(String title);
 
-  public abstract AlertBuilder _Alerts_builder();
+  public abstract <T> Alert<T> _Alerts_create();
 
   public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
 

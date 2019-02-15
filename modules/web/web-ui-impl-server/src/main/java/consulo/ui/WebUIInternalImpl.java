@@ -259,7 +259,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public AlertBuilder _Alerts_builder() {
+  public <T> Alert<T> _Alerts_create() {
     throw new UnsupportedOperationException();
   }
 
