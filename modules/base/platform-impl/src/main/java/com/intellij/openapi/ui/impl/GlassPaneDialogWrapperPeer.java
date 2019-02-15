@@ -37,7 +37,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
@@ -87,7 +87,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
       window = myWindowManager.suggestParentWindow(project);
       if (window == null) {
         Window focusedWindow = myWindowManager.getMostRecentFocusedWindow();
-        if (focusedWindow instanceof IdeFrameImpl) {
+        if (focusedWindow instanceof DesktopIdeFrameImpl) {
           window = focusedWindow;
         }
       }

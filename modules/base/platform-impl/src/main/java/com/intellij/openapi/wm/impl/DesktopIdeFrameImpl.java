@@ -49,6 +49,7 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.annotations.DeprecationInfo;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.shared.Rectangle2D;
@@ -70,7 +71,9 @@ import java.lang.reflect.Field;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class IdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleContextAccessor, DataProvider {
+@Deprecated
+@DeprecationInfo("Desktop only")
+public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleContextAccessor, DataProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.IdeFrameImpl");
 
   private static final String FULL_SCREEN = "FullScreen";
@@ -89,10 +92,7 @@ public class IdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleC
   private PropertyChangeListener myWindowsBorderUpdater;
   private boolean myRestoreFullScreen;
 
-  public IdeFrameImpl(ApplicationInfoEx applicationInfoEx,
-                      ActionManager actionManager,
-                      DataManager dataManager,
-                      Application application) {
+  public DesktopIdeFrameImpl(ApplicationInfoEx applicationInfoEx, ActionManager actionManager, DataManager dataManager, Application application) {
     super(FrameTitleUtil.buildTitle());
     myRootPane = createRootPane(actionManager, dataManager, application);
     setRootPane(myRootPane);
@@ -168,7 +168,7 @@ public class IdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleC
 
       for (IdeFrame frame : projectFrames) {
         if (frame == this) continue;
-        if (((IdeFrameImpl)frame).isInFullScreen() && ScreenUtil.getScreenDevice(((IdeFrameImpl)frame).getBounds()) == device) {
+        if (((DesktopIdeFrameImpl)frame).isInFullScreen() && ScreenUtil.getScreenDevice(((DesktopIdeFrameImpl)frame).getBounds()) == device) {
           Insets insets = ScreenUtil.getScreenInsets(device.getDefaultConfiguration());
           int mask = SideBorder.NONE;
           if (insets.top != 0) mask |= SideBorder.TOP;
@@ -559,7 +559,7 @@ public class IdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleC
     }
     IdeFrame[] frames = WindowManager.getInstance().getAllProjectFrames();
     for (IdeFrame frame : frames) {
-      ((IdeFrameImpl)frame).updateBorder();
+      ((DesktopIdeFrameImpl)frame).updateBorder();
     }
 
     return ActionCallback.DONE;

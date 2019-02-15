@@ -31,7 +31,7 @@ import java.awt.event.ComponentEvent;
 
 public abstract class IdeFrameDecorator implements Disposable {
   @Nullable
-  public static IdeFrameDecorator decorate(@Nonnull IdeFrameImpl frame) {
+  public static IdeFrameDecorator decorate(@Nonnull DesktopIdeFrameImpl frame) {
     assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
 
     // we can't use internal api for fullscreen
@@ -54,9 +54,9 @@ public abstract class IdeFrameDecorator implements Disposable {
     return null;
   }
 
-  protected IdeFrameImpl myFrame;
+  protected DesktopIdeFrameImpl myFrame;
 
-  protected IdeFrameDecorator(IdeFrameImpl frame) {
+  protected IdeFrameDecorator(DesktopIdeFrameImpl frame) {
     myFrame = frame;
   }
 
@@ -79,7 +79,7 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   // AWT-based decorator
   private static class AWTFrameDecorator extends IdeFrameDecorator {
-    private AWTFrameDecorator(@Nonnull IdeFrameImpl frame) {
+    private AWTFrameDecorator(@Nonnull DesktopIdeFrameImpl frame) {
       super(frame);
     }
 
@@ -131,7 +131,7 @@ public abstract class IdeFrameDecorator implements Disposable {
   private static class EWMHFrameDecorator extends IdeFrameDecorator {
     private Boolean myRequestedState = null;
 
-    private EWMHFrameDecorator(IdeFrameImpl frame) {
+    private EWMHFrameDecorator(DesktopIdeFrameImpl frame) {
       super(frame);
       frame.addComponentListener(new ComponentAdapter() {
         @Override

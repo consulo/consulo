@@ -32,7 +32,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -90,9 +90,9 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
   }
 
   private static ActionCallback tweakFrameFullScreen(Project project, boolean inPresentation) {
-    Window window = IdeFrameImpl.getActiveFrame();
-    if (window instanceof IdeFrameImpl) {
-      IdeFrameImpl frame = (IdeFrameImpl)window;
+    Window window = DesktopIdeFrameImpl.getActiveFrame();
+    if (window instanceof DesktopIdeFrameImpl) {
+      DesktopIdeFrameImpl frame = (DesktopIdeFrameImpl)window;
       PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
       if (inPresentation) {
         propertiesComponent.setValue("full.screen.before.presentation.mode", String.valueOf(frame.isInFullScreen()));

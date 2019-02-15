@@ -26,7 +26,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.ui.CustomProtocolHandler;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
@@ -196,7 +196,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private boolean myInFullScreen;
 
-  public MacMainFrameDecorator(@Nonnull final IdeFrameImpl frame, final boolean navBar) {
+  public MacMainFrameDecorator(@Nonnull final DesktopIdeFrameImpl frame, final boolean navBar) {
     super(frame);
 
     if (CURRENT_SETTER == null) {

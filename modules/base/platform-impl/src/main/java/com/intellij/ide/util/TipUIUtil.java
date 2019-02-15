@@ -32,7 +32,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.impl.DefaultKeymap;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ResourceUtil;
 import com.intellij.util.ui.JBUI;
@@ -144,7 +144,7 @@ public class TipUIUtil {
 //      return;
 //    }
 
-    Component af = IdeFrameImpl.getActiveFrame();
+    Component af = DesktopIdeFrameImpl.getActiveFrame();
     Component comp = af != null ? af : browser;
     int index = text.indexOf("<img", 0);
     while (index != -1) {

@@ -30,7 +30,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.EventDispatcher;
@@ -123,7 +123,7 @@ public class EditorTracker implements ProjectComponent {
       list = new ArrayList<>();
       myWindowToEditorsMap.put(window, list);
 
-      if (!(window instanceof IdeFrameImpl)) {
+      if (!(window instanceof DesktopIdeFrameImpl)) {
         WindowAdapter listener =  new WindowAdapter() {
           @Override
           public void windowGainedFocus(WindowEvent e) {
@@ -188,7 +188,7 @@ public class EditorTracker implements ProjectComponent {
 
   private Window windowByEditor(Editor editor) {
     Window window = SwingUtilities.windowForComponent(editor.getComponent());
-    if (window instanceof IdeFrameImpl) {
+    if (window instanceof DesktopIdeFrameImpl) {
       if (window != myIdeFrame) return null;
     }
     return window;

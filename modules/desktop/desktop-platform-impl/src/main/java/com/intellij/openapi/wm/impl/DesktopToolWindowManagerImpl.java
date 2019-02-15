@@ -174,7 +174,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   private final EditorComponentFocusWatcher myEditorComponentFocusWatcher = new EditorComponentFocusWatcher();
 
-  private IdeFrameImpl myFrame;
+  private DesktopIdeFrameImpl myFrame;
 
   private final Map<String, Balloon> myWindow2Balloon = new HashMap<>();
 
@@ -464,7 +464,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       UIManager.removePropertyChangeListener(uiManagerPropertyListener);
       LafManager.getInstance().removeLafManagerListener(lafManagerListener);
     });
-    myFrame = (IdeFrameImpl)myWindowManager.allocateFrame(myProject);
+    myFrame = (DesktopIdeFrameImpl)myWindowManager.allocateFrame(myProject);
     LOG.assertTrue(myFrame != null);
 
     myToolWindowPanel = new DesktopToolWindowPanelImpl(myFrame, this);

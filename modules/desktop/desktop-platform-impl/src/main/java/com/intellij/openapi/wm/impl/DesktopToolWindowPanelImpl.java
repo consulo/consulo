@@ -61,7 +61,7 @@ import java.util.List;
 public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements UISettingsListener, Disposable, ToolWindowPanelImplEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowsPane");
 
-  private final IdeFrameImpl myFrame;
+  private final DesktopIdeFrameImpl myFrame;
 
   private final HashMap<String, DesktopStripeButton> myId2Button = new HashMap<>();
   private final HashMap<String, DesktopInternalDecorator> myId2Decorator = new HashMap<>();
@@ -98,7 +98,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   private boolean myLeftHorizontalSplit;
   private boolean myRightHorizontalSplit;
 
-  DesktopToolWindowPanelImpl(@Nonnull IdeFrameImpl frame, @Nonnull DesktopToolWindowManagerImpl manager) {
+  DesktopToolWindowPanelImpl(@Nonnull DesktopIdeFrameImpl frame, @Nonnull DesktopToolWindowManagerImpl manager) {
     myManager = manager;
 
     AWTComponentProviderUtil.putMark(this, this);

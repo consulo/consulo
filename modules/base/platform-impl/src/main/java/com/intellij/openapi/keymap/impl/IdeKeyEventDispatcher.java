@@ -47,7 +47,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ComponentWithMnemonics;
@@ -253,8 +253,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
   public static boolean isModalContext(@Nonnull Component component) {
     Window window = UIUtil.getWindow(component);
 
-    if (window instanceof IdeFrameImpl) {
-      final Component pane = ((IdeFrameImpl)window).getGlassPane();
+    if (window instanceof DesktopIdeFrameImpl) {
+      final Component pane = ((DesktopIdeFrameImpl)window).getGlassPane();
       if (pane instanceof IdeGlassPaneEx) {
         return ((IdeGlassPaneEx)pane).isInModalContext();
       }
