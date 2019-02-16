@@ -92,7 +92,7 @@ public class WebPathChooserDialog implements PathChooserDialog {
 
     fileTree.setContent(dockLayout);
 
-    fileTree.show();
+    fileTree.showAsync();
 
     return result;
   }

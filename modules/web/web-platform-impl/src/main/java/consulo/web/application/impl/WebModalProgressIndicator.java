@@ -38,7 +38,7 @@ public class WebModalProgressIndicator extends EmptyProgressIndicator {
       myWindow.setClosable(false);
       myWindow.setResizable(false);
       myWindow.setContent(myLabel = Label.create("Loading"));
-      myWindow.show();
+      myWindow.showAsync();
     });
   }
 

@@ -66,14 +66,9 @@ public class WebWindowManagerImpl extends WindowManagerEx implements PersistentS
 
   }
 
-  @Override
-  public void doNotSuggestAsParent(Window window) {
-
-  }
-
   @Nullable
   @Override
-  public Window suggestParentWindow(@Nullable Project project) {
+  public consulo.ui.Window suggestParentWindow(@Nullable Project project) {
     return null;
   }
 
