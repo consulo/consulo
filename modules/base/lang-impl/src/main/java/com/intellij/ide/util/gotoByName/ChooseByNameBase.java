@@ -942,7 +942,7 @@ public abstract class ChooseByNameBase {
 
   private JLayeredPane getLayeredPane() {
     JLayeredPane layeredPane;
-    final Window window = WindowManager.getInstance().suggestParentWindow(myProject);
+    final Window window = (Window)WindowManager.getInstance().suggestParentWindow(myProject);
 
     Component parent = UIUtil.findUltimateParent(window);
 

@@ -440,7 +440,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   public void addLibraryOrderEntry(final Module module, final Library library) {
-    Component parent = WindowManager.getInstance().suggestParentWindow(module.getProject());
+    Component parent = (Component)WindowManager.getInstance().suggestParentWindow(module.getProject());
 
     final ModuleEditor moduleEditor = myContext.myModulesConfigurator.getModuleEditor(module);
     LOG.assertTrue(moduleEditor != null, "Current module editor was not initialized");

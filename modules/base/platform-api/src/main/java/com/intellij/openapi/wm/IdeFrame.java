@@ -18,14 +18,19 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.BalloonLayout;
+import consulo.ui.Window;
 import consulo.ui.shared.Rectangle2D;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 
 public interface IdeFrame {
+  interface Child extends IdeFrame {
+    IdeFrame getParentFrame();
+  }
+
   Key<IdeFrame> KEY = Key.create("IdeFrame");
 
   StatusBar getStatusBar();
@@ -47,14 +52,12 @@ public interface IdeFrame {
   }
 
   @Nonnull
-  default consulo.ui.Window getWindow() {
-    throw new AbstractMethodError();
-  }
+  Window getWindow();
 
   @Nullable
   BalloonLayout getBalloonLayout();
 
-  interface Child extends IdeFrame {
-    IdeFrame getParentFrame();
+  default boolean isActive() {
+    return Window.getActiveWindow() == getWindow();
   }
 }

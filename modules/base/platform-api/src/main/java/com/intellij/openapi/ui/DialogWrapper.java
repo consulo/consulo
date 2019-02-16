@@ -281,10 +281,10 @@ public abstract class DialogWrapper {
     this(null, canBeParent, applicationModalIfPossible);
   }
 
-  protected DialogWrapper(Project project, boolean canBeParent, boolean applicationModalIfPossible) {
+  protected DialogWrapper(@Nullable Project project, boolean canBeParent, boolean applicationModalIfPossible) {
     ensureEventDispatchThread();
     if (ApplicationManager.getApplication() != null) {
-      myPeer = createPeer(WindowManager.getInstance().suggestParentWindow(project), canBeParent, applicationModalIfPossible);
+      myPeer = createPeer(project != null ? WindowManager.getInstance().suggestParentWindow(project) : WindowManager.getInstance().findVisibleWindow(), canBeParent, applicationModalIfPossible);
     }
     else {
       myPeer = createPeer(null, canBeParent, applicationModalIfPossible);
@@ -781,12 +781,12 @@ public abstract class DialogWrapper {
     return createPeer(null, canBeParent, applicationModalIfPossible);
   }
 
-  protected DialogWrapperPeer createPeer(final Window owner, final boolean canBeParent, final IdeModalityType ideModalityType) {
+  protected DialogWrapperPeer createPeer(final consulo.ui.Window owner, final boolean canBeParent, final IdeModalityType ideModalityType) {
     return DialogWrapperPeerFactory.getInstance().createPeer(this, owner, canBeParent, ideModalityType);
   }
 
   @Deprecated
-  protected DialogWrapperPeer createPeer(final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+  protected DialogWrapperPeer createPeer(final consulo.ui.Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
     return DialogWrapperPeerFactory.getInstance().createPeer(this, owner, canBeParent, applicationModalIfPossible ? IdeModalityType.IDE : IdeModalityType.PROJECT);
   }
 
@@ -1681,8 +1681,7 @@ public abstract class DialogWrapper {
 
     ActionListener cancelKeyboardAction = createCancelAction();
     if (cancelKeyboardAction != null) {
-      rootPane
-              .registerKeyboardAction(cancelKeyboardAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+      rootPane.registerKeyboardAction(cancelKeyboardAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
       ActionUtil.registerForEveryKeyboardShortcut(getRootPane(), cancelKeyboardAction, CommonShortcuts.getCloseActiveWindow());
     }
     registerForEveryKeyboardShortcut(cancelKeyboardAction, CommonShortcuts.getCloseActiveWindow());

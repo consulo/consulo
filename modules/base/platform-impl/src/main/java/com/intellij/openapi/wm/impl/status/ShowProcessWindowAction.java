@@ -19,11 +19,10 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
-
-import javax.annotation.Nullable;
-import java.awt.*;
+import consulo.ui.RequiredUIAccess;
+import consulo.wm.util.IdeFrameUtil;
 
 public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
 
@@ -31,32 +30,24 @@ public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
     super(ActionsBundle.message("action.ShowProcessWindow.text"), ActionsBundle.message("action.ShowProcessWindow.description"), null);
   }
 
-
+  @Override
   public boolean isSelected(final AnActionEvent e) {
-    final DesktopIdeFrameImpl frame = getFrame();
+    final IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
     if (frame == null) return false;
-    return ((StatusBarEx) frame.getStatusBar()).isProcessWindowOpen();
+    return ((StatusBarEx)frame.getStatusBar()).isProcessWindowOpen();
   }
 
+  @RequiredUIAccess
+  @Override
   public void update(final AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled(getFrame() != null);
+    e.getPresentation().setEnabled(IdeFrameUtil.findFocusedRootIdeFrame() != null);
   }
 
-  @Nullable
-  private static DesktopIdeFrameImpl getFrame() {
-    Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    while (window != null) {
-      if (window instanceof DesktopIdeFrameImpl) return (DesktopIdeFrameImpl)window;
-      window = window.getParent();
-    }
-
-    return null;
-  }
-
+  @Override
   public void setSelected(final AnActionEvent e, final boolean state) {
-    final DesktopIdeFrameImpl frame = getFrame();
+    final IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
     if (frame == null) return;
-    ((StatusBarEx) frame.getStatusBar()).setProcessWindowOpen(state);
+    ((StatusBarEx)frame.getStatusBar()).setProcessWindowOpen(state);
   }
 }

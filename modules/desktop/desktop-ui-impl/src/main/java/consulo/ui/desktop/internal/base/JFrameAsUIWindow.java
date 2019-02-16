@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.start;
+package consulo.ui.desktop.internal.base;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
+import consulo.ui.impl.UIDataObject;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -30,38 +29,34 @@ import consulo.ui.style.ColorKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.EventListener;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 2018-12-29
+ * @since 2019-02-15
  */
-public class DesktopWelcomeWindow implements Window {
-  private FlatWelcomeFrame myFlatWelcomeFrame;
+public class JFrameAsUIWindow extends JFrame implements Window {
+  private UIDataObject myUIDataObject = new UIDataObject();
 
-  public DesktopWelcomeWindow(FlatWelcomeFrame flatWelcomeFrame) {
-    myFlatWelcomeFrame = flatWelcomeFrame;
+  @Override
+  public void dispose() {
+    super.dispose();
+
+    myUIDataObject = null;
   }
 
   @RequiredUIAccess
   @Override
-  public void show() {
-    myFlatWelcomeFrame.setVisible(true);
+  public void showAsync() {
+    SwingUtilities.invokeLater(() -> setVisible(true));
   }
 
   @RequiredUIAccess
   @Override
   public void close() {
-    Disposer.dispose(myFlatWelcomeFrame);
-  }
-
-  // region Migration staff
-  @RequiredUIAccess
-  @Override
-  public void setTitle(@Nonnull String title) {
-    throw new UnsupportedOperationException();
+    setVisible(false);
   }
 
   @RequiredUIAccess
@@ -73,11 +68,6 @@ public class DesktopWelcomeWindow implements Window {
   @RequiredUIAccess
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setResizable(boolean value) {
     throw new UnsupportedOperationException();
   }
 
@@ -98,32 +88,10 @@ public class DesktopWelcomeWindow implements Window {
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public boolean isVisible() {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setVisible(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isEnabled() {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setEnabled(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
   @Nullable
   @Override
-  public Component getParentComponent() {
-    throw new UnsupportedOperationException();
+  public Window getParentComponent() {
+    return (Window)getParent();
   }
 
   @RequiredUIAccess
@@ -134,14 +102,13 @@ public class DesktopWelcomeWindow implements Window {
 
   @Nonnull
   @Override
-  public <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
-    throw new UnsupportedOperationException();
+  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+    return myUIDataObject.addUserDataProvider(function);
   }
 
-  @Nonnull
   @Override
-  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    throw new UnsupportedOperationException();
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    myUIDataObject.putUserData(key, value);
   }
 
   @Nonnull
@@ -159,12 +126,6 @@ public class DesktopWelcomeWindow implements Window {
   @Nullable
   @Override
   public <T> T getUserData(@Nonnull Key<T> key) {
-    throw new UnsupportedOperationException();
+    return myUIDataObject.getUserData(key);
   }
-
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    throw new UnsupportedOperationException();
-  }
-  // endregion
 }

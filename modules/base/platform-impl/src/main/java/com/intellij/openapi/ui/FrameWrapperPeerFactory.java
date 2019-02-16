@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.wm.ex;
+package com.intellij.openapi.ui;
 
-import com.intellij.openapi.wm.ex.IdeFrameEx;
+import com.intellij.openapi.wm.IdeFrame;
 
-import javax.annotation.Nonnull;
-import java.awt.*;
+import javax.swing.*;
 
 /**
- * @author VISTALL
- * @since 2018-12-29
- * <p>
- * TODO [VISTALL] move to DESKTOP module!!!
- */
-public interface DesktopIdeFrame extends IdeFrameEx {
-  @Nonnull
-  Window getJWindow();
+* @author VISTALL
+* @since 2019-02-15
+ *
+ * Hack for extract desktop dep to desktop module
+ * TODO [VISTALL] drop this class when FrameWrapper removed
+*/
+public interface FrameWrapperPeerFactory {
+  JFrame createJFrame(FrameWrapper owner, IdeFrame parent);
+
+  JDialog createJDialog(FrameWrapper owner, IdeFrame parent);
 }

@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EventListener;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -46,12 +45,6 @@ public interface SomeUIWrapper extends Component {
   @Override
   default <T> T getUserData(@Nonnull Key<T> key) {
     return dataObject().getUserData(key);
-  }
-
-  @Nonnull
-  @Override
-  default <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
-    return addUserDataProvider(k -> k == key ? supplier.get() : null);
   }
 
   @Override

@@ -19,19 +19,23 @@ import com.intellij.Patches;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
+import com.intellij.util.ObjectUtil;
+import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public abstract class IdeFrameDecorator implements Disposable {
   @Nullable
-  public static IdeFrameDecorator decorate(@Nonnull DesktopIdeFrameImpl frame) {
+  public static IdeFrameDecorator decorate(@Nonnull IdeFrameEx frame) {
     assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
 
     // we can't use internal api for fullscreen
@@ -54,10 +58,19 @@ public abstract class IdeFrameDecorator implements Disposable {
     return null;
   }
 
-  protected DesktopIdeFrameImpl myFrame;
+  protected IdeFrameEx myIdeFrame;
 
-  protected IdeFrameDecorator(DesktopIdeFrameImpl frame) {
-    myFrame = frame;
+  protected IdeFrameDecorator(IdeFrameEx ideFrame) {
+    myIdeFrame = ideFrame;
+  }
+
+  @Nullable
+  protected JFrame getJFrame() {
+    if(myIdeFrame == null) {
+      return null;
+    }
+    Window window = myIdeFrame.getWindow();
+    return ObjectUtil.tryCast(window, JFrame.class);
   }
 
   public abstract boolean isInFullScreen();
@@ -67,59 +80,68 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   @Override
   public void dispose() {
-    myFrame = null;
+    myIdeFrame = null;
   }
 
   protected void notifyFrameComponents(boolean state) {
-    if (myFrame != null) {
-      myFrame.getRootPane().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
-      myFrame.getJMenuBar().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
+    JFrame jFrame = getJFrame();
+    if (jFrame == null) {
+      return;
     }
+
+    jFrame.getRootPane().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
+    jFrame.getJMenuBar().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
   }
 
   // AWT-based decorator
   private static class AWTFrameDecorator extends IdeFrameDecorator {
-    private AWTFrameDecorator(@Nonnull DesktopIdeFrameImpl frame) {
+    private AWTFrameDecorator(@Nonnull IdeFrameEx frame) {
       super(frame);
     }
 
     @Override
     public boolean isInFullScreen() {
-      if (myFrame == null) return false;
+      JFrame jFrame = getJFrame();
+      if (jFrame == null) {
+        return false;
+      }
 
-      Rectangle frameBounds = myFrame.getBounds();
+      Rectangle frameBounds = jFrame.getBounds();
       GraphicsDevice device = ScreenUtil.getScreenDevice(frameBounds);
-      return device != null && device.getDefaultConfiguration().getBounds().equals(frameBounds) && myFrame.isUndecorated();
+      return device != null && device.getDefaultConfiguration().getBounds().equals(frameBounds) && jFrame.isUndecorated();
     }
 
     @Nonnull
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
-      if (myFrame == null) return ActionCallback.REJECTED;
+      JFrame jFrame = getJFrame();
+      if (jFrame == null) {
+        return ActionCallback.REJECTED;
+      }
 
-      GraphicsDevice device = ScreenUtil.getScreenDevice(myFrame.getBounds());
+      GraphicsDevice device = ScreenUtil.getScreenDevice(jFrame.getBounds());
       if (device == null) return ActionCallback.REJECTED;
 
       try {
-        myFrame.getRootPane().putClientProperty(ScreenUtil.DISPOSE_TEMPORARY, Boolean.TRUE);
+        jFrame.getRootPane().putClientProperty(ScreenUtil.DISPOSE_TEMPORARY, Boolean.TRUE);
         if (state) {
-          myFrame.getRootPane().putClientProperty("oldBounds", myFrame.getBounds());
+          jFrame.getRootPane().putClientProperty("oldBounds", jFrame.getBounds());
         }
-        myFrame.dispose();
-        myFrame.setUndecorated(state);
+        jFrame.dispose();
+        jFrame.setUndecorated(state);
       }
       finally {
         if (state) {
-          myFrame.setBounds(device.getDefaultConfiguration().getBounds());
+          jFrame.setBounds(device.getDefaultConfiguration().getBounds());
         }
         else {
-          Object o = myFrame.getRootPane().getClientProperty("oldBounds");
+          Object o = jFrame.getRootPane().getClientProperty("oldBounds");
           if (o instanceof Rectangle) {
-            myFrame.setBounds((Rectangle)o);
+            jFrame.setBounds((Rectangle)o);
           }
         }
-        myFrame.setVisible(true);
-        myFrame.getRootPane().putClientProperty(ScreenUtil.DISPOSE_TEMPORARY, null);
+        jFrame.setVisible(true);
+        jFrame.getRootPane().putClientProperty(ScreenUtil.DISPOSE_TEMPORARY, null);
 
         notifyFrameComponents(state);
       }
@@ -131,9 +153,11 @@ public abstract class IdeFrameDecorator implements Disposable {
   private static class EWMHFrameDecorator extends IdeFrameDecorator {
     private Boolean myRequestedState = null;
 
-    private EWMHFrameDecorator(DesktopIdeFrameImpl frame) {
+    private EWMHFrameDecorator(IdeFrameEx frame) {
       super(frame);
-      frame.addComponentListener(new ComponentAdapter() {
+      JFrame jFrame = getJFrame();
+      assert jFrame != null;
+      jFrame.addComponentListener(new ComponentAdapter() {
         @Override
         public void componentResized(ComponentEvent e) {
           if (myRequestedState != null) {
@@ -146,15 +170,17 @@ public abstract class IdeFrameDecorator implements Disposable {
 
     @Override
     public boolean isInFullScreen() {
-      return myFrame != null && X11UiUtil.isInFullScreenMode(myFrame);
+      JFrame jFrame = getJFrame();
+      return jFrame != null && X11UiUtil.isInFullScreenMode(jFrame);
     }
 
     @Nonnull
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
-      if (myFrame != null) {
+      JFrame jFrame = getJFrame();
+      if (jFrame != null) {
         myRequestedState = state;
-        X11UiUtil.toggleFullScreenMode(myFrame);
+        X11UiUtil.toggleFullScreenMode(jFrame);
       }
       return ActionCallback.DONE;
     }

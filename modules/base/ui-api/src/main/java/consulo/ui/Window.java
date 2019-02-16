@@ -30,11 +30,25 @@ public interface Window extends Component {
 
   @Nonnull
   static Window createModal(@Nonnull String title) {
-    return UIInternal.get()._Windows_modalWindow(title);
+    return UIInternal.get()._Window_modalWindow(title);
+  }
+
+  @Nullable
+  static Window getActiveWindow() {
+    return UIInternal.get()._Window_getActiveWindow();
+  }
+
+  @Nullable
+  static Window getFocusedWindow() {
+    return UIInternal.get()._Window_getFocusedWindow();
   }
 
   @RequiredUIAccess
   void setTitle(@Nonnull String title);
+
+  @Nullable
+  @Override
+  Window getParentComponent();
 
   @RequiredUIAccess
   void setContent(@Nonnull Component content);
@@ -50,7 +64,7 @@ public interface Window extends Component {
    * not block current thread
    */
   @RequiredUIAccess
-  void show();
+  void showAsync();
 
   @RequiredUIAccess
   void close();

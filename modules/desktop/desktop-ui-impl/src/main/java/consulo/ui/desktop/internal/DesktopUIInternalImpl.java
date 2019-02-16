@@ -17,6 +17,12 @@ package consulo.ui.desktop.internal;
 
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
+import consulo.ui.Button;
+import consulo.ui.Label;
+import consulo.ui.Menu;
+import consulo.ui.MenuBar;
+import consulo.ui.MenuItem;
+import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.desktop.internal.image.*;
 import consulo.ui.image.Image;
@@ -33,6 +39,7 @@ import consulo.ui.style.StyleManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -130,8 +137,34 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Nonnull
   @Override
-  public Window _Windows_modalWindow(String title) {
+  public Window _Window_modalWindow(String title) {
     throw new UnsupportedOperationException();
+  }
+
+  @Nullable
+  @Override
+  public Window _Window_getActiveWindow() {
+    Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+    if (window == null) {
+      return null;
+    }
+    if (window instanceof Window) {
+      return (Window)window;
+    }
+    throw new UnsupportedOperationException(window + " is not impl consulo.Window.");
+  }
+
+  @Nullable
+  @Override
+  public Window _Window_getFocusedWindow() {
+    Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+    if (window == null) {
+      return null;
+    }
+    if (window instanceof Window) {
+      return (Window)window;
+    }
+    throw new UnsupportedOperationException(window + " is not impl consulo.Window.");
   }
 
   @Override

@@ -33,6 +33,7 @@ import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.VaadinUIAccessImpl;
+import consulo.ui.web.internal.VaadinWindowImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -252,10 +253,22 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Nonnull
   @Override
-  public Window _Windows_modalWindow(String title) {
+  public Window _Window_modalWindow(String title) {
     VaadinWindowImpl window = new VaadinWindowImpl(true);
     window.setTitle(title);
     return window;
+  }
+
+  @Nullable
+  @Override
+  public Window _Window_getActiveWindow() {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public Window _Window_getFocusedWindow() {
+    return null;
   }
 
   @Override

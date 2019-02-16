@@ -42,9 +42,9 @@ import consulo.platform.Platform;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
@@ -126,6 +126,10 @@ public class DataManagerImpl extends DataManager {
     }
     else if (component instanceof JComponent) {
       dataProvider = getDataProvider((JComponent)component);
+    }
+    // special case for desktop impl. Later removed since we don't want use AWT
+    else if(component instanceof consulo.ui.Window) {
+      return ((consulo.ui.Window)component)::getUserData;
     }
 
     return dataProvider;
@@ -263,7 +267,7 @@ public class DataManagerImpl extends DataManager {
     if (myWindowManager == null) {
       return null;
     }
-    Window activeWindow = myWindowManager.getMostRecentFocusedWindow();
+    Window activeWindow = (Window)myWindowManager.getMostRecentFocusedWindow();
     if (activeWindow == null) {
       activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
       if (activeWindow == null) {

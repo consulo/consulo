@@ -22,9 +22,9 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.StatusBar;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -35,12 +35,15 @@ import java.util.List;
  */
 public interface StatusBarEx extends StatusBar, Disposable {
   void startRefreshIndication(String tooltipText);
+
   void stopRefreshIndication();
 
   BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody);
+
   BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener);
 
   void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info);
+
   List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses();
 
   void updateWidgets();
@@ -53,6 +56,7 @@ public interface StatusBarEx extends StatusBar, Disposable {
   void removeCustomIndicationComponents();
 
   Dimension getSize();
+
   boolean isVisible();
 
   @Nullable

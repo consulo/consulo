@@ -40,7 +40,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
 
   @RequiredUIAccess
   @Override
-  public void show() {
+  public void showAsync() {
     if (myDisposed) {
       throw new IllegalArgumentException("Window already disposed");
     }
@@ -80,7 +80,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
 
   @Nullable
   @Override
-  public Component getParentComponent() {
+  public Window getParentComponent() {
     return null;
   }
 

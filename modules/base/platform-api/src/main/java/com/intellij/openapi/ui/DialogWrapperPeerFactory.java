@@ -18,9 +18,10 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import consulo.ui.Window;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 
 public abstract class DialogWrapperPeerFactory {
@@ -38,19 +39,24 @@ public abstract class DialogWrapperPeerFactory {
   }
 
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent);
+
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, boolean canBeParent);
 
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType);
 
-  /** @see DialogWrapper#DialogWrapper(boolean, boolean)
+  /**
+   * @see DialogWrapper#DialogWrapper(boolean, boolean)
    */
   @Deprecated
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, boolean canBeParent, boolean applicationModalIfPossible);
+
   @Deprecated
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, Window owner, boolean canBeParent, boolean applicationModalIfPossible);
+
   @Deprecated
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nonnull Component parent, boolean canBeParent);
 
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType);
+
   public abstract DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, Window owner, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType);
 }

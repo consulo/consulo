@@ -32,15 +32,17 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.impl.DefaultKeymap;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ResourceUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.util.URLDictionatyLoader;
+import consulo.ui.style.StyleManager;
+import consulo.wm.util.IdeFrameUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -139,13 +141,10 @@ public class TipUIUtil {
   }
 
   private static void updateImages(StringBuilder text, ClassLoader tipLoader, JEditorPane browser) {
-    final boolean dark = UIUtil.isUnderDarcula();
-//    if (!dark && !retina) {
-//      return;
-//    }
+    final boolean dark = StyleManager.get().getCurrentStyle().isDark();
 
-    Component af = DesktopIdeFrameImpl.getActiveFrame();
-    Component comp = af != null ? af : browser;
+    IdeFrame af = IdeFrameUtil.findActiveRootIdeFrame();
+    Component comp = af != null ? (Component)af.getWindow() : browser;
     int index = text.indexOf("<img", 0);
     while (index != -1) {
       final int end = text.indexOf(">", index + 1);

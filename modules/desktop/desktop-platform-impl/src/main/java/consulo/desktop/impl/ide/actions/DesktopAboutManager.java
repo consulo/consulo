@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.actionSystem.impl;
+package consulo.desktop.impl.ide.actions;
 
-import com.intellij.openapi.actionSystem.JBAwtEventQueue;
-import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.actions.AboutDialog;
+import consulo.ide.actions.AboutManager;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
 
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import java.awt.event.MouseEvent;
 
+/**
+ * @author VISTALL
+ * @since 2019-02-15
+ */
 @Singleton
-public class JBAwtEventQueueImpl extends JBAwtEventQueue {
-  public void blockNextEvents(MouseEvent e) {
-    IdeEventQueue.getInstance().blockNextEvents(e);
+public class DesktopAboutManager implements AboutManager {
+  @RequiredUIAccess
+  @Override
+  public void showAbout(@Nullable Window parentWindow) {
+    AboutDialog aboutDialog = new AboutDialog(parentWindow);
+    aboutDialog.showAsync();
   }
 }

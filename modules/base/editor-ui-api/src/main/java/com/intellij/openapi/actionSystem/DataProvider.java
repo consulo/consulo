@@ -41,7 +41,7 @@ public interface DataProvider {
   @Nullable
   Object getData(@Nonnull Key<?> dataId);
 
-  @javax.annotation.Nullable
+  @Nullable
   @SuppressWarnings("unchecked")
   default <T> T getDataUnchecked(@Nonnull Key<T> key) {
     return (T)getData(key);

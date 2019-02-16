@@ -693,7 +693,7 @@ public abstract class AppIcon {
     }
 
     private static boolean isValid(IdeFrame frame) {
-      return frame != null && ((Component)frame).isDisplayable();
+      return frame != null && ((JFrame)frame.getWindow()).isDisplayable();
     }
   }
 

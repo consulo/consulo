@@ -18,6 +18,7 @@ package com.intellij.openapi.wm.ex;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFrame;
+
 import javax.annotation.Nonnull;
 
 public interface IdeFrameEx extends IdeFrame {
@@ -25,6 +26,13 @@ public interface IdeFrameEx extends IdeFrame {
 
   default boolean isInFullScreen() {
     return false;
+  }
+
+  default void storeFullScreenStateIfNeeded() {
+    storeFullScreenStateIfNeeded(isInFullScreen());
+  }
+
+  default void storeFullScreenStateIfNeeded(boolean value) {
   }
 
   @Nonnull

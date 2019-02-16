@@ -74,7 +74,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
     WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
     Window activeWindow=null;
     if (windowManager != null) {
-      activeWindow = windowManager.getMostRecentFocusedWindow();
+      activeWindow = (Window)windowManager.getMostRecentFocusedWindow();
     }
     if(activeWindow==null){
       return false;

@@ -187,7 +187,7 @@ class Win7TaskBar {
 
   private static WinDef.HWND getHandle(IdeFrame frame) {
     try {
-      Pointer pointer = Native.getWindowPointer((Window)frame);
+      Pointer pointer = Native.getWindowPointer((Window)frame.getWindow());
       return new WinDef.HWND(pointer);
     }
     catch (Throwable e) {

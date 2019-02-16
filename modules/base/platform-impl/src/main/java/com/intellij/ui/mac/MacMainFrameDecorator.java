@@ -25,8 +25,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.ui.CustomProtocolHandler;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
@@ -57,15 +57,18 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private final EventDispatcher<FSListener> myDispatcher = EventDispatcher.create(FSListener.class);
 
-  private interface FSListener extends FullScreenListener, EventListener {}
-  private static class FSAdapter extends FullScreenAdapter implements FSListener {}
+  private interface FSListener extends FullScreenListener, EventListener {
+  }
 
-  private static class FullscreenQueue <T extends Runnable> {
+  private static class FSAdapter extends FullScreenAdapter implements FSListener {
+  }
+
+  private static class FullscreenQueue<T extends Runnable> {
 
     private boolean waitingForAppKit = false;
     private LinkedList<Runnable> queueModel = new LinkedList<Runnable>();
 
-    synchronized void runOrEnqueue (final T runnable) {
+    synchronized void runOrEnqueue(final T runnable) {
       if (waitingForAppKit) {
         enqueue(runnable);
       }
@@ -75,15 +78,16 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
       }
     }
 
-    synchronized private void enqueue (final T runnable) {
+    synchronized private void enqueue(final T runnable) {
       queueModel.add(runnable);
     }
 
-    synchronized void runFromQueue () {
+    synchronized void runFromQueue() {
       if (!queueModel.isEmpty()) {
         queueModel.remove().run();
         waitingForAppKit = true;
-      } else {
+      }
+      else {
         waitingForAppKit = false;
       }
     }
@@ -93,9 +97,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
   // Fullscreen listener delivers event too late,
   // so we use method swizzling here
   private final Callback windowWillEnterFullScreenCallBack = new Callback() {
-    public void callback(ID self,
-                         ID nsNotification)
-    {
+    public void callback(ID self, ID nsNotification) {
       invoke(self, "oldWindowWillEnterFullScreen:", nsNotification);
       enterFullscreen();
     }
@@ -103,14 +105,12 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private void enterFullscreen() {
     myInFullScreen = true;
-    myFrame.storeFullScreenStateIfNeeded(true);
+    myIdeFrame.storeFullScreenStateIfNeeded(true);
     myFullscreenQueue.runFromQueue();
   }
 
   private final Callback windowWillExitFullScreenCallBack = new Callback() {
-    public void callback(ID self,
-                         ID nsNotification)
-    {
+    public void callback(ID self, ID nsNotification) {
       invoke(self, "oldWindowWillExitFullScreen:", nsNotification);
       exitFullscreen();
     }
@@ -118,9 +118,9 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private void exitFullscreen() {
     myInFullScreen = false;
-    myFrame.storeFullScreenStateIfNeeded(false);
+    myIdeFrame.storeFullScreenStateIfNeeded(false);
 
-    JRootPane rootPane = myFrame.getRootPane();
+    JRootPane rootPane = getJFrame().getRootPane();
     if (rootPane != null) rootPane.putClientProperty(FULL_SCREEN, null);
     myFullscreenQueue.runFromQueue();
   }
@@ -135,10 +135,12 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
       Class.forName("com.apple.eawt.FullScreenUtilities");
       requestToggleFullScreenMethod = Application.class.getMethod("requestToggleFullScreen", Window.class);
       HAS_FULLSCREEN_UTILITIES = true;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       HAS_FULLSCREEN_UTILITIES = false;
     }
   }
+
   public static final boolean FULL_SCREEN_AVAILABLE = HAS_FULLSCREEN_UTILITIES;
 
   private static boolean SHOWN = false;
@@ -196,7 +198,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private boolean myInFullScreen;
 
-  public MacMainFrameDecorator(@Nonnull final DesktopIdeFrameImpl frame, final boolean navBar) {
+  public MacMainFrameDecorator(@Nonnull final IdeFrameEx frame, final boolean navBar) {
     super(frame);
 
     if (CURRENT_SETTER == null) {
@@ -215,13 +217,16 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
     int v = UNIQUE_COUNTER.incrementAndGet();
 
+    JFrame jFrame = getJFrame();
+    assert jFrame != null;
+
     try {
       if (SystemInfo.isMacOSLion) {
         if (!FULL_SCREEN_AVAILABLE) return;
 
-        FullScreenUtilities.setWindowCanFullScreen(frame, true);
+        FullScreenUtilities.setWindowCanFullScreen(jFrame, true);
         // Native fullscreen listener can be set only once
-        FullScreenUtilities.addFullScreenListenerTo(frame, new FullScreenListener() {
+        FullScreenUtilities.addFullScreenListenerTo(jFrame, new FullScreenListener() {
           @Override
           public void windowEnteringFullScreen(AppEvent.FullScreenEvent event) {
             myDispatcher.getMulticaster().windowEnteringFullScreen(event);
@@ -245,24 +250,27 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
         myDispatcher.addListener(new FSAdapter() {
           @Override
           public void windowEnteredFullScreen(AppEvent.FullScreenEvent event) {
+            JFrame temp = getJFrame();
+
             // We can get the notification when the frame has been disposed
-            JRootPane rootPane = frame.getRootPane();
+            JRootPane rootPane = temp.getRootPane();
             if (rootPane != null) rootPane.putClientProperty(FULL_SCREEN, Boolean.TRUE);
             enterFullscreen();
-            myFrame.validate();
+            temp.validate();
           }
 
           @Override
           public void windowExitedFullScreen(AppEvent.FullScreenEvent event) {
             // We can get the notification when the frame has been disposed
-            if (myFrame == null/* || ORACLE_BUG_ID_8003173*/) return;
+            JFrame temp = getJFrame();
+            if (temp == null/* || ORACLE_BUG_ID_8003173*/) return;
             exitFullscreen();
-            myFrame.validate();
+            temp.validate();
           }
         });
       }
       else {
-        final ID window = MacUtil.findWindowForTitle(frame.getTitle());
+        final ID window = MacUtil.findWindowForTitle(jFrame.getTitle());
         if (window == null) return;
 
         // toggle toolbar
@@ -321,18 +329,14 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     ID awtWindow = Foundation.getObjcClass("AWTWindow");
 
     Pointer windowWillEnterFullScreenMethod = Foundation.createSelector("windowWillEnterFullScreen:");
-    ID originalWindowWillEnterFullScreen = Foundation.class_replaceMethod(awtWindow, windowWillEnterFullScreenMethod,
-                                                                          windowWillEnterFullScreenCallBack, "v@::@");
+    ID originalWindowWillEnterFullScreen = Foundation.class_replaceMethod(awtWindow, windowWillEnterFullScreenMethod, windowWillEnterFullScreenCallBack, "v@::@");
 
-    Foundation.addMethodByID(awtWindow, Foundation.createSelector("oldWindowWillEnterFullScreen:"),
-                             originalWindowWillEnterFullScreen, "v@::@");
+    Foundation.addMethodByID(awtWindow, Foundation.createSelector("oldWindowWillEnterFullScreen:"), originalWindowWillEnterFullScreen, "v@::@");
 
-    Pointer  windowWillExitFullScreenMethod = Foundation.createSelector("windowWillExitFullScreen:");
-    ID originalWindowWillExitFullScreen = Foundation.class_replaceMethod(awtWindow, windowWillExitFullScreenMethod,
-                                                                         windowWillExitFullScreenCallBack, "v@::@");
+    Pointer windowWillExitFullScreenMethod = Foundation.createSelector("windowWillExitFullScreen:");
+    ID originalWindowWillExitFullScreen = Foundation.class_replaceMethod(awtWindow, windowWillExitFullScreenMethod, windowWillExitFullScreenCallBack, "v@::@");
 
-    Foundation.addMethodByID(awtWindow, Foundation.createSelector("oldWindowWillExitFullScreen:"),
-                             originalWindowWillExitFullScreen, "v@::@");
+    Foundation.addMethodByID(awtWindow, Foundation.createSelector("oldWindowWillExitFullScreen:"), originalWindowWillExitFullScreen, "v@::@");
   }
 
   @Override
@@ -350,7 +354,8 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
   @Nonnull
   @Override
   public ActionCallback toggleFullScreen(final boolean state) {
-    if (!SystemInfo.isMacOSLion || myFrame == null || myInFullScreen == state) return ActionCallback.REJECTED;
+    JFrame jFrame = getJFrame();
+    if (!SystemInfo.isMacOSLion || jFrame == null || myInFullScreen == state) return ActionCallback.REJECTED;
     final ActionCallback callback = new ActionCallback();
     myDispatcher.addListener(new FSAdapter() {
       @Override
@@ -366,11 +371,11 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
       }
     });
 
-    myFullscreenQueue.runOrEnqueue( new Runnable() {
+    myFullscreenQueue.runOrEnqueue(new Runnable() {
       @Override
       public void run() {
         try {
-          requestToggleFullScreenMethod.invoke(Application.getApplication(),myFrame);
+          requestToggleFullScreenMethod.invoke(Application.getApplication(), getJFrame());
         }
         catch (IllegalAccessException e) {
           LOG.error(e);
@@ -385,7 +390,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   public void toggleFullScreenNow() {
     try {
-      requestToggleFullScreenMethod.invoke(Application.getApplication(), myFrame);
+      requestToggleFullScreenMethod.invoke(Application.getApplication(), getJFrame());
     }
     catch (Exception e) {
       LOG.error(e);

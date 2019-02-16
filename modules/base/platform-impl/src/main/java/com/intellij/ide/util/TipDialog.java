@@ -19,9 +19,8 @@ package com.intellij.ide.util;
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.impl.DialogWrapperPeerImpl;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -38,9 +37,6 @@ public class TipDialog extends DialogWrapper{
     setHorizontalStretch(1.33f);
     setVerticalStretch(1.25f);
     init();
-    if (getPeer() instanceof DialogWrapperPeerImpl) {
-      ((DialogWrapperPeerImpl)getPeer()).setAutoRequestFocus(false);
-    }
   }
 
   @Nonnull

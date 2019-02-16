@@ -29,10 +29,11 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.desktop.internal.base.JDialogAsUIWindow;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
-import javax.annotation.Nonnull;
+import consulo.ui.shared.Rectangle2D;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -44,8 +45,8 @@ import java.awt.event.WindowEvent;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class DesktopFloatingDecorator extends JDialog implements ToolWindowFloatingDecorator {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.FloatingDecorator");
+public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements ToolWindowFloatingDecorator {
+  private static final Logger LOG = Logger.getInstance(DesktopFloatingDecorator.class);
 
   static final int DIVIDER_WIDTH = 3;
 
@@ -71,7 +72,7 @@ public final class DesktopFloatingDecorator extends JDialog implements ToolWindo
 
 
   DesktopFloatingDecorator(final DesktopIdeFrameImpl owner, final WindowInfoImpl info, final DesktopInternalDecorator internalDecorator) {
-    super(owner, internalDecorator.getToolWindow().getId());
+    super(owner.getWindow(), internalDecorator.getToolWindow().getId());
     MnemonicHelper.init(getContentPane());
     myInternalDecorator = internalDecorator;
 

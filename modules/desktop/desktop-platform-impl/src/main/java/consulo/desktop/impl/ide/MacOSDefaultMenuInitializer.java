@@ -20,7 +20,6 @@ import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import com.intellij.Patches;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.actions.AboutAction;
 import com.intellij.ide.actions.OpenFileAction;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.ApplicationStarter;
@@ -33,12 +32,17 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.intellij.util.ThrowableRunnable;
 import com.sun.jna.Callback;
+import consulo.ide.actions.AboutManager;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
@@ -58,6 +62,12 @@ public class MacOSDefaultMenuInitializer {
   private static final Logger LOGGER = Logger.getInstance(MacOSDefaultMenuInitializer.class);
 
   private static class PreJava9Worker implements ThrowableRunnable<Throwable> {
+    private Runnable showAboutFunction;
+
+    private PreJava9Worker(Runnable showAboutFunction) {
+      this.showAboutFunction = showAboutFunction;
+    }
+
     @Override
     @SuppressWarnings("deprecation")
     public void run() throws Throwable {
@@ -65,7 +75,7 @@ public class MacOSDefaultMenuInitializer {
       application.addApplicationListener(new ApplicationAdapter() {
         @Override
         public void handleAbout(ApplicationEvent applicationEvent) {
-          AboutAction.showAbout();
+          showAboutFunction.run();
           applicationEvent.setHandled(true);
         }
 
@@ -113,6 +123,12 @@ public class MacOSDefaultMenuInitializer {
   }
 
   private static class Java9Worker implements ThrowableRunnable<Throwable> {
+    private Runnable showAboutFunction;
+
+    private Java9Worker(Runnable showAboutFunction) {
+      this.showAboutFunction = showAboutFunction;
+    }
+
     @Override
     public void run() throws Throwable {
       Desktop desktop = Desktop.getDesktop();
@@ -131,7 +147,7 @@ public class MacOSDefaultMenuInitializer {
       setAboutHandler.invoke(desktop, Proxy.newProxyInstance(classLoader, new Class[]{aboutHandler}, new InvocationHandler() {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          AboutAction.showAbout();
+          showAboutFunction.run();
           return null;
         }
       }));
@@ -200,12 +216,20 @@ public class MacOSDefaultMenuInitializer {
     }
   };
 
-  public MacOSDefaultMenuInitializer() {
+  private final AboutManager myAboutManager;
+  private final DataManager myDataManager;
+  private final WindowManager myWindowManager;
+
+  @Inject
+  public MacOSDefaultMenuInitializer(AboutManager aboutManager, DataManager dataManager, WindowManager windowManager) {
+    myAboutManager = aboutManager;
+    myDataManager = dataManager;
+    myWindowManager = windowManager;
     if (SystemInfo.isMac) {
       try {
         assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
 
-        ThrowableRunnable<Throwable> task = SystemInfo.isJavaVersionAtLeast(9, 0, 0) ? new Java9Worker() : new PreJava9Worker();
+        ThrowableRunnable<Throwable> task = SystemInfo.isJavaVersionAtLeast(9, 0, 0) ? new Java9Worker(this::showAbout) : new PreJava9Worker(this::showAbout);
 
         task.run();
 
@@ -215,6 +239,13 @@ public class MacOSDefaultMenuInitializer {
         LOGGER.warn(t);
       }
     }
+  }
+
+  @RequiredUIAccess
+  private void showAbout() {
+    Window window = myWindowManager.suggestParentWindow(myDataManager.getDataContext().getData(CommonDataKeys.PROJECT));
+
+    myAboutManager.showAbout(window);
   }
 
   @Nonnull

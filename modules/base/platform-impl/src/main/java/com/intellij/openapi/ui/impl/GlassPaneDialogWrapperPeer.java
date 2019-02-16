@@ -37,12 +37,12 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
+import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,7 +75,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
 
-    Window window = null;
+    consulo.ui.Window window = null;
     if (myWindowManager != null) {
 
       if (project == null) {
@@ -86,8 +86,8 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
       window = myWindowManager.suggestParentWindow(project);
       if (window == null) {
-        Window focusedWindow = myWindowManager.getMostRecentFocusedWindow();
-        if (focusedWindow instanceof DesktopIdeFrameImpl) {
+        consulo.ui.Window focusedWindow = myWindowManager.getMostRecentFocusedWindow();
+        if (IdeFrameUtil.findRootIdeFrame(focusedWindow) != null) {
           window = focusedWindow;
         }
       }
@@ -95,7 +95,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
     Window owner;
     if (window != null) {
-      owner = window;
+      owner = (Window)window;
     }
     else {
       owner = JOptionPane.getRootFrame();
@@ -359,7 +359,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
   @Override
   public boolean isHeadless() {
-    return DialogWrapperPeerImpl.isHeadlessEnv();
+    return DialogWrapperPeer.isHeadlessEnv();
   }
 
   //[kirillk] for now it only deals with the TaskWindow under Mac OS X: modal dialogs are shown behind JBPopup

@@ -63,7 +63,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
     myRootView.update();
 
-    myWindow.show();
+    myWindow.showAsync();
   }
 
   public WGwtRootPanelImpl getRootPanel() {

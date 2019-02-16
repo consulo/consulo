@@ -36,6 +36,8 @@ import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.Window;
+import consulo.ui.desktop.internal.base.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;
 
 import javax.accessibility.AccessibleContext;
@@ -44,12 +46,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrame implements Disposable, AccessibleContextAccessor, UISettingsListener {
+public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, AccessibleContextAccessor, UISettingsListener, Window {
   private final Runnable myClearInstance;
   private BalloonLayout myBalloonLayout;
   private boolean myDisposed;
@@ -147,10 +148,6 @@ public class FlatWelcomeFrame extends JFrame implements Disposable, AccessibleCo
 
   public void setFrameTitle(String title) {
     setTitle(title);
-  }
-
-  public void setFileTitle(String fileTitle, File ioFile) {
-    setTitle(fileTitle);
   }
 
   public IdeRootPaneNorthExtension getNorthExtension(String key) {

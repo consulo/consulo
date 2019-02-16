@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.progress;
+package consulo.ide.actions;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
+
+import javax.annotation.Nullable;
 
 /**
- * @author irengrig
- *         Date: 3/30/11
- *         Time: 7:55 PM
+ * @author VISTALL
+ * @since 2019-02-15
  */
-@Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.METHOD})
-public @interface AsynchronousExecution {
+public interface AboutManager {
+  @RequiredUIAccess
+  void showAbout(@Nullable Window parentWindow);
 }

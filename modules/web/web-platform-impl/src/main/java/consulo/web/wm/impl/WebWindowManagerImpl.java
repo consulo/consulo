@@ -30,6 +30,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -40,8 +41,9 @@ import java.util.Map;
  * @author VISTALL
  * @since 24-Sep-17
  */
+@Singleton
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
-public class WebWindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
+public class WebWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {
   private final Map<Project, WebIdeFrameImpl> myProject2Frame = new HashMap<>();
 
   @Override
@@ -69,7 +71,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
 
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Window suggestParentWindow(@Nullable Project project) {
     return null;
@@ -88,12 +90,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public JFrame getFrame(@Nullable Project project) {
-    return null;
-  }
-
-  @Override
-  public IdeFrameEx getIdeFrame(@javax.annotation.Nullable Project project) {
+  public IdeFrameEx getIdeFrame(@Nullable Project project) {
     return myProject2Frame.get(project);
   }
 
@@ -113,8 +110,9 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
     return new IdeFrame[0];
   }
 
+  @Nullable
   @Override
-  public JFrame findVisibleFrame() {
+  public consulo.ui.Window findVisibleWindow() {
     return null;
   }
 
@@ -166,7 +164,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public Window getMostRecentFocusedWindow() {
+  public consulo.ui.Window getMostRecentFocusedWindow() {
     return null;
   }
 

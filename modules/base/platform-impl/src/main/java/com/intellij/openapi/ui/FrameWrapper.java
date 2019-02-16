@@ -15,38 +15,30 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.ide.DataManager;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.*;
-import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
-import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import com.intellij.openapi.wm.impl.IdeMenuBar;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.FocusTrackback;
-import com.intellij.ui.FrameState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
-import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
-import consulo.ui.shared.Rectangle2D;
-import consulo.wm.ex.DesktopIdeFrame;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -54,7 +46,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +66,6 @@ public class FrameWrapper implements Disposable, DataProvider {
   private FocusWatcher myFocusWatcher;
 
   private AsyncResult<Void> myFocusedCallback;
-  private boolean myDisposing;
   private boolean myDisposed;
 
   protected StatusBar myStatusBar;
@@ -118,7 +108,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public void show(boolean restoreBounds) {
-    myFocusedCallback = new AsyncResult<>();
+    myFocusedCallback = AsyncResult.undefined();
 
     if (myProject != null) {
       IdeFocusManager.getInstance(myProject).typeAheadUntil(myFocusedCallback);
@@ -134,7 +124,8 @@ public class FrameWrapper implements Disposable, DataProvider {
 
     if (frame instanceof JFrame) {
       ((JFrame)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    } else {
+    }
+    else {
       ((JDialog)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
@@ -151,7 +142,8 @@ public class FrameWrapper implements Disposable, DataProvider {
 
         if (toFocus != null) {
           fm.requestFocus(toFocus, true).notify(myFocusedCallback);
-        } else {
+        }
+        else {
           myFocusedCallback.setRejected();
         }
       }
@@ -160,17 +152,13 @@ public class FrameWrapper implements Disposable, DataProvider {
     if (ModalityPerProjectEAPDescriptor.is()) {
       frame.setAlwaysOnTop(true);
     }
-    Disposer.register(this, new Disposable() {
-      @Override
-      public void dispose() {
-        frame.removeWindowListener(focusListener);
-      }
-    });
+    Disposer.register(this, () -> frame.removeWindowListener(focusListener));
     if (myCloseOnEsc) addCloseOnEsc((RootPaneContainer)frame);
     ((RootPaneContainer)frame).getContentPane().add(myComponent, BorderLayout.CENTER);
     if (frame instanceof JFrame) {
       ((JFrame)frame).setTitle(myTitle);
-    } else {
+    }
+    else {
       ((JDialog)frame).setTitle(myTitle);
     }
     if (myImages != null) {
@@ -198,6 +186,10 @@ public class FrameWrapper implements Disposable, DataProvider {
 
   public void close() {
     Disposer.dispose(this);
+  }
+
+  public StatusBar getStatusBar() {
+    return myStatusBar;
   }
 
   @Override
@@ -286,14 +278,16 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   protected JFrame createJFrame(IdeFrame parent) {
-    return new MyJFrame(this, parent);
+    FrameWrapperPeerFactory service = ServiceManager.getService(FrameWrapperPeerFactory.class);
+    return service.createJFrame(this, parent);
   }
 
   protected JDialog createJDialog(IdeFrame parent) {
-    return new MyJDialog(this, parent);
+    FrameWrapperPeerFactory service = ServiceManager.getService(FrameWrapperPeerFactory.class);
+    return service.createJDialog(this, parent);
   }
 
-  protected IdeRootPaneNorthExtension getNorthExtension(String key) {
+  public IdeRootPaneNorthExtension getNorthExtension(String key) {
     return null;
   }
 
@@ -306,7 +300,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   @Nullable
-  private Object getDataInner(Key<?> dataId) {
+  public Object getDataInner(Key<?> dataId) {
     Object data = getData(dataId);
     return data != null ? data : myDataMap.get(dataId);
   }
@@ -360,227 +354,6 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
     myStatusBar = statusBar;
   }
-
-  private static class MyJFrame extends JFrame implements DataProvider, IdeFrame.Child, DesktopIdeFrame {
-
-    private FrameWrapper myOwner;
-    private final IdeFrame myParent;
-
-    private String myFrameTitle;
-    private String myFileTitle;
-    private File myFile;
-
-    private MyJFrame(FrameWrapper owner, IdeFrame parent) throws HeadlessException {
-      myOwner = owner;
-      myParent = parent;
-      FrameState.setFrameStateListener(this);
-      setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
-
-      boolean setMenuOnFrame = SystemInfo.isMac;
-
-      if (SystemInfo.isLinux) {
-        final String desktop = System.getenv("XDG_CURRENT_DESKTOP");
-        if ("Unity".equals(desktop) || "Unity:Unity7".equals(desktop)) {
-          try {
-            Class.forName("com.jarego.jayatana.Agent");
-            setMenuOnFrame = true;
-          }
-          catch (ClassNotFoundException e) {
-            // ignore
-          }
-        }
-      }
-
-      if (setMenuOnFrame) {
-        setJMenuBar(new IdeMenuBar(ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
-      }
-
-      MouseGestureManager.getInstance().add(this);
-      setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
-      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    }
-
-    @Nonnull
-    @Override
-    public Window getJWindow() {
-      return this;
-    }
-
-    @Override
-    public JComponent getComponent() {
-      return getRootPane();
-    }
-
-    @Override
-    public StatusBar getStatusBar() {
-      StatusBar ownerBar = myOwner != null ? myOwner.myStatusBar : null;
-      return ownerBar != null ? ownerBar : myParent != null ? myParent.getStatusBar() : null;
-    }
-
-    @Override
-    public Rectangle2D suggestChildFrameBounds() {
-      return myParent.suggestChildFrameBounds();
-    }
-
-    @Override
-    public Project getProject() {
-      return myParent.getProject();
-    }
-
-    @Override
-    public void setFrameTitle(String title) {
-      myFrameTitle = title;
-      updateTitle();
-    }
-
-    @Override
-    public void setFileTitle(String fileTitle, File ioFile) {
-      myFileTitle = fileTitle;
-      myFile = ioFile;
-      updateTitle();
-    }
-
-    @Override
-    public IdeRootPaneNorthExtension getNorthExtension(String key) {
-      return myOwner.getNorthExtension(key);
-    }
-
-    @Override
-    public BalloonLayout getBalloonLayout() {
-      return null;
-    }
-
-    private void updateTitle() {
-      DesktopIdeFrameImpl.updateTitle(this, myFrameTitle, myFileTitle, myFile);
-    }
-
-    @Override
-    public IdeFrame getParentFrame() {
-      return myParent;
-    }
-
-    @Override
-    public void dispose() {
-      FrameWrapper owner = myOwner;
-      myOwner = null;
-      if (owner == null || owner.myDisposing) return;
-      owner.myDisposing = true;
-      Disposer.dispose(owner);
-      super.dispose();
-      rootPane = null;
-      setMenuBar(null);
-    }
-
-    @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-      if (IdeFrame.KEY == dataId) {
-        return this;
-      }
-      return myOwner == null ? null : myOwner.getDataInner(dataId);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-      UISettings.setupAntialiasing(g);
-      super.paint(g);
-    }
-  }
-
-  private static class MyJDialog extends JDialog implements DataProvider, IdeFrame.Child, DesktopIdeFrame {
-
-    private FrameWrapper myOwner;
-    private final IdeFrame myParent;
-
-    private MyJDialog(FrameWrapper owner, IdeFrame parent) throws HeadlessException {
-      super((JFrame)parent);
-      myOwner = owner;
-      myParent = parent;
-      setGlassPane(new IdeGlassPaneImpl(getRootPane()));
-      getRootPane().putClientProperty("Window.style", "small");
-      setBackground(UIUtil.getPanelBackground());
-      MouseGestureManager.getInstance().add(this);
-      setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
-      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    }
-
-    @Nonnull
-    @Override
-    public Window getJWindow() {
-      return this;
-    }
-
-    @Override
-    public JComponent getComponent() {
-      return getRootPane();
-    }
-
-    @Override
-    public StatusBar getStatusBar() {
-      return null;
-    }
-
-    @Nullable
-    @Override
-    public BalloonLayout getBalloonLayout() {
-      return null;
-    }
-
-    @Override
-    public Rectangle2D suggestChildFrameBounds() {
-      return myParent.suggestChildFrameBounds();
-    }
-
-    @Override
-    public Project getProject() {
-      return myParent.getProject();
-    }
-
-    @Override
-    public void setFrameTitle(String title) {
-      setTitle(title);
-    }
-
-    @Override
-    public void setFileTitle(String fileTitle, File ioFile) {
-      setTitle(fileTitle);
-    }
-
-    @Override
-    public IdeRootPaneNorthExtension getNorthExtension(String key) {
-      return null;
-    }
-
-    @Override
-    public IdeFrame getParentFrame() {
-      return myParent;
-    }
-
-    @Override
-    public void dispose() {
-      FrameWrapper owner = myOwner;
-      myOwner = null;
-      if (owner == null || owner.myDisposing) return;
-      owner.myDisposing = true;
-      Disposer.dispose(owner);
-      super.dispose();
-      rootPane = null;
-    }
-
-    @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-      if (IdeFrame.KEY == dataId) {
-        return this;
-      }
-      return myOwner == null ? null : myOwner.getDataInner(dataId);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-      UISettings.setupAntialiasing(g);
-      super.paint(g);
-    }
-  }
-
 
   public void setLocation(Point location) {
     getFrame().setLocation(location);

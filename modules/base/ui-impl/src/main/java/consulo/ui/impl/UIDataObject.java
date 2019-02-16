@@ -98,4 +98,12 @@ public class UIDataObject extends UserDataHolderBase {
     }
     return myBorders.values();
   }
+
+  public void dispose() {
+    myListeners.clear();
+    myBorders = null;
+    if(myUserDataProviders.isComputed()) {
+      myUserDataProviders.getValue().clear();
+    }
+  }
 }

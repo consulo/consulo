@@ -124,7 +124,13 @@ public abstract class UIInternal {
   public abstract StyleManager _StyleManager_get();
 
   @Nonnull
-  public abstract Window _Windows_modalWindow(String title);
+  public abstract Window _Window_modalWindow(String title);
+
+  @Nullable
+  public abstract Window _Window_getActiveWindow();
+
+  @Nullable
+  public abstract Window _Window_getFocusedWindow();
 
   public abstract <T> Alert<T> _Alerts_create();
 

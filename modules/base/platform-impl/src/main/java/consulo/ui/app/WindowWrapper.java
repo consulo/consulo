@@ -52,7 +52,7 @@ public abstract class WindowWrapper {
    * Not block UI
    */
   @RequiredUIAccess
-  public void show() {
+  public void showAsync() {
     if (myWindow != null) {
       throw new IllegalArgumentException();
     }
@@ -67,7 +67,7 @@ public abstract class WindowWrapper {
     Layout rootLayout = buildRootLayout();
     myWindow.setContent(rootLayout);
 
-    myWindow.show();
+    myWindow.showAsync();
   }
 
   @Nonnull

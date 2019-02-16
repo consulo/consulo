@@ -32,6 +32,7 @@ import com.intellij.ui.UI;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.desktop.internal.base.JDialogAsUIWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,11 +48,11 @@ import java.util.Properties;
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings("SSBasedInspection")
-public class AboutDialog extends JDialog {
+public class AboutDialog extends JDialogAsUIWindow {
 
-  public AboutDialog(Window owner) {
-    super(owner);
-    init(owner);
+  public AboutDialog(consulo.ui.Window owner) {
+    super(owner, null);
+    init((Window)owner);
   }
 
   private void init(Window window) {
@@ -59,7 +60,7 @@ public class AboutDialog extends JDialog {
     JPanel mainPanel = new JPanel(new BorderLayout());
     final JComponent closeListenerOwner;
     Icon image = IconLoader.getIcon(appInfo.getAboutImageUrl());
-    final InfoSurface infoSurface= new InfoSurface(image);
+    final InfoSurface infoSurface = new InfoSurface(image);
     infoSurface.setPreferredSize(new Dimension(image.getIconWidth(), image.getIconHeight()));
     mainPanel.add(infoSurface, BorderLayout.NORTH);
 
@@ -79,8 +80,7 @@ public class AboutDialog extends JDialog {
             showTime.set(System.currentTimeMillis());
             e.consume();
           }
-          else if ((code == KeyEvent.VK_C && (e.isControlDown() || e.isMetaDown()))
-                   || (!SystemInfo.isMac && code == KeyEvent.VK_INSERT && e.isControlDown())) {
+          else if ((code == KeyEvent.VK_C && (e.isControlDown() || e.isMetaDown())) || (!SystemInfo.isMac && code == KeyEvent.VK_INSERT && e.isControlDown())) {
             copyInfoToClipboard(infoSurface.getText());
             showTime.set(System.currentTimeMillis());
             e.consume();
@@ -104,7 +104,7 @@ public class AboutDialog extends JDialog {
           dispose();
         }
         else {
-          IdeFocusManager.getGlobalInstance().requestFocus(AboutDialog.this, true);
+          IdeFocusManager.getGlobalInstance().requestFocus((Component)AboutDialog.this, true);
         }
       }
     });
@@ -182,8 +182,7 @@ public class AboutDialog extends JDialog {
       final Properties properties = System.getProperties();
       myLines.add(new AboutBoxLine(IdeBundle.message("aboutbox.jdk", properties.getProperty("java.version", "unknown")), true, null));
       appendLast();
-      myLines.add(new AboutBoxLine(IdeBundle.message("aboutbox.vm", properties.getProperty("java.vm.name", "unknown"),
-                                                     properties.getProperty("java.vendor", "unknown"))));
+      myLines.add(new AboutBoxLine(IdeBundle.message("aboutbox.vm", properties.getProperty("java.vm.name", "unknown"), properties.getProperty("java.vendor", "unknown"))));
       appendLast();
 
       myLines.add(new AboutBoxLine(""));
@@ -309,7 +308,7 @@ public class AboutDialog extends JDialog {
             g2.setColor(appInfo.getAboutForeground());
           }
           renderString(s, indentX);
-          if (!line.isKeepWithNext() && !line.equals(lines.get(lines.size()-1))) {
+          if (!line.isKeepWithNext() && !line.equals(lines.get(lines.size() - 1))) {
             lineFeed(indentX, s);
           }
         }

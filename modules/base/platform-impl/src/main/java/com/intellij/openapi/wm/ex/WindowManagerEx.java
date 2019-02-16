@@ -80,7 +80,8 @@ public abstract class WindowManagerEx extends WindowManager {
   @Nullable
   public abstract Component getFocusedComponent(@Nullable Project project);
 
-  public abstract Window getMostRecentFocusedWindow();
+  @Nullable
+  public abstract consulo.ui.Window getMostRecentFocusedWindow();
 
   public abstract IdeFrame findFrameFor(@Nullable Project project);
 

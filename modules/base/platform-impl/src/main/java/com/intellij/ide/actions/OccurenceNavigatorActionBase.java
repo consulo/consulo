@@ -129,7 +129,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
   @Nullable
   @RequiredUIAccess
   private static Component getOccurenceNavigatorFromContext(DataContext dataContext) {
-    Window window = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+    Window window = (Window)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
 
     if (window != null) {
       Component component = window.getFocusOwner();

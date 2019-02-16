@@ -87,7 +87,7 @@ public abstract class WelcomeFrameManager {
 
     if (myFrameInstance == null) {
       myFrameInstance = createFrame();
-      myFrameInstance.getWindow().show();
+      myFrameInstance.getWindow().showAsync();
     }
   }
 

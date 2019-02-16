@@ -18,12 +18,12 @@ package consulo.desktop.start;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import com.intellij.ui.BalloonLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.ui.shared.Rectangle2D;
-import consulo.wm.ex.DesktopIdeFrame;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,20 +33,18 @@ import java.io.File;
  * @author VISTALL
  * @since 2018-12-29
  */
-public class DesktopWelcomeIdeFrame implements DesktopIdeFrame {
-  private FlatWelcomeFrame myFlatWelcomeFrame;
-  private DesktopWelcomeWindow myWindow;
+class DesktopWelcomeIdeFrame implements IdeFrameEx {
+  private FlatWelcomeFrame myFrame;
 
   @RequiredUIAccess
   public DesktopWelcomeIdeFrame(Runnable clearInstance) {
-    myFlatWelcomeFrame = new FlatWelcomeFrame(clearInstance);
-    myWindow = new DesktopWelcomeWindow(myFlatWelcomeFrame);
+    myFrame = new FlatWelcomeFrame(clearInstance);
   }
 
   @Nonnull
   @Override
   public Window getWindow() {
-    return myWindow;
+    return myFrame;
   }
 
   @Override
@@ -57,39 +55,33 @@ public class DesktopWelcomeIdeFrame implements DesktopIdeFrame {
   @Nullable
   @Override
   public Rectangle2D suggestChildFrameBounds() {
-    return myFlatWelcomeFrame.suggestChildFrameBounds();
+    return myFrame.suggestChildFrameBounds();
   }
 
   @Nullable
   @Override
   public Project getProject() {
-    return myFlatWelcomeFrame.getProject();
+    return myFrame.getProject();
   }
 
   @Override
   public void setFrameTitle(String title) {
-    myFlatWelcomeFrame.setFrameTitle(title);
+    myFrame.setTitle(title);
   }
 
   @Override
   public void setFileTitle(String fileTitle, File ioFile) {
-    myFlatWelcomeFrame.setFrameTitle(fileTitle);
+    myFrame.setTitle(fileTitle);
   }
 
   @Override
   public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return myFlatWelcomeFrame.getNorthExtension(key);
+    return myFrame.getNorthExtension(key);
   }
 
   @Nullable
   @Override
   public BalloonLayout getBalloonLayout() {
-    return myFlatWelcomeFrame.getBalloonLayout();
-  }
-
-  @Nonnull
-  @Override
-  public java.awt.Window getJWindow() {
-    return myFlatWelcomeFrame;
+    return myFrame.getBalloonLayout();
   }
 }

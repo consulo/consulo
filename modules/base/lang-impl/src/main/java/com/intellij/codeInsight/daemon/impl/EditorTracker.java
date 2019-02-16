@@ -29,21 +29,22 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
+import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.List;
 
 @Singleton
 public class EditorTracker implements ProjectComponent {
@@ -59,14 +60,12 @@ public class EditorTracker implements ProjectComponent {
 
   private final EventDispatcher<EditorTrackerListener> myDispatcher = EventDispatcher.create(EditorTrackerListener.class);
 
-  private JFrame myIdeFrame;
+  private IdeFrame myIdeFrame;
   private Window myActiveWindow;
   private Project myProject;
 
   @Inject
-  public EditorTracker(Project project,
-                       WindowManager windowManager,
-                       EditorFactory editorFactory) {
+  public EditorTracker(Project project, WindowManager windowManager, EditorFactory editorFactory) {
     myProject = project;
     myWindowManager = windowManager;
     myEditorFactory = editorFactory;
@@ -74,25 +73,27 @@ public class EditorTracker implements ProjectComponent {
 
   @Override
   public void projectOpened() {
-    myIdeFrame = myWindowManager.getFrame(myProject);
+    myIdeFrame = myWindowManager.getIdeFrame(myProject);
     myProject.getMessageBus().connect(myProject).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-        if (myIdeFrame == null || myIdeFrame.getFocusOwner() == null) return;
-        setActiveWindow(myIdeFrame);
+        if (myIdeFrame == null) {
+          return;
+        }
+
+        JFrame window = (JFrame)myIdeFrame.getWindow();
+        if (window.getFocusOwner() == null) return;
+
+        setActiveWindow((Window)window);
       }
     });
 
     final MyEditorFactoryListener myEditorFactoryListener = new MyEditorFactoryListener();
-    myEditorFactory.addEditorFactoryListener(myEditorFactoryListener,myProject);
-    Disposer.register(myProject, new Disposable() {
-      @Override
-      public void dispose() {
-        myEditorFactoryListener.executeOnRelease(null);
-      }
-    });
+    myEditorFactory.addEditorFactoryListener(myEditorFactoryListener, myProject);
+    Disposer.register(myProject, () -> myEditorFactoryListener.executeOnRelease(null));
   }
 
+  @RequiredUIAccess
   private void editorFocused(Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Window window = myEditorToWindowMap.get(editor);
@@ -123,8 +124,10 @@ public class EditorTracker implements ProjectComponent {
       list = new ArrayList<>();
       myWindowToEditorsMap.put(window, list);
 
-      if (!(window instanceof DesktopIdeFrameImpl)) {
-        WindowAdapter listener =  new WindowAdapter() {
+      IdeFrame ideFrame = window.getUserData(IdeFrame.KEY);
+
+      if (!IdeFrameUtil.isRootFrame(ideFrame)) {
+        WindowAdapter listener = new WindowAdapter() {
           @Override
           public void windowGainedFocus(WindowEvent e) {
             if (LOG.isDebugEnabled()) {
@@ -153,9 +156,11 @@ public class EditorTracker implements ProjectComponent {
           }
         };
         myWindowToWindowFocusListenerMap.put(window, listener);
-        window.addWindowFocusListener(listener);
-        window.addWindowListener(listener);
-        if (window.isFocused()) {  // windowGainedFocus is missed; activate by force
+
+        JFrame frame = (JFrame)ideFrame.getWindow();
+        frame.addWindowFocusListener(listener);
+        frame.addWindowListener(listener);
+        if (frame.isFocused()) {  // windowGainedFocus is missed; activate by force
           setActiveWindow(window);
         }
       }
@@ -179,27 +184,36 @@ public class EditorTracker implements ProjectComponent {
         myWindowToEditorsMap.remove(oldWindow);
         final WindowAdapter listener = myWindowToWindowFocusListenerMap.remove(oldWindow);
         if (listener != null) {
-          oldWindow.removeWindowFocusListener(listener);
-          oldWindow.removeWindowListener(listener);
+          JFrame frame = (JFrame)oldWindow;
+
+          frame.removeWindowFocusListener(listener);
+          frame.removeWindowListener(listener);
         }
       }
     }
   }
 
   private Window windowByEditor(Editor editor) {
-    Window window = SwingUtilities.windowForComponent(editor.getComponent());
-    if (window instanceof DesktopIdeFrameImpl) {
-      if (window != myIdeFrame) return null;
+    Window window = (Window)SwingUtilities.windowForComponent(editor.getComponent());
+    if (window != null) {
+      IdeFrame ideFrame = window.getUserData(IdeFrame.KEY);
+      if (IdeFrameUtil.isRootFrame(ideFrame)) {
+        if (ideFrame != myIdeFrame) {
+          return null;
+        }
+      }
     }
     return window;
   }
 
   @Nonnull
+  @RequiredUIAccess
   List<Editor> getActiveEditors() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     return myActiveEditors;
   }
 
+  @RequiredUIAccess
   private void setActiveWindow(Window window) {
     myActiveWindow = window;
     List<Editor> editors = editorsByWindow(myActiveWindow);
@@ -219,6 +233,7 @@ public class EditorTracker implements ProjectComponent {
     return filtered;
   }
 
+  @RequiredUIAccess
   void setActiveEditors(@Nonnull List<Editor> editors) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myActiveEditors = editors;
@@ -235,7 +250,7 @@ public class EditorTracker implements ProjectComponent {
   }
 
   void addEditorTrackerListener(@Nonnull EditorTrackerListener listener, @Nonnull Disposable parentDisposable) {
-    myDispatcher.addListener(listener,parentDisposable);
+    myDispatcher.addListener(listener, parentDisposable);
   }
 
   private class MyEditorFactoryListener implements EditorFactoryListener {

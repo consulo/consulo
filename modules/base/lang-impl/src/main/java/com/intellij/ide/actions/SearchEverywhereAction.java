@@ -741,7 +741,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       }
     }).createPopup();
     myBalloon.getContent().setBorder(new EmptyBorder(0, 0, 0, 0));
-    final Window window = WindowManager.getInstance().suggestParentWindow(project);
+    final Window window = (Window)WindowManager.getInstance().suggestParentWindow(project);
 
     project.getMessageBus().connect(myBalloon).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
       @Override

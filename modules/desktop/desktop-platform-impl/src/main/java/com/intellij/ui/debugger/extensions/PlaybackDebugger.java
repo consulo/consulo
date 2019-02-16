@@ -42,6 +42,8 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 import com.intellij.util.WaitFor;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.Window;
+import consulo.wm.util.IdeFrameUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -355,13 +357,13 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     final DesktopIdeFrameImpl frame = getFrame();
 
-    final Component c = ((WindowManagerEx)WindowManager.getInstance()).getFocusedComponent(frame);
+    final Component c = ((WindowManagerEx)WindowManager.getInstance()).getFocusedComponent((java.awt.Window)frame.getWindow());
 
     if (c != null) {
       IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(c);
     }
     else {
-      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(frame);
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown((Component)frame.getWindow());
     }
 
     //noinspection SSBasedInspection
@@ -377,8 +379,11 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   private DesktopIdeFrameImpl getFrame() {
     final Frame[] all = Frame.getFrames();
     for (Frame each : all) {
-      if (each instanceof IdeFrame) {
-        return (DesktopIdeFrameImpl)each;
+      Window uiWindow = (Window)each;
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if(IdeFrameUtil.isRootFrame(ideFrame)) {
+        return (DesktopIdeFrameImpl)ideFrame;
       }
     }
 
@@ -453,11 +458,11 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   }
 
   @Override
-  public void message(@javax.annotation.Nullable final PlaybackContext context, final String text, final Type type) {
+  public void message(@Nullable final PlaybackContext context, final String text, final Type type) {
     message(context, text, context != null ? context.getCurrentLine() : -1, type, false);
   }
 
-  private void message(@javax.annotation.Nullable final PlaybackContext context, final String text, final int currentLine, final Type type, final boolean forced) {
+  private void message(@Nullable final PlaybackContext context, final String text, final int currentLine, final Type type, final boolean forced) {
     final int depth = context != null ? context.getCurrentStageDepth() : 0;
 
     UIUtil.invokeLaterIfNeeded(new Runnable() {

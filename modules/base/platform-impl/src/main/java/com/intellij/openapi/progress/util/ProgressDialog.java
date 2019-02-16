@@ -8,7 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.DialogWrapperPeer;
-import com.intellij.openapi.ui.impl.DialogWrapperPeerImpl;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
@@ -88,11 +87,11 @@ class ProgressDialog implements Disposable {
   private TitlePanel myTitlePanel;
   private JPanel myInnerPanel;
   DialogWrapper myPopup;
-  private final Window myParentWindow;
+  private final consulo.ui.Window myParentWindow;
 
   public ProgressDialog(ProgressWindow progressWindow, boolean shouldShowBackground, Project project, String cancelText) {
     myProgressWindow = progressWindow;
-    Window parentWindow = WindowManager.getInstance().suggestParentWindow(project);
+    consulo.ui.Window parentWindow = WindowManager.getInstance().suggestParentWindow(project);
     if (parentWindow == null) {
       parentWindow = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
     }
@@ -103,7 +102,7 @@ class ProgressDialog implements Disposable {
 
   public ProgressDialog(ProgressWindow progressWindow, boolean shouldShowBackground, Component parent, String cancelText) {
     myProgressWindow = progressWindow;
-    myParentWindow = UIUtil.getWindow(parent);
+    myParentWindow = (consulo.ui.Window)UIUtil.getWindow(parent);
     initDialog(shouldShowBackground, cancelText);
   }
 
@@ -238,11 +237,6 @@ class ProgressDialog implements Disposable {
     }
   }
 
-  @Nullable
-  Window getParentWindow() {
-    return myParentWindow;
-  }
-
   void show() {
     myWasShown = true;
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
@@ -251,12 +245,13 @@ class ProgressDialog implements Disposable {
       myPopup.close(DialogWrapper.CANCEL_EXIT_CODE);
     }
 
-    myPopup = myParentWindow.isShowing()
-              ? new MyDialogWrapper(myParentWindow, myProgressWindow.myShouldShowCancel)
+    myPopup = ((Window)myParentWindow).isShowing()
+              ? new MyDialogWrapper((Component)myParentWindow, myProgressWindow.myShouldShowCancel)
               : new MyDialogWrapper(myProgressWindow.myProject, myProgressWindow.myShouldShowCancel);
     myPopup.setUndecorated(true);
-    if (myPopup.getPeer() instanceof DialogWrapperPeerImpl) {
-      ((DialogWrapperPeerImpl)myPopup.getPeer()).setAutoRequestFocus(false);
+
+    if (myPopup.getPeer().isRealDialog()) {
+      myPopup.getPeer().setAutoRequestFocus(false);
       if (isWriteActionProgress()) {
         myPopup.setModal(false); // display the dialog and continue with EDT execution, don't block it forever
       }
@@ -324,7 +319,7 @@ class ProgressDialog implements Disposable {
 
     @Nonnull
     @Override
-    protected DialogWrapperPeer createPeer(final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+    protected DialogWrapperPeer createPeer(final consulo.ui.Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
       if (useLightPopup()) {
         try {
           return new GlassPaneDialogWrapperPeer(this, canBeParent);

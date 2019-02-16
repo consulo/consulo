@@ -19,10 +19,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.DialogWrapperPeerFactory;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.awt.*;
 
 @Singleton
@@ -32,6 +32,7 @@ public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
     return new DialogWrapperPeerImpl(wrapper, project, canBeParent);
   }
 
+  @Override
   public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType) {
     return new DialogWrapperPeerImpl(wrapper, project, canBeParent, ideModalityType);
   }
@@ -51,8 +52,8 @@ public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
   }
 
   @Override
-  public DialogWrapperPeer createPeer(@Nonnull final DialogWrapper wrapper, final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
-    return new DialogWrapperPeerImpl(wrapper, owner, canBeParent, applicationModalIfPossible);
+  public DialogWrapperPeer createPeer(@Nonnull final DialogWrapper wrapper, final consulo.ui.Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+    return new DialogWrapperPeerImpl(wrapper, (Window)owner, canBeParent, applicationModalIfPossible);
   }
 
   @Override
@@ -66,10 +67,7 @@ public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
   }
 
   @Override
-  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper,
-                                      Window owner,
-                                      boolean canBeParent,
-                                      DialogWrapper.IdeModalityType ideModalityType) {
-    return new DialogWrapperPeerImpl(wrapper, owner, canBeParent, ideModalityType);
+  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, consulo.ui.Window owner, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType) {
+    return new DialogWrapperPeerImpl(wrapper, (Window)owner, canBeParent, ideModalityType);
   }
 }

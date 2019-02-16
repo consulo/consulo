@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.ui;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -28,6 +30,20 @@ import java.awt.event.MouseMotionListener;
 
 public abstract class DialogWrapperPeer {
   public static Object HAVE_INITIAL_SELECTION = new Object();
+
+  public static boolean isHeadlessEnv() {
+    Application app = ApplicationManager.getApplication();
+    if (app == null) return GraphicsEnvironment.isHeadless();
+
+    return app.isUnitTestMode() || app.isHeadlessEnvironment();
+  }
+
+  public boolean isRealDialog() {
+    return false;
+  }
+
+  public void setAutoRequestFocus(boolean value) {
+  }
 
   public abstract void setUndecorated(boolean undecorated);
 
@@ -138,7 +154,7 @@ public abstract class DialogWrapperPeer {
   public abstract void setLocation(Point p);
 
   /**
-   * @see javax.swing.JDialog#setLocation(int,int)
+   * @see javax.swing.JDialog#setLocation(int, int)
    */
   public abstract void setLocation(int x, int y);
 
@@ -151,7 +167,9 @@ public abstract class DialogWrapperPeer {
   public abstract void centerInParent();
 
   public abstract void validate();
+
   public abstract void repaint();
+
   public abstract void pack();
 
   public abstract void setAppIcons();

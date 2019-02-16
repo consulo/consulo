@@ -206,7 +206,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
               .createPopup();
       Disposer.register(myBalloon, myDisposable);
       registerCloseAction(myBalloon);
-      final Window window = WindowManager.getInstance().suggestParentWindow(myProject);
+      final Window window = (Window)WindowManager.getInstance().suggestParentWindow(myProject);
       Component parent = UIUtil.findUltimateParent(window);
       RelativePoint showPoint = null;
       Point screenPoint = DimensionService.getInstance().getLocation(SERVICE_KEY);

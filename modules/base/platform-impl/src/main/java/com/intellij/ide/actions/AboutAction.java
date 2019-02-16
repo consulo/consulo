@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -23,29 +22,35 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.ide.actions.AboutManager;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class AboutAction extends AnAction implements DumbAware {
+  private final AboutManager myAboutManager;
+  private final WindowManager myWindowManager;
 
-  public void update(AnActionEvent e) {
+  @Inject
+  public AboutAction(AboutManager aboutManager, WindowManager windowManager) {
+    myAboutManager = aboutManager;
+    myWindowManager = windowManager;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setVisible(!SystemInfo.isMacSystemMenu);
     e.getPresentation().setDescription("Show information about " + ApplicationNamesInfo.getInstance().getFullProductName());
   }
 
-  public void actionPerformed(AnActionEvent e) {
-    Window window = WindowManager.getInstance().suggestParentWindow(e.getData(CommonDataKeys.PROJECT));
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Window window = myWindowManager.suggestParentWindow(e.getData(CommonDataKeys.PROJECT));
 
-    showAboutDialog(window);
-  }
-
-  public static void showAbout() {
-    Window window = WindowManager.getInstance().suggestParentWindow(DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT));
-
-    showAboutDialog(window);
-  }
-
-  private static void showAboutDialog(Window window) {
-    new AboutDialog(window).setVisible(true);
+    myAboutManager.showAbout(window);
   }
 }

@@ -25,12 +25,10 @@ import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -40,6 +38,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.status.*;
@@ -49,11 +48,10 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.annotations.DeprecationInfo;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.desktop.internal.base.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;
-import consulo.wm.ex.DesktopIdeFrame;
 import consulo.wm.impl.status.ModuleLayerWidget;
 
 import javax.accessibility.AccessibleContext;
@@ -71,10 +69,157 @@ import java.lang.reflect.Field;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-@Deprecated
-@DeprecationInfo("Desktop only")
-public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, AccessibleContextAccessor, DataProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.IdeFrameImpl");
+public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextAccessor {
+  private class MyFrame extends JFrameAsUIWindow {
+    protected class AccessibleIdeFrameImpl extends AccessibleJFrame {
+      @Override
+      public String getAccessibleName() {
+        final StringBuilder builder = new StringBuilder();
+
+        if (myProject != null) {
+          builder.append(myProject.getName());
+          builder.append(" - ");
+        }
+        builder.append(FrameTitleUtil.buildTitle());
+        return builder.toString();
+      }
+    }
+
+    @Override
+    public void setRootPane(JRootPane root) {
+      super.setRootPane(root);
+    }
+
+    @Nonnull
+    @Override
+    public Insets getInsets() {
+      if (SystemInfo.isMac && isInFullScreen()) {
+        return new Insets(0, 0, 0, 0);
+      }
+      return super.getInsets();
+    }
+
+    @Override
+    public void show() {
+      super.show();
+      SwingUtilities.invokeLater(() -> setFocusableWindowState(true));
+    }
+
+    @SuppressWarnings("SSBasedInspection")
+    @Override
+    public void setVisible(boolean b) {
+      super.setVisible(b);
+
+      if (b && myRestoreFullScreen) {
+        SwingUtilities.invokeLater(() -> {
+          toggleFullScreen(true);
+          if (SystemInfo.isMacOSLion) {
+            setBounds(ScreenUtil.getScreenRectangle(getLocationOnScreen()));
+          }
+          myRestoreFullScreen = false;
+        });
+      }
+    }
+
+    @Override
+    public void setTitle(final String title) {
+      if (myUpdatingTitle) {
+        super.setTitle(title);
+      }
+      else {
+        myTitle = title;
+      }
+
+      updateTitle();
+    }
+
+    @Override
+    public void paint(@Nonnull Graphics g) {
+      UISettings.setupAntialiasing(g);
+      //noinspection Since15
+      super.paint(g);
+    }
+
+    @Override
+    public Color getBackground() {
+      return super.getBackground();
+    }
+
+    @Override
+    public void doLayout() {
+      super.doLayout();
+    }
+
+    @Override
+    public void dispose() {
+      if (SystemInfo.isMac && isInFullScreen()) {
+        ((MacMainFrameDecorator)myFrameDecorator).toggleFullScreenNow();
+      }
+      if (isTemporaryDisposed()) {
+        super.dispose();
+        return;
+      }
+      MouseGestureManager.getInstance().remove(DesktopIdeFrameImpl.this);
+
+      if (myBalloonLayout != null) {
+        ((DesktopBalloonLayoutImpl)myBalloonLayout).dispose();
+        myBalloonLayout = null;
+      }
+
+      // clear both our and swing hard refs
+      if (myRootPane != null) {
+        if (ApplicationManager.getApplication().isUnitTestMode()) {
+          myRootPane.removeNotify();
+        }
+        myRootPane = null;
+        setRootPane(new JRootPane());
+      }
+
+      if (myFrameDecorator != null) {
+        Disposer.dispose(myFrameDecorator);
+        myFrameDecorator = null;
+      }
+
+      if (myWindowsBorderUpdater != null) {
+        Toolkit.getDefaultToolkit().removePropertyChangeListener("win.xpstyle.themeActive", myWindowsBorderUpdater);
+        myWindowsBorderUpdater = null;
+      }
+
+      FocusTrackback.release(this);
+
+      super.dispose();
+    }
+
+    @Override
+    public AccessibleContext getAccessibleContext() {
+      if (accessibleContext == null) {
+        accessibleContext = new AccessibleIdeFrameImpl();
+      }
+      return accessibleContext;
+    }
+
+
+    public void setTitleWithoutCheck(String title) {
+      super.setTitle(title);
+    }
+
+    public AccessibleContext getAccessibleContextWithoutInitialization() {
+      return accessibleContext;
+    }
+  }
+
+  private static final class TitleBuilder {
+    public StringBuilder sb = new StringBuilder();
+
+    public TitleBuilder append(@Nullable final String s) {
+      if (s == null || s.isEmpty()) return this;
+      if (sb.length() > 0) sb.append(" - ");
+      sb.append(s);
+      return this;
+    }
+  }
+
+  private static final Logger LOG = Logger.getInstance(DesktopIdeFrameImpl.class);
 
   private static final String FULL_SCREEN = "FullScreen";
 
@@ -92,42 +237,49 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
   private PropertyChangeListener myWindowsBorderUpdater;
   private boolean myRestoreFullScreen;
 
-  public DesktopIdeFrameImpl(ApplicationInfoEx applicationInfoEx, ActionManager actionManager, DataManager dataManager, Application application) {
-    super(FrameTitleUtil.buildTitle());
+  private MyFrame myJFrame;
+
+  public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
+    myJFrame = new MyFrame();
+    myJFrame.putUserData(IdeFrame.KEY, this);
+    myJFrame.addUserDataProvider(key -> getData(key));
+
+    myJFrame.setTitle(FrameTitleUtil.buildTitle());
     myRootPane = createRootPane(actionManager, dataManager, application);
-    setRootPane(myRootPane);
-    setBackground(UIUtil.getPanelBackground());
-    AppUIUtil.updateWindowIcon(this);
+    myJFrame.setRootPane(myRootPane);
+    myJFrame.setBackground(UIUtil.getPanelBackground());
+    AppUIUtil.updateWindowIcon(myJFrame);
     final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
 
     size.width = Math.min(1400, size.width - 20);
-    size.height= Math.min(1000, size.height - 40);
+    size.height = Math.min(1000, size.height - 40);
 
-    setSize(size);
-    setLocationRelativeTo(null);
+    myJFrame.setSize(size);
+    myJFrame.setLocationRelativeTo(null);
 
     LayoutFocusTraversalPolicyExt layoutFocusTraversalPolicy = new LayoutFocusTraversalPolicyExt();
-    setFocusTraversalPolicy(layoutFocusTraversalPolicy);
+    myJFrame.setFocusTraversalPolicy(layoutFocusTraversalPolicy);
 
     setupCloseAction();
-    MnemonicHelper.init(this);
+    MnemonicHelper.init(myJFrame);
 
     myBalloonLayout = new DesktopBalloonLayoutImpl(myRootPane, new Insets(8, 8, 8, 8));
 
     // to show window thumbnail under Macs
     // http://lists.apple.com/archives/java-dev/2009/Dec/msg00240.html
-    if (SystemInfo.isMac) setIconImage(null);
+    if (SystemInfo.isMac) myJFrame.setIconImage(null);
 
     MouseGestureManager.getInstance().add(this);
 
     myFrameDecorator = IdeFrameDecorator.decorate(this);
 
-    addWindowStateListener(new WindowAdapter() {
+    myJFrame.addWindowStateListener(new WindowAdapter() {
       @Override
       public void windowStateChanged(WindowEvent e) {
         updateBorder();
       }
     });
+
     if (SystemInfo.isWindows) {
       myWindowsBorderUpdater = __ -> updateBorder();
       Toolkit.getDefaultToolkit().addPropertyChangeListener("win.xpstyle.themeActive", myWindowsBorderUpdater);
@@ -137,13 +289,13 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
         final Runnable runnable = new Runnable() {
           @Override
           public void run() {
-            if (isDisplayable() && !getSize().equals(myDimensionRef.get())) {
-              Rectangle bounds = getBounds();
+            if (myJFrame.isDisplayable() && !myJFrame.getSize().equals(myDimensionRef.get())) {
+              Rectangle bounds = myJFrame.getBounds();
               bounds.width--;
-              setBounds(bounds);
+              myJFrame.setBounds(bounds);
               bounds.width++;
-              setBounds(bounds);
-              myDimensionRef.set(getSize());
+              myJFrame.setBounds(bounds);
+              myDimensionRef.set(myJFrame.getSize());
             }
             alarm.addRequest(this, 50);
           }
@@ -155,20 +307,22 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
   }
 
   private void updateBorder() {
-    int state = getExtendedState();
+    int state = myJFrame.getExtendedState();
     if (!WindowManager.getInstance().isFullScreenSupportedInCurrentOS() || !SystemInfo.isWindows || myRootPane == null) {
       return;
     }
 
     myRootPane.setBorder(null);
     boolean isNotClassic = Boolean.parseBoolean(String.valueOf(Toolkit.getDefaultToolkit().getDesktopProperty("win.xpstyle.themeActive")));
-    if (isNotClassic && (state & MAXIMIZED_BOTH) != 0) {
+    if (isNotClassic && (state & JFrame.MAXIMIZED_BOTH) != 0) {
       IdeFrame[] projectFrames = WindowManager.getInstance().getAllProjectFrames();
-      GraphicsDevice device = ScreenUtil.getScreenDevice(getBounds());
+      GraphicsDevice device = ScreenUtil.getScreenDevice(myJFrame.getBounds());
 
       for (IdeFrame frame : projectFrames) {
         if (frame == this) continue;
-        if (((DesktopIdeFrameImpl)frame).isInFullScreen() && ScreenUtil.getScreenDevice(((DesktopIdeFrameImpl)frame).getBounds()) == device) {
+
+        IdeFrameEx ideFrameEx = (IdeFrameEx)frame;
+        if (ideFrameEx.isInFullScreen() && ScreenUtil.getScreenDevice(((JFrame)ideFrameEx.getWindow()).getBounds()) == device) {
           Insets insets = ScreenUtil.getScreenInsets(device.getDefaultConfiguration());
           int mask = SideBorder.NONE;
           if (insets.top != 0) mask |= SideBorder.TOP;
@@ -182,72 +336,49 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
     }
   }
 
-  protected IdeRootPane createRootPane(ActionManager actionManager,
-                                       DataManager dataManager,
-                                       Application application) {
+  protected IdeRootPane createRootPane(ActionManager actionManager, DataManager dataManager, Application application) {
     return new IdeRootPane(actionManager, dataManager, application, this);
-  }
-
-  @Nonnull
-  @Override
-  public Insets getInsets() {
-    if (SystemInfo.isMac && isInFullScreen()) {
-      return new Insets(0, 0, 0, 0);
-    }
-    return super.getInsets();
   }
 
   @Override
   public JComponent getComponent() {
-    return getRootPane();
+    return myJFrame.getRootPane();
+  }
+
+  @Nonnull
+  @Override
+  public consulo.ui.Window getWindow() {
+    return myJFrame;
   }
 
   @Nullable
   public static Window getActiveFrame() {
-    for (Frame frame : getFrames()) {
+    for (Frame frame : JFrame.getFrames()) {
       if (frame.isActive()) return frame;
     }
     return null;
   }
 
-  @Override
-  public void show() {
-    super.show();
-    SwingUtilities.invokeLater(() -> setFocusableWindowState(true));
-  }
-
-  /**
-   * This is overridden to get rid of strange Alloy LaF customization of frames. For unknown reason it sets the maxBounds rectangle
-   * and it does it plain wrong. Setting bounds to {@code null} means default value should be taken from the underlying OS.
-   */
-  @Override
-  public synchronized void setMaximizedBounds(Rectangle bounds) {
-    super.setMaximizedBounds(null);
-  }
-
   private void setupCloseAction() {
-    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    addWindowListener(
-            new WindowAdapter() {
-              @Override
-              public void windowClosing(@Nonnull final WindowEvent e) {
-                if (isTemporaryDisposed())
-                  return;
+    myJFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    myJFrame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(@Nonnull final WindowEvent e) {
+        if (isTemporaryDisposed()) return;
 
-                final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                if (openProjects.length > 1 || openProjects.length == 1 && SystemInfo.isMacSystemMenu) {
-                  if (myProject != null && myProject.isOpen()) {
-                    ProjectUtil.closeAndDispose(myProject);
-                  }
-                  ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectFrameClosed();
-                  WelcomeFrame.showIfNoProjectOpened();
-                }
-                else {
-                  Application.get().exit();
-                }
-              }
-            }
-    );
+        final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        if (openProjects.length > 1 || openProjects.length == 1 && SystemInfo.isMacSystemMenu) {
+          if (myProject != null && myProject.isOpen()) {
+            ProjectUtil.closeAndDispose(myProject);
+          }
+          ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectFrameClosed();
+          WelcomeFrame.showIfNoProjectOpened();
+        }
+        else {
+          Application.get().exit();
+        }
+      }
+    });
   }
 
   @Override
@@ -256,23 +387,8 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
   }
 
   @Override
-  public void setTitle(final String title) {
-    if (myUpdatingTitle) {
-      super.setTitle(title);
-    } else {
-      myTitle = title;
-    }
-
-    updateTitle();
-  }
-
-  @Override
   public void setFrameTitle(final String text) {
-    super.setTitle(text);
-  }
-
-  public void setFileTitle(final String fileTitle) {
-    setFileTitle(fileTitle, null);
+    myJFrame.setTitleWithoutCheck(text);
   }
 
   @Override
@@ -288,7 +404,7 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
   }
 
   private void updateTitle() {
-    updateTitle(this, myTitle, myFileTitle, myCurrentFile);
+    updateTitle(myJFrame, myTitle, myFileTitle, myCurrentFile);
   }
 
   public static void updateTitle(JFrame frame, final String title, final String fileTitle, final File currentFile) {
@@ -300,15 +416,16 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
       frame.getRootPane().putClientProperty("Window.documentFile", currentFile);
 
       final String applicationName = FrameTitleUtil.buildTitle();
-      final Builder builder = new Builder();
+      final TitleBuilder titleBuilder = new TitleBuilder();
       if (SystemInfo.isMac) {
         boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
-        builder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
-      } else {
-        builder.append(title).append(fileTitle).append(applicationName);
+        titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
+      }
+      else {
+        titleBuilder.append(title).append(fileTitle).append(applicationName);
       }
 
-      frame.setTitle(builder.sb.toString());
+      frame.setTitle(titleBuilder.sb.toString());
     }
     finally {
       myUpdatingTitle = false;
@@ -317,29 +434,17 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
 
   @Override
   public void updateView() {
-    ((IdeRootPane)getRootPane()).updateToolbar();
-    ((IdeRootPane)getRootPane()).updateMainMenuActions();
-    ((IdeRootPane)getRootPane()).updateNorthComponents();
+    ((IdeRootPane)myJFrame.getRootPane()).updateToolbar();
+    ((IdeRootPane)myJFrame.getRootPane()).updateMainMenuActions();
+    ((IdeRootPane)myJFrame.getRootPane()).updateNorthComponents();
   }
 
   @Override
   public AccessibleContext getCurrentAccessibleContext() {
-    return accessibleContext;
+    return myJFrame.getAccessibleContextWithoutInitialization();
   }
 
-  private static final class Builder {
-    public StringBuilder sb = new StringBuilder();
-
-    public Builder append(@Nullable final String s) {
-      if (s == null || s.isEmpty()) return this;
-      if (sb.length() > 0) sb.append(" - ");
-      sb.append(s);
-      return this;
-    }
-  }
-
-  @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  private Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       if (myProject != null) {
         return myProject.isInitialized() ? myProject : null;
@@ -379,28 +484,12 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
     }
 
     if (project == null) {
-      FocusTrackback.release(this);
+      FocusTrackback.release(myJFrame);
     }
 
-    if (isVisible() && myRestoreFullScreen) {
+    if (myJFrame.isVisible() && myRestoreFullScreen) {
       toggleFullScreen(true);
       myRestoreFullScreen = false;
-    }
-  }
-
-  @SuppressWarnings("SSBasedInspection")
-  @Override
-  public void setVisible(boolean b) {
-    super.setVisible(b);
-
-    if (b && myRestoreFullScreen) {
-      SwingUtilities.invokeLater(() -> {
-        toggleFullScreen(true);
-        if (SystemInfo.isMacOSLion) {
-          setBounds(ScreenUtil.getScreenRectangle(getLocationOnScreen()));
-        }
-        myRestoreFullScreen = false;
-      });
     }
   }
 
@@ -446,60 +535,24 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
     return myProject;
   }
 
-  @Override
-  public void dispose() {
-    if (SystemInfo.isMac && isInFullScreen()) {
-      ((MacMainFrameDecorator)myFrameDecorator).toggleFullScreenNow();
-    }
-    if (isTemporaryDisposed()) {
-      super.dispose();
-      return;
-    }
-    MouseGestureManager.getInstance().remove(this);
-
-    if (myBalloonLayout != null) {
-      ((DesktopBalloonLayoutImpl)myBalloonLayout).dispose();
-      myBalloonLayout = null;
-    }
-
-    // clear both our and swing hard refs
-    if (myRootPane != null) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        myRootPane.removeNotify();
-      }
-      myRootPane = null;
-      setRootPane(new JRootPane());
-    }
-    if (myFrameDecorator != null) {
-      Disposer.dispose(myFrameDecorator);
-      myFrameDecorator = null;
-    }
-    if (myWindowsBorderUpdater != null) {
-      Toolkit.getDefaultToolkit().removePropertyChangeListener("win.xpstyle.themeActive", myWindowsBorderUpdater);
-      myWindowsBorderUpdater = null;
-    }
-
-    FocusTrackback.release(this);
-
-    super.dispose();
-  }
-
   private boolean isTemporaryDisposed() {
     return myRootPane != null && myRootPane.getClientProperty(ScreenUtil.DISPOSE_TEMPORARY) != null;
   }
 
-  void storeFullScreenStateIfNeeded() {
+  @Override
+  public void storeFullScreenStateIfNeeded() {
     if (myFrameDecorator != null) {
       storeFullScreenStateIfNeeded(myFrameDecorator.isInFullScreen());
     }
   }
 
+  @Override
   public void storeFullScreenStateIfNeeded(boolean state) {
     if (!WindowManager.getInstance().isFullScreenSupportedInCurrentOS()) return;
 
     if (myProject != null) {
       PropertiesComponent.getInstance(myProject).setValue(FULL_SCREEN, state);
-      doLayout();
+      myJFrame.doLayout();
     }
   }
 
@@ -509,28 +562,10 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
            (SHOULD_OPEN_IN_FULL_SCREEN.get(project) == Boolean.TRUE || PropertiesComponent.getInstance(project).getBoolean(FULL_SCREEN));
   }
 
-
-  @Override
-  public void paint(@Nonnull Graphics g) {
-    UISettings.setupAntialiasing(g);
-    //noinspection Since15
-    super.paint(g);
-  }
-
-  @Override
-  public Color getBackground() {
-    return super.getBackground();
-  }
-
-  @Override
-  public void doLayout() {
-    super.doLayout();
-  }
-
   @Override
   public Rectangle2D suggestChildFrameBounds() {
     //todo [kirillk] a dummy implementation
-    final Rectangle b = getBounds();
+    final Rectangle b = myJFrame.getBounds();
     b.x += 100;
     b.width -= 200;
     b.y += 100;
@@ -581,33 +616,5 @@ public class DesktopIdeFrameImpl extends JFrame implements DesktopIdeFrame, Acce
       }
     }
     return false;
-  }
-
-  @Nonnull
-  @Override
-  public Window getJWindow() {
-    return this;
-  }
-
-  @Override
-  public AccessibleContext getAccessibleContext() {
-    if (accessibleContext == null) {
-      accessibleContext = new AccessibleIdeFrameImpl();
-    }
-    return accessibleContext;
-  }
-
-  protected class AccessibleIdeFrameImpl extends AccessibleJFrame {
-    @Override
-    public String getAccessibleName() {
-      final StringBuilder builder = new StringBuilder();
-
-      if (myProject != null) {
-        builder.append(myProject.getName());
-        builder.append(" - ");
-      }
-      builder.append(FrameTitleUtil.buildTitle());
-      return builder.toString();
-    }
   }
 }

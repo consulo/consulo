@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.base;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import consulo.ui.Component;
-import consulo.ui.MenuSeparator;
+import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
+import consulo.ui.impl.UIDataObject;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -27,19 +29,58 @@ import consulo.ui.style.ColorKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.EventListener;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 2018-05-09
+ * @since 2019-02-15
  */
-public class DesktopMenuSeparatorImpl implements MenuSeparator {
-  public static final DesktopMenuSeparatorImpl INSTANCE = new DesktopMenuSeparatorImpl();
-  @Nonnull
+public class JDialogAsUIWindow extends JDialog implements Window {
+  private UIDataObject myUIDataObject = new UIDataObject();
+
+  public JDialogAsUIWindow() {
+  }
+
+  public JDialogAsUIWindow(Window owner, String title) {
+    super((java.awt.Window)owner, title);
+  }
+
   @Override
-  public String getText() {
-    return "";
+  public void dispose() {
+    super.dispose();
+
+    myUIDataObject = null;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void showAsync() {
+    SwingUtilities.invokeLater(() -> setVisible(true));
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void close() {
+    setVisible(false);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setContent(@Nonnull Component content) {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setMenuBar(@Nullable MenuBar menuBar) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setClosable(boolean value) {
+    throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess
@@ -54,32 +95,10 @@ public class DesktopMenuSeparatorImpl implements MenuSeparator {
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public boolean isVisible() {
-    return true;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setVisible(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setEnabled(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
   @Nullable
   @Override
-  public Component getParentComponent() {
-    return null;
+  public Window getParentComponent() {
+    return (Window)getParent();
   }
 
   @RequiredUIAccess
@@ -91,7 +110,12 @@ public class DesktopMenuSeparatorImpl implements MenuSeparator {
   @Nonnull
   @Override
   public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    throw new UnsupportedOperationException();
+    return myUIDataObject.addUserDataProvider(function);
+  }
+
+  @Override
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    myUIDataObject.putUserData(key, value);
   }
 
   @Nonnull
@@ -109,11 +133,6 @@ public class DesktopMenuSeparatorImpl implements MenuSeparator {
   @Nullable
   @Override
   public <T> T getUserData(@Nonnull Key<T> key) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    throw new UnsupportedOperationException();
+    return myUIDataObject.getUserData(key);
   }
 }

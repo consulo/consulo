@@ -16,13 +16,12 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.SomeQueue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +35,6 @@ import java.util.Map;
  * - if request had been submitted while refresh action was in progress, new refresh action is initiated right after first refresh action finishes
  *
  */
-@SomeQueue
 public class RequestsMerger {
   private static final Logger LOG = Logger.getInstance(RequestsMerger.class);
   private static final int ourDelay = 300;

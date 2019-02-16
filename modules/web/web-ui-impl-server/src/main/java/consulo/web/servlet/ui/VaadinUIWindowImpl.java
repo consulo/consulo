@@ -30,9 +30,9 @@ import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EventListener;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -89,22 +89,16 @@ class VaadinUIWindowImpl implements Window {
     myUI.setEnabled(value);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
-  public Component getParentComponent() {
-    return (Component)myUI.getParent();
+  public Window getParentComponent() {
+    return (Window)myUI.getParent();
   }
 
   @RequiredUIAccess
   @Override
   public void setSize(@Nonnull Size size) {
 
-  }
-
-  @Nonnull
-  @Override
-  public <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
-    throw new UnsupportedOperationException();
   }
 
   @Nonnull
@@ -143,7 +137,7 @@ class VaadinUIWindowImpl implements Window {
 
   @RequiredUIAccess
   @Override
-  public void setMenuBar(@javax.annotation.Nullable MenuBar menuBar) {
+  public void setMenuBar(@Nullable MenuBar menuBar) {
     myRootPanel.setMenuBar(menuBar);
   }
 
@@ -159,7 +153,7 @@ class VaadinUIWindowImpl implements Window {
 
   @RequiredUIAccess
   @Override
-  public void show() {
+  public void showAsync() {
     throw new UnsupportedOperationException();
   }
 
@@ -169,14 +163,14 @@ class VaadinUIWindowImpl implements Window {
     myUI.close();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public <T> T getUserData(@Nonnull Key<T> key) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     throw new UnsupportedOperationException();
   }
 }

@@ -25,11 +25,12 @@ import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
+import com.intellij.openapi.wm.IdeFrame;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
+import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,18 +40,18 @@ import java.awt.*;
 /**
  * Requests focus for the editor component.
  */
-public final class RequestFocusInEditorComponentCmd extends FinalizableCommand{
-  private JComponent myComponent;
-  private final boolean myForced;
-  private final ActionCallback myDoneCallback;
-
-  private final IdeFocusManager myFocusManager;
-  private final Expirable myTimestamp;
-
+public final class RequestFocusInEditorComponentCmd extends FinalizableCommand {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.commands.RequestFocusInEditorComponentCmd");
 
-  public RequestFocusInEditorComponentCmd(@Nonnull final EditorsSplitters splitters, IdeFocusManager
-          focusManager, final Runnable finishCallBack, boolean forced){
+  private JComponent myComponent;
+  private final boolean myForced;
+
+  private final ActionCallback myDoneCallback;
+  private final IdeFocusManager myFocusManager;
+
+  private final Expirable myTimestamp;
+
+  public RequestFocusInEditorComponentCmd(@Nonnull final EditorsSplitters splitters, IdeFocusManager focusManager, final Runnable finishCallBack, boolean forced) {
     super(finishCallBack);
 
     boolean shouldLogFocuses = Registry.is("ide.log.focuses");
@@ -79,31 +80,32 @@ public final class RequestFocusInEditorComponentCmd extends FinalizableCommand{
   }
 
   @Override
-  public final void run(){
-    try{
+  public final void run() {
+    try {
       if (myTimestamp.isExpired()) {
         final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         if (owner != null && owner == myComponent) {
           myDoneCallback.setDone();
-        } else {
+        }
+        else {
           myDoneCallback.setRejected();
         }
       }
 
 
       final Window owner = myComponent != null ? SwingUtilities.getWindowAncestor(myComponent) : null;
-      if(owner==null){
+      if (owner == null) {
         myDoneCallback.setRejected();
         return;
       }
 
-      final Window activeFrame = DesktopIdeFrameImpl.getActiveFrame();
-      if (activeFrame != null && owner instanceof DesktopIdeFrameImpl && activeFrame != owner) {
+      IdeFrame activeRootIdeFrame = IdeFrameUtil.findActiveRootIdeFrame();
+      if (activeRootIdeFrame != null && activeRootIdeFrame != owner) {
         myDoneCallback.setRejected();
         return;
       }
 
-      if(myComponent != null){
+      if (myComponent != null) {
         final boolean forced = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == null;
         myFocusManager.requestFocus(myComponent, myForced || forced).notifyWhenDone(myDoneCallback).doWhenDone(new Runnable() {
           @Override
@@ -116,9 +118,9 @@ public final class RequestFocusInEditorComponentCmd extends FinalizableCommand{
             // 2. "Do not show preview" dialog is popping up.
             // 3. At that time "preview" tool window is being activated and modal "don't show..." dialog
             // isn't active.
-            if(!owner.isActive()){
-              final Window activeWindow=getActiveWindow(owner.getOwnedWindows());
-              if(activeWindow == null || (activeWindow instanceof ToolWindowFloatingDecorator)){
+            if (!owner.isActive()) {
+              final Window activeWindow = getActiveWindow(owner.getOwnedWindows());
+              if (activeWindow == null || (activeWindow instanceof ToolWindowFloatingDecorator)) {
                 //Thread.dumpStack();
                 //System.out.println("------------------------------------------------------");
                 owner.toFront();
@@ -126,11 +128,13 @@ public final class RequestFocusInEditorComponentCmd extends FinalizableCommand{
             }
           }
         });
-      } else {
+      }
+      else {
         myDoneCallback.setRejected();
       }
 
-    }finally{
+    }
+    finally {
       finish();
     }
   }

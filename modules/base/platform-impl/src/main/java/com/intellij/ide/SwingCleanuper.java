@@ -24,16 +24,17 @@ import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ReflectionUtil;
+import consulo.wm.util.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeListener;
@@ -76,8 +77,7 @@ public final class SwingCleanuper {
         myAlarm.cancelAllRequests();
         myAlarm.addRequest(() -> {
           // request focus into some focusable component inside IdeFrame
-          final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-          DesktopIdeFrameImpl frame = (DesktopIdeFrameImpl)(window instanceof DesktopIdeFrameImpl ? window : SwingUtilities.getAncestorOfClass(DesktopIdeFrameImpl.class, window));
+          IdeFrame frame = IdeFrameUtil.findFocusedRootIdeFrame();
           if (frame != null) {
             final Application app = ApplicationManager.getApplication();
             if (app != null && app.isActive()) {

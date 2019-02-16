@@ -49,7 +49,7 @@ public class WebShowSettingsUtil extends BaseShowSettingsUtil {
     Project actualProject = project == null ? myDefaultProjectFactory.getDefaultProject() : project;
 
     SettingsDialog settingsDialog = new SettingsDialog(buildConfigurables(actualProject));
-    settingsDialog.show();
+    settingsDialog.showAsync();
   }
 
   @RequiredUIAccess

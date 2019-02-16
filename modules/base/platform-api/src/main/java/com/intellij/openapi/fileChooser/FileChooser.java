@@ -108,7 +108,7 @@ public class FileChooser {
                                  @Nullable final Component parent,
                                  @Nullable final VirtualFile toSelect,
                                  @Nonnull final Consumer<List<VirtualFile>> callback) {
-    Component parentComponent = parent == null ? WindowManager.getInstance().suggestParentWindow(project) : parent;
+    Component parentComponent = parent == null ? (Component)WindowManager.getInstance().suggestParentWindow(project) : parent;
     final FileChooserFactory factory = FileChooserFactory.getInstance();
     final PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parentComponent);
     pathChooser.choose(toSelect, callback);

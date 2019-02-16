@@ -95,7 +95,9 @@ public interface Component extends Disposable, UserDataHolder {
   void setSize(@Nonnull Size size);
 
   @Nonnull
-  <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier);
+  default <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
+    return addUserDataProvider(k -> k == key ? supplier.get() : null);
+  }
 
   @Nonnull
   Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);

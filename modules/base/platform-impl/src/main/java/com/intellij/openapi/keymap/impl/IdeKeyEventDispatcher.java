@@ -44,10 +44,10 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ComponentWithMnemonics;
@@ -63,6 +63,7 @@ import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
+import consulo.wm.util.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -76,8 +77,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
 import java.lang.reflect.Method;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * This class is automaton with finite number of state.
@@ -253,10 +254,17 @@ public final class IdeKeyEventDispatcher implements Disposable {
   public static boolean isModalContext(@Nonnull Component component) {
     Window window = UIUtil.getWindow(component);
 
-    if (window instanceof DesktopIdeFrameImpl) {
-      final Component pane = ((DesktopIdeFrameImpl)window).getGlassPane();
-      if (pane instanceof IdeGlassPaneEx) {
-        return ((IdeGlassPaneEx)pane).isInModalContext();
+
+    if (window instanceof consulo.ui.Window) {
+      consulo.ui.Window uiWindow = (consulo.ui.Window)window;
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if (IdeFrameUtil.isRootFrame(ideFrame)) {
+        RootPaneContainer rootPaneContainer = (RootPaneContainer)uiWindow;
+
+        Component glassPane = rootPaneContainer.getGlassPane();
+        if (glassPane instanceof IdeGlassPaneEx) {
+          return ((IdeGlassPaneEx)glassPane).isInModalContext();
+        }
       }
     }
 

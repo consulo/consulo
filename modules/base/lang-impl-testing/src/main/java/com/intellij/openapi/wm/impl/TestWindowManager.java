@@ -53,7 +53,7 @@ public final class TestWindowManager extends WindowManagerEx {
   }
 
   @Override
-  public StatusBar getStatusBar(@Nonnull Component c, @javax.annotation.Nullable Project project) {
+  public StatusBar getStatusBar(@Nonnull Component c, @Nullable Project project) {
     return null;
   }
 
@@ -63,7 +63,7 @@ public final class TestWindowManager extends WindowManagerEx {
   }
 
   @Override
-  public final Window suggestParentWindow(@javax.annotation.Nullable final Project project) {
+  public final consulo.ui.Window suggestParentWindow(@Nullable final Project project) {
     return null;
   }
 
@@ -116,7 +116,7 @@ public final class TestWindowManager extends WindowManagerEx {
     }
 
     @Override
-    public void setInfo(@Nullable String s, @javax.annotation.Nullable String requestor) {
+    public void setInfo(@Nullable String s, @Nullable String requestor) {
     }
 
     @Override
@@ -233,7 +233,7 @@ public final class TestWindowManager extends WindowManagerEx {
     }
 
     @Override
-    public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable HyperlinkListener listener) {
+    public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
       return new BalloonHandler() {
         public void hide() {
         }
@@ -252,8 +252,9 @@ public final class TestWindowManager extends WindowManagerEx {
     return null;
   }
 
+  @Nullable
   @Override
-  public final JFrame getFrame(final Project project) {
+  public consulo.ui.Window findVisibleWindow() {
     return null;
   }
 
@@ -280,12 +281,12 @@ public final class TestWindowManager extends WindowManagerEx {
   }
 
   @Override
-  public final Window getMostRecentFocusedWindow() {
+  public final consulo.ui.Window getMostRecentFocusedWindow() {
     return null;
   }
 
   @Override
-  public IdeFrame findFrameFor(@javax.annotation.Nullable Project project) {
+  public IdeFrame findFrameFor(@Nullable Project project) {
     throw new UnsupportedOperationException();
   }
 

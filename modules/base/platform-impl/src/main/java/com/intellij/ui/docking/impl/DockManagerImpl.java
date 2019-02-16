@@ -498,7 +498,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
 
     @Override
-    protected IdeRootPaneNorthExtension getNorthExtension(String key) {
+    public IdeRootPaneNorthExtension getNorthExtension(String key) {
       return myNorthExtensions.get(key);
     }
 

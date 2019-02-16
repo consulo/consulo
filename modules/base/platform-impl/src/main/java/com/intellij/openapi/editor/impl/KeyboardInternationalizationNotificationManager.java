@@ -40,7 +40,7 @@ public class KeyboardInternationalizationNotificationManager {
 
   public static void showNotification() {
 
-    if (notificationHasBeenShown || !KeyboardSettingsExternalizable.isSupportedKeyboardLayout(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow())) return;
+    if (notificationHasBeenShown || !KeyboardSettingsExternalizable.isSupportedKeyboardLayout((Component)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow())) return;
 
     MyNotificationListener listener =
             new MyNotificationListener();
@@ -53,7 +53,7 @@ public class KeyboardInternationalizationNotificationManager {
 
     final String productName = ApplicationNamesInfo.getInstance().getProductName();
 
-    Window recentFocusedWindow = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+    Window recentFocusedWindow = (Window)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
 
     String text =
             "<html>We have found out that you are using a non-english keyboard layout. You can <a href='enable'>enable</a> smart layout support for " +

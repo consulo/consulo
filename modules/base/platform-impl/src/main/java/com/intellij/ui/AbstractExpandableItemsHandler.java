@@ -281,7 +281,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
   private boolean noIntersections(Rectangle bounds) {
     Window owner = SwingUtilities.getWindowAncestor(myComponent);
     Window popup = SwingUtilities.getWindowAncestor(myTipComponent);
-    Window focus = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+    Window focus = (Window)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
     if (focus == owner.getOwner()) {
       focus = null; // do not check intersection with parent
     }

@@ -70,6 +70,11 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   }
 
   @Override
+  public boolean isForWelcomeFrame() {
+    return true;
+  }
+
+  @Override
   public void add(@Nonnull Balloon balloon, @Nullable Object layoutData) {
     if (layoutData instanceof BalloonLayoutData && ((BalloonLayoutData)layoutData).welcomeScreen) {
       addToPopup((BalloonImpl)balloon, (BalloonLayoutData)layoutData);

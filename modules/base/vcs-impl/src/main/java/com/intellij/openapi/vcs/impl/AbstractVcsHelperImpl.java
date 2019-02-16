@@ -538,7 +538,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         final List<CommittedChangeList> versions = new ArrayList<>();
 
         if (parent == null || !parent.isValid()) {
-          parent = WindowManager.getInstance().suggestParentWindow(myProject);
+          parent = (Component)WindowManager.getInstance().suggestParentWindow(myProject);
         }
         final CommittedChangesTableModel model = new CommittedChangesTableModel(versions, true);
         final AsynchronousListsLoader[] task = new AsynchronousListsLoader[1];

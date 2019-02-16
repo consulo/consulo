@@ -61,7 +61,7 @@ import java.util.List;
 public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements UISettingsListener, Disposable, ToolWindowPanelImplEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowsPane");
 
-  private final DesktopIdeFrameImpl myFrame;
+  private final DesktopIdeFrameImpl myIdeFrame;
 
   private final HashMap<String, DesktopStripeButton> myId2Button = new HashMap<>();
   private final HashMap<String, DesktopInternalDecorator> myId2Decorator = new HashMap<>();
@@ -98,13 +98,13 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   private boolean myLeftHorizontalSplit;
   private boolean myRightHorizontalSplit;
 
-  DesktopToolWindowPanelImpl(@Nonnull DesktopIdeFrameImpl frame, @Nonnull DesktopToolWindowManagerImpl manager) {
+  DesktopToolWindowPanelImpl(@Nonnull DesktopIdeFrameImpl ideFrame, @Nonnull DesktopToolWindowManagerImpl manager) {
     myManager = manager;
 
     AWTComponentProviderUtil.putMark(this, this);
 
     setOpaque(false);
-    myFrame = frame;
+    myIdeFrame = ideFrame;
 
     // Splitters
     myVerticalSplitter = new ThreeComponentsSplitter(true);
@@ -208,7 +208,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   }
 
   public Project getProject() {
-    return myFrame.getProject();
+    return myIdeFrame.getProject();
   }
 
   @Override
@@ -1246,12 +1246,13 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     @Nonnull
     private Pair<BufferedImage, Reference<BufferedImage>> getImage(@Nullable Reference<BufferedImage> imageRef) {
       LOG.assertTrue(UISettings.getInstance().getAnimateWindows());
+      JFrame jFrame = (JFrame)myIdeFrame.getWindow();
       BufferedImage image = SoftReference.dereference(imageRef);
       if (image == null || image.getWidth(null) < getWidth() || image.getHeight(null) < getHeight()) {
-        final int width = Math.max(Math.max(1, getWidth()), myFrame.getWidth());
-        final int height = Math.max(Math.max(1, getHeight()), myFrame.getHeight());
+        final int width = Math.max(Math.max(1, getWidth()), jFrame.getWidth());
+        final int height = Math.max(Math.max(1, getHeight()), jFrame.getHeight());
         if (SystemInfo.isWindows) {
-          image = myFrame.getGraphicsConfiguration().createCompatibleImage(width, height);
+          image = jFrame.getGraphicsConfiguration().createCompatibleImage(width, height);
         }
         else {
           // Under Linux we have found that images created by createCompatibleImage(),

@@ -17,16 +17,16 @@ package com.intellij.openapi.wm;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class WindowManager {
   /**
    * @return <code>true</code> is and only if current OS supports alpha mode for windows and
-   *         all native libraries were successfully loaded.
+   * all native libraries were successfully loaded.
    */
   public abstract boolean isAlphaModeSupported();
 
@@ -68,10 +68,10 @@ public abstract class WindowManager {
    * Note, that this method returns only subclasses of dialog or frame.
    *
    * @return <code>null</code> if there is no currently active window or there are any window
-   *         that can be parent.
+   * that can be parent.
    */
   @Nullable
-  public abstract Window suggestParentWindow(@Nullable Project project);
+  public abstract consulo.ui.Window suggestParentWindow(@Nullable Project project);
 
   /**
    * Get the status bar for the project's main frame
@@ -92,9 +92,20 @@ public abstract class WindowManager {
     return null;
   }
 
-  public abstract JFrame getFrame(@Nullable Project project);
+  @Deprecated
+  @Nullable
+  public JFrame getFrame(@Nullable Project project) {
+    consulo.ui.Window window = getWindow(project);
+    return (JFrame)window;
+  }
 
   public abstract IdeFrame getIdeFrame(@Nullable Project project);
+
+  @Nullable
+  public consulo.ui.Window getWindow(@Nullable Project project) {
+    IdeFrame ideFrame = getIdeFrame(project);
+    return ideFrame != null ? ideFrame.getWindow() : null;
+  }
 
   /**
    * Tests whether the specified rectangle is inside of screen bounds. Method uses its own heuristic test.
@@ -114,7 +125,13 @@ public abstract class WindowManager {
   @Nonnull
   public abstract IdeFrame[] getAllProjectFrames();
 
-  public abstract JFrame findVisibleFrame();
+  @Nullable
+  public JFrame findVisibleFrame() {
+    return (JFrame)findVisibleWindow();
+  }
+
+  @Nullable
+  public abstract consulo.ui.Window findVisibleWindow();
 
   public abstract void addListener(WindowManagerListener listener);
 

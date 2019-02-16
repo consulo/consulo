@@ -100,7 +100,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
       String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
       try {
         if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-          return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
+          return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, (java.awt.Window)WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
         }
       } catch (Exception ignored) {}
 
@@ -137,7 +137,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
       String cancelText = ObjectUtil.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
       try {
         if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-          return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
+          return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, (java.awt.Window)WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
         }
       }
       catch (Exception ignored) {}

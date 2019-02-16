@@ -226,7 +226,7 @@ public class ExportToFileUtil {
       if (myTfFile != null) {
         chooser.setCurrentDirectory(new File(myTfFile.getText()));
       }
-      chooser.showOpenDialog(WindowManager.getInstance().suggestParentWindow(myProject));
+      chooser.showOpenDialog((Component)WindowManager.getInstance().suggestParentWindow(myProject));
       if (chooser.getSelectedFile() != null) {
         myTfFile.setText(chooser.getSelectedFile().getAbsolutePath());
       }

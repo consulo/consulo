@@ -117,9 +117,9 @@ public class Messages {
 
   @Nonnull
   public static Runnable createMessageDialogRemover(@Nullable Project project) {
-    Window projectWindow = project == null ? null : WindowManager.getInstance().suggestParentWindow(project);
+    consulo.ui.Window projectWindow = project == null ? null : WindowManager.getInstance().suggestParentWindow(project);
     return () -> UIUtil
-            .invokeLaterIfNeeded(() -> makeCurrentMessageDialogGoAway(projectWindow != null ? projectWindow.getOwnedWindows() : Window.getWindows()));
+            .invokeLaterIfNeeded(() -> makeCurrentMessageDialogGoAway(projectWindow != null ? ((Window)projectWindow).getOwnedWindows() : Window.getWindows()));
   }
 
   private static void makeCurrentMessageDialogGoAway(@Nonnull Window[] checkWindows) {
@@ -164,7 +164,7 @@ public class Messages {
 
     try {
       if (canShowMacSheetPanel()) {
-        Window parentWindow = WindowManager.getInstance().suggestParentWindow(project);
+        Window parentWindow = (Window)WindowManager.getInstance().suggestParentWindow(project);
         return MacMessages.getInstance()
                 .showMessageDialog(title, message, options, false, parentWindow, defaultOptionIndex, defaultOptionIndex, doNotAskOption);
       }
@@ -218,7 +218,7 @@ public class Messages {
     try {
       if (canShowMacSheetPanel() && moreInfo == null) {
         return MacMessages.getInstance()
-                .showMessageDialog(title, message, options, false, WindowManager.getInstance().suggestParentWindow(project), defaultOptionIndex,
+                .showMessageDialog(title, message, options, false, (Window)WindowManager.getInstance().suggestParentWindow(project), defaultOptionIndex,
                                    focusedOptionIndex, null);
       }
     }
@@ -330,7 +330,7 @@ public class Messages {
   public static void showMessageDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
-        MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
+        MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, (Window)WindowManager.getInstance().suggestParentWindow(project));
         return;
       }
     }
@@ -390,7 +390,7 @@ public class Messages {
                                     @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
-        return MacMessages.getInstance().showYesNoDialog(title, message, yesText, noText, WindowManager.getInstance().suggestParentWindow(project));
+        return MacMessages.getInstance().showYesNoDialog(title, message, yesText, noText, (Window)WindowManager.getInstance().suggestParentWindow(project));
       }
     }
     catch (Exception exception) {
@@ -410,7 +410,7 @@ public class Messages {
   public static int showYesNoDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
-        return MacMessages.getInstance().showYesNoDialog(title, message, YES_BUTTON, NO_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
+        return MacMessages.getInstance().showYesNoDialog(title, message, YES_BUTTON, NO_BUTTON, (Window)WindowManager.getInstance().suggestParentWindow(project));
       }
     }
     catch (Exception exception) {
@@ -526,7 +526,7 @@ public class Messages {
     try {
       if (canShowMacSheetPanel()) {
         int result = MacMessages.getInstance()
-                .showYesNoDialog(title, message, okText, cancelText, WindowManager.getInstance().suggestParentWindow(project), doNotAskOption);
+                .showYesNoDialog(title, message, okText, cancelText, (Window)WindowManager.getInstance().suggestParentWindow(project), doNotAskOption);
         return result == YES ? OK : CANCEL;
       }
     }
@@ -679,7 +679,7 @@ public class Messages {
   public static void showErrorDialog(@Nullable Project project, @Nls String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
-        MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
+        MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, (Window)WindowManager.getInstance().suggestParentWindow(project));
         return;
       }
     }
@@ -737,7 +737,7 @@ public class Messages {
   public static void showWarningDialog(@Nullable Project project, String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
-        MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
+        MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, (Window)WindowManager.getInstance().suggestParentWindow(project));
         return;
       }
     }
@@ -797,7 +797,7 @@ public class Messages {
                                           @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
-        return MacMessages.getInstance().showYesNoCancelDialog(title, message, yes, no, cancel, WindowManager.getInstance().suggestParentWindow(project), null);
+        return MacMessages.getInstance().showYesNoCancelDialog(title, message, yes, no, cancel, (Window)WindowManager.getInstance().suggestParentWindow(project), null);
       }
     }
     catch (Exception exception) {
@@ -1167,7 +1167,7 @@ public class Messages {
   public static void showInfoMessage(@Nullable Project project, @Nls String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
-        MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
+        MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, (Window)WindowManager.getInstance().suggestParentWindow(project));
         return;
       }
     }

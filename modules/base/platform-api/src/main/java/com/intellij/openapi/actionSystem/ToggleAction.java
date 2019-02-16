@@ -41,7 +41,6 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
     super(text, description, icon);
   }
 
-  @Deprecated
   public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final SwingImageRef icon) {
     super(text, description, icon);
   }

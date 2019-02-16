@@ -59,10 +59,10 @@ import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.DesktopIdeFrameImpl;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.docking.DockContainer;
@@ -86,6 +86,7 @@ import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.platform.Platform;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.wm.util.IdeFrameUtil;
 import gnu.trove.THashSet;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -1644,7 +1645,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       if (component != null) {
         return component instanceof EditorComponentImpl;
       }
-      return window instanceof DesktopIdeFrameImpl;
+
+      if (window instanceof consulo.ui.Window) {
+        IdeFrame ideFrame = ((consulo.ui.Window)window).getUserData(IdeFrame.KEY);
+        return IdeFrameUtil.isRootFrame(ideFrame);
+      }
     }
     return true;
   }
