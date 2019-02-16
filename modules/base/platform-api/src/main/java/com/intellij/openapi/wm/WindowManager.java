@@ -17,6 +17,8 @@ package com.intellij.openapi.wm;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.DeprecationInfo;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,7 +63,10 @@ public abstract class WindowManager {
     return ApplicationManager.getApplication().getComponent(WindowManager.class);
   }
 
-  public abstract void doNotSuggestAsParent(Window window);
+  @Deprecated
+  @DeprecationInfo("Desktop only")
+  public void doNotSuggestAsParent(consulo.ui.Window window) {
+  }
 
   /**
    * Gets first window (starting from the active one) that can be parent for other windows.
@@ -96,7 +101,7 @@ public abstract class WindowManager {
   @Nullable
   public JFrame getFrame(@Nullable Project project) {
     consulo.ui.Window window = getWindow(project);
-    return (JFrame)window;
+    return (JFrame)TargetAWT.to(window);
   }
 
   public abstract IdeFrame getIdeFrame(@Nullable Project project);

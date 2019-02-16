@@ -16,6 +16,7 @@
 package consulo.desktop.start;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -39,12 +40,13 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
   @RequiredUIAccess
   public DesktopWelcomeIdeFrame(Runnable clearInstance) {
     myFrame = new FlatWelcomeFrame(clearInstance);
+    myFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
   }
 
   @Nonnull
   @Override
   public Window getWindow() {
-    return myFrame;
+    return myFrame.toUIWindow();
   }
 
   @Override

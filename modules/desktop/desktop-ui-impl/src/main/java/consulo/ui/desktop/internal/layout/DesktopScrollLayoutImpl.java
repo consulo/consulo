@@ -16,13 +16,15 @@
 package consulo.ui.desktop.internal.layout;
 
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBScrollPane;
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.ScrollLayout;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -31,8 +33,20 @@ import javax.swing.*;
  * @since 2019-02-16
  */
 public class DesktopScrollLayoutImpl extends SwingComponentDelegate<JScrollPane> implements ScrollLayout {
+  class MyJBScrollPane extends JBScrollPane implements FromSwingComponentWrapper {
+    MyJBScrollPane(java.awt.Component view) {
+      super(view);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopScrollLayoutImpl.this;
+    }
+  }
+
   public DesktopScrollLayoutImpl(@Nullable Component component) {
-    myComponent = ScrollPaneFactory.createScrollPane(TargetAWT.to(component));
+    myComponent = new MyJBScrollPane(TargetAWT.to(component));
   }
 
   @RequiredUIAccess

@@ -17,13 +17,11 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.actionSystem.impl.WeakTimerListener;
@@ -39,6 +37,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.base.BaseDataManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -326,7 +325,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
     myNewVisibleActions.clear();
 
     if (!myDisabled) {
-      DataContext dataContext = ((DataManagerImpl)myDataManager).getDataContextTest(this);
+      DataContext dataContext = ((BaseDataManager)myDataManager).getDataContextTest(this);
       expandActionGroup(dataContext, myNewVisibleActions, myActionManager);
     }
 

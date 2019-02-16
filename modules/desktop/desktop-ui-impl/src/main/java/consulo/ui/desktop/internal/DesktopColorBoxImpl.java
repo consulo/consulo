@@ -18,7 +18,9 @@ package consulo.ui.desktop.internal;
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.ColorPanel;
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.ColorBox;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.shared.ColorValue;
@@ -32,8 +34,17 @@ import java.awt.event.ActionListener;
  * @since 6/9/18
  */
 class DesktopColorBoxImpl extends SwingComponentDelegate<ColorPanel> implements ColorBox {
+  class MyColorPanel extends ColorPanel implements FromSwingComponentWrapper {
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopColorBoxImpl.this;
+    }
+  }
+
   public DesktopColorBoxImpl(ColorValue colorValue) {
-    myComponent = new ColorPanel();
+    myComponent = new MyColorPanel();
     myComponent.setSelectedColor(TargetAWT.to(colorValue));
   }
 

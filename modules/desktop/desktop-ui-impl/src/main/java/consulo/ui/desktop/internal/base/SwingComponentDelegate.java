@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
-import consulo.awt.internal.SwingComponentWrapper;
+import consulo.awt.impl.ToSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.impl.BorderInfo;
@@ -43,7 +43,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 27-Oct-17
  */
-public class SwingComponentDelegate<T extends java.awt.Component> implements Component, SwingComponentWrapper {
+public class SwingComponentDelegate<T extends java.awt.Component> implements Component, ToSwingComponentWrapper {
   protected T myComponent;
 
   @Nonnull

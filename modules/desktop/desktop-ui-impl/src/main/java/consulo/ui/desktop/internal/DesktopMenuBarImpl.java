@@ -15,12 +15,14 @@
  */
 package consulo.ui.desktop.internal;
 
+import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 /**
@@ -28,8 +30,17 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 public class DesktopMenuBarImpl extends SwingComponentDelegate<JMenuBar> implements MenuBar {
+  class MyJMenu extends JMenuBar implements FromSwingComponentWrapper {
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopMenuBarImpl.this;
+    }
+  }
+
   public DesktopMenuBarImpl() {
-    myComponent = new JMenuBar();
+    myComponent = new MyJMenu();
   }
 
   @Override
@@ -40,11 +51,12 @@ public class DesktopMenuBarImpl extends SwingComponentDelegate<JMenuBar> impleme
   @Nonnull
   @Override
   public MenuBar add(@Nonnull MenuItem menuItem) {
-    if(menuItem instanceof JMenu) {
+    if (menuItem instanceof JMenu) {
       myComponent.add((JMenu)menuItem);
     }
     else {
-      myComponent.add((JMenu)new DesktopMenuImpl(menuItem.getText()));
+      DesktopMenuImpl menu = new DesktopMenuImpl(menuItem.getText());
+      myComponent.add((JMenu)TargetAWT.to(menu));
     }
     return this;
   }

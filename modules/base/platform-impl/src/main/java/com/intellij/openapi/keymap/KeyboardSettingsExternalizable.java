@@ -32,10 +32,7 @@ import java.util.Locale;
  */
 
 @Singleton
-@State(
-        name = "KeyboardSettings",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/keyboard.xml")}
-)
+@State(name = "KeyboardSettings", storages = @Storage("keyboard.xml"))
 public class KeyboardSettingsExternalizable implements PersistentStateComponent<KeyboardSettingsExternalizable.OptionSet> {
 
   private static final String [] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};

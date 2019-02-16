@@ -16,15 +16,17 @@
 package consulo.ui.desktop.internal;
 
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.style.ComponentColors;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.function.Supplier;
@@ -34,18 +36,30 @@ import java.util.function.Supplier;
  * @since 12-Jun-16
  */
 class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements Label {
+  class MyJLabel extends JLabel implements FromSwingComponentWrapper {
+    MyJLabel(String text) {
+      super(text);
+    }
+
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      DesktopLabelImpl.this.updateUI();
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopLabelImpl.this;
+    }
+  }
+
   private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
   private Supplier<ColorValue> myForegroundSupplier;
 
   public DesktopLabelImpl(String text) {
-    myComponent = new JLabel(text) {
-      @Override
-      public void updateUI() {
-        super.updateUI();
-
-        DesktopLabelImpl.this.updateUI();
-      }
-    };
+    myComponent = new MyJLabel(text);
 
     setHorizontalAlignment(HorizontalAlignment.LEFT);
 

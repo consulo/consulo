@@ -20,6 +20,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -245,8 +246,10 @@ class ProgressDialog implements Disposable {
       myPopup.close(DialogWrapper.CANCEL_EXIT_CODE);
     }
 
-    myPopup = ((Window)myParentWindow).isShowing()
-              ? new MyDialogWrapper((Component)myParentWindow, myProgressWindow.myShouldShowCancel)
+    Window awtWindow = TargetAWT.to(myParentWindow);
+
+    myPopup = awtWindow.isShowing()
+              ? new MyDialogWrapper(awtWindow, myProgressWindow.myShouldShowCancel)
               : new MyDialogWrapper(myProgressWindow.myProject, myProgressWindow.myShouldShowCancel);
     myPopup.setUndecorated(true);
 

@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-@SomeQueue
 public class ProgressManagerQueue {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.AbstractTaskQueue");
 

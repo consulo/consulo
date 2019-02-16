@@ -23,6 +23,7 @@ import com.intellij.ide.actions.ViewToolbarAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.Extensions;
@@ -60,7 +61,7 @@ import java.util.List;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class IdeRootPane extends JRootPane implements UISettingsListener {
+public class IdeRootPane extends JRootPane implements Disposable, UISettingsListener {
   /**
    * Toolbar and status bar.
    */
@@ -228,6 +229,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
 
   private void createStatusBar(IdeFrame frame) {
     myStatusBar = new IdeStatusBarImpl();
+    Disposer.register(this, myStatusBar);
     myStatusBar.install(frame);
 
     myMemoryWidget = new MemoryUsagePanel();
@@ -301,6 +303,10 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     IdeFrame frame = UIUtil.getParentOfType(IdeFrame.class, this);
     BalloonLayout layout = frame != null ? frame.getBalloonLayout() : null;
     if (layout instanceof DesktopBalloonLayoutImpl) ((DesktopBalloonLayoutImpl)layout).queueRelayout();
+  }
+
+  @Override
+  public void dispose() {
   }
 
   private class MyRootLayout extends RootLayout {

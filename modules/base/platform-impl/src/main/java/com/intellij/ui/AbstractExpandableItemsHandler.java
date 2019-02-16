@@ -28,6 +28,8 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.MouseEventHandler;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -281,7 +283,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
   private boolean noIntersections(Rectangle bounds) {
     Window owner = SwingUtilities.getWindowAncestor(myComponent);
     Window popup = SwingUtilities.getWindowAncestor(myTipComponent);
-    Window focus = (Window)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+    Window focus = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
     if (focus == owner.getOwner()) {
       focus = null; // do not check intersection with parent
     }

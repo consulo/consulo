@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 /**
  * @author mike
  */
+@SuppressWarnings("deprecation")
 public class ExtensionPointName<T> {
   private final String myName;
 

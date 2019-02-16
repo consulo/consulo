@@ -16,8 +16,10 @@
 package com.intellij.ui.popup;
 
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.util.JWindowAsUIWindowHack;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -140,17 +142,8 @@ public class MovablePopup {
       Window owner = UIUtil.getWindow(myOwner);
       if (owner != null) {
         if (myHeavyWeight) {
-          JWindow view = new JWindow(owner);
-          // TODO 1.7+: temporary fix for the i3 window manager because of Java 1.6
-          try {
-            @SuppressWarnings("unchecked")
-            Class<? extends Enum> type = (Class<? extends Enum>)Class.forName("java.awt.Window$Type");
-            Object value = Enum.valueOf(type, "POPUP");
-            view.getClass().getMethod("setType", type).invoke(view, value);
-          }
-          catch (Exception ignored) {
-          }
-          // TODO 1.7+: setType(Window.Type.POPUP); // or UTILITY
+          JWindow view = JWindowAsUIWindowHack.create(TargetAWT.from(owner));
+          view.setType(Window.Type.POPUP);
           if (myAlwaysOnTop) {
             try {
               view.setAlwaysOnTop(true);

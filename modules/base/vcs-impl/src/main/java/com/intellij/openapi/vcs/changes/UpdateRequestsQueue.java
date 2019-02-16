@@ -19,7 +19,6 @@ import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.SomeQueue;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Getter;
@@ -27,10 +26,10 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,6 @@ import java.util.concurrent.TimeUnit;
  * Tries to zip several update requests into one (if starts and see several requests in the queue)
  * own inner synchronization
  */
-@SomeQueue
 public class UpdateRequestsQueue {
   private final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.UpdateRequestsQueue");
   private static final String ourHeavyLatchOptimization = "vcs.local.changes.track.heavy.latch";

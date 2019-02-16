@@ -36,6 +36,7 @@ import java.util.function.Function;
  */
 class DesktopMenuSeparatorImpl implements MenuSeparator {
   public static final DesktopMenuSeparatorImpl INSTANCE = new DesktopMenuSeparatorImpl();
+
   @Nonnull
   @Override
   public String getText() {

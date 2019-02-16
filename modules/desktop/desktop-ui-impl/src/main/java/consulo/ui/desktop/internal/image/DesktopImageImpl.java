@@ -17,7 +17,7 @@ package consulo.ui.desktop.internal.image;
 
 import com.intellij.openapi.util.IconLoader;
 import consulo.ui.image.Image;
-import consulo.awt.internal.SwingIconWrapper;
+import consulo.awt.impl.ToSwingIconWrapper;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class DesktopImageImpl implements Image, SwingIconWrapper {
+public class DesktopImageImpl implements Image, ToSwingIconWrapper {
   private Icon myIcon;
 
   public DesktopImageImpl(URL url) {

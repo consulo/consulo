@@ -17,10 +17,11 @@ package consulo.ui.desktop.internal.layout;
 
 import com.intellij.openapi.ui.Splitter;
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.layout.SplitLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.layout.SplitLayout;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -30,8 +31,20 @@ import javax.swing.*;
  * @since 13-Jun-16
  */
 public class DesktopSplitLayoutImpl extends SwingComponentDelegate<Splitter> implements SplitLayout {
+  class MySplitter extends Splitter implements FromSwingComponentWrapper {
+    MySplitter(boolean vertical) {
+      super(vertical);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopSplitLayoutImpl.this;
+    }
+  }
+
   public DesktopSplitLayoutImpl(boolean vertical) {
-    myComponent = new Splitter(vertical);
+    myComponent = new MySplitter(vertical);
   }
 
   @Override

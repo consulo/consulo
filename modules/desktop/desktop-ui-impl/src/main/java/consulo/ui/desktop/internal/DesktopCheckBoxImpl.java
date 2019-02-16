@@ -18,10 +18,8 @@ package consulo.ui.desktop.internal;
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.awt.TargetAWT;
-import consulo.ui.CheckBox;
-import consulo.ui.KeyCode;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.ValueComponent;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.*;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.util.MnemonicInfo;
 
@@ -34,8 +32,17 @@ import java.awt.event.ActionListener;
  * @since 09-Jun-16
  */
 class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements CheckBox {
+  class MyJBCheckBox extends JBCheckBox implements FromSwingComponentWrapper {
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopCheckBoxImpl.this;
+    }
+  }
+
   public DesktopCheckBoxImpl() {
-    myComponent = new JBCheckBox();
+    myComponent = new MyJBCheckBox();
   }
 
   @Nonnull

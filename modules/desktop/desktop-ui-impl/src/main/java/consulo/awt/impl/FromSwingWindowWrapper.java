@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.awt.internal;
+package consulo.awt.impl;
 
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 2019-02-16
  */
 @Deprecated
 @DeprecationInfo("Internal class, don't use it in plugins")
-public interface SwingIconWrapper {
+public interface FromSwingWindowWrapper {
   @Nonnull
-  javax.swing.Icon toSwingIcon();
+  Window toUIWindow();
 }

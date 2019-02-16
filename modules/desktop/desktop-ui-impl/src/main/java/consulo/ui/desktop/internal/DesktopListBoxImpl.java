@@ -18,7 +18,7 @@ package consulo.ui.desktop.internal;
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
-import consulo.awt.internal.SwingComponentWrapper;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.*;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.model.ListModel;
@@ -30,7 +30,19 @@ import javax.swing.*;
  * @author VISTALL
  * @since 12-Sep-17
  */
-class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E>, SwingComponentWrapper {
+class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
+  class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
+    MyJBList(@Nonnull javax.swing.ListModel<T> dataModel) {
+      super(dataModel);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopListBoxImpl.this;
+    }
+  }
+
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
 
   private ListModel<E> myModel;
@@ -39,7 +51,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     myModel = model;
     DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(model);
 
-    myComponent = new JBList<>(wrapper);
+    myComponent = new MyJBList<>(wrapper);
     myComponent.setCellRenderer(new ColoredListCellRenderer<E>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {

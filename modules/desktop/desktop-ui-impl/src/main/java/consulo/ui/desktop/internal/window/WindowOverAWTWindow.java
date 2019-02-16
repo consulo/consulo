@@ -17,7 +17,8 @@ package consulo.ui.desktop.internal.window;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
-import consulo.awt.internal.SwingWindowWrapper;
+import consulo.awt.TargetAWT;
+import consulo.awt.impl.ToSwingWindowWrapper;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
@@ -31,6 +32,8 @@ import consulo.ui.style.ColorKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.EventListener;
 import java.util.function.Function;
 
@@ -38,17 +41,23 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2019-02-16
  */
-public abstract class WindowOverAWTWindow implements Window, SwingWindowWrapper {
+public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrapper {
   protected final java.awt.Window myWindow;
-  private UIDataObject myUIDataObject = new UIDataObject();
+  private final UIDataObject myUIDataObject = new UIDataObject();
 
   public WindowOverAWTWindow(java.awt.Window window) {
     myWindow = window;
+    myWindow.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosed(WindowEvent e) {
+        myUIDataObject.dispose();
+      }
+    });
   }
 
   @Override
   public void dispose() {
-    myUIDataObject = null;
+    myWindow.dispose();
   }
 
   @Nonnull
@@ -128,7 +137,7 @@ public abstract class WindowOverAWTWindow implements Window, SwingWindowWrapper 
   @Nullable
   @Override
   public Window getParentComponent() {
-    return (Window)myWindow.getParent();
+    return TargetAWT.from((java.awt.Window)myWindow.getParent());
   }
 
   @RequiredUIAccess

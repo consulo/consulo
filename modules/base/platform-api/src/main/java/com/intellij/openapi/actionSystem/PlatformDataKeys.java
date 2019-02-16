@@ -25,6 +25,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.ContentManager;
+import consulo.annotations.DeprecationInfo;
 
 import java.awt.*;
 import java.util.Comparator;
@@ -36,7 +37,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
   Key<FileEditor> FILE_EDITOR = Key.create("fileEditor");
 
   /**
-   *  Returns the text of currently selected file/file revision
+   * Returns the text of currently selected file/file revision
    */
   Key<String> FILE_TEXT = Key.create("fileText");
 
@@ -62,7 +63,14 @@ public interface PlatformDataKeys extends CommonDataKeys {
   /**
    * Returns java.awt.Component currently in focus, DataContext should be retrieved for
    */
+  @Deprecated
+  @DeprecationInfo("Desktop only")
   Key<Component> CONTEXT_COMPONENT = Key.create("contextComponent");
+  /**
+   * Returns java.awt.Component currently in focus, DataContext should be retrieved for
+   */
+  Key<consulo.ui.Component> CONTEXT_UI_COMPONENT = Key.create("contextUIComponent");
+
   Key<CopyProvider> COPY_PROVIDER = Key.create("copyProvider");
   Key<CutProvider> CUT_PROVIDER = Key.create("cutProvider");
   Key<PasteProvider> PASTE_PROVIDER = Key.create("pasteProvider");

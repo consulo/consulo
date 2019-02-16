@@ -20,15 +20,15 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
 import consulo.application.ApplicationProperties;
 import consulo.spash.AnimatedLogoLabel;
+import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class DesktopSplash extends JDialog implements StartupProgress {
+public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress {
   @Nullable
   public static Rectangle BOUNDS;
 
@@ -39,7 +39,7 @@ public class DesktopSplash extends JDialog implements StartupProgress {
    *                        On start - scaling may changed, and will provide some artifacts after LafManager loading
    */
   public DesktopSplash(boolean unstableScaling) {
-    super((Frame)null, false);
+    super(null, false);
 
     setUndecorated(true);
     if (!(SystemInfo.isLinux && SystemInfo.isJavaVersionAtLeast(7, 0, 0))) {

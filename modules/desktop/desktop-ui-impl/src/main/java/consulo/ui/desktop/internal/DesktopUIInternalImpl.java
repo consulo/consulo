@@ -147,26 +147,14 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Window _Window_getActiveWindow() {
     Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-    if (window == null) {
-      return null;
-    }
-    if (window instanceof Window) {
-      return (Window)window;
-    }
-    throw new UnsupportedOperationException(window + " is not impl consulo.Window.");
+    return (Window)TargetAWT.from((java.awt.Window)window);
   }
 
   @Nullable
   @Override
   public Window _Window_getFocusedWindow() {
     Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    if (window == null) {
-      return null;
-    }
-    if (window instanceof Window) {
-      return (Window)window;
-    }
-    throw new UnsupportedOperationException(window + " is not impl consulo.Window.");
+    return (Window)TargetAWT.from((java.awt.Window)window);
   }
 
   @Override

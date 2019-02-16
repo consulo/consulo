@@ -19,7 +19,7 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.JBImageIcon;
-import consulo.awt.internal.SwingIconWrapper;
+import consulo.awt.impl.ToSwingIconWrapper;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.awt.image.BufferedImage;
  * @author VISTALL
  * @since 2019-02-13
  */
-public class DesktopFromBytesImageImpl implements Image, SwingIconWrapper {
+public class DesktopFromBytesImageImpl implements Image, ToSwingIconWrapper {
   private Icon myIcon;
 
   public DesktopFromBytesImageImpl(byte[] bytes, int width, int height) {

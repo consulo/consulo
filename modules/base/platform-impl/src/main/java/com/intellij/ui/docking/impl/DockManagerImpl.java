@@ -54,6 +54,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;
+import consulo.util.JWindowAsUIWindowHack;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 
@@ -230,7 +231,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     private final JLabel myImageContainer;
 
     private MyDragSession(MouseEvent me, @Nonnull DockableContent content) {
-      myWindow = new JWindow();
+      myWindow = JWindowAsUIWindowHack.create(null);
       myContent = content;
 
       Image previewImage = content.getPreviewImage();

@@ -41,11 +41,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.ide.DataManager</interface-class>
-      <implementation-class>com.intellij.ide.impl.DataManagerImpl</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.openapi.keymap.KeymapManager</interface-class>
       <implementation-class>com.intellij.openapi.keymap.impl.KeymapManagerImpl</implementation-class>
     </component>

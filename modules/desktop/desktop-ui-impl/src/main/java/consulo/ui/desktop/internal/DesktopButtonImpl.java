@@ -15,7 +15,9 @@
  */
 package consulo.ui.desktop.internal;
 
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Button;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
@@ -27,8 +29,20 @@ import javax.swing.*;
  * @since 13-Sep-17
  */
 class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Button {
+  class MyButton extends JButton implements FromSwingComponentWrapper {
+    MyButton(String text) {
+      super(text);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopButtonImpl.this;
+    }
+  }
+
   public DesktopButtonImpl(String text) {
-    myComponent = new JButton(text);
+    myComponent = new MyButton(text);
   }
 
   @Nonnull

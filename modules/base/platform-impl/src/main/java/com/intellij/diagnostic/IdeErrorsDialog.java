@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.diagnostic.errordialog.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;
@@ -49,12 +48,13 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
+import consulo.ide.base.BaseDataManager;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -67,8 +67,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListener, TypeSafeDataProvider {
   private static final Logger LOG = Logger.getInstance(IdeErrorsDialog.class.getName());
@@ -1026,7 +1026,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      final DataContext dataContext = ((DataManagerImpl)DataManager.getInstance()).getDataContextTest((Component)e.getSource());
+      final DataContext dataContext = ((BaseDataManager)DataManager.getInstance()).getDataContextTest((Component)e.getSource());
 
       AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, myAnalyze.getTemplatePresentation(), ActionManager.getInstance(), e.getModifiers());
 

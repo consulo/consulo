@@ -469,7 +469,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     myToolWindowPanel = new DesktopToolWindowPanelImpl(myFrame, this);
     Disposer.register(myProject, getToolWindowPanel());
-    JFrame jFrame = (JFrame)myFrame.getWindow();
+    JFrame jFrame = (JFrame)TargetAWT.to(myFrame.getWindow());
     ((IdeRootPane)jFrame.getRootPane()).setToolWindowsPane(myToolWindowPanel);
     jFrame.setTitle(FrameTitleBuilder.getInstance().getProjectTitle(myProject));
     ((IdeRootPane)jFrame.getRootPane()).updateToolbar();
@@ -538,7 +538,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     final String[] ids = getToolWindowIds();
 
     // Remove ToolWindowsPane
-    JFrame window = (JFrame)myFrame.getWindow();
+    JFrame window = (JFrame)TargetAWT.to(myFrame.getWindow());
     ((IdeRootPane)window.getRootPane()).setToolWindowsPane(null);
     myWindowManager.releaseFrame(myFrame);
     List<FinalizableCommand> commandsList = new ArrayList<>();
@@ -882,7 +882,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Override
   protected void appendUpdateToolWindowsPaneCmd(final List<FinalizableCommand> commandsList) {
-    final JRootPane rootPane = ((JFrame)myFrame.getWindow()).getRootPane();
+    final JRootPane rootPane = ((JFrame)TargetAWT.to(myFrame.getWindow())).getRootPane();
     if (rootPane != null) {
       final FinalizableCommand command = new UpdateRootPaneCmd(rootPane, myCommandProcessor);
       commandsList.add(command);
@@ -890,7 +890,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private EditorsSplitters getSplittersToFocus() {
-    Window activeWindow = (Window)myWindowManager.getMostRecentFocusedWindow();
+    Window activeWindow = TargetAWT.to(myWindowManager.getMostRecentFocusedWindow());
 
     if (activeWindow instanceof DesktopFloatingDecorator) {
       IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
@@ -976,7 +976,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     Element element = new Element("state");
 
     // Save frame's bounds
-    JFrame jFrame = (JFrame)myFrame.getWindow();
+    JFrame jFrame = (JFrame)TargetAWT.to(myFrame.getWindow());
     final Rectangle frameBounds = jFrame.getBounds();
     final Element frameElement = new Element(FRAME_ELEMENT);
     element.addContent(frameElement);
@@ -1068,7 +1068,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
           size = decorator.getPreferredSize();
         }
         myFloatingDecorator.setSize(size);
-        myFloatingDecorator.setLocationRelativeTo((Component)myFrame.getWindow());
+        myFloatingDecorator.setLocationRelativeTo(TargetAWT.to(myFrame.getWindow()));
       }
     }
 

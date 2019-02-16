@@ -16,11 +16,11 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ModalityState;
+import consulo.ide.base.BaseDataManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,7 +106,7 @@ public class ButtonToolbarImpl extends JPanel {
         public void actionPerformed(ActionEvent e) {
           AnActionEvent event = new AnActionEvent(
             null,
-            ((DataManagerImpl)myDataManager).getDataContextTest(ButtonToolbarImpl.this),
+            ((BaseDataManager)myDataManager).getDataContextTest(ButtonToolbarImpl.this),
             myPlace,
             myPresentationFactory.getPresentation(action),
             ActionManager.getInstance(),
@@ -171,8 +171,7 @@ public class ButtonToolbarImpl extends JPanel {
   }
 
   public void updateActions() {
-
-    final DataContext dataContext = ((DataManagerImpl)myDataManager).getDataContextTest(this);
+    final DataContext dataContext = ((BaseDataManager)myDataManager).getDataContextTest(this);
 
     for (ActionJButton action : myActions) {
       action.updateAction(dataContext);

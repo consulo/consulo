@@ -16,11 +16,12 @@
 package consulo.ui.desktop.internal.layout;
 
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
-import consulo.ui.layout.TabbedLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.layout.TabbedLayout;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -30,8 +31,16 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane> implements TabbedLayout {
+  class MyJTabbedPane extends JTabbedPane implements FromSwingComponentWrapper {
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopTabbedLayoutImpl.this;
+    }
+  }
+
   public DesktopTabbedLayoutImpl() {
-    myComponent = new JTabbedPane();
+    myComponent = new MyJTabbedPane();
   }
 
   @Nonnull

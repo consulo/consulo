@@ -15,7 +15,9 @@
  */
 package consulo.ui.desktop.internal.window;
 
+import consulo.awt.impl.FromSwingWindowWrapper;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -24,7 +26,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2019-02-15
  */
-public class JFrameAsUIWindow extends JFrame {
+public class JFrameAsUIWindow extends JFrame implements FromSwingWindowWrapper {
   private WindowOverAWTWindow myWindowOverAWTWindow;
 
   public JFrameAsUIWindow() {
@@ -37,10 +39,9 @@ public class JFrameAsUIWindow extends JFrame {
     };
   }
 
+  @Nonnull
   @Override
-  public void dispose() {
-    super.dispose();
-
-    myWindowOverAWTWindow.dispose();
+  public Window toUIWindow() {
+    return myWindowOverAWTWindow;
   }
 }

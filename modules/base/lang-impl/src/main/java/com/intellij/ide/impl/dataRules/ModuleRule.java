@@ -17,7 +17,6 @@
 package com.intellij.ide.impl.dataRules;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -28,6 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import consulo.ide.base.BaseDataManager;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -56,7 +57,7 @@ public class ModuleRule implements GetDataRule<Module> {
 
     VirtualFile virtualFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) {
-      GetDataRule<VirtualFile> dataRule = ((DataManagerImpl)DataManager.getInstance()).getDataRule(PlatformDataKeys.VIRTUAL_FILE);
+      GetDataRule<VirtualFile> dataRule = ((BaseDataManager)DataManager.getInstance()).getDataRule(PlatformDataKeys.VIRTUAL_FILE);
       if (dataRule != null) {
         virtualFile = dataRule.getData(dataProvider);
       }

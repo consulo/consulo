@@ -17,17 +17,18 @@ package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class DataManager {
   @Nonnull
   public static DataManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(DataManager.class);
+    return Application.get().getComponent(DataManager.class);
   }
 
   /**
@@ -72,7 +73,9 @@ public abstract class DataManager {
    * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside
    *                                            component's bounds
    */
-  public abstract DataContext getDataContext(@Nonnull java.awt.Component component, int x, int y);
+  public DataContext getDataContext(@Nonnull java.awt.Component component, int x, int y) {
+    throw new UnsupportedOperationException();
+  }
 
   @NonNls
   public static final String CLIENT_PROPERTY_DATA_PROVIDER = "DataProvider";
@@ -84,7 +87,9 @@ public abstract class DataManager {
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
-  public abstract DataContext getDataContext(@Nullable java.awt.Component component);
+  public DataContext getDataContext(@Nullable java.awt.Component component) {
+    throw new UnsupportedOperationException();
+  }
 
   @Nullable
   public static DataProvider getDataProvider(@Nonnull javax.swing.JComponent component) {

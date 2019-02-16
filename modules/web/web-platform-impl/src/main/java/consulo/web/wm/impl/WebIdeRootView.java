@@ -16,10 +16,10 @@
 package consulo.web.wm.impl;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.Project;
+import consulo.ide.base.BaseDataManager;
 import consulo.ui.*;
 import consulo.ui.internal.WGwtRootPanelImpl;
 
@@ -50,7 +50,7 @@ public class WebIdeRootView {
 
   @RequiredUIAccess
   public void update() {
-    DataContext dataContext = ((DataManagerImpl)DataManager.getInstance()).getDataContextTest(myRootPanel);
+    DataContext dataContext = ((BaseDataManager)DataManager.getInstance()).getDataContextTest(myRootPanel);
 
     AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
 

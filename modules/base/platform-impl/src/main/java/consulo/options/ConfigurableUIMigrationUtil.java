@@ -17,6 +17,7 @@ package consulo.options;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ public class ConfigurableUIMigrationUtil {
 
     consulo.ui.Component uiComponent = configurable.createUIComponent();
     if (uiComponent != null) {
-      return (JComponent)uiComponent;
+      return (JComponent)TargetAWT.to(uiComponent);
     }
     return null;
   }
@@ -51,7 +52,7 @@ public class ConfigurableUIMigrationUtil {
     }
     consulo.ui.Component uiComponent = component.getPreferredFocusedUIComponent();
     if (uiComponent != null) {
-      return (JComponent)uiComponent;
+      return (JComponent)TargetAWT.to(uiComponent);
     }
     return null;
   }

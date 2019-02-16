@@ -16,12 +16,13 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.openapi.Disposable;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 /**
@@ -29,8 +30,20 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 class DesktopRadioButtonImpl extends SwingComponentDelegate<JRadioButton> implements RadioButton {
+  class MyJRadioButton extends JRadioButton implements FromSwingComponentWrapper {
+    MyJRadioButton(String text, boolean selected) {
+      super(text, selected);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopRadioButtonImpl.this;
+    }
+  }
+
   public DesktopRadioButtonImpl(String text, boolean selected) {
-    myComponent = new JRadioButton(text, selected);
+    myComponent = new MyJRadioButton(text, selected);
   }
 
   @Nonnull

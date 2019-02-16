@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.awt.internal;
+package consulo.awt.impl;
 
 import consulo.annotations.DeprecationInfo;
 
@@ -21,11 +21,11 @@ import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-02-16
+ * @since 12-Sep-17
  */
 @Deprecated
 @DeprecationInfo("Internal class, don't use it in plugins")
-public interface SwingWindowWrapper {
+public interface ToSwingComponentWrapper {
   @Nonnull
-  java.awt.Window toAWTWindow();
+  java.awt.Component toAWTComponent();
 }

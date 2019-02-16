@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.impl.ide.actions;
+package consulo.awt.impl;
 
-import com.intellij.ide.actions.AboutDialog;
-import consulo.ide.actions.AboutManager;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Window;
+import consulo.annotations.DeprecationInfo;
 
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-02-15
+ * @since 2019-02-16
  */
-@Singleton
-public class DesktopAboutManager implements AboutManager {
-  @RequiredUIAccess
-  @Override
-  public void showAbout(@Nullable Window parentWindow) {
-    AboutDialog aboutDialog = new AboutDialog(parentWindow);
-    aboutDialog.toUIWindow().showAsync();
-  }
+@Deprecated
+@DeprecationInfo("Internal class, don't use it in plugins")
+public interface ToSwingWindowWrapper {
+  @Nonnull
+  java.awt.Window toAWTWindow();
 }

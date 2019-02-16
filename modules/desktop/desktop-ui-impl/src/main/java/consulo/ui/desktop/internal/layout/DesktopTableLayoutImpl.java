@@ -16,10 +16,11 @@
 package consulo.ui.desktop.internal.layout;
 
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.layout.TableLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.layout.TableLayout;
 import consulo.ui.shared.StaticPosition;
 
 import javax.annotation.Nonnull;
@@ -31,14 +32,26 @@ import java.awt.*;
  * @since 06-Nov-17
  */
 public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> implements TableLayout {
+  class MyJPanel extends JPanel implements FromSwingComponentWrapper {
+    MyJPanel(LayoutManager layout) {
+      super(layout);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopTableLayoutImpl.this;
+    }
+  }
+
   private JPanel myGridPanel;
 
   public DesktopTableLayoutImpl(StaticPosition position) {
     if (position == StaticPosition.CENTER) {
-      myComponent = myGridPanel = new JPanel(new GridBagLayout());
+      myComponent = myGridPanel = new MyJPanel(new GridBagLayout());
     }
     else {
-      myComponent = new JPanel(new BorderLayout());
+      myComponent = new MyJPanel(new BorderLayout());
       myGridPanel = new JPanel(new GridBagLayout());
       switch (position) {
         case TOP:

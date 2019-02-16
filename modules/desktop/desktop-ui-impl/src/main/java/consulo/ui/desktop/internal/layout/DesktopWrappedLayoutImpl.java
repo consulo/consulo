@@ -17,10 +17,11 @@ package consulo.ui.desktop.internal.layout;
 
 import com.intellij.openapi.wm.IdeFocusManager;
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.layout.WrappedLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.layout.WrappedLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,34 +33,45 @@ import java.awt.*;
  * @since 25-Oct-17
  */
 public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> implements WrappedLayout {
+  class MyJPanel extends JPanel implements FromSwingComponentWrapper {
+    MyJPanel(LayoutManager layout) {
+      super(layout);
+    }
+
+    @Override
+    public void requestFocus() {
+      if (getTargetComponent() == this) {
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(super::requestFocus);
+        return;
+      }
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getTargetComponent());
+    }
+
+    @Override
+    public boolean requestFocusInWindow() {
+      if (getTargetComponent() == this) {
+        return super.requestFocusInWindow();
+      }
+      return getTargetComponent().requestFocusInWindow();
+    }
+
+    @Override
+    public final boolean requestFocus(boolean temporary) {
+      if (getTargetComponent() == this) {
+        return super.requestFocus(temporary);
+      }
+      return getTargetComponent().requestFocus(temporary);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopWrappedLayoutImpl.this;
+    }
+  }
+
   public DesktopWrappedLayoutImpl() {
-    myComponent = new JPanel(new BorderLayout()) {
-      @Override
-      public void requestFocus() {
-        if (getTargetComponent() == this) {
-          IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(super::requestFocus);
-          return;
-        }
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getTargetComponent());
-      }
-
-      @Override
-      public boolean requestFocusInWindow() {
-        if (getTargetComponent() == this) {
-          return super.requestFocusInWindow();
-        }
-        return getTargetComponent().requestFocusInWindow();
-      }
-
-      @Override
-      public final boolean requestFocus(boolean temporary) {
-        if (getTargetComponent() == this) {
-          return super.requestFocus(temporary);
-        }
-        return getTargetComponent().requestFocus(temporary);
-      }
-
-    };
+    myComponent = new MyJPanel(new BorderLayout());
     myComponent.setOpaque(false);
   }
 

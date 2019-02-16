@@ -17,15 +17,13 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.SomeQueue;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.Alarm;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@SomeQueue
 public class ControlledCycle {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ControlledCycle");
 

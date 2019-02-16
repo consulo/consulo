@@ -24,7 +24,6 @@ import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -38,11 +37,11 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.base.BaseDataManager;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -428,7 +427,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     public Object getData(@Nonnull Key<?> dataId) {
       Object data;
 
-      DataProvider contentProvider = DataManagerImpl.getDataProviderEx(myContentPanel.getTargetComponent());
+      DataProvider contentProvider = ((BaseDataManager)DataManager.getInstance()).getDataProviderEx(myContentPanel.getTargetComponent());
       if (contentProvider != null) {
         data = contentProvider.getData(dataId);
         if (data != null) return data;

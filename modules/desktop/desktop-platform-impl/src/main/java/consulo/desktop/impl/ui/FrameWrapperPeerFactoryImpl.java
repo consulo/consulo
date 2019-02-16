@@ -67,6 +67,10 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     private MyJFrame(FrameWrapper owner, IdeFrame parent) throws HeadlessException {
       myOwner = owner;
       myParent = parent;
+
+      toUIWindow().putUserData(IdeFrame.KEY, this);
+      toUIWindow().addUserDataProvider(this::getData);
+
       FrameState.setFrameStateListener(this);
       setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
 
@@ -92,14 +96,12 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       MouseGestureManager.getInstance().add(this);
       setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-      addUserDataProvider(this::getData);
     }
 
     @Nonnull
     @Override
     public Window getWindow() {
-      return this;
+      return toUIWindow();
     }
 
     @Override
@@ -197,7 +199,9 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       MouseGestureManager.getInstance().add(this);
       setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-      addUserDataProvider(this::getData);
+
+      toUIWindow().putUserData(IdeFrame.KEY, this);
+      toUIWindow().addUserDataProvider(this::getData);
     }
 
     private Object getData(@Nonnull Key<?> dataId) {
@@ -210,7 +214,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     @Nonnull
     @Override
     public consulo.ui.Window getWindow() {
-      return this;
+      return toUIWindow();
     }
 
     @Override

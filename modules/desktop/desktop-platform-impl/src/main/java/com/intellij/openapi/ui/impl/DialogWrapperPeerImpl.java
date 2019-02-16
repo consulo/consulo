@@ -42,7 +42,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.*;
@@ -56,6 +56,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
@@ -79,7 +80,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
   private final DialogWrapper myWrapper;
   private AbstractDialog myDialog;
   private boolean myCanBeParent = true;
-  private WindowManagerEx myWindowManager;
+  private DesktopWindowManagerImpl myWindowManager;
   private final List<Runnable> myDisposeActions = new ArrayList<>();
   private Project myProject;
 
@@ -93,7 +94,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
     if (application != null) {
-      myWindowManager = (WindowManagerEx)WindowManager.getInstance();
+      myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
     }
 
     consulo.ui.Window window = null;
@@ -109,7 +110,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       window = myWindowManager.suggestParentWindow(project);
       if (window == null) {
         consulo.ui.Window focusedWindow = myWindowManager.getMostRecentFocusedWindow();
-        if (IdeFrameUtil.findRootIdeFrame(focusedWindow) != null) {
+        if (IdeFrameUtil.isRootIdeFrameWindow(focusedWindow)) {
           window = focusedWindow;
         }
       }
@@ -126,7 +127,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     Window owner;
     if (window != null) {
-      owner = (Window)window;
+      owner = TargetAWT.to(window);
     }
     else {
       if (!isHeadless()) {
@@ -181,7 +182,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
     if (application != null) {
-      myWindowManager = (WindowManagerEx)WindowManager.getInstance();
+      myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
     }
 
     OwnerOptional.fromComponent(parent).ifWindow(window -> {
@@ -195,7 +196,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
     if (application != null) {
-      myWindowManager = (WindowManagerEx)WindowManager.getInstance();
+      myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
     }
     createDialog(owner, canBeParent);
 
@@ -431,7 +432,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
 
     if (!myCanBeParent && myWindowManager != null) {
-      myWindowManager.doNotSuggestAsParent(myDialog.getWindow());
+      myWindowManager.doNotSuggestAsParent(TargetAWT.from(myDialog.getWindow()));
     }
 
     final CommandProcessorEx commandProcessor =
@@ -489,7 +490,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myDisposeActions.add(() -> anCancelAction.unregisterCustomShortcutSet(rootPane));
 
     if (!myCanBeParent && myWindowManager != null) {
-      myWindowManager.doNotSuggestAsParent(myDialog.getWindow());
+      myWindowManager.doNotSuggestAsParent(TargetAWT.from(myDialog.getWindow()));
     }
 
     final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
@@ -619,7 +620,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                     @Nonnull ActionCallback focused,
                     @Nonnull ActionCallback typeAheadDone,
                     ActionCallback typeAheadCallback) {
-      super((consulo.ui.Window)owner, null);
+      super((consulo.ui.Window)TargetAWT.from(owner), null);
       myDialogWrapper = new WeakReference<>(dialogWrapper);
       myProject = project != null ? new WeakReference<>(project) : null;
 

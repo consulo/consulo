@@ -22,36 +22,22 @@ import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.Frame;
 
 /**
  * @author VISTALL
- * @since 2019-02-15
+ * @since 2019-02-16
  */
-public class JDialogAsUIWindow extends JDialog implements FromSwingWindowWrapper {
-
+public class JWindowAsUIWindow extends JWindow implements FromSwingWindowWrapper {
   private WindowOverAWTWindow myWindowOverAWTWindow;
 
-  public JDialogAsUIWindow(Window owner, boolean modal) {
-    super((Frame)TargetAWT.to(owner), modal);
+  public JWindowAsUIWindow(Window window) {
+    super(TargetAWT.to(window));
 
     myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
       @RequiredUIAccess
       @Override
       public void setTitle(@Nonnull String title) {
-        JDialogAsUIWindow.this.setTitle(title);
-      }
-    };
-  }
-
-  public JDialogAsUIWindow(Window owner, String title) {
-    super(TargetAWT.to(owner), title);
-
-    myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
-      @RequiredUIAccess
-      @Override
-      public void setTitle(@Nonnull String title) {
-        JDialogAsUIWindow.this.setTitle(title);
+        throw new UnsupportedOperationException();
       }
     };
   }

@@ -171,8 +171,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         if (ApplicationManager.getApplication().isUnitTestMode()) {
           myRootPane.removeNotify();
         }
-        myRootPane = null;
         setRootPane(new JRootPane());
+        Disposer.dispose(myRootPane);
+        myRootPane = null;
       }
 
       if (myFrameDecorator != null) {
@@ -241,8 +242,8 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
   public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
     myJFrame = new MyFrame();
-    myJFrame.putUserData(IdeFrame.KEY, this);
-    myJFrame.addUserDataProvider(key -> getData(key));
+    myJFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
+    myJFrame.toUIWindow().addUserDataProvider(key -> getData(key));
 
     myJFrame.setTitle(FrameTitleUtil.buildTitle());
     myRootPane = createRootPane(actionManager, dataManager, application);
@@ -348,15 +349,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
   @Nonnull
   @Override
   public consulo.ui.Window getWindow() {
-    return myJFrame;
-  }
-
-  @Nullable
-  public static Window getActiveFrame() {
-    for (Frame frame : JFrame.getFrames()) {
-      if (frame.isActive()) return frame;
-    }
-    return null;
+    return myJFrame.toUIWindow();
   }
 
   private void setupCloseAction() {

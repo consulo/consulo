@@ -22,9 +22,10 @@ import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 
@@ -40,10 +41,16 @@ public class KeyboardInternationalizationNotificationManager {
 
   public static void showNotification() {
 
-    if (notificationHasBeenShown || !KeyboardSettingsExternalizable.isSupportedKeyboardLayout((Component)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow())) return;
+    if (notificationHasBeenShown) {
+      return;
+    }
 
-    MyNotificationListener listener =
-            new MyNotificationListener();
+    consulo.ui.Window window = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+    if(!KeyboardSettingsExternalizable.isSupportedKeyboardLayout(TargetAWT.to(window))) {
+      return;
+    }
+
+    MyNotificationListener listener = new MyNotificationListener();
 
     Notifications.Bus.notify(createNotification(LOCALIZATION_GROUP_DISPLAY_ID, listener));
     notificationHasBeenShown = true;
@@ -53,19 +60,18 @@ public class KeyboardInternationalizationNotificationManager {
 
     final String productName = ApplicationNamesInfo.getInstance().getProductName();
 
-    Window recentFocusedWindow = (Window)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+    Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
 
-    String text =
-            "<html>We have found out that you are using a non-english keyboard layout. You can <a href='enable'>enable</a> smart layout support for " +
-            KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) + " language." +
-            "You can change this option in the settings of " + productName + " <a href='settings'>more...</a></html>";
+    String text = "<html>We have found out that you are using a non-english keyboard layout. You can <a href='enable'>enable</a> smart layout support for " +
+                  KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) +
+                  " language." +
+                  "You can change this option in the settings of " +
+                  productName +
+                  " <a href='settings'>more...</a></html>";
 
     String title = "Enable smart keyboard internalization for " + productName + ".";
 
-    return new Notification(groupDisplayId, title,
-                            text,
-                            NotificationType.INFORMATION,
-                            listener);
+    return new Notification(groupDisplayId, title, text, NotificationType.INFORMATION, listener);
   }
 
   private static class MyNotificationListener implements NotificationListener {

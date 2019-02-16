@@ -18,16 +18,13 @@ package consulo.ui.desktop.internal;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.ui.ComboBox;
-import consulo.ui.ListItemRender;
-import consulo.ui.ListItemRenders;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.ValueComponent;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.*;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.model.ListModel;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -35,6 +32,14 @@ import javax.swing.*;
  * @since 12-Jun-16
  */
 public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<ComboBoxWithWidePopup> implements ComboBox<E> {
+  class MyComboBoxWithWidePopup extends ComboBoxWithWidePopup implements FromSwingComponentWrapper {
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopComboBoxImpl.this;
+    }
+  }
+
   private ListModel<E> myModel;
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
 
@@ -42,7 +47,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<ComboBoxWithW
     DesktopComboBoxModelWrapper wrapper = new DesktopComboBoxModelWrapper<>(model);
     myModel = model;
 
-    myComponent = new ComboBoxWithWidePopup();
+    myComponent = new MyComboBoxWithWidePopup();
     myComponent.setModel(wrapper);
     myComponent.setRenderer(new ColoredListCellRenderer<E>() {
       @Override

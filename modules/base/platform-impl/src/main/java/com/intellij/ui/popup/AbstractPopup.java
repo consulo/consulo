@@ -51,6 +51,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -944,7 +945,7 @@ public class AbstractPopup implements JBPopup {
       // for other popups like jdialog-based we should exclude them manually, but
       // we still have to be able to use IdeFrame as parent
       if (!myMayBeParent && !(myWindow instanceof Frame)) {
-        WindowManager.getInstance().doNotSuggestAsParent(myWindow);
+        WindowManager.getInstance().doNotSuggestAsParent(TargetAWT.from(myWindow));
       }
     }
 

@@ -29,6 +29,13 @@ public class IdeFrameUtil {
     return frame != null && !(frame instanceof IdeFrame.Child);
   }
 
+  public static boolean isRootIdeFrameWindow(@Nullable Window window) {
+    if(window == null) {
+      return false;
+    }
+    return isRootFrame(window.getUserData(IdeFrame.KEY));
+  }
+
   /**
    * Return focused and root IdeFrame. Consulo can provide some frame which is not project-frame (child frame). It will return child if active
    * In this case it will return parent frame

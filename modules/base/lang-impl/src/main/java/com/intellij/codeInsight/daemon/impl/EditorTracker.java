@@ -35,6 +35,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.wm.util.IdeFrameUtil;
@@ -76,15 +77,16 @@ public class EditorTracker implements ProjectComponent {
     myIdeFrame = myWindowManager.getIdeFrame(myProject);
     myProject.getMessageBus().connect(myProject).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
+      @RequiredUIAccess
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         if (myIdeFrame == null) {
           return;
         }
 
-        JFrame window = (JFrame)myIdeFrame.getWindow();
+        JFrame window = (JFrame)TargetAWT.to(myIdeFrame.getWindow());
         if (window.getFocusOwner() == null) return;
 
-        setActiveWindow((Window)window);
+        setActiveWindow(myIdeFrame.getWindow());
       }
     });
 
@@ -124,9 +126,7 @@ public class EditorTracker implements ProjectComponent {
       list = new ArrayList<>();
       myWindowToEditorsMap.put(window, list);
 
-      IdeFrame ideFrame = window.getUserData(IdeFrame.KEY);
-
-      if (!IdeFrameUtil.isRootFrame(ideFrame)) {
+      if (!IdeFrameUtil.isRootIdeFrameWindow(window)) {
         WindowAdapter listener = new WindowAdapter() {
           @Override
           public void windowGainedFocus(WindowEvent e) {
@@ -157,7 +157,7 @@ public class EditorTracker implements ProjectComponent {
         };
         myWindowToWindowFocusListenerMap.put(window, listener);
 
-        JFrame frame = (JFrame)ideFrame.getWindow();
+        java.awt.Window frame = TargetAWT.to(window);
         frame.addWindowFocusListener(listener);
         frame.addWindowListener(listener);
         if (frame.isFocused()) {  // windowGainedFocus is missed; activate by force
@@ -184,7 +184,7 @@ public class EditorTracker implements ProjectComponent {
         myWindowToEditorsMap.remove(oldWindow);
         final WindowAdapter listener = myWindowToWindowFocusListenerMap.remove(oldWindow);
         if (listener != null) {
-          JFrame frame = (JFrame)oldWindow;
+          java.awt.Window frame = TargetAWT.to(oldWindow);
 
           frame.removeWindowFocusListener(listener);
           frame.removeWindowListener(listener);
@@ -194,7 +194,7 @@ public class EditorTracker implements ProjectComponent {
   }
 
   private Window windowByEditor(Editor editor) {
-    Window window = (Window)SwingUtilities.windowForComponent(editor.getComponent());
+    Window window = TargetAWT.from(SwingUtilities.windowForComponent(editor.getComponent()));
     if (window != null) {
       IdeFrame ideFrame = window.getUserData(IdeFrame.KEY);
       if (IdeFrameUtil.isRootFrame(ideFrame)) {

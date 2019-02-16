@@ -15,14 +15,12 @@
  */
 package consulo.ui.desktop.internal;
 
-import consulo.ui.Menu;
-import consulo.ui.MenuItem;
-import consulo.ui.MenuSeparator;
-import consulo.ui.RequiredUIAccess;
+import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.*;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 /**
@@ -30,19 +28,31 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
+  class MyJMenu extends JMenu implements FromSwingComponentWrapper {
+    MyJMenu(String s) {
+      super(s);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopMenuImpl.this;
+    }
+  }
+
   public DesktopMenuImpl(String text) {
-    myComponent = new JMenu(text);
+    myComponent = new MyJMenu(text);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public Menu add(@Nonnull MenuItem menuItem) {
-    if(menuItem instanceof MenuSeparator) {
+    if (menuItem instanceof MenuSeparator) {
       myComponent.addSeparator();
       return this;
     }
-    myComponent.add((JMenuItem)menuItem);
+    myComponent.add((JMenuItem)TargetAWT.to(menuItem));
     return this;
   }
 

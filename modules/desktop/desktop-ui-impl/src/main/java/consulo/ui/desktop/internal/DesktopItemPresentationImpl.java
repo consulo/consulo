@@ -16,6 +16,7 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.ColoredListCellRenderer;
+import consulo.awt.impl.TargetAWTFacadeImpl;
 import consulo.ui.ItemPresentation;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
@@ -51,6 +52,6 @@ class DesktopItemPresentationImpl<E> implements ItemPresentation {
 
   @Override
   public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
-    myRenderer.append(text, TargetAWTImpl.from(textAttribute));
+    myRenderer.append(text, TargetAWTFacadeImpl.from(textAttribute));
   }
 }

@@ -16,9 +16,11 @@
 package consulo.ui.desktop.internal.layout;
 
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,9 +28,21 @@ import java.awt.*;
  * @author VISTALL
  * @since 2019-02-16
  */
-class DesktopLayoutBase extends SwingComponentDelegate<JPanel> {
+abstract class DesktopLayoutBase extends SwingComponentDelegate<JPanel> {
+  class MyJPanel extends JPanel implements FromSwingComponentWrapper {
+    MyJPanel(LayoutManager layout) {
+      super(layout);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopLayoutBase.this;
+    }
+  }
+
   protected DesktopLayoutBase(LayoutManager layoutManager) {
-    myComponent = new JPanel(layoutManager);
+    myComponent = new MyJPanel(layoutManager);
   }
 
   protected void add(Component component, Object constraints) {

@@ -18,6 +18,8 @@ package consulo.ui.desktop.internal;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBTextField;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
@@ -57,8 +59,17 @@ class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> implements 
     }
   }
 
+  class MyJBTextField extends JBTextField implements FromSwingComponentWrapper {
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopTextBoxImpl.this;
+    }
+  }
+
   public DesktopTextBoxImpl(String text) {
-    myComponent = new JBTextField(text);
+    myComponent = new MyJBTextField();
     myComponent.getDocument().addDocumentListener(new Listener(this));
     setValue(text);
   }

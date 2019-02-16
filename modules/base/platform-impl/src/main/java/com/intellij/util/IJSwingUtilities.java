@@ -24,6 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import gnu.trove.TIntStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -74,7 +75,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
     WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
     Window activeWindow=null;
     if (windowManager != null) {
-      activeWindow = (Window)windowManager.getMostRecentFocusedWindow();
+      activeWindow = TargetAWT.to(windowManager.getMostRecentFocusedWindow());
     }
     if(activeWindow==null){
       return false;

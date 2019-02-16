@@ -18,7 +18,6 @@ package com.intellij.openapi.keymap.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
-import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -62,6 +61,7 @@ import com.intellij.util.ui.KeyboardLayoutUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.ide.base.BaseDataManager;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import consulo.wm.util.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;
@@ -637,8 +637,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
       processor.onUpdatePassed(e, action, actionEvent);
 
-      if (myContext.getDataContext() instanceof DataManagerImpl.MyDataContext) { // this is not true for test data contexts
-        ((DataManagerImpl.MyDataContext)myContext.getDataContext()).setEventCount(IdeEventQueue.getInstance().getEventCount(), this);
+      if (myContext.getDataContext() instanceof BaseDataManager.DataContextWithEventCount) { // this is not true for test data contexts
+        ((BaseDataManager.DataContextWithEventCount)myContext.getDataContext()).setEventCount(IdeEventQueue.getInstance().getEventCount(), this);
       }
       actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
       Component component = actionEvent.getData(PlatformDataKeys.CONTEXT_COMPONENT);

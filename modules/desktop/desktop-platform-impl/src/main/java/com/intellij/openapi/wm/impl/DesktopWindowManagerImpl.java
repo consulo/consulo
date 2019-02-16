@@ -18,8 +18,6 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.impl.DataManagerImpl;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -44,6 +42,7 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
+import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
@@ -129,17 +128,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   public DesktopWindowManagerImpl(Application application, DataManager dataManager, ActionManager actionManager) {
     myDataManager = dataManager;
     myActionManager = actionManager;
-    if (myDataManager instanceof DataManagerImpl) {
-      ((DataManagerImpl)myDataManager).setWindowManager(this);
-    }
 
     if (!application.isUnitTestMode()) {
-      Disposer.register(application, new Disposable() {
-        @Override
-        public void dispose() {
-          disposeRootFrame();
-        }
-      });
+      Disposer.register(application, () -> disposeRootFrame());
     }
 
     myCommandProcessor = new DesktopCommandProcessorImpl();
@@ -154,7 +145,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     myActivationListener = new WindowAdapter() {
       @Override
       public void windowActivated(WindowEvent e) {
-        consulo.ui.Window activeWindow = (consulo.ui.Window)e.getWindow();
+        consulo.ui.Window activeWindow = TargetAWT.from(e.getWindow());
 
         IdeFrame ideFrame = activeWindow.getUserData(IdeFrame.KEY);
         if (ideFrame != null) {
@@ -408,7 +399,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   }
 
   @Override
-  public final void doNotSuggestAsParent(final Window window) {
+  public final void doNotSuggestAsParent(final consulo.ui.Window window) {
     myWindowWatcher.doNotSuggestAsParent(window);
   }
 
@@ -542,7 +533,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       JBInsets.removeFrom(myFrameBounds, new Insets(yOff, xOff, yOff, xOff));
     }
 
-    JFrame jWindow = (JFrame)frame.getWindow();
+    JFrame jWindow = (JFrame)TargetAWT.to(frame.getWindow());
 
     jWindow.setBounds(myFrameBounds);
     jWindow.setExtendedState(myFrameExtendedState);
@@ -566,12 +557,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       myProject2Frame.remove(null);
       myProject2Frame.put(project, ideFrame);
       ideFrame.setProject(project);
-      jFrame = (JFrame)ideFrame.getWindow();
+      jFrame = (JFrame)TargetAWT.to(ideFrame.getWindow());
     }
     else {
       ideFrame = new DesktopIdeFrameImpl(myActionManager, myDataManager, ApplicationManager.getApplication());
 
-      jFrame = (JFrame)ideFrame.getWindow();
+      jFrame = (JFrame)TargetAWT.to(ideFrame.getWindow());
 
       final Rectangle bounds = ProjectFrameBounds.getInstance(project).getBounds();
 
@@ -627,7 +618,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     final Project project = implFrame.getProject();
     LOG.assertTrue(project != null);
 
-    JFrame jFrame = (JFrame)implFrame.getWindow();
+    JFrame jFrame = (JFrame)TargetAWT.to(implFrame.getWindow());
 
     jFrame.removeWindowListener(myActivationListener);
     proceedDialogDisposalQueue(project);
@@ -765,7 +756,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       return null;
     }
 
-    JFrame jWindow = (JFrame)ideFrame.getWindow();
+    JFrame jWindow = (JFrame)TargetAWT.to(ideFrame.getWindow());
 
     int extendedState = updateFrameBounds(jWindow, ideFrame);
 
