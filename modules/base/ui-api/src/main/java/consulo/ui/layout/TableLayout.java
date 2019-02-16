@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.layout;
 
-import consulo.ui.layout.Layout;
+import consulo.ui.Component;
+import consulo.ui.PseudoComponent;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIInternal;
 import consulo.ui.shared.StaticPosition;
 import javax.annotation.Nonnull;
 

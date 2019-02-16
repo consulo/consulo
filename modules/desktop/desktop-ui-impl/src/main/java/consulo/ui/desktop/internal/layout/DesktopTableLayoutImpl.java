@@ -18,7 +18,7 @@ package consulo.ui.desktop.internal.layout;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.TableLayout;
+import consulo.ui.layout.TableLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.shared.StaticPosition;
 

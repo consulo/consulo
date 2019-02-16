@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.TableLayout;
+import consulo.ui.layout.TableLayout;
 import consulo.ui.shared.StaticPosition;
 import javax.annotation.Nonnull;
 
