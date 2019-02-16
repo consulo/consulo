@@ -51,7 +51,7 @@ public class VaadinWebSessionImpl implements WebSession {
       window.setResizable(false);
       window.setClosable(false);
 
-      window.show();
+      window.showAsync();
 
       ((VaadinUIAccessImpl)myAccess).getUI().close();
     });
