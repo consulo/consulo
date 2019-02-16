@@ -20,6 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBTextField;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
 import javax.swing.event.DocumentEvent;
@@ -29,7 +30,7 @@ import javax.swing.event.DocumentListener;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public class DesktopTextBoxImpl extends JBTextField implements TextBox, SwingWrapper {
+class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> implements TextBox {
   private static class Listener implements DocumentListener {
     private DesktopTextBoxImpl myTextField;
 
@@ -57,7 +58,8 @@ public class DesktopTextBoxImpl extends JBTextField implements TextBox, SwingWra
   }
 
   public DesktopTextBoxImpl(String text) {
-    getDocument().addDocumentListener(new Listener(this));
+    myComponent = new JBTextField(text);
+    myComponent.getDocument().addDocumentListener(new Listener(this));
     setValue(text);
   }
 
@@ -75,12 +77,12 @@ public class DesktopTextBoxImpl extends JBTextField implements TextBox, SwingWra
 
   @Override
   public String getValue() {
-    return StringUtil.nullize(getText());
+    return StringUtil.nullize(myComponent.getText());
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(String value, boolean fireEvents) {
-    setText(value);
+    myComponent.setText(value);
   }
 }

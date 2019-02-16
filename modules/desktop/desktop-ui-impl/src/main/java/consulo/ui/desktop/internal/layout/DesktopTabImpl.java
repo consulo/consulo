@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.ui.desktop.internal.layout;
 
 import consulo.ui.Component;
-import consulo.ui.UIInternal;
+import consulo.ui.Tab;
+import consulo.ui.TextAttribute;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 2018-07-03
+ * @since 12-Sep-17
  */
-public interface ScrollLayout {
-  @Nonnull
-  static ScrollLayout create(@Nonnull Component component) {
-    return UIInternal.get()._ScrollLayout_create(component);
+public class DesktopTabImpl implements Tab {
+  @Override
+  public void setIcon(@Nullable Image image) {
+
+  }
+
+  @Override
+  public void clearText() {
+
+  }
+
+  @Override
+  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
+
+  }
+
+  @Override
+  public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+
+  }
+
+  @Override
+  public void select() {
+
   }
 }

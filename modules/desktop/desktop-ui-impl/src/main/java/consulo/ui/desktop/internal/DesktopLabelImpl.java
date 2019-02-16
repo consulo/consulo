@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements Label, SwingWrapper {
+class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements Label {
   private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
   private Supplier<ColorValue> myForegroundSupplier;
 

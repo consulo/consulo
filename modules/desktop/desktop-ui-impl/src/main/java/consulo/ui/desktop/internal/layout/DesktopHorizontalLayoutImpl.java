@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,44 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
+import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
-import consulo.ui.Tab;
-import consulo.ui.TextAttribute;
-import consulo.ui.image.Image;
+import consulo.ui.HorizontalLayout;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 12-Jun-16
  */
-public class DesktopTabImpl implements Tab {
-  @Override
-  public void setIcon(@Nullable Image image) {
-
+public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase implements HorizontalLayout {
+  public DesktopHorizontalLayoutImpl(int gapInPixesl) {
+    super(new com.intellij.ui.components.panels.HorizontalLayout(JBUI.scale(gapInPixesl)));
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public void clearText() {
-
-  }
-
-  @Override
-  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
-
-  }
-
-  @Override
-  public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
-
-  }
-
-  @Override
-  public void select() {
-
+  public HorizontalLayout add(@Nonnull Component component) {
+    add(component, null);
+    return this;
   }
 }

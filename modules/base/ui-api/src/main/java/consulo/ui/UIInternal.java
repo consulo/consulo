@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.annotations.Internal;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.layout.ScrollLayout;
 import consulo.ui.layout.SwipeLayout;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
@@ -65,6 +66,8 @@ public abstract class UIInternal {
   public abstract LabeledLayout _Layouts_labeled(String label);
 
   public abstract TableLayout _Layouts_table(StaticPosition fillOption);
+
+  public abstract ScrollLayout _ScrollLayout_create(Component component);
 
   public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
 

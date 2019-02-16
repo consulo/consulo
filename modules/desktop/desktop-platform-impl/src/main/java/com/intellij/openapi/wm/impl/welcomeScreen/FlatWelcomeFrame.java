@@ -37,7 +37,7 @@ import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.Window;
-import consulo.ui.desktop.internal.base.JFrameAsUIWindow;
+import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;
 
 import javax.accessibility.AccessibleContext;

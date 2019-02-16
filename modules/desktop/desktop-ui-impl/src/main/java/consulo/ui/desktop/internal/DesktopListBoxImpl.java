@@ -17,42 +17,36 @@ package consulo.ui.desktop.internal;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBList;
-import consulo.ui.*;
 import consulo.awt.internal.SwingComponentWrapper;
+import consulo.ui.*;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.model.ListModel;
-import consulo.ui.shared.Size;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.Component;
 
 /**
  * @author VISTALL
  * @since 12-Sep-17
  */
-public class DesktopListBoxImpl<E> implements ListBox<E>, SwingComponentWrapper, SwingWrapper {
-  private JBList<E> myList;
+class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E>, SwingComponentWrapper {
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
 
-  private JScrollPane myRootPanel;
   private ListModel<E> myModel;
 
   public DesktopListBoxImpl(ListModel<E> model) {
     myModel = model;
     DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(model);
 
-    myList = new JBList<>(wrapper);
-    myList.setCellRenderer(new ColoredListCellRenderer<E>() {
+    myComponent = new JBList<>(wrapper);
+    myComponent.setCellRenderer(new ColoredListCellRenderer<E>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
         DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<>(this);
         myRender.render(render, index, value);
       }
     });
-    myRootPanel = ScrollPaneFactory.createScrollPane(myList);
   }
 
   @Nonnull
@@ -68,67 +62,27 @@ public class DesktopListBoxImpl<E> implements ListBox<E>, SwingComponentWrapper,
 
   @Override
   public void setValueByIndex(int index) {
-    myList.setSelectedIndex(index);
+    myComponent.setSelectedIndex(index);
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(E value, boolean fireEvents) {
-    myList.setSelectedValue(value, true);
+    myComponent.setSelectedValue(value, true);
   }
 
   @Nonnull
   @Override
   public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, myList, valueListener);
-    myList.addListSelectionListener(listener);
-    return () -> myList.removeListSelectionListener(listener);
+    DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, myComponent, valueListener);
+    myComponent.addListSelectionListener(listener);
+    return () -> myComponent.removeListSelectionListener(listener);
   }
 
   @SuppressWarnings("unchecked")
   @Nonnull
   @Override
   public E getValue() {
-    return myList.getSelectedValue();
-  }
-
-  @Override
-  public boolean isVisible() {
-    return myRootPanel.isVisible();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setVisible(boolean value) {
-    myRootPanel.setVisible(value);
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return myList.isEnabled();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setEnabled(boolean value) {
-    myList.setEnabled(value);
-  }
-
-  @Nullable
-  @Override
-  public consulo.ui.Component getParentComponent() {
-    return (consulo.ui.Component)myRootPanel.getParent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-
-  }
-
-  @Nonnull
-  @Override
-  public Component toAWTComponent() {
-    return myRootPanel;
+    return myComponent.getSelectedValue();
   }
 }

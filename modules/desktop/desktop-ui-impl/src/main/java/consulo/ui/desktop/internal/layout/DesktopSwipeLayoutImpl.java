@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
 import com.intellij.ui.JBCardLayout;
 import consulo.ui.Layout;
-import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.SwipeLayout;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -30,7 +28,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2018-07-01
  */
-public class DesktopSwipeLayoutImpl extends SwingComponentDelegate<JPanel> implements SwingWrapper, SwipeLayout {
+public class DesktopSwipeLayoutImpl extends DesktopLayoutBase implements SwipeLayout {
   static class LayoutInfo {
     private String myId;
     private Supplier<Layout> myLayoutSupplier;
@@ -44,10 +42,9 @@ public class DesktopSwipeLayoutImpl extends SwingComponentDelegate<JPanel> imple
   }
 
   private final List<LayoutInfo> myLayoutInfos = new ArrayList<>();
-  private final JBCardLayout myCardLayout = new JBCardLayout();
 
   public DesktopSwipeLayoutImpl() {
-    myComponent = new JPanel(myCardLayout);
+    super(new JBCardLayout());
   }
 
   @Nonnull

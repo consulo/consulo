@@ -27,10 +27,8 @@ import javax.swing.*;
 /**
  * @author VISTALL
  * @since 12-Jun-16
- * <p/>
- * some dummy impl
  */
-public class DesktopItemPresentationImpl<E> implements ItemPresentation {
+class DesktopItemPresentationImpl<E> implements ItemPresentation {
   private ColoredListCellRenderer<E> myRenderer;
 
   public DesktopItemPresentationImpl(ColoredListCellRenderer<E> renderer) {

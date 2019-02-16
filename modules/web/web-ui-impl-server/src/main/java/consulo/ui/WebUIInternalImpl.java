@@ -24,6 +24,7 @@ import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.internal.image.WGwtResizeImageImpl;
 import consulo.ui.internal.image.WGwtTransparentImageImpl;
+import consulo.ui.layout.ScrollLayout;
 import consulo.ui.layout.SwipeLayout;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
@@ -95,6 +96,11 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TableLayout _Layouts_table(StaticPosition fillOption) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public ScrollLayout _ScrollLayout_create(Component component) {
     throw new UnsupportedOperationException();
   }
 

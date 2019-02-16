@@ -18,6 +18,7 @@ package consulo.ui.desktop.internal;
 import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.Button;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.Menu;
 import consulo.ui.MenuBar;
@@ -25,8 +26,10 @@ import consulo.ui.MenuItem;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.desktop.internal.image.*;
+import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.layout.ScrollLayout;
 import consulo.ui.layout.SwipeLayout;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
@@ -209,14 +212,12 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public SplitLayout _Layouts_horizontalSplit() {
-    return new DesktopSplitLayoutImpl();
+    return new DesktopSplitLayoutImpl(false);
   }
 
   @Override
   public SplitLayout _Layouts_verticalSplit() {
-    DesktopSplitLayoutImpl impl = new DesktopSplitLayoutImpl();
-    impl.setOrientation(true);
-    return impl;
+    return new DesktopSplitLayoutImpl(true);
   }
 
   @Override
@@ -232,6 +233,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public TableLayout _Layouts_table(StaticPosition fillOption) {
     return new DesktopTableLayoutImpl(fillOption);
+  }
+
+  @Override
+  public ScrollLayout _ScrollLayout_create(Component component) {
+    return new DesktopScrollLayoutImpl(component);
   }
 
   @Override
@@ -266,7 +272,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Button _Components_button(String text) {
-    return new DesktopButtonImpl(text, null);
+    return new DesktopButtonImpl(text);
   }
 
   @Override

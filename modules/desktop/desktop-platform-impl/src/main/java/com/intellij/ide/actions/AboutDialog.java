@@ -32,7 +32,7 @@ import com.intellij.ui.UI;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.desktop.internal.base.JDialogAsUIWindow;
+import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 
 import javax.swing.*;
 import java.awt.*;

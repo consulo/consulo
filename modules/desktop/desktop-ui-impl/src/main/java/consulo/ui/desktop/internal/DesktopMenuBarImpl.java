@@ -17,6 +17,8 @@ package consulo.ui.desktop.internal;
 
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -25,20 +27,24 @@ import javax.swing.*;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class DesktopMenuBarImpl extends JMenuBar implements MenuBar, SwingWrapper {
+public class DesktopMenuBarImpl extends SwingComponentDelegate<JMenuBar> implements MenuBar {
+  public DesktopMenuBarImpl() {
+    myComponent = new JMenuBar();
+  }
+
   @Override
   public void clear() {
-    removeAll();
+    myComponent.removeAll();
   }
 
   @Nonnull
   @Override
   public MenuBar add(@Nonnull MenuItem menuItem) {
     if(menuItem instanceof JMenu) {
-      add((JMenu)menuItem);
+      myComponent.add((JMenu)menuItem);
     }
     else {
-      add((JMenu)new DesktopMenuImpl(menuItem.getText()));
+      myComponent.add((JMenu)new DesktopMenuImpl(menuItem.getText()));
     }
     return this;
   }

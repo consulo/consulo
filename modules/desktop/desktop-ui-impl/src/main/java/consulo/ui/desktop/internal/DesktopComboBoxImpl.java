@@ -23,6 +23,7 @@ import consulo.ui.ListItemRender;
 import consulo.ui.ListItemRenders;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.model.ListModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +34,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements ComboBox<E>, SwingWrapper {
+public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<ComboBoxWithWidePopup> implements ComboBox<E> {
   private ListModel<E> myModel;
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
 
@@ -41,8 +42,9 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
     DesktopComboBoxModelWrapper wrapper = new DesktopComboBoxModelWrapper<>(model);
     myModel = model;
 
-    setModel(wrapper);
-    setRenderer(new ColoredListCellRenderer<E>() {
+    myComponent = new ComboBoxWithWidePopup();
+    myComponent.setModel(wrapper);
+    myComponent.setRenderer(new ColoredListCellRenderer<E>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
         DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<>(this);
@@ -64,27 +66,27 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
 
   @Override
   public void setValueByIndex(int index) {
-    setSelectedIndex(index);
+    myComponent.setSelectedIndex(index);
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(E value, boolean fireEvents) {
-    setSelectedItem(value);
+    myComponent.setSelectedItem(value);
   }
 
   @Nonnull
   @Override
   public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
     DesktopValueListenerAsItemListenerImpl<E> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true);
-    addItemListener(listener);
-    return () -> removeItemListener(listener);
+    myComponent.addItemListener(listener);
+    return () -> myComponent.removeItemListener(listener);
   }
 
   @SuppressWarnings("unchecked")
   @Nullable
   @Override
   public E getValue() {
-    return (E)getSelectedItem();
+    return (E)myComponent.getSelectedItem();
   }
 }

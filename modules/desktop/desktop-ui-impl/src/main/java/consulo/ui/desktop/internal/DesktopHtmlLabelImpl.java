@@ -21,7 +21,7 @@ import consulo.ui.HtmlLabel;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopHtmlLabelImpl extends DesktopLabelImpl implements HtmlLabel, SwingWrapper {
+class DesktopHtmlLabelImpl extends DesktopLabelImpl implements HtmlLabel {
   public DesktopHtmlLabelImpl(String text) {
     super("<html><body>" + text + "</body></html>");
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.window;
 
-import consulo.ui.Button;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2019-02-15
  */
-class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Button {
-  public DesktopButtonImpl(String text) {
-    myComponent = new JButton(text);
+public class JDialogAsUIWindow extends JDialog {
+
+  private WindowOverAWTWindow myWindowOverAWTWindow;
+
+  public JDialogAsUIWindow(Window owner, String title) {
+    super((java.awt.Window)owner, title);
+
+    myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
+      @RequiredUIAccess
+      @Override
+      public void setTitle(@Nonnull String title) {
+        JDialogAsUIWindow.this.setTitle(title);
+      }
+    };
   }
 
-  @Nonnull
   @Override
-  public String getText() {
-    return myComponent.getText();
-  }
+  public void dispose() {
+    super.dispose();
 
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull String text) {
-    myComponent.setText(text);
+    myWindowOverAWTWindow.dispose();
   }
 }

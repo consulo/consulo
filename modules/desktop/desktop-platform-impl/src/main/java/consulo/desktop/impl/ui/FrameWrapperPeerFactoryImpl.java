@@ -37,8 +37,8 @@ import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.FrameState;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.Window;
-import consulo.ui.desktop.internal.base.JDialogAsUIWindow;
-import consulo.ui.desktop.internal.base.JFrameAsUIWindow;
+import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
+import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;
 
 import javax.annotation.Nonnull;

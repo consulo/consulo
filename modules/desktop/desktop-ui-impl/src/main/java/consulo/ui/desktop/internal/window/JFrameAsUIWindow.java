@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.window;
 
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import consulo.awt.TargetAWT;
-import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.VerticalLayout;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2019-02-15
  */
-public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout, SwingWrapper {
-  public DesktopVerticalLayoutImpl() {
-    super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
+public class JFrameAsUIWindow extends JFrame {
+  private WindowOverAWTWindow myWindowOverAWTWindow;
+
+  public JFrameAsUIWindow() {
+    myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
+      @RequiredUIAccess
+      @Override
+      public void setTitle(@Nonnull String title) {
+        JFrameAsUIWindow.this.setTitle(title);
+      }
+    };
   }
 
-  @RequiredUIAccess
-  @Nonnull
   @Override
-  public VerticalLayout add(@Nonnull Component component) {
-    add(TargetAWT.to(component));
-    return this;
+  public void dispose() {
+    super.dispose();
+
+    myWindowOverAWTWindow.dispose();
   }
 }

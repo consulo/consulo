@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal.base;
+package consulo.ui.desktop.internal.window;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
+import consulo.awt.internal.SwingWindowWrapper;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
@@ -35,16 +36,25 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 2019-02-15
+ * @since 2019-02-16
  */
-public class JFrameAsUIWindow extends JFrame implements Window {
+public abstract class WindowOverAWTWindow implements Window, SwingWindowWrapper {
+  protected final java.awt.Window myWindow;
   private UIDataObject myUIDataObject = new UIDataObject();
+
+  public WindowOverAWTWindow(java.awt.Window window) {
+    myWindow = window;
+  }
 
   @Override
   public void dispose() {
-    super.dispose();
-
     myUIDataObject = null;
+  }
+
+  @Nonnull
+  @Override
+  public java.awt.Window toAWTWindow() {
+    return myWindow;
   }
 
   @RequiredUIAccess
@@ -72,6 +82,11 @@ public class JFrameAsUIWindow extends JFrame implements Window {
   }
 
   @Override
+  public void setResizable(boolean value) {
+
+  }
+
+  @Override
   public void setClosable(boolean value) {
     throw new UnsupportedOperationException();
   }
@@ -88,10 +103,32 @@ public class JFrameAsUIWindow extends JFrame implements Window {
     throw new UnsupportedOperationException();
   }
 
+  @Override
+  public boolean isVisible() {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setVisible(boolean value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setEnabled(boolean value) {
+
+  }
+
   @Nullable
   @Override
   public Window getParentComponent() {
-    return (Window)getParent();
+    return (Window)myWindow.getParent();
   }
 
   @RequiredUIAccess

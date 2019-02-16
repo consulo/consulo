@@ -18,6 +18,8 @@ package consulo.ui.desktop.internal;
 import com.intellij.openapi.Disposable;
 import consulo.ui.RadioButton;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -26,28 +28,40 @@ import javax.swing.*;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton, SwingWrapper {
+class DesktopRadioButtonImpl extends SwingComponentDelegate<JRadioButton> implements RadioButton {
   public DesktopRadioButtonImpl(String text, boolean selected) {
-    super(text, selected);
+    myComponent = new JRadioButton(text, selected);
   }
 
   @Nonnull
   @Override
   public Disposable addValueListener(@Nonnull ValueListener<Boolean> valueListener) {
     DesktopValueListenerAsItemListenerImpl<Boolean> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false);
-    addItemListener(listener);
-    return () -> removeItemListener(listener);
+    myComponent.addItemListener(listener);
+    return () -> myComponent.removeItemListener(listener);
   }
 
   @Nonnull
   @Override
   public Boolean getValue() {
-    return isSelected();
+    return myComponent.isSelected();
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(@Nonnull Boolean value, boolean fireEvents) {
-    setSelected(value);
+    myComponent.setSelected(value);
+  }
+
+  @Nonnull
+  @Override
+  public String getText() {
+    return myComponent.getText();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setText(@Nonnull String text) {
+    myComponent.setText(text);
   }
 }

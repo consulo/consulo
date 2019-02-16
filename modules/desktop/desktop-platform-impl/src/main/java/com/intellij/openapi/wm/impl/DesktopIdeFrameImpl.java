@@ -50,7 +50,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.desktop.internal.base.JFrameAsUIWindow;
+import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.status.ModuleLayerWidget;
 

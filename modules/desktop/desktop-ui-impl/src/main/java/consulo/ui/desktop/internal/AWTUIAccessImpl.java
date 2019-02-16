@@ -40,7 +40,7 @@ public class AWTUIAccessImpl implements UIAccess {
   @Nonnull
   @Override
   public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
-    AsyncResult<T> asyncResult = new AsyncResult<>();
+    AsyncResult<T> asyncResult = AsyncResult.undefined();
     SwingUtilities.invokeLater(() -> {
       try {
         T result = supplier.get();

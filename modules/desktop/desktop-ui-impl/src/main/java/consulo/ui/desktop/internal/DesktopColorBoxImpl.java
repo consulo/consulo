@@ -20,6 +20,7 @@ import com.intellij.ui.ColorPanel;
 import consulo.awt.TargetAWT;
 import consulo.ui.ColorBox;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;
@@ -30,28 +31,29 @@ import java.awt.event.ActionListener;
  * @author VISTALL
  * @since 6/9/18
  */
-public class DesktopColorBoxImpl extends ColorPanel implements SwingWrapper, ColorBox {
+class DesktopColorBoxImpl extends SwingComponentDelegate<ColorPanel> implements ColorBox {
   public DesktopColorBoxImpl(ColorValue colorValue) {
-    setSelectedColor(TargetAWT.to(colorValue));
+    myComponent = new ColorPanel();
+    myComponent.setSelectedColor(TargetAWT.to(colorValue));
   }
 
   @Nonnull
   @Override
   public Disposable addValueListener(@Nonnull ValueListener<ColorValue> valueListener) {
-    ActionListener actionListener = e -> valueListener.valueChanged(new ValueEvent<>(this, TargetAWT.from(getSelectedColor())));
-    addActionListener(actionListener);
-    return () -> removeActionListener(actionListener);
+    ActionListener actionListener = e -> valueListener.valueChanged(new ValueEvent<>(this, TargetAWT.from(myComponent.getSelectedColor())));
+    myComponent.addActionListener(actionListener);
+    return () -> myComponent.removeActionListener(actionListener);
   }
 
   @Nullable
   @Override
   public ColorValue getValue() {
-    return TargetAWT.from(getSelectedColor());
+    return TargetAWT.from(myComponent.getSelectedColor());
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(ColorValue value, boolean fireEvents) {
-    setSelectedColor(TargetAWT.to(value));
+    myComponent.setSelectedColor(TargetAWT.to(value));
   }
 }

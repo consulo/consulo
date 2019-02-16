@@ -32,6 +32,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 15-Oct-17
  */
+@Deprecated
 public interface SomeUIWrapper extends Component {
   @Nonnull
   UIDataObject dataObject();

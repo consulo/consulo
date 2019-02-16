@@ -18,8 +18,10 @@ package consulo.awt;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.internal.SwingComponentWrapper;
 import consulo.awt.internal.SwingIconWrapper;
+import consulo.awt.internal.SwingWindowWrapper;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
+import consulo.ui.Window;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
@@ -46,7 +48,7 @@ public class TargetAWT {
 
   @Nonnull
   public static java.awt.Color to(@Nonnull RGBColor color) {
-    int alpha = (int) color.getAlpha() * 255;
+    int alpha = (int)color.getAlpha() * 255;
     return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
   }
 
@@ -63,15 +65,28 @@ public class TargetAWT {
     return new java.awt.Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
   }
 
-  @Nonnull
-  public static java.awt.Component to(@Nonnull Component component) {
+  @Contract("null -> null")
+  public static java.awt.Component to(@Nullable Component component) {
+    if (component == null) {
+      return null;
+    }
+
     if (component instanceof SwingComponentWrapper) {
       return ((SwingComponentWrapper)component).toAWTComponent();
     }
-    else if (component instanceof java.awt.Component) {
-      return (java.awt.Component)component;
+    throw new IllegalArgumentException(component + " is not SwingComponentWrapper");
+  }
+
+  @Contract("null -> null")
+  public static java.awt.Window to(@Nullable Window component) {
+    if (component == null) {
+      return null;
     }
-    throw new IllegalArgumentException(component + " is not ToSwingWrapper");
+
+    if (component instanceof SwingWindowWrapper) {
+      return ((SwingWindowWrapper)component).toAWTWindow();
+    }
+    throw new IllegalArgumentException(component + " is not SwingWindowWrapper");
   }
 
   @Contract("null -> null")
@@ -97,8 +112,8 @@ public class TargetAWT {
       return null;
     }
 
-    if(image instanceof SwingIconWrapper) {
-      return ((SwingIconWrapper) image).toSwingIcon();
+    if (image instanceof SwingIconWrapper) {
+      return ((SwingIconWrapper)image).toSwingIcon();
     }
     else if (image instanceof Icon) {
       return (Icon)image;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
@@ -21,8 +21,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.TableLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.shared.StaticPosition;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -30,7 +30,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 06-Nov-17
  */
-public class DesktopTableLayoutImpl extends SwingComponentDelegate implements TableLayout, SwingWrapper {
+public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> implements TableLayout {
   private JPanel myGridPanel;
 
   public DesktopTableLayoutImpl(StaticPosition position) {

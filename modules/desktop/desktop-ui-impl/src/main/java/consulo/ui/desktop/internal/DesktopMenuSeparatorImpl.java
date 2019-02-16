@@ -34,7 +34,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-05-09
  */
-public class DesktopMenuSeparatorImpl implements MenuSeparator {
+class DesktopMenuSeparatorImpl implements MenuSeparator {
   public static final DesktopMenuSeparatorImpl INSTANCE = new DesktopMenuSeparatorImpl();
   @Nonnull
   @Override

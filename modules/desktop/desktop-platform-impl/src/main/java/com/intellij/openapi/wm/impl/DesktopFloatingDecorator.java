@@ -29,7 +29,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.desktop.internal.base.JDialogAsUIWindow;
+import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import consulo.ui.shared.Rectangle2D;
 

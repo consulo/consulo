@@ -13,34 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
-import com.intellij.ui.IdeBorderFactory;
-import consulo.awt.TargetAWT;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.ui.Component;
-import consulo.ui.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import consulo.ui.VerticalLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 15-Jun-16
+ * @since 11-Jun-16
  */
-public class DesktopLabeledLayoutImpl extends JPanel implements SwingWrapper, LabeledLayout {
-  public DesktopLabeledLayoutImpl(String text) {
-    super(new BorderLayout());
-
-    setBorder(IdeBorderFactory.createTitledBorder(text));
+public class DesktopVerticalLayoutImpl extends DesktopLayoutBase implements VerticalLayout {
+  public DesktopVerticalLayoutImpl() {
+    super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  public LabeledLayout set(@Nonnull Component component) {
-    add(TargetAWT.to(component), BorderLayout.CENTER);
+  public VerticalLayout add(@Nonnull Component component) {
+    add(component, null);
     return this;
   }
 }

@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements CheckBox, SwingWrapper {
+class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements CheckBox {
   public DesktopCheckBoxImpl() {
     myComponent = new JBCheckBox();
   }

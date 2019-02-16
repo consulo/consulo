@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
-import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
-import consulo.ui.HorizontalLayout;
-import consulo.ui.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2019-02-16
  */
-public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLayout, SwingWrapper {
-  public DesktopHorizontalLayoutImpl(int gapInPixesl) {
-    super(new com.intellij.ui.components.panels.HorizontalLayout(JBUI.scale(gapInPixesl)));
+class DesktopLayoutBase extends SwingComponentDelegate<JPanel> {
+  protected DesktopLayoutBase(LayoutManager layoutManager) {
+    myComponent = new JPanel(layoutManager);
   }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public HorizontalLayout add(@Nonnull Component component) {
-    add(TargetAWT.to(component));
-    return this;
+  protected void add(Component component, Object constraints) {
+    myComponent.add(TargetAWT.to(component), constraints);
   }
 }

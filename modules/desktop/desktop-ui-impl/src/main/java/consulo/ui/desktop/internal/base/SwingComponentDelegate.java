@@ -15,23 +15,35 @@
  */
 package consulo.ui.desktop.internal.base;
 
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.util.Key;
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
+import consulo.awt.internal.SwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
-import consulo.ui.impl.SomeUIWrapper;
+import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
-import consulo.awt.internal.SwingComponentWrapper;
+import consulo.ui.shared.Size;
+import consulo.ui.shared.border.BorderPosition;
+import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.style.ColorKey;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.util.Collection;
+import java.util.EventListener;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 27-Oct-17
  */
-public class SwingComponentDelegate<T extends JComponent> implements Component, SwingComponentWrapper, SomeUIWrapper {
+public class SwingComponentDelegate<T extends java.awt.Component> implements Component, SwingComponentWrapper {
   protected T myComponent;
 
   @Nonnull
@@ -74,9 +86,85 @@ public class SwingComponentDelegate<T extends JComponent> implements Component, 
     myComponent.setPreferredSize(TargetAWT.to(size));
   }
 
+  @Override
+  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+    dataObject().putUserData(key, value);
+  }
+
+  @Nullable
+  @Override
+  public <T> T getUserData(@Nonnull Key<T> key) {
+    return dataObject().getUserData(key);
+  }
+
+  @Override
+  @Nonnull
+  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+    return dataObject().addUserDataProvider(function);
+  }
+
   @Nonnull
   @Override
-  public UIDataObject dataObject() {
+  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
+    return dataObject().addListener(eventClass, listener);
+  }
+
+  @Nonnull
+  @Override
+  public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
+    return dataObject().getDispatcher(eventClass);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey, int width) {
+    dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
+
+    bordersChanged();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void removeBorder(@Nonnull BorderPosition borderPosition) {
+    dataObject().removeBorder(borderPosition);
+
+    bordersChanged();
+  }
+
+  private void bordersChanged() {
+    JComponent component = (JComponent)toAWTComponent();
+
+    component.setBorder(null);
+
+    Collection<BorderInfo> borders = dataObject().getBorders();
+
+    Map<BorderPosition, Integer> emptyBorders = new LinkedHashMap<>();
+    for (BorderInfo border : borders) {
+      if (border.getBorderStyle() == BorderStyle.EMPTY) {
+        emptyBorders.put(border.getBorderPosition(), border.getWidth());
+      }
+    }
+
+    if (!emptyBorders.isEmpty()) {
+      component.setBorder(new EmptyBorder(getBorderSize(emptyBorders, BorderPosition.TOP), getBorderSize(emptyBorders, BorderPosition.LEFT), getBorderSize(emptyBorders, BorderPosition.BOTTOM),
+                                          getBorderSize(emptyBorders, BorderPosition.RIGHT)));
+
+      return;
+    }
+
+    // FIXME [VISTALL] support other borders?
+  }
+
+  static int getBorderSize(Map<BorderPosition, Integer> map, BorderPosition position) {
+    Integer width = map.get(position);
+    if (width == null) {
+      return 0;
+    }
+    return JBUI.scale(width);
+  }
+
+  @Nonnull
+  protected UIDataObject dataObject() {
     javax.swing.JComponent component = (javax.swing.JComponent)toAWTComponent();
     UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
     if (dataObject == null) {

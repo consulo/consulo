@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.awt.internal;
 
-import consulo.ui.Component;
-import consulo.ui.UIInternal;
+import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-07-03
+ * @since 2019-02-16
  */
-public interface ScrollLayout {
+@Deprecated
+@DeprecationInfo("Internal class, don't use it in plugins")
+public interface SwingWindowWrapper {
   @Nonnull
-  static ScrollLayout create(@Nonnull Component component) {
-    return UIInternal.get()._ScrollLayout_create(component);
-  }
+  java.awt.Window toAWTWindow();
 }

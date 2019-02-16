@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
-import consulo.ui.Button;
+import com.intellij.ui.IdeBorderFactory;
+import com.intellij.ui.ScrollPaneFactory;
+import consulo.awt.TargetAWT;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.layout.ScrollLayout;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2019-02-16
  */
-class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Button {
-  public DesktopButtonImpl(String text) {
-    myComponent = new JButton(text);
-  }
-
-  @Nonnull
-  @Override
-  public String getText() {
-    return myComponent.getText();
+public class DesktopScrollLayoutImpl extends SwingComponentDelegate<JScrollPane> implements ScrollLayout {
+  public DesktopScrollLayoutImpl(@Nullable Component component) {
+    myComponent = ScrollPaneFactory.createScrollPane(TargetAWT.to(component));
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
-    myComponent.setText(text);
+  public void removeBorders() {
+    myComponent.setBorder(IdeBorderFactory.createEmptyBorder());
+    myComponent.setViewportBorder(IdeBorderFactory.createEmptyBorder());
   }
 }

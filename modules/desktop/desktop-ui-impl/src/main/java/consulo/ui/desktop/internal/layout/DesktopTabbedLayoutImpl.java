@@ -13,22 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
-import javax.annotation.Nonnull;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout, SwingWrapper {
+public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane> implements TabbedLayout {
+  public DesktopTabbedLayoutImpl() {
+    myComponent = new JTabbedPane();
+  }
+
   @Nonnull
   @Override
   public Tab createTab() {
@@ -46,7 +51,7 @@ public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout
   @Nonnull
   @Override
   public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
-    addTab(tabName, TargetAWT.to(component));
+    myComponent.addTab(tabName, TargetAWT.to(component));
     return new DesktopTabImpl();
   }
 }

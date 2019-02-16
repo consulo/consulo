@@ -16,7 +16,6 @@
 package consulo.awt.internal;
 
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 @Deprecated
 @DeprecationInfo("Internal class, don't use it in plugins")
-public interface SwingComponentWrapper extends Component {
+public interface SwingComponentWrapper {
   @Nonnull
   java.awt.Component toAWTComponent();
 }

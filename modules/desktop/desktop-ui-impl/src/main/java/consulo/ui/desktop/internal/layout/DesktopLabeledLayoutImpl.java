@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.ui.desktop.internal.layout;
 
+import com.intellij.ui.IdeBorderFactory;
 import consulo.ui.Component;
-import consulo.ui.UIInternal;
+import consulo.ui.LabeledLayout;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 2018-07-03
+ * @since 15-Jun-16
  */
-public interface ScrollLayout {
+public class DesktopLabeledLayoutImpl extends DesktopLayoutBase implements LabeledLayout {
+  public DesktopLabeledLayoutImpl(String text) {
+    super(new BorderLayout());
+    myComponent.setBorder(IdeBorderFactory.createTitledBorder(text));
+  }
+
+  @RequiredUIAccess
   @Nonnull
-  static ScrollLayout create(@Nonnull Component component) {
-    return UIInternal.get()._ScrollLayout_create(component);
+  @Override
+  public LabeledLayout set(@Nonnull Component component) {
+    add(component, BorderLayout.CENTER);
+    return this;
   }
 }

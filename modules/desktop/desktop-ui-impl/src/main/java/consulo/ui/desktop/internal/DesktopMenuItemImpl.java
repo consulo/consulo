@@ -16,15 +16,23 @@
 package consulo.ui.desktop.internal;
 
 import consulo.ui.MenuItem;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class DesktopMenuItemImpl extends JMenuItem implements MenuItem, SwingWrapper {
+class DesktopMenuItemImpl extends SwingComponentDelegate<JMenuItem> implements MenuItem {
   public DesktopMenuItemImpl(String text) {
-    super(text);
+    myComponent = new JMenuItem(text);
+  }
+
+  @Nonnull
+  @Override
+  public String getText() {
+    return myComponent.getText();
   }
 }

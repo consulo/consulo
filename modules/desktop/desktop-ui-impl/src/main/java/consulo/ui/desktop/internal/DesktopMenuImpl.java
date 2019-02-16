@@ -19,6 +19,7 @@ import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.MenuSeparator;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
 
@@ -28,9 +29,9 @@ import javax.swing.*;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class DesktopMenuImpl extends JMenu implements Menu, SwingWrapper {
+class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
   public DesktopMenuImpl(String text) {
-    super(text);
+    myComponent = new JMenu(text);
   }
 
   @RequiredUIAccess
@@ -38,10 +39,16 @@ public class DesktopMenuImpl extends JMenu implements Menu, SwingWrapper {
   @Override
   public Menu add(@Nonnull MenuItem menuItem) {
     if(menuItem instanceof MenuSeparator) {
-      addSeparator();
+      myComponent.addSeparator();
       return this;
     }
-    add((JMenuItem)menuItem);
+    myComponent.add((JMenuItem)menuItem);
     return this;
+  }
+
+  @Nonnull
+  @Override
+  public String getText() {
+    return myComponent.getText();
   }
 }

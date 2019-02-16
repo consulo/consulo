@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.layout;
 
-import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWrapper {
+public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayout {
   public DesktopDockLayoutImpl() {
     super(new BorderLayout());
   }
@@ -37,7 +35,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @Nonnull
   @Override
   public DockLayout top(@Nonnull Component component) {
-    add(TargetAWT.to(component), BorderLayout.NORTH);
+    add(component, BorderLayout.NORTH);
     return this;
   }
 
@@ -45,7 +43,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @Nonnull
   @Override
   public DockLayout bottom(@Nonnull Component component) {
-    add(TargetAWT.to(component), BorderLayout.SOUTH);
+    add(component, BorderLayout.SOUTH);
     return this;
   }
 
@@ -53,7 +51,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @Nonnull
   @Override
   public DockLayout center(@Nonnull Component component) {
-    add(TargetAWT.to(component), BorderLayout.CENTER);
+    add(component, BorderLayout.CENTER);
     return this;
   }
 
@@ -61,7 +59,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @Nonnull
   @Override
   public DockLayout left(@Nonnull Component component) {
-    add(TargetAWT.to(component), BorderLayout.WEST);
+    add(component, BorderLayout.WEST);
     return this;
   }
 
@@ -69,7 +67,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @Nonnull
   @Override
   public DockLayout right(@Nonnull Component component) {
-    add(TargetAWT.to(component), BorderLayout.EAST);
+    add(component, BorderLayout.EAST);
     return this;
   }
 }
