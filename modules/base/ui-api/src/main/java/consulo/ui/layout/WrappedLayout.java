@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.layout;
+
+import consulo.ui.*;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 25-Oct-17
  */
-public interface Layout extends Component {
-  @RequiredUIAccess
-  default void clear() {
-    throw new AbstractMethodError();
+public interface WrappedLayout extends Layout {
+  @Nonnull
+  static WrappedLayout create() {
+    return UIInternal.get()._Layouts_wrapped();
   }
 
-  default void remove(@Nonnull Component component) {
-    throw new AbstractMethodError();
+  @Nonnull
+  @RequiredUIAccess
+  static WrappedLayout create(@Nonnull Component component) {
+    return UIInternal.get()._Layouts_wrapped().set(component);
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  WrappedLayout set(@javax.annotation.Nullable Component component);
+
+  @RequiredUIAccess
+  @Nonnull
+  default WrappedLayout set(@Nonnull PseudoComponent component) {
+    return set(component.getComponent());
   }
 }

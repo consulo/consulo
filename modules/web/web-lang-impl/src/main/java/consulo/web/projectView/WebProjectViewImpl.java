@@ -44,7 +44,7 @@ import consulo.ide.projectView.ProjectViewEx;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
-import consulo.ui.WrappedLayout;
+import consulo.ui.layout.WrappedLayout;
 import consulo.web.ui.TreeStructureWrappenModel;
 
 import javax.annotation.Nonnull;

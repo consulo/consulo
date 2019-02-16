@@ -13,44 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.layout;
+
+import consulo.ui.*;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 15-Jun-16
  */
-public interface TabbedLayout extends Layout {
+public interface LabeledLayout extends Layout {
   @Nonnull
-  static TabbedLayout create() {
-    return UIInternal.get()._Layouts_tabbed();
-  }
-
-  /**
-   * Create tab without adding to view
-   * @return new tab
-   */
-  @Nonnull
-  Tab createTab();
-
-  @Nonnull
-  @RequiredUIAccess
-  default Tab addTab(@Nonnull Tab tab, @Nonnull PseudoComponent component) {
-    return addTab(tab, component.getComponent());
+  static LabeledLayout create(@Nonnull String label) {
+    return UIInternal.get()._Layouts_labeled(label);
   }
 
   @Nonnull
   @RequiredUIAccess
-  default Tab addTab(@Nonnull String tabName, @Nonnull PseudoComponent component) {
-    return addTab(tabName, component.getComponent());
+  static LabeledLayout create(@Nonnull String label, @Nonnull Component component) {
+    return UIInternal.get()._Layouts_labeled(label).set(component);
   }
 
   @Nonnull
   @RequiredUIAccess
-  Tab addTab(@Nonnull Tab tab, @Nonnull Component component);
+  default LabeledLayout set(@Nonnull PseudoComponent component) {
+    return set(component.getComponent());
+  }
 
   @Nonnull
   @RequiredUIAccess
-  Tab addTab(@Nonnull String tabName, @Nonnull Component component);
+  LabeledLayout set(@Nonnull Component component);
 }

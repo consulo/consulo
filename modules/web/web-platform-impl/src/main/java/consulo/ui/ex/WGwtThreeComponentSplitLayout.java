@@ -20,7 +20,7 @@ import com.vaadin.shared.Connector;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.HasComponents;
 import consulo.ui.Component;
-import consulo.ui.Layout;
+import consulo.ui.layout.Layout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.internal.VaadinWrapper;

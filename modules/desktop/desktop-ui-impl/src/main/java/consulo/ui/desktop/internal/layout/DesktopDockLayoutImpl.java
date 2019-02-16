@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal.layout;
 
 import consulo.ui.Component;
-import consulo.ui.DockLayout;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

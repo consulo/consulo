@@ -19,7 +19,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
-import consulo.ui.TabbedLayout;
+import consulo.ui.layout.TabbedLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;

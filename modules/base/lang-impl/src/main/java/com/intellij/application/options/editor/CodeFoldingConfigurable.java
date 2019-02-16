@@ -30,7 +30,7 @@ import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.VerticalLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;

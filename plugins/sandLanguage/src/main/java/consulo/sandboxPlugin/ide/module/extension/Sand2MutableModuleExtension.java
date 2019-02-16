@@ -19,7 +19,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.CheckBox;
-import consulo.ui.VerticalLayout;
+import consulo.ui.layout.VerticalLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import com.vaadin.ui.AbstractSingleComponentContainer;
 import consulo.ui.Component;
-import consulo.ui.LabeledLayout;
+import consulo.ui.layout.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import javax.annotation.Nonnull;

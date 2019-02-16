@@ -25,6 +25,10 @@ import consulo.ui.*;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
 import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledComponents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

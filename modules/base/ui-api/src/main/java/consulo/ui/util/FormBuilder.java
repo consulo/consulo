@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.util;
 
 import com.intellij.openapi.util.text.StringUtilRt;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.TableLayout;
 import consulo.ui.shared.StaticPosition;
 import javax.annotation.Nonnull;
 

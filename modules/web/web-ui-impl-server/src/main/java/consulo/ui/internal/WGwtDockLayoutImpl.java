@@ -19,6 +19,8 @@ import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.HasComponents;
 import consulo.ui.*;
 import consulo.ui.internal.border.WGwtBorderBuilder;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.Layout;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import javax.annotation.Nonnull;

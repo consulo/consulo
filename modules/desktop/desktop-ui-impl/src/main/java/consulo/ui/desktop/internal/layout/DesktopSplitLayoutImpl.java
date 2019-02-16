@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.Splitter;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.SplitLayout;
+import consulo.ui.layout.SplitLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;

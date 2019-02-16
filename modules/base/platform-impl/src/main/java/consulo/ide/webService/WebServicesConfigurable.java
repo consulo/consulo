@@ -20,6 +20,11 @@ import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.*;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledComponents;
+
 import javax.annotation.Nonnull;
 
 /**

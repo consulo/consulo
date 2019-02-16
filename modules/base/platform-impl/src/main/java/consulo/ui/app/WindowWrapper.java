@@ -17,6 +17,9 @@ package consulo.ui.app;
 
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.Layout;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;

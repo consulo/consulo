@@ -22,7 +22,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.ui.DockLayout;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;

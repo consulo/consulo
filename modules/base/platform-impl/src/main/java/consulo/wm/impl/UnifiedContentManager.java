@@ -22,7 +22,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentUI;
 import consulo.ui.Component;
-import consulo.ui.DockLayout;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

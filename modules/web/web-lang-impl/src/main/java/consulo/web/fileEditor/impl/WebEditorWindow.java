@@ -25,7 +25,7 @@ import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
-import consulo.ui.TabbedLayout;
+import consulo.ui.layout.TabbedLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

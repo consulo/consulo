@@ -30,6 +30,9 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NotNullComputable;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledComponents;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

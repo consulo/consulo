@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.layout.Layout;
 import consulo.ui.shared.StaticPosition;
 import javax.annotation.Nonnull;
 

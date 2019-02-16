@@ -37,7 +37,7 @@ import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
-import consulo.ui.Layout;
+import consulo.ui.layout.Layout;
 import consulo.ui.shared.border.BorderStyle;
 import org.jetbrains.annotations.Nls;
 

@@ -25,6 +25,7 @@ import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.*;
 import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.layout.DockLayout;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import javax.annotation.Nonnull;
 

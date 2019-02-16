@@ -13,32 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.layout;
+
+import consulo.ui.*;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 11-Jun-16
  */
-public interface HorizontalLayout extends Layout {
+public interface VerticalLayout extends Layout {
   @Nonnull
-  static HorizontalLayout create() {
-    return create(0);
-  }
-
-  @Nonnull
-  static HorizontalLayout create(int gapInPixesl) {
-    return UIInternal.get()._Layouts_horizontal(gapInPixesl);
+  static VerticalLayout create() {
+    return UIInternal.get()._Layouts_vertical();
   }
 
   @Nonnull
   @RequiredUIAccess
-  default HorizontalLayout add(@Nonnull PseudoComponent component) {
+  default VerticalLayout add(@Nonnull PseudoComponent component) {
     return add(component.getComponent());
   }
 
   @Nonnull
   @RequiredUIAccess
-  HorizontalLayout add(@Nonnull Component component);
+  VerticalLayout add(@Nonnull Component component);
 }

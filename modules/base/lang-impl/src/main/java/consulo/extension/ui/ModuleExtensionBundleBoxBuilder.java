@@ -28,7 +28,7 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.Component;
-import consulo.ui.LabeledComponents;
+import consulo.ui.util.LabeledComponents;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;

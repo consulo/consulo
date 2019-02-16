@@ -17,7 +17,7 @@ package consulo.ui.desktop.internal.layout;
 
 import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
-import consulo.ui.HorizontalLayout;
+import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

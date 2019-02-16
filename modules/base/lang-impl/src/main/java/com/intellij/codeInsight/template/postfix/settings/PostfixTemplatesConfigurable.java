@@ -30,6 +30,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledComponents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package consulo.ui.desktop.internal.layout;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.VerticalLayout;
+import consulo.ui.layout.VerticalLayout;
 
 import javax.annotation.Nonnull;
 

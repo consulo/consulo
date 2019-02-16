@@ -13,43 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.layout;
+
+import consulo.ui.*;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 14-Jun-16
  */
-public interface SplitLayout extends Layout {
+public interface TabbedLayout extends Layout {
   @Nonnull
-  static SplitLayout createHorizontal() {
-    return UIInternal.get()._Layouts_horizontalSplit();
-  }
-
-  @Nonnull
-  static SplitLayout createVertical() {
-    return UIInternal.get()._Layouts_verticalSplit();
+  static TabbedLayout create() {
+    return UIInternal.get()._Layouts_tabbed();
   }
 
   /**
-   * @param percent from 0 to 100
+   * Create tab without adding to view
+   * @return new tab
    */
-  void setProportion(int percent);
+  @Nonnull
+  Tab createTab();
 
+  @Nonnull
   @RequiredUIAccess
-  default SplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
-    return setFirstComponent(component.getComponent());
+  default Tab addTab(@Nonnull Tab tab, @Nonnull PseudoComponent component) {
+    return addTab(tab, component.getComponent());
   }
 
+  @Nonnull
   @RequiredUIAccess
-  SplitLayout setFirstComponent(@Nonnull Component component);
-
-  @RequiredUIAccess
-  default SplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
-    return setSecondComponent(component.getComponent());
+  default Tab addTab(@Nonnull String tabName, @Nonnull PseudoComponent component) {
+    return addTab(tabName, component.getComponent());
   }
 
+  @Nonnull
   @RequiredUIAccess
-  SplitLayout setSecondComponent(@Nonnull Component component);
+  Tab addTab(@Nonnull Tab tab, @Nonnull Component component);
+
+  @Nonnull
+  @RequiredUIAccess
+  Tab addTab(@Nonnull String tabName, @Nonnull Component component);
 }

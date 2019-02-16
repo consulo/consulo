@@ -17,7 +17,7 @@ package consulo.ui.desktop.internal.layout;
 
 import com.intellij.ui.IdeBorderFactory;
 import consulo.ui.Component;
-import consulo.ui.LabeledLayout;
+import consulo.ui.layout.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -19,7 +19,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.WrappedLayout;
+import consulo.ui.layout.WrappedLayout;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;

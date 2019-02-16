@@ -21,6 +21,8 @@ import com.intellij.xdebugger.impl.settings.XDebuggerGeneralSettings;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.*;
+import consulo.ui.layout.VerticalLayout;
+
 import javax.annotation.Nonnull;
 
 /**

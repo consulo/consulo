@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal.layout;
 
 import com.intellij.ui.JBCardLayout;
-import consulo.ui.Layout;
+import consulo.ui.layout.Layout;
 import consulo.ui.layout.SwipeLayout;
 
 import javax.annotation.Nonnull;

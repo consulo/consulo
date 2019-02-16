@@ -17,6 +17,9 @@ package consulo.ui.app;
 
 import com.intellij.openapi.util.Couple;
 import consulo.ui.*;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.Layout;
+import consulo.ui.layout.SplitLayout;
 
 import javax.annotation.Nonnull;
 

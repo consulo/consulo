@@ -19,7 +19,7 @@ import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import consulo.ui.WrappedLayout;
+import consulo.ui.layout.WrappedLayout;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;

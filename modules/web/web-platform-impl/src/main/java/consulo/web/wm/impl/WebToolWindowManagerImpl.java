@@ -40,6 +40,7 @@ import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.ui.ex.WGwtToolWindowStripeButton;
 import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.layout.DockLayout;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
