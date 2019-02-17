@@ -54,6 +54,7 @@ import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.moduleImport.ModuleImportProviders;
 import org.jetbrains.annotations.NonNls;
@@ -440,7 +441,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   public void addLibraryOrderEntry(final Module module, final Library library) {
-    Component parent = (Component)WindowManager.getInstance().suggestParentWindow(module.getProject());
+    Component parent = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(module.getProject()));
 
     final ModuleEditor moduleEditor = myContext.myModulesConfigurator.getModuleEditor(module);
     LOG.assertTrue(moduleEditor != null, "Current module editor was not initialized");

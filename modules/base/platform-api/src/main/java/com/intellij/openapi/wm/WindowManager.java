@@ -131,8 +131,9 @@ public abstract class WindowManager {
   public abstract IdeFrame[] getAllProjectFrames();
 
   @Nullable
+  @Deprecated
   public JFrame findVisibleFrame() {
-    return (JFrame)findVisibleWindow();
+    return (JFrame)TargetAWT.to(findVisibleWindow());
   }
 
   @Nullable

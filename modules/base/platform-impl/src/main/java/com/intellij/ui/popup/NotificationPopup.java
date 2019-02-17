@@ -23,6 +23,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +43,7 @@ public class NotificationPopup {
 
   public NotificationPopup(final JComponent owner, final JComponent content, Color background, final boolean useDefaultPreferredSize, ActionListener clickHandler, boolean closeOnClick) {
     final IdeFrame frame = findFrame(owner);
-    if (frame == null || !((Window)frame).isShowing() || frame.getBalloonLayout() == null) {
+    if (frame == null || !TargetAWT.to(frame.getWindow()).isShowing() || frame.getBalloonLayout() == null) {
       new FramelessNotificationPopup(owner, content, background, useDefaultPreferredSize, clickHandler);
     }
     else {

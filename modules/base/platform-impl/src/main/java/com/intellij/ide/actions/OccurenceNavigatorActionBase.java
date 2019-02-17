@@ -28,6 +28,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
@@ -129,7 +130,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
   @Nullable
   @RequiredUIAccess
   private static Component getOccurenceNavigatorFromContext(DataContext dataContext) {
-    Window window = (Window)WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
+    Window window = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
 
     if (window != null) {
       Component component = window.getFocusOwner();

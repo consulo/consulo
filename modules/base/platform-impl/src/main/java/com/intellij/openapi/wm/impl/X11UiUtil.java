@@ -21,6 +21,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
+import consulo.awt.TargetAWT;
 import sun.awt.AWTAccessor;
 import sun.misc.Unsafe;
 
@@ -297,14 +298,16 @@ public class X11UiUtil {
     IdeFrame[] frames = WindowManager.getInstance().getAllProjectFrames();
     if (frames.length == 0) return true;  // no frame to check the property so be optimistic here
 
-    return frames[0] instanceof JFrame && hasWindowProperty((JFrame)frames[0], X11.NET_WM_ALLOWED_ACTIONS, X11.NET_WM_ACTION_FULLSCREEN);
+    IdeFrame frame = frames[0];
+    Window awtWindow = TargetAWT.to(frame.getWindow());
+    return awtWindow instanceof JFrame && hasWindowProperty(awtWindow, X11.NET_WM_ALLOWED_ACTIONS, X11.NET_WM_ACTION_FULLSCREEN);
   }
 
   public static boolean isInFullScreenMode(JFrame frame) {
     return X11 != null && hasWindowProperty(frame, X11.NET_WM_STATE, X11.NET_WM_STATE_FULLSCREEN);
   }
 
-  private static boolean hasWindowProperty(JFrame frame, long name, long expected) {
+  private static boolean hasWindowProperty(Window frame, long name, long expected) {
     if (X11 == null) return false;
     try {
       ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(frame);

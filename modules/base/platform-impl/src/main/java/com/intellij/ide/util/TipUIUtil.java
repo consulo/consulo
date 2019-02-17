@@ -37,6 +37,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ResourceUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.util.URLDictionatyLoader;
 import consulo.ui.style.StyleManager;
 import consulo.wm.util.IdeFrameUtil;
@@ -144,7 +145,7 @@ public class TipUIUtil {
     final boolean dark = StyleManager.get().getCurrentStyle().isDark();
 
     IdeFrame af = IdeFrameUtil.findActiveRootIdeFrame();
-    Component comp = af != null ? (Component)af.getWindow() : browser;
+    Component comp = af != null ? TargetAWT.to(af.getWindow()) : browser;
     int index = text.indexOf("<img", 0);
     while (index != -1) {
       final int end = text.indexOf(">", index + 1);

@@ -42,6 +42,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 import com.intellij.util.WaitFor;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.Window;
 import consulo.wm.util.IdeFrameUtil;
 import org.jdom.Element;
@@ -357,13 +358,13 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     final DesktopIdeFrameImpl frame = getFrame();
 
-    final Component c = ((WindowManagerEx)WindowManager.getInstance()).getFocusedComponent((java.awt.Window)frame.getWindow());
+    final Component c = ((WindowManagerEx)WindowManager.getInstance()).getFocusedComponent(TargetAWT.to(frame.getWindow()));
 
     if (c != null) {
       IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(c);
     }
     else {
-      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown((Component)frame.getWindow());
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(TargetAWT.to(frame.getWindow()));
     }
 
     //noinspection SSBasedInspection

@@ -36,6 +36,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.impl.ToolWindowPanelImplEx;
@@ -1246,13 +1247,13 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     @Nonnull
     private Pair<BufferedImage, Reference<BufferedImage>> getImage(@Nullable Reference<BufferedImage> imageRef) {
       LOG.assertTrue(UISettings.getInstance().getAnimateWindows());
-      JFrame jFrame = (JFrame)myIdeFrame.getWindow();
+      Window awtWindow = TargetAWT.to(myIdeFrame.getWindow());
       BufferedImage image = SoftReference.dereference(imageRef);
       if (image == null || image.getWidth(null) < getWidth() || image.getHeight(null) < getHeight()) {
-        final int width = Math.max(Math.max(1, getWidth()), jFrame.getWidth());
-        final int height = Math.max(Math.max(1, getHeight()), jFrame.getHeight());
+        final int width = Math.max(Math.max(1, getWidth()), awtWindow.getWidth());
+        final int height = Math.max(Math.max(1, getHeight()), awtWindow.getHeight());
         if (SystemInfo.isWindows) {
-          image = jFrame.getGraphicsConfiguration().createCompatibleImage(width, height);
+          image = awtWindow.getGraphicsConfiguration().createCompatibleImage(width, height);
         }
         else {
           // Under Linux we have found that images created by createCompatibleImage(),

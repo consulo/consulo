@@ -75,6 +75,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
+import consulo.awt.TargetAWT;
 import net.miginfocom.swing.MigLayout;
 
 import javax.annotation.Nonnull;
@@ -206,7 +207,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
               .createPopup();
       Disposer.register(myBalloon, myDisposable);
       registerCloseAction(myBalloon);
-      final Window window = (Window)WindowManager.getInstance().suggestParentWindow(myProject);
+      final Window window = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
       Component parent = UIUtil.findUltimateParent(window);
       RelativePoint showPoint = null;
       Point screenPoint = DimensionService.getInstance().getLocation(SERVICE_KEY);

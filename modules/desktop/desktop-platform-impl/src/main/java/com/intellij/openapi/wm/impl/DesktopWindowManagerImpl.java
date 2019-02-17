@@ -456,7 +456,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       }
     }
     else {
-      Container eachParent = (Container)getMostRecentFocusedWindow();
+      Container eachParent = TargetAWT.to(getMostRecentFocusedWindow());
       while (eachParent != null) {
         if (eachParent instanceof IdeFrame) {
 

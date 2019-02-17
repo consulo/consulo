@@ -37,12 +37,12 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ApplicationProperties;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -158,7 +158,7 @@ public class PluginManager extends PluginManagerCore {
             if (EDIT.equals(description)) {
               PluginManagerConfigurable configurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
               IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : (Window)ideFrame.getWindow(), configurable);
+              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : TargetAWT.to(ideFrame.getWindow()), configurable);
               return;
             }
 

@@ -19,6 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.DialogWrapperPeerFactory;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +54,7 @@ public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
 
   @Override
   public DialogWrapperPeer createPeer(@Nonnull final DialogWrapper wrapper, final consulo.ui.Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
-    return new DialogWrapperPeerImpl(wrapper, (Window)owner, canBeParent, applicationModalIfPossible);
+    return new DialogWrapperPeerImpl(wrapper, TargetAWT.to(owner), canBeParent, applicationModalIfPossible);
   }
 
   @Override
@@ -68,6 +69,6 @@ public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
 
   @Override
   public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, consulo.ui.Window owner, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType) {
-    return new DialogWrapperPeerImpl(wrapper, (Window)owner, canBeParent, ideModalityType);
+    return new DialogWrapperPeerImpl(wrapper, TargetAWT.to(owner), canBeParent, ideModalityType);
   }
 }

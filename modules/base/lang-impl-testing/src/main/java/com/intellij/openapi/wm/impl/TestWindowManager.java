@@ -247,11 +247,6 @@ public final class TestWindowManager extends WindowManagerEx {
     return new IdeFrameEx[0];
   }
 
-  @Override
-  public JFrame findVisibleFrame() {
-    return null;
-  }
-
   @Nullable
   @Override
   public consulo.ui.Window findVisibleWindow() {

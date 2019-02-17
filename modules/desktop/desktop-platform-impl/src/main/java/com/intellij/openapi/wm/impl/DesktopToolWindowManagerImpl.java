@@ -1106,7 +1106,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
           size = decorator.getPreferredSize();
         }
         window.setSize(size);
-        window.setLocationRelativeTo((Component)myFrame.getWindow());
+        window.setLocationRelativeTo(TargetAWT.to(myFrame.getWindow()));
       }
       myId2WindowedDecorator.put(info.getId(), myWindowedDecorator);
       myWindowedDecorator.addDisposable(() -> {

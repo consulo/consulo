@@ -18,6 +18,8 @@ package consulo.buildInWebServer.api;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.BitUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,7 +32,7 @@ import java.awt.*;
  */
 public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
   public static boolean activateFrame(@Nullable final IdeFrame frame) {
-    return frame instanceof Frame && activateFrame((Frame)frame);
+    return frame instanceof Frame && activateFrame((Frame)TargetAWT.to(frame.getWindow()));
   }
 
   public static boolean activateFrame(@Nullable final Frame frame) {

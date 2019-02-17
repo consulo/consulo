@@ -42,6 +42,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
@@ -95,7 +96,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
     Window owner;
     if (window != null) {
-      owner = (Window)window;
+      owner = TargetAWT.to(window);
     }
     else {
       owner = JOptionPane.getRootFrame();

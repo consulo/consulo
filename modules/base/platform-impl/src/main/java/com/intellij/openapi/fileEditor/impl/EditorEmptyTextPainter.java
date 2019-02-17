@@ -34,6 +34,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
@@ -105,7 +106,7 @@ public class EditorEmptyTextPainter {
   protected static boolean isToolwindowVisible(@Nonnull JComponent splitters, @Nonnull String toolwindowId) {
     Window frame = SwingUtilities.getWindowAncestor(splitters);
 
-    IdeFrame ideFrameIfRoot = IdeFrameUtil.findRootIdeFrame((consulo.ui.Window)frame);
+    IdeFrame ideFrameIfRoot = IdeFrameUtil.findRootIdeFrame(TargetAWT.from(frame));
     if (ideFrameIfRoot != null) {
       Project project = ideFrameIfRoot.getProject();
       if (project != null) {

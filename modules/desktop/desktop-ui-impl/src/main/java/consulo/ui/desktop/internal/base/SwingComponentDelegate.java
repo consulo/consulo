@@ -77,7 +77,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
   @Nullable
   @Override
   public Component getParentComponent() {
-    return (Component)myComponent.getParent();
+    return TargetAWT.from(myComponent.getParent());
   }
 
   @RequiredUIAccess

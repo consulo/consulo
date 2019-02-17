@@ -194,7 +194,7 @@ public class ProjectUtil {
     };
 
     if (executeIfAppInactive) {
-      AppIcon.getInstance().requestFocus((IdeFrame)WindowManager.getInstance().getFrame(p));
+      AppIcon.getInstance().requestFocus(WindowManager.getInstance().getIdeFrame(p));
       cmd.run();
     }
     else {

@@ -266,7 +266,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
           continue;
         }
         if (info.mySuggestAsParent) {
-          return (consulo.ui.Window)window;
+          return TargetAWT.from(window);
         }
         else {
           window = window.getOwner();

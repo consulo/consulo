@@ -26,8 +26,7 @@ import com.sun.jna.platform.win32.*;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
-
-import java.awt.*;
+import consulo.awt.TargetAWT;
 
 /**
  * @author Alexander Lobas
@@ -187,7 +186,7 @@ class Win7TaskBar {
 
   private static WinDef.HWND getHandle(IdeFrame frame) {
     try {
-      Pointer pointer = Native.getWindowPointer((Window)frame.getWindow());
+      Pointer pointer = Native.getWindowPointer(TargetAWT.to(frame.getWindow()));
       return new WinDef.HWND(pointer);
     }
     catch (Throwable e) {

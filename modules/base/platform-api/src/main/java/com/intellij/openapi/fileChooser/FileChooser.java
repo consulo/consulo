@@ -22,6 +22,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import consulo.annotations.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -108,7 +109,7 @@ public class FileChooser {
                                  @Nullable final Component parent,
                                  @Nullable final VirtualFile toSelect,
                                  @Nonnull final Consumer<List<VirtualFile>> callback) {
-    Component parentComponent = parent == null ? (Component)WindowManager.getInstance().suggestParentWindow(project) : parent;
+    Component parentComponent = parent == null ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow(project)) : parent;
     final FileChooserFactory factory = FileChooserFactory.getInstance();
     final PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parentComponent);
     pathChooser.choose(toSelect, callback);

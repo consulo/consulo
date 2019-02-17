@@ -37,6 +37,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -226,7 +228,7 @@ public class ExportToFileUtil {
       if (myTfFile != null) {
         chooser.setCurrentDirectory(new File(myTfFile.getText()));
       }
-      chooser.showOpenDialog((Component)WindowManager.getInstance().suggestParentWindow(myProject));
+      chooser.showOpenDialog(TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject)));
       if (chooser.getSelectedFile() != null) {
         myTfFile.setText(chooser.getSelectedFile().getAbsolutePath());
       }

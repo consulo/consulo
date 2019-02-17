@@ -103,7 +103,7 @@ class ProgressDialog implements Disposable {
 
   public ProgressDialog(ProgressWindow progressWindow, boolean shouldShowBackground, Component parent, String cancelText) {
     myProgressWindow = progressWindow;
-    myParentWindow = (consulo.ui.Window)UIUtil.getWindow(parent);
+    myParentWindow = TargetAWT.from(UIUtil.getWindow(parent));
     initDialog(shouldShowBackground, cancelText);
   }
 

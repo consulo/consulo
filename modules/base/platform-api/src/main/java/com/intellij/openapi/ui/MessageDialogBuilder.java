@@ -19,6 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.mac.MacMessages;
 import com.intellij.util.ObjectUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -100,7 +102,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
       String noText = ObjectUtil.chooseNotNull(myNoText, Messages.NO_BUTTON);
       try {
         if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-          return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, (java.awt.Window)WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
+          return MacMessages.getInstance().showYesNoDialog(myTitle, myMessage, yesText, noText, TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject)), myDoNotAskOption);
         }
       } catch (Exception ignored) {}
 
@@ -137,7 +139,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
       String cancelText = ObjectUtil.chooseNotNull(myCancelText, Messages.CANCEL_BUTTON);
       try {
         if (Messages.canShowMacSheetPanel() && !Messages.isApplicationInUnitTestOrHeadless()) {
-          return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, (java.awt.Window)WindowManager.getInstance().suggestParentWindow(myProject), myDoNotAskOption);
+          return MacMessages.getInstance().showYesNoCancelDialog(myTitle, myMessage, yesText, noText, cancelText, TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject)), myDoNotAskOption);
         }
       }
       catch (Exception ignored) {}
