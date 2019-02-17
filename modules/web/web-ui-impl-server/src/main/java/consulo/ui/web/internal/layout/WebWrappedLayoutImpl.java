@@ -20,51 +20,29 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
-import consulo.ui.web.internal.base.VaadinComponentContainer;
+import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 
 /**
  * @author VISTALL
  * @since 2019-02-17
  */
 public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
-  public static class Vaadin extends VaadinComponentContainer {
-    private Component myComponent;
-
+  public static class Vaadin extends VaadinSingleComponentContainer {
     private void set(@Nullable Component component) {
-      if (myComponent != null) {
-        removeComponent(myComponent);
-      }
-
-      myComponent = component;
-
-      if (component != null) {
-        addComponent(component);
-      }
+      setContent(component);
     }
 
     private void removeIfEqual(Component component) {
-      if (myComponent == component) {
+      if (getContent() == component) {
         set(null);
       }
     }
-
-    @Override
-    public int getComponentCount() {
-      return myComponent == null ? 0 : 1;
-    }
-
-    @Override
-    public Iterator<Component> iterator() {
-      return myComponent == null ? Collections.<Component>emptyList().iterator() : Arrays.asList(myComponent).iterator();
-    }
   }
 
+  @Nonnull
   @Override
   public Vaadin create() {
     return new Vaadin();
