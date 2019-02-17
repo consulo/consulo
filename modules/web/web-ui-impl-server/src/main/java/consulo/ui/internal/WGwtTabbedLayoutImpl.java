@@ -22,7 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.layout.TabbedLayout;
-import consulo.ui.web.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutServerRpc;
@@ -121,8 +121,8 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
       tabState.myItemSegments = tab.getItem().myItemSegments;
       BiConsumer<Tab, Component> closeHandler = tab.getCloseHandler();
       if (closeHandler != null) {
-        tabState.myCloseButton = WGwtImageUrlCache.map(AllIcons.Actions.CloseNew).getState();
-        tabState.myCloseHoverButton = WGwtImageUrlCache.map(AllIcons.Actions.CloseNewHovered).getState();
+        tabState.myCloseButton = WebImageUrlCache.map(AllIcons.Actions.CloseNew).getState();
+        tabState.myCloseHoverButton = WebImageUrlCache.map(AllIcons.Actions.CloseNewHovered).getState();
       }
 
       tabStates.add(tabState);

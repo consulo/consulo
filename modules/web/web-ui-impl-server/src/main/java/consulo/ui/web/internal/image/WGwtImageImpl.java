@@ -22,6 +22,7 @@ import consulo.ui.image.Image;
 import consulo.ui.web.internal.WebUIThreadLocal;
 import consulo.ui.migration.SwingImageRef;
 import consulo.ui.web.servlet.UIServlet;
+import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
@@ -41,7 +42,7 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
 
   @SuppressWarnings("unchecked")
   public WGwtImageImpl(@Nonnull URL url) {
-    myURLHash = WGwtImageUrlCache.hashCode(url);
+    myURLHash = WebImageUrlCache.hashCode(url);
 
     URL scaledImageUrl = url;
     String urlText = url.toString();
@@ -57,7 +58,7 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
 
     try (InputStream ignored = scaledImageUrl.openStream()) {
       // if scaled image resolved - map it for better quality
-      myURLHash = WGwtImageUrlCache.hashCode(scaledImageUrl);
+      myURLHash = WebImageUrlCache.hashCode(scaledImageUrl);
     }
     catch (Throwable ignored) {
     }
@@ -102,7 +103,7 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
   public void toState(MultiImageState m) {
     ImageState state = new ImageState();
     UIServlet.UIImpl current = (UIServlet.UIImpl)WebUIThreadLocal.getUI();
-    state.myURL = WGwtImageUrlCache.createURL(myURLHash, current.getURLPrefix());
+    state.myURL = WebImageUrlCache.createURL(myURLHash, current.getURLPrefix());
 
     m.myImageState = state;
   }

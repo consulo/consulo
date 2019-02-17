@@ -19,7 +19,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.io.URLUtil;
-import consulo.ui.web.internal.image.WGwtImageUrlCache;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -56,7 +55,7 @@ public class UIIconServlet extends HttpServlet {
       return;
     }
 
-    final URL url = WGwtImageUrlCache.ourURLCache.get(Integer.parseInt(StringUtil.unquoteString(urlHash)));
+    final URL url = WebImageUrlCache.ourURLCache.get(Integer.parseInt(StringUtil.unquoteString(urlHash)));
     if (url == null) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;

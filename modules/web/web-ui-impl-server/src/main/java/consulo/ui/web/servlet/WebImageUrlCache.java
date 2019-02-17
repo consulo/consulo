@@ -1,7 +1,8 @@
-package consulo.ui.web.internal.image;
+package consulo.ui.web.servlet;
 
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
+import consulo.ui.web.internal.image.WGwtImageWithState;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
@@ -11,7 +12,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 18-Jan-17
  */
-public class WGwtImageUrlCache {
+public class WebImageUrlCache {
   public static final Map<Integer, URL> ourURLCache = ContainerUtil.newConcurrentMap();
 
   public static WGwtImageWithState map(Image other) {

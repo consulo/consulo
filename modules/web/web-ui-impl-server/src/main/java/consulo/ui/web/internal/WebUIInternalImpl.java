@@ -153,7 +153,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public ImageBox _Components_imageBox(Image image) {
-    return new WGwtImageBoxImpl(image);
+    return new WebImageBoxImpl(image);
   }
 
   @Override

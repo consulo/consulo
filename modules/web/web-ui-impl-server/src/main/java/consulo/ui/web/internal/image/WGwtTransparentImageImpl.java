@@ -16,6 +16,7 @@
 package consulo.ui.web.internal.image;
 
 import consulo.ui.image.Image;
+import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.state.image.FoldedImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
@@ -45,7 +46,7 @@ public class WGwtTransparentImageImpl implements Image, WGwtImageWithState {
   @Override
   public void toState(MultiImageState m) {
     m.myFoldedImageState = new FoldedImageState();
-    m.myFoldedImageState.myChildren = new MultiImageState[]{WGwtImageUrlCache.map(myOriginal).getState()};
+    m.myFoldedImageState.myChildren = new MultiImageState[]{WebImageUrlCache.map(myOriginal).getState()};
 
     m.myAlpha = myAlpha;
   }

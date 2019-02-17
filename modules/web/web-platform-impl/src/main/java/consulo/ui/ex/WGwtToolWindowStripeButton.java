@@ -20,7 +20,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
@@ -64,7 +64,7 @@ public class WGwtToolWindowStripeButton extends AbstractComponent implements Too
     Image icon = toolWindow.getIcon();
 
     try {
-      state.myImageState = icon == null ? null : WGwtImageUrlCache.map(icon).getState();
+      state.myImageState = icon == null ? null : WebImageUrlCache.map(icon).getState();
     }
     catch (Exception e) {
       e.printStackTrace();

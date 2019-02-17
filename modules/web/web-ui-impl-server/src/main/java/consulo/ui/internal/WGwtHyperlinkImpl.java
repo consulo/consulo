@@ -19,7 +19,7 @@ import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Hyperlink;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
 import consulo.web.gwt.shared.ui.state.button.ButtonState;
 
@@ -55,7 +55,7 @@ public class WGwtHyperlinkImpl extends AbstractComponent implements Hyperlink, V
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);
 
-    getState().myImageState = myImage == null ? null : WGwtImageUrlCache.map(myImage).getState();
+    getState().myImageState = myImage == null ? null : WebImageUrlCache.map(myImage).getState();
   }
 
   @Nonnull

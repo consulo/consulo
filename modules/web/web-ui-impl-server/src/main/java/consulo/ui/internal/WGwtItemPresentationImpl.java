@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import consulo.ui.ItemPresentation;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 
 import javax.annotation.Nonnull;
@@ -33,7 +33,7 @@ class WGwtItemPresentationImpl implements ItemPresentation {
 
   @Override
   public void setIcon(@Nullable Image image) {
-    myItem.myImageState = image == null ? null : WGwtImageUrlCache.map(image).getState();
+    myItem.myImageState = image == null ? null : WebImageUrlCache.map(image).getState();
 
     after();
   }
