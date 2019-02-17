@@ -19,6 +19,8 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.UI;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.WGwtTreeNodeImpl;
+import consulo.ui.web.internal.WGwtUIThreadLocal;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
