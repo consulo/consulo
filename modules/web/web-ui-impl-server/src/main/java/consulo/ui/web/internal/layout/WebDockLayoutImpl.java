@@ -101,11 +101,6 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
     }
 
     @Override
-    public void replaceComponent(com.vaadin.ui.Component removeComponent, com.vaadin.ui.Component newComponent) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
     public int getComponentCount() {
       return myChildren.size();
     }

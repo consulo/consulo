@@ -34,6 +34,8 @@ import consulo.ui.web.internal.image.WGwtImageImpl;
 import consulo.ui.web.internal.image.WGwtResizeImageImpl;
 import consulo.ui.web.internal.image.WGwtTransparentImageImpl;
 import consulo.ui.web.internal.layout.WebDockLayoutImpl;
+import consulo.ui.web.internal.layout.WebHorizontalSplitLayoutImpl;
+import consulo.ui.web.internal.layout.WebVerticalSplitLayoutImpl;
 import consulo.ui.web.internal.layout.WebWrappedLayoutImpl;
 
 import javax.annotation.Nonnull;
@@ -76,12 +78,12 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public SplitLayout _Layouts_horizontalSplit() {
-    return new WGwtHorizontalSplitLayoutImpl();
+    return new WebHorizontalSplitLayoutImpl();
   }
 
   @Override
   public SplitLayout _Layouts_verticalSplit() {
-    return new WGwtVerticalSplitLayoutImpl();
+    return new WebVerticalSplitLayoutImpl();
   }
 
   @Override

@@ -31,6 +31,11 @@ public abstract class VaadinComponentContainer<T extends Component> extends Abst
     myComponent = component;
   }
 
+  @Override
+  public void replaceComponent(com.vaadin.ui.Component oldComponent, com.vaadin.ui.Component newComponent) {
+    throw new UnsupportedOperationException();
+  }
+
   @Nonnull
   @Override
   public T toUIComponent() {

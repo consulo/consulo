@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal.layout;
 
-import com.vaadin.ui.AbstractComponentContainer;
-import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
-import consulo.ui.layout.SplitLayout;
+import com.vaadin.ui.Component;
+import consulo.ui.layout.Layout;
+import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author VISTALL
- * @since 13-Jun-16
- */
-public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements SplitLayout, VaadinWrapper {
+* @author VISTALL
+* @since 2019-02-17
+*/
+class WebSplitLayoutVaadinBase<T extends Layout> extends VaadinComponentContainer<T> {
   private Component myFirstComponent;
   private Component mySecondComponent;
 
-  @Override
+  public WebSplitLayoutVaadinBase(T component) {
+    super(component);
+  }
+
   public void setProportion(int percent) {
     getState().myProportion = percent;
     markAsDirty();
@@ -46,35 +47,24 @@ public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements S
     return (SplitLayoutState)super.getState();
   }
 
-  @RequiredUIAccess
-  @Override
-  public SplitLayout setFirstComponent(@Nonnull Component component) {
+  public void setFirstComponent(@Nonnull Component component) {
     Component old = myFirstComponent;
     if (old != null) {
-      removeComponent((com.vaadin.ui.Component)old);
+      removeComponent(old);
     }
 
     myFirstComponent = component;
-    addComponent((com.vaadin.ui.Component)component);
-    return this;
+    addComponent(component);
   }
 
-  @RequiredUIAccess
-  @Override
-  public SplitLayout setSecondComponent(@Nonnull Component component) {
+  public void setSecondComponent(@Nonnull Component component) {
     Component old = mySecondComponent;
     if (old != null) {
-      removeComponent((com.vaadin.ui.Component)old);
+      removeComponent(old);
     }
 
     mySecondComponent = component;
-    addComponent((com.vaadin.ui.Component)component);
-    return this;
-  }
-
-  @Override
-  public void replaceComponent(com.vaadin.ui.Component oldComponent, com.vaadin.ui.Component newComponent) {
-    throw new UnsupportedOperationException();
+    addComponent(component);
   }
 
   @Override
@@ -90,26 +80,14 @@ public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements S
   }
 
   @Override
-  public Iterator<com.vaadin.ui.Component> iterator() {
-    List<com.vaadin.ui.Component> list = new ArrayList<>(getComponentCount());
+  public Iterator<Component> iterator() {
+    List<Component> list = new ArrayList<>(getComponentCount());
     if (myFirstComponent != null) {
-      list.add((com.vaadin.ui.Component)myFirstComponent);
+      list.add(myFirstComponent);
     }
     if (mySecondComponent != null) {
-      list.add((com.vaadin.ui.Component)mySecondComponent);
+      list.add(mySecondComponent);
     }
     return list.iterator();
-  }
-
-  @javax.annotation.Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-
   }
 }

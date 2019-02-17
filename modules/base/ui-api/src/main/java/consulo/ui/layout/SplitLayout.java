@@ -40,18 +40,22 @@ public interface SplitLayout extends Layout {
   void setProportion(int percent);
 
   @RequiredUIAccess
+  @Nonnull
   default SplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
     return setFirstComponent(component.getComponent());
   }
 
   @RequiredUIAccess
+  @Nonnull
   SplitLayout setFirstComponent(@Nonnull Component component);
 
   @RequiredUIAccess
+  @Nonnull
   default SplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
     return setSecondComponent(component.getComponent());
   }
 
   @RequiredUIAccess
+  @Nonnull
   SplitLayout setSecondComponent(@Nonnull Component component);
 }

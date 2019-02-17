@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal.layout;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 2019-02-17
  */
-public class WGwtVerticalSplitLayoutImpl extends WGwtSplitLayoutImpl {
-  public WGwtVerticalSplitLayoutImpl() {
+public class WebHorizontalSplitLayoutImpl extends WebSplitLayoutBase<WebHorizontalSplitLayoutImpl.Vaadin> {
+  protected static class Vaadin extends WebSplitLayoutVaadinBase<WebHorizontalSplitLayoutImpl> {
+    public Vaadin(WebHorizontalSplitLayoutImpl component) {
+      super(component);
+    }
+  }
+
+  public WebHorizontalSplitLayoutImpl() {
+    myVaadinComponent = new Vaadin(this);
   }
 }

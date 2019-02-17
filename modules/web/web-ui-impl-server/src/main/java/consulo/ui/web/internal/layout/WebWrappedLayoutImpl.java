@@ -59,11 +59,6 @@ public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrap
     }
 
     @Override
-    public void replaceComponent(Component component, Component component1) {
-
-    }
-
-    @Override
     public int getComponentCount() {
       return myComponent == null ? 0 : 1;
     }

@@ -52,6 +52,7 @@ public class DesktopSplitLayoutImpl extends SwingComponentDelegate<Splitter> imp
     myComponent.setProportion(percent / 100f);
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
   public SplitLayout setFirstComponent(@Nonnull Component component) {
@@ -59,6 +60,7 @@ public class DesktopSplitLayoutImpl extends SwingComponentDelegate<Splitter> imp
     return this;
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
   public SplitLayout setSecondComponent(@Nonnull Component component) {
