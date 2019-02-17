@@ -23,7 +23,7 @@ import consulo.ui.internal.WGwtUIThreadLocal;
 import consulo.ui.migration.SwingImageRef;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-import consulo.web.servlet.ui.UIServlet;
+import consulo.ui.web.servlet.UIServlet;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.internal;
+package consulo.ui.web.internal.ex;
 
 import com.intellij.ide.CopyProvider;
 import com.intellij.ide.CutProvider;

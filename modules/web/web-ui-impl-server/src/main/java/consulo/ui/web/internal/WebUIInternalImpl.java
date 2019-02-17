@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
 import consulo.annotations.Internal;
+import consulo.ui.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
@@ -32,8 +33,6 @@ import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import consulo.ui.web.internal.VaadinUIAccessImpl;
-import consulo.ui.web.internal.VaadinWindowImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

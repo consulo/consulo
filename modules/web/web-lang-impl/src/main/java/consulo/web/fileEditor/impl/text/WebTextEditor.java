@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.ex.internal.WGwtEditorImpl;
+import consulo.ui.web.internal.ex.WGwtEditorImpl;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

@@ -41,9 +41,10 @@ public class VaadinUIAccessImpl implements UIAccess {
     return myUI.isAttached() && myUI.getSession() != null;
   }
 
+  @Nonnull
   @Override
   public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
-    AsyncResult<T> result = new AsyncResult<>();
+    AsyncResult<T> result = AsyncResult.undefined();
     if (isValid()) {
       myUI.access(() -> {
         try {

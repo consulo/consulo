@@ -26,11 +26,11 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.ex.internal.WGwtLoadingPanelImpl;
+import consulo.ui.web.internal.ex.WGwtLoadingPanelImpl;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-import consulo.web.application.impl.VaadinWebSessionImpl;
-import consulo.web.servlet.ui.UIBuilder;
+import consulo.ui.web.servlet.VaadinWebSessionImpl;
+import consulo.ui.web.servlet.UIBuilder;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;

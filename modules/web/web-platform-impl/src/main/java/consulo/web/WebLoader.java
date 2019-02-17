@@ -26,8 +26,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.web.main.WebPostStarter;
 import consulo.web.servlet.RootUIBuilder;
-import consulo.web.servlet.ui.UIIconServlet;
-import consulo.web.servlet.ui.UIServlet;
+import consulo.ui.web.servlet.UIIconServlet;
+import consulo.ui.web.servlet.UIServlet;
 
 import javax.annotation.Nonnull;
 import javax.servlet.annotation.WebServlet;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet.ui;
-
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Window;
-import javax.annotation.Nonnull;
+package consulo.ui.web.internal;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2018-05-10
  */
-public interface UIBuilder {
-  @RequiredUIAccess
-  void build(@Nonnull Window window);
+public class TargetVaddin {
+  // FIXME [VISTALL] stub
 }

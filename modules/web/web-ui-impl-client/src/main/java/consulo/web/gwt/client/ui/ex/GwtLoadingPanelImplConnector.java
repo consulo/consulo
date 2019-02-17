@@ -26,7 +26,7 @@ import consulo.web.gwt.client.util.GwtUIUtil;
  * @author VISTALL
  * @since 23-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.ex.internal.WGwtLoadingPanelImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.ex.WGwtLoadingPanelImpl")
 public class GwtLoadingPanelImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateComponentSize() {

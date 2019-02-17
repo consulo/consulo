@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.internal;
+package consulo.ui.web.servlet;
 
-import com.vaadin.ui.AbstractComponent;
-import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
-import consulo.ui.internal.VaadinWrapper;
+import consulo.ui.Window;
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23-Sep-17
+ * @since 14-Jun-16
  */
-public class WGwtLoadingPanelImpl extends AbstractComponent implements Component, VaadinWrapper {
+public interface UIBuilder {
   @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-  }
+  void build(@Nonnull Window window);
 }

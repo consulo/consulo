@@ -26,7 +26,7 @@ import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
  * @author VISTALL
  * @since 13-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.ex.internal.WGwtEditorImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.ex.WGwtEditorImpl")
 public class GwtEditorImplConnector extends AbstractComponentConnector {
   @Override
   protected void init() {
