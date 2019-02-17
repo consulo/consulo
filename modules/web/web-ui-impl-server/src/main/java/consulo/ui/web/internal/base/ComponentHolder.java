@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.layout;
+package consulo.ui.web.internal.base;
 
-import javax.annotation.Nonnull;
+import consulo.ui.Component;
 
 /**
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebHorizontalSplitLayoutImpl extends WebSplitLayoutBase<WebHorizontalSplitLayoutImpl.Vaadin> {
-  public static class Vaadin extends WebSplitLayoutVaadinBase<WebHorizontalSplitLayoutImpl> {
-  }
-
-  @Nonnull
-  @Override
-  public Vaadin create() {
-    return new Vaadin();
-  }
+public interface ComponentHolder {
+  void setComponent(Component component);
 }

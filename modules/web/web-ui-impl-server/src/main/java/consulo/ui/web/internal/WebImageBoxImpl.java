@@ -29,15 +29,13 @@ import javax.annotation.Nonnull;
  * @since 2019-02-17
  */
 public class WebImageBoxImpl extends UIComponentWithVaadinComponent<WebImageBoxImpl.Vaadin> implements ImageBox {
-  protected static class Vaadin extends VaadinComponent<WebImageBoxImpl> {
-    public Vaadin(WebImageBoxImpl component, Image image) {
-      super(component);
-
+  protected static class Vaadin extends VaadinComponent {
+    public void set(Image image) {
       getState().myImageState = WebImageUrlCache.map(image).getState();
     }
 
     @Override
-    protected ImageBoxState getState() {
+    public ImageBoxState getState() {
       return (ImageBoxState)super.getState();
     }
   }
@@ -46,7 +44,14 @@ public class WebImageBoxImpl extends UIComponentWithVaadinComponent<WebImageBoxI
 
   public WebImageBoxImpl(Image image) {
     myImage = image;
-    myVaadinComponent = new Vaadin(this, image);
+
+    get().set(image);
+  }
+
+  @Nonnull
+  @Override
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   @Nonnull

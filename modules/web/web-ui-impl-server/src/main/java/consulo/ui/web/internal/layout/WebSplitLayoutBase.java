@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal.layout;
 
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.layout.SplitLayout;
 import consulo.ui.web.internal.TargetVaddin;
@@ -26,26 +27,25 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebSplitLayoutBase<V extends WebSplitLayoutVaadinBase<?>> extends UIComponentWithVaadinComponent<V> implements SplitLayout {
-
+public abstract class WebSplitLayoutBase<V extends WebSplitLayoutVaadinBase<?>> extends UIComponentWithVaadinComponent<V> implements SplitLayout {
   @Override
   public void setProportion(int percent) {
-    myVaadinComponent.setProportion(percent);
+    get().setProportion(percent);
   }
 
   @Nonnull
   @RequiredUIAccess
   @Override
-  public SplitLayout setFirstComponent(@Nonnull consulo.ui.Component component) {
-    myVaadinComponent.setFirstComponent(TargetVaddin.to(component));
+  public SplitLayout setFirstComponent(@Nonnull Component component) {
+    get().setFirstComponent(TargetVaddin.to(component));
     return this;
   }
 
   @Nonnull
   @RequiredUIAccess
   @Override
-  public SplitLayout setSecondComponent(@Nonnull consulo.ui.Component component) {
-    myVaadinComponent.setSecondComponent(TargetVaddin.to(component));
+  public SplitLayout setSecondComponent(@Nonnull Component component) {
+    get().setSecondComponent(TargetVaddin.to(component));
     return this;
   }
 }

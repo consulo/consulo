@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal.base;
 
+import com.vaadin.shared.ui.AbstractComponentContainerState;
 import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 
@@ -24,10 +25,11 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-17
  */
-public abstract class VaadinComponentContainer<T extends Component> extends AbstractComponentContainer implements FromVaadinComponentWrapper {
-  protected final T myComponent;
+public abstract class VaadinComponentContainer extends AbstractComponentContainer implements FromVaadinComponentWrapper, ComponentHolder {
+  private Component myComponent;
 
-  public VaadinComponentContainer(T component) {
+  @Override
+  public void setComponent(Component component) {
     myComponent = component;
   }
 
@@ -38,7 +40,12 @@ public abstract class VaadinComponentContainer<T extends Component> extends Abst
 
   @Nonnull
   @Override
-  public T toUIComponent() {
+  public Component toUIComponent() {
     return myComponent;
+  }
+
+  @Override
+  public AbstractComponentContainerState getState() {
+    return super.getState();
   }
 }

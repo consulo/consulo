@@ -29,13 +29,9 @@ import java.util.List;
 * @author VISTALL
 * @since 2019-02-17
 */
-class WebSplitLayoutVaadinBase<T extends Layout> extends VaadinComponentContainer<T> {
+class WebSplitLayoutVaadinBase<T extends Layout> extends VaadinComponentContainer {
   private Component myFirstComponent;
   private Component mySecondComponent;
-
-  public WebSplitLayoutVaadinBase(T component) {
-    super(component);
-  }
 
   public void setProportion(int percent) {
     getState().myProportion = percent;
@@ -43,7 +39,7 @@ class WebSplitLayoutVaadinBase<T extends Layout> extends VaadinComponentContaine
   }
 
   @Override
-  protected SplitLayoutState getState() {
+  public SplitLayoutState getState() {
     return (SplitLayoutState)super.getState();
   }
 

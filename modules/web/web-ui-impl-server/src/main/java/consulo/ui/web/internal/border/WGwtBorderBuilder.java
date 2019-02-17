@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal.border;
 
+import consulo.ui.Component;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.Style;
@@ -27,12 +28,14 @@ import consulo.web.gwt.shared.ui.state.border.BorderListState;
  * @since 15-Sep-17
  */
 public class WGwtBorderBuilder {
-  public static void fill(DataObjectHolder wrapper, BorderListState borderListState) {
+  public static void fill(Component component, BorderListState borderListState) {
+    DataObjectHolder dataObjectHolder = (DataObjectHolder)component;
+
     borderListState.myBorders.clear();
 
     Style currentStyle = StyleManager.get().getCurrentStyle();
 
-    for (BorderInfo info : wrapper.dataObject().getBorders()) {
+    for (BorderInfo info : dataObjectHolder.dataObject().getBorders()) {
       BorderListState.BorderState borderState = new BorderListState.BorderState();
       borderState.myPosition = info.getBorderPosition();
       borderState.myStyle = info.getBorderStyle();

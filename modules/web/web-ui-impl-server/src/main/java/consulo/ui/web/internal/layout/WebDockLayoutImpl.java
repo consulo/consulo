@@ -36,12 +36,8 @@ import java.util.Map;
  * @since 2019-02-17
  */
 public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLayoutImpl.Vaadin> implements DockLayout {
-  protected static class Vaadin extends VaadinComponentContainer<WebDockLayoutImpl> {
+  protected static class Vaadin extends VaadinComponentContainer {
     private final Map<DockLayoutState.Constraint, com.vaadin.ui.Component> myChildren = new LinkedHashMap<>();
-
-    public Vaadin(WebDockLayoutImpl component) {
-      super(component);
-    }
 
     @RequiredUIAccess
     public void removeAll() {
@@ -52,7 +48,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
     }
 
     @Override
-    protected DockLayoutState getState() {
+    public DockLayoutState getState() {
       return (DockLayoutState)super.getState();
     }
 
@@ -111,26 +107,28 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
     }
   }
 
-  public WebDockLayoutImpl() {
-    myVaadinComponent = new Vaadin(this);
+  @Nonnull
+  @Override
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   @RequiredUIAccess
   @Override
   public void removeAll() {
-    myVaadinComponent.removeAll();
+    get().removeAll();
   }
 
   @Override
   public void remove(@Nonnull Component component) {
-    myVaadinComponent.removeComponent(TargetVaddin.to(component));
+    get().removeComponent(TargetVaddin.to(component));
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public DockLayout top(@Nonnull Component component) {
-    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.TOP);
+    get().placeAt(component, DockLayoutState.Constraint.TOP);
     return this;
   }
 
@@ -138,7 +136,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout bottom(@Nonnull Component component) {
-    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.BOTTOM);
+    get().placeAt(component, DockLayoutState.Constraint.BOTTOM);
     return this;
   }
 
@@ -146,7 +144,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout center(@Nonnull Component component) {
-    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.CENTER);
+    get().placeAt(component, DockLayoutState.Constraint.CENTER);
     return this;
   }
 
@@ -154,7 +152,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout left(@Nonnull Component component) {
-    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.LEFT);
+    get().placeAt(component, DockLayoutState.Constraint.LEFT);
     return this;
   }
 
@@ -162,7 +160,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout right(@Nonnull Component component) {
-    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.RIGHT);
+    get().placeAt(component, DockLayoutState.Constraint.RIGHT);
     return this;
   }
 }

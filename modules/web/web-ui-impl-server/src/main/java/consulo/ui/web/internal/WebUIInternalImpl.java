@@ -143,7 +143,9 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Hyperlink _Components_hyperlink(String text) {
-    return new WGwtHyperlinkImpl(text);
+    WebHyperlinkImpl hyperlink = new WebHyperlinkImpl();
+    hyperlink.setText(text);
+    return hyperlink;
   }
 
   @Override

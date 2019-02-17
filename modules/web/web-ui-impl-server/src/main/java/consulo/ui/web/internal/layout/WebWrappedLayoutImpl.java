@@ -33,12 +33,8 @@ import java.util.Iterator;
  * @since 2019-02-17
  */
 public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
-  protected static class Vaadin extends VaadinComponentContainer<WebWrappedLayoutImpl> {
+  public static class Vaadin extends VaadinComponentContainer {
     private Component myComponent;
-
-    Vaadin(WebWrappedLayoutImpl component) {
-      super(component);
-    }
 
     private void set(@Nullable Component component) {
       if (myComponent != null) {
@@ -69,26 +65,27 @@ public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrap
     }
   }
 
-  public WebWrappedLayoutImpl() {
-    myVaadinComponent = new Vaadin(this);
+  @Override
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   @RequiredUIAccess
   @Override
   public void removeAll() {
-    myVaadinComponent.set(null);
+    get().set(null);
   }
 
   @Override
   public void remove(@Nonnull consulo.ui.Component component) {
-    myVaadinComponent.removeIfEqual(TargetVaddin.to(component));
+    get().removeIfEqual(TargetVaddin.to(component));
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public WrappedLayout set(@Nullable consulo.ui.Component component) {
-    myVaadinComponent.set(TargetVaddin.to(component));
+    get().set(TargetVaddin.to(component));
     return this;
   }
 }

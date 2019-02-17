@@ -15,18 +15,19 @@
  */
 package consulo.ui.web.internal.layout;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 2019-02-17
  */
 public class WebVerticalSplitLayoutImpl extends WebSplitLayoutBase<WebVerticalSplitLayoutImpl.Vaadin> {
-  protected static class Vaadin extends WebSplitLayoutVaadinBase<WebVerticalSplitLayoutImpl> {
-    public Vaadin(WebVerticalSplitLayoutImpl component) {
-      super(component);
-    }
+  public static class Vaadin extends WebSplitLayoutVaadinBase<WebVerticalSplitLayoutImpl> {
   }
 
-  public WebVerticalSplitLayoutImpl() {
-    myVaadinComponent = new Vaadin(this);
+  @Nonnull
+  @Override
+  public Vaadin create() {
+    return new Vaadin();
   }
 }
