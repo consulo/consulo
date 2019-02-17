@@ -37,11 +37,10 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
+public class WebImageImpl implements Image, WebImageWithVaadinState, SwingImageRef {
   private int myURLHash, myHeight, myWidth;
 
-  @SuppressWarnings("unchecked")
-  public WGwtImageImpl(@Nonnull URL url) {
+  public WebImageImpl(@Nonnull URL url) {
     myURLHash = WebImageUrlCache.hashCode(url);
 
     URL scaledImageUrl = url;

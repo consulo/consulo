@@ -22,7 +22,7 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
  * @author VISTALL
  * @since 11-Sep-17
  */
-public interface WGwtImageWithState extends Image {
+public interface WebImageWithVaadinState extends Image {
   void toState(MultiImageState state);
 
   default MultiImageState getState() {

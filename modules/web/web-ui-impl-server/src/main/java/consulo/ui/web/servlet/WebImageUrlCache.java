@@ -2,7 +2,7 @@ package consulo.ui.web.servlet;
 
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.image.WGwtImageWithState;
+import consulo.ui.web.internal.image.WebImageWithVaadinState;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
@@ -15,8 +15,8 @@ import java.util.Map;
 public class WebImageUrlCache {
   public static final Map<Integer, URL> ourURLCache = ContainerUtil.newConcurrentMap();
 
-  public static WGwtImageWithState map(Image other) {
-    return (WGwtImageWithState)other;
+  public static WebImageWithVaadinState map(Image other) {
+    return (WebImageWithVaadinState)other;
   }
 
   @Nonnull

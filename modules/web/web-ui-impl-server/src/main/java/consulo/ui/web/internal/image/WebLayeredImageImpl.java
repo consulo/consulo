@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,32 +22,35 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
- * @since 2018-05-08
+ * @since 11-Sep-17
  */
-public class WGwtTransparentImageImpl implements Image, WGwtImageWithState {
-  private Image myOriginal;
-  private float myAlpha;
+public class WebLayeredImageImpl implements Image, WebImageWithVaadinState {
+  private final Image[] myImages;
 
-  public WGwtTransparentImageImpl(Image original, float alpha) {
-    myOriginal = original;
-    myAlpha = alpha;
+  public WebLayeredImageImpl(Image[] images) {
+    myImages = images;
   }
 
   @Override
   public int getHeight() {
-    return myOriginal.getHeight();
+    return myImages[0].getHeight();
   }
 
   @Override
   public int getWidth() {
-    return myOriginal.getWidth();
+    return myImages[0].getWidth();
   }
 
   @Override
   public void toState(MultiImageState m) {
-    m.myFoldedImageState = new FoldedImageState();
-    m.myFoldedImageState.myChildren = new MultiImageState[]{WebImageUrlCache.map(myOriginal).getState()};
+    FoldedImageState state = new FoldedImageState();
+    state.myChildren = new MultiImageState[myImages.length];
 
-    m.myAlpha = myAlpha;
+    for (int i = 0; i < myImages.length; i++) {
+      Image image = myImages[i];
+      state.myChildren[i] = WebImageUrlCache.map(image).getState();
+    }
+
+    m.myFoldedImageState = state;
   }
 }

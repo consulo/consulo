@@ -29,10 +29,10 @@ import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import consulo.ui.web.internal.image.WGwtFoldedImageImpl;
-import consulo.ui.web.internal.image.WGwtImageImpl;
-import consulo.ui.web.internal.image.WGwtResizeImageImpl;
-import consulo.ui.web.internal.image.WGwtTransparentImageImpl;
+import consulo.ui.web.internal.image.WebLayeredImageImpl;
+import consulo.ui.web.internal.image.WebImageImpl;
+import consulo.ui.web.internal.image.WebResizeImageImpl;
+import consulo.ui.web.internal.image.WebTransparentImageImpl;
 import consulo.ui.web.internal.layout.WebDockLayoutImpl;
 import consulo.ui.web.internal.layout.WebHorizontalSplitLayoutImpl;
 import consulo.ui.web.internal.layout.WebVerticalSplitLayoutImpl;
@@ -170,7 +170,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _Image_fromUrl(URL url) {
-    return new WGwtImageImpl(url);
+    return new WebImageImpl(url);
   }
 
   @Override
@@ -185,12 +185,12 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_layered(Image[] images) {
-    return new WGwtFoldedImageImpl(images);
+    return new WebLayeredImageImpl(images);
   }
 
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
-    return new WGwtTransparentImageImpl(original, alpha);
+    return new WebTransparentImageImpl(original, alpha);
   }
 
   @Override
@@ -215,7 +215,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
-    return new WGwtResizeImageImpl(original, width, height);
+    return new WebResizeImageImpl(original, width, height);
   }
 
   @Override

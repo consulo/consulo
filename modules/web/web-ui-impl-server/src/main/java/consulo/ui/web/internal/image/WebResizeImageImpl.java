@@ -24,12 +24,12 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
  * @author VISTALL
  * @since 2019-02-09
  */
-public class WGwtResizeImageImpl implements Image, WGwtImageWithState {
+public class WebResizeImageImpl implements Image, WebImageWithVaadinState {
   private final Image myOriginal;
   private final int myHeight;
   private final int myWidth;
 
-  public WGwtResizeImageImpl(Image original, int width, int height) {
+  public WebResizeImageImpl(Image original, int width, int height) {
     myOriginal = original;
     myHeight = height;
     myWidth = width;
