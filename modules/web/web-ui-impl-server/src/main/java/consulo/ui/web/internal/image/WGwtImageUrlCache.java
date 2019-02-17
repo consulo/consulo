@@ -1,4 +1,4 @@
-package consulo.ui.internal.image;
+package consulo.ui.web.internal.image;
 
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

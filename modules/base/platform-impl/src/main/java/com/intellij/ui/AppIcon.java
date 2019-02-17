@@ -28,6 +28,7 @@ import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.taskbar.TaskbarWrapper;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.common.BinaryOutputStream;
@@ -693,7 +694,7 @@ public abstract class AppIcon {
     }
 
     private static boolean isValid(IdeFrame frame) {
-      return frame != null && ((JFrame)frame.getWindow()).isDisplayable();
+      return frame != null && TargetAWT.to(frame.getWindow()).isDisplayable();
     }
   }
 

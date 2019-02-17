@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import consulo.ui.ItemPresentation;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
-import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 
 import javax.annotation.Nonnull;

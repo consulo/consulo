@@ -15,10 +15,41 @@
  */
 package consulo.ui.web.internal;
 
+import consulo.ui.Component;
+import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
+import consulo.ui.web.internal.base.ToVaddinComponentWrapper;
+import org.jetbrains.annotations.Contract;
+
+import javax.annotation.Nullable;
+
 /**
  * @author VISTALL
  * @since 2018-05-10
  */
 public class TargetVaddin {
-  // FIXME [VISTALL] stub
+  @Contract("null -> null")
+  public static com.vaadin.ui.Component to(@Nullable Component component) {
+    if (component == null) {
+      return null;
+    }
+
+    if (component instanceof ToVaddinComponentWrapper) {
+      return ((ToVaddinComponentWrapper)component).toVaadinComponent();
+    }
+
+    throw new UnsupportedOperationException("Component " + component + " is not impl ToVaddinComponentWrapper");
+  }
+
+  @Contract("null -> null")
+  public static Component from(@Nullable com.vaadin.ui.Component component) {
+    if (component == null) {
+      return null;
+    }
+
+    if (component instanceof FromVaadinComponentWrapper) {
+      return ((FromVaadinComponentWrapper)component).toUIComponent();
+    }
+
+    throw new UnsupportedOperationException("Component " + component + " is not impl FromVaadinComponentWrapper");
+  }
 }

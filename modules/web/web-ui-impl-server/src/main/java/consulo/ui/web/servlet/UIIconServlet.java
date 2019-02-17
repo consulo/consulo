@@ -19,7 +19,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.io.URLUtil;
-import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.internal.image.WGwtImageUrlCache;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;

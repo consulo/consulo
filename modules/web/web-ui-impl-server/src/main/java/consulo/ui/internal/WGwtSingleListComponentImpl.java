@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.intellij.openapi.Disposable;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.*;
-import consulo.ui.internal.border.WGwtBorderBuilder;
+import consulo.ui.web.internal.border.WGwtBorderBuilder;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;

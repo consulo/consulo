@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.web.internal.image;
 
-import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.ValueComponent;
-import consulo.ui.ValueGroup;
-import javax.annotation.Nonnull;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
- * @since 03-May-17
+ * @since 11-Sep-17
  */
-public class DesktopBoolValueGroup extends ButtonGroup implements ValueGroup<Boolean> {
-  @RequiredUIAccess
-  @Override
-  public void clearValues() {
-    clearSelection();
-  }
+public interface WGwtImageWithState extends Image {
+  void toState(MultiImageState state);
 
-  @Nonnull
-  @Override
-  public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
-    add((AbstractButton)TargetAWT.to(component));
-    return this;
+  default MultiImageState getState() {
+    MultiImageState state = new MultiImageState();
+    state.myHeight = getHeight();
+    state.myWidth = getWidth();
+
+    toState(state);
+
+    return state;
   }
 }

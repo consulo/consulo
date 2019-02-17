@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import consulo.ui.internal.border.WGwtBorderBuilder;
+import consulo.ui.web.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
 import javax.annotation.Nonnull;
 

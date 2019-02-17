@@ -21,10 +21,6 @@ import consulo.ui.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.internal.*;
-import consulo.ui.internal.image.WGwtFoldedImageImpl;
-import consulo.ui.internal.image.WGwtImageImpl;
-import consulo.ui.internal.image.WGwtResizeImageImpl;
-import consulo.ui.internal.image.WGwtTransparentImageImpl;
 import consulo.ui.layout.*;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
@@ -33,6 +29,11 @@ import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
+import consulo.ui.web.internal.image.WGwtFoldedImageImpl;
+import consulo.ui.web.internal.image.WGwtImageImpl;
+import consulo.ui.web.internal.image.WGwtResizeImageImpl;
+import consulo.ui.web.internal.image.WGwtTransparentImageImpl;
+import consulo.ui.web.internal.layout.WebDockLayoutImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,7 +55,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public DockLayout _Layouts_dock() {
-    return new WGwtDockLayoutImpl();
+    return new WebDockLayoutImpl();
   }
 
   @Override

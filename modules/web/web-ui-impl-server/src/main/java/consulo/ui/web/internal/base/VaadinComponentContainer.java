@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal.image;
+package consulo.ui.web.internal.base;
 
-import consulo.ui.image.Image;
-import consulo.web.gwt.shared.ui.state.image.MultiImageState;
+import com.vaadin.ui.AbstractComponentContainer;
+import consulo.ui.Component;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 2019-02-17
  */
-public interface WGwtImageWithState extends Image {
-  void toState(MultiImageState state);
+public abstract class VaadinComponentContainer<T extends Component> extends AbstractComponentContainer implements FromVaadinComponentWrapper {
+  protected final T myComponent;
 
-  default MultiImageState getState() {
-    MultiImageState state = new MultiImageState();
-    state.myHeight = getHeight();
-    state.myWidth = getWidth();
+  public VaadinComponentContainer(T component) {
+    myComponent = component;
+  }
 
-    toState(state);
-
-    return state;
+  @Nonnull
+  @Override
+  public Component toUIComponent() {
+    return myComponent;
   }
 }

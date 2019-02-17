@@ -82,6 +82,7 @@ import com.intellij.util.ui.ErrorTreeView;
 import com.intellij.util.ui.MessageCategory;
 import com.intellij.vcs.history.VcsHistoryProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -538,7 +539,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         final List<CommittedChangeList> versions = new ArrayList<>();
 
         if (parent == null || !parent.isValid()) {
-          parent = (Component)WindowManager.getInstance().suggestParentWindow(myProject);
+          parent = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
         }
         final CommittedChangesTableModel model = new CommittedChangesTableModel(versions, true);
         final AsynchronousListsLoader[] task = new AsynchronousListsLoader[1];

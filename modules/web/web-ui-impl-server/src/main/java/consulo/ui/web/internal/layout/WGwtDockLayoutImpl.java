@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal.layout;
 
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.HasComponents;
-import consulo.ui.*;
-import consulo.ui.internal.border.WGwtBorderBuilder;
-import consulo.ui.layout.DockLayout;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.internal.VaadinWrapper;
 import consulo.ui.layout.Layout;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.TargetVaddin;
+import consulo.ui.web.internal.base.VaadinComponentContainer;
+import consulo.ui.web.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -34,12 +35,15 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WGwtDockLayoutImpl extends AbstractComponentContainer implements DockLayout, VaadinWrapper {
+public class WGwtDockLayoutImpl extends VaadinComponentContainer<WebDockLayoutImpl> implements VaadinWrapper {
   private final Map<DockLayoutState.Constraint, com.vaadin.ui.Component> myChildren = new LinkedHashMap<>();
 
+  public WGwtDockLayoutImpl(WebDockLayoutImpl component) {
+    super(component);
+  }
+
   @RequiredUIAccess
-  @Override
-  public void clear() {
+  public void removeAll() {
     for (com.vaadin.ui.Component child : new ArrayList<>(myChildren.values())) {
       removeComponent(child);
     }
@@ -47,20 +51,17 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
   }
 
   @Override
-  public void remove(@Nonnull Component component) {
-    removeComponent((com.vaadin.ui.Component)component);
-  }
-
-  @Override
   protected DockLayoutState getState() {
     return (DockLayoutState)super.getState();
   }
 
-  private void placeAt(@Nonnull com.vaadin.ui.Component component, DockLayoutState.Constraint constraint) {
-    HasComponents parent = component.getParent();
+  void placeAt(@Nonnull Component uiComponent, DockLayoutState.Constraint constraint) {
+    com.vaadin.ui.Component component = TargetVaddin.to(uiComponent);
+
+    Component parentComponent = uiComponent.getParentComponent();
     // remove from old parent
-    if (parent instanceof Layout) {
-      ((Layout)parent).remove((Component)component);
+    if (parentComponent instanceof Layout) {
+      ((Layout)parentComponent).remove(uiComponent);
     }
 
     com.vaadin.ui.Component oldComponent = myChildren.remove(constraint);
@@ -96,46 +97,6 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);
     WGwtBorderBuilder.fill(this, getState().myBorderListState);
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout top(@Nonnull Component component) {
-    placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.TOP);
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout bottom(@Nonnull Component component) {
-    placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.BOTTOM);
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout center(@Nonnull Component component) {
-    placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.CENTER);
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout left(@Nonnull Component component) {
-    placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.LEFT);
-    return this;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public DockLayout right(@Nonnull Component component) {
-    placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.RIGHT);
-    return this;
   }
 
   @Override

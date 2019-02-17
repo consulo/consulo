@@ -80,13 +80,13 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.*;
+import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.annotations.RequiredReadAction;
-
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -99,8 +99,8 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class ChooseByNameBase {
   public static final String TEMPORARILY_FOCUSABLE_COMPONENT_KEY = "ChooseByNameBase.TemporarilyFocusableComponent";
@@ -942,7 +942,7 @@ public abstract class ChooseByNameBase {
 
   private JLayeredPane getLayeredPane() {
     JLayeredPane layeredPane;
-    final Window window = (Window)WindowManager.getInstance().suggestParentWindow(myProject);
+    final Window window = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
 
     Component parent = UIUtil.findUltimateParent(window);
 

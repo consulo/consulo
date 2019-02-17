@@ -22,7 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.layout.TabbedLayout;
-import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.internal.image.WGwtImageUrlCache;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutServerRpc;

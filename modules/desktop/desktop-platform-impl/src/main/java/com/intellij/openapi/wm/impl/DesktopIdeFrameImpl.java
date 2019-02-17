@@ -323,7 +323,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         if (frame == this) continue;
 
         IdeFrameEx ideFrameEx = (IdeFrameEx)frame;
-        if (ideFrameEx.isInFullScreen() && ScreenUtil.getScreenDevice(((JFrame)ideFrameEx.getWindow()).getBounds()) == device) {
+        if (ideFrameEx.isInFullScreen() && ScreenUtil.getScreenDevice(TargetAWT.to(ideFrameEx.getWindow()).getBounds()) == device) {
           Insets insets = ScreenUtil.getScreenInsets(device.getDefaultConfiguration());
           int mask = SideBorder.NONE;
           if (insets.top != 0) mask |= SideBorder.TOP;

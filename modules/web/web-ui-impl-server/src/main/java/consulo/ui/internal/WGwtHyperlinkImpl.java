@@ -19,7 +19,7 @@ import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Hyperlink;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
 import consulo.web.gwt.shared.ui.state.button.ButtonState;
 

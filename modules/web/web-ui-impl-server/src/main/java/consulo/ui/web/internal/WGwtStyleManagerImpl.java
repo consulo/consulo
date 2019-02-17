@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;

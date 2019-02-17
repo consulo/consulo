@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal.image;
+package consulo.ui.web.internal.image;
 
 import consulo.ui.image.Image;
 import consulo.web.gwt.shared.ui.state.image.FoldedImageState;
@@ -21,35 +21,35 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
- * @since 2019-02-09
+ * @since 11-Sep-17
  */
-public class WGwtResizeImageImpl implements Image, WGwtImageWithState {
-  private final Image myOriginal;
-  private final int myHeight;
-  private final int myWidth;
+public class WGwtFoldedImageImpl implements Image, WGwtImageWithState {
+  private Image[] myImages;
 
-  public WGwtResizeImageImpl(Image original, int width, int height) {
-    myOriginal = original;
-    myHeight = height;
-    myWidth = width;
+  public WGwtFoldedImageImpl(Image[] images) {
+    myImages = images;
   }
 
   @Override
   public int getHeight() {
-    return myHeight;
+    return myImages[0].getHeight();
   }
 
   @Override
   public int getWidth() {
-    return myWidth;
+    return myImages[0].getWidth();
   }
 
   @Override
   public void toState(MultiImageState m) {
-    m.myFoldedImageState = new FoldedImageState();
-    m.myFoldedImageState.myChildren = new MultiImageState[]{WGwtImageUrlCache.map(myOriginal).getState()};
+    FoldedImageState state = new FoldedImageState();
+    state.myChildren = new MultiImageState[myImages.length];
 
-    m.myHeight = myHeight;
-    m.myWidth = myWidth;
+    for (int i = 0; i < myImages.length; i++) {
+      Image image = myImages[i];
+      state.myChildren[i] = WGwtImageUrlCache.map(image).getState();
+    }
+
+    m.myFoldedImageState = state;
   }
 }

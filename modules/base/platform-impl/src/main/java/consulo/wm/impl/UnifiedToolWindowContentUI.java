@@ -166,7 +166,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
   private void ensureSelectedContentVisible() {
     final Content selected = myManager.getSelectedContent();
     if (selected == null) {
-      myContent.clear();
+      myContent.removeAll();
       return;
     }
 
@@ -175,7 +175,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
       if (visible == selected.getComponent()) return;
     } */
 
-    myContent.clear();
+    myContent.removeAll();
     myContent.center(selected.getUIComponent());
   }
 

@@ -32,6 +32,7 @@ import com.intellij.ui.UI;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 
 import javax.swing.*;
@@ -52,7 +53,7 @@ public class AboutDialog extends JDialogAsUIWindow {
 
   public AboutDialog(consulo.ui.Window owner) {
     super(owner, null);
-    init((Window)owner);
+    init(TargetAWT.to(owner));
   }
 
   private void init(Window window) {

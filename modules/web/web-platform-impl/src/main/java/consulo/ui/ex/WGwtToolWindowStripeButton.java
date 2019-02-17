@@ -20,7 +20,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.image.Image;
-import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.ui.web.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;

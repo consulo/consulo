@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal.image;
+package consulo.ui.web.internal.image;
 
 import ar.com.hjg.pngj.PngReader;
 import com.kitfox.svg.SVGCache;
@@ -21,9 +21,9 @@ import com.kitfox.svg.SVGDiagram;
 import consulo.ui.image.Image;
 import consulo.ui.internal.WGwtUIThreadLocal;
 import consulo.ui.migration.SwingImageRef;
+import consulo.ui.web.servlet.UIServlet;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-import consulo.ui.web.servlet.UIServlet;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
