@@ -29,7 +29,7 @@ import java.net.URL;
  * @author VISTALL
  * @since 2018-05-08
  */
-public class VaadinIconLoaderFacade implements IconLoaderFacade {
+public class WebIconLoaderFacade implements IconLoaderFacade {
   @Override
   public void activate() {
 

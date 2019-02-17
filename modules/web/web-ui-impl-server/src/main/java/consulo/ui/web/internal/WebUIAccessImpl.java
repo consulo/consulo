@@ -27,12 +27,12 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class VaadinUIAccessImpl implements UIAccess {
-  private static final Logger LOGGER = Logger.getInstance(VaadinUIAccessImpl.class);
+public class WebUIAccessImpl implements UIAccess {
+  private static final Logger LOGGER = Logger.getInstance(WebUIAccessImpl.class);
 
   private final UI myUI;
 
-  public VaadinUIAccessImpl(UI ui) {
+  public WebUIAccessImpl(UI ui) {
     myUI = ui;
   }
 

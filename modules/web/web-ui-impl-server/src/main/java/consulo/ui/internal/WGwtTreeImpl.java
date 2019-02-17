@@ -19,8 +19,8 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.UI;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
-import consulo.ui.web.internal.WGwtTreeNodeImpl;
-import consulo.ui.web.internal.WGwtUIThreadLocal;
+import consulo.ui.web.internal.WebTreeNodeImpl;
+import consulo.ui.web.internal.WebUIThreadLocal;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
@@ -39,7 +39,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   private final TreeServerRpc myTreeServerRpc = new TreeServerRpc() {
     @Override
     public void onOpen(String id) {
-      WGwtTreeNodeImpl<NODE> node = myNodeMap.get(id);
+      WebTreeNodeImpl<NODE> node = myNodeMap.get(id);
       if (node == null) {
         return;
       }
@@ -49,7 +49,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
 
     @Override
     public void onDoubleClick(String id) {
-      WGwtTreeNodeImpl<NODE> node = myNodeMap.get(id);
+      WebTreeNodeImpl<NODE> node = myNodeMap.get(id);
       if (node == null) {
         return;
       }
@@ -63,7 +63,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     public void onSelected(String id) {
       mySelectedValue = id;
 
-      WGwtTreeNodeImpl<NODE> gwtTreeNode = myNodeMap.get(id);
+      WebTreeNodeImpl<NODE> gwtTreeNode = myNodeMap.get(id);
       if (gwtTreeNode != null) {
         getListenerDispatcher(SelectListener.class).onSelected(gwtTreeNode);
       }
@@ -82,15 +82,15 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
 
   private String mySelectedValue;
 
-  private final Map<String, WGwtTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
-  private final WGwtTreeNodeImpl<NODE> myRootNode;
+  private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
+  private final WebTreeNodeImpl<NODE> myRootNode;
   private final TreeModel<NODE> myModel;
   private ContextHandler myContextHandler;
 
   public WGwtTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model) {
     myModel = model;
 
-    myRootNode = new WGwtTreeNodeImpl<>(null, rootValue, myNodeMap);
+    myRootNode = new WebTreeNodeImpl<>(null, rootValue, myNodeMap);
 
     registerRpc(myTreeServerRpc);
 
@@ -118,7 +118,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
 
   @Override
   public void expand(@Nonnull TreeNode<NODE> node) {
-    queue((WGwtTreeNodeImpl<NODE>)node, TreeState.TreeChangeType.SET);
+    queue((WebTreeNodeImpl<NODE>)node, TreeState.TreeChangeType.SET);
   }
 
   @Override
@@ -126,13 +126,13 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     myContextHandler = contextHandler;
   }
 
-  private void queue(@Nonnull WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
+  private void queue(@Nonnull WebTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
     UI ui = UI.getCurrent();
     myUpdater.execute(() -> {
-      WGwtUIThreadLocal.setUI(ui);
+      WebUIThreadLocal.setUI(ui);
 
       try {
-        List<WGwtTreeNodeImpl<NODE>> children = parent.getChildren();
+        List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
         if (children == null) {
           children = fetchChildren(parent, true);
         }
@@ -142,18 +142,18 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
         ui.access(this::markAsDirty);
       }
       finally {
-        WGwtUIThreadLocal.setUI(null);
+        WebUIThreadLocal.setUI(null);
       }
     });
   }
 
-  private void mapChanges(@Nonnull WGwtTreeNodeImpl<NODE> parent, List<WGwtTreeNodeImpl<NODE>> children, TreeState.TreeChangeType type) {
+  private void mapChanges(@Nonnull WebTreeNodeImpl<NODE> parent, List<WebTreeNodeImpl<NODE>> children, TreeState.TreeChangeType type) {
     synchronized (myChanges) {
       TreeState.TreeChange change = new TreeState.TreeChange();
       change.myId = parent.getId();
       change.myType = type;
 
-      for (WGwtTreeNodeImpl<NODE> node : children) {
+      for (WebTreeNodeImpl<NODE> node : children) {
         change.myNodes.add(convert(node));
       }
 
@@ -162,11 +162,11 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   }
 
   @Nonnull
-  private List<WGwtTreeNodeImpl<NODE>> fetchChildren(@Nonnull WGwtTreeNodeImpl<NODE> parent, boolean fetchNext) {
-    List<WGwtTreeNodeImpl<NODE>> list = new ArrayList<>();
+  private List<WebTreeNodeImpl<NODE>> fetchChildren(@Nonnull WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
+    List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
 
     myModel.fetchChildren(node -> {
-      WGwtTreeNodeImpl<NODE> child = new WGwtTreeNodeImpl<>(parent, node, myNodeMap);
+      WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, myNodeMap);
       list.add(child);
       return child;
     }, parent.getValue());
@@ -183,7 +183,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     }
 
     if (fetchNext) {
-      for (WGwtTreeNodeImpl<NODE> child : list) {
+      for (WebTreeNodeImpl<NODE> child : list) {
         if (myModel.isNeedBuildChildrenBeforeOpen(child)) {
           fetchChildren(child, false);
         }
@@ -208,7 +208,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   }
 
   @Nonnull
-  private TreeState.TreeNodeState convert(WGwtTreeNodeImpl<NODE> child) {
+  private TreeState.TreeNodeState convert(WebTreeNodeImpl<NODE> child) {
     TreeState.TreeNodeState e = new TreeState.TreeNodeState();
     e.myId = child.getId();
     e.myLeaf = child.isLeaf();

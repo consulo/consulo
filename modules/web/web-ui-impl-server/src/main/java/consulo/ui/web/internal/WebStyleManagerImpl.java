@@ -27,10 +27,10 @@ import java.util.List;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WGwtStyleManagerImpl implements StyleManager {
-  public static final WGwtStyleManagerImpl ourInstance = new WGwtStyleManagerImpl();
+public class WebStyleManagerImpl implements StyleManager {
+  public static final WebStyleManagerImpl ourInstance = new WebStyleManagerImpl();
 
-  private Style myCurrentStyle = new WGwtStyleImpl("Default");
+  private Style myCurrentStyle = new WebStyleImpl("Default");
 
   @Nonnull
   @Override

@@ -256,7 +256,7 @@ public class WebUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public StyleManager _StyleManager_get() {
-    return WGwtStyleManagerImpl.ourInstance;
+    return WebStyleManagerImpl.ourInstance;
   }
 
   @Nonnull
@@ -305,7 +305,7 @@ public class WebUIInternalImpl extends UIInternal {
       return (UIAccess)data;
     }
     else {
-      VaadinUIAccessImpl access = new VaadinUIAccessImpl(ui);
+      WebUIAccessImpl access = new WebUIAccessImpl(ui);
       ui.setData(access);
       return access;
     }

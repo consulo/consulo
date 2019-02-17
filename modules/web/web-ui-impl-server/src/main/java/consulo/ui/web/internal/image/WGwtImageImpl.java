@@ -19,7 +19,7 @@ import ar.com.hjg.pngj.PngReader;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.WGwtUIThreadLocal;
+import consulo.ui.web.internal.WebUIThreadLocal;
 import consulo.ui.migration.SwingImageRef;
 import consulo.ui.web.servlet.UIServlet;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
@@ -101,7 +101,7 @@ public class WGwtImageImpl implements Image, WGwtImageWithState, SwingImageRef {
   @Override
   public void toState(MultiImageState m) {
     ImageState state = new ImageState();
-    UIServlet.UIImpl current = (UIServlet.UIImpl)WGwtUIThreadLocal.getUI();
+    UIServlet.UIImpl current = (UIServlet.UIImpl)WebUIThreadLocal.getUI();
     state.myURL = WGwtImageUrlCache.createURL(myURLHash, current.getURLPrefix());
 
     m.myImageState = state;

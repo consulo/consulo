@@ -19,7 +19,7 @@ import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.web.internal.VaadinUIAccessImpl;
+import consulo.ui.web.internal.WebUIAccessImpl;
 import consulo.web.application.WebSession;
 
 import javax.annotation.Nonnull;
@@ -53,7 +53,7 @@ public class VaadinWebSessionImpl implements WebSession {
 
       window.showAsync();
 
-      ((VaadinUIAccessImpl)myAccess).getUI().close();
+      ((WebUIAccessImpl)myAccess).getUI().close();
     });
   }
 

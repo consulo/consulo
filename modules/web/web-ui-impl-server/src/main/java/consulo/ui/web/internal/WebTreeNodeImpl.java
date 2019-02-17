@@ -29,17 +29,17 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 09-Sep-17
  */
-public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
-  private final WGwtTreeNodeImpl<N> myParent;
+public class WebTreeNodeImpl<N> implements TreeNode<N> {
+  private final WebTreeNodeImpl<N> myParent;
   private final String myId;
 
   private N myNode;
 
-  private List<WGwtTreeNodeImpl<N>> myChildren;
+  private List<WebTreeNodeImpl<N>> myChildren;
   private BiConsumer<N, ItemPresentation> myRender = (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
   private boolean myLeaf;
 
-  public WGwtTreeNodeImpl(@Nullable WGwtTreeNodeImpl<N> parent, @Nullable N node, Map<String, WGwtTreeNodeImpl<N>> nodeMap) {
+  public WebTreeNodeImpl(@Nullable WebTreeNodeImpl<N> parent, @Nullable N node, Map<String, WebTreeNodeImpl<N>> nodeMap) {
     myParent = parent;
     myNode = node;
     myId = parent == null ? "root" : UUID.randomUUID().toString();
@@ -48,7 +48,7 @@ public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
   }
 
   @Nullable
-  public WGwtTreeNodeImpl<N> getParent() {
+  public WebTreeNodeImpl<N> getParent() {
     return myParent;
   }
 
@@ -62,11 +62,11 @@ public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
     return myId;
   }
 
-  public List<WGwtTreeNodeImpl<N>> getChildren() {
+  public List<WebTreeNodeImpl<N>> getChildren() {
     return myChildren;
   }
 
-  public void setChildren(List<WGwtTreeNodeImpl<N>> children) {
+  public void setChildren(List<WebTreeNodeImpl<N>> children) {
     myChildren = children;
   }
 

@@ -30,11 +30,11 @@ import java.util.Map;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WGwtStyleImpl implements Style {
+public class WebStyleImpl implements Style {
   private Map<ColorKey, ColorValue> myColors = new HashMap<>();
   private final String myName;
 
-  public WGwtStyleImpl(String name) {
+  public WebStyleImpl(String name) {
     myName = name;
 
     for (StandardColors color : StandardColors.values()) {

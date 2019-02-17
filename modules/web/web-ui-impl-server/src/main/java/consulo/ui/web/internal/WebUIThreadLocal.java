@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 13-Sep-17
  */
-public class WGwtUIThreadLocal {
+public class WebUIThreadLocal {
   private static final ThreadLocal<UI> ourUI = new ThreadLocal<>();
 
   public static void setUI(UI ui) {

@@ -45,7 +45,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
       throw new IllegalArgumentException("Window already disposed");
     }
 
-    VaadinUIAccessImpl uiAccess = (VaadinUIAccessImpl)UIAccess.current();
+    WebUIAccessImpl uiAccess = (WebUIAccessImpl)UIAccess.current();
 
     uiAccess.getUI().addWindow(this);
   }
