@@ -15,25 +15,12 @@
  */
 package consulo.ui.web.internal.base;
 
-import com.vaadin.ui.AbstractComponentContainer;
-import consulo.ui.Component;
-
-import javax.annotation.Nonnull;
+import consulo.ui.impl.UIDataObject;
 
 /**
  * @author VISTALL
  * @since 2019-02-17
  */
-public abstract class VaadinComponentContainer<T extends Component> extends AbstractComponentContainer implements FromVaadinComponentWrapper {
-  protected final T myComponent;
-
-  public VaadinComponentContainer(T component) {
-    myComponent = component;
-  }
-
-  @Nonnull
-  @Override
-  public T toUIComponent() {
-    return myComponent;
-  }
+public interface DataObjectHolder {
+  UIDataObject dataObject();
 }

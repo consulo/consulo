@@ -16,10 +16,10 @@
 package consulo.ui.web.internal.border;
 
 import consulo.ui.impl.BorderInfo;
-import consulo.ui.internal.VaadinWrapper;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
+import consulo.ui.web.internal.base.DataObjectHolder;
 import consulo.web.gwt.shared.ui.state.border.BorderListState;
 
 /**
@@ -27,7 +27,7 @@ import consulo.web.gwt.shared.ui.state.border.BorderListState;
  * @since 15-Sep-17
  */
 public class WGwtBorderBuilder {
-  public static void fill(VaadinWrapper wrapper, BorderListState borderListState) {
+  public static void fill(DataObjectHolder wrapper, BorderListState borderListState) {
     borderListState.myBorders.clear();
 
     Style currentStyle = StyleManager.get().getCurrentStyle();

@@ -34,6 +34,7 @@ import consulo.ui.web.internal.image.WGwtImageImpl;
 import consulo.ui.web.internal.image.WGwtResizeImageImpl;
 import consulo.ui.web.internal.image.WGwtTransparentImageImpl;
 import consulo.ui.web.internal.layout.WebDockLayoutImpl;
+import consulo.ui.web.internal.layout.WebWrappedLayoutImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,7 +61,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public WrappedLayout _Layouts_wrapped() {
-    return new WGwtWrappedLayoutImpl();
+    return new WebWrappedLayoutImpl();
   }
 
   @Override

@@ -36,17 +36,18 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2019-02-17
  */
-public class UIComponentWithVaadinComponent<T extends AbstractComponent> implements Component {
-  protected T myComponent;
+public class UIComponentWithVaadinComponent<T extends AbstractComponent> implements Component, DataObjectHolder {
+  protected T myVaadinComponent;
 
   public UIComponentWithVaadinComponent() {
   }
 
+  @Override
   @Nonnull
-  private UIDataObject dataObject() {
-    UIDataObject data = (UIDataObject)myComponent.getData();
+  public UIDataObject dataObject() {
+    UIDataObject data = (UIDataObject)myVaadinComponent.getData();
     if (data == null) {
-      myComponent.setData(data = new UIDataObject());
+      myVaadinComponent.setData(data = new UIDataObject());
     }
     return data;
   }
@@ -54,7 +55,7 @@ public class UIComponentWithVaadinComponent<T extends AbstractComponent> impleme
   @Nullable
   @Override
   public Component getParentComponent() {
-    return TargetVaddin.from(myComponent.getParent());
+    return TargetVaddin.from(myVaadinComponent.getParent());
   }
 
   @RequiredUIAccess
@@ -64,7 +65,7 @@ public class UIComponentWithVaadinComponent<T extends AbstractComponent> impleme
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     dataObject().putUserData(key, value);
   }
 
@@ -110,24 +111,24 @@ public class UIComponentWithVaadinComponent<T extends AbstractComponent> impleme
 
   @Override
   public boolean isVisible() {
-    return myComponent.isVisible();
+    return myVaadinComponent.isVisible();
   }
 
   @RequiredUIAccess
   @Override
   public void setVisible(boolean value) {
-    myComponent.setVisible(value);
+    myVaadinComponent.setVisible(value);
   }
 
   @Override
   public boolean isEnabled() {
-    return myComponent.isEnabled();
+    return myVaadinComponent.isEnabled();
   }
 
   @RequiredUIAccess
   @Override
   public void setEnabled(boolean value) {
-    myComponent.setEnabled(value);
+    myVaadinComponent.setEnabled(value);
   }
 
   public void bordersChanged() {

@@ -18,37 +18,124 @@ package consulo.ui.web.internal.layout;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.Layout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentContainer;
+import consulo.ui.web.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WGwtDockLayoutImpl> implements DockLayout {
+public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLayoutImpl.Vaadin> implements DockLayout {
+  protected static class Vaadin extends VaadinComponentContainer<WebDockLayoutImpl> {
+    private final Map<DockLayoutState.Constraint, com.vaadin.ui.Component> myChildren = new LinkedHashMap<>();
+
+    public Vaadin(WebDockLayoutImpl component) {
+      super(component);
+    }
+
+    @RequiredUIAccess
+    public void removeAll() {
+      for (com.vaadin.ui.Component child : new ArrayList<>(myChildren.values())) {
+        removeComponent(child);
+      }
+      markAsDirty();
+    }
+
+    @Override
+    protected DockLayoutState getState() {
+      return (DockLayoutState)super.getState();
+    }
+
+    void placeAt(@Nonnull Component uiComponent, DockLayoutState.Constraint constraint) {
+      com.vaadin.ui.Component component = TargetVaddin.to(uiComponent);
+
+      Component parentComponent = uiComponent.getParentComponent();
+      // remove from old parent
+      if (parentComponent instanceof Layout) {
+        ((Layout)parentComponent).remove(uiComponent);
+      }
+
+      com.vaadin.ui.Component oldComponent = myChildren.remove(constraint);
+      if (oldComponent != null) {
+        removeComponent(oldComponent);
+      }
+
+      myChildren.put(constraint, component);
+
+      addComponent(component);
+
+      getState().myConstraints = new ArrayList<>(myChildren.keySet());
+    }
+
+    @Override
+    public void removeComponent(com.vaadin.ui.Component c) {
+      DockLayoutState.Constraint constraint = null;
+
+      for (Map.Entry<DockLayoutState.Constraint, com.vaadin.ui.Component> entry : myChildren.entrySet()) {
+        if (entry.getValue() == c) {
+          constraint = entry.getKey();
+        }
+      }
+
+      if (constraint != null) {
+        myChildren.remove(constraint);
+      }
+
+      super.removeComponent(c);
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+      super.beforeClientResponse(initial);
+      WGwtBorderBuilder.fill(toUIComponent(), getState().myBorderListState);
+    }
+
+    @Override
+    public void replaceComponent(com.vaadin.ui.Component removeComponent, com.vaadin.ui.Component newComponent) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getComponentCount() {
+      return myChildren.size();
+    }
+
+    @Override
+    public Iterator<com.vaadin.ui.Component> iterator() {
+      return myChildren.values().iterator();
+    }
+  }
+
   public WebDockLayoutImpl() {
-    myComponent = new WGwtDockLayoutImpl(this);
+    myVaadinComponent = new Vaadin(this);
   }
 
   @RequiredUIAccess
   @Override
   public void removeAll() {
-    myComponent.removeAll();
+    myVaadinComponent.removeAll();
   }
 
   @Override
   public void remove(@Nonnull Component component) {
-    myComponent.removeComponent(TargetVaddin.to(component));
+    myVaadinComponent.removeComponent(TargetVaddin.to(component));
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public DockLayout top(@Nonnull Component component) {
-    myComponent.placeAt(component, DockLayoutState.Constraint.TOP);
+    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.TOP);
     return this;
   }
 
@@ -56,7 +143,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WGwtDockLa
   @Nonnull
   @Override
   public DockLayout bottom(@Nonnull Component component) {
-    myComponent.placeAt(component, DockLayoutState.Constraint.BOTTOM);
+    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.BOTTOM);
     return this;
   }
 
@@ -64,7 +151,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WGwtDockLa
   @Nonnull
   @Override
   public DockLayout center(@Nonnull Component component) {
-    myComponent.placeAt(component, DockLayoutState.Constraint.CENTER);
+    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.CENTER);
     return this;
   }
 
@@ -72,7 +159,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WGwtDockLa
   @Nonnull
   @Override
   public DockLayout left(@Nonnull Component component) {
-    myComponent.placeAt(component, DockLayoutState.Constraint.LEFT);
+    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.LEFT);
     return this;
   }
 
@@ -80,7 +167,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WGwtDockLa
   @Nonnull
   @Override
   public DockLayout right(@Nonnull Component component) {
-    myComponent.placeAt(component, DockLayoutState.Constraint.RIGHT);
+    myVaadinComponent.placeAt(component, DockLayoutState.Constraint.RIGHT);
     return this;
   }
 }

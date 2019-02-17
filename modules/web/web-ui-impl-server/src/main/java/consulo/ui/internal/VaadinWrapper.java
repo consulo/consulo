@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 14-Sep-17
  */
+@Deprecated
 public interface VaadinWrapper extends SomeUIWrapper {
   default com.vaadin.ui.Component toVaadin() {
     return (com.vaadin.ui.Component)this;
