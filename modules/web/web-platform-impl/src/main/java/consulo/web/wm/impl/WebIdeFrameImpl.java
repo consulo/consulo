@@ -25,6 +25,7 @@ import com.vaadin.shared.ui.window.WindowMode;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.ui.shared.Rectangle2D;
+import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.web.application.WebApplication;
 
@@ -51,10 +52,12 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   @RequiredUIAccess
   public void show() {
     myWindow = Window.createModal(myProject.getName());
-    ((com.vaadin.ui.Window)myWindow).setWindowMode(WindowMode.MAXIMIZED);
+
+    com.vaadin.ui.Window vaadinWindow = (com.vaadin.ui.Window)TargetVaddin.to(myWindow);
+    vaadinWindow.setWindowMode(WindowMode.MAXIMIZED);
 
     myWindow.setResizable(false);
-    ((com.vaadin.ui.Window)myWindow).addCloseListener(closeEvent -> {
+    myWindow.addListener(Window.CloseListener.class, () -> {
       myWindow.close();
 
       ProjectManager.getInstance().closeProjectAsync(myProject);

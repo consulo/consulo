@@ -25,6 +25,7 @@ import java.util.EventListener;
  */
 public interface Window extends Component {
   static interface CloseListener extends EventListener {
+    @RequiredUIAccess
     void onClose();
   }
 
