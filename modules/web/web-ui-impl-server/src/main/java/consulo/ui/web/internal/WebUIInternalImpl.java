@@ -29,14 +29,11 @@ import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import consulo.ui.web.internal.image.WebLayeredImageImpl;
 import consulo.ui.web.internal.image.WebImageImpl;
+import consulo.ui.web.internal.image.WebLayeredImageImpl;
 import consulo.ui.web.internal.image.WebResizeImageImpl;
 import consulo.ui.web.internal.image.WebTransparentImageImpl;
-import consulo.ui.web.internal.layout.WebDockLayoutImpl;
-import consulo.ui.web.internal.layout.WebHorizontalSplitLayoutImpl;
-import consulo.ui.web.internal.layout.WebVerticalSplitLayoutImpl;
-import consulo.ui.web.internal.layout.WebWrappedLayoutImpl;
+import consulo.ui.web.internal.layout.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,7 +90,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public LabeledLayout _Layouts_labeled(String label) {
-    return new WGwtLabeledLayoutImpl(label);
+    return new WebLabeledLayoutImpl(label);
   }
 
   @Override

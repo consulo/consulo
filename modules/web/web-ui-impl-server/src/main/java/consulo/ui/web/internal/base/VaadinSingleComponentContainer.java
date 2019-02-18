@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal.base;
 
+import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
 import com.vaadin.ui.AbstractSingleComponentContainer;
 import consulo.ui.Component;
 
@@ -26,6 +27,17 @@ import javax.annotation.Nonnull;
  */
 public abstract class VaadinSingleComponentContainer extends AbstractSingleComponentContainer implements FromVaadinComponentWrapper, ComponentHolder {
   private Component myComponent;
+
+  public void removeIfContent(@Nonnull com.vaadin.ui.Component component) {
+    if (getContent() == component) {
+      setContent(null);
+    }
+  }
+
+  @Override
+  public AbstractSingleComponentContainerState getState() {
+    return super.getState();
+  }
 
   @Override
   public void setComponent(Component component) {

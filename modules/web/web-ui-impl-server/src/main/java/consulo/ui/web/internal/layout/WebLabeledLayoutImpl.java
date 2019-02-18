@@ -17,32 +17,24 @@ package consulo.ui.web.internal.layout;
 
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.layout.WrappedLayout;
+import consulo.ui.layout.LabeledLayout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-02-17
+ * @since 2019-02-18
  */
-public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
+public class WebLabeledLayoutImpl extends UIComponentWithVaadinComponent<WebLabeledLayoutImpl.Vaadin> implements LabeledLayout {
   public static class Vaadin extends VaadinSingleComponentContainer {
+
   }
 
-  @Nonnull
-  @Override
-  public Vaadin create() {
-    return new Vaadin();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeAll() {
-    getVaadinComponent().setContent(null);
+  public WebLabeledLayoutImpl(String text) {
+    getVaadinComponent().getState().caption = text;
   }
 
   @Override
@@ -51,10 +43,22 @@ public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrap
   }
 
   @RequiredUIAccess
+  @Override
+  public void removeAll() {
+    getVaadinComponent().setComponent(null);
+  }
+
+  @RequiredUIAccess
   @Nonnull
   @Override
-  public WrappedLayout set(@Nullable Component component) {
+  public LabeledLayout set(@Nonnull Component component) {
     getVaadinComponent().setContent(TargetVaddin.to(component));
     return this;
+  }
+
+  @Nonnull
+  @Override
+  public WebLabeledLayoutImpl.Vaadin create() {
+    return new Vaadin();
   }
 }
