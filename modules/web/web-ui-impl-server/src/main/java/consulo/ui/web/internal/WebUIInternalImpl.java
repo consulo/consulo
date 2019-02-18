@@ -261,7 +261,7 @@ public class WebUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public Window _Window_modalWindow(String title) {
-    VaadinWindowImpl window = new VaadinWindowImpl(true);
+    WebWindowImpl window = new WebWindowImpl(true);
     window.setTitle(title);
     return window;
   }

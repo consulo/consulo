@@ -16,9 +16,10 @@
 package consulo.ui.web.internal;
 
 import com.intellij.openapi.util.Disposer;
+import com.vaadin.server.Sizeable;
 import consulo.ui.*;
-import consulo.ui.internal.VaadinWrapper;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,14 +28,25 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, VaadinWrapper {
+public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.Vaadin> implements Window {
+  public static class Vaadin extends com.vaadin.ui.Window {
+  }
+
   private boolean myDisposed;
   private WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
-  public VaadinWindowImpl(boolean modal) {
-    setModal(modal);
-    setContent(TargetVaddin.to(myRootPanel));
-    addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
+  public WebWindowImpl(boolean modal) {
+    Vaadin vaadinComponent = getVaadinComponent();
+
+    vaadinComponent.setModal(modal);
+    vaadinComponent.setContent(TargetVaddin.to(myRootPanel));
+    vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
+  }
+
+  @Nonnull
+  @Override
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   @RequiredUIAccess
@@ -46,13 +58,13 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
 
     WebUIAccessImpl uiAccess = (WebUIAccessImpl)UIAccess.current();
 
-    uiAccess.getUI().addWindow(this);
+    uiAccess.getUI().addWindow(getVaadinComponent());
   }
 
   @RequiredUIAccess
   @Override
   public void close() {
-    super.close();
+    getVaadinComponent().close();
 
     myDisposed = true;
 
@@ -62,7 +74,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
   @RequiredUIAccess
   @Override
   public void setTitle(@Nonnull String title) {
-    setCaption(title);
+    getVaadinComponent().setCaption(title);
   }
 
   @RequiredUIAccess
@@ -77,21 +89,31 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
     myRootPanel.setMenuBar(menuBar);
   }
 
+  @Override
+  public void setResizable(boolean value) {
+    getVaadinComponent().setResizable(value);
+  }
+
+  @Override
+  public void setClosable(boolean value) {
+    getVaadinComponent().setClosable(value);
+  }
+
   @Nullable
   @Override
   public Window getParentComponent() {
-    return null;
+    return (Window)super.getParentComponent();
   }
 
   @RequiredUIAccess
   @Override
   public void setSize(@Nonnull Size size) {
     if (size.getWidth() != -1) {
-      setWidth(size.getWidth(), Unit.PIXELS);
+      getVaadinComponent().setWidth(size.getWidth(), Sizeable.Unit.PIXELS);
     }
 
     if (size.getHeight() != -1) {
-      setHeight(size.getHeight(), Unit.PIXELS);
+      getVaadinComponent().setHeight(size.getHeight(), Sizeable.Unit.PIXELS);
     }
   }
 }
