@@ -162,7 +162,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
-    return new WGwtTreeImpl<>(rootValue, model);
+    return new WebTreeImpl<>(rootValue, model);
   }
 
   @Override
