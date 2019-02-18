@@ -20,17 +20,17 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.ui.layout.DockLayout;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.web.internal.ex.WGwtLoadingPanelImpl;
+import consulo.ui.web.servlet.UIBuilder;
+import consulo.ui.web.servlet.VaadinWebSessionImpl;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-import consulo.ui.web.servlet.VaadinWebSessionImpl;
-import consulo.ui.web.servlet.UIBuilder;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +62,7 @@ public class RootUIBuilder implements UIBuilder {
 
     window.setContent(new WGwtLoadingPanelImpl());
 
-    UIAccess access = UIAccess.get();
+    UIAccess access = UIAccess.current();
 
     scheduleWelcomeFrame(access, window);
   }
@@ -101,6 +101,6 @@ public class RootUIBuilder implements UIBuilder {
 
     application.setCurrentSession(currentSession);
 
-    WelcomeFrame.showIfNoProjectOpened();
+    WelcomeFrameManager.getInstance().showIfNoProjectOpened();
   }
 }
