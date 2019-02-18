@@ -26,7 +26,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.web.internal.ex.WGwtLoadingPanelImpl;
+import consulo.ui.web.internal.ex.WebLoadingPanelImpl;
 import consulo.ui.web.servlet.UIBuilder;
 import consulo.ui.web.servlet.VaadinWebSessionImpl;
 import consulo.web.application.WebApplication;
@@ -60,7 +60,7 @@ public class RootUIBuilder implements UIBuilder {
       });
     });
 
-    window.setContent(new WGwtLoadingPanelImpl());
+    window.setContent(new WebLoadingPanelImpl());
 
     UIAccess access = UIAccess.current();
 
