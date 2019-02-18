@@ -38,7 +38,7 @@ public class UIServlet extends VaadinServlet {
     private String myURLPrefix;
     private final UIBuilder myBuilder;
 
-    private VaadinUIWindowImpl myUIWindow = new VaadinUIWindowImpl(this);
+    private UIWindowOverVaadinUI myUIWindow = new UIWindowOverVaadinUI(this);
 
     public UIImpl(String urlPrefix, UIBuilder builder) {
       myURLPrefix = urlPrefix;

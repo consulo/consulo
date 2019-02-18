@@ -39,13 +39,13 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 11-Sep-17
  */
-class VaadinUIWindowImpl implements Window {
+class UIWindowOverVaadinUI implements Window {
   private final UI myUI;
   private WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
   private boolean myDisposed;
 
-  public VaadinUIWindowImpl(UI ui) {
+  public UIWindowOverVaadinUI(UI ui) {
     myUI = ui;
     myUI.setSizeFull();
     myUI.setContent(TargetVaddin.to(myRootPanel));
