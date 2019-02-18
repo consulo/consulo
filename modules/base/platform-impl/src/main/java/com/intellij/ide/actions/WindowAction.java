@@ -22,7 +22,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
+import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,20 +36,23 @@ public abstract class WindowAction extends AnAction implements DumbAware {
   protected Window myWindow;
   private static JLabel mySizeHelper = null;
 
-  {
+  WindowAction() {
     setEnabledInModalContext(true);
   }
 
+  @RequiredUIAccess
   @Override
-  public final void update(AnActionEvent e) {
-    Window wnd = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    e.getPresentation().setEnabled(wnd != null && !(wnd instanceof IdeFrame));
+  public final void update(@Nonnull AnActionEvent e) {
+    consulo.ui.Window focusedWindow = consulo.ui.Window.getFocusedWindow();
+    e.getPresentation().setEnabled(focusedWindow != null && focusedWindow.getUserData(IdeFrame.KEY) == null);
 
+    Window awtWindow = TargetAWT.to(focusedWindow);
     Object noActions = null;
-    if (wnd instanceof JDialog) {
-      noActions = ((JDialog)wnd).getRootPane().getClientProperty(NO_WINDOW_ACTIONS);
-    } else if (wnd instanceof JFrame) {
-      noActions = ((JFrame)wnd).getRootPane().getClientProperty(NO_WINDOW_ACTIONS);
+    if (awtWindow instanceof JDialog) {
+      noActions = ((JDialog)awtWindow).getRootPane().getClientProperty(NO_WINDOW_ACTIONS);
+    }
+    else if (awtWindow instanceof JFrame) {
+      noActions = ((JFrame)awtWindow).getRootPane().getClientProperty(NO_WINDOW_ACTIONS);
     }
 
     if (noActions != null && "true".equalsIgnoreCase(noActions.toString())) {
@@ -59,8 +65,9 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     }
 
     if (e.getPresentation().isEnabled()) {
-      myWindow = wnd;
-    } else {
+      myWindow = awtWindow;
+    }
+    else {
       myWindow = null;
     }
   }
@@ -75,16 +82,16 @@ public abstract class WindowAction extends AnAction implements DumbAware {
       myPositive = positive;
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (mySizeHelper == null) {
         mySizeHelper = new JLabel("W"); // Must be sure to invoke label constructor from EDT thread or it may lead to a deadlock
       }
 
       int baseValue = myHorizontal ? mySizeHelper.getPreferredSize().width : mySizeHelper.getPreferredSize().height;
 
-      int inc = baseValue *
-                (myHorizontal ? Registry.intValue("ide.windowSystem.hScrollChars") : Registry.intValue("ide.windowSystem.vScrollChars"));
+      int inc = baseValue * (myHorizontal ? Registry.intValue("ide.windowSystem.hScrollChars") : Registry.intValue("ide.windowSystem.vScrollChars"));
       if (!myPositive) {
         inc = -inc;
       }

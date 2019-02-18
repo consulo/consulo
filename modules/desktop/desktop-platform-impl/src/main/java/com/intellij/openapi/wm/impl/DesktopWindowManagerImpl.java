@@ -134,7 +134,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     myCommandProcessor = new DesktopCommandProcessorImpl();
-    myWindowWatcher = new DesktopWindowWatcher();
+    myWindowWatcher = new DesktopWindowWatcher(application);
     final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
     myLayout = new ToolWindowLayout();

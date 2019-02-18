@@ -18,7 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.FocusWatcher;
@@ -56,6 +56,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
   private final Object myLock = new Object();
 
   private final Map<consulo.ui.Window, WindowInfo> myWindow2Info = new WeakHashMap<>();
+  private final Application myApplication;
   /**
    * Currenly focused window (window which has focused component). Can be <code>null</code> if there is no focused
    * window at all.
@@ -66,7 +67,8 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
    */
   private final Set<consulo.ui.Window> myFocusedWindows = new HashSet<>();
 
-  DesktopWindowWatcher() {
+  public DesktopWindowWatcher(Application application) {
+    myApplication = application;
   }
 
   /**
@@ -85,7 +87,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
     }
     synchronized (myLock) {
       final consulo.ui.Window window = TargetAWT.from((Window)e.getNewValue());
-      if (window == null || ApplicationManager.getApplication().isDisposed()) {
+      if (window == null || myApplication.isDisposed()) {
         return;
       }
       if (!myWindow2Info.containsKey(window)) {
@@ -196,7 +198,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
 
   public final Component getFocusedComponent(@Nonnull final Window window) {
     synchronized (myLock) {
-      final WindowInfo info = myWindow2Info.get(window);
+      final WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
       if (info == null) { // it means that we don't manage this window, so just return standard focus owner
         // return window.getFocusOwner();
         // TODO[vova,anton] usage of getMostRecentFocusOwner is experimental. But it seems suitable here.
@@ -215,7 +217,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
       else {
         // info isn't valid, i.e. window was garbage collected, so we need the remove invalid info
         // and return null
-        myWindow2Info.remove(window);
+        myWindow2Info.remove(TargetAWT.from(window));
         return null;
       }
     }
@@ -224,7 +226,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
   @Nullable
   public FocusWatcher getFocusWatcherFor(Component c) {
     final Window window = SwingUtilities.getWindowAncestor(c);
-    final WindowInfo info = myWindow2Info.get(window);
+    final WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
     return info == null ? null : info.myFocusWatcherRef.get();
   }
 
@@ -260,7 +262,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
           continue;
         }
         // skip windows that have not associated WindowInfo
-        final WindowInfo info = myWindow2Info.get(window);
+        final WindowInfo info = myWindow2Info.get(TargetAWT.from(window));
         if (info == null) {
           window = window.getOwner();
           continue;
@@ -299,9 +301,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
   private Window getFocusedWindowForProject(@Nullable final Project project) {
     //todo[anton,vova]: it is possible that returned wnd is not contained in myFocusedWindows; investigate
     outer:
-    for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
-      consulo.ui.Window window = i.next();
-
+    for (consulo.ui.Window window : myFocusedWindows) {
       Window awtWindow = TargetAWT.to(window);
 
       while (!awtWindow.isDisplayable() || !awtWindow.isShowing()) { // if window isn't visible then gets its first visible ancestor
