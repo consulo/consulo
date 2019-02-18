@@ -34,13 +34,16 @@ import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.ui.ex.WGwtToolWindowStripeButton;
-import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
@@ -93,7 +96,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     myToolWindowPanel = toolWindowPanel;
 
-    WGwtRootPanelImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
+    WebRootPaneImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
 
     rootPanel.setCenterComponent(toolWindowPanel);
   }

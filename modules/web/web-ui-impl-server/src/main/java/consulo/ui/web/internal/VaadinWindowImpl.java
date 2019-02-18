@@ -18,7 +18,6 @@ package consulo.ui.web.internal;
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
 import consulo.ui.internal.VaadinWrapper;
-import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Size;
 
 import javax.annotation.Nonnull;
@@ -30,11 +29,11 @@ import javax.annotation.Nullable;
  */
 public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, VaadinWrapper {
   private boolean myDisposed;
-  private WGwtRootPanelImpl myRootPanel = new WGwtRootPanelImpl();
+  private WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
   public VaadinWindowImpl(boolean modal) {
     setModal(modal);
-    setContent((com.vaadin.ui.Component)myRootPanel);
+    setContent(TargetVaddin.to(myRootPanel));
     addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
   }
 

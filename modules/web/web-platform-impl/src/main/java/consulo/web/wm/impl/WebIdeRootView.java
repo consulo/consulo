@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.Project;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.*;
-import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.web.internal.WebRootPaneImpl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ import java.util.function.Consumer;
  * @since 19-Oct-17
  */
 public class WebIdeRootView {
-  private final WGwtRootPanelImpl myRootPanel = new WGwtRootPanelImpl();
+  private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
   private final MenuItemPresentationFactory myPresentationFactory;
   private Project myProject;
 
@@ -98,7 +98,7 @@ public class WebIdeRootView {
     }
   }
 
-  public Component getComponent() {
+  public WebRootPaneImpl getComponent() {
     return myRootPanel;
   }
 }

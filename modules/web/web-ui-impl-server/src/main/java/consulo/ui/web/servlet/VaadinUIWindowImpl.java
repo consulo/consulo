@@ -23,11 +23,12 @@ import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
-import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
+import consulo.ui.web.internal.TargetVaddin;
+import consulo.ui.web.internal.WebRootPaneImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,14 +41,14 @@ import java.util.function.Function;
  */
 class VaadinUIWindowImpl implements Window {
   private final UI myUI;
-  private WGwtRootPanelImpl myRootPanel = new WGwtRootPanelImpl();
+  private WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
   private boolean myDisposed;
 
   public VaadinUIWindowImpl(UI ui) {
     myUI = ui;
     myUI.setSizeFull();
-    myUI.setContent(myRootPanel);
+    myUI.setContent(TargetVaddin.to(myRootPanel));
   }
 
   @Override
@@ -92,7 +93,7 @@ class VaadinUIWindowImpl implements Window {
   @Nullable
   @Override
   public Window getParentComponent() {
-    return (Window)myUI.getParent();
+    return (Window)TargetVaddin.from(myUI.getParent());
   }
 
   @RequiredUIAccess

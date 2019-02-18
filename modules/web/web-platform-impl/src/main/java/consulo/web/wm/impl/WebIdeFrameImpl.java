@@ -24,11 +24,12 @@ import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
-import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Rectangle2D;
+import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.web.application.WebApplication;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -39,7 +40,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   private final WebStatusBarImpl myStatusBar = new WebStatusBarImpl(this);
   private final Project myProject;
 
-  private consulo.ui.Window myWindow;
+  private Window myWindow;
   private final WebIdeRootView myRootView;
 
   public WebIdeFrameImpl(Project project) {
@@ -66,13 +67,13 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     myWindow.showAsync();
   }
 
-  public WGwtRootPanelImpl getRootPanel() {
-    return (WGwtRootPanelImpl)myRootView.getComponent();
+  public WebRootPaneImpl getRootPanel() {
+    return myRootView.getComponent();
   }
 
   @Nonnull
   @Override
-  public consulo.ui.Window getWindow() {
+  public Window getWindow() {
     return myWindow;
   }
 
@@ -92,7 +93,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Project getProject() {
     return myProject;
@@ -113,7 +114,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public BalloonLayout getBalloonLayout() {
     return null;
