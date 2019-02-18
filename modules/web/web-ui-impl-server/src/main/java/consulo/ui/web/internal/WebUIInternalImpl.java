@@ -120,7 +120,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TextBox _Components_textBox(String text) {
-    return new WGwtTextBoxImpl(text);
+    return new WebTextBoxImpl(text);
   }
 
   @Override

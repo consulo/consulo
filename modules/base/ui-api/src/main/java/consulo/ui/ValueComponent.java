@@ -51,7 +51,9 @@ public interface ValueComponent<V> extends Component {
   }
 
   @Nonnull
-  Disposable addValueListener(@Nonnull ValueComponent.ValueListener<V> valueListener);
+  default Disposable addValueListener(@Nonnull ValueComponent.ValueListener<V> valueListener) {
+    return addListener(ValueListener.class, valueListener);
+  }
 
   @Nullable
   V getValue();

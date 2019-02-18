@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,53 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
-import com.intellij.openapi.Disposable;
-import com.vaadin.ui.AbstractComponent;
-import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
 import consulo.ui.TextBox;
+import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponent;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 2019-02-18
  */
-public class WGwtTextBoxImpl extends AbstractComponent implements TextBox, VaadinWrapper {
-  public WGwtTextBoxImpl(String text) {
-    getState().caption = text;
+public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImpl.Vaadin> implements TextBox {
+  public static class Vaadin extends VaadinComponent {
   }
 
-  @javax.annotation.Nullable
+  public WebTextBoxImpl(String text) {
+    setValue(text, false);
+  }
+
   @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-
-  }
-
   @Nonnull
-  @Override
-  public Disposable addValueListener(@Nonnull ValueListener<String> valueListener) {
-    return dataObject().addListener(ValueListener.class, valueListener);
+  public Vaadin create() {
+    return new Vaadin();
   }
 
+  @Nullable
   @Override
   public String getValue() {
-    return getState().caption;
+    return getVaadinComponent().getState().caption;
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(String value, boolean fireEvents) {
-    getState().caption = value;
-
-    markAsDirty();
+    getVaadinComponent().getState().caption = value;
+    getVaadinComponent().markAsDirty();
   }
 }
