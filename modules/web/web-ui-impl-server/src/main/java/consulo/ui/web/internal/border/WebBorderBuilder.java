@@ -27,7 +27,7 @@ import consulo.web.gwt.shared.ui.state.border.BorderListState;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WGwtBorderBuilder {
+public class WebBorderBuilder {
   public static void fill(Component component, BorderListState borderListState) {
     DataObjectHolder dataObjectHolder = (DataObjectHolder)component;
 

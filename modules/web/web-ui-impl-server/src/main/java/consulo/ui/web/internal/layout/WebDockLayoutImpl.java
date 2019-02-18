@@ -22,7 +22,7 @@ import consulo.ui.layout.Layout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
-import consulo.ui.web.internal.border.WGwtBorderBuilder;
+import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 import javax.annotation.Nonnull;
@@ -93,7 +93,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
     @Override
     public void beforeClientResponse(boolean initial) {
       super.beforeClientResponse(initial);
-      WGwtBorderBuilder.fill(toUIComponent(), getState().myBorderListState);
+      WebBorderBuilder.fill(toUIComponent(), getState().myBorderListState);
     }
 
     @Override

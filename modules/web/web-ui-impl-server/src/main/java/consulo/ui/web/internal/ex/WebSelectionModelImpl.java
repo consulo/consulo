@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-05-10
  */
-public class WGwtSelectionModelImpl implements SelectionModel {
+public class WebSelectionModelImpl implements SelectionModel {
   @Override
   public int getSelectionStart() {
     return 0;

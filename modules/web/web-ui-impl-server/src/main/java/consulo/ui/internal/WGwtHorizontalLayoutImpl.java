@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import consulo.ui.web.internal.border.WGwtBorderBuilder;
+import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
 import javax.annotation.Nonnull;
 
@@ -42,7 +42,7 @@ public class WGwtHorizontalLayoutImpl extends AbstractComponentContainer impleme
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);
 
-    WGwtBorderBuilder.fill(this, getState().myBorderListState);
+    WebBorderBuilder.fill(this, getState().myBorderListState);
   }
 
   @Override

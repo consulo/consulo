@@ -25,11 +25,11 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-05-10
  */
-public class WGwtCaretImpl implements Caret {
-  private WGwtCaretModelImpl myCaretModel;
+public class WebCaretImpl implements Caret {
+  private WebCaretModelImpl myCaretModel;
   private WGwtEditorImpl myEditor;
 
-  public WGwtCaretImpl(WGwtCaretModelImpl caretModel, WGwtEditorImpl editor) {
+  public WebCaretImpl(WebCaretModelImpl caretModel, WGwtEditorImpl editor) {
     myCaretModel = caretModel;
     myEditor = editor;
   }

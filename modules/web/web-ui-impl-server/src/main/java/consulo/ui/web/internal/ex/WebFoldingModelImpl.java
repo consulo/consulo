@@ -32,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2018-05-10
  */
-public class WGwtFoldingModelImpl implements FoldingModelEx {
+public class WebFoldingModelImpl implements FoldingModelEx {
   @Nullable
   @Override
   public FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText) {

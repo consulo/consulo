@@ -68,9 +68,9 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
   private final DocumentEx myDocument;
   private final Project myProject;
 
-  private final WGwtFoldingModelImpl myFoldingModel = new WGwtFoldingModelImpl();
-  private final WGwtSelectionModelImpl mySelectionModel = new WGwtSelectionModelImpl();
-  private final WGwtCaretModelImpl myCaretModel = new WGwtCaretModelImpl(this);
+  private final WebFoldingModelImpl myFoldingModel = new WebFoldingModelImpl();
+  private final WebSelectionModelImpl mySelectionModel = new WebSelectionModelImpl();
+  private final WebCaretModelImpl myCaretModel = new WebCaretModelImpl(this);
 
   private EditorColorsScheme myEditorColorsScheme;
 

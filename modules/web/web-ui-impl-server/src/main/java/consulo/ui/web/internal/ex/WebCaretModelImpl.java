@@ -28,13 +28,13 @@ import java.util.List;
  * @author VISTALL
  * @since 2018-05-10
  */
-public class WGwtCaretModelImpl implements CaretModel {
-  private WGwtCaretImpl myPrimaryCaret;
+public class WebCaretModelImpl implements CaretModel {
+  private WebCaretImpl myPrimaryCaret;
   private WGwtEditorImpl myEditor;
 
-  public WGwtCaretModelImpl(WGwtEditorImpl editor) {
+  public WebCaretModelImpl(WGwtEditorImpl editor) {
     myEditor = editor;
-    myPrimaryCaret = new WGwtCaretImpl(this, editor);
+    myPrimaryCaret = new WebCaretImpl(this, editor);
   }
 
   @Override
