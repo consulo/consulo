@@ -27,9 +27,9 @@ import javax.annotation.Nullable;
  */
 public class WebCaretImpl implements Caret {
   private WebCaretModelImpl myCaretModel;
-  private WGwtEditorImpl myEditor;
+  private WebEditorImpl myEditor;
 
-  public WebCaretImpl(WebCaretModelImpl caretModel, WGwtEditorImpl editor) {
+  public WebCaretImpl(WebCaretModelImpl caretModel, WebEditorImpl editor) {
     myCaretModel = caretModel;
     myEditor = editor;
   }

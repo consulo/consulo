@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.Component;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -66,7 +66,7 @@ public interface Editor extends UserDataHolder {
    * @return the component instance.
    */
   @Nonnull
-  default javax.swing.JComponent getComponent()  {
+  default javax.swing.JComponent getComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
@@ -94,9 +94,13 @@ public interface Editor extends UserDataHolder {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
-  void setBorder(@Nullable Border border);
+  default void setBorder(@Nullable Border border) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
-  java.awt.Insets getInsets();
+  default java.awt.Insets getInsets() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * Returns the selection model for the editor, which can be used to select ranges of text in
@@ -191,7 +195,9 @@ public interface Editor extends UserDataHolder {
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
   @Nonnull
-  java.awt.Point logicalPositionToXY(@Nonnull LogicalPosition pos);
+  default java.awt.Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * Maps a logical position in the editor to the offset in the document.
@@ -218,13 +224,17 @@ public interface Editor extends UserDataHolder {
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
   @Nonnull
-  java.awt.Point visualPositionToXY(@Nonnull VisualPosition visible);
+  default java.awt.Point visualPositionToXY(@Nonnull VisualPosition visible) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * Same as {@link #visualPositionToXY(VisualPosition)}, but returns potentially more precise result.
    */
   @Nonnull
-  Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos);
+  default Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * Maps a visual position in the editor (with folded lines and columns not included in the line and column count) to
@@ -283,7 +293,10 @@ public interface Editor extends UserDataHolder {
    * @return the corresponding logical position.
    */
   @Nonnull
-  LogicalPosition xyToLogicalPosition(@Nonnull java.awt.Point p);
+  default LogicalPosition xyToLogicalPosition(@Nonnull java.awt.Point p) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
+
 
   /**
    * Maps the pixel coordinates in the editor to a visual position.
@@ -292,13 +305,18 @@ public interface Editor extends UserDataHolder {
    * @return the corresponding visual position.
    */
   @Nonnull
-  VisualPosition xyToVisualPosition(@Nonnull java.awt.Point p);
+  default VisualPosition xyToVisualPosition(@Nonnull java.awt.Point p) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
+
 
   /**
    * Same as {{@link #xyToVisualPosition(java.awt.Point)}}, but allows to specify target point with higher precision.
    */
   @Nonnull
-  VisualPosition xyToVisualPosition(@Nonnull Point2D p);
+  default VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * @since 2017.2
@@ -419,7 +437,9 @@ public interface Editor extends UserDataHolder {
    * @return the editor area, or null if the event occurred over an unknown area.
    */
   @Nullable
-  EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e);
+  default EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * Set up a header component for this text editor. Please note this is used for textual find feature so your component will most
@@ -427,7 +447,9 @@ public interface Editor extends UserDataHolder {
    *
    * @param header a component to setup as header for this text editor or <code>null</code> to remove one.
    */
-  void setHeaderComponent(@Nullable JComponent header);
+  default void setHeaderComponent(@Nullable JComponent header) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * @return <code>true</code> if this editor has active header component set up by {@link #setHeaderComponent(JComponent)}
@@ -438,7 +460,9 @@ public interface Editor extends UserDataHolder {
    * @return a component set by {@link #setHeaderComponent(JComponent)} or <code>null</code> if no header currently installed.
    */
   @Nullable
-  JComponent getHeaderComponent();
+  default JComponent getHeaderComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   @Nonnull
   IndentsModel getIndentsModel();

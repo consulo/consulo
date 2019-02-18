@@ -30,9 +30,9 @@ import java.util.List;
  */
 public class WebCaretModelImpl implements CaretModel {
   private WebCaretImpl myPrimaryCaret;
-  private WGwtEditorImpl myEditor;
+  private WebEditorImpl myEditor;
 
-  public WebCaretModelImpl(WGwtEditorImpl editor) {
+  public WebCaretModelImpl(WebEditorImpl editor) {
     myEditor = editor;
     myPrimaryCaret = new WebCaretImpl(this, editor);
   }

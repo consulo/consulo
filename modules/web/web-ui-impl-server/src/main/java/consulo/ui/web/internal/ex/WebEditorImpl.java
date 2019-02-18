@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.*;
@@ -36,13 +35,10 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
-import com.vaadin.ui.AbstractComponent;
 import consulo.annotations.RequiredReadAction;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.internal.VaadinWrapper;
-import consulo.ui.shared.Size;
+import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorClientRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
@@ -51,20 +47,35 @@ import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.function.IntFunction;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2019-02-18
  */
-public class WGwtEditorImpl extends AbstractComponent implements Component, VaadinWrapper, EditorEx {
+public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.Vaadin> implements Component, EditorEx {
+  public static class Vaadin extends VaadinComponent {
+    public Vaadin() {
+      registerRpc(new EditorServerRpc() {
+        @Override
+        public void onShow() {
+          getRpcProxy(EditorClientRpc.class).setText(getEditor().myDocument.getText());
+        }
+      }, EditorServerRpc.class);
+    }
+
+    @Override
+    public EditorState getState() {
+      return (EditorState)super.getState();
+    }
+
+    @Nonnull
+    private WebEditorImpl getEditor() {
+      return (WebEditorImpl)toUIComponent();
+    }
+  }
+
   private final DocumentEx myDocument;
   private final Project myProject;
 
@@ -77,7 +88,7 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
   private EditorSettings mySettings;
 
   @RequiredReadAction
-  public WGwtEditorImpl(Project project, VirtualFile file) {
+  public WebEditorImpl(Project project, VirtualFile file) {
     myProject = project;
     myDocument = (DocumentEx)FileDocumentManager.getInstance().getDocument(file);
 
@@ -85,30 +96,12 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
 
     myEditorColorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
     mySettings = new SettingsImpl(this, project);
-
-    registerRpc(new EditorServerRpc() {
-      @Override
-      public void onShow() {
-        getRpcProxy(EditorClientRpc.class).setText(myDocument.getText());
-      }
-    }, EditorServerRpc.class);
   }
 
   @Override
-  protected EditorState getState() {
-    return (EditorState)super.getState();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-
-  }
-
   @Nonnull
-  @Override
-  public Component getUIComponent() {
-    return this;
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   @Nonnull
@@ -120,16 +113,6 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
   @Override
   public boolean isViewer() {
     return false;
-  }
-
-  @Override
-  public void setBorder(@Nullable Border border) {
-
-  }
-
-  @Override
-  public Insets getInsets() {
-    return null;
   }
 
   @Nonnull
@@ -163,17 +146,7 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
   }
 
   @Override
-  public JComponent getPermanentHeaderComponent() {
-    return null;
-  }
-
-  @Override
   public void setViewer(boolean isViewer) {
-
-  }
-
-  @Override
-  public void setPermanentHeaderComponent(JComponent component) {
 
   }
 
@@ -292,12 +265,6 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
 
   }
 
-  @Nonnull
-  @Override
-  public JScrollPane getScrollPane() {
-    return null;
-  }
-
   @Override
   public boolean isRendererMode() {
     return false;
@@ -319,29 +286,10 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
     return null;
   }
 
-  @Override
-  public boolean processKeyTyped(@Nonnull KeyEvent e) {
-    return false;
-  }
 
   @Override
   public void setFontSize(int fontSize) {
 
-  }
-
-  @Override
-  public Color getBackgroundColor() {
-    return null;
-  }
-
-  @Override
-  public void setBackgroundColor(Color color) {
-
-  }
-
-  @Override
-  public Dimension getContentSize() {
-    return null;
   }
 
   @Override
@@ -448,11 +396,6 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
   }
 
   @Override
-  public void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
-
-  }
-
-  @Override
   public int getExpectedCaretOffset() {
     return 0;
   }
@@ -497,12 +440,6 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
     return 0;
   }
 
-  @Nonnull
-  @Override
-  public Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
-    return null;
-  }
-
   @Override
   public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
     return 0;
@@ -511,18 +448,6 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
   @Nonnull
   @Override
   public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public Point visualPositionToXY(@Nonnull VisualPosition visible) {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos) {
     return null;
   }
 
@@ -547,24 +472,6 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
   @Nonnull
   @Override
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public LogicalPosition xyToLogicalPosition(@Nonnull Point p) {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public VisualPosition xyToVisualPosition(@Nonnull Point p) {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
     return null;
   }
 
@@ -620,27 +527,11 @@ public class WGwtEditorImpl extends AbstractComponent implements Component, Vaad
     return null;
   }
 
-  @Nullable
-  @Override
-  public EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e) {
-    return null;
-  }
-
-  @Override
-  public void setHeaderComponent(@Nullable JComponent header) {
-
-  }
-
   @Override
   public boolean hasHeaderComponent() {
     return false;
   }
 
-  @Nullable
-  @Override
-  public JComponent getHeaderComponent() {
-    return null;
-  }
 
   @Nonnull
   @Override

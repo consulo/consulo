@@ -49,9 +49,12 @@ import java.util.Collection;
 import java.util.function.IntFunction;
 
 public interface EditorEx extends Editor {
-  @NonNls String PROP_INSERT_MODE = "insertMode";
-  @NonNls String PROP_COLUMN_MODE = "columnMode";
-  @NonNls String PROP_FONT_SIZE = "fontSize";
+  @NonNls
+  String PROP_INSERT_MODE = "insertMode";
+  @NonNls
+  String PROP_COLUMN_MODE = "columnMode";
+  @NonNls
+  String PROP_FONT_SIZE = "fontSize";
   Key<TextRange> LAST_PASTED_REGION = Key.create("LAST_PASTED_REGION");
 
   @Nonnull
@@ -83,14 +86,18 @@ public interface EditorEx extends Editor {
   @Nonnull
   EditorHighlighter getHighlighter();
 
-  JComponent getPermanentHeaderComponent();
+  default JComponent getPermanentHeaderComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * shouldn't be called during Document update
    */
   void setViewer(boolean isViewer);
 
-  void setPermanentHeaderComponent(JComponent component);
+  default void setPermanentHeaderComponent(JComponent component) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   void setHighlighter(@Nonnull EditorHighlighter highlighter);
 
@@ -125,6 +132,7 @@ public interface EditorEx extends Editor {
   void reinitSettings();
 
   void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable);
+
   void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
@@ -142,7 +150,9 @@ public interface EditorEx extends Editor {
   void setOneLineMode(boolean b);
 
   @Nonnull
-  JScrollPane getScrollPane();
+  default JScrollPane getScrollPane() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   boolean isRendererMode();
 
@@ -153,17 +163,27 @@ public interface EditorEx extends Editor {
   @Nonnull
   DataContext getDataContext();
 
-  boolean processKeyTyped(@Nonnull KeyEvent e);
+  default boolean processKeyTyped(@Nonnull KeyEvent e) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   void setFontSize(int fontSize);
 
-  Color getBackgroundColor();
+  default Color getBackgroundColor() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
-  void setBackgroundColor(Color color);
+  default void setBackgroundColor(Color color) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
-  Dimension getContentSize();
+
+  default Dimension getContentSize() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   boolean isEmbeddedIntoDialogWrapper();
+
   void setEmbeddedIntoDialogWrapper(boolean b);
 
   VirtualFile getVirtualFile();
@@ -205,18 +225,18 @@ public interface EditorEx extends Editor {
    * <p/>
    * {@link SoftWrapAppliancePlaces#MAIN_EDITOR} is used by default.
    *
-   * @param place   soft wraps appliance appliance use-case
+   * @param place soft wraps appliance appliance use-case
    */
   void setSoftWrapAppliancePlace(@Nonnull SoftWrapAppliancePlaces place);
 
   /**
    * Allows to define <code>'placeholder text'</code> for the current editor, i.e. virtual text that will be represented until
    * any user data is entered.
-   *
+   * <p>
    * Feel free to see the detailed feature
    * definition <a href="http://dev.w3.org/html5/spec/Overview.html#the-placeholder-attribute">here</a>.
    *
-   * @param text    virtual text to show until user data is entered or the editor is focused
+   * @param text virtual text to show until user data is entered or the editor is focused
    */
   void setPlaceholder(@Nullable CharSequence text);
 
@@ -231,8 +251,7 @@ public interface EditorEx extends Editor {
   /**
    * Controls whether <code>'placeholder text'</code> is visible when editor is focused.
    *
-   * @param show   flag indicating whether placeholder is visible when editor is focused.
-   *
+   * @param show flag indicating whether placeholder is visible when editor is focused.
    * @see EditorEx#setPlaceholder(CharSequence)
    */
   void setShowPlaceholderWhenFocused(boolean show);
@@ -243,33 +262,33 @@ public interface EditorEx extends Editor {
    * 'Sticky selection' means that every time caret position changes, selection end offset is automatically set to the same position.
    * Selection start is always caret offset on {@link #setStickySelection(boolean)} call with <code>'true'</code> argument.
    *
-   * @return      <code>true</code> if 'sticky selection' mode is active at the current editor; <code>false</code> otherwise
+   * @return <code>true</code> if 'sticky selection' mode is active at the current editor; <code>false</code> otherwise
    */
   boolean isStickySelection();
 
   /**
    * Allows to set current {@link #isStickySelection() sticky selection} mode.
    *
-   * @param enable      flag that identifies if <code>'sticky selection'</code> mode should be enabled
+   * @param enable flag that identifies if <code>'sticky selection'</code> mode should be enabled
    */
   void setStickySelection(boolean enable);
 
   /**
-   * @return  width in pixels of the {@link #setPrefixTextAndAttributes(String, TextAttributes) prefix} used with the current editor if any;
-   *          zero otherwise
+   * @return width in pixels of the {@link #setPrefixTextAndAttributes(String, TextAttributes) prefix} used with the current editor if any;
+   * zero otherwise
    */
   int getPrefixTextWidthInPixels();
 
   /**
    * Allows to define prefix to be displayed on every editor line and text attributes to use for its coloring.
    *
-   * @param prefixText  target prefix text
-   * @param attributes  text attributes to use during given prefix painting
+   * @param prefixText target prefix text
+   * @param attributes text attributes to use during given prefix painting
    */
   void setPrefixTextAndAttributes(@Nullable String prefixText, @Nullable TextAttributes attributes);
 
   /**
-   * @return    current 'pure painting mode' status
+   * @return current 'pure painting mode' status
    * @see #setPurePaintingMode(boolean)
    */
   boolean isPurePaintingMode();
@@ -285,7 +304,7 @@ public interface EditorEx extends Editor {
    * <p>
    * In 'pure painting mode' editor also behaves as if soft wraps were not enabled.
    *
-   * @param enabled  'pure painting mode' status to use
+   * @param enabled 'pure painting mode' status to use
    */
   void setPurePaintingMode(boolean enabled);
 
@@ -300,15 +319,18 @@ public interface EditorEx extends Editor {
    * This is needed to allow a parent component draw above the scrollbar components (e.g. in the merge tool),
    * otherwise the drawings are cleared once the scrollbar gets repainted (which may happen suddenly, because the scrollbar UI uses the
    * {@link com.intellij.util.ui.Animator} to draw itself.
-   * @param callback  callback which will be called from the {@link JComponent#paint(Graphics)} method of
-   *                  the editor vertical scrollbar.
+   *
+   * @param callback callback which will be called from the {@link JComponent#paint(Graphics)} method of
+   *                 the editor vertical scrollbar.
    */
-  void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback);
+  default void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 
   /**
    * @return the offset that the caret is expected to be but maybe not yet.
    * E.g. when user right-clicks the mouse the caret is not immediately jumps there but the click-handler wants to know that location already.
-   *
+   * <p>
    * When no mouse-clicks happened return the regular caret offset.
    */
   int getExpectedCaretOffset();

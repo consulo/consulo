@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.web.internal.ex.WGwtEditorImpl;
+import consulo.ui.web.internal.ex.WebEditorImpl;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
@@ -37,11 +37,11 @@ import javax.annotation.Nullable;
  * @since 2018-05-10
  */
 public class WebTextEditor extends UserDataHolderBase implements TextEditor {
-  private WGwtEditorImpl myEditor;
+  private WebEditorImpl myEditor;
 
   @RequiredUIAccess
   public WebTextEditor(Project project, VirtualFile file) {
-    myEditor = new WGwtEditorImpl(project, file);
+    myEditor = new WebEditorImpl(project, file);
   }
 
   @Nullable
