@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,40 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
-import com.vaadin.ui.AbstractComponent;
-import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.shared.Size;
+import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2019-02-18
  */
-public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuSeparator, VaadinWrapper {
-  public WGwtMenuSeparatorImpl() {
+public class WebMenuSeparatorImpl extends UIComponentWithVaadinComponent<WebMenuSeparatorImpl.Vaadin> implements MenuSeparator {
+  public static class Vaadin extends VaadinComponent {
+
+  }
+
+  @Override
+  @Nonnull
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   @Nonnull
   @Override
   public String getText() {
     throw new UnsupportedOperationException();
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-
   }
 }

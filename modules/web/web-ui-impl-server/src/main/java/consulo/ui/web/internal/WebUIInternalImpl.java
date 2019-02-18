@@ -227,7 +227,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public MenuSeparator _MenuSeparator_create() {
-    return new WGwtMenuSeparatorImpl();
+    return new WebMenuSeparatorImpl();
   }
 
   @Override
