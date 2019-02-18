@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.ui.web.internal;
 
 import com.intellij.util.containers.ContainerUtil;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
-import consulo.ui.web.internal.TargetVaddin;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
@@ -34,7 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinComponent<WebThreeComponentSplitLayoutImpl.Vaadin> {
+public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinComponent<WebThreeComponentSplitLayoutImpl.Vaadin> implements ThreeComponentSplitLayout {
   public static class Vaadin extends VaadinComponent implements HasComponents {
     @Override
     public ThreeComponentSplitLayoutState getState() {
@@ -54,7 +55,7 @@ public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinCompo
       return components.iterator();
     }
 
-    public void setLeftComponent(@Nullable Component component) {
+    public void setFirstComponent(@Nullable Component component) {
       reset(getState().myLeftComponent);
 
       if (component != null) {
@@ -64,7 +65,7 @@ public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinCompo
       getState().myLeftComponent = component;
     }
 
-    public void setRightComponent(@Nullable Component component) {
+    public void setSecondComponent(@Nullable Component component) {
       reset(getState().myRightComponent);
 
       if (component != null) {
@@ -99,15 +100,27 @@ public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinCompo
     return new Vaadin();
   }
 
-  public void setLeftComponent(@Nullable consulo.ui.Component component) {
-    getVaadinComponent().setLeftComponent(TargetVaddin.to(component));
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public ThreeComponentSplitLayout setFirstComponent(@Nonnull consulo.ui.Component component) {
+    getVaadinComponent().setFirstComponent(TargetVaddin.to(component));
+    return this;
   }
 
-  public void setRightComponent(@Nullable consulo.ui.Component component) {
-    getVaadinComponent().setRightComponent(TargetVaddin.to(component));
-  }
-
-  public void setCenterComponent(@Nullable consulo.ui.Component component) {
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public ThreeComponentSplitLayout setCenterComponent(@Nullable consulo.ui.Component component) {
     getVaadinComponent().setCenterComponent(TargetVaddin.to(component));
+    return this;
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public ThreeComponentSplitLayout setSecondComponent(@Nonnull consulo.ui.Component component) {
+    getVaadinComponent().setSecondComponent(TargetVaddin.to(component));
+    return this;
   }
 }

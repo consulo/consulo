@@ -27,6 +27,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.ui.shared.Size;
 import consulo.ui.web.internal.TargetVaddin;
+import consulo.ui.web.internal.WebThreeComponentSplitLayoutImpl;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 
@@ -231,7 +232,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
       //myVerticalSplitter.setFirstSize((int)(myLayeredPane.getHeight() * weight));
     }
     else if (ToolWindowAnchor.LEFT == anchor) {
-      myHorizontalSplitter.setLeftComponent(component);
+      myHorizontalSplitter.setFirstComponent(component);
       //myHorizontalSplitter.setFirstSize((int)(myLayeredPane.getWidth() * weight));
     }
     else if (ToolWindowAnchor.BOTTOM == anchor) {
@@ -239,7 +240,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
       //myVerticalSplitter.setLastSize((int)(myLayeredPane.getHeight() * weight));
     }
     else if (ToolWindowAnchor.RIGHT == anchor) {
-      myHorizontalSplitter.setRightComponent(component);
+      myHorizontalSplitter.setSecondComponent(component);
       //myHorizontalSplitter.setLastSize((int)(myLayeredPane.getWidth() * weight));
     }
     else {

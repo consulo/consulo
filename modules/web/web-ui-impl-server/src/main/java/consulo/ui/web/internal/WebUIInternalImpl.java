@@ -74,13 +74,19 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public TwoComponentSplitLayout _Layouts_horizontalSplit() {
-    return new WebHorizontalTwoComponentSplitLayoutImpl();
+  public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
+    if(position == SplitLayoutPosition.HORIZONTAL) {
+      return new WebHorizontalTwoComponentSplitLayoutImpl();
+    }
+    else if (position == SplitLayoutPosition.VERTICAL) {
+      return new WebVerticalTwoComponentSplitLayoutImpl();
+    }
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public TwoComponentSplitLayout _TwoComponentSplitLayout_create() {
-    return new WebVerticalTwoComponentSplitLayoutImpl();
+  public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
+    return new WebThreeComponentSplitLayoutImpl();
   }
 
   @Override
