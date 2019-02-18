@@ -249,7 +249,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public MenuBar _MenuItems_menuBar() {
-    return new WGwtMenuBarImpl();
+    return new WebMenuBarImpl();
   }
 
   @Nonnull
