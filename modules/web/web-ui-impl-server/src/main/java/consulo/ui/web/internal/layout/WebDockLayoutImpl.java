@@ -116,19 +116,19 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @RequiredUIAccess
   @Override
   public void removeAll() {
-    get().removeAll();
+    getVaadinComponent().removeAll();
   }
 
   @Override
   public void remove(@Nonnull Component component) {
-    get().removeComponent(TargetVaddin.to(component));
+    getVaadinComponent().removeComponent(TargetVaddin.to(component));
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public DockLayout top(@Nonnull Component component) {
-    get().placeAt(component, DockLayoutState.Constraint.TOP);
+    getVaadinComponent().placeAt(component, DockLayoutState.Constraint.TOP);
     return this;
   }
 
@@ -136,7 +136,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout bottom(@Nonnull Component component) {
-    get().placeAt(component, DockLayoutState.Constraint.BOTTOM);
+    getVaadinComponent().placeAt(component, DockLayoutState.Constraint.BOTTOM);
     return this;
   }
 
@@ -144,7 +144,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout center(@Nonnull Component component) {
-    get().placeAt(component, DockLayoutState.Constraint.CENTER);
+    getVaadinComponent().placeAt(component, DockLayoutState.Constraint.CENTER);
     return this;
   }
 
@@ -152,7 +152,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout left(@Nonnull Component component) {
-    get().placeAt(component, DockLayoutState.Constraint.LEFT);
+    getVaadinComponent().placeAt(component, DockLayoutState.Constraint.LEFT);
     return this;
   }
 
@@ -160,7 +160,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
   @Nonnull
   @Override
   public DockLayout right(@Nonnull Component component) {
-    get().placeAt(component, DockLayoutState.Constraint.RIGHT);
+    getVaadinComponent().placeAt(component, DockLayoutState.Constraint.RIGHT);
     return this;
   }
 }

@@ -138,7 +138,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Button _Components_button(String text) {
-    return new WGwtButtonImpl(text, null);
+    return new WebButtonImpl(text);
   }
 
   @Override

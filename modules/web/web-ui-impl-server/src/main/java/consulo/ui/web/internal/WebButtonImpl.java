@@ -15,23 +15,19 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.ui.Hyperlink;
+import consulo.ui.Button;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
-import consulo.web.gwt.shared.ui.state.button.ButtonState;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-02-17
+ * @since 2019-02-18
  */
-public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlinkImpl.Vaadin> implements Hyperlink {
+public class WebButtonImpl extends UIComponentWithVaadinComponent<WebButtonImpl.Vaadin> implements Button {
   public static class Vaadin extends VaadinComponent {
     private final ButtonRpc myRpc = new ButtonRpc() {
       @Override
@@ -40,39 +36,18 @@ public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlin
       }
     };
 
-    private Image myImage;
-
     public Vaadin() {
       registerRpc(myRpc);
     }
 
-
-    @Override
-    public ButtonState getState() {
-      return (ButtonState)super.getState();
-    }
-
-    @Override
-    public void beforeClientResponse(boolean initial) {
-      super.beforeClientResponse(initial);
-
-      getState().myImageState = myImage == null ? null : WebImageUrlCache.map(myImage).getState();
-    }
-
-    private void setText(String text) {
+    public void setText(String text) {
       getState().caption = text;
-    }
-
-    private void setImage(Image image) {
-      myImage = image;
       markAsDirty();
     }
   }
 
-  @Nonnull
-  @Override
-  public Vaadin create() {
-    return new Vaadin();
+  public WebButtonImpl(String text) {
+    setText(text);
   }
 
   @Nonnull
@@ -87,14 +62,9 @@ public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlin
     getVaadinComponent().setText(text);
   }
 
+  @Nonnull
   @Override
-  public void setImage(@Nullable Image icon) {
-    getVaadinComponent().setImage(icon);
-  }
-
-  @Nullable
-  @Override
-  public Image getImage() {
-    return getVaadinComponent().myImage;
+  public Vaadin create() {
+    return new Vaadin();
   }
 }

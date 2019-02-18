@@ -45,7 +45,7 @@ public class WebImageBoxImpl extends UIComponentWithVaadinComponent<WebImageBoxI
   public WebImageBoxImpl(Image image) {
     myImage = image;
 
-    get().set(image);
+    getVaadinComponent().set(image);
   }
 
   @Nonnull

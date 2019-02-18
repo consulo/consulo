@@ -51,19 +51,19 @@ public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrap
   @RequiredUIAccess
   @Override
   public void removeAll() {
-    get().set(null);
+    getVaadinComponent().set(null);
   }
 
   @Override
   public void remove(@Nonnull consulo.ui.Component component) {
-    get().removeIfEqual(TargetVaddin.to(component));
+    getVaadinComponent().removeIfEqual(TargetVaddin.to(component));
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public WrappedLayout set(@Nullable consulo.ui.Component component) {
-    get().set(TargetVaddin.to(component));
+    getVaadinComponent().set(TargetVaddin.to(component));
     return this;
   }
 }

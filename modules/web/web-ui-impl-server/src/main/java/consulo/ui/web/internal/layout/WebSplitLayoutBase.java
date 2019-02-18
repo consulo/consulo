@@ -30,14 +30,14 @@ import javax.annotation.Nonnull;
 public abstract class WebSplitLayoutBase<V extends WebSplitLayoutVaadinBase<?>> extends UIComponentWithVaadinComponent<V> implements SplitLayout {
   @Override
   public void setProportion(int percent) {
-    get().setProportion(percent);
+    getVaadinComponent().setProportion(percent);
   }
 
   @Nonnull
   @RequiredUIAccess
   @Override
   public SplitLayout setFirstComponent(@Nonnull Component component) {
-    get().setFirstComponent(TargetVaddin.to(component));
+    getVaadinComponent().setFirstComponent(TargetVaddin.to(component));
     return this;
   }
 
@@ -45,7 +45,7 @@ public abstract class WebSplitLayoutBase<V extends WebSplitLayoutVaadinBase<?>> 
   @RequiredUIAccess
   @Override
   public SplitLayout setSecondComponent(@Nonnull Component component) {
-    get().setSecondComponent(TargetVaddin.to(component));
+    getVaadinComponent().setSecondComponent(TargetVaddin.to(component));
     return this;
   }
 }

@@ -49,7 +49,7 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
   public abstract T create();
 
   @Nonnull
-  protected T get() {
+  protected T getVaadinComponent() {
     return myVaadinComponent;
   }
 
