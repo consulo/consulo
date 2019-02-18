@@ -198,13 +198,13 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public SplitLayout _Layouts_horizontalSplit() {
-    return new DesktopSplitLayoutImpl(false);
+  public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
+    return new DesktopTwoComponentSplitLayoutImpl(position);
   }
 
   @Override
-  public SplitLayout _Layouts_verticalSplit() {
-    return new DesktopSplitLayoutImpl(true);
+  public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
+    return new DesktopThreeComponentSplitLayoutImpl(position);
   }
 
   @Override

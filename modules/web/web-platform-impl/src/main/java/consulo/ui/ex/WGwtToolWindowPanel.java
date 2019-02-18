@@ -26,6 +26,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.TargetVaddin;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 
@@ -199,10 +200,10 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
 
   private final List<com.vaadin.ui.Component> myChildren = new ArrayList<>();
 
-  private WGwtThreeComponentSplitLayout myHorizontalSplitter = new WGwtThreeComponentSplitLayout();
+  private WebThreeComponentSplitLayoutImpl myHorizontalSplitter = new WebThreeComponentSplitLayoutImpl();
   @Deprecated
   @DeprecationInfo("Unsupported for now")
-  private WGwtThreeComponentSplitLayout myVerticalSplitter = new WGwtThreeComponentSplitLayout();
+  private WebThreeComponentSplitLayoutImpl myVerticalSplitter = new WebThreeComponentSplitLayoutImpl();
 
   private boolean myWidescreen;
 
@@ -212,7 +213,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     add(myLeftStripe);
     add(myRightStripe);
 
-    add(myHorizontalSplitter);
+    add(TargetVaddin.to(myHorizontalSplitter));
   }
 
   private void add(com.vaadin.ui.Component component) {

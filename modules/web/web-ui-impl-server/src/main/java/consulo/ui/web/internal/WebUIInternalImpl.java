@@ -74,13 +74,13 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public SplitLayout _Layouts_horizontalSplit() {
-    return new WebHorizontalSplitLayoutImpl();
+  public TwoComponentSplitLayout _Layouts_horizontalSplit() {
+    return new WebHorizontalTwoComponentSplitLayoutImpl();
   }
 
   @Override
-  public SplitLayout _Layouts_verticalSplit() {
-    return new WebVerticalSplitLayoutImpl();
+  public TwoComponentSplitLayout _TwoComponentSplitLayout_create() {
+    return new WebVerticalTwoComponentSplitLayoutImpl();
   }
 
   @Override

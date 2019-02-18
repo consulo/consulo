@@ -56,9 +56,9 @@ public abstract class UIInternal {
 
   public abstract SwipeLayout _Layouts_swipe();
 
-  public abstract SplitLayout _Layouts_horizontalSplit();
+  public abstract TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position);
 
-  public abstract SplitLayout _Layouts_verticalSplit();
+  public abstract ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position);
 
   public abstract TabbedLayout _Layouts_tabbed();
 

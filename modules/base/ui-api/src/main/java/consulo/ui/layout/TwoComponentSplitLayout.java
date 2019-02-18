@@ -23,15 +23,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface SplitLayout extends Layout {
+public interface TwoComponentSplitLayout extends Layout {
   @Nonnull
-  static SplitLayout createHorizontal() {
-    return UIInternal.get()._Layouts_horizontalSplit();
-  }
-
-  @Nonnull
-  static SplitLayout createVertical() {
-    return UIInternal.get()._Layouts_verticalSplit();
+  static TwoComponentSplitLayout create(@Nonnull SplitLayoutPosition position) {
+    return UIInternal.get()._TwoComponentSplitLayout_create(position);
   }
 
   /**
@@ -41,21 +36,21 @@ public interface SplitLayout extends Layout {
 
   @RequiredUIAccess
   @Nonnull
-  default SplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
+  default TwoComponentSplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
     return setFirstComponent(component.getComponent());
   }
 
   @RequiredUIAccess
   @Nonnull
-  SplitLayout setFirstComponent(@Nonnull Component component);
+  TwoComponentSplitLayout setFirstComponent(@Nonnull Component component);
 
   @RequiredUIAccess
   @Nonnull
-  default SplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
+  default TwoComponentSplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
     return setSecondComponent(component.getComponent());
   }
 
   @RequiredUIAccess
   @Nonnull
-  SplitLayout setSecondComponent(@Nonnull Component component);
+  TwoComponentSplitLayout setSecondComponent(@Nonnull Component component);
 }

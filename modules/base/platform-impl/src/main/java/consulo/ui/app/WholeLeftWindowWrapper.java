@@ -19,7 +19,8 @@ import com.intellij.openapi.util.Couple;
 import consulo.ui.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
-import consulo.ui.layout.SplitLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
 
 import javax.annotation.Nonnull;
 
@@ -36,7 +37,7 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
   @Nonnull
   @RequiredUIAccess
   protected Layout buildRootLayout() {
-    SplitLayout layout = SplitLayout.createHorizontal();
+    TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
     layout.setProportion(30);
 
     Couple<Component> compoents = createCompoents();

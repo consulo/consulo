@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebHorizontalSplitLayoutImpl extends WebSplitLayoutBase<WebHorizontalSplitLayoutImpl.Vaadin> {
-  public static class Vaadin extends WebSplitLayoutVaadinBase<WebHorizontalSplitLayoutImpl> {
+public class WebVerticalTwoComponentSplitLayoutImpl extends WebTwoComponentSplitLayoutBase<WebVerticalTwoComponentSplitLayoutImpl.Vaadin> {
+  public static class Vaadin extends WebSplitLayoutVaadinBase<WebVerticalTwoComponentSplitLayoutImpl> {
   }
 
   @Nonnull

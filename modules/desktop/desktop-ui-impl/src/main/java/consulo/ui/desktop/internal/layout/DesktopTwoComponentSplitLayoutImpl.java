@@ -21,7 +21,8 @@ import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
-import consulo.ui.layout.SplitLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -30,7 +31,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class DesktopSplitLayoutImpl extends SwingComponentDelegate<Splitter> implements SplitLayout {
+public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<Splitter> implements TwoComponentSplitLayout {
   class MySplitter extends Splitter implements FromSwingComponentWrapper {
     MySplitter(boolean vertical) {
       super(vertical);
@@ -39,12 +40,12 @@ public class DesktopSplitLayoutImpl extends SwingComponentDelegate<Splitter> imp
     @Nonnull
     @Override
     public Component toUIComponent() {
-      return DesktopSplitLayoutImpl.this;
+      return DesktopTwoComponentSplitLayoutImpl.this;
     }
   }
 
-  public DesktopSplitLayoutImpl(boolean vertical) {
-    myComponent = new MySplitter(vertical);
+  public DesktopTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
+    myComponent = new MySplitter(position == SplitLayoutPosition.VERTICAL);
   }
 
   @Override
@@ -55,7 +56,7 @@ public class DesktopSplitLayoutImpl extends SwingComponentDelegate<Splitter> imp
   @Nonnull
   @RequiredUIAccess
   @Override
-  public SplitLayout setFirstComponent(@Nonnull Component component) {
+  public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
     myComponent.setFirstComponent((JComponent)TargetAWT.to(component));
     return this;
   }
@@ -63,7 +64,7 @@ public class DesktopSplitLayoutImpl extends SwingComponentDelegate<Splitter> imp
   @Nonnull
   @RequiredUIAccess
   @Override
-  public SplitLayout setSecondComponent(@Nonnull Component component) {
+  public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
     myComponent.setSecondComponent((JComponent)TargetAWT.to(component));
     return this;
   }
