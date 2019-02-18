@@ -30,6 +30,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.awt.TargetAWT;
 import consulo.platform.Platform;
 import org.jetbrains.annotations.TestOnly;
 
@@ -126,7 +127,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
       final Task.NotificationInfo notificationInfo = task.notifyFinished();
       long time = end - start;
       if (notificationInfo != null && time > 5000) { // show notification only if process took more than 5 secs
-        final JFrame frame = WindowManager.getInstance().getFrame(task.getProject());
+        final Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(task.getProject()));
         if (frame != null && !frame.hasFocus()) {
           systemNotify(notificationInfo);
         }

@@ -23,6 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -121,7 +123,7 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
     if (project == null) {
       return;
     }
-    final JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+    final JFrame projectFrame = (JFrame)TargetAWT.to(WindowManager.getInstance().getWindow(project));
     final int frameState = projectFrame.getExtendedState();
     if ((frameState & Frame.ICONIFIED) == Frame.ICONIFIED) {
       // restore the frame if it is minimized

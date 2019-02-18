@@ -650,7 +650,7 @@ public class Switcher extends AnAction implements DumbAware {
 
       Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
       if (window == null) {
-        window = WindowManager.getInstance().getFrame(project);
+        window = TargetAWT.to(WindowManager.getInstance().getWindow(project));
       }
       myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, myPopup);
       myPopup.showInCenterOf(window);

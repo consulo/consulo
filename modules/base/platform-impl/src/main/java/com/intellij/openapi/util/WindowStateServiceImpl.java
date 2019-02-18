@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.FrameState;
 import com.intellij.ui.ScreenUtil;
+import consulo.awt.TargetAWT;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -311,7 +312,7 @@ abstract class WindowStateServiceImpl implements WindowStateService, PersistentS
     }
     if (object instanceof Project) {
       Project project = (Project)object;
-      object = WindowManager.getInstance().getFrame(project);
+      object = TargetAWT.to(WindowManager.getInstance().getWindow(project));
       if (object == null) {
         LOG.warn("cannot find a project frame for " + project);
         return null;

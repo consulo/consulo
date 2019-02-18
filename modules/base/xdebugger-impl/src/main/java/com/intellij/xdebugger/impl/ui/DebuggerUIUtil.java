@@ -55,6 +55,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPane
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -136,7 +137,7 @@ public class DebuggerUIUtil {
 
     Dimension size = DimensionService.getInstance().getSize(FULL_VALUE_POPUP_DIMENSION_KEY, project);
     if (size == null) {
-      Dimension frameSize = WindowManager.getInstance().getFrame(project).getSize();
+      Dimension frameSize = TargetAWT.to(WindowManager.getInstance().getWindow(project)).getSize();
       size = new Dimension(frameSize.width / 2, frameSize.height / 2);
     }
 

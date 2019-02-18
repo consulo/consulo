@@ -57,6 +57,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -591,7 +592,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
     if (focusOwner == null) {
       Project project = dataContext.getData(CommonDataKeys.PROJECT);
-      JFrame frame = project == null ? null : WindowManager.getInstance().getFrame(project);
+      JFrame frame = project == null ? null : (JFrame)TargetAWT.to(WindowManager.getInstance().getWindow(project));
       focusOwner = frame == null ? null : frame.getRootPane();
       if (focusOwner == null) {
         throw new IllegalArgumentException("focusOwner cannot be null");

@@ -58,6 +58,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.storage.StateStorageBase;
 import consulo.components.impl.stores.storage.StateStorageManager;
@@ -72,9 +73,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -368,7 +370,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           }
 
           if (ApplicationManager.getApplication().isActive()) {
-            JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+            Window projectFrame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
             if (projectFrame != null) {
               IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
             }
@@ -443,7 +445,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           }
 
           if (ApplicationManager.getApplication().isActive()) {
-            JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+            Window projectFrame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
             if (projectFrame != null) {
               IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
             }

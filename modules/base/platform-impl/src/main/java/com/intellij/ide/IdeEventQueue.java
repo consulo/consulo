@@ -45,6 +45,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.awt.TargetAWT;
 import consulo.platform.Platform;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
@@ -820,7 +821,7 @@ public class IdeEventQueue extends EventQueue {
 
       if (focusOwnerInDeactivatedWindow != null) {
         for (IdeFrame ideFrame : allProjectFrames) {
-          JFrame aFrame = WindowManager.getInstance().getFrame(ideFrame.getProject());
+          Window aFrame = TargetAWT.to(WindowManager.getInstance().getWindow(ideFrame.getProject()));
           if (aFrame.equals(frame)) {
             IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
             if (focusManager instanceof FocusManagerImpl) {

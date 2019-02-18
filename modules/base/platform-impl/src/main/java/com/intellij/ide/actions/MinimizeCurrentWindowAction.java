@@ -22,6 +22,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.mac.MacMainFrameDecorator;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +51,7 @@ public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
     if (SystemInfo.isMac) {
       Project project = e.getData(CommonDataKeys.PROJECT);
       if (project != null) {
-        JFrame frame = WindowManager.getInstance().getFrame(project);
+        JFrame frame = (JFrame)TargetAWT.to(WindowManager.getInstance().getWindow(project));
         if (frame != null) {
           JRootPane pane = frame.getRootPane();
           p.setEnabled(pane != null && pane.getClientProperty(MacMainFrameDecorator.FULL_SCREEN) == null);

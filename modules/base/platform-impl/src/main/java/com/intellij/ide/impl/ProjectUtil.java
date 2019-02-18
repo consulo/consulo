@@ -21,7 +21,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.components.impl.stores.IProjectStore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -36,15 +35,17 @@ import com.intellij.openapi.wm.*;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 import consulo.application.DefaultPaths;
+import consulo.awt.TargetAWT;
+import consulo.components.impl.stores.IProjectStore;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -184,7 +185,7 @@ public class ProjectUtil {
       @Nonnull
       @Override
       public AsyncResult<Void> run() {
-        JFrame f = WindowManager.getInstance().getFrame(p);
+        Window f = TargetAWT.to(WindowManager.getInstance().getWindow(p));
         if (f != null) {
           f.toFront();
           //f.requestFocus();

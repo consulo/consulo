@@ -23,8 +23,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
-import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.storage.StateStorageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -34,11 +32,14 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ex.ApplicationEx2;
+import consulo.components.impl.stores.IApplicationStore;
+import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServicesConfiguration;
 import org.apache.http.client.methods.HttpGet;
@@ -51,7 +52,6 @@ import org.apache.http.util.EntityUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -226,8 +226,8 @@ class ExternalStorageQueue {
       Project project = null;
       Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
       for (Project openProject : openProjects) {
-        JFrame frame = WindowManager.getInstance().getFrame(openProject);
-        if (frame.isActive()) {
+        IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(openProject);
+        if (ideFrame.isActive()) {
           project = openProject;
           break;
         }

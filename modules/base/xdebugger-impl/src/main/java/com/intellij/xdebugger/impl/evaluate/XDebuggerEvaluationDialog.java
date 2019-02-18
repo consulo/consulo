@@ -43,6 +43,7 @@ import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreePanel;
 import com.intellij.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -80,7 +81,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
                                    @Nonnull XDebuggerEvaluator evaluator,
                                    @Nonnull XExpression text,
                                    @Nullable XSourcePosition sourcePosition) {
-    super(WindowManager.getInstance().getFrame(session.getProject()), true);
+    super(TargetAWT.to(WindowManager.getInstance().getWindow(session.getProject())), true);
     mySession = session;
     myEditorsProvider = editorsProvider;
     mySourcePosition = sourcePosition;

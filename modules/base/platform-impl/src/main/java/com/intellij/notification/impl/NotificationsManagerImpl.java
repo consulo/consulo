@@ -41,7 +41,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.*;
 import com.intellij.ui.components.GradientViewport;
 import com.intellij.ui.components.labels.LinkLabel;
@@ -56,6 +55,9 @@ import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.start.WelcomeFrameManager;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -287,10 +289,11 @@ public class NotificationsManagerImpl extends NotificationsManager {
   }
 
   @Nullable
+  @RequiredUIAccess
   public static Window findWindowForBalloon(@Nullable Project project) {
-    Window frame = WindowManager.getInstance().getFrame(project);
+    Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
     if (frame == null && project == null) {
-      frame = (Window)WelcomeFrame.getInstance();
+      frame = (Window)TargetAWT.to(WelcomeFrameManager.getInstance().getCurrentFrame().getWindow());
     }
     if (frame == null && project == null) {
       frame = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();

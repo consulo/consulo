@@ -18,6 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.awt.TargetAWT;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,7 +44,7 @@ public class ProjectFrameBounds implements PersistentStateComponent<Rectangle> {
 
   @Override
   public Rectangle getState() {
-    return WindowManager.getInstance().getFrame(myProject).getBounds();
+    return TargetAWT.to(WindowManager.getInstance().getWindow(myProject)).getBounds();
   }
 
   @Override

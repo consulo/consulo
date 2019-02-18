@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.EditorTextField;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +42,7 @@ public class ShowTextPopupHyperlinkInfo implements HyperlinkInfo {
         }
       };
 
-      JFrame frame = WindowManager.getInstance().getFrame(project);
+      Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
       if(frame != null) {
         Dimension size = frame.getSize();
         if(size != null) {
