@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal.layout;
 
 import consulo.ui.Component;
 import consulo.ui.Tab;
+import consulo.ui.web.internal.WebItemPresentationImpl;
 
 import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
@@ -25,12 +26,12 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtTabImpl extends WGwtItemPresentationImpl implements Tab {
+class WebTabImpl extends WebItemPresentationImpl implements Tab {
   private BiConsumer<Tab, Component> myCloseHandler;
-  private WGwtTabbedLayoutImpl myTabbedLayout;
+  private WebTabbedLayoutImpl myTabbedLayout;
   private int myIndex;
 
-  public WGwtTabImpl(int index, WGwtTabbedLayoutImpl tabbedLayout) {
+  public WebTabImpl(int index, WebTabbedLayoutImpl tabbedLayout) {
     myIndex = index;
     myTabbedLayout = tabbedLayout;
   }

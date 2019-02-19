@@ -91,7 +91,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TabbedLayout _Layouts_tabbed() {
-    return new WGwtTabbedLayoutImpl();
+    return new WebTabbedLayoutImpl();
   }
 
   @Override
