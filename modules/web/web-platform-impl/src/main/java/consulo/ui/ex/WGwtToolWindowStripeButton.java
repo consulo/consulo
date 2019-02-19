@@ -23,6 +23,7 @@ import consulo.ui.image.Image;
 import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
+import consulo.web.ui.ex.WebToolWindowPanelImpl;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 import consulo.wm.impl.ToolWindowBase;
 
@@ -44,7 +45,7 @@ public class WGwtToolWindowStripeButton extends AbstractComponent implements Too
     }
   };
 
-  public WGwtToolWindowStripeButton(WebToolWindowInternalDecorator decorator, WGwtToolWindowPanel toolWindowPanel) {
+  public WGwtToolWindowStripeButton(WebToolWindowInternalDecorator decorator, WebToolWindowPanelImpl toolWindowPanel) {
     myDecorator = decorator;
 
     registerRpc(myRpc);

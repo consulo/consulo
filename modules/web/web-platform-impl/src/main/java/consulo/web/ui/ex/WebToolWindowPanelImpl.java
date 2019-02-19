@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.web.ui.ex;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
-import com.vaadin.ui.AbstractComponentContainer;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.internal.VaadinWrapper;
-import consulo.ui.shared.Size;
+import consulo.ui.ex.*;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebThreeComponentSplitLayoutImpl;
+import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 
@@ -39,8 +38,27 @@ import java.util.*;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WGwtToolWindowPanel extends AbstractComponentContainer implements consulo.ui.Component, VaadinWrapper, ToolWindowPanel {
-  private static final Logger LOGGER = Logger.getInstance(WGwtToolWindowPanel.class);
+public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
+  private static final Logger LOGGER = Logger.getInstance(WebToolWindowPanelImpl.class);
+
+  public static class Vaadin extends VaadinComponentContainer {
+    private final List<com.vaadin.ui.Component> myChildren = new ArrayList<>();
+
+    @Override
+    public int getComponentCount() {
+      return myChildren.size();
+    }
+
+    @Override
+    public Iterator<com.vaadin.ui.Component> iterator() {
+      return myChildren.iterator();
+    }
+
+    private void add(com.vaadin.ui.Component component) {
+      addComponent(component);
+      myChildren.add(component);
+    }
+  }
 
   private final class AddToolStripeButtonCmd extends FinalizableCommand {
     private final WGwtToolWindowStripeButton myButton;
@@ -73,7 +91,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
         else {
           LOGGER.error("unknown anchor: " + anchor);
         }
-        markAsDirtyRecursive();
+        getVaadinComponent().markAsDirtyRecursive();
       }
       finally {
         finish();
@@ -199,7 +217,6 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   private final HashMap<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
   private final HashMap<WGwtToolWindowStripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
 
-  private final List<com.vaadin.ui.Component> myChildren = new ArrayList<>();
 
   private WebThreeComponentSplitLayoutImpl myHorizontalSplitter = new WebThreeComponentSplitLayoutImpl();
   @Deprecated
@@ -208,18 +225,20 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
 
   private boolean myWidescreen;
 
-  public WGwtToolWindowPanel() {
-    add(myTopStripe);
-    add(myBottomStripe);
-    add(myLeftStripe);
-    add(myRightStripe);
+  public WebToolWindowPanelImpl() {
+    Vaadin vaadinComponent = getVaadinComponent();
 
-    add(TargetVaddin.to(myHorizontalSplitter));
+    vaadinComponent.add(myTopStripe);
+    vaadinComponent.add(myBottomStripe);
+    vaadinComponent.add(myLeftStripe);
+    vaadinComponent.add(myRightStripe);
+    vaadinComponent.add(TargetVaddin.to(myHorizontalSplitter));
   }
 
-  private void add(com.vaadin.ui.Component component) {
-    addComponent(component);
-    myChildren.add(component);
+  @Nonnull
+  @Override
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, final float weight) {
@@ -255,26 +274,6 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   @Nullable
   private WGwtToolWindowStripeButton getButtonById(final String id) {
     return myId2Button.get(id);
-  }
-
-  @Override
-  public void replaceComponent(com.vaadin.ui.Component oldComponent, com.vaadin.ui.Component newComponent) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int getComponentCount() {
-    return myChildren.size();
-  }
-
-  @Override
-  public Iterator<com.vaadin.ui.Component> iterator() {
-    return myChildren.iterator();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
   }
 
   @Nonnull
