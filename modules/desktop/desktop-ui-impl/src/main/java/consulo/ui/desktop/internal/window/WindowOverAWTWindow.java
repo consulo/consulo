@@ -136,7 +136,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
   @Nullable
   @Override
-  public Window getParentComponent() {
+  public Window getParent() {
     return TargetAWT.from((java.awt.Window)myWindow.getParent());
   }
 

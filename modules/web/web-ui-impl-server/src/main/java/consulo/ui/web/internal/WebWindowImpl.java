@@ -101,8 +101,8 @@ public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.
 
   @Nullable
   @Override
-  public Window getParentComponent() {
-    return (Window)super.getParentComponent();
+  public Window getParent() {
+    return (Window)super.getParent();
   }
 
   @RequiredUIAccess

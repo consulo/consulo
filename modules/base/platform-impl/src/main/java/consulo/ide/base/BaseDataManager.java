@@ -272,7 +272,7 @@ public abstract class BaseDataManager extends DataManager {
 
   @Nullable
   private <T> T getData(@Nonnull Key<T> dataId, final consulo.ui.Component focusedComponent) {
-    for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParentComponent()) {
+    for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
       final DataProvider dataProvider = c::getUserData;
       T data = getDataFromProvider(dataProvider, dataId, null);
       if (data != null) return data;

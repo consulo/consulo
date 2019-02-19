@@ -89,7 +89,7 @@ public interface Component extends Disposable, UserDataHolder {
   void setEnabled(boolean value);
 
   @Nullable
-  Component getParentComponent();
+  Component getParent();
 
   @RequiredUIAccess
   void setSize(@Nonnull Size size);

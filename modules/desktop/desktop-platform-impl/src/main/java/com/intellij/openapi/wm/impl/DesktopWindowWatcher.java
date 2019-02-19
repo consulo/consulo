@@ -150,7 +150,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
       if (LOG.isDebugEnabled()) {
         LOG.debug("currently active window should be closed");
       }
-      myFocusedWindow = myFocusedWindow.getParentComponent();
+      myFocusedWindow = myFocusedWindow.getParent();
       if (LOG.isDebugEnabled()) {
         LOG.debug("new active window is " + myFocusedWindow);
       }
@@ -158,7 +158,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
     for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
       final consulo.ui.Window activeWindow = i.next();
       if (activeWindow == window) {
-        final consulo.ui.Window newActiveWindow = activeWindow.getParentComponent();
+        final consulo.ui.Window newActiveWindow = activeWindow.getParent();
         i.remove();
         if (newActiveWindow != null) {
           myFocusedWindows.add(newActiveWindow);

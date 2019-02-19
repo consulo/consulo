@@ -68,7 +68,7 @@ public class IdeFrameUtil {
 
       frame = activeWindow.getUserData(IdeFrame.KEY);
 
-      activeWindow = activeWindow.getParentComponent();
+      activeWindow = activeWindow.getParent();
     }
 
     if (frame == null) {

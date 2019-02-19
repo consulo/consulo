@@ -37,7 +37,7 @@ public class TraverseUtil {
       return (Window)c;
     }
 
-    for (Component p = c.getParentComponent(); p != null; p = p.getParentComponent()) {
+    for (Component p = c.getParent(); p != null; p = p.getParent()) {
       if (p instanceof Window) {
         return (Window)p;
       }

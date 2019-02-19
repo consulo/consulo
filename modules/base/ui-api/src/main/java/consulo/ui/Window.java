@@ -49,7 +49,7 @@ public interface Window extends Component {
 
   @Nullable
   @Override
-  Window getParentComponent();
+  Window getParent();
 
   @RequiredUIAccess
   void setContent(@Nonnull Component content);

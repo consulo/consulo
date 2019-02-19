@@ -55,7 +55,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
     void placeAt(@Nonnull Component uiComponent, DockLayoutState.Constraint constraint) {
       com.vaadin.ui.Component component = TargetVaddin.to(uiComponent);
 
-      Component parentComponent = uiComponent.getParentComponent();
+      Component parentComponent = uiComponent.getParent();
       // remove from old parent
       if (parentComponent instanceof Layout) {
         ((Layout)parentComponent).remove(uiComponent);

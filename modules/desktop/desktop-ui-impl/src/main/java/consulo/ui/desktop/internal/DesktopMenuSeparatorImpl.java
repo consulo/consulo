@@ -79,7 +79,7 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
 
   @Nullable
   @Override
-  public Component getParentComponent() {
+  public Component getParent() {
     return null;
   }
 

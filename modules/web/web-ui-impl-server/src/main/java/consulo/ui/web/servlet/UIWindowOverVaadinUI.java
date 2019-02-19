@@ -92,7 +92,7 @@ class UIWindowOverVaadinUI implements Window {
 
   @Nullable
   @Override
-  public Window getParentComponent() {
+  public Window getParent() {
     return (Window)TargetVaddin.from(myUI.getParent());
   }
 

@@ -65,7 +65,7 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
 
   @Nullable
   @Override
-  public Component getParentComponent() {
+  public Component getParent() {
     return TargetVaddin.from(myVaadinComponent.getParent());
   }
 
