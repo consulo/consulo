@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
 import consulo.ui.HtmlLabel;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2019-02-19
  */
-public class WGwtHtmlLabelImpl extends WGwtLabelImpl implements HtmlLabel, VaadinWrapper {
-  public WGwtHtmlLabelImpl(String text) {
+public class WebHtmlLabelImpl extends WebLabelBase<WebHtmlLabelImpl.Vaadin> implements HtmlLabel {
+  public static class Vaadin extends VaadinLabelComponentBase {
+
+  }
+
+  public WebHtmlLabelImpl(String text) {
     super(text);
+  }
+
+  @Nonnull
+  @Override
+  public Vaadin createVaadinComponent() {
+    return new Vaadin();
   }
 }

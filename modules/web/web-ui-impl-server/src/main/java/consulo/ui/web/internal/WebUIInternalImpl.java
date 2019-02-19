@@ -111,12 +111,12 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Label _Components_label(String text) {
-    return new WGwtLabelImpl(text);
+    return new WebLabelImpl(text);
   }
 
   @Override
   public HtmlLabel _Components_htmlLabel(String html) {
-    return new WGwtHtmlLabelImpl(html);
+    return new WebHtmlLabelImpl(html);
   }
 
   @Override

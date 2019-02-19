@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
-import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
-import consulo.web.gwt.shared.ui.state.LabelState;
+import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,27 +28,24 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2019-02-19
  */
-public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWrapper {
-  private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
-
-  public WGwtLabelImpl(String text) {
-    getState().caption = text;
+public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends UIComponentWithVaadinComponent<V> implements Label {
+  public WebLabelBase(String text) {
+    setText(text);
   }
 
   @Nonnull
   @Override
   public String getText() {
-    return getState().caption;
+    return getVaadinComponent().getCaption();
   }
 
   @Nonnull
   @RequiredUIAccess
   @Override
   public Label setText(@Nonnull String text) {
-    getState().caption = text;
-    markAsDirty();
+    getVaadinComponent().setCaption(text);
     return this;
   }
 
@@ -68,16 +64,14 @@ public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWra
   @Nonnull
   @Override
   public Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
-    myHorizontalAlignment = horizontalAlignment;
-    getState().myHorizontalAlignment = horizontalAlignment;
-    markAsDirty();
+    getVaadinComponent().setHorizontalAlignment(horizontalAlignment);
     return this;
   }
 
   @Nonnull
   @Override
   public HorizontalAlignment getHorizontalAlignment() {
-    return myHorizontalAlignment;
+    return getVaadinComponent().getHorizontalAlignment();
   }
 
   @Nonnull
@@ -95,10 +89,5 @@ public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWra
   @Override
   public Image getImage() {
     return null;
-  }
-
-  @Override
-  protected LabelState getState() {
-    return (LabelState)super.getState();
   }
 }
