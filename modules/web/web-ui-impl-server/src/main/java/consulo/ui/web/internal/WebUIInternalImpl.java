@@ -228,7 +228,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Menu _Menu_create(String text) {
-    return new WGwtMenuImpl(text);
+    return new WebMenuImpl(text);
   }
 
   @Override
