@@ -41,7 +41,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.web.ui.ex.WebToolWindowPanelImpl;
-import consulo.ui.ex.WGwtToolWindowStripeButton;
+import consulo.web.ui.ex.WebToolWindowStripeButtonImpl;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
@@ -160,7 +160,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   @Nonnull
   @Override
   protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
-    return new WGwtToolWindowStripeButton((WebToolWindowInternalDecorator)internalDecorator, (WebToolWindowPanelImpl)myToolWindowPanel);
+    return new WebToolWindowStripeButtonImpl((WebToolWindowInternalDecorator)internalDecorator, (WebToolWindowPanelImpl)myToolWindowPanel);
   }
 
   @Nonnull

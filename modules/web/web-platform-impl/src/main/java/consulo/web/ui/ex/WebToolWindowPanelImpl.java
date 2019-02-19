@@ -61,11 +61,11 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
   }
 
   private final class AddToolStripeButtonCmd extends FinalizableCommand {
-    private final WGwtToolWindowStripeButton myButton;
+    private final WebToolWindowStripeButtonImpl myButton;
     private final WindowInfoImpl myInfo;
     private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(final WGwtToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
+    public AddToolStripeButtonCmd(final WebToolWindowStripeButtonImpl button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myButton = button;
       myInfo = info;
@@ -110,7 +110,7 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     @Override
     public void run() {
       try {
-        WGwtToolWindowStripeButton stripeButton = getButtonById(myId);
+        WebToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
         if (stripeButton == null) {
           return;
         }
@@ -207,15 +207,15 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     }
   }
 
-  private WGwtToolWindowStripe myTopStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.TOP);
-  private WGwtToolWindowStripe myBottomStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.BOTTOM);
-  private WGwtToolWindowStripe myLeftStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.LEFT);
-  private WGwtToolWindowStripe myRightStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.RIGHT);
+  private WebToolWindowStripeImpl myTopStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.TOP);
+  private WebToolWindowStripeImpl myBottomStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.BOTTOM);
+  private WebToolWindowStripeImpl myLeftStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.LEFT);
+  private WebToolWindowStripeImpl myRightStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.RIGHT);
 
-  private final Map<String, WGwtToolWindowStripeButton> myId2Button = new HashMap<>();
+  private final Map<String, WebToolWindowStripeButtonImpl> myId2Button = new HashMap<>();
   private final HashMap<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();
   private final HashMap<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
-  private final HashMap<WGwtToolWindowStripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
+  private final HashMap<WebToolWindowStripeButtonImpl, WindowInfoImpl> myButton2Info = new HashMap<>();
 
 
   private WebThreeComponentSplitLayoutImpl myHorizontalSplitter = new WebThreeComponentSplitLayoutImpl();
@@ -228,10 +228,10 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
   public WebToolWindowPanelImpl() {
     Vaadin vaadinComponent = getVaadinComponent();
 
-    vaadinComponent.add(myTopStripe);
-    vaadinComponent.add(myBottomStripe);
-    vaadinComponent.add(myLeftStripe);
-    vaadinComponent.add(myRightStripe);
+    vaadinComponent.add(TargetVaddin.to(myTopStripe));
+    vaadinComponent.add(TargetVaddin.to(myBottomStripe));
+    vaadinComponent.add(TargetVaddin.to(myLeftStripe));
+    vaadinComponent.add(TargetVaddin.to(myRightStripe));
     vaadinComponent.add(TargetVaddin.to(myHorizontalSplitter));
   }
 
@@ -272,7 +272,7 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
   }
 
   @Nullable
-  private WGwtToolWindowStripeButton getButtonById(final String id) {
+  private WebToolWindowStripeButtonImpl getButtonById(final String id) {
     return myId2Button.get(id);
   }
 
@@ -280,8 +280,8 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
   @Override
   public FinalizableCommand createAddButtonCmd(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
     final WindowInfoImpl copiedInfo = info.copy();
-    myId2Button.put(copiedInfo.getId(), (WGwtToolWindowStripeButton)button);
-    return new AddToolStripeButtonCmd((WGwtToolWindowStripeButton)button, copiedInfo, comparator, finishCallBack);
+    myId2Button.put(copiedInfo.getId(), (WebToolWindowStripeButtonImpl)button);
+    return new AddToolStripeButtonCmd((WebToolWindowStripeButtonImpl)button, copiedInfo, comparator, finishCallBack);
   }
 
   @Nonnull
