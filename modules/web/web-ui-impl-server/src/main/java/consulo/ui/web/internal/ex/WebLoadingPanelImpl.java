@@ -31,7 +31,7 @@ public class WebLoadingPanelImpl extends UIComponentWithVaadinComponent<WebLoadi
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 }

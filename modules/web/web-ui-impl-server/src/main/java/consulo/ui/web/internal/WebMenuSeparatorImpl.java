@@ -32,7 +32,7 @@ public class WebMenuSeparatorImpl extends UIComponentWithVaadinComponent<WebMenu
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

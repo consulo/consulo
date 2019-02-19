@@ -71,7 +71,7 @@ public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlin
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

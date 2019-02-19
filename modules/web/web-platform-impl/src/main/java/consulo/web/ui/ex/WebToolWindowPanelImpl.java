@@ -237,7 +237,7 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

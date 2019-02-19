@@ -96,7 +96,7 @@ public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinCompo
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

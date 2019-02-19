@@ -67,7 +67,7 @@ public class WebMenuBarImpl extends UIComponentWithVaadinComponent<WebMenuBarImp
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

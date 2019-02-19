@@ -74,7 +74,7 @@ public class WebHorizontalLayoutImpl extends UIComponentWithVaadinComponent<WebH
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

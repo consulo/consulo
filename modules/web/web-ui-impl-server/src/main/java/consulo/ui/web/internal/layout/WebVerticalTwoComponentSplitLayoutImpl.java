@@ -27,7 +27,7 @@ public class WebVerticalTwoComponentSplitLayoutImpl extends WebTwoComponentSplit
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 }

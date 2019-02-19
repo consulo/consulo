@@ -42,7 +42,7 @@ public class WebMenuItemImpl extends UIComponentWithVaadinComponent<WebMenuItemI
 
   @Nonnull
   @Override
-  public WebMenuItemImpl.Vaadin create() {
+  public WebMenuItemImpl.Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 }

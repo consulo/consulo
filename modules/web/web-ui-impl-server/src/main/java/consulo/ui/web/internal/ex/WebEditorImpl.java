@@ -100,7 +100,7 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

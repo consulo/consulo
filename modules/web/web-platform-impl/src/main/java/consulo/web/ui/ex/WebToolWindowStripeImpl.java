@@ -78,7 +78,7 @@ public class WebToolWindowStripeImpl extends UIComponentWithVaadinComponent<WebT
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

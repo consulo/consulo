@@ -227,7 +227,7 @@ public class WebTreeImpl<NODE> extends UIComponentWithVaadinComponent<WebTreeImp
 
   @Override
   @Nonnull
-  public Vaadin<NODE> create() {
+  public Vaadin<NODE> createVaadinComponent() {
     return new Vaadin<>();
   }
 

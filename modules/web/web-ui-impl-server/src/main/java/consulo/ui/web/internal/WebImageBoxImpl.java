@@ -50,7 +50,7 @@ public class WebImageBoxImpl extends UIComponentWithVaadinComponent<WebImageBoxI
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

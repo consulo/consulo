@@ -93,7 +93,7 @@ public class WebRootPaneImpl extends UIComponentWithVaadinComponent<WebRootPaneI
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

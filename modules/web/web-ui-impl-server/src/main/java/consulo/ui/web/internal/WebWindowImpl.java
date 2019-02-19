@@ -45,7 +45,7 @@ public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

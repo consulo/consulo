@@ -61,7 +61,7 @@ public class WebVerticalLayoutImpl extends UIComponentWithVaadinComponent<WebVer
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

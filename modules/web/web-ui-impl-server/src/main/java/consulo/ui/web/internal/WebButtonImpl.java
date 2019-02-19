@@ -64,7 +64,7 @@ public class WebButtonImpl extends UIComponentWithVaadinComponent<WebButtonImpl.
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 }

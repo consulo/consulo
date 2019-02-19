@@ -47,7 +47,7 @@ public class WebRadioButtonImpl extends WebBooleanValueComponentBase<WebRadioBut
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

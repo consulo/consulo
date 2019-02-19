@@ -153,7 +153,7 @@ public class WebTabbedLayoutImpl extends UIComponentWithVaadinComponent<WebTabbe
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

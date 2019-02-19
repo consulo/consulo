@@ -109,7 +109,7 @@ public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLay
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

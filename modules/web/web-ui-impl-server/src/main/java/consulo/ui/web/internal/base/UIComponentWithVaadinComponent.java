@@ -36,17 +36,17 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2019-02-17
  */
-public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent> implements Component, DataObjectHolder {
+public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent & ComponentHolder> implements Component, DataObjectHolder {
   private T myVaadinComponent;
 
   public UIComponentWithVaadinComponent() {
-    myVaadinComponent = create();
+    myVaadinComponent = createVaadinComponent();
 
-    ((ComponentHolder)myVaadinComponent).setComponent(this);
+    myVaadinComponent.setComponent(this);
   }
 
   @Nonnull
-  public abstract T create();
+  public abstract T createVaadinComponent();
 
   @Nonnull
   protected T getVaadinComponent() {

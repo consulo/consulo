@@ -37,7 +37,7 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
 
   @Override
   @Nonnull
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

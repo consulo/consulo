@@ -35,7 +35,7 @@ public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrap
 
   @Nonnull
   @Override
-  public Vaadin create() {
+  public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 

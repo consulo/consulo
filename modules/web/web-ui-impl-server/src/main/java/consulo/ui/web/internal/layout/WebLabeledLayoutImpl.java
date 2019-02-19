@@ -58,7 +58,7 @@ public class WebLabeledLayoutImpl extends UIComponentWithVaadinComponent<WebLabe
 
   @Nonnull
   @Override
-  public WebLabeledLayoutImpl.Vaadin create() {
+  public WebLabeledLayoutImpl.Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 }
