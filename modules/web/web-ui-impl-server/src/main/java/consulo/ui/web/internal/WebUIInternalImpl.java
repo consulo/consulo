@@ -136,7 +136,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public RadioButton _Components_radioButton(String text, boolean selected) {
-    return new WGwtRadioButtonImpl(selected, text);
+    return new WebRadioButtonImpl(selected, text);
   }
 
   @Override
