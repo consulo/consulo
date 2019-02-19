@@ -61,6 +61,7 @@ import com.intellij.util.ui.KeyboardLayoutUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.awt.TargetAWT;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import consulo.wm.util.IdeFrameUtil;
@@ -252,35 +253,33 @@ public final class IdeKeyEventDispatcher implements Disposable {
    * @throws IllegalArgumentException if <code>component</code> is <code>null</code>.
    */
   public static boolean isModalContext(@Nonnull Component component) {
-    Window window = UIUtil.getWindow(component);
+    Window awtWindow = UIUtil.getWindow(component);
 
+    consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
 
-    if (window instanceof consulo.ui.Window) {
-      consulo.ui.Window uiWindow = (consulo.ui.Window)window;
-      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-      if (IdeFrameUtil.isRootFrame(ideFrame)) {
-        RootPaneContainer rootPaneContainer = (RootPaneContainer)uiWindow;
+    IdeFrame ideFrame = uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
+    if (IdeFrameUtil.isRootFrame(ideFrame)) {
+      RootPaneContainer rootPaneContainer = (RootPaneContainer)awtWindow;
 
-        Component glassPane = rootPaneContainer.getGlassPane();
-        if (glassPane instanceof IdeGlassPaneEx) {
-          return ((IdeGlassPaneEx)glassPane).isInModalContext();
-        }
+      Component glassPane = rootPaneContainer.getGlassPane();
+      if (glassPane instanceof IdeGlassPaneEx) {
+        return ((IdeGlassPaneEx)glassPane).isInModalContext();
       }
     }
 
-    if (window instanceof JDialog) {
-      final JDialog dialog = (JDialog)window;
+    if (awtWindow instanceof JDialog) {
+      final JDialog dialog = (JDialog)awtWindow;
       if (!dialog.isModal()) {
         final Window owner = dialog.getOwner();
         return owner != null && isModalContext(owner);
       }
     }
 
-    if (window instanceof JFrame) {
+    if (awtWindow instanceof JFrame) {
       return false;
     }
 
-    boolean isFloatingDecorator = window instanceof ToolWindowFloatingDecorator;
+    boolean isFloatingDecorator = awtWindow instanceof ToolWindowFloatingDecorator;
 
     boolean isPopup = !(component instanceof JFrame) && !(component instanceof JDialog);
     if (isPopup) {

@@ -1026,9 +1026,12 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
 
   @Override
   public void showNotify() {
-    final Window window = SwingUtilities.getWindowAncestor(myComponent);
-    if (window instanceof IdeFrame.Child) {
-      ((IdeFrame.Child)window).setFrameTitle(mySessionName);
+    Window awtWindow = SwingUtilities.getWindowAncestor(myComponent);
+    consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
+
+    IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+    if (ideFrame instanceof IdeFrame.Child) {
+      ideFrame.setFrameTitle(mySessionName);
     }
   }
 

@@ -39,7 +39,8 @@ import javax.swing.*;
  * @since 2019-02-16
  */
 public class TargetAWTFacadeImpl implements TargetAWTFacade {
-  private final String heavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
+  private final static String heavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
+  private final static String sharedOwnerFrame = "javax.swing.SwingUtilities$SharedOwnerFrame";
 
   static class PopupWindow extends WindowOverAWTWindow {
     public PopupWindow(java.awt.Window window) {
@@ -132,17 +133,17 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     }
 
     String name = window.getClass().getName();
-    if (heavyWeightWindow.equals(name)) {
+    if (heavyWeightWindow.equals(name) || sharedOwnerFrame.equals(name)) {
       JWindow jWindow = (JWindow)window;
 
       JRootPane rootPane = jWindow.getRootPane();
-      Object clientProperty = rootPane.getClientProperty(heavyWeightWindow);
+      Object clientProperty = rootPane.getClientProperty(name);
       if (clientProperty != null) {
         return (Window)clientProperty;
       }
       else {
         PopupWindow popupWindow = new PopupWindow(window);
-        rootPane.putClientProperty(heavyWeightWindow, popupWindow);
+        rootPane.putClientProperty(name, popupWindow);
         return popupWindow;
       }
     }

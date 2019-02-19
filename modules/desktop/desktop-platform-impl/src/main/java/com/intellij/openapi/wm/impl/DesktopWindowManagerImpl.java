@@ -478,9 +478,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     IdeFrame candidate = null;
     final Frame[] all = Frame.getFrames();
     for (Frame each : all) {
-      if (each instanceof IdeFrame) {
+      consulo.ui.Window uiWindow = TargetAWT.from(each);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if (ideFrame != null) {
         if (candidate == null) {
-          candidate = (IdeFrame)each;
+          candidate = ideFrame;
         }
         else {
           candidate = null;
@@ -509,13 +512,23 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       return myProject2Frame.get(project);
     }
     final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-    final Component parent = UIUtil.findUltimateParent(window);
-    if (parent instanceof IdeFrameEx) return (IdeFrameEx)parent;
+    final Component parentMaybeWindow = UIUtil.findUltimateParent(window);
+    if(parentMaybeWindow instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)parentMaybeWindow);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if(ideFrame instanceof IdeFrameEx) {
+        return (IdeFrameEx)ideFrame;
+      }
+    }
 
     final Frame[] frames = Frame.getFrames();
     for (Frame each : frames) {
-      if (each instanceof IdeFrameEx) {
-        return (IdeFrameEx)each;
+      consulo.ui.Window uiWindow = TargetAWT.from(each);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if (ideFrame instanceof IdeFrameEx) {
+        return (IdeFrameEx)ideFrame;
       }
     }
 

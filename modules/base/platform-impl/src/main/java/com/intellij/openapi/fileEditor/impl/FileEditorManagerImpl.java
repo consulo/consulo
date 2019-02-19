@@ -78,6 +78,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
@@ -1639,15 +1640,17 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   private static boolean moveFocusOnDelete() {
-    final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    if (window != null) {
-      final Component component = FocusTrackback.getFocusFor(window);
+    final Window awtWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+    if (awtWindow != null) {
+      final Component component = FocusTrackback.getFocusFor(awtWindow);
       if (component != null) {
         return component instanceof EditorComponentImpl;
       }
 
-      if (window instanceof consulo.ui.Window) {
-        IdeFrame ideFrame = ((consulo.ui.Window)window).getUserData(IdeFrame.KEY);
+      consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if (ideFrame != null) {
         return IdeFrameUtil.isRootFrame(ideFrame);
       }
     }

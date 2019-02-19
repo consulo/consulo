@@ -99,6 +99,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import gnu.trove.Equality;
@@ -1184,7 +1185,14 @@ public class DiffUtil {
   }
 
   public static void closeWindow(@Nonnull Window window, boolean modalOnly) {
-    if (window instanceof IdeFrame) return;
+    consulo.ui.Window uiWindow = TargetAWT.from(window);
+    if(uiWindow != null) {
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if(ideFrame != null) {
+        return;
+      }
+    }
+
     if (modalOnly && window instanceof Frame) return;
 
     if (window instanceof DialogWrapperDialog) {

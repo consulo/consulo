@@ -40,6 +40,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowContentUI;
 import kava.beans.PropertyChangeEvent;
@@ -407,11 +408,14 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         final Point newPoint = info.getLocation();
         Point p = myLastPoint.get();
 
-        final Window window = SwingUtilities.windowForComponent(c);
-        if (!(window instanceof IdeFrame)) {
-          final Point windowLocation = window.getLocationOnScreen();
+        final Window awtWindow = SwingUtilities.windowForComponent(c);
+        consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
+
+        IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+        if(ideFrame == null) {
+          final Point windowLocation = awtWindow.getLocationOnScreen();
           windowLocation.translate(newPoint.x - p.x, newPoint.y - p.y);
-          window.setLocation(windowLocation);
+          awtWindow.setLocation(windowLocation);
         }
 
         myLastPoint.set(newPoint);

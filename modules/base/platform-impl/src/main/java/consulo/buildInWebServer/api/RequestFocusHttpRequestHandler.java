@@ -22,7 +22,6 @@ import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,8 +30,13 @@ import java.awt.*;
  * @since 27.10.2015
  */
 public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
-  public static boolean activateFrame(@Nullable final IdeFrame frame) {
-    return frame instanceof Frame && activateFrame((Frame)TargetAWT.to(frame.getWindow()));
+  public static boolean activateFrame(@Nullable final IdeFrame ideFrame) {
+    if (ideFrame == null) {
+      return false;
+    }
+
+    Window awtWindow = TargetAWT.to(ideFrame.getWindow());
+    return awtWindow instanceof Frame && activateFrame((Frame)awtWindow);
   }
 
   public static boolean activateFrame(@Nullable final Frame frame) {

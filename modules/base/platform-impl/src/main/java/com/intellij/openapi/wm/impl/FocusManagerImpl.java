@@ -37,6 +37,7 @@ import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.awt.TargetAWT;
 import consulo.wm.ApplicationIdeFocusManager;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
@@ -139,8 +140,8 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
   private IdeFrame myLastFocusedFrame;
 
   @Inject
-  public FocusManagerImpl(WindowManager wm, UiActivityMonitor monitor) {
-    myApp = ApplicationManager.getApplication();
+  public FocusManagerImpl(@Nonnull Application app, WindowManager wm, UiActivityMonitor monitor) {
+    myApp = app;
     myQueue = IdeEventQueue.getInstance();
     myActivityMonitor = monitor;
 
@@ -159,16 +160,24 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
 
         Component parent = UIUtil.findUltimateParent(c);
 
-        if (parent instanceof IdeFrame) {
-          myLastFocused.put((IdeFrame)parent, c);
+        if(parent instanceof Window) {
+          consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+
+          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+          if(ideFrame != null) {
+            myLastFocused.put(ideFrame, c);
+          }
         }
       }
       else if (e instanceof WindowEvent) {
         Window wnd = ((WindowEvent)e).getWindow();
         if (e.getID() == WindowEvent.WINDOW_CLOSED) {
-          if (wnd instanceof IdeFrame) {
-            myLastFocused.remove(wnd);
-            myLastFocusedAtDeactivation.remove(wnd);
+          consulo.ui.Window uiWindow = TargetAWT.from(wnd);
+
+          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+          if (ideFrame != null) {
+            myLastFocused.remove(ideFrame);
+            myLastFocusedAtDeactivation.remove(ideFrame);
           }
         }
       }

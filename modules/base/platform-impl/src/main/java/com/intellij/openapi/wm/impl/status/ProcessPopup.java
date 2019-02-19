@@ -28,6 +28,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -152,7 +153,11 @@ public class ProcessPopup  {
       builder.setMinSize(new Dimension(width, height));
       myPopup = builder.createPopup();
 
-      StatusBarEx sb = (StatusBarEx)((IdeFrame)frame).getStatusBar();
+      consulo.ui.Window uiWindow = TargetAWT.from(frame);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      assert ideFrame != null;
+      StatusBarEx sb = (StatusBarEx)ideFrame.getStatusBar();
       if (sb.isVisible()) {
         y -= sb.getSize().height;
       }

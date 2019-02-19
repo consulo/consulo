@@ -22,7 +22,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ex.ApplicationEx2;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -72,8 +74,6 @@ public class ApplicationActivationStateManager {
 
     final Application application = ApplicationManager.getApplication();
     if (!(application instanceof ApplicationEx2)) return false;
-
-    final Window eventWindow = windowEvent.getWindow();
 
     if (windowEvent.getID() == WindowEvent.WINDOW_ACTIVATED || windowEvent.getID() == WindowEvent.WINDOW_GAINED_FOCUS) {
 
@@ -147,9 +147,14 @@ public class ApplicationActivationStateManager {
     }
   }
 
+  @Nullable
   private static IdeFrame getIdeFrameFromWindow(Window window) {
     final Component frame = UIUtil.findUltimateParent(window);
-    return (frame instanceof IdeFrame) ? (IdeFrame)frame : null;
-  }
+    if (!(frame instanceof Window)) {
+      return null;
+    }
 
+    consulo.ui.Window uiWindow = TargetAWT.from((Window)frame);
+    return uiWindow.getUserData(IdeFrame.KEY);
+  }
 }
