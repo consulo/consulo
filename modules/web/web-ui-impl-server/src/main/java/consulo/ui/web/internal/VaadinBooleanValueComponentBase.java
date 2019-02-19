@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-19
  */
-public class VaadinBooleanValueComponentBase extends VaadinComponent {
+public abstract class VaadinBooleanValueComponentBase extends VaadinComponent {
   private final CheckBoxRpc myRpc = value -> toUIComponent().setValueImpl(value, true);
 
   public VaadinBooleanValueComponentBase() {

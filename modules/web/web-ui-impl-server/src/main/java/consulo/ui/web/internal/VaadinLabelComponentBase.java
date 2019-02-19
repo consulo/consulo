@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-19
  */
-public class VaadinLabelComponentBase extends VaadinComponent {
+public abstract class VaadinLabelComponentBase extends VaadinComponent {
   private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
 
   public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {

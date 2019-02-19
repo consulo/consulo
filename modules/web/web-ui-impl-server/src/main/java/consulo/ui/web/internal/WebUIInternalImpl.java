@@ -121,7 +121,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
-    return new WGwtComboBoxImpl<>(model);
+    return new WebComboBoxImpl<>(model);
   }
 
   @Override
@@ -131,7 +131,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
-    return new WGwtListBoxImpl<>(model);
+    return new WebListBoxImpl<>(model);
   }
 
   @Override

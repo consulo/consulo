@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
 import consulo.ui.ListBox;
 import consulo.ui.model.ListModel;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
- * @since 16-Jun-16
+ * @since 2019-02-19
  */
-public class WGwtListBoxImpl<E> extends WGwtSingleListComponentImpl<E> implements ListBox<E>, VaadinWrapper {
+public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxImpl.Vaadin<E>> implements ListBox<E> {
+  public static class Vaadin<J> extends VaadinSingleListComponentBase<J> {
+    @Override
+    protected boolean needRenderNullValue() {
+      return false;
+    }
+  }
 
-  public WGwtListBoxImpl(ListModel<E> model) {
+  public WebListBoxImpl(ListModel<E> model) {
     super(model);
   }
 
+  @Nonnull
   @Override
-  protected boolean needRenderNullValue() {
-    return false;
+  public Vaadin<E> createVaadinComponent() {
+    return new Vaadin<>();
   }
 }
