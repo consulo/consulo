@@ -153,7 +153,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
-    return new WGwtHorizontalLayoutImpl(gapInPixesl);
+    return new WebHorizontalLayoutImpl();
   }
 
   @Override
