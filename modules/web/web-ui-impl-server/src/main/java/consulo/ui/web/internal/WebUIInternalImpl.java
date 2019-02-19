@@ -65,7 +65,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public VerticalLayout _Layouts_vertical() {
-    return new WGwtVerticalLayoutImpl();
+    return new WebVerticalLayoutImpl();
   }
 
   @Override
