@@ -69,6 +69,8 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
 
     myComponent = contentManager.getComponent();
 
+    DesktopInternalDecorator.installFocusTraversalPolicy(myComponent, new LayoutFocusTraversalPolicy());
+
     UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable.Adapter() {
       @Override
       public void showNotify() {

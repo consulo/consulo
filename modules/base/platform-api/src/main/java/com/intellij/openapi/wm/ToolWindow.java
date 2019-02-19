@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.ContentManager;
@@ -188,8 +187,6 @@ public interface ToolWindow extends BusyObject {
   boolean isShowStripeButton();
 
   boolean isDisposed();
-
-  ActionCallback getActivation();
 
   @Nonnull
   default Component getUIComponent() {

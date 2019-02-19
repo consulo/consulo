@@ -41,9 +41,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -94,9 +94,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     myHideStripeButtonAction = new RemoveStripeButtonAction();
     myToggleToolbarGroup = ToggleToolbarAction.createToggleToolbarGroup(myProject, myToolWindow);
 
-    setFocusable(false);
-    setFocusTraversalPolicy(new LayoutFocusTraversalPolicy());
-
     myHeader = new DesktopToolWindowHeader(toolWindow, () -> createPopupGroup(true)) {
       @Override
       protected void hideToolWindow() {
@@ -109,6 +106,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     apply(info);
   }
 
+  @Override
   public boolean isFocused() {
     IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
     Component component = fm.getFocusedDescendantFor(myToolWindow.getComponent());
@@ -252,6 +250,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     enableEvents(AWTEvent.COMPONENT_EVENT_MASK);
 
     final JPanel contentPane = new JPanel(new BorderLayout());
+    installFocusTraversalPolicy(contentPane, new LayoutFocusTraversalPolicy());
     contentPane.add(myHeader, BorderLayout.NORTH);
 
     JPanel innerPanel = new JPanel(new BorderLayout());
@@ -810,5 +809,24 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   @Override
   public void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions) {
     myAdditionalGearActions = additionalGearActions;
+  }
+
+  /**
+   * Installs a focus traversal policy for the tool window.
+   * If the policy cannot handle a keystroke, it delegates the handling to
+   * the nearest ancestors focus traversal policy. For instance,
+   * this policy does not handle KeyEvent.VK_ESCAPE, so it can delegate the handling
+   * to a ThreeComponentSplitter instance.
+   */
+  static void installFocusTraversalPolicy(@Nonnull Container container, @Nonnull FocusTraversalPolicy policy) {
+    container.setFocusCycleRoot(true);
+    container.setFocusTraversalPolicyProvider(true);
+    container.setFocusTraversalPolicy(policy);
+    installDefaultFocusTraversalKeys(container, KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+    installDefaultFocusTraversalKeys(container, KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+  }
+
+  private static void installDefaultFocusTraversalKeys(@Nonnull Container container, int id) {
+    container.setFocusTraversalKeys(id, KeyboardFocusManager.getCurrentKeyboardFocusManager().getDefaultFocusTraversalKeys(id));
   }
 }

@@ -17,20 +17,16 @@ package com.intellij.openapi.wm.impl.commands;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Expirable;
-import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
 import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.DesktopWindowWatcher;
 import com.intellij.util.Alarm;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -40,71 +36,23 @@ import java.awt.*;
  * @author Vladimir Kondratyev
  */
 public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.commands.RequestFocusInToolWindowCmd");
+  private static final Logger LOG = Logger.getInstance(DesktopRequestFocusInToolWindowCmd.class);
   private final DesktopToolWindowImpl myToolWindow;
   private final FocusWatcher myFocusWatcher;
 
   private final Project myProject;
-  private final Expirable myTimestamp;
 
   public DesktopRequestFocusInToolWindowCmd(IdeFocusManager focusManager, final DesktopToolWindowImpl toolWindow, final FocusWatcher focusWatcher, final Runnable finishCallBack, Project project) {
     super(finishCallBack);
     myToolWindow = toolWindow;
     myFocusWatcher = focusWatcher;
     myProject = project;
-
-    myTimestamp = focusManager.getTimestamp(true);
   }
 
   @Override
   public final void run() {
-    myToolWindow.getActivation().doWhenDone(() -> processRequestFocus());
-  }
-
-  private void processRequestFocus() {
     try {
-
-      if (myTimestamp.isExpired()) {
-        return;
-      }
-
-      Component preferredFocusedComponent = myToolWindow.isUseLastFocusedOnActivation() ? myFocusWatcher.getFocusedComponent() : null;
-
-      if (preferredFocusedComponent == null && myToolWindow.getContentManager().getSelectedContent() != null) {
-        preferredFocusedComponent = myToolWindow.getContentManager().getSelectedContent().getPreferredFocusableComponent();
-        if (preferredFocusedComponent != null) {
-          preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent((JComponent)preferredFocusedComponent);
-        }
-      }
-
-      if (preferredFocusedComponent == null) {
-        preferredFocusedComponent = myFocusWatcher.getNearestFocusableComponent();
-        if (preferredFocusedComponent instanceof JComponent) {
-          preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent((JComponent)preferredFocusedComponent);
-        }
-      }
-
-      if (preferredFocusedComponent != null) {
-        // When we get remembered component this component can be already invisible
-        if (!preferredFocusedComponent.isShowing()) {
-          preferredFocusedComponent = null;
-        }
-      }
-
-      if (preferredFocusedComponent == null) {
-        final JComponent component = myToolWindow.getComponent();
-        preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent(component);
-      }
-
-      // Try to focus component which is preferred one for the tool window
-      if (preferredFocusedComponent != null) {
-        requestFocus(preferredFocusedComponent).doWhenDone(() -> bringOwnerToFront());
-      }
-      else {
-        // If there is no preferred component then try to focus tool window itself
-        final JComponent componentToFocus = myToolWindow.getComponent();
-        requestFocus(componentToFocus).doWhenDone(() -> bringOwnerToFront());
-      }
+      requestFocus();
     }
     finally {
       finish();
@@ -140,36 +88,25 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
     }
   }
 
-
-  @Nonnull
-  private AsyncResult<Void> requestFocus(@Nonnull final Component c) {
-    final AsyncResult<Void> result = new AsyncResult<>();
+  private void requestFocus() {
     final Alarm checkerAlarm = new Alarm();
-
     Runnable checker = new Runnable() {
       final long startTime = System.currentTimeMillis();
 
       @Override
       public void run() {
         if (System.currentTimeMillis() - startTime > 10000) {
-          result.setRejected();
+          LOG.debug(myToolWindow.getId(), " tool window - cannot wait for showing component");
           return;
         }
-        if (c.isShowing()) {
+        Component c = getShowingComponentToRequestFocus();
+        if (c != null) {
           final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
-          if (owner != null && owner == c) {
-            myManager.getFocusManager().requestFocus(new FocusCommand() {
-              @Override
-              @Nonnull
-              public AsyncResult<Void> run() {
-                return AsyncResult.resolved();
-              }
-            }, false).doWhenProcessed(() -> updateToolWindow(c)).notify(result);
+          if (owner != c) {
+            myManager.getFocusManager().requestFocusInProject(c, myProject);
+            bringOwnerToFront();
           }
-          else {
-            myManager.getFocusManager().requestFocus(new FocusCommand.ByComponent(c, myToolWindow.getComponent(), myProject, new Exception()), false).doWhenProcessed(() -> updateToolWindow(c))
-                    .notify(result);
-          }
+          myManager.getFocusManager().doWhenFocusSettlesDown(() -> updateToolWindow(c));
         }
         else {
           checkerAlarm.addRequest(this, 100);
@@ -177,7 +114,27 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
       }
     };
     checkerAlarm.addRequest(checker, 0);
-    return result;
+  }
+
+
+  @Nullable
+  private Component getShowingComponentToRequestFocus() {
+    Container container = myToolWindow.getComponent();
+    if (container == null || !container.isShowing()) {
+      LOG.debug(myToolWindow.getId(), " tool window - parent container is hidden: ", container);
+      return null;
+    }
+    FocusTraversalPolicy policy = container.getFocusTraversalPolicy();
+    if (policy == null) {
+      LOG.warn(myToolWindow.getId() + " tool window does not provide focus traversal policy");
+      return null;
+    }
+    Component component = policy.getDefaultComponent(container);
+    if (component == null || !component.isShowing()) {
+      LOG.debug(myToolWindow.getId(), " tool window - default component is hidden: ", container);
+      return null;
+    }
+    return component;
   }
 
   private void updateToolWindow(Component c) {

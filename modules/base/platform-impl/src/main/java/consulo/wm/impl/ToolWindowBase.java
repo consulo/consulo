@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -37,11 +36,11 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.shared.Rectangle2D;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
 
 /**
  * @author VISTALL
@@ -65,8 +64,6 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   private boolean myHideOnEmptyContent = false;
   private boolean myPlaceholderMode;
   private ToolWindowFactory myContentFactory;
-
-  private ActionCallback myActivation = new ActionCallback.Done();
 
   private Image myIcon;
 
@@ -117,12 +114,12 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
     myToolWindowManager.activateToolWindow(myId, forced, autoFocusContents);
 
-    getActivation().doWhenDone(() -> myToolWindowManager.invokeLater(() -> {
+    myToolWindowManager.invokeLater(() -> {
       if (runnable != null) {
         runnable.run();
       }
       UiActivityMonitor.getInstance().removeActivity(myToolWindowManager.getProject(), activity);
-    }));
+    });
   }
 
   @RequiredUIAccess
@@ -139,7 +136,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     UIAccess.assertIsUIThread();
     myToolWindowManager.showToolWindow(myId);
     if (runnable != null) {
-      getActivation().doWhenDone(() -> myToolWindowManager.invokeLater(runnable));
+      myToolWindowManager.invokeLater(runnable);
     }
   }
 
@@ -409,20 +406,6 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   public void setPlaceholderMode(final boolean placeholderMode) {
     myPlaceholderMode = placeholderMode;
-  }
-
-  @Override
-  public ActionCallback getActivation() {
-    return myActivation;
-  }
-
-  public ActionCallback setActivation(ActionCallback activation) {
-    if (myActivation != null && !myActivation.isProcessed() && !myActivation.equals(activation)) {
-      myActivation.setRejected();
-    }
-
-    myActivation = activation;
-    return myActivation;
   }
 
   public void setContentFactory(ToolWindowFactory contentFactory) {

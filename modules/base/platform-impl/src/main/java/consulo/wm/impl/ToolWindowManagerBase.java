@@ -1064,8 +1064,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       toolWindow.setSplitMode(true, null);
     }
 
-    // ToolWindow activation is not needed anymore and should be removed in 2017
-    toolWindow.setActivation(new ActionCallback()).setDone();
     final DumbAwareRunnable runnable = () -> {
       if (toolWindow.isDisposed()) return;
 

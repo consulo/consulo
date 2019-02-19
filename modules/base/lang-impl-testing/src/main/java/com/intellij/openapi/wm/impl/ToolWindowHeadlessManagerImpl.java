@@ -453,11 +453,6 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
-    public ActionCallback getActivation() {
-      return ActionCallback.DONE;
-    }
-
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
 
     }
