@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.web.internal;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.CheckBox;
 import consulo.ui.KeyCode;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2019-02-19
  */
-public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements CheckBox {
-  public WGwtCheckBoxImpl() {
+public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImpl.Vaadin> implements CheckBox {
+
+  public static class Vaadin extends VaadinBooleanValueComponentBase {
+    public void setText(@Nonnull final String text) {
+      if (Comparing.equal(getState().caption, text)) {
+        return;
+      }
+
+      getState().caption = text;
+
+      markAsDirty();
+    }
+  }
+
+  public WebCheckBoxImpl() {
     super(false);
+  }
+
+  @Nonnull
+  @Override
+  public Vaadin create() {
+    return new Vaadin();
   }
 
   @Override
   @Nonnull
   public String getText() {
-    return getState().caption;
+    return getVaadinComponent().getState().caption;
   }
 
   @RequiredUIAccess
@@ -43,15 +63,7 @@ public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements C
   public void setText(@Nonnull final String text) {
     UIAccess.assertIsUIThread();
 
-    if (Comparing.equal(getState().caption, text)) {
-      return;
-    }
-
-    getState().caption = text;
-
-    getState().caption = text;
-
-    markAsDirty();
+    getVaadinComponent().setText(text);
   }
 
   @Override

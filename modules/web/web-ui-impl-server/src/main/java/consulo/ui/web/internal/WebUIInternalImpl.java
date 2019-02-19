@@ -50,7 +50,7 @@ import java.util.function.Supplier;
 public class WebUIInternalImpl extends UIInternal {
   @Override
   public CheckBox _Components_checkBox() {
-    return new WGwtCheckBoxImpl();
+    return new WebCheckBoxImpl();
   }
 
   @Override
