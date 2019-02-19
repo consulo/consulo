@@ -25,12 +25,15 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.Window;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -43,7 +46,8 @@ import java.awt.*;
  */
 public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   private JComponent myWrapperPanel;
-  @NonNls public static final String NAV_BAR = "NavBar";
+  @NonNls
+  public static final String NAV_BAR = "NavBar";
   private Project myProject;
   private NavBarPanel myNavigationBar;
   private JPanel myRunPanel;
@@ -54,7 +58,8 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   public NavBarRootPaneExtension(Project project) {
     myProject = project;
 
-    myProject.getMessageBus().connect().subscribe(UISettingsListener.TOPIC, uiSettings -> toggleRunPanel(!uiSettings.getShowMainToolbar() && uiSettings.getShowNavigationBar() && !uiSettings.getPresentationMode()));
+    myProject.getMessageBus().connect()
+            .subscribe(UISettingsListener.TOPIC, uiSettings -> toggleRunPanel(!uiSettings.getShowMainToolbar() && uiSettings.getShowNavigationBar() && !uiSettings.getPresentationMode()));
 
     myNavToolbarGroupExist = runToolbarExists();
 
@@ -157,10 +162,8 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   }
 
   private boolean isUndocked() {
-    final Window ancestor = SwingUtilities.getWindowAncestor(myWrapperPanel);
-    return (ancestor != null && !(ancestor instanceof IdeFrameEx))
-           || !UISettings.getInstance().getShowMainToolbar()
-           || !UISettings.getInstance().getPresentationMode();
+    Window uiWindow = TargetAWT.from(SwingUtilities.getWindowAncestor(myWrapperPanel));
+    return (uiWindow != null && !(uiWindow.getUserData(IdeFrame.KEY) instanceof IdeFrameEx)) || !UISettings.getInstance().getShowMainToolbar() || !UISettings.getInstance().getPresentationMode();
   }
 
   private static boolean isNeedGap(final AnAction group) {
@@ -210,7 +213,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
         Insets insets = getInsets();
         Rectangle r = navBar.getBounds();
 
-        Graphics2D g2d = (Graphics2D) g.create();
+        Graphics2D g2d = (Graphics2D)g.create();
         g2d.translate(r.x, r.y);
 
         Rectangle rectangle = new Rectangle(0, 0, r.width + insets.left + insets.right, r.height + insets.top + insets.bottom);
@@ -234,8 +237,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
 
         final Dimension preferredSize = navBar.getPreferredSize();
 
-        navBar.setBounds(x, (r.height - preferredSize.height) / 2,
-                         r.width - insets.left - insets.right, preferredSize.height);
+        navBar.setBounds(x, (r.height - preferredSize.height) / 2, r.width - insets.left - insets.right, preferredSize.height);
       }
 
       @Override

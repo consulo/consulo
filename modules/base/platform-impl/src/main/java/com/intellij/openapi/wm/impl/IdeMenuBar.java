@@ -28,6 +28,7 @@ import com.intellij.openapi.actionSystem.impl.WeakTimerListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.status.ClockPanel;
@@ -37,6 +38,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.base.BaseDataManager;
 
 import javax.annotation.Nonnull;
@@ -63,7 +65,11 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   private static final int COLLAPSED_HEIGHT = 2;
 
   private enum State {
-    EXPANDED, COLLAPSING, COLLAPSED, EXPANDING, TEMPORARY_EXPANDED;
+    EXPANDED,
+    COLLAPSING,
+    COLLAPSED,
+    EXPANDING,
+    TEMPORARY_EXPANDED;
 
     boolean isInProgress() {
       return this == COLLAPSING || this == EXPANDING;
@@ -79,11 +85,14 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   private final Disposable myDisposable = Disposer.newDisposable();
   private boolean myDisabled = false;
 
-  @Nullable private final ClockPanel myClockPanel;
+  @Nullable
+  private final ClockPanel myClockPanel;
   @Nullable
   private final MyExitFullScreenButton myButton;
-  @Nullable private final Animator myAnimator;
-  @Nullable private final Timer myActivationWatcher;
+  @Nullable
+  private final Animator myAnimator;
+  @Nullable
+  private final Timer myActivationWatcher;
   @Nonnull
   private State myState = State.EXPANDED;
   private double myProgress = 0;
@@ -119,7 +128,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   public Border getBorder() {
     //avoid moving lines
     if (myState == State.EXPANDING || myState == State.COLLAPSING) {
-      return new EmptyBorder(0,0,0,0);
+      return new EmptyBorder(0, 0, 0, 0);
     }
 
     //fix for Darcula double border
@@ -200,21 +209,31 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   }
 
   private void updateState() {
-    if (myAnimator != null) {
-      Window window = SwingUtilities.getWindowAncestor(this);
-      if (window instanceof IdeFrameEx) {
-        boolean fullScreen = ((IdeFrameEx)window).isInFullScreen();
-        if (fullScreen) {
-          setState(State.COLLAPSING);
-          restartAnimator();
-        }
-        else {
-          myAnimator.suspend();
-          setState(State.EXPANDED);
-          if (myClockPanel != null) {
-            myClockPanel.setVisible(false);
-            myButton.setVisible(false);
-          }
+    if (myAnimator == null) {
+      return;
+    }
+
+    Window awtComponent = SwingUtilities.getWindowAncestor(this);
+    consulo.ui.Window uiWindow = TargetAWT.from(awtComponent);
+
+    if (uiWindow == null) {
+      return;
+    }
+
+    IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+
+    if (ideFrame instanceof IdeFrameEx) {
+      boolean fullScreen = ((IdeFrameEx)ideFrame).isInFullScreen();
+      if (fullScreen) {
+        setState(State.COLLAPSING);
+        restartAnimator();
+      }
+      else {
+        myAnimator.suspend();
+        setState(State.EXPANDED);
+        if (myClockPanel != null) {
+          myClockPanel.setVisible(false);
+          myButton.setVisible(false);
         }
       }
     }
@@ -224,7 +243,8 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
     myState = state;
     if (myState == State.EXPANDING && myActivationWatcher != null && !myActivationWatcher.isRunning()) {
       myActivationWatcher.start();
-    } else if (myActivationWatcher != null && myActivationWatcher.isRunning()) {
+    }
+    else if (myActivationWatcher != null && myActivationWatcher.isRunning()) {
       if (state == State.EXPANDED || state == State.COLLAPSED) {
         myActivationWatcher.stop();
       }
@@ -235,8 +255,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   public Dimension getPreferredSize() {
     Dimension dimension = super.getPreferredSize();
     if (myState.isInProgress()) {
-      dimension.height =
-              COLLAPSED_HEIGHT + (int)((myState == State.COLLAPSING ? (1 - myProgress) : myProgress) * (dimension.height - COLLAPSED_HEIGHT));
+      dimension.height = COLLAPSED_HEIGHT + (int)((myState == State.COLLAPSING ? (1 - myProgress) : myProgress) * (dimension.height - COLLAPSED_HEIGHT));
     }
     else if (myState == State.COLLAPSED) {
       dimension.height = COLLAPSED_HEIGHT;
@@ -307,9 +326,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   private Component findActualComponent(MouseEvent mouseEvent) {
     Component component = mouseEvent.getComponent();
     Component deepestComponent;
-    if (myState != State.EXPANDED &&
-        !myState.isInProgress() &&
-        contains(SwingUtilities.convertPoint(component, mouseEvent.getPoint(), this))) {
+    if (myState != State.EXPANDED && !myState.isInProgress() && contains(SwingUtilities.convertPoint(component, mouseEvent.getPoint(), this))) {
       deepestComponent = this;
     }
     else {
@@ -397,7 +414,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   @Override
   public int getMenuCount() {
     int menuCount = super.getMenuCount();
-    return myClockPanel != null ? menuCount - 2: menuCount;
+    return myClockPanel != null ? menuCount - 2 : menuCount;
   }
 
   private void updateMnemonicsVisibility() {
@@ -482,7 +499,8 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
       if (myState == State.COLLAPSED) {
         //we should repaint parent, to clear 1px on top when menu is collapsed
         getParent().repaint();
-      } else {
+      }
+      else {
         repaint();
       }
     }
@@ -518,8 +536,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
           Component item = ((IdeMenuBar)c).findComponentAt(p.x, size.height / 2);
           if (item instanceof JMenuItem) {
             // re-target border clicks as a menu item ones
-            item.dispatchEvent(
-                    new MouseEvent(item, e.getID(), e.getWhen(), e.getModifiers(), 1, 1, e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+            item.dispatchEvent(new MouseEvent(item, e.getID(), e.getWhen(), e.getModifiers(), 1, 1, e.getClickCount(), e.isPopupTrigger(), e.getButton()));
             e.consume();
             return;
           }
@@ -536,9 +553,15 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
       addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          Window window = SwingUtilities.getWindowAncestor(MyExitFullScreenButton.this);
-          if (window instanceof IdeFrameEx) {
-            ((IdeFrameEx)window).toggleFullScreen(false);
+          Window awtWindow = SwingUtilities.getWindowAncestor(MyExitFullScreenButton.this);
+          consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
+          if(uiWindow == null) {
+            return;
+          }
+
+          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+          if (ideFrame instanceof IdeFrameEx) {
+            ((IdeFrameEx)ideFrame).toggleFullScreen(false);
           }
         }
       });
@@ -554,6 +577,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
         }
       });
     }
+
     @Override
     public Dimension getPreferredSize() {
       int height;
@@ -577,7 +601,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
       Graphics2D g2d = (Graphics2D)g.create();
       try {
         g2d.setColor(UIManager.getColor("Label.background"));
-        g2d.fillRect(0, 0, getWidth()+1, getHeight()+1);
+        g2d.fillRect(0, 0, getWidth() + 1, getHeight() + 1);
         g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
@@ -586,9 +610,9 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
         Shape plate = new RoundRectangle2D.Double(0, 0, s * 11, s * 11, s, s);
         Color color = UIManager.getColor("Label.foreground");
         boolean hover = model.isRollover() || model.isPressed();
-        g2d.setColor(ColorUtil.withAlpha(color, hover? .25: .18));
+        g2d.setColor(ColorUtil.withAlpha(color, hover ? .25 : .18));
         g2d.fill(plate);
-        g2d.setColor(ColorUtil.withAlpha(color, hover? .4 : .33));
+        g2d.setColor(ColorUtil.withAlpha(color, hover ? .4 : .33));
         g2d.draw(plate);
         g2d.setColor(ColorUtil.withAlpha(color, hover ? .7 : .66));
         GeneralPath path = new GeneralPath();
@@ -597,7 +621,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
         path.lineTo(s * 5, s * 9);
         path.lineTo(s * 4, s * 8);
         path.lineTo(s * 2, s * 10);
-        path.quadTo(s * 2 - s/ Math.sqrt(2), s * 9 + s/Math.sqrt(2), s, s * 9);
+        path.quadTo(s * 2 - s / Math.sqrt(2), s * 9 + s / Math.sqrt(2), s, s * 9);
         path.lineTo(s * 3, s * 7);
         path.lineTo(s * 2, s * 6);
         path.closePath();
@@ -609,13 +633,14 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
         path.lineTo(s * 9, s * 5);
         path.lineTo(s * 8, s * 4);
         path.lineTo(s * 10, s * 2);
-        path.quadTo(s * 9 + s/ Math.sqrt(2), s * 2 - s/Math.sqrt(2), s * 9 , s);
+        path.quadTo(s * 9 + s / Math.sqrt(2), s * 2 - s / Math.sqrt(2), s * 9, s);
         path.lineTo(s * 7, s * 3);
         path.lineTo(s * 6, s * 2);
         path.closePath();
         g2d.fill(path);
         g2d.draw(path);
-      } finally {
+      }
+      finally {
         g2d.dispose();
       }
     }

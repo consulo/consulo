@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
-import com.intellij.util.ObjectUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
@@ -70,7 +70,7 @@ public abstract class IdeFrameDecorator implements Disposable {
       return null;
     }
     Window window = myIdeFrame.getWindow();
-    return ObjectUtil.tryCast(window, JFrame.class);
+    return (JFrame)TargetAWT.to(window);
   }
 
   public abstract boolean isInFullScreen();

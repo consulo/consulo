@@ -306,11 +306,11 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
 
       while (!awtWindow.isDisplayable() || !awtWindow.isShowing()) { // if window isn't visible then gets its first visible ancestor
         awtWindow = awtWindow.getOwner();
-        if (window == null) {
+        if (awtWindow == null) {
           continue outer;
         }
       }
-      final DataContext dataContext = DataManager.getInstance().getDataContext(window);
+      final DataContext dataContext = DataManager.getInstance().getDataContext(awtWindow);
       if (project == dataContext.getData(CommonDataKeys.PROJECT)) {
         return awtWindow;
       }

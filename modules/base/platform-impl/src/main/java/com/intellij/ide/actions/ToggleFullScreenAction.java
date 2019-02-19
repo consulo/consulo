@@ -21,9 +21,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
+import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -35,23 +39,24 @@ public class ToggleFullScreenAction extends AnAction implements DumbAware {
   private static final String TEXT_ENTER_FULL_SCREEN = ActionsBundle.message("action.ToggleFullScreen.text.enter");
   private static final String TEXT_EXIT_FULL_SCREEN = ActionsBundle.message("action.ToggleFullScreen.text.exit");
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     IdeFrameEx frame = getFrame();
     if (frame != null) {
       frame.toggleFullScreen(!frame.isInFullScreen());
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation p = e.getPresentation();
 
     IdeFrameEx frame = null;
     boolean isApplicable = WindowManager.getInstance().isFullScreenSupportedInCurrentOS() && (frame = getFrame()) != null;
 
-    p.setVisible(isApplicable);
-    p.setEnabled(isApplicable);
+    p.setEnabledAndVisible(isApplicable);
 
     if (isApplicable) {
       p.setText(frame.isInFullScreen() ? TEXT_EXIT_FULL_SCREEN : TEXT_ENTER_FULL_SCREEN);
@@ -62,9 +67,11 @@ public class ToggleFullScreenAction extends AnAction implements DumbAware {
   private static IdeFrameEx getFrame() {
     Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
     if (focusOwner != null) {
-      Window window = focusOwner instanceof JFrame ? (Window) focusOwner : SwingUtilities.getWindowAncestor(focusOwner);
-      if (window instanceof IdeFrameEx) {
-        return (IdeFrameEx)window;
+      Window awtWindow = focusOwner instanceof JFrame ? (Window)focusOwner : SwingUtilities.getWindowAncestor(focusOwner);
+
+      consulo.ui.Window window = TargetAWT.from(awtWindow);
+      if (window != null) {
+        return (IdeFrameEx)window.getUserData(IdeFrame.KEY);
       }
     }
     return null;
