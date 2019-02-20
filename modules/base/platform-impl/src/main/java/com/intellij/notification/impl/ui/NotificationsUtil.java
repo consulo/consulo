@@ -27,10 +27,10 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -161,8 +161,8 @@ public class NotificationsUtil {
   }
 
   @Nonnull
-  public static Icon getIcon(@Nonnull final Notification notification) {
-    Icon icon = notification.getIcon();
+  public static Image getIcon(@Nonnull final Notification notification) {
+    Image icon = notification.getIcon();
     if (icon != null) {
       return icon;
     }

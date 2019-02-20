@@ -17,7 +17,10 @@ package com.intellij.notification;
 
 import com.google.common.util.concurrent.Atomics;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -29,9 +32,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -58,7 +62,7 @@ public class Notification {
   public final String id;
 
   private final String myGroupId;
-  private Icon myIcon;
+  private Image myIcon;
   private final NotificationType myType;
 
   private String myTitle;
@@ -74,7 +78,7 @@ public class Notification {
   private WeakReference<Balloon> myBalloonRef;
   private final long myTimestamp;
 
-  public Notification(@Nonnull String groupDisplayId, @Nullable Icon icon, @Nonnull NotificationType type) {
+  public Notification(@Nonnull String groupDisplayId, @Nullable Image icon, @Nonnull NotificationType type) {
     this(groupDisplayId, icon, null, null, null, type, null);
   }
 
@@ -89,7 +93,7 @@ public class Notification {
    * @param listener       notification lifecycle listener
    */
   public Notification(@Nonnull String groupDisplayId,
-                      @Nullable Icon icon,
+                      @Nullable Image icon,
                       @Nullable String title,
                       @Nullable String subtitle,
                       @Nullable String content,
@@ -145,12 +149,12 @@ public class Notification {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
   @Nonnull
-  public Notification setIcon(@Nullable Icon icon) {
+  public Notification setIcon(@Nullable Image icon) {
     myIcon = icon;
     return this;
   }

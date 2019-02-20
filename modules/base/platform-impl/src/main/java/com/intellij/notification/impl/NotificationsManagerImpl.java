@@ -575,7 +575,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     if (!layoutData.welcomeScreen) {
-      final Icon icon = NotificationsUtil.getIcon(notification);
+      final Icon icon = TargetAWT.to(NotificationsUtil.getIcon(notification));
       JComponent iconComponent = new JComponent() {
         @Override
         protected void paintComponent(Graphics g) {

@@ -29,7 +29,6 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
@@ -184,7 +183,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
   public void notifyByBalloon(@Nonnull final String toolWindowId,
                               @Nonnull final MessageType type,
                               @Nonnull final String text,
-                              @Nullable final Icon icon,
+                              @Nullable final Image icon,
                               @Nullable final HyperlinkListener listener) {
   }
 

@@ -18,17 +18,17 @@ package com.intellij.notification;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Map;
 
 /**
  * @author peter
  */
 public final class NotificationGroup {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.notification.NotificationGroup");
+  private static final Logger LOG = Logger.getInstance(NotificationGroup.class);
   private static final Map<String, NotificationGroup> ourRegisteredGroups = ContainerUtil.newConcurrentMap();
 
   @Nonnull
@@ -36,8 +36,9 @@ public final class NotificationGroup {
   @Nonnull
   private final NotificationDisplayType myDisplayType;
   private final boolean myLogByDefault;
-  @Nullable private final String myToolWindowId;
-  private final Icon myIcon;
+  @Nullable
+  private final String myToolWindowId;
+  private final Image myIcon;
 
   private String myParentId;
 
@@ -45,18 +46,11 @@ public final class NotificationGroup {
     this(displayId, defaultDisplayType, logByDefault, null);
   }
 
-  public NotificationGroup(@Nonnull String displayId,
-                           @Nonnull NotificationDisplayType defaultDisplayType,
-                           boolean logByDefault,
-                           @Nullable String toolWindowId) {
+  public NotificationGroup(@Nonnull String displayId, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId) {
     this(displayId, defaultDisplayType, logByDefault, toolWindowId, null);
   }
 
-  public NotificationGroup(@Nonnull String displayId,
-                           @Nonnull NotificationDisplayType defaultDisplayType,
-                           boolean logByDefault,
-                           @Nullable String toolWindowId,
-                           @Nullable Icon icon) {
+  public NotificationGroup(@Nonnull String displayId, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId, @Nullable Image icon) {
     myDisplayId = displayId;
     myDisplayType = defaultDisplayType;
     myLogByDefault = logByDefault;
@@ -95,7 +89,7 @@ public final class NotificationGroup {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
@@ -109,10 +103,7 @@ public final class NotificationGroup {
   }
 
   @Nonnull
-  public Notification createNotification(@Nonnull final String title,
-                                         @Nonnull final String content,
-                                         @Nonnull final NotificationType type,
-                                         @Nullable NotificationListener listener) {
+  public Notification createNotification(@Nonnull final String title, @Nonnull final String content, @Nonnull final NotificationType type, @Nullable NotificationListener listener) {
     return new Notification(myDisplayId, title, content, type, listener);
   }
 
@@ -127,19 +118,12 @@ public final class NotificationGroup {
   }
 
   @Nonnull
-  public Notification createNotification(@Nullable String title,
-                                         @Nullable String subtitle,
-                                         @Nullable String content,
-                                         @Nonnull NotificationType type) {
+  public Notification createNotification(@Nullable String title, @Nullable String subtitle, @Nullable String content, @Nonnull NotificationType type) {
     return createNotification(title, subtitle, content, type, null);
   }
 
   @Nonnull
-  public Notification createNotification(@Nullable String title,
-                                         @Nullable String subtitle,
-                                         @Nullable String content,
-                                         @Nonnull NotificationType type,
-                                         @Nullable NotificationListener listener) {
+  public Notification createNotification(@Nullable String title, @Nullable String subtitle, @Nullable String content, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
     LOG.assertTrue(myIcon != null);
     return new Notification(myDisplayId, myIcon, title, subtitle, content, type, listener);
   }

@@ -23,10 +23,12 @@ import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -75,7 +77,7 @@ public class Mock {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public VirtualFile getFile() {
       return null;
@@ -85,11 +87,11 @@ public class Mock {
     @Nonnull
     public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
       return new FileEditorState() {
-            @Override
-            public boolean canBeMergedWith(FileEditorState fileEditorState, FileEditorStateLevel fileEditorStateLevel) {
-                return false;
-            }
-        };
+        @Override
+        public boolean canBeMergedWith(FileEditorState fileEditorState, FileEditorStateLevel fileEditorStateLevel) {
+          return false;
+        }
+      };
     }
 
     @Override
@@ -155,9 +157,7 @@ public class Mock {
     @RequiredUIAccess
     @Nonnull
     @Override
-    public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
-                                                                          boolean focusEditor,
-                                                                          @Nonnull EditorWindow window) {
+    public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull EditorWindow window) {
       throw new RuntimeException("not implemented");
     }
 
@@ -258,7 +258,7 @@ public class Mock {
     }
 
     @Override
-    public void createSplitter(int orientation, @javax.annotation.Nullable EditorWindow window) {
+    public void createSplitter(int orientation, @Nullable EditorWindow window) {
     }
 
     @Override
@@ -319,10 +319,8 @@ public class Mock {
 
     @Override
     @Nonnull
-    public Pair<FileEditor[],FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
-                                                                         boolean focusEditor,
-                                                                         boolean searchForSplitter) {
-      return Pair.create (new FileEditor[0], new FileEditorProvider [0]);
+    public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter) {
+      return Pair.create(new FileEditor[0], new FileEditorProvider[0]);
     }
 
     @Override
@@ -560,7 +558,8 @@ public class Mock {
                                          @Nonnull JComponent component,
                                          @Nonnull ToolWindowAnchor anchor,
                                          Disposable parentDisposable,
-                                         boolean canWorkInDumbMode, boolean canCloseContents) {
+                                         boolean canWorkInDumbMode,
+                                         boolean canCloseContents) {
       return null;
     }
 
@@ -574,20 +573,14 @@ public class Mock {
     @Nonnull
     @RequiredUIAccess
     @Override
-    public ToolWindow registerToolWindow(@Nonnull final String id, final boolean canCloseContent, @Nonnull final ToolWindowAnchor anchor,
-                                         final Disposable parentDisposable, final boolean dumbAware) {
+    public ToolWindow registerToolWindow(@Nonnull final String id, final boolean canCloseContent, @Nonnull final ToolWindowAnchor anchor, final Disposable parentDisposable, final boolean dumbAware) {
       return null;
     }
 
     @RequiredUIAccess
     @Nonnull
     @Override
-    public ToolWindow registerToolWindow(@Nonnull String id,
-                                         boolean canCloseContent,
-                                         @Nonnull ToolWindowAnchor anchor,
-                                         Disposable parentDisposable,
-                                         boolean canWorkInDumbMode,
-                                         boolean secondary) {
+    public ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode, boolean secondary) {
       return null;
     }
 
@@ -652,8 +645,11 @@ public class Mock {
     }
 
     @Override
-    public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String text, @javax.annotation.Nullable final Icon icon,
-                                @javax.annotation.Nullable final HyperlinkListener listener) {
+    public void notifyByBalloon(@Nonnull final String toolWindowId,
+                                @Nonnull final MessageType type,
+                                @Nonnull final String text,
+                                @Nullable final Image icon,
+                                @Nullable final HyperlinkListener listener) {
     }
 
     @Override

@@ -71,6 +71,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.image.Image;
 import consulo.ui.migration.AWTComponentProviderUtil;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
@@ -718,7 +719,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String text, @Nullable final Icon icon, @Nullable final HyperlinkListener listener) {
+  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String text, @Nullable final Image icon, @Nullable final HyperlinkListener listener) {
     checkId(toolWindowId);
 
 
@@ -755,7 +756,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     final BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
-    final Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, type.getPopupBackground(), listenerWrapper).setHideOnClickOutside(false)
+    final Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), TargetAWT.to(icon), type.getPopupBackground(), listenerWrapper).setHideOnClickOutside(false)
             .setHideOnFrameResize(false).createBalloon();
     FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
       final Alarm alarm = new Alarm();

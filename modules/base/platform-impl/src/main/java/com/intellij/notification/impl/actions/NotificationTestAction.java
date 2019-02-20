@@ -30,6 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.util.messages.MessageBus;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -178,7 +179,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
     public Notification getNotification() {
       if (myNotification == null) {
-        Icon icon = null;
+        Image icon = null;
         if (!StringUtil.isEmpty(myGroupId)) {
           icon = IconLoader.findIcon(myGroupId);
         }
