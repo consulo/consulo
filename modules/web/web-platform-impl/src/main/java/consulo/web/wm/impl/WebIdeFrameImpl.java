@@ -67,7 +67,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
     myRootView.update();
 
-    myWindow.showAsync();
+    myWindow.show();
   }
 
   public WebRootPaneImpl getRootPanel() {

@@ -154,7 +154,7 @@ class UIWindowOverVaadinUI implements Window {
 
   @RequiredUIAccess
   @Override
-  public void showAsync() {
+  public void show() {
     throw new UnsupportedOperationException();
   }
 

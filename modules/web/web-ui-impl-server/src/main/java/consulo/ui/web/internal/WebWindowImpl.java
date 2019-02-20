@@ -51,7 +51,7 @@ public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.
 
   @RequiredUIAccess
   @Override
-  public void showAsync() {
+  public void show() {
     if (myDisposed) {
       throw new IllegalArgumentException("Window already disposed");
     }

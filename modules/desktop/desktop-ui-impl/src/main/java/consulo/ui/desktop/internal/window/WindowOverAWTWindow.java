@@ -68,7 +68,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
   @RequiredUIAccess
   @Override
-  public void showAsync() {
+  public void show() {
     SwingUtilities.invokeLater(() -> setVisible(true));
   }
 

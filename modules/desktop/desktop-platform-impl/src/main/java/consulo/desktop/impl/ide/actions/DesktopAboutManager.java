@@ -33,6 +33,6 @@ public class DesktopAboutManager implements AboutManager {
   @Override
   public void showAbout(@Nullable Window parentWindow) {
     AboutDialog aboutDialog = new AboutDialog(parentWindow);
-    aboutDialog.toUIWindow().showAsync();
+    aboutDialog.toUIWindow().show();
   }
 }

@@ -65,7 +65,7 @@ public interface Window extends Component {
    * not block current thread
    */
   @RequiredUIAccess
-  void showAsync();
+  void show();
 
   @RequiredUIAccess
   void close();

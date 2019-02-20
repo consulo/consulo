@@ -70,7 +70,7 @@ public abstract class WindowWrapper {
     Layout rootLayout = buildRootLayout();
     myWindow.setContent(rootLayout);
 
-    myWindow.showAsync();
+    myWindow.show();
   }
 
   @Nonnull
