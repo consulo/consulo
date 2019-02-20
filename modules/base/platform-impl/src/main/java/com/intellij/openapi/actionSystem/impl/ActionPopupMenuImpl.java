@@ -30,6 +30,8 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -103,8 +105,9 @@ public final class ActionPopupMenuImpl extends ApplicationActivationListener.Ada
       if (myApp != null) {
         if (myApp.isActive()) {
           Component frame = UIUtil.findUltimateParent(component);
-          if (frame instanceof IdeFrame) {
-            myFrame = (IdeFrame)frame;
+          if (frame instanceof Window) {
+            consulo.ui.Window uiWindow = TargetAWT.from((Window)frame);
+            myFrame = uiWindow.getUserData(IdeFrame.KEY);
           }
           myConnection = myApp.getMessageBus().connect();
           myConnection.subscribe(ApplicationActivationListener.TOPIC, ActionPopupMenuImpl.this);

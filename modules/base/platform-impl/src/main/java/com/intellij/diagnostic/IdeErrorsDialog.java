@@ -49,6 +49,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationProperties;
+import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
@@ -902,7 +903,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
         Container parentComponent;
         if (dialogClosed) {
-          IdeFrame ideFrame = UIUtil.getParentOfType(IdeFrame.class, getContentPane());
+          IdeFrame ideFrame = DesktopIdeFrameUtil.findIdeFrameFromParent(getContentPane());
           parentComponent = ideFrame.getComponent();
         }
         else {

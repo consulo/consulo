@@ -69,9 +69,10 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcs.AnnotationProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -80,10 +81,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
   private static final Key<boolean[]> ANNOTATIONS_SHOWN_KEY = Key.create("Diff.AnnotateAction.AnnotationShown");
 
-  private static final ViewerAnnotatorFactory[] ANNOTATORS = new ViewerAnnotatorFactory[]{
-          new TwosideAnnotatorFactory(), new OnesideAnnotatorFactory(), new UnifiedAnnotatorFactory(),
-          new ThreesideAnnotatorFactory(), new TextMergeAnnotatorFactory()
-  };
+  private static final ViewerAnnotatorFactory[] ANNOTATORS =
+          new ViewerAnnotatorFactory[]{new TwosideAnnotatorFactory(), new OnesideAnnotatorFactory(), new UnifiedAnnotatorFactory(), new ThreesideAnnotatorFactory(), new TextMergeAnnotatorFactory()};
 
   public AnnotateDiffViewerAction() {
     ActionUtil.copyFrom(this, "Annotate");
@@ -201,8 +200,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
           VcsException exception = loader.getException();
           if (exception != null) {
-            Notification notification = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION
-                    .createNotification("Can't Load Annotations", exception.getMessage(), NotificationType.ERROR, null);
+            Notification notification = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.createNotification("Can't Load Annotations", exception.getMessage(), NotificationType.ERROR, null);
             showNotification(viewer, notification);
             LOG.warn(exception);
             return;
@@ -218,9 +216,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   }
 
   @javax.annotation.Nullable
-  private static FileAnnotationLoader createThreesideAnnotationsLoader(@Nonnull Project project,
-                                                                       @Nonnull DiffRequest request,
-                                                                       @Nonnull ThreeSide side) {
+  private static FileAnnotationLoader createThreesideAnnotationsLoader(@Nonnull Project project, @Nonnull DiffRequest request, @Nonnull ThreeSide side) {
     if (request instanceof ContentDiffRequest) {
       ContentDiffRequest requestEx = (ContentDiffRequest)request;
       if (requestEx.getContents().size() == 3) {
@@ -234,9 +230,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   }
 
   @javax.annotation.Nullable
-  private static FileAnnotationLoader createTwosideAnnotationsLoader(@Nonnull Project project,
-                                                                     @Nonnull DiffRequest request,
-                                                                     @Nonnull Side side) {
+  private static FileAnnotationLoader createTwosideAnnotationsLoader(@Nonnull Project project, @Nonnull DiffRequest request, @Nonnull Side side) {
     Change change = request.getUserData(ChangeDiffRequestProducer.CHANGE_KEY);
     if (change != null) {
       ContentRevision revision = side.select(change.getBeforeRevision(), change.getAfterRevision());
@@ -286,9 +280,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   }
 
   @javax.annotation.Nullable
-  private static FileAnnotationLoader doCreateAnnotationsLoader(@Nonnull Project project,
-                                                                @javax.annotation.Nullable AbstractVcs vcs,
-                                                                @javax.annotation.Nullable final VirtualFile file) {
+  private static FileAnnotationLoader doCreateAnnotationsLoader(@Nonnull Project project, @javax.annotation.Nullable AbstractVcs vcs, @javax.annotation.Nullable final VirtualFile file) {
     if (vcs == null || file == null) return null;
     final AnnotationProvider annotationProvider = vcs.getAnnotationProvider();
     if (annotationProvider == null) return null;
@@ -365,10 +357,17 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   private static void showNotification(@Nonnull DiffViewerBase viewer, @Nonnull Notification notification) {
     JComponent component = viewer.getComponent();
 
-    Window window = UIUtil.getWindow(component);
-    if (window instanceof IdeFrame && NotificationsManagerImpl.findWindowForBalloon(viewer.getProject()) == window) {
-      notification.notify(viewer.getProject());
-      return;
+    Window awtWindow = UIUtil.getWindow(component);
+
+    if (awtWindow != null) {
+      consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+
+      if (ideFrame != null && NotificationsManagerImpl.findWindowForBalloon(viewer.getProject()) == awtWindow) {
+        notification.notify(viewer.getProject());
+        return;
+      }
     }
 
     Balloon balloon = NotificationsManagerImpl.createBalloon(component, notification, false, true, null, viewer);

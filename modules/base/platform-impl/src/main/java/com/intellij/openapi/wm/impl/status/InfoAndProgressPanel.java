@@ -53,6 +53,7 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.impl.ToolWindowPanelImplEx;
 import consulo.ui.migration.AWTComponentProviderUtil;
@@ -66,8 +67,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidget {
   private final ProcessPopup myPopup;
@@ -456,8 +457,14 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   @Nullable
   private static DesktopBalloonLayoutImpl getBalloonLayout(@Nonnull JRootPane pane) {
     Component parent = UIUtil.findUltimateParent(pane);
-    if (parent instanceof IdeFrame) {
-      return (DesktopBalloonLayoutImpl)((IdeFrame)parent).getBalloonLayout();
+    if (parent instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if(ideFrame == null) {
+        return null;
+      }
+      return (DesktopBalloonLayoutImpl)ideFrame.getBalloonLayout();
     }
     return null;
   }

@@ -432,8 +432,13 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   @Override
   public StatusBar getStatusBar(@Nonnull Component c, @Nullable Project project) {
     Component parent = UIUtil.findUltimateParent(c);
-    if (parent instanceof IdeFrame) {
-      return ((IdeFrame)parent).getStatusBar().findChild(c);
+    if (parent instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if(ideFrame != null) {
+        return ideFrame.getStatusBar().findChild(c);
+      }
     }
 
     IdeFrame frame = findFrameFor(project);
@@ -446,6 +451,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public IdeFrame findFrameFor(@Nullable final Project project) {
     IdeFrame frame = null;
@@ -458,10 +464,13 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     else {
       Container eachParent = TargetAWT.to(getMostRecentFocusedWindow());
       while (eachParent != null) {
-        if (eachParent instanceof IdeFrame) {
-
-          frame = (IdeFrame)eachParent;
-          break;
+        if (eachParent instanceof Window) {
+          consulo.ui.Window uiWIndow = TargetAWT.from((Window)eachParent);
+          IdeFrame ideFrame = uiWIndow.getUserData(IdeFrame.KEY);
+          if(ideFrame != null) {
+            frame = ideFrame;
+            break;
+          }
         }
         eachParent = eachParent.getParent();
       }

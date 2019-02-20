@@ -26,12 +26,13 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -43,25 +44,31 @@ import java.util.Map;
  * sizes of window, dialogs, etc.
  */
 @Singleton
-@State(
-        name = "DimensionService",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/dimensions.xml", roamingType = RoamingType.DISABLED),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true)})
+@State(name = "DimensionService", storages = @Storage(value = "dimensions.xml", roamingType = RoamingType.DISABLED))
 public class DimensionService implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DimensionService.class);
 
   private final Map<String, Point> myKey2Location;
   private final Map<String, Dimension> myKey2Size;
   private final TObjectIntHashMap<String> myKey2ExtendedState;
-  @NonNls private static final String EXTENDED_STATE = "extendedState";
-  @NonNls private static final String KEY = "key";
-  @NonNls private static final String STATE = "state";
-  @NonNls private static final String ELEMENT_LOCATION = "location";
-  @NonNls private static final String ELEMENT_SIZE = "size";
-  @NonNls private static final String ATTRIBUTE_X = "x";
-  @NonNls private static final String ATTRIBUTE_Y = "y";
-  @NonNls private static final String ATTRIBUTE_WIDTH = "width";
-  @NonNls private static final String ATTRIBUTE_HEIGHT = "height";
+  @NonNls
+  private static final String EXTENDED_STATE = "extendedState";
+  @NonNls
+  private static final String KEY = "key";
+  @NonNls
+  private static final String STATE = "state";
+  @NonNls
+  private static final String ELEMENT_LOCATION = "location";
+  @NonNls
+  private static final String ELEMENT_SIZE = "size";
+  @NonNls
+  private static final String ATTRIBUTE_X = "x";
+  @NonNls
+  private static final String ATTRIBUTE_Y = "y";
+  @NonNls
+  private static final String ATTRIBUTE_WIDTH = "width";
+  @NonNls
+  private static final String ATTRIBUTE_HEIGHT = "height";
 
   public static DimensionService getInstance() {
     return ServiceManager.getService(DimensionService.class);
@@ -244,16 +251,14 @@ public class DimensionService implements PersistentStateComponent<Element> {
     for (Element e : element.getChildren()) {
       if (ELEMENT_LOCATION.equals(e.getName())) {
         try {
-          myKey2Location.put(e.getAttributeValue(KEY),
-                             new Point(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_X)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_Y))));
+          myKey2Location.put(e.getAttributeValue(KEY), new Point(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_X)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_Y))));
         }
         catch (NumberFormatException ignored) {
         }
       }
       else if (ELEMENT_SIZE.equals(e.getName())) {
         try {
-          myKey2Size.put(e.getAttributeValue(KEY),
-                         new Dimension(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_WIDTH)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_HEIGHT))));
+          myKey2Size.put(e.getAttributeValue(KEY), new Dimension(Integer.parseInt(e.getAttributeValue(ATTRIBUTE_WIDTH)), Integer.parseInt(e.getAttributeValue(ATTRIBUTE_HEIGHT))));
         }
         catch (NumberFormatException ignored) {
         }
@@ -271,16 +276,14 @@ public class DimensionService implements PersistentStateComponent<Element> {
   @Deprecated
   /**
    * @deprecated Use {@link com.intellij.ide.util.PropertiesComponent}
-   */
-  public void setExtendedState(String key, int extendedState) {
+   */ public void setExtendedState(String key, int extendedState) {
     myKey2ExtendedState.put(key, extendedState);
   }
 
   @Deprecated
   /**
    * @deprecated Use {@link com.intellij.ide.util.PropertiesComponent}
-   */
-  public int getExtendedState(String key) {
+   */ public int getExtendedState(String key) {
     if (!myKey2ExtendedState.containsKey(key)) return -1;
     return myKey2ExtendedState.get(key);
   }
@@ -298,21 +301,24 @@ public class DimensionService implements PersistentStateComponent<Element> {
       return key + ".headless";
     }
 
-    JFrame frame = null;
+    consulo.ui.Window uiWindow = null;
     final Component owner = IdeFocusManager.findInstance().getFocusOwner();
     if (owner != null) {
-      frame = UIUtil.getParentOfType(JFrame.class, owner);
+      uiWindow = TargetAWT.from(UIUtil.getParentOfType(JFrame.class, owner));
     }
-    if (frame == null) {
-      frame = WindowManager.getInstance().findVisibleFrame();
+    if (uiWindow == null) {
+      uiWindow = WindowManager.getInstance().findVisibleWindow();
     }
-    if (project != null && (frame == null || (frame instanceof IdeFrame && project != ((IdeFrame)frame).getProject()))) {
-      frame = WindowManager.getInstance().getFrame(project);
+
+    if (project != null && (uiWindow == null || (uiWindow.getUserData(IdeFrame.KEY) != null && project != uiWindow.getUserData(IdeFrame.KEY).getProject()))) {
+      uiWindow = WindowManager.getInstance().getWindow(project);
     }
+
     Rectangle screen = new Rectangle(0, 0, 0, 0);
-    if (frame != null) {
-      final Point topLeft = frame.getLocation();
-      Point center = new Point(topLeft.x + frame.getWidth() / 2, topLeft.y + frame.getHeight() / 2);
+    if (uiWindow != null) {
+      Window awtWindow = TargetAWT.to(uiWindow);
+      final Point topLeft = awtWindow.getLocation();
+      Point center = new Point(topLeft.x + awtWindow.getWidth() / 2, topLeft.y + awtWindow.getHeight() / 2);
       for (GraphicsDevice device : env.getScreenDevices()) {
         Rectangle bounds = device.getDefaultConfiguration().getBounds();
         if (bounds.contains(center)) {

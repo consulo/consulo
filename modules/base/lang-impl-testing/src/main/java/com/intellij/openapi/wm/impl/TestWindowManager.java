@@ -280,6 +280,7 @@ public final class TestWindowManager extends WindowManagerEx {
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public IdeFrame findFrameFor(@Nullable Project project) {
     throw new UnsupportedOperationException();

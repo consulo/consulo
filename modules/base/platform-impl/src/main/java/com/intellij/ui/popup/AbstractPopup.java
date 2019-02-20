@@ -837,12 +837,12 @@ public class AbstractPopup implements JBPopup {
     myRequestorComponent = owner;
 
     boolean forcedDialog = myMayBeParent
-                           || SystemInfo.isMac && !(myOwner instanceof IdeFrame) && myOwner != null && myOwner.isShowing();
+                           || SystemInfo.isMac && !isIdeFrame(myOwner) && myOwner != null && myOwner.isShowing();
 
     PopupComponent.Factory factory = getFactory(myForcedHeavyweight || myResizable, forcedDialog);
     myNativePopup = factory.isNativePopup();
     Component popupOwner = myOwner;
-    if (popupOwner instanceof RootPaneContainer && !(popupOwner instanceof IdeFrame && !Registry.is("popup.fix.ide.frame.owner"))) {
+    if (popupOwner instanceof RootPaneContainer && !(isIdeFrame(myOwner) && !Registry.is("popup.fix.ide.frame.owner"))) {
       // JDK uses cached heavyweight popup for a window ancestor
       RootPaneContainer root = (RootPaneContainer)popupOwner;
       popupOwner = root.getRootPane();
@@ -1066,6 +1066,14 @@ public class AbstractPopup implements JBPopup {
 
   public void focusPreferredComponent() {
     _requestFocus();
+  }
+
+  private static boolean isIdeFrame(Component component) {
+    if(!(component instanceof Window)) {
+      return false;
+    }
+    consulo.ui.Window uiWindow = TargetAWT.from((Window)component);
+    return uiWindow.getUserData(IdeFrame.KEY) != null;
   }
 
   private void installProjectDisposer() {

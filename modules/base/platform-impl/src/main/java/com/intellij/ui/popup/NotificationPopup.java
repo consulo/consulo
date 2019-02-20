@@ -25,6 +25,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import consulo.awt.TargetAWT;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -71,13 +72,15 @@ public class NotificationPopup {
     }
   }
 
+  @Nullable
   private static IdeFrame findFrame(JComponent owner) {
     final Window frame = SwingUtilities.getWindowAncestor(owner);
-    if (frame instanceof IdeFrame) {
-      return (IdeFrame)frame;
+    if(frame == null) {
+      return null;
     }
 
-    return null;
+    consulo.ui.Window uiWindow = TargetAWT.from(frame);
+    return uiWindow.getUserData(IdeFrame.KEY);
   }
 
   public JBPopup getPopup() {

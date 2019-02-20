@@ -136,6 +136,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
   }
 
+  @RequiredUIAccess
   private static void showNotification(@Nonnull final Notification notification, @Nullable final Project project) {
     Application application = ApplicationManager.getApplication();
     if (application instanceof ApplicationEx && !((ApplicationEx)application).isLoaded()) {
@@ -149,8 +150,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     NotificationDisplayType type = settings.getDisplayType();
     String toolWindowId = NotificationsConfigurationImpl.getInstanceImpl().getToolWindowId(groupId);
-    if (type == NotificationDisplayType.TOOL_WINDOW &&
-        (toolWindowId == null || project == null || !ToolWindowManager.getInstance(project).canShowNotification(toolWindowId))) {
+    if (type == NotificationDisplayType.TOOL_WINDOW && (toolWindowId == null || project == null || !ToolWindowManager.getInstance(project).canShowNotification(toolWindowId))) {
       type = NotificationDisplayType.BALLOON;
     }
 
@@ -184,9 +184,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
         break;
       case TOOL_WINDOW:
-        MessageType messageType = notification.getType() == NotificationType.ERROR
-                                  ? MessageType.ERROR
-                                  : notification.getType() == NotificationType.WARNING ? MessageType.WARNING : MessageType.INFO;
+        MessageType messageType = notification.getType() == NotificationType.ERROR ? MessageType.ERROR : notification.getType() == NotificationType.WARNING ? MessageType.WARNING : MessageType.INFO;
         final NotificationListener notificationListener = notification.getListener();
         HyperlinkListener listener = notificationListener == null ? null : new HyperlinkListener() {
           @Override
@@ -203,9 +201,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
           msg += notification.getContent();
         }
 
-        Window window = findWindowForBalloon(project);
-        if (window instanceof IdeFrame) {
-          BalloonLayout layout = ((IdeFrame)window).getBalloonLayout();
+        IdeFrame ideFrame = findIdeFrameForBalloon(project);
+        if (ideFrame != null) {
+          BalloonLayout layout = ideFrame.getBalloonLayout();
           if (layout != null) {
             ((DesktopBalloonLayoutImpl)layout).remove(notification);
           }
@@ -217,14 +215,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
   }
 
   @Nullable
-  private static Balloon notifyByBalloon(@Nonnull final Notification notification,
-                                         @Nonnull final NotificationDisplayType displayType,
-                                         @Nullable final Project project) {
+  @RequiredUIAccess
+  private static Balloon notifyByBalloon(@Nonnull final Notification notification, @Nonnull final NotificationDisplayType displayType, @Nullable final Project project) {
     if (isDummyEnvironment()) return null;
 
-    Window window = findWindowForBalloon(project);
-    if (window instanceof IdeFrame) {
-      BalloonLayout layout = ((IdeFrame)window).getBalloonLayout();
+    IdeFrame ideFrame = findIdeFrameForBalloon(project);
+    if (ideFrame != null) {
+      BalloonLayout layout = ideFrame.getBalloonLayout();
       if (layout == null) return null;
 
       final ProjectManager projectManager = ProjectManager.getInstance();
@@ -246,8 +243,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
           layoutDataRef.set(layoutData);
         }
       }
-      final Balloon balloon =
-              createBalloon((IdeFrame)window, notification, false, false, layoutDataRef, project != null ? project : ApplicationManager.getApplication());
+      final Balloon balloon = createBalloon(ideFrame, notification, false, false, layoutDataRef, project != null ? project : ApplicationManager.getApplication());
       if (notification.isExpired()) {
         return null;
       }
@@ -293,7 +289,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static Window findWindowForBalloon(@Nullable Project project) {
     Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
     if (frame == null && project == null) {
-      frame = (Window)TargetAWT.to(WelcomeFrameManager.getInstance().getCurrentFrame().getWindow());
+      frame = TargetAWT.to(WelcomeFrameManager.getInstance().getCurrentFrame().getWindow());
     }
     if (frame == null && project == null) {
       frame = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
@@ -304,6 +300,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return frame;
   }
 
+  @Nullable
+  @RequiredUIAccess
+  public static IdeFrame findIdeFrameForBalloon(@Nullable Project project) {
+    Window windowForBalloon = findWindowForBalloon(project);
+    consulo.ui.Window uiWindow = TargetAWT.from(windowForBalloon);
+    return uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
+  }
 
   @Nonnull
   public static Balloon createBalloon(@Nonnull final IdeFrame window,
@@ -581,8 +584,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
       };
       iconComponent.setOpaque(false);
-      iconComponent
-              .setPreferredSize(new Dimension(layoutData.configuration.iconPanelWidth, 2 * layoutData.configuration.iconOffset.height + icon.getIconHeight()));
+      iconComponent.setPreferredSize(new Dimension(layoutData.configuration.iconPanelWidth, 2 * layoutData.configuration.iconOffset.height + icon.getIconHeight()));
 
       content.add(iconComponent, BorderLayout.WEST);
     }
@@ -639,9 +641,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     final BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(content);
-    builder.setFillColor(layoutData.fillColor).setCloseButtonEnabled(buttons == null).setShowCallout(showCallout).setShadow(false).setAnimationCycle(200)
-            .setHideOnClickOutside(hideOnClickOutside).setHideOnAction(hideOnClickOutside).setHideOnKeyOutside(hideOnClickOutside).setHideOnFrameResize(false)
-            .setBorderColor(layoutData.borderColor).setBorderInsets(JBUI.emptyInsets());
+    builder.setFillColor(layoutData.fillColor).setCloseButtonEnabled(buttons == null).setShowCallout(showCallout).setShadow(false).setAnimationCycle(200).setHideOnClickOutside(hideOnClickOutside)
+            .setHideOnAction(hideOnClickOutside).setHideOnKeyOutside(hideOnClickOutside).setHideOnFrameResize(false).setBorderColor(layoutData.borderColor).setBorderInsets(JBUI.emptyInsets());
 
     if (layoutData.fadeoutTime != 0) {
       builder.setFadeoutTime(layoutData.fadeoutTime);
@@ -744,8 +745,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     for (AnAction action : actions) {
       Presentation presentation = action.getTemplatePresentation();
-      actionPanel.add(HorizontalLayout.LEFT, new LinkLabel<AnAction>(presentation.getText(), presentation.getIcon(),
-                                                                     (aSource, action1) -> Notification.fire(notification, action1), action));
+      actionPanel.add(HorizontalLayout.LEFT, new LinkLabel<AnAction>(presentation.getText(), presentation.getIcon(), (aSource, action1) -> Notification.fire(notification, action1), action));
     }
 
     Insets hover = JBUI.insets(8, 5, 8, 7);
@@ -936,8 +936,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static int calculateContentHeight(int lines) {
     JEditorPane text = new JEditorPane();
     text.setEditorKit(UIUtil.getHTMLEditorKit());
-    text.setText(NotificationsUtil
-                         .buildHtml(null, null, "Content" + StringUtil.repeat("<br>\nContent", lines - 1), null, null, null, NotificationsUtil.getFontStyle()));
+    text.setText(NotificationsUtil.buildHtml(null, null, "Content" + StringUtil.repeat("<br>\nContent", lines - 1), null, null, null, NotificationsUtil.getFontStyle()));
     text.setEditable(false);
     text.setOpaque(false);
     text.setBorder(null);
@@ -1116,9 +1115,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
       Dimension actionSize = myActionPanel == null ? new Dimension() : size.fun(myActionPanel);
       Dimension expandSize = myExpandAction == null || myLayoutData.showMinSize ? new Dimension() : size.fun(myExpandAction);
 
-      int height = myLayoutData.configuration.topSpaceHeight +
-                   titleSize.height + centeredSize.height + Math.max(actionSize.height, expandSize.height) +
-                   myLayoutData.configuration.bottomSpaceHeight;
+      int height = myLayoutData.configuration.topSpaceHeight + titleSize.height + centeredSize.height + Math.max(actionSize.height, expandSize.height) + myLayoutData.configuration.bottomSpaceHeight;
 
       if (titleSize.height > 0 && centeredSize.height > 0) {
         height += myLayoutData.configuration.titleContentSpaceHeight;

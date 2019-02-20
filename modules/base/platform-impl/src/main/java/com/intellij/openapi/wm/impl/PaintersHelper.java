@@ -32,6 +32,8 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -196,7 +198,7 @@ final class PaintersHelper implements Painter.Listener {
       }
 
       boolean ensureImageLoaded() {
-        IdeFrame frame = UIUtil.getParentOfType(IdeFrame.class, rootComponent);
+        IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(rootComponent);
         Project project = frame == null ? null : frame.getProject();
         String value = getBackgroundSpec(project, propertyName);
         if (!Comparing.equal(value, current)) {

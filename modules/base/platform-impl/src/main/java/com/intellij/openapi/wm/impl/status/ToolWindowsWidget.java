@@ -39,6 +39,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 
 import javax.annotation.Nonnull;
 
@@ -127,7 +128,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
     }
     if (myAlarm.getActiveRequestCount() == 0) {
       myAlarm.addRequest(() -> {
-        final IdeFrameEx frame = UIUtil.getParentOfType(IdeFrameEx.class, this);
+        final IdeFrameEx frame = DesktopIdeFrameUtil.findIdeFrameExFromParent(this);
         if (frame == null) return;
 
         List<ToolWindow> toolWindows = new ArrayList<>();

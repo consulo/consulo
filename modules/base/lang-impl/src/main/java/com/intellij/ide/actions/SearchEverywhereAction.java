@@ -759,8 +759,12 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     final RelativePoint showPoint;
     if (parent != null) {
       int height = UISettings.getInstance().getShowMainToolbar() ? 135 : 115;
-      if (parent instanceof IdeFrameEx && ((IdeFrameEx)parent).isInFullScreen()) {
-        height -= 20;
+      if (parent instanceof Window) {
+        consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+        IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+        if(ideFrame instanceof IdeFrameEx && ((IdeFrameEx)ideFrame).isInFullScreen()) {
+          height -= 20;
+        }
       }
       showPoint = new RelativePoint(parent, new Point((parent.getSize().width - panel.getPreferredSize().width) / 2, height));
     } else {

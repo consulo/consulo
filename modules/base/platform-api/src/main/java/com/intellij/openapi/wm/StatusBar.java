@@ -99,5 +99,4 @@ public interface StatusBar extends StatusBarInfo, Disposable {
   IdeFrame getFrame();
 
   void install(IdeFrame frame);
-
 }

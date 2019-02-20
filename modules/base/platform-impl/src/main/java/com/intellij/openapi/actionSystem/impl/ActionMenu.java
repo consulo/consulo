@@ -27,6 +27,8 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -198,9 +200,17 @@ public final class ActionMenu extends JMenu {
   }
 
   public static void showDescriptionInStatusBar(boolean isIncluded, Component component, String description) {
-    IdeFrame frame = component instanceof IdeFrame ? (IdeFrame)component : (IdeFrame)SwingUtilities.getAncestorOfClass(IdeFrame.class, component);
+    IdeFrame ideFrame = null;
+    if (component instanceof Window) {
+      ideFrame = TargetAWT.from((Window)component).getUserData(IdeFrame.KEY);
+    }
+
+    if (ideFrame == null) {
+      ideFrame = DesktopIdeFrameUtil.findIdeFrameFromParent(component);
+    }
+
     StatusBar statusBar;
-    if (frame != null && (statusBar = frame.getStatusBar()) != null) {
+    if (ideFrame != null && (statusBar = ideFrame.getStatusBar()) != null) {
       statusBar.setInfo(isIncluded ? description : null);
     }
   }
@@ -309,7 +319,7 @@ public final class ActionMenu extends JMenu {
       @SuppressWarnings("deprecation") DataContext contextFromFocus = DataManager.getInstance().getDataContext();
       context = contextFromFocus;
       if (context.getData(PlatformDataKeys.CONTEXT_COMPONENT) == null) {
-        IdeFrame frame = UIUtil.getParentOfType(IdeFrame.class, this);
+        IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(this);
         context = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame));
       }
       mayContextBeInvalid = true;

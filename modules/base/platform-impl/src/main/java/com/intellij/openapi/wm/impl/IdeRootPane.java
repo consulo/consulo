@@ -46,7 +46,7 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.ex.ToolWindowPanel;
 
@@ -300,7 +300,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     for (IdeRootPaneNorthExtension component : myNorthComponents) {
       component.uiSettingsChanged(uiSettings);
     }
-    IdeFrame frame = UIUtil.getParentOfType(IdeFrame.class, this);
+    IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(this);
     BalloonLayout layout = frame != null ? frame.getBalloonLayout() : null;
     if (layout instanceof DesktopBalloonLayoutImpl) ((DesktopBalloonLayoutImpl)layout).queueRelayout();
   }

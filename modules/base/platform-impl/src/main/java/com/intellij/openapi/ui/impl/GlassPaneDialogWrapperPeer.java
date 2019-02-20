@@ -131,7 +131,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
   private void createDialog(final Window owner) throws GlasspanePeerUnavailableException {
     Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-    if (!(active instanceof JDialog) && owner instanceof IdeFrame) {
+    if (!(active instanceof JDialog) && owner != null && TargetAWT.from(owner).getUserData(IdeFrame.KEY) != null) {
 
       Component glassPane;
 

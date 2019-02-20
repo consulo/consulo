@@ -19,10 +19,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.popup.IdePopupEventDispatcher;
 import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -45,7 +48,8 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
     return myDispatchStack.size() > 0;
   }
 
-  public boolean dispatch(final AWTEvent e) {
+  @Override
+  public boolean dispatch(@Nonnull final AWTEvent e) {
     LOG.assertTrue(isPopupActive());
 
     if (e.getID() == WindowEvent.WINDOW_LOST_FOCUS) {
@@ -70,11 +74,15 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
           shouldCloseAllPopup = true;
         }
 
-        if (!shouldCloseAllPopup && ultimateParentForEventWindow instanceof IdeFrameEx) {
-          IdeFrameEx ultimateParentWindowForEvent = ((IdeFrameEx)ultimateParentForEventWindow);
-          if (ultimateParentWindowForEvent.isInFullScreen()
-              && !ultimateParentForFocusedComponent.equals(ultimateParentForEventWindow)) {
-            shouldCloseAllPopup = true;
+        if (!shouldCloseAllPopup && ultimateParentForEventWindow instanceof Window) {
+          consulo.ui.Window uiWindow = TargetAWT.from((Window)ultimateParentForFocusedComponent);
+
+          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+          if(ideFrame instanceof IdeFrameEx) {
+            IdeFrameEx ultimateParentWindowForEvent = (IdeFrameEx)ideFrame;
+            if (ultimateParentWindowForEvent.isInFullScreen() && !ultimateParentForFocusedComponent.equals(ultimateParentForEventWindow)) {
+              shouldCloseAllPopup = true;
+            }
           }
         }
 
@@ -129,9 +137,6 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
   }
 
   public boolean isPopupWindow(Window w) {
-    return myDispatchStack.stream()
-            .flatMap(IdePopupEventDispatcher::getPopupStream)
-            .map(JBPopup::getContent)
-            .anyMatch(jbPopupContent -> SwingUtilities.getWindowAncestor(jbPopupContent) == w);
+    return myDispatchStack.stream().flatMap(IdePopupEventDispatcher::getPopupStream).map(JBPopup::getContent).anyMatch(jbPopupContent -> SwingUtilities.getWindowAncestor(jbPopupContent) == w);
   }
 }

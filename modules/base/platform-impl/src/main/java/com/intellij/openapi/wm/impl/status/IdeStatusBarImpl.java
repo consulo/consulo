@@ -102,8 +102,9 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
     Component eachParent = c;
     IdeFrame frame = null;
     while (eachParent != null) {
-      if (eachParent instanceof IdeFrame) {
-        frame = (IdeFrame)eachParent;
+      if (eachParent instanceof Window) {
+        consulo.ui.Window uiWindow = TargetAWT.from((Window)eachParent);
+        frame = uiWindow.getUserData(IdeFrame.KEY);
       }
       eachParent = eachParent.getParent();
     }

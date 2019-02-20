@@ -27,7 +27,9 @@ import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -85,11 +87,11 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
     }
 
     final Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
-    if (!(windowAncestor instanceof IdeFrame) || windowAncestor instanceof IdeFrame.Child) {
+    consulo.ui.Window uiWindow = TargetAWT.from(windowAncestor);
+    if(!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
       setDisabled(e);
       return;
     }
-
 
     ToolWindowManager mgr = ToolWindowManager.getInstance(project);
 

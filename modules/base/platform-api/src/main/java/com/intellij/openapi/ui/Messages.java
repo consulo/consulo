@@ -120,7 +120,7 @@ public class Messages {
   public static Runnable createMessageDialogRemover(@Nullable Project project) {
     consulo.ui.Window projectWindow = project == null ? null : WindowManager.getInstance().suggestParentWindow(project);
     return () -> UIUtil
-            .invokeLaterIfNeeded(() -> makeCurrentMessageDialogGoAway(projectWindow != null ? ((Window)projectWindow).getOwnedWindows() : Window.getWindows()));
+            .invokeLaterIfNeeded(() -> makeCurrentMessageDialogGoAway(projectWindow != null ? TargetAWT.to(projectWindow).getOwnedWindows() : Window.getWindows()));
   }
 
   private static void makeCurrentMessageDialogGoAway(@Nonnull Window[] checkWindows) {
@@ -1523,8 +1523,12 @@ public class Messages {
 
           window.setBounds(bounds);
 
-          if (state == 0 && !toClose && window.getOwner() instanceof IdeFrame) {
-            WindowManager.getInstance().requestUserAttention((IdeFrame)window.getOwner(), true);
+          if (state == 0 && !toClose && window.getOwner() != null) {
+            consulo.ui.Window uiWindow = TargetAWT.from(window.getOwner());
+            IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+            if(ideFrame != null) {
+              WindowManager.getInstance().requestUserAttention(ideFrame, true);
+            }
           }
 
           if (state < frameCount) {

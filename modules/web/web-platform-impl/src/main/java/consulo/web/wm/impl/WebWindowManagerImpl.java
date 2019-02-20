@@ -163,6 +163,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements PersistentS
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public IdeFrame findFrameFor(@Nullable Project project) {
     return null;

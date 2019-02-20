@@ -117,7 +117,9 @@ public class FrameWrapper implements Disposable, DataProvider {
     final Window frame = getFrame();
 
     if (myStatusBar != null) {
-      myStatusBar.install((IdeFrame)frame);
+      consulo.ui.Window uiWindow = TargetAWT.from(frame);
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      myStatusBar.install(ideFrame);
     }
 
     myFocusTrackback = new FocusTrackback(this, IdeFocusManager.findInstance().getFocusOwner(), true);
@@ -234,9 +236,10 @@ public class FrameWrapper implements Disposable, DataProvider {
       if (frame instanceof JFrame) {
         FocusTrackback.release((JFrame)frame);
       }
-      if (frame instanceof IdeFrame) {
-        MouseGestureManager.getInstance().remove((IdeFrame)frame);
-      }
+
+      consulo.ui.Window uiWindow = TargetAWT.from(frame);
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      MouseGestureManager.getInstance().remove(ideFrame);
 
       frame.dispose();
 

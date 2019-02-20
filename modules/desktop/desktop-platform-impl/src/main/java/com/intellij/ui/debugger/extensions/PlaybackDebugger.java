@@ -380,7 +380,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   private DesktopIdeFrameImpl getFrame() {
     final Frame[] all = Frame.getFrames();
     for (Frame each : all) {
-      Window uiWindow = (Window)each;
+      Window uiWindow = TargetAWT.from(each);
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
       if(IdeFrameUtil.isRootFrame(ideFrame)) {
@@ -416,7 +416,8 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         new WaitFor() {
           @Override
           protected boolean condition() {
-            return KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow() instanceof IdeFrame || myRunner == null;
+            java.awt.Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+            return window != null && TargetAWT.from(window).getUserData(IdeFrame.KEY) != null || myRunner == null;
           }
         };
 

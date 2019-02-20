@@ -216,8 +216,12 @@ public class FindPopupPanel extends JBPanel implements FindUI {
       }
       if (parent != null && showPoint == null) {
         int height = UISettings.getInstance().getShowNavigationBar() ? 135 : 115;
-        if (parent instanceof IdeFrameEx && ((IdeFrameEx)parent).isInFullScreen()) {
-          height -= 20;
+        if (parent instanceof Window) {
+          consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+          if(ideFrame instanceof IdeFrameEx && ((IdeFrameEx)ideFrame).isInFullScreen()) {
+            height -= 20;
+          }
         }
         showPoint = new RelativePoint(parent, new Point((parent.getSize().width - getPreferredSize().width) / 2, height));
       }
