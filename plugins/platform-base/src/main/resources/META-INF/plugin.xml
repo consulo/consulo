@@ -1351,6 +1351,7 @@
     <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings"/>
     <applicationService serviceImplementation="com.intellij.openapi.util.registry.RegistryState"/>
     <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider" />
+    <applicationService serviceImplementation="consulo.ide.actions.webSearch.WebSearchOptions"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>

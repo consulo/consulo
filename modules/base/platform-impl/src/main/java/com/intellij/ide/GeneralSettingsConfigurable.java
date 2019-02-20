@@ -20,6 +20,8 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ObjectUtil;
 import consulo.fileChooser.FileOperateDialogSettings;
+import consulo.ide.actions.webSearch.WebSearchEngine;
+import consulo.ide.actions.webSearch.WebSearchOptions;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
@@ -32,6 +34,7 @@ import consulo.ui.util.LabeledComponents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -60,6 +63,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     private ComboBox<FileOperateDialogProvider> myFileChooseDialogBox;
     private ComboBox<FileOperateDialogProvider> myFileSaveDialogBox;
+
+    private ComboBox<WebSearchEngine> myWebSearchEngineComboBox;
 
     private VerticalLayout myRootLayout;
 
@@ -127,6 +132,12 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       fileDialogsLayout.add(LabeledComponents.left("File Save Dialog Type", myFileSaveDialogBox = fileSaveDialogBox.build()));
 
       myRootLayout.add(LabeledLayout.create("File Dialogs", fileDialogsLayout));
+
+      HorizontalLayout webSearchOptionsLayout = HorizontalLayout.create(10);
+      ComboBox.Builder<WebSearchEngine> webSearchEngineBuilder = ComboBox.<WebSearchEngine>builder().fillByEnum(WebSearchEngine.class, WebSearchEngine::getPresentableName);
+      webSearchOptionsLayout.add(LabeledComponents.left("Engine", myWebSearchEngineComboBox = webSearchEngineBuilder.build()));
+
+      myRootLayout.add(LabeledLayout.create("Web Search", webSearchOptionsLayout));
     }
 
     @Nonnull
@@ -134,6 +145,17 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     public Component compute() {
       return myRootLayout;
     }
+  }
+
+  private final WebSearchOptions myWebSearchOptions;
+  private final GeneralSettings myGeneralSettings;
+  private final FileOperateDialogSettings myFileOperateDialogSettings;
+
+  @Inject
+  public GeneralSettingsConfigurable(WebSearchOptions webSearchOptions, GeneralSettings generalSettings, FileOperateDialogSettings fileOperateDialogSettings) {
+    myWebSearchOptions = webSearchOptions;
+    myGeneralSettings = generalSettings;
+    myFileOperateDialogSettings = fileOperateDialogSettings;
   }
 
   @RequiredUIAccess
@@ -147,19 +169,17 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
   @Override
   protected boolean isModified(@Nonnull MyComponent component) {
     boolean isModified = false;
-    GeneralSettings settings = GeneralSettings.getInstance();
-    isModified |= settings.isReopenLastProject() != component.myChkReopenLastProject.getValue();
-    isModified |= settings.isConfirmExit() != component.myConfirmExit.getValue();
-    isModified |= settings.isSupportScreenReaders() != component.myChkSupportScreenReaders.getValue();
-    isModified |= settings.isSyncOnFrameActivation() != component.myChkSyncOnFrameActivation.getValue();
-    isModified |= settings.isSaveOnFrameDeactivation() != component.myChkSaveOnFrameDeactivation.getValue();
-    isModified |= settings.isAutoSaveIfInactive() != component.myChkAutoSaveIfInactive.getValue();
-    isModified |= settings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
-    isModified |= settings.getConfirmOpenNewProject() != getConfirmOpenNewProject(component);
+    isModified |= myGeneralSettings.isReopenLastProject() != component.myChkReopenLastProject.getValue();
+    isModified |= myGeneralSettings.isConfirmExit() != component.myConfirmExit.getValue();
+    isModified |= myGeneralSettings.isSupportScreenReaders() != component.myChkSupportScreenReaders.getValue();
+    isModified |= myGeneralSettings.isSyncOnFrameActivation() != component.myChkSyncOnFrameActivation.getValue();
+    isModified |= myGeneralSettings.isSaveOnFrameDeactivation() != component.myChkSaveOnFrameDeactivation.getValue();
+    isModified |= myGeneralSettings.isAutoSaveIfInactive() != component.myChkAutoSaveIfInactive.getValue();
+    isModified |= myGeneralSettings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
+    isModified |= myGeneralSettings.getConfirmOpenNewProject() != getConfirmOpenNewProject(component);
 
-    FileOperateDialogSettings dialogSettings = FileOperateDialogSettings.getInstance();
-    isModified |= isModified(dialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
-    isModified |= isModified(dialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
+    isModified |= isModified(myFileOperateDialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
+    isModified |= isModified(myFileOperateDialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
 
     int inactiveTimeout = -1;
     try {
@@ -167,10 +187,11 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
     catch (NumberFormatException ignored) {
     }
-    isModified |= inactiveTimeout > 0 && settings.getInactiveTimeout() != inactiveTimeout;
+    isModified |= inactiveTimeout > 0 && myGeneralSettings.getInactiveTimeout() != inactiveTimeout;
 
-    isModified |= settings.isUseSafeWrite() != component.myChkUseSafeWrite.getValue();
+    isModified |= myGeneralSettings.isUseSafeWrite() != component.myChkUseSafeWrite.getValue();
 
+    isModified |= myWebSearchOptions.getEngine() != component.myWebSearchEngineComboBox.getValue();
     return isModified;
   }
 
@@ -187,31 +208,29 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
   @RequiredUIAccess
   @Override
   protected void apply(@Nonnull MyComponent component) throws ConfigurationException {
-    GeneralSettings settings = GeneralSettings.getInstance();
+    myGeneralSettings.setReopenLastProject(component.myChkReopenLastProject.getValue());
+    myGeneralSettings.setSupportScreenReaders(component.myChkSupportScreenReaders.getValue());
+    myGeneralSettings.setSyncOnFrameActivation(component.myChkSyncOnFrameActivation.getValue());
+    myGeneralSettings.setSaveOnFrameDeactivation(component.myChkSaveOnFrameDeactivation.getValue());
+    myGeneralSettings.setConfirmExit(component.myConfirmExit.getValue());
+    myGeneralSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
+    myGeneralSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
 
-    settings.setReopenLastProject(component.myChkReopenLastProject.getValue());
-    settings.setSupportScreenReaders(component.myChkSupportScreenReaders.getValue());
-    settings.setSyncOnFrameActivation(component.myChkSyncOnFrameActivation.getValue());
-    settings.setSaveOnFrameDeactivation(component.myChkSaveOnFrameDeactivation.getValue());
-    settings.setConfirmExit(component.myConfirmExit.getValue());
-    settings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
-    settings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
-
-    settings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
+    myGeneralSettings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
     try {
       int newInactiveTimeout = Integer.parseInt(component.myTfInactiveTimeout.getValue());
       if (newInactiveTimeout > 0) {
-        settings.setInactiveTimeout(newInactiveTimeout);
+        myGeneralSettings.setInactiveTimeout(newInactiveTimeout);
       }
     }
     catch (NumberFormatException ignored) {
     }
-    settings.setUseSafeWrite(component.myChkUseSafeWrite.getValue());
+    myGeneralSettings.setUseSafeWrite(component.myChkUseSafeWrite.getValue());
 
-    FileOperateDialogSettings dialogSettings = FileOperateDialogSettings.getInstance();
+    apply(component.myFileChooseDialogBox, myFileOperateDialogSettings::setFileChooseDialogId);
+    apply(component.myFileSaveDialogBox, myFileOperateDialogSettings::setFileSaveDialogId);
 
-    apply(component.myFileChooseDialogBox, dialogSettings::setFileChooseDialogId);
-    apply(component.myFileSaveDialogBox, dialogSettings::setFileSaveDialogId);
+    myWebSearchOptions.setEngine(component.myWebSearchEngineComboBox.getValue());
   }
 
   private void apply(ComboBox<FileOperateDialogProvider> comboBox, Consumer<String> func) {
@@ -262,10 +281,10 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         break;
     }
 
-    FileOperateDialogSettings dialogSettings = FileOperateDialogSettings.getInstance();
+    component.myWebSearchEngineComboBox.setValue(myWebSearchOptions.getEngine());
 
-    reset(component.myFileChooseDialogBox, dialogSettings::getFileChooseDialogId);
-    reset(component.myFileSaveDialogBox, dialogSettings::getFileSaveDialogId);
+    reset(component.myFileChooseDialogBox, myFileOperateDialogSettings::getFileChooseDialogId);
+    reset(component.myFileSaveDialogBox, myFileOperateDialogSettings::getFileSaveDialogId);
   }
 
   @RequiredUIAccess
