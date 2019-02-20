@@ -312,8 +312,11 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     if (e.getID() != KeyEvent.KEY_PRESSED && e.getID() != KeyEvent.KEY_RELEASED) return false;
 
     Component parent = UIUtil.findUltimateParent(e.getComponent());
-    if (parent instanceof IdeFrame) {
-      if (((IdeFrame)parent).getProject() != myProject) {
+    if(parent instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if (ideFrame != null && ideFrame.getProject() != myProject) {
         resetHoldState();
         return false;
       }

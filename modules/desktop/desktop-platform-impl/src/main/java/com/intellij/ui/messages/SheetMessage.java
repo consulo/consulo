@@ -25,8 +25,10 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Animator;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -66,18 +68,19 @@ public class SheetMessage {
     }
   };
 
-  public SheetMessage(final Window owner,
+  public SheetMessage(@Nullable consulo.ui.Window uiOwner,
                       final String title,
                       final String message,
                       final Icon icon,
                       final String[] buttons,
                       final DialogWrapper.DoNotAskOption doNotAskOption,
                       final String defaultButton,
-                      final String focusedButton)
-  {
+                      final String focusedButton) {
     final Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
     final Component recentFocusOwner = activeWindow == null ? null : activeWindow.getMostRecentFocusOwner();
     WeakReference<Component> beforeShowFocusOwner = new WeakReference<>(recentFocusOwner);
+
+    Window owner = TargetAWT.to(uiOwner);
 
     maximizeIfNeeded(owner);
 
@@ -114,7 +117,8 @@ public class SheetMessage {
           myWindow.setSize(myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
         }
       });
-    } else {
+    }
+    else {
       myWindow.setModal(true);
       myWindow.setSize(myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
       setPositionRelativeToParent();
@@ -179,14 +183,14 @@ public class SheetMessage {
     return myController.getResult();
   }
 
-  void startAnimation (final boolean enlarge) {
+  void startAnimation(final boolean enlarge) {
     staticImage = myController.getStaticImage();
     JPanel staticPanel = new JPanel() {
       @Override
       public void paint(@Nonnull Graphics g) {
         super.paint(g);
         if (staticImage != null) {
-          Graphics2D g2d = (Graphics2D) g.create();
+          Graphics2D g2d = (Graphics2D)g.create();
 
 
           g2d.setBackground(new JBColor(new Color(255, 255, 255, 0), new Color(110, 110, 110, 0)));
@@ -195,28 +199,23 @@ public class SheetMessage {
 
           g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.95f));
 
-          int multiplyFactor = staticImage.getWidth(null)/myController.SHEET_NC_WIDTH;
+          int multiplyFactor = staticImage.getWidth(null) / myController.SHEET_NC_WIDTH;
 
-          g.drawImage(staticImage, 0, 0,
-                      myController.SHEET_NC_WIDTH, imageHeight,
-                      0, staticImage.getHeight(null) - imageHeight * multiplyFactor,
-                      staticImage.getWidth(null), staticImage.getHeight(null),
-                      null);
+          g.drawImage(staticImage, 0, 0, myController.SHEET_NC_WIDTH, imageHeight, 0, staticImage.getHeight(null) - imageHeight * multiplyFactor, staticImage.getWidth(null),
+                      staticImage.getHeight(null), null);
         }
       }
     };
     staticPanel.setOpaque(false);
-    staticPanel.setSize(myController.SHEET_NC_WIDTH,myController.SHEET_NC_HEIGHT);
+    staticPanel.setSize(myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
     myWindow.setContentPane(staticPanel);
 
-    Animator myAnimator = new Animator("Roll Down Sheet Animator", myController.SHEET_NC_HEIGHT ,
-                                       TIME_TO_SHOW_SHEET, false) {
+    Animator myAnimator = new Animator("Roll Down Sheet Animator", myController.SHEET_NC_HEIGHT, TIME_TO_SHOW_SHEET, false) {
       @Override
       public void paintNow(int frame, int totalFrames, int cycle) {
         setPositionRelativeToParent();
-        float percentage = (float)frame/(float)totalFrames;
-        imageHeight = enlarge ? (int)(((float)myController.SHEET_NC_HEIGHT) * percentage):
-                      (int)(myController.SHEET_NC_HEIGHT - percentage * myController.SHEET_HEIGHT);
+        float percentage = (float)frame / (float)totalFrames;
+        imageHeight = enlarge ? (int)(((float)myController.SHEET_NC_HEIGHT) * percentage) : (int)(myController.SHEET_NC_HEIGHT - percentage * myController.SHEET_HEIGHT);
         myWindow.repaint();
       }
 
@@ -230,7 +229,8 @@ public class SheetMessage {
 
           IJSwingUtilities.moveMousePointerOn(myWindow.getRootPane().getDefaultButton());
           myController.requestFocus();
-        } else {
+        }
+        else {
           if (restoreFullScreenButton) {
             FullScreenUtilities.setWindowCanFullScreen(myParent, true);
           }
@@ -246,11 +246,9 @@ public class SheetMessage {
 
   }
 
-  private void setPositionRelativeToParent () {
+  private void setPositionRelativeToParent() {
     int width = myParent.getWidth();
-    myWindow.setBounds(width / 2 - myController.SHEET_NC_WIDTH / 2 + myParent.getLocation().x,
-                       myParent.getInsets().top + myParent.getLocation().y,
-                       myController.SHEET_NC_WIDTH,
+    myWindow.setBounds(width / 2 - myController.SHEET_NC_WIDTH / 2 + myParent.getLocation().x, myParent.getInsets().top + myParent.getLocation().y, myController.SHEET_NC_WIDTH,
                        myController.SHEET_NC_HEIGHT);
 
   }

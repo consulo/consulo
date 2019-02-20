@@ -29,6 +29,8 @@ import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -256,7 +258,7 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   @Override
-  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable Window window) {
+  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable consulo.ui.Window window) {
     showAlertDialog(title, okText, null, null, message, window);
   }
 
@@ -267,19 +269,19 @@ public class MacMessagesImpl extends MacMessages {
 
   @Override
   @Messages.YesNoResult
-  public int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window) {
+  public int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable consulo.ui.Window window) {
     return showAlertDialog(title, yesButton, null, noButton, message, window) == Messages.YES ? Messages.YES : Messages.NO;
   }
 
   @Override
   @Messages.YesNoResult
-  public int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window,
+  public int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable consulo.ui.Window window,
                              @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption) {
     return showAlertDialog(title, yesButton, null, noButton, message, window, false, doNotAskDialogOption) == Messages.YES ? Messages.YES : Messages.NO;
   }
 
   @Override
-  public void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable Window window) {
+  public void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable consulo.ui.Window window) {
     showAlertDialog(title, okButton, null, null, message, window, true, null);
   }
 
@@ -289,8 +291,7 @@ public class MacMessagesImpl extends MacMessages {
                                    String message,
                                    @Nonnull String defaultButton,
                                    String alternateButton,
-                                   String otherButton,
-                                   Window window,
+                                   String otherButton, consulo.ui.Window window,
                                    @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
     return showAlertDialog(title, defaultButton, alternateButton, otherButton, message, window, false, doNotAskOption);
   }
@@ -483,7 +484,7 @@ public class MacMessagesImpl extends MacMessages {
                                     @Nullable final String alternateText,
                                     @Nullable final String otherText,
                                     final String message,
-                                    @Nullable Window window,
+                                    @Nullable consulo.ui.Window window,
                                     final boolean errorStyle,
                                     @Nullable final DialogWrapper.DoNotAskOption doNotAskDialogOption) {
 
@@ -528,7 +529,7 @@ public class MacMessagesImpl extends MacMessages {
                                final String message,
                                @Nonnull final String[] buttons,
                                final boolean errorStyle,
-                               @Nullable Window window,
+                               @Nullable consulo.ui.Window window,
                                final int defaultOptionIndex,
                                final int focusedOptionIndex,
                                @Nullable final DialogWrapper.DoNotAskOption doNotAskDialogOption) {
@@ -577,9 +578,11 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   //title, message, errorStyle, window, paramsArray, doNotAskDialogOption, "showVariableButtonsSheet:"
-  private static Window showDialog(@Nullable Window window, final String methodName, final DialogParamsWrapper paramsWrapper) {
+  private static Window showDialog(@Nullable consulo.ui.Window uiWindow, final String methodName, final DialogParamsWrapper paramsWrapper) {
 
-    final Window foremostWindow = getForemostWindow(window);
+    Window awtWindow = TargetAWT.to(uiWindow);
+
+    final Window foremostWindow = getForemostWindow(awtWindow);
 
     final Window documentRoot = getDocumentRootFromWindow(foremostWindow);
 
@@ -759,7 +762,7 @@ public class MacMessagesImpl extends MacMessages {
                                      @Nullable String alternateText,
                                      @Nullable String cancelText,
                                      String message,
-                                     @Nullable Window window) {
+                                     @Nullable consulo.ui.Window window) {
     return showAlertDialog(title, okText, alternateText, cancelText, message, window, false, null);
   }
 }

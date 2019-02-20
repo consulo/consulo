@@ -16,11 +16,13 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 import sun.awt.AWTAccessor;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -71,9 +73,16 @@ public class FrameState {
   }
 
   public static boolean isFullScreen(Component component) {
-    return component instanceof IdeFrameEx
-           && WindowManager.getInstance().isFullScreenSupportedInCurrentOS()
-           && ((IdeFrameEx)component).isInFullScreen();
+    if(component instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)component);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+
+      if(ideFrame instanceof IdeFrameEx) {
+         return WindowManager.getInstance().isFullScreenSupportedInCurrentOS() && ((IdeFrameEx)ideFrame).isInFullScreen();
+      }
+    }
+    return false;
   }
 
   public static boolean isMaximized(int state) {

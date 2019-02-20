@@ -52,6 +52,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;
 import consulo.util.JWindowAsUIWindowHack;
@@ -140,8 +141,10 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
   @Override
   public IdeFrame getIdeFrame(DockContainer container) {
     Component parent = UIUtil.findUltimateParent(container.getContainerComponent());
-    if (parent instanceof IdeFrame) {
-      return (IdeFrame)parent;
+    if(parent instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+
+      return uiWindow.getUserData(IdeFrame.KEY);
     }
     return null;
   }

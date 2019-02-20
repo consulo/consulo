@@ -25,6 +25,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.wm.ApplicationIdeFocusManager;
 import consulo.wm.ProjectIdeFocusManager;
 
@@ -228,8 +229,14 @@ public interface IdeFocusManager extends FocusRequestor {
   @Nullable
   static IdeFocusManager findByComponent(Component c) {
     final Component parent = UIUtil.findUltimateParent(c);
-    if (parent instanceof IdeFrame) {
-      return getInstanceSafe(((IdeFrame)parent).getProject());
+    if (parent instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if(ideFrame == null) {
+        return null;
+      }
+      return getInstanceSafe(ideFrame.getProject());
     }
     return null;
   }

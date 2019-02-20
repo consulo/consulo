@@ -19,10 +19,10 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.registry.Registry;
+import consulo.ui.Window;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 
 /**
  * @author pegov
@@ -38,29 +38,32 @@ public abstract class MacMessages {
                                             @Nullable DialogWrapper.DoNotAskOption doNotAskOption);
 
   public static MacMessages getInstance() {
-    return Registry.is("ide.mac.message.sheets.java.emulation.dialogs")
-           ? ServiceManager.getService(MacMessagesEmulation.class)
-           : ServiceManager.getService(MacMessages.class);
+    return Registry.is("ide.mac.message.sheets.java.emulation.dialogs") ? ServiceManager.getService(MacMessagesEmulation.class) : ServiceManager.getService(MacMessages.class);
   }
 
   /**
-   * Buttons are placed starting near the right side of the alert and going toward the left side 
-   * (for languages that read left to right). The first three buttons are identified positionally as 
-   * NSAlertFirstButtonReturn, NSAlertSecondButtonReturn, NSAlertThirdButtonReturn in the return-code parameter evaluated by the modal 
+   * Buttons are placed starting near the right side of the alert and going toward the left side
+   * (for languages that read left to right). The first three buttons are identified positionally as
+   * NSAlertFirstButtonReturn, NSAlertSecondButtonReturn, NSAlertThirdButtonReturn in the return-code parameter evaluated by the modal
    * delegate. Subsequent buttons are identified as NSAlertThirdButtonReturn +n, where n is an integer
-   *
-   * By default, the first button has a key equivalent of Return, 
+   * <p>
+   * By default, the first button has a key equivalent of Return,
    * any button with a title of "Cancel" has a key equivalent of Escape,
    * and any button with the title "Don't Save" has a key equivalent of Command-D (but only if it is not the first button).
-   *
+   * <p>
    * http://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSAlert_Class/Reference/Reference.html
-   *
+   * <p>
    * Please, note that Cancel is supposed to be the last button!
    *
    * @return number of button pressed: from 0 up to buttons.length-1 inclusive, or -1 for Cancel
    */
-  public abstract int showMessageDialog(@Nonnull String title, String message, @Nonnull String[] buttons, boolean errorStyle,
-                                        @Nullable Window window, int defaultOptionIndex, int focusedOptionIndex,
+  public abstract int showMessageDialog(@Nonnull String title,
+                                        String message,
+                                        @Nonnull String[] buttons,
+                                        boolean errorStyle,
+                                        @Nullable Window window,
+                                        int defaultOptionIndex,
+                                        int focusedOptionIndex,
                                         @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption);
 
   public abstract void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable Window window);
@@ -77,7 +80,11 @@ public abstract class MacMessages {
    * @return {@link Messages#YES} if user pressed "Yes" or {@link Messages#NO} if user pressed "No" button.
    */
   @Messages.YesNoResult
-  public abstract int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window,
+  public abstract int showYesNoDialog(@Nonnull String title,
+                                      String message,
+                                      @Nonnull String yesButton,
+                                      @Nonnull String noButton,
+                                      @Nullable Window window,
                                       @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption);
 
   public abstract void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable Window window);

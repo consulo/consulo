@@ -26,6 +26,8 @@ import com.intellij.ui.mac.MacMessageException;
 import com.intellij.ui.mac.MacMessagesEmulation;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,7 +47,7 @@ public class JBMacMessages extends MacMessagesEmulation {
                                    @Nonnull String defaultButton,
                                    String alternateButton,
                                    String otherButton,
-                                   @Nullable Window window,
+                                   @Nullable consulo.ui.Window window,
                                    @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
     if (window == null) {
       window = getForemostWindow(null);
@@ -65,7 +67,7 @@ public class JBMacMessages extends MacMessagesEmulation {
                                String message,
                                @Nonnull String[] buttons,
                                boolean errorStyle,
-                               @Nullable Window window,
+                               @Nullable consulo.ui.Window window,
                                int defaultOptionIndex,
                                int focusedOptionIndex,
                                @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption) {
@@ -92,7 +94,7 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable Window window) {
+  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable consulo.ui.Window window) {
     if (window == null) {
       window = getForemostWindow(null);
     }
@@ -101,11 +103,11 @@ public class JBMacMessages extends MacMessagesEmulation {
 
   @Override
   public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText) {
-    final Window foremostWindow = getForemostWindow(null);
+    final consulo.ui.Window foremostWindow = getForemostWindow(null);
     new SheetMessage(foremostWindow, title, message, UIUtil.getInformationIcon(), new String [] {okText},null, null, okText);
   }
 
-  private static Window getForemostWindow(final Window window) {
+  private static consulo.ui.Window getForemostWindow(final Window window) {
     Window _window = null;
     IdeFocusManager ideFocusManager = IdeFocusManager.getGlobalInstance();
 
@@ -158,7 +160,7 @@ public class JBMacMessages extends MacMessagesEmulation {
       _window = _window.getOwner();
     }
 
-    return _window;
+    return TargetAWT.from(_window);
   }
 
   @Override
@@ -166,7 +168,7 @@ public class JBMacMessages extends MacMessagesEmulation {
                              String message,
                              @Nonnull String yesButton,
                              @Nonnull String noButton,
-                             @Nullable Window window) {
+                             @Nullable consulo.ui.Window window) {
     if (window == null) {
       window = getForemostWindow(null);
     }
@@ -180,7 +182,7 @@ public class JBMacMessages extends MacMessagesEmulation {
                              String message,
                              @Nonnull String yesButton,
                              @Nonnull String noButton,
-                             @Nullable Window window,
+                             @Nullable consulo.ui.Window window,
                              @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption) {
     if (window == null) {
       window = getForemostWindow(null);
@@ -195,7 +197,7 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable Window window) {
+  public void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable consulo.ui.Window window) {
     if (window == null) {
       window = getForemostWindow(null);
     }

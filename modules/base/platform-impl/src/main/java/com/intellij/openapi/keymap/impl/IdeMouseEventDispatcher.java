@@ -34,6 +34,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -147,12 +148,21 @@ public final class IdeMouseEventDispatcher {
     Component c = e.getComponent();
 
     //frame activation by mouse click
-    if (e.getID() == MOUSE_PRESSED && c instanceof IdeFrame && !c.hasFocus()) {
-      IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
-      if (focusManager instanceof FocusManagerImpl) {
-        Component at = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
-        if (at != null && at.isFocusable()) {
-          ((FocusManagerImpl)focusManager).setLastFocusedAtDeactivation((IdeFrame)c, at);
+    if (e.getID() == MOUSE_PRESSED && !c.hasFocus()) {
+      if(c instanceof Window)  {
+        Window awtWindow = (Window)c;
+
+        consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
+
+        IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+        if(ideFrame != null) {
+          IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
+          if (focusManager instanceof FocusManagerImpl) {
+            Component at = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
+            if (at != null && at.isFocusable()) {
+              ((FocusManagerImpl)focusManager).setLastFocusedAtDeactivation(ideFrame, at);
+            }
+          }
         }
       }
     }

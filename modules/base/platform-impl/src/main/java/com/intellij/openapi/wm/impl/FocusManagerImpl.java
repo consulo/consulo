@@ -51,8 +51,6 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -124,10 +122,10 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
 
   private boolean canFlushIdleRequests() {
     Component focusOwner = getFocusOwner();
-    return isFocusTransferReady()
-           && !isIdleQueueEmpty()
-           && !IdeEventQueue.getInstance().isDispatchingFocusEvent()
-           && !(focusOwner == null && (!myValidFurtherRequestors.isEmpty() || myFocusRevalidator != null && !myFocusRevalidator.isExpired()));
+    return isFocusTransferReady() &&
+           !isIdleQueueEmpty() &&
+           !IdeEventQueue.getInstance().isDispatchingFocusEvent() &&
+           !(focusOwner == null && (!myValidFurtherRequestors.isEmpty() || myFocusRevalidator != null && !myFocusRevalidator.isExpired()));
   }
 
   private final Map<IdeFrame, Component> myLastFocused = new WeakValueHashMap<>();
@@ -160,11 +158,11 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
 
         Component parent = UIUtil.findUltimateParent(c);
 
-        if(parent instanceof Window) {
+        if (parent instanceof Window) {
           consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
 
           IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-          if(ideFrame != null) {
+          if (ideFrame != null) {
             myLastFocused.put(ideFrame, c);
           }
         }
@@ -185,12 +183,15 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
       return false;
     }, this);
 
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusedWindow", new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getNewValue() instanceof IdeFrame) {
-          myLastFocusedFrame = (IdeFrame)evt.getNewValue();
-        }
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusedWindow", evt -> {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)evt.getNewValue());
+      if (uiWindow == null) {
+        return;
+      }
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if (ideFrame != null) {
+        myLastFocusedFrame = ideFrame;
       }
     });
   }
@@ -282,8 +283,7 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
 
       if (myRequestFocusCmd == command) {
         final TimedOutCallback focusTimeout =
-                new TimedOutCallback(Registry.intValue("actionSystem.commandProcessingTimeout"),
-                                     "Focus command timed out, cmd=" + command, command.getAllocation(), true) {
+                new TimedOutCallback(Registry.intValue("actionSystem.commandProcessingTimeout"), "Focus command timed out, cmd=" + command, command.getAllocation(), true) {
                   @Override
                   protected void onTimeout() {
                     forceFinishFocusSettleDown(command, result);
@@ -352,8 +352,7 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
     }
 
     if (!Registry.is("focus.fix.lost.cursor")) {
-      boolean doNotExecuteBecauseAppIsInactive =
-              !myApp.isActive() && !canExecuteOnInactiveApplication(cmd) && Registry.is("actionSystem.suspendFocusTransferIfApplicationInactive");
+      boolean doNotExecuteBecauseAppIsInactive = !myApp.isActive() && !canExecuteOnInactiveApplication(cmd) && Registry.is("actionSystem.suspendFocusTransferIfApplicationInactive");
 
       if (doNotExecuteBecauseAppIsInactive) {
         if (myCallbackOnActivation != null) {
@@ -492,7 +491,8 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
       if (myIdleRequests.contains(runnable)) {
         myIdleRequests.remove(runnable);
         myIdleRequests.add(runnable);
-      } else {
+      }
+      else {
         myIdleRequests.add(runnable);
       }
 
@@ -554,11 +554,7 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
             owner = JOptionPane.getRootFrame();
           }
 
-          boolean metaKey =
-                  each.getKeyCode() == KeyEvent.VK_ALT ||
-                  each.getKeyCode() == KeyEvent.VK_CONTROL ||
-                  each.getKeyCode() == KeyEvent.VK_SHIFT ||
-                  each.getKeyCode() == KeyEvent.VK_META;
+          boolean metaKey = each.getKeyCode() == KeyEvent.VK_ALT || each.getKeyCode() == KeyEvent.VK_CONTROL || each.getKeyCode() == KeyEvent.VK_SHIFT || each.getKeyCode() == KeyEvent.VK_META;
 
           boolean toDispatch = false;
           if (!metaKey && (each.getID() == KeyEvent.KEY_RELEASED || each.getID() == KeyEvent.KEY_TYPED)) {
@@ -585,8 +581,7 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
           }
 
 
-          KeyEvent keyEvent = new KeyEvent(owner, each.getID(), each.getWhen(), each.getModifiersEx(), each.getKeyCode(), each.getKeyChar(),
-                                           each.getKeyLocation());
+          KeyEvent keyEvent = new KeyEvent(owner, each.getID(), each.getWhen(), each.getModifiersEx(), each.getKeyCode(), each.getKeyChar(), each.getKeyLocation());
 
 
           if (SwingUtilities.getWindowAncestor(owner) != null) {
@@ -662,7 +657,8 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
       if (!((Expirable)each).isExpired()) {
         each.run();
       }
-    } else {
+    }
+    else {
       each.run();
     }
   }
@@ -779,15 +775,12 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
     assertDispatchThread();
 
     myTypeAheadRequestors.add(done);
-    done.notify(new TimedOutCallback(Registry.intValue("actionSystem.commandProcessingTimeout"),
-                                     "Typeahead request blocked",
-                                     new Exception() {
-                                       @Override
-                                       public String getMessage() {
-                                         return "Time: " + (System.currentTimeMillis() - currentTime) + "; cause: " + cause;
-                                       }
-                                     },
-                                     true).doWhenProcessed(() -> {
+    done.notify(new TimedOutCallback(Registry.intValue("actionSystem.commandProcessingTimeout"), "Typeahead request blocked", new Exception() {
+      @Override
+      public String getMessage() {
+        return "Time: " + (System.currentTimeMillis() - currentTime) + "; cause: " + cause;
+      }
+    }, true).doWhenProcessed(() -> {
       if (myTypeAheadRequestors.remove(done)) {
         restartIdleAlarm();
       }
@@ -910,7 +903,7 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
     }
 
     if (result == null) {
-      result =  isFocusBeingTransferred() ? null : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+      result = isFocusBeingTransferred() ? null : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
 
     final boolean meaninglessOwner = UIUtil.isMeaninglessFocusOwner(result);
@@ -964,7 +957,8 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
         if (ApplicationManager.getApplication().isActive()) {
           if (window instanceof JFrame && ((JFrame)window).getState() == Frame.ICONIFIED) {
             ((JFrame)window).setState(Frame.NORMAL);
-          } else {
+          }
+          else {
             window.toFront();
           }
         }
@@ -1050,7 +1044,8 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
 
       if (cmd != null) {
         requestFocus(cmd, true).notify(callback);
-      } else {
+      }
+      else {
         focusLastFocusedComponent(ideFrame);
       }
     }
@@ -1138,10 +1133,12 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
           if (each instanceof JFrame) {
             toFocus = getFocusTargetFor(((JFrame)each).getRootPane());
             break;
-          } else if (each instanceof JDialog) {
+          }
+          else if (each instanceof JDialog) {
             toFocus = getFocusTargetFor(((JDialog)each).getRootPane());
             break;
-          } else if (each instanceof JWindow) {
+          }
+          else if (each instanceof JWindow) {
             toFocus = getFocusTargetFor(((JWindow)each).getRootPane());
             break;
           }
