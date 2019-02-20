@@ -100,7 +100,6 @@ public class FindInProjectManager {
 
     com.intellij.usages.UsageViewManager manager = com.intellij.usages.UsageViewManager.getInstance(myProject);
 
-    if (manager == null) return;
     final FindManager findManager = FindManager.getInstance(myProject);
     findManager.getFindInProjectModel().copyFrom(findModel);
     final FindModel findModelCopy = findModel.clone();

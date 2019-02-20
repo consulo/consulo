@@ -110,14 +110,13 @@ public class FindInProjectUtil {
     }
 
     Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
-    if (module != null) {
-      model.setModuleName(module.getName());
-    }
 
     // model contains previous find in path settings
     // apply explicit settings from context
     if (module != null) {
       model.setModuleName(module.getName());
+      model.setDirectoryName(null);
+      model.setCustomScope(false);
     }
 
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);

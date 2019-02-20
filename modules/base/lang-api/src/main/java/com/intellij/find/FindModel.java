@@ -611,7 +611,6 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
         setSearchInProjectFiles(true);
       }
     }
-
   }
 
   /**
