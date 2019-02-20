@@ -22,13 +22,14 @@ import com.intellij.util.Base64;
 import com.intellij.util.ThreeState;
 import consulo.annotations.DeprecationInfo;
 import gnu.trove.TIntArrayList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -307,5 +308,23 @@ public class URLUtil {
   public static URL getJarEntryURL(@Nonnull File file, @Nonnull String pathInJar) throws MalformedURLException {
     String fileURL = StringUtil.replace(file.toURI().toASCIIString(), "!", "%21");
     return new URL(JAR_PROTOCOL + ':' + fileURL + JAR_SEPARATOR + StringUtil.trimLeading(pathInJar, '/'));
+  }
+
+  /**
+   * Encodes a URI component by replacing each instance of certain characters by one, two, three,
+   * or four escape sequences representing the UTF-8 encoding of the character.
+   * Behaves similarly to standard JavaScript build-in function <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent">encodeURIComponent</a>.
+   *
+   * @param s a component of a URI
+   * @return a new string representing the provided string encoded as a URI component
+   */
+  @Nonnull
+  public static String encodeURIComponent(@Nonnull String s) {
+    try {
+      return URLEncoder.encode(s, CharsetToolkit.UTF8).replace("+", "%20").replace("%21", "!").replace("%27", "'").replace("%28", "(").replace("%29", ")").replace("%7E", "~");
+    }
+    catch (UnsupportedEncodingException e) {
+      return s;
+    }
   }
 }
