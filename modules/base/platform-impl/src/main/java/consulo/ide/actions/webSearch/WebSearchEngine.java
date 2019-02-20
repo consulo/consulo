@@ -23,7 +23,7 @@ public enum WebSearchEngine {
   GOOGLE("Google", "https://www.google.com/search?q={0}"),
   YANDEX("Yandex", "https://yandex.ru/search/?text={0}"),
   BING("Bing", "https://www.bing.com/search?q={0}"),
-  DUCKGOGO("DuckGoGo", "https://duckduckgo.com/?q={0}");
+  DUCKDUCKGO("DuckDuckGo", "https://duckduckgo.com/?q={0}");
 
   private String myPresentableName;
   private String myUrlTemplate;
