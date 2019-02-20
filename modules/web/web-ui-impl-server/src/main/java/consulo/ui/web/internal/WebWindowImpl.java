@@ -19,6 +19,8 @@ import com.intellij.openapi.util.Disposer;
 import com.vaadin.server.Sizeable;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
+import consulo.ui.web.internal.base.ComponentHolder;
+import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;
@@ -29,7 +31,19 @@ import javax.annotation.Nullable;
  * @since 15-Sep-17
  */
 public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.Vaadin> implements Window {
-  public static class Vaadin extends com.vaadin.ui.Window {
+  public static class Vaadin extends com.vaadin.ui.Window implements ComponentHolder, FromVaadinComponentWrapper {
+    private Component myComponent;
+
+    @Override
+    public void setComponent(Component component) {
+      myComponent = component;
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return myComponent;
+    }
   }
 
   private boolean myDisposed;

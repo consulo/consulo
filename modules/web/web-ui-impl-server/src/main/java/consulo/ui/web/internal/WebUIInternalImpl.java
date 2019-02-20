@@ -20,7 +20,6 @@ import consulo.annotations.Internal;
 import consulo.ui.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.internal.*;
 import consulo.ui.layout.*;
 import consulo.ui.model.ImmutableListModelImpl;
 import consulo.ui.model.ListModel;
