@@ -290,7 +290,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static Window findWindowForBalloon(@Nullable Project project) {
     Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
     if (frame == null && project == null) {
-      frame = TargetAWT.to(WelcomeFrameManager.getInstance().getCurrentFrame().getWindow());
+      IdeFrame currentFrame = WelcomeFrameManager.getInstance().getCurrentFrame();
+      frame = currentFrame == null ? null : TargetAWT.to(currentFrame.getWindow());
     }
     if (frame == null && project == null) {
       frame = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
