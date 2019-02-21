@@ -16,6 +16,7 @@
 package consulo.web.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WebPathChooserDialog implements PathChooserDialog {
+public class WebPathChooserDialog implements PathChooserDialog, FileChooserDialog {
   private FileChooserDescriptor myDescriptor;
   @Nullable
   private Project myProject;
@@ -49,6 +50,13 @@ public class WebPathChooserDialog implements PathChooserDialog {
   @Override
   @RequiredUIAccess
   public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+    return chooseAsync(myProject, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelect) {
     AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
 
     Window fileTree = Window.createModal("Select file");
@@ -71,7 +79,7 @@ public class WebPathChooserDialog implements PathChooserDialog {
 
       VirtualFile file = component.getSelectedNode().getValue().getFile();
 
-      UIAccess.current().give(() -> result.setDone(new VirtualFile[] {file}));
+      UIAccess.current().give(() -> result.setDone(new VirtualFile[]{file}));
     });
     ok.setEnabled(false);
     rightButtons.add(ok);

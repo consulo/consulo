@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.Connect;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtLabeledLayoutImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.layout.WebLabeledLayoutImpl.Vaadin")
 public class GwtLabeledLayoutImplConnector extends AbstractSingleComponentContainerConnector {
   @Override
   protected void updateWidgetStyleNames() {

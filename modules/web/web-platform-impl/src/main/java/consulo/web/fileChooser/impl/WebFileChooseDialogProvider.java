@@ -33,7 +33,7 @@ public class WebFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override
   public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    throw new UnsupportedOperationException();
+    return new WebPathChooserDialog(project, descriptor);
   }
 
   @Nonnull

@@ -28,10 +28,7 @@ import consulo.ui.model.MutableListModelImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import consulo.ui.web.internal.image.WebImageImpl;
-import consulo.ui.web.internal.image.WebLayeredImageImpl;
-import consulo.ui.web.internal.image.WebResizeImageImpl;
-import consulo.ui.web.internal.image.WebTransparentImageImpl;
+import consulo.ui.web.internal.image.*;
 import consulo.ui.web.internal.layout.*;
 
 import javax.annotation.Nonnull;
@@ -207,12 +204,12 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_empty(int width, int height) {
-    throw new UnsupportedOperationException();
+    return new WebEmptyImageImpl(width, height);
   }
 
   @Override
   public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -54,7 +54,11 @@ public class WebStyleImpl implements Style {
   @Nonnull
   @Override
   public ColorValue getColor(@Nonnull ColorKey colorKey) {
-    return myColors.get(colorKey);
+    ColorValue colorValue = myColors.get(colorKey);
+    if(colorValue == null) {
+      throw new UnsupportedOperationException(colorKey + " is not supported");
+    }
+    return colorValue;
   }
 
   @Override

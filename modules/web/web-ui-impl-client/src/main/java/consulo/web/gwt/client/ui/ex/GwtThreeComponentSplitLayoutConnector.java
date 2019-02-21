@@ -32,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 23-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtThreeComponentSplitLayout")
+@Connect(canonicalName = "consulo.ui.web.internal.WebThreeComponentSplitLayoutImpl.Vaadin")
 public class GwtThreeComponentSplitLayoutConnector extends AbstractComponentConnector implements HasComponentsConnector {
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {

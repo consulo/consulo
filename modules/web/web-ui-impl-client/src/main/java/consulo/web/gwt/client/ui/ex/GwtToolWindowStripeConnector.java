@@ -28,7 +28,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowStripe")
+@Connect(canonicalName = "consulo.web.ui.ex.WebToolWindowStripeImpl.Vaadin")
 public class GwtToolWindowStripeConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

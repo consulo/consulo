@@ -17,13 +17,13 @@ package consulo.ui.web.internal.base;
 
 import consulo.ui.Component;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2019-02-17
  */
 public interface FromVaadinComponentWrapper {
-  @Nonnull
+  @Nullable
   Component toUIComponent();
 }

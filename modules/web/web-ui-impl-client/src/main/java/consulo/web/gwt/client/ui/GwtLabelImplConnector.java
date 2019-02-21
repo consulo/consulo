@@ -26,7 +26,7 @@ import consulo.web.gwt.shared.ui.state.LabelState;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtLabelImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebLabelImpl.Vaadin")
 public class GwtLabelImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateComponentSize() {

@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.Connect;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtTextBoxImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebTextBoxImpl.Vaadin")
 public class GwtTextBoxImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateWidgetStyleNames() {

@@ -25,6 +25,7 @@ import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.ui.web.servlet.WebImageUrlCache;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutServerRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 
 import javax.annotation.Nonnull;
@@ -104,6 +105,15 @@ public class WebTabbedLayoutImpl extends UIComponentWithVaadinComponent<WebTabbe
 
       getState().mySelected = index;
       return tab;
+    }
+
+    public Vaadin() {
+      registerRpc(new TabbedLayoutServerRpc() {
+        @Override
+        public void close(int index) {
+          closeTab(index);
+        }
+      });
     }
 
     @Override

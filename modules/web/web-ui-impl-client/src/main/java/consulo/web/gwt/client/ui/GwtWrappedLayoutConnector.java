@@ -23,7 +23,7 @@ import consulo.web.gwt.client.util.GwtUIUtil;
  * @author VISTALL
  * @since 26-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtWrappedLayoutImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.layout.WebWrappedLayoutImpl.Vaadin")
 public class GwtWrappedLayoutConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

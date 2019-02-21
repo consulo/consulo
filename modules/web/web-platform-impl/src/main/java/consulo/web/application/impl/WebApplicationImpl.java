@@ -12,11 +12,11 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
@@ -117,22 +117,26 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
-    getCurrentSession().getAccess().give(runnable);
+    WebSession currentSession = getCurrentSession();
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
-    getCurrentSession().getAccess().give(runnable);
+    WebSession currentSession = getCurrentSession();
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
-    getCurrentSession().getAccess().give(runnable);
+    WebSession currentSession = getCurrentSession();
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   @Override
   public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-    getCurrentSession().getAccess().giveAndWait(runnable);
+    WebSession currentSession = getCurrentSession();
+    if (currentSession != null) currentSession.getAccess().giveAndWait(runnable);
   }
 
   @Nonnull
@@ -256,7 +260,7 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Override
   public UIAccess getLastUIAccess() {
     WebSession currentSession = getCurrentSession();
-    if(currentSession == null) {
+    if (currentSession == null) {
       throw new IllegalArgumentException("No session");
     }
     return currentSession.getAccess();

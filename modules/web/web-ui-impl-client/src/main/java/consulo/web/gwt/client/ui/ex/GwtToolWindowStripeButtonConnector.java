@@ -28,7 +28,7 @@ import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState
  * @author VISTALL
  * @since 12-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowStripeButton")
+@Connect(canonicalName = "consulo.web.ui.ex.WebToolWindowStripeButtonImpl.Vaadin")
 public class GwtToolWindowStripeButtonConnector extends AbstractComponentConnector {
   @Override
   protected void init() {

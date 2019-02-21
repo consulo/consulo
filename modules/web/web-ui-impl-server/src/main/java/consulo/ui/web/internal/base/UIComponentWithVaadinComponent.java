@@ -36,7 +36,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2019-02-17
  */
-public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent & ComponentHolder> implements Component, DataObjectHolder {
+public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent & ComponentHolder> implements Component, DataObjectHolder, ToVaddinComponentWrapper {
   private T myVaadinComponent;
 
   public UIComponentWithVaadinComponent() {
@@ -50,6 +50,12 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
 
   @Nonnull
   protected T getVaadinComponent() {
+    return myVaadinComponent;
+  }
+
+  @Nonnull
+  @Override
+  public com.vaadin.ui.Component toVaadinComponent() {
     return myVaadinComponent;
   }
 

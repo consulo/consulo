@@ -26,6 +26,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import consulo.wm.ApplicationIdeFocusManager;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -34,18 +35,25 @@ import java.awt.event.KeyEvent;
  * @author VISTALL
  * @since 2018-08-24
  */
+@Singleton
 public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
-    return AsyncResult.done(null);
+    return AsyncResult.resolved();
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+    return AsyncResult.resolved();
   }
 
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
     command.run();
-    return AsyncResult.done(null);
+    return AsyncResult.resolved();
   }
 
   @Override

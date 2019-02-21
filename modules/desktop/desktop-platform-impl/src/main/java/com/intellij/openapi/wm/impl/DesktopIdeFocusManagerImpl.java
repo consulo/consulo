@@ -55,6 +55,12 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
     return IdeFocusManager.getGlobalInstance().requestFocus(command, forced);
   }
 
+  @Nonnull
+  @Override
+  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+    return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
+  }
+
   @Override
   public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @javax.annotation.Nullable Project project) {
     return IdeFocusManager.getGlobalInstance().requestFocusInProject(c, project);

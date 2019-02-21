@@ -28,7 +28,7 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtImageBoxImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebImageBoxImpl.Vaadin")
 public class GwtImageBoxImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateWidgetStyleNames() {

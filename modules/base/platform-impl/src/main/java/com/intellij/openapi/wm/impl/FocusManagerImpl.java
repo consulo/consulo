@@ -201,8 +201,18 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
     return myLastFocusedFrame;
   }
 
+  @Override
   public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
     return requestFocus(new FocusCommand.ByComponent(c, c, project, new Exception()), false);
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+    if(c instanceof consulo.ui.Window) {
+      return requestFocus(TargetAWT.to((consulo.ui.Window)c), forced);
+    }
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -978,6 +988,14 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
       if (Registry.is("ide.debugMode")) {
         myAllocation = new Exception();
       }
+    }
+
+    @Nonnull
+    @Override
+    public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+      final AsyncResult<Void> result = isExpired() ? AsyncResult.rejected() : myManager.requestFocus(c, forced);
+      result.doWhenProcessed(() -> Disposer.dispose(this));
+      return result;
     }
 
     @Nonnull

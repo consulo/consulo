@@ -56,6 +56,7 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.platform.Platform;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 
@@ -953,7 +954,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static class ProjectNotificationsComponent {
     @Inject
     public ProjectNotificationsComponent(@Nonnull final Project project) {
-      if (isDummyEnvironment()) {
+      if (isDummyEnvironment() || Platform.current().isWebService()) {
         return;
       }
       project.getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(project));

@@ -1,0 +1,118 @@
+/*
+ * Copyright 2013-2019 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ui.web.internal;
+
+import consulo.awt.TargetAWTFacade;
+import consulo.ui.KeyCode;
+import consulo.ui.image.Image;
+import consulo.ui.shared.ColorValue;
+import consulo.ui.shared.RGBColor;
+import consulo.ui.shared.Rectangle2D;
+import consulo.ui.shared.Size;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author VISTALL
+ * @since 2019-02-21
+ */
+public class TargetAWTFacadeStub implements TargetAWTFacade {
+  @Nonnull
+  @Override
+  public Dimension to(@Nonnull Size size) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public Color to(@Nonnull RGBColor color) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Color to(@Nullable ColorValue colorValue) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Rectangle to(@Nullable Rectangle2D rectangle2D) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Component to(@Nullable consulo.ui.Component component) {
+    return null;
+  }
+
+  @Override
+  public consulo.ui.Component from(@Nullable Component component) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Window to(@Nullable consulo.ui.Window component) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public consulo.ui.Window from(@Nullable Window component) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Rectangle2D from(@Nullable Rectangle rectangle) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public RGBColor from(@Nullable Color color) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Icon to(@Nullable Image image) {
+    if (image == null) {
+      return null;
+    }
+
+    if (image instanceof Icon) {
+      return (Icon)image;
+    }
+
+    throw new UnsupportedOperationException(image.getClass().getName());
+  }
+
+  @Override
+  public Image from(@Nullable Icon icon) {
+    if (icon == null) {
+      return null;
+    }
+
+    if(icon instanceof Image) {
+      return (Image)icon;
+    }
+
+    throw new UnsupportedOperationException(icon.getClass().getName());
+  }
+
+  @Override
+  public int to(@Nonnull KeyCode code) {
+    throw new UnsupportedOperationException();
+  }
+}

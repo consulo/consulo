@@ -46,7 +46,9 @@ public interface FileChooserDialog {
    */
   @Nonnull
   @Deprecated
-  VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect);
+  default VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
+    throw new UnsupportedOperationException("desktop only");
+  }
 
   /**
    * Choose one or more files

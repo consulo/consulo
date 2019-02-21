@@ -91,7 +91,11 @@ public class WebToolWindowStripeImpl extends UIComponentWithVaadinComponent<WebT
 
     vaadinComponent.myButtons.add(TargetVaddin.to(button));
 
-    vaadinComponent.myButtons.sort((o1, o2) -> comparator.compare((ToolWindowStripeButton)o1, (ToolWindowStripeButton)o2));
+    vaadinComponent.myButtons.sort((o1, o2) -> {
+      ToolWindowStripeButton v1 = (ToolWindowStripeButton)TargetVaddin.from(o1);
+      ToolWindowStripeButton v2 = (ToolWindowStripeButton)TargetVaddin.from(o2);
+      return comparator.compare(v1, v2);
+    });
 
     vaadinComponent.addComponent(TargetVaddin.to(button));
   }

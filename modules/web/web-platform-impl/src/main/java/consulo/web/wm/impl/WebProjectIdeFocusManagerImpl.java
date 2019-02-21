@@ -29,6 +29,7 @@ import com.intellij.openapi.wm.IdeFrame;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -37,10 +38,17 @@ import java.awt.event.KeyEvent;
  * @author VISTALL
  * @since 12-Oct-17
  */
+@Singleton
 public class WebProjectIdeFocusManagerImpl implements IdeFocusManager {
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
+    return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
     return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
   }
 

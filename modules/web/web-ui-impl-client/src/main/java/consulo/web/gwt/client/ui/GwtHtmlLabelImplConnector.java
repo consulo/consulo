@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.Connect;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtHtmlLabelImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebHtmlLabelImpl.Vaadin")
 public class GwtHtmlLabelImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateWidgetStyleNames() {

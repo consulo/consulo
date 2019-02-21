@@ -27,7 +27,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtMenuBarImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebMenuBarImpl.Vaadin")
 public class GwtMenuBarImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {

@@ -27,7 +27,7 @@ import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
  * @author VISTALL
  * @since 13-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtButtonImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebButtonImpl.Vaadin")
 public class GwtButtonImplConnector extends AbstractComponentConnector implements ClickHandler {
   @Override
   protected void updateWidgetStyleNames() {

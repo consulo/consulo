@@ -24,7 +24,7 @@ import consulo.web.gwt.client.util.GwtUIUtil;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtMenuImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebMenuImpl.Vaadin")
 public class GwtMenuImplConnector extends GwtLayoutConnector {
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {

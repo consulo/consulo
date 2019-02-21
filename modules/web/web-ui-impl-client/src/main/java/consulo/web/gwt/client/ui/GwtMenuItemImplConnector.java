@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.Connect;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtMenuItemImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebMenuItemImpl.Vaadin")
 public class GwtMenuItemImplConnector extends AbstractComponentConnector {
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {

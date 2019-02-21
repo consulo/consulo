@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtTreeImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebTreeImpl.Vaadin")
 public class GwtTreeImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateWidgetStyleNames() {

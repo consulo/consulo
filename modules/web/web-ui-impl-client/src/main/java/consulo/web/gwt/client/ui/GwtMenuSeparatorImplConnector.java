@@ -22,7 +22,7 @@ import com.vaadin.shared.ui.Connect;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtMenuSeparatorImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebMenuSeparatorImpl.Vaadin")
 public class GwtMenuSeparatorImplConnector extends AbstractComponentConnector {
   @Override
   public GwtMenuSeparatorImpl getWidget() {

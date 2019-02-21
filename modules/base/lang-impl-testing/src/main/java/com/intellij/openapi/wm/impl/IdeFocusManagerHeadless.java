@@ -40,6 +40,12 @@ public class IdeFocusManagerHeadless implements IdeFocusManager {
     return AsyncResult.resolved();
   }
 
+  @Nonnull
+  @Override
+  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+    return AsyncResult.resolved();
+  }
+
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final FocusCommand command, final boolean forced) {

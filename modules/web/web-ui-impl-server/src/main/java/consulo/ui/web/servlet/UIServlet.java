@@ -21,8 +21,11 @@ import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 
+import javax.annotation.Nullable;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,7 @@ import java.util.Properties;
  */
 public class UIServlet extends VaadinServlet {
   @StyleSheet("app://GENERATED/__scheme.css?")
-  public static class UIImpl extends UI {
+  public static class UIImpl extends UI implements FromVaadinComponentWrapper {
     private String myURLPrefix;
     private final UIBuilder myBuilder;
 
@@ -62,6 +65,12 @@ public class UIServlet extends VaadinServlet {
       if (session == null) {
         Disposer.dispose(myUIWindow);
       }
+    }
+
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return null;
     }
   }
 

@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -39,5 +40,10 @@ public class WebDataManagerImpl extends BaseDataManager {
   @Override
   public DataContext getDataContext() {
     return new MyUIDataContext(this, null);
+  }
+
+  @Override
+  public DataContext getDataContextTest(Component component) {
+    return getDataContext();
   }
 }

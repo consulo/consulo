@@ -32,13 +32,18 @@ public class ImageConverter {
   public static Widget create(@Nonnull MultiImageState state) {
     Widget widget = null;
     if (state.myImageState != null) {
-      Image box = new Image();
-      box.setStyleName("ui-image");
-      box.setUrl(state.myImageState.myURL);
-      box.setWidth(state.myWidth + "px");
-      box.setHeight(state.myHeight + "px");
+      if(state.myImageState.myEmpty) {
+        widget = new SimplePanel();
+      }
+      else {
+        Image box = new Image();
+        box.setStyleName("ui-image");
+        box.setUrl(state.myImageState.myURL);
+        box.setWidth(state.myWidth + "px");
+        box.setHeight(state.myHeight + "px");
 
-      widget = new SimplePanel(box);
+        widget = new SimplePanel(box);
+      }
     }
     else if (state.myFoldedImageState != null) {
       FlowPanel flowPanel = new FlowPanel();

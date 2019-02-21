@@ -23,4 +23,6 @@ public class ImageState extends ImageStateBase {
   private static final long serialVersionUID = 8417412269533764848L;
 
   public String myURL;
+
+  public boolean myEmpty;
 }

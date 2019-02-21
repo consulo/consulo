@@ -28,7 +28,7 @@ import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtCheckBoxImpl")
+@Connect(canonicalName = "consulo.ui.web.internal.WebCheckBoxImpl.Vaadin")
 public class GwtCheckBoxImplConnector extends AbstractComponentConnector implements ValueChangeHandler<Boolean> {
   @Override
   protected void init() {

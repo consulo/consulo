@@ -106,6 +106,12 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
 
   @Nonnull
   @Override
+  public Component getUIComponent() {
+    return this;
+  }
+
+  @Nonnull
+  @Override
   public DocumentEx getDocument() {
     return myDocument;
   }

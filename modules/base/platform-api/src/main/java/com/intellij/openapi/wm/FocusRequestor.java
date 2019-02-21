@@ -33,9 +33,7 @@ public interface FocusRequestor extends Disposable {
    * @return action callback that either notifies when the focus was obtained or focus request was droppped
    */
   @Nonnull
-  default AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
-    return AsyncResult.done(null); //FIXME [VISTALL] stub
-  }
+  AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced);
 
   /**
    * Runs a request focus command, actual focus request is defined by the user in the command itself
