@@ -17,7 +17,7 @@ package consulo.awt.impl;
 
 import consulo.annotations.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -26,6 +26,6 @@ import javax.annotation.Nonnull;
 @Deprecated
 @DeprecationInfo("Internal class, don't use it in plugins")
 public interface ToSwingWindowWrapper {
-  @Nonnull
+  @Nullable
   java.awt.Window toAWTWindow();
 }

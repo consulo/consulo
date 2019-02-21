@@ -21,6 +21,8 @@ import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.awt.TargetAWTFacade;
 import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.Window;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
@@ -32,6 +34,7 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 
 
 /**
@@ -40,17 +43,29 @@ import javax.swing.*;
  */
 public class TargetAWTFacadeImpl implements TargetAWTFacade {
   private final static String heavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
-  private final static String sharedOwnerFrame = "javax.swing.SwingUtilities$SharedOwnerFrame";
 
-  static class PopupWindow extends WindowOverAWTWindow {
-    public PopupWindow(java.awt.Window window) {
+  static class StubWindow extends WindowOverAWTWindow {
+    public StubWindow(java.awt.Window window) {
       super(window);
     }
 
     @RequiredUIAccess
     @Override
     public void setTitle(@Nonnull String title) {
+    }
+  }
 
+  private final StubWindow mySharedOwnerFrame;
+
+  public TargetAWTFacadeImpl() {
+    JDialog stubDialog = new JDialog((Frame)null);
+    java.awt.Window sharedOwnerFrame = stubDialog.getOwner();
+    // of dialog have owner - we need stub it
+    if(sharedOwnerFrame != null) {
+      mySharedOwnerFrame = new StubWindow(sharedOwnerFrame);
+    }
+    else {
+      mySharedOwnerFrame = null;
     }
   }
 
@@ -110,15 +125,19 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
 
   @Override
   @Contract("null -> null")
-  public java.awt.Window to(@Nullable Window component) {
-    if (component == null) {
+  public java.awt.Window to(@Nullable Window window) {
+    if (window == null) {
       return null;
     }
 
-    if (component instanceof ToSwingWindowWrapper) {
-      return ((ToSwingWindowWrapper)component).toAWTWindow();
+    if (window instanceof ToSwingWindowWrapper) {
+      return ((ToSwingWindowWrapper)window).toAWTWindow();
     }
-    throw new IllegalArgumentException(component + " is not SwingWindowWrapper");
+
+    if(window == mySharedOwnerFrame) {
+      return mySharedOwnerFrame.toAWTWindow();
+    }
+    throw new IllegalArgumentException(window + " is not SwingWindowWrapper");
   }
 
   @Override
@@ -132,8 +151,14 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       return ((FromSwingWindowWrapper)window).toUIWindow();
     }
 
+    if(mySharedOwnerFrame != null) {
+      if(mySharedOwnerFrame.toAWTWindow() == window) {
+        return mySharedOwnerFrame;
+      }
+    }
+
     String name = window.getClass().getName();
-    if (heavyWeightWindow.equals(name) || sharedOwnerFrame.equals(name)) {
+    if (heavyWeightWindow.equals(name)) {
       JWindow jWindow = (JWindow)window;
 
       JRootPane rootPane = jWindow.getRootPane();
@@ -142,9 +167,9 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
         return (Window)clientProperty;
       }
       else {
-        PopupWindow popupWindow = new PopupWindow(window);
-        rootPane.putClientProperty(name, popupWindow);
-        return popupWindow;
+        StubWindow stubWindow = new StubWindow(window);
+        rootPane.putClientProperty(name, stubWindow);
+        return stubWindow;
       }
     }
 
