@@ -55,17 +55,16 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     }
   }
 
-  private final StubWindow mySharedOwnerFrame;
+  private StubWindow mySharedOwnerFrame;
 
   public TargetAWTFacadeImpl() {
-    JDialog stubDialog = new JDialog((Frame)null);
-    java.awt.Window sharedOwnerFrame = stubDialog.getOwner();
-    // of dialog have owner - we need stub it
-    if(sharedOwnerFrame != null) {
-      mySharedOwnerFrame = new StubWindow(sharedOwnerFrame);
-    }
-    else {
-      mySharedOwnerFrame = null;
+    if(!GraphicsEnvironment.isHeadless()) {
+      JDialog stubDialog = new JDialog((Frame)null);
+      java.awt.Window sharedOwnerFrame = stubDialog.getOwner();
+      // of dialog have owner - we need stub it
+      if (sharedOwnerFrame != null) {
+        mySharedOwnerFrame = new StubWindow(sharedOwnerFrame);
+      }
     }
   }
 
