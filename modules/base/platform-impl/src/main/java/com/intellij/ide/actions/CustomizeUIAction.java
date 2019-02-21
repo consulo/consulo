@@ -32,7 +32,6 @@ public class CustomizeUIAction extends AnAction {
 
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-    util.editConfigurable(project, new CustomizationConfigurable());
+    ShowSettingsUtil.getInstance().editConfigurable(project, new CustomizationConfigurable());
   }
 }

@@ -42,6 +42,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
@@ -249,17 +250,16 @@ public class SeverityEditorDialog extends DialogWrapper {
     else {
       ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions();
       final Configurable[] configurables = colorAndFontOptions.buildConfigurables();
-      try {
-        final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(InspectionColorSettingsPage.class);
-        LOG.assertTrue(javaPage != null);
-        ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(CommonDataKeys.PROJECT), javaPage);
-      }
-      finally {
+      final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(InspectionColorSettingsPage.class);
+      LOG.assertTrue(javaPage != null);
+      AsyncResult<Void> result = ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(CommonDataKeys.PROJECT), javaPage);
+
+      result.doWhenProcessed(() -> {
         for (Configurable configurable : configurables) {
           configurable.disposeUIResources();
         }
         colorAndFontOptions.disposeUIResources();
-      }
+      });
     }
   }
 
