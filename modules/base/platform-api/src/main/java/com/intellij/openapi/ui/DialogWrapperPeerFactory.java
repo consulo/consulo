@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import consulo.ui.Window;
@@ -25,16 +24,8 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class DialogWrapperPeerFactory {
+  @Nonnull
   public static DialogWrapperPeerFactory getInstance() {
-    if (ApplicationManager.getApplication() == null) {
-      try {
-        return (DialogWrapperPeerFactory)Class.forName("com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl").newInstance();
-      }
-      catch (Exception e) {
-        throw new RuntimeException("Can't instantiate DialogWrapperPeerFactory", e);
-      }
-    }
-
     return ServiceManager.getService(DialogWrapperPeerFactory.class);
   }
 
