@@ -24,9 +24,9 @@ import io.netty.handler.codec.compression.ZlibWrapper;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import javax.annotation.Nonnull;
 import org.jetbrains.ide.BinaryRequestHandler;
 
+import javax.annotation.Nonnull;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
