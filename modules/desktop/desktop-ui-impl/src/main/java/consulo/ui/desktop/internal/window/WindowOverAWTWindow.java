@@ -69,7 +69,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
   @RequiredUIAccess
   @Override
   public void show() {
-    SwingUtilities.invokeLater(() -> setVisible(true));
+    setVisible(true);
   }
 
   @RequiredUIAccess
@@ -120,7 +120,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
   @RequiredUIAccess
   @Override
   public void setVisible(boolean value) {
-    myWindow.setVisible(value);
+    SwingUtilities.invokeLater(() -> myWindow.setVisible(value));
   }
 
   @Override
