@@ -22,6 +22,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
@@ -617,5 +618,33 @@ public class VfsUtil extends VfsUtilCore {
       file = parent;
     }
     return file;
+  }
+
+  @Nonnull
+  public static Url newLocalFileUrl(@Nonnull VirtualFile file) {
+    return Urls.newLocalFileUrl(file.getPath());
+  }
+
+  @Nonnull
+  public static Url newFromVirtualFile(@Nonnull VirtualFile file) {
+    if (file.isInLocalFileSystem()) {
+      return Urls.newUri(file.getFileSystem().getProtocol(), file.getPath());
+    }
+    else {
+      Url url = Urls.parseUrlUnsafe(file.getUrl());
+      return url == null ? new UrlImpl(file.getPath()) : url;
+    }
+  }
+
+  public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull VirtualFile file) {
+    if (file.isInLocalFileSystem()) {
+      return url.isInLocalFileSystem() && (SystemInfoRt.isFileSystemCaseSensitive ? url.getPath().equals(file.getPath()) : url.getPath().equalsIgnoreCase(file.getPath()));
+    }
+    else if (url.isInLocalFileSystem()) {
+      return false;
+    }
+
+    Url fileUrl = Urls.parseUrlUnsafe(file.getUrl());
+    return fileUrl != null && fileUrl.equalsIgnoreParameters(url);
   }
 }

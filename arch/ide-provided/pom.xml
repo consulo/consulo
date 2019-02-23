@@ -140,7 +140,13 @@
     </dependency>
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-buildin-server-impl</artifactId>
+      <artifactId>consulo-built-in-server-api</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>consulo-built-in-server-impl</artifactId>
       <version>${project.parent.version}</version>
       <scope>provided</scope>
     </dependency>

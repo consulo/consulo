@@ -15,6 +15,8 @@
  */
 package consulo.platform;
 
+import com.intellij.openapi.util.io.win32.WindowsElevationUtil;
+
 /**
  * @author VISTALL
  * @since 15-Sep-17
@@ -27,5 +29,10 @@ class DesktopPlatformImpl extends PlatformBase {
   @Override
   public boolean isDesktop() {
     return true;
+  }
+
+  @Override
+  public boolean isUnderRoot() {
+    return WindowsElevationUtil.isUnderElevation();
   }
 }

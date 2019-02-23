@@ -16,6 +16,7 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.Base64;
@@ -38,6 +39,7 @@ import java.util.zip.ZipFile;
 public class URLUtil {
   public static final String SCHEME_SEPARATOR = "://";
   public static final String FILE_PROTOCOL = "file";
+  public static final String FILE_PROTOCOL_PREFIX = FILE_PROTOCOL + URLUtil.SCHEME_SEPARATOR;
   public static final String HTTP_PROTOCOL = "http";
   @Deprecated
   public static final String JAR_PROTOCOL = "jar";
@@ -46,8 +48,11 @@ public class URLUtil {
   @DeprecationInfo(value = "Use #ARCHIVE_SEPARATOR")
   public static final String JAR_SEPARATOR = ARCHIVE_SEPARATOR;
 
+
   public static final Pattern DATA_URI_PATTERN = Pattern.compile("data:([^,;]+/[^,;]+)(;charset(?:=|:)[^,;]+)?(;base64)?,(.+)");
   public static final Pattern URL_PATTERN = Pattern.compile("\\b(mailto:|(news|(ht|f)tp(s?))://|((?<![\\p{L}0-9_.])(www\\.)))[-A-Za-z0-9+$&@#/%?=~_|!:,.;]*[-A-Za-z0-9+$&@#/%=~_|]");
+
+  public static final String LOCALHOST_URI_PATH_PREFIX = "localhost/";
 
   private URLUtil() { }
 
@@ -326,5 +331,49 @@ public class URLUtil {
     catch (UnsupportedEncodingException e) {
       return s;
     }
+  }
+
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url) {
+    return toIdeaUrl(url, true);
+  }
+
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url, boolean removeLocalhostPrefix) {
+    int index = url.indexOf(":/");
+    if (index < 0 || (index + 2) >= url.length()) {
+      return url;
+    }
+
+    if (url.charAt(index + 2) != '/') {
+      String prefix = url.substring(0, index);
+      String suffix = url.substring(index + 2);
+
+      if (SystemInfoRt.isWindows) {
+        return prefix + URLUtil.SCHEME_SEPARATOR + suffix;
+      }
+      else if (removeLocalhostPrefix && prefix.equals(URLUtil.FILE_PROTOCOL) && suffix.startsWith(LOCALHOST_URI_PATH_PREFIX)) {
+        // sometimes (e.g. in Google Chrome for Mac) local file url is prefixed with 'localhost' so we need to remove it
+        return prefix + ":///" + suffix.substring(LOCALHOST_URI_PATH_PREFIX.length());
+      }
+      else {
+        return prefix + ":///" + suffix;
+      }
+    }
+    else if (SystemInfoRt.isWindows && (index + 3) < url.length() && url.charAt(index + 3) == '/' &&
+             url.regionMatches(0, URLUtil.FILE_PROTOCOL_PREFIX, 0, FILE_PROTOCOL_PREFIX.length())) {
+      // file:///C:/test/file.js -> file://C:/test/file.js
+      for (int i = index + 4; i < url.length(); i++) {
+        char c = url.charAt(i);
+        if (c == '/') {
+          break;
+        }
+        else if (c == ':') {
+          return FILE_PROTOCOL_PREFIX + url.substring(index + 4);
+        }
+      }
+      return url;
+    }
+    return url;
   }
 }

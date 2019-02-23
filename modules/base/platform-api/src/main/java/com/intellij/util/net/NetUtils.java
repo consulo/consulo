@@ -15,179 +15,68 @@
  */
 package com.intellij.util.net;
 
-import com.intellij.Patches;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.SystemProperties;
+import consulo.net.util.NetUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 public class NetUtils {
-  private static final Logger LOG = Logger.getInstance(NetUtils.class);
-
   private NetUtils() {
   }
 
   public static InetSocketAddress loopbackSocketAddress() throws IOException {
-    return loopbackSocketAddress(-1);
+    return NetUtil.loopbackSocketAddress();
   }
 
   public static InetSocketAddress loopbackSocketAddress(int port) throws IOException {
-    return new InetSocketAddress(InetAddress.getLoopbackAddress(), port == -1 ? NetUtils.findAvailableSocketPort() : port);
+    return NetUtil.loopbackSocketAddress(port);
   }
 
   public static boolean canConnectToSocket(String host, int port) {
-    return canConnectToSocket(host, port, false);
+    return NetUtil.canConnectToSocket(host, port);
   }
 
   public static boolean canConnectToSocketOpenedByJavaProcess(String host, int port) {
-    return canConnectToSocket(host, port, Patches.SUN_BUG_ID_7179799);
-  }
-
-  private static boolean canConnectToSocket(String host, int port, boolean alwaysTryToConnectDirectly) {
-    if (isLocalhost(host)) {
-      if (!canBindToLocalSocket(host, port)) {
-        return true;
-      }
-      return alwaysTryToConnectDirectly && canConnectToRemoteSocket(host, port);
-    }
-    else {
-      return canConnectToRemoteSocket(host, port);
-    }
+    return NetUtil.canConnectToRemoteSocket(host, port);
   }
 
   public static InetAddress getLoopbackAddress() {
-    try {
-      //  todo use JDK 7 InetAddress.getLoopbackAddress()
-      return InetAddress.getByName(null);
-    }
-    catch (UnknownHostException e) {
-      throw new RuntimeException(e);
-    }
+    return NetUtil.getLoopbackAddress();
   }
 
   public static boolean isLocalhost(@Nonnull String host) {
-    return host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1") || host.equals("::1");
-  }
-
-  private static boolean canBindToLocalSocket(String host, int port) {
-    try {
-      ServerSocket socket = new ServerSocket();
-      try {
-        //it looks like this flag should be set but it leads to incorrect results for NodeJS under Windows
-        //socket.setReuseAddress(true);
-        socket.bind(new InetSocketAddress(host, port));
-      }
-      finally {
-        try {
-          socket.close();
-        }
-        catch (IOException ignored) {
-        }
-      }
-      return true;
-    }
-    catch (IOException e) {
-      LOG.debug(e);
-      return false;
-    }
+    return NetUtil.isLocalhost(host);
   }
 
   public static boolean canConnectToRemoteSocket(String host, int port) {
-    try {
-      Socket socket = new Socket(host, port);
-      socket.close();
-      return true;
-    }
-    catch (IOException ignored) {
-      return false;
-    }
+    return NetUtil.canConnectToRemoteSocket(host, port);
   }
 
   public static int findAvailableSocketPort() throws IOException {
-    final ServerSocket serverSocket = new ServerSocket(0);
-    try {
-      int port = serverSocket.getLocalPort();
-      // workaround for linux : calling close() immediately after opening socket
-      // may result that socket is not closed
-      //noinspection SynchronizationOnLocalVariableOrMethodParameter
-      synchronized (serverSocket) {
-        try {
-          //noinspection WaitNotInLoop
-          serverSocket.wait(1);
-        }
-        catch (InterruptedException e) {
-          LOG.error(e);
-        }
-      }
-      return port;
-    }
-    finally {
-      serverSocket.close();
-    }
+    return NetUtil.findAvailableSocketPort();
   }
 
   public static int tryToFindAvailableSocketPort(int defaultPort) {
-    try {
-      return findAvailableSocketPort();
-    }
-    catch (IOException ignored) {
-      return defaultPort;
-    }
+    return NetUtil.tryToFindAvailableSocketPort(defaultPort);
   }
 
   public static int tryToFindAvailableSocketPort() {
-    return tryToFindAvailableSocketPort(-1);
+    return NetUtil.tryToFindAvailableSocketPort();
   }
 
   public static int[] findAvailableSocketPorts(int capacity) throws IOException {
-    final int[] ports = new int[capacity];
-    final ServerSocket[] sockets = new ServerSocket[capacity];
-
-    for (int i = 0; i < capacity; i++) {
-      //noinspection SocketOpenedButNotSafelyClosed
-      final ServerSocket serverSocket = new ServerSocket(0);
-      sockets[i] = serverSocket;
-      ports[i] = serverSocket.getLocalPort();
-    }
-    //workaround for linux : calling close() immediately after opening socket
-    //may result that socket is not closed
-    //noinspection SynchronizationOnLocalVariableOrMethodParameter
-    synchronized (sockets) {
-      try {
-        //noinspection WaitNotInLoop
-        sockets.wait(1);
-      }
-      catch (InterruptedException e) {
-        LOG.error(e);
-      }
-    }
-
-    for (ServerSocket socket : sockets) {
-      socket.close();
-    }
-    return ports;
+    return NetUtil.findAvailableSocketPorts(capacity);
   }
 
   public static String getLocalHostString() {
-    // HACK for Windows with ipv6
-    String localHostString = "localhost";
-    try {
-      final InetAddress localHost = InetAddress.getByName(localHostString);
-      if ((localHost.getAddress().length != 4 && SystemInfo.isWindows) || (localHost.getAddress().length == 4 && SystemInfo.isMac)) {
-        localHostString = "127.0.0.1";
-      }
-    }
-    catch (UnknownHostException ignored) {
-    }
-    return localHostString;
+    return NetUtil.getLocalHostString();
   }
 
   /**
@@ -199,6 +88,8 @@ public class NetUtils {
    * @throws IOException                                            if IO error occur
    * @throws com.intellij.openapi.progress.ProcessCanceledException if process was canceled.
    */
+
+  // TODO [VISTALL] move to another util
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
                                       @Nonnull InputStream inputStream,
                                       @Nonnull OutputStream outputStream,
@@ -231,9 +122,5 @@ public class NetUtils {
     }
 
     return total;
-  }
-
-  public static boolean isSniEnabled() {
-    return SystemProperties.getBooleanProperty("jsse.enableSNIExtension", true);
   }
 }

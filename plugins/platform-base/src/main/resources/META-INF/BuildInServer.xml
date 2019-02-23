@@ -14,32 +14,22 @@
   - limitations under the License.
   -->
 <idea-plugin>
-  <application-components>
-    <component>
-      <interface-class>org.jetbrains.ide.BuiltInServerManager</interface-class>
-      <implementation-class>org.jetbrains.ide.BuiltInServerManagerImpl</implementation-class>
-    </component>
-  </application-components>
-
   <extensionPoints>
-    <extensionPoint qualifiedName="org.jetbrains.customPortServerManager" interface="org.jetbrains.ide.CustomPortServerManager"/>
-    <extensionPoint qualifiedName="org.jetbrains.binaryRequestHandler" interface="org.jetbrains.ide.BinaryRequestHandler"/>
+    <extensionPoint name="customPortServerManager" interface="consulo.builtInServer.custom.CustomPortServerManager"/>
+    <extensionPoint name="binaryRequestHandler" interface="consulo.builtInServer.binary.BinaryRequestHandler"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationService serviceImplementation="org.jetbrains.builtInWebServer.BuiltInServerOptions"/>
+    <applicationService serviceImplementation="consulo.builtInServer.impl.ide.BuiltInServerOptions"/>
+    <applicationService serviceInterface="consulo.builtInServer.BuiltInServerManager" serviceImplementation="consulo.builtInServer.impl.BuiltInServerManagerImpl" lazy="false" />
+    <applicationService serviceInterface="consulo.builtInServer.xml.XmlRpcServer" serviceImplementation="consulo.builtInServer.impl.net.xml.XmlRpcServerImpl"/>
 
-    <xdebugger.settings implementation="org.jetbrains.builtInWebServer.BuiltInServerOptions$BuiltInServerDebuggerConfigurableProvider"/>
+    <xdebugger.settings implementation="consulo.builtInServer.impl.ide.BuiltInServerOptions$BuiltInServerDebuggerConfigurableProvider"/>
 
-    <applicationService serviceInterface="com.intellij.ide.XmlRpcServer" serviceImplementation="org.jetbrains.ide.XmlRpcServerImpl"/>
+    <httpRequestHandler implementation="consulo.builtInServer.impl.net.xml.XmlRpcServerImpl$XmlRpcRequestHandler"/>
+    <httpRequestHandler implementation="consulo.builtInServer.impl.net.json.RequestFocusHttpRequestHandler"/>
+    <httpRequestHandler implementation="consulo.builtInServer.impl.net.json.AboutRestHandler" />
 
-    <httpRequestHandler implementation="org.jetbrains.ide.XmlRpcServerImpl$XmlRpcRequestHandler"/>
-    <httpRequestHandler implementation="consulo.buildInWebServer.api.RequestFocusHttpRequestHandler"/>
-
-    <httpRequestHandler implementation="consulo.builtInWebServer.restApi.AboutRestHandler" />
-  </extensions>
-
-  <extensions defaultExtensionNs="org.jetbrains">
-    <customPortServerManager implementation="org.jetbrains.builtInWebServer.BuiltInServerOptions$MyCustomPortServerManager"/>
+    <customPortServerManager implementation="consulo.builtInServer.impl.ide.BuiltInServerOptions$MyCustomPortServerManager"/>
   </extensions>
 </idea-plugin>

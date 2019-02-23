@@ -28,16 +28,14 @@ import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.start.CommandLineArgs;
+import consulo.start.ImportantFolderLocker;
 import consulo.util.logging.LoggerFactory;
-import org.jetbrains.io.BuiltInServer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -45,26 +43,31 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.ServiceLoader;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 /**
  * @author yole
  */
 public class StartupUtil {
-  private static SocketLock ourSocketLock;
+  private static ImportantFolderLocker ourFolderLocker;
 
   private StartupUtil() {
   }
 
   public synchronized static void addExternalInstanceListener(@Nonnull Consumer<CommandLineArgs> consumer) {
-    ourSocketLock.setExternalInstanceListener(consumer);
+    ourFolderLocker.setExternalInstanceListener(consumer);
   }
 
-  @Nullable
-  public synchronized static BuiltInServer getServer() {
-    return ourSocketLock == null ? null : ourSocketLock.getServer();
+  @Nonnull
+  public static synchronized ImportantFolderLocker getLocker() {
+    if(ourFolderLocker == null) {
+      throw new IllegalArgumentException("Called #getLocker() before app start");
+    }
+    return ourFolderLocker;
   }
 
-  public static void prepareAndStart(String[] args, PairConsumer<Boolean, CommandLineArgs> appStarter) {
+  public static void prepareAndStart(String[] args, BiFunction<String, String, ImportantFolderLocker> lockFactory, PairConsumer<Boolean, CommandLineArgs> appStarter) {
     boolean newConfigFolder = false;
     CommandLineArgs commandLineArgs = CommandLineArgs.parse(args);
 
@@ -89,7 +92,7 @@ public class StartupUtil {
     LoggerFactory factory = factories.get(0);
     Logger.setFactory(factory);
 
-    ActivationResult result = lockSystemFolders(args);
+    ActivationResult result = lockSystemFolders(lockFactory, args);
     if (result == ActivationResult.ACTIVATED) {
       System.exit(0);
     }
@@ -117,38 +120,38 @@ public class StartupUtil {
   }
 
   @Nonnull
-  private synchronized static ActivationResult lockSystemFolders(String[] args) {
-    if (ourSocketLock != null) {
+  private synchronized static ActivationResult lockSystemFolders(BiFunction<String, String, ImportantFolderLocker> lockFactory, String[] args) {
+    if (ourFolderLocker != null) {
       throw new AssertionError();
     }
 
-    ourSocketLock = new SocketLock(PathManager.getConfigPath(), PathManager.getSystemPath());
+    ourFolderLocker = lockFactory.apply(PathManager.getConfigPath(), PathManager.getSystemPath());
 
-    SocketLock.ActivateStatus status;
+    ImportantFolderLocker.ActivateStatus status;
     try {
-      status = ourSocketLock.lock(args);
+      status = ourFolderLocker.lock(args);
     }
     catch (Exception e) {
       Main.showMessage("Cannot Lock System Folders", e);
       return ActivationResult.FAILED;
     }
 
-    if (status == SocketLock.ActivateStatus.NO_INSTANCE) {
+    if (status == ImportantFolderLocker.ActivateStatus.NO_INSTANCE) {
       ShutDownTracker.getInstance().registerShutdownTask(() -> {
         //noinspection SynchronizeOnThis
         synchronized (StartupUtil.class) {
-          ourSocketLock.dispose();
-          ourSocketLock = null;
+          ourFolderLocker.dispose();
+          ourFolderLocker = null;
         }
       });
       return ActivationResult.STARTED;
     }
-    else if (status == SocketLock.ActivateStatus.ACTIVATED) {
+    else if (status == ImportantFolderLocker.ActivateStatus.ACTIVATED) {
       //noinspection UseOfSystemOutOrSystemErr
       System.out.println("Already running");
       return ActivationResult.ACTIVATED;
     }
-    else if (Main.isHeadless() || status == SocketLock.ActivateStatus.CANNOT_ACTIVATE) {
+    else if (Main.isHeadless() || status == ImportantFolderLocker.ActivateStatus.CANNOT_ACTIVATE) {
       String message = "Only one instance of " + ApplicationNamesInfo.getInstance().getFullProductName() + " can be run at a time.";
       Main.showMessage("Too Many Instances", message, true);
     }

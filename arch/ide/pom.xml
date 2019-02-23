@@ -110,7 +110,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-buildin-server-impl</artifactId>
+      <artifactId>consulo-built-in-server-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-built-in-server-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

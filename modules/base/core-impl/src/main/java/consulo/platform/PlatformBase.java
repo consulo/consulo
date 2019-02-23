@@ -49,6 +49,11 @@ public abstract class PlatformBase implements Platform {
   }
 
   @Override
+  public boolean isUnderRoot() {
+    return false;
+  }
+
+  @Override
   public boolean isDesktop() {
     return false;
   }

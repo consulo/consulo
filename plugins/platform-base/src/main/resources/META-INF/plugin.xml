@@ -254,7 +254,7 @@
     <extensionPoint name="pathMacroFilter" interface="com.intellij.openapi.application.PathMacroFilter"/>
     <extensionPoint name="pathMacroExpendableProtocol" beanClass="com.intellij.application.options.PathMacroExpendableProtocolBean"/>
 
-    <extensionPoint name="httpRequestHandler" interface="org.jetbrains.ide.HttpRequestHandler"/>
+    <extensionPoint name="httpRequestHandler" interface="consulo.builtInServer.http.HttpRequestHandler"/>
 
     <extensionPoint name="colorPickerListenerFactory" interface="com.intellij.ui.ColorPickerListenerFactory"/>
 

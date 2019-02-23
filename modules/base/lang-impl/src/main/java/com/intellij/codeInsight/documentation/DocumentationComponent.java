@@ -69,7 +69,7 @@ import com.intellij.util.ui.accessibility.ScreenReader;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.ide.BuiltInServerManager;
+import consulo.builtInServer.BuiltInServerManager;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

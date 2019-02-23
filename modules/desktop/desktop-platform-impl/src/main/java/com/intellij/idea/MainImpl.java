@@ -30,7 +30,7 @@ public class MainImpl {
    * Called from PluginManager via reflection.
    */
   protected static void start(String[] args) {
-    StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
+    StartupUtil.prepareAndStart(args, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new DesktopApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
 
       SwingUtilities.invokeLater(() -> {

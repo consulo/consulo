@@ -74,6 +74,11 @@ public interface Platform {
 
   boolean isWebService();
 
+  /**
+   * @return is has administrative rights
+   */
+  boolean isUnderRoot();
+
   @Nullable
   String getRuntimeProperty(@Nonnull String key);
 

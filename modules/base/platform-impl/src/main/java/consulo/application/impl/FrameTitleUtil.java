@@ -18,10 +18,10 @@ package consulo.application.impl;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.util.BuildNumber;
-import com.intellij.openapi.util.io.win32.WindowsElevationUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.platform.Platform;
 
 /**
  * @author VISTALL
@@ -41,7 +41,7 @@ public class FrameTitleUtil {
       builder.append(StringUtil.capitalize(channel.name()));
     }
 
-    if(WindowsElevationUtil.isUnderElevation()) {
+    if(Platform.current().isUnderRoot()) {
       builder.append(" (Administrator)");
     }
     return builder.toString();

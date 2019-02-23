@@ -19,7 +19,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -32,9 +31,9 @@ import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringFactory;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,7 +46,7 @@ public class VfsUtilCore {
 
   private static final String MAILTO = "mailto";
 
-  public static final String LOCALHOST_URI_PATH_PREFIX = "localhost/";
+  public static final String LOCALHOST_URI_PATH_PREFIX = URLUtil.LOCALHOST_URI_PATH_PREFIX;
   public static final char VFS_SEPARATOR_CHAR = '/';
 
   private static final String PROTOCOL_DELIMITER = ":";
@@ -403,41 +402,7 @@ public class VfsUtilCore {
 
   @Nonnull
   public static String toIdeaUrl(@Nonnull String url, boolean removeLocalhostPrefix) {
-    int index = url.indexOf(":/");
-    if (index < 0 || (index + 2) >= url.length()) {
-      return url;
-    }
-
-    if (url.charAt(index + 2) != '/') {
-      String prefix = url.substring(0, index);
-      String suffix = url.substring(index + 2);
-
-      if (SystemInfoRt.isWindows) {
-        return prefix + URLUtil.SCHEME_SEPARATOR + suffix;
-      }
-      else if (removeLocalhostPrefix && prefix.equals(URLUtil.FILE_PROTOCOL) && suffix.startsWith(LOCALHOST_URI_PATH_PREFIX)) {
-        // sometimes (e.g. in Google Chrome for Mac) local file url is prefixed with 'localhost' so we need to remove it
-        return prefix + ":///" + suffix.substring(LOCALHOST_URI_PATH_PREFIX.length());
-      }
-      else {
-        return prefix + ":///" + suffix;
-      }
-    }
-    else if (SystemInfoRt.isWindows && (index + 3) < url.length() && url.charAt(index + 3) == '/' &&
-             url.regionMatches(0, StandardFileSystems.FILE_PROTOCOL_PREFIX, 0, StandardFileSystems.FILE_PROTOCOL_PREFIX.length())) {
-      // file:///C:/test/file.js -> file://C:/test/file.js
-      for (int i = index + 4; i < url.length(); i++) {
-        char c = url.charAt(i);
-        if (c == '/') {
-          break;
-        }
-        else if (c == ':') {
-          return StandardFileSystems.FILE_PROTOCOL_PREFIX + url.substring(index + 4);
-        }
-      }
-      return url;
-    }
-    return url;
+    return URLUtil.toIdeaUrl(url, removeLocalhostPrefix);
   }
 
   @Nonnull

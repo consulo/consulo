@@ -24,10 +24,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.web.main.WebPostStarter;
-import consulo.web.servlet.RootUIBuilder;
 import consulo.ui.web.servlet.UIIconServlet;
 import consulo.ui.web.servlet.UIServlet;
+import consulo.web.main.WebPostStarter;
+import consulo.web.servlet.RootUIBuilder;
+import consulo.web.start.WebImportantFolderLocker;
 
 import javax.annotation.Nonnull;
 import javax.servlet.annotation.WebServlet;
@@ -55,8 +56,8 @@ public class WebLoader {
 
     Main.setFlags(new String[0]);
 
-    StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new ApplicationStarter(WebPostStarter.class, commandLineArgs);
+    StartupUtil.prepareAndStart(args, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
+      ApplicationStarter app = new ApplicationStarter(WebPostStarter.class,commandLineArgs);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         PluginManager.installExceptionHandler();
