@@ -114,13 +114,13 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
   @Override
   public boolean isVisible() {
-    throw new UnsupportedOperationException();
+    return myWindow.isVisible();
   }
 
   @RequiredUIAccess
   @Override
   public void setVisible(boolean value) {
-    throw new UnsupportedOperationException();
+    myWindow.setVisible(value);
   }
 
   @Override
