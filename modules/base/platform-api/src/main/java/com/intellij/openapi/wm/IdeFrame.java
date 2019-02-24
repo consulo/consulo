@@ -48,7 +48,7 @@ public interface IdeFrame {
   IdeRootPaneNorthExtension getNorthExtension(String key);
 
   default JComponent getComponent() {
-    throw new AbstractMethodError();
+    throw new AbstractMethodError(getClass().getName() + " is not implemented");
   }
 
   @Nonnull
