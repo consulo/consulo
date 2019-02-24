@@ -26,17 +26,11 @@ import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.parser.ParserDelegator;
 import java.beans.Introspector;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,44 +45,6 @@ public class StringUtil extends StringUtilRt {
   @NonNls private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
   @NonNls private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
   @NonNls private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
-
-  private static class MyHtml2Text extends HTMLEditorKit.ParserCallback {
-    @Nonnull
-    private final StringBuilder myBuffer = new StringBuilder();
-
-    public void parse(Reader in) throws IOException {
-      myBuffer.setLength(0);
-      new ParserDelegator().parse(in, this, Boolean.TRUE);
-    }
-
-    @Override
-    public void handleText(char[] text, int pos) {
-      myBuffer.append(text);
-    }
-
-    @Override
-    public void handleStartTag(HTML.Tag tag, MutableAttributeSet set, int i) {
-      handleTag(tag);
-    }
-
-    @Override
-    public void handleSimpleTag(HTML.Tag tag, MutableAttributeSet set, int i) {
-      handleTag(tag);
-    }
-
-    private void handleTag(HTML.Tag tag) {
-      if (tag.breaksFlow() && myBuffer.length() > 0) {
-        myBuffer.append(SystemProperties.getLineSeparator());
-      }
-    }
-
-    public String getText() {
-      return myBuffer.toString();
-    }
-  }
-
-
-  private static final MyHtml2Text html2TextParser = new MyHtml2Text();
 
   public static final NotNullFunction<String, String> QUOTER = new NotNullFunction<String, String>() {
     @Override
@@ -2248,17 +2204,6 @@ public class StringUtil extends StringUtilRt {
   public static String escapeXml(@Nullable final String text) {
     if (text == null) return null;
     return replace(text, REPLACES_DISP, REPLACES_REFS);
-  }
-
-  public static String removeHtmlTags (@Nullable String htmlString) {
-    if (isEmpty(htmlString)) return htmlString;
-    try {
-      html2TextParser.parse(new StringReader(htmlString));
-    }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-    return html2TextParser.getText();
   }
 
   @NonNls private static final String[] MN_QUOTED = {"&&", "__"};

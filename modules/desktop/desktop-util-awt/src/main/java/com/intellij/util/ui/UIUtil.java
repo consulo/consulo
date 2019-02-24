@@ -16,7 +16,6 @@
 package com.intellij.util.ui;
 
 import com.intellij.BundleBase;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.GraphicsConfig;
@@ -34,6 +33,8 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotations.DeprecationInfo;
+import consulo.desktop.util.awt.AllIconsHack;
+import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.ui.laf.MorphColor;
 import consulo.ui.style.StyleManager;
 import consulo.util.ui.BuildInLookAndFeel;
@@ -93,28 +94,10 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class UIUtil {
-  private static NullableLazyValue<StyleManager> ourStyleManagerValue = NullableLazyValue.of(new Factory<StyleManager>() {
-    @Override
-    public StyleManager create() {
-      try {
-        // hack due this module compiled via 1.6 bytecode, which can't call default methods
-        Method getMethod = ReflectionUtil.getDeclaredMethod(StyleManager.class, "get");
-        return (StyleManager)getMethod.invoke(null);
-      }
-      catch (Throwable ignored) {
-        return null;
-      }
-    }
-  });
-
   @Deprecated
   @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark()")
   public static boolean isUnderDarkTheme() {
-    StyleManager value = ourStyleManagerValue.getValue();
-    if(value == null) {
-      return false;
-    }
-    return value.getCurrentStyle().isDark();
+    return StyleManager.get().getCurrentStyle().isDark();
   }
 
   public static final Key<Iterable<? extends Component>> NOT_IN_HIERARCHY_COMPONENTS = Key.create("NOT_IN_HIERARCHY_COMPONENTS");
@@ -1388,18 +1371,6 @@ public class UIUtil {
     return UIManager.getIcon("OptionPane.warningIcon");
   }
 
-  public static Icon getBalloonInformationIcon() {
-    return AllIcons.General.BalloonInformation;
-  }
-
-  public static Icon getBalloonWarningIcon() {
-    return AllIcons.General.BalloonWarning;
-  }
-
-  public static Icon getBalloonErrorIcon() {
-    return AllIcons.General.BalloonError;
-  }
-
   public static Icon getRadioButtonIcon() {
     return UIManager.getIcon("RadioButton.icon");
   }
@@ -1433,7 +1404,7 @@ public class UIUtil {
     if (icon != null) {
       return icon;
     }
-    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_right_arrow : getTreeCollapsedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIconsHack.Tree_white_right_arrow() : getTreeCollapsedIcon();
   }
 
   public static Icon getTreeSelectedExpandedIcon() {
@@ -1442,7 +1413,7 @@ public class UIUtil {
       return icon;
     }
 
-    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_down_arrow : getTreeExpandedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIconsHack.Tree_white_down_arrow() : getTreeExpandedIcon();
   }
 
   public static Border getTableHeaderCellBorder() {
@@ -3674,7 +3645,7 @@ public class UIUtil {
     if (StringUtil.isNotEmpty(candidate)) {
       candidate = candidate.replaceAll("<a href=\"#inspection/[^)]+\\)", "");
       if (builder.length() > 0) builder.append(' ');
-      builder.append(StringUtil.removeHtmlTags(candidate).trim());
+      builder.append(StringHtmlUtil.removeHtmlTags(candidate).trim());
     }
     if (component instanceof Container) {
       Component[] components = ((Container)component).getComponents();

@@ -27,9 +27,10 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.ui.HtmlPanel;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
+import consulo.desktop.util.awt.StringHtmlUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
@@ -107,7 +108,7 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
   @Override
   public void performCopy(@Nonnull DataContext dataContext) {
     String selectedText = getSelectedText();
-    if (selectedText == null || selectedText.isEmpty()) selectedText = StringUtil.removeHtmlTags(getText());
+    if (selectedText == null || selectedText.isEmpty()) selectedText = StringHtmlUtil.removeHtmlTags(getText());
     CopyPasteManager.getInstance().setContents(new StringSelection(selectedText));
   }
 

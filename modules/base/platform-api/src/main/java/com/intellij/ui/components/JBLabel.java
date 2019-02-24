@@ -15,15 +15,15 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AnchorableComponent;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
+import consulo.desktop.util.awt.StringHtmlUtil;
 import org.intellij.lang.annotations.JdkConstants;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.EditorKit;
@@ -170,7 +170,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
   }
 
   private void checkMultiline() {
-    myMultiline = StringUtil.removeHtmlTags(getText()).contains(SystemProperties.getLineSeparator());
+    myMultiline = StringHtmlUtil.removeHtmlTags(getText()).contains(SystemProperties.getLineSeparator());
   }
 
   @Override

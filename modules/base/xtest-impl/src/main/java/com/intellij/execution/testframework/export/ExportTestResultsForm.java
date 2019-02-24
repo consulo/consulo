@@ -16,6 +16,7 @@
 package com.intellij.execution.testframework.export;
 
 import com.intellij.execution.ExecutionBundle;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.TextComponentAccessor;
@@ -28,9 +29,8 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -97,7 +97,7 @@ public class ExportTestResultsForm {
       }
     });
 
-    myMessageLabel.setIcon(UIUtil.getBalloonWarningIcon());
+    myMessageLabel.setIcon(AllIcons.General.BalloonWarning);
     JRadioButton b;
     if (config.getExportFormat() == ExportTestResultsConfiguration.ExportFormat.Xml) {
       b = myXmlRb;

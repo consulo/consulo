@@ -1819,7 +1819,7 @@ public class AbstractPopup implements JBPopup {
   }
 
   public void setWarning(@Nonnull String text) {
-    JBLabel label = new JBLabel(text, UIUtil.getBalloonWarningIcon(), SwingConstants.CENTER);
+    JBLabel label = new JBLabel(text, AllIcons.General.BalloonWarning, SwingConstants.CENTER);
     label.setOpaque(true);
     Color color = HintUtil.INFORMATION_COLOR;
     label.setBackground(color);

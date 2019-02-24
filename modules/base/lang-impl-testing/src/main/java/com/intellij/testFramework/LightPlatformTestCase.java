@@ -40,6 +40,7 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.UndoManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -88,6 +89,7 @@ import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
+import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IndexableFileSet;
@@ -103,6 +105,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -113,6 +116,8 @@ import java.util.*;
  * @author yole
  */
 public abstract class LightPlatformTestCase extends UsefulTestCase implements DataProvider {
+  private static final Logger LOG = Logger.getInstance(LightPlatformTestCase.class);
+
   public static final String PROFILE = "Configurable";
   private static ApplicationStarter ourApplication;
   protected static Project ourProject;
@@ -788,7 +793,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     ShutDownTracker.getInstance().registerShutdownTask(new Runnable() {
       @Override
       public void run() {
-        ShutDownTracker.invokeAndWait(true, true, new Runnable() {
+        invokeAndWait(true, true, new Runnable() {
           @Override
           @RequiredUIAccess
           public void run() {
@@ -802,5 +807,47 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
         });
       }
     });
+  }
+
+  public static void invokeAndWait(boolean returnOnTimeout, boolean runInEdt, @Nonnull final Runnable runnable) {
+    if (!runInEdt) {
+      if (returnOnTimeout) {
+        final Semaphore semaphore = new Semaphore();
+        semaphore.down();
+        new Thread(new Runnable() {
+          @Override
+          public void run() {
+            runnable.run();
+            semaphore.up();
+          }
+        }).start();
+        semaphore.waitFor(1000);
+      }
+      else {
+        runnable.run();
+      }
+      return;
+    }
+
+    if (returnOnTimeout) {
+      final Semaphore semaphore = new Semaphore();
+      semaphore.down();
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          runnable.run();
+          semaphore.up();
+        }
+      });
+      semaphore.waitFor(1000);
+      return;
+    }
+
+    try {
+      UIUtil.invokeAndWaitIfNeeded(runnable);
+    }
+    catch (Exception e) {
+      LOG.error(e);
+    }
   }
 }

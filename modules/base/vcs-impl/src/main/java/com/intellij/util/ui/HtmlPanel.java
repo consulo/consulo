@@ -15,8 +15,8 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BrowserHyperlinkListener;
+import consulo.desktop.util.awt.StringHtmlUtil;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -53,7 +53,7 @@ public class HtmlPanel extends JEditorPane implements HyperlinkListener {
       StringWriter sw = new StringWriter(p1.getOffset() - p0.getOffset());
       getEditorKit().write(sw, doc, p0.getOffset(), p1.getOffset() - p0.getOffset());
 
-      return StringUtil.removeHtmlTags(sw.toString());
+      return StringHtmlUtil.removeHtmlTags(sw.toString());
     }
     catch (BadLocationException | IOException ignored) {
     }

@@ -16,7 +16,6 @@
 package com.intellij.util;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
@@ -469,8 +468,8 @@ public class ImageLoader implements Serializable {
     return null;
   }
 
-  public static boolean isGoodSize(final Icon icon) {
-    return IconLoader.isGoodSize(icon);
+  public static boolean isGoodSize(@Nonnull final Icon icon) {
+    return icon.getIconWidth() > 0 && icon.getIconHeight() > 0;
   }
 
   /**

@@ -108,7 +108,7 @@ public class LinePainter2D {
     boolean thickStroke = PaintUtil.devValue(strokeWidth, g) > 1;
 
     if (g.getStroke() instanceof BasicStroke && (straight || thickStroke)) {
-      double sw = alignToInt(strokeWidth, g);
+      double sw = PaintUtil.alignToInt(strokeWidth, g);
       double swx_2 = 0, swx_1 = 0, swy_2 = 0, swy_1 = 0; // stroke offsets
       double capy_1 = 0, capy_2 = 0, capx_1 = 0, capx_2 = 0; // caps offsets
 
@@ -140,22 +140,22 @@ public class LinePainter2D {
       if (vertical/*|| dot*/) {
         double y_min = Math.min(y1, y2);
         double y_max = Math.max(y1, y2);
-        y1 = alignToInt(y_min, g);
+        y1 = PaintUtil.alignToInt(y_min, g);
         y2 = y1 + y_max - y1 + 1;
-        x1 = x2 = alignToInt(x2, g);
+        x1 = x2 = PaintUtil.alignToInt(x2, g);
       }
       else if (horizontal) {
         double x_min = Math.min(x1, x2);
         double x_max = Math.max(x1, x2);
-        x1 = alignToInt(x_min, g);
+        x1 = PaintUtil.alignToInt(x_min, g);
         x2 = x1 + x_max - x1 + 1;
-        y1 = y2 = alignToInt(y2, g);
+        y1 = y2 = PaintUtil.alignToInt(y2, g);
       }
       else {
-        x1 = alignToInt(x1, g);
-        x2 = alignToInt(x2, g);
-        y1 = alignToInt(y1, g);
-        y2 = alignToInt(y2, g);
+        x1 = PaintUtil.alignToInt(x1, g);
+        x2 = PaintUtil.alignToInt(x2, g);
+        y1 = PaintUtil.alignToInt(y1, g);
+        y2 = PaintUtil.alignToInt(y2, g);
 
         if (Math.abs(angle) > Math.PI / 2) {
           sin *= -1;
@@ -181,7 +181,7 @@ public class LinePainter2D {
         }
         else {
           // stroke is painted around the line
-          sw_1 = alignToInt(Math.max(sw / 2, 0), g);
+          sw_1 = PaintUtil.alignToInt(Math.max(sw / 2, 0), g);
           sw_2 = Math.max(sw - sw_1, 0);
         }
         swx_1 = sw_1 * sin;
@@ -350,9 +350,9 @@ public class LinePainter2D {
    * 2) new size with adjusted parity
    */
   static Pair<Double, Double> alignSizeXY(Graphics2D g, double xy, double prefSize, StrokeType strokeType, double strokeWidth, boolean rectangle) {
-    prefSize = alignToInt(prefSize, g);
+    prefSize = PaintUtil.alignToInt(prefSize, g);
     // if xy is (close to) dev int the resulting size should be EVEN, otherwise ODD - to compensate the middle dev pixel
-    double _xy = alignToInt(xy + 0.000001, g, RoundingMode.FLOOR);
+    double _xy = PaintUtil.alignToInt(xy + 0.000001, g, RoundingMode.FLOOR);
     ParityMode pm = Double.compare(_xy, xy) == 0 ? ParityMode.EVEN : ParityMode.ODD;
     double sw_1 = 0, sw_2 = 0; // stroke split for rect, and caps for line with CENTERED_CAPS_SQUARE
     if (rectangle || strokeType == StrokeType.CENTERED_CAPS_SQUARE) {
@@ -361,8 +361,8 @@ public class LinePainter2D {
       sw_2 = strokeSplit.second;
     }
     double sizeWithStroke = sw_1 + prefSize + sw_2;
-    if (getParityMode(sizeWithStroke, g) != pm) {
-      prefSize = alignToInt(prefSize, g, ParityMode.invert(getParityMode(prefSize, g)));
+    if (PaintUtil.getParityMode(sizeWithStroke, g) != pm) {
+      prefSize = PaintUtil.alignToInt(prefSize, g, ParityMode.invert(PaintUtil.getParityMode(prefSize, g)));
       sizeWithStroke = sw_1 + prefSize + sw_2;
     }
     _xy -= (pm == ParityMode.ODD ? sizeWithStroke - PaintUtil.devPixel(g) : sizeWithStroke) / 2 - sw_1;
@@ -424,7 +424,7 @@ public class LinePainter2D {
     // StrokeType.CENTERED || StrokeType.CENTERED_CAPS_SQUARE
     int linePixel = includeLinePixel ? 1 : 0;
     double _sw = strokeWidth - 1;
-    double sw_1 = alignToInt(Math.max(_sw / 2, 0), ctx, RoundingMode.ROUND, null);
+    double sw_1 = PaintUtil.alignToInt(Math.max(_sw / 2, 0), ctx, RoundingMode.ROUND, null);
     double sw_2 = Math.max(linePixel + (_sw - sw_1), 0);
     return Pair.create(sw_1, sw_2);
   }

@@ -17,6 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
@@ -174,7 +175,7 @@ public final class IconLoader {
   }
 
   public static boolean isGoodSize(@Nonnull final Icon icon) {
-    return icon.getIconWidth() > 0 && icon.getIconHeight() > 0;
+    return ImageLoader.isGoodSize(icon);
   }
 
   /**

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.patch.formove;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
@@ -22,10 +23,9 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ui.FilePathChangesTreeList;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -60,7 +60,7 @@ class UndoApplyPatchDialog extends DialogWrapper {
     labelsPanel.add(infoLabel, BorderLayout.NORTH);
     if (myShouldInformAboutBinaries) {
       JLabel warningLabel = new JLabel("Rollback will not affect binaries");
-      warningLabel.setIcon(UIUtil.getBalloonWarningIcon());
+      warningLabel.setIcon(AllIcons.General.BalloonWarning);
       labelsPanel.add(warningLabel, BorderLayout.CENTER);
     }
     panel.add(labelsPanel, BorderLayout.NORTH);

@@ -2,8 +2,8 @@
 package com.intellij.ui.paint;
 
 import com.intellij.util.ui.RegionPainter;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**

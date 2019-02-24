@@ -11,14 +11,14 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-util</artifactId>
+  <artifactId>consulo-desktop-util-awt</artifactId>
   <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>1.6</java.level>
+    <java.level>1.8</java.level>
   </properties>
 
   <dependencies>
@@ -34,40 +34,13 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-rt</artifactId>
+      <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--internal dependencies-->
+
     <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>jdom</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>trove4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>eawtstub</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <!--external-->
-    <dependency>
-      <groupId>net.java.dev.jna</groupId>
-      <artifactId>jna</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.java.dev.jna</groupId>
-      <artifactId>jna-platform</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.iq80.snappy</groupId>
-      <artifactId>snappy</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
+      <groupId>org.imgscalr</groupId>
+      <artifactId>imgscalr-lib</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

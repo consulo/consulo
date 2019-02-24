@@ -16,11 +16,8 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.concurrency.Semaphore;
-import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -132,47 +129,5 @@ public class ShutDownTracker implements Runnable {
   
   private synchronized <T> T removeLast(@Nonnull LinkedList<T> list) {
     return list.isEmpty()? null : list.removeLast();
-  }
-
-  public static void invokeAndWait(boolean returnOnTimeout, boolean runInEdt, @Nonnull final Runnable runnable) {
-    if (!runInEdt) {
-      if (returnOnTimeout) {
-        final Semaphore semaphore = new Semaphore();
-        semaphore.down();
-        new Thread(new Runnable() {
-          @Override
-          public void run() {
-            runnable.run();
-            semaphore.up();
-          }
-        }).start();
-        semaphore.waitFor(1000);
-      }
-      else {
-        runnable.run();
-      }
-      return;
-    }
-
-    if (returnOnTimeout) {
-      final Semaphore semaphore = new Semaphore();
-      semaphore.down();
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          runnable.run();
-          semaphore.up();
-        }
-      });
-      semaphore.waitFor(1000);
-      return;
-    }
-
-    try {
-      UIUtil.invokeAndWaitIfNeeded(runnable);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
   }
 }

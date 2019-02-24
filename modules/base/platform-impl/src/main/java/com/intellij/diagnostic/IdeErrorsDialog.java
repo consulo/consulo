@@ -363,7 +363,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       }
     });
 
-    myAttachmentWarningLabel.setIcon(UIUtil.getBalloonWarningIcon());
+    myAttachmentWarningLabel.setIcon(AllIcons.General.BalloonWarning);
     myAttachmentWarningLabel.addHyperlinkListener(new HyperlinkListener() {
       @Override
       public void hyperlinkUpdate(final HyperlinkEvent e) {

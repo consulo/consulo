@@ -116,7 +116,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
               if (bounds != null && bounds.y <= y && y <= (bounds.y + bounds.height)) {
                 x = Math.max(bounds.x, Math.min(x, bounds.x + bounds.width - 1));
                 if (x != event.getX()) {
-                  event = convert(event, tree, x, y);
+                  event = MouseEventAdapter.convert(event, tree, x, y);
                 }
               }
             }

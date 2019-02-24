@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.application.ApplicationBundle;
@@ -49,7 +50,7 @@ import java.util.List;
 
 public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyText {
 
-  private static final Icon WARNING_ICON = UIUtil.getBalloonWarningIcon();
+  private static final Icon WARNING_ICON = AllIcons.General.BalloonWarning;
   private static final Icon EMPTY_ICON = EmptyIcon.create(WARNING_ICON);
   @NonNls private static final String REMOVE_KEY = "REMOVE_SELECTED";
 
