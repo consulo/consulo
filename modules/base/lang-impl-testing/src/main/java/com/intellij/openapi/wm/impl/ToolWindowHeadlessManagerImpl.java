@@ -484,7 +484,12 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
-    public void setTitleActions(AnAction... actions) {
+    public void setTitleActions(@Nonnull AnAction... actions) {
+    }
+
+    @Override
+    public void setTabActions(@Nonnull AnAction... actions) {
+
     }
 
     @Override

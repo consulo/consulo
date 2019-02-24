@@ -76,6 +76,9 @@ public interface ToolWindowInternalDecorator extends Disposable {
   default void setTitleActions(AnAction... actions) {
   }
 
+  default void setTabActions(AnAction... actions) {
+  }
+
   default void setAdditionalGearActions(@Nullable ActionGroup gearActions) {
   }
 }

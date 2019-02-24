@@ -282,6 +282,11 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     myHeader.setAdditionalTitleActions(actions);
   }
 
+  @Override
+  public void setTabActions(AnAction... actions) {
+    myHeader.setTabActions(actions);
+  }
+
   private class InnerPanelBorder implements Border {
 
     private final ToolWindow myWindow;

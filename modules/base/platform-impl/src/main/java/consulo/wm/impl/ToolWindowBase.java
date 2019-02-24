@@ -258,7 +258,12 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   }
 
   @Override
-  public void setTitleActions(AnAction... actions) {
+  public void setTitleActions(@Nonnull AnAction... actions) {
+    getDecorator().setTitleActions(actions);
+  }
+
+  @Override
+  public void setTabActions(@Nonnull AnAction... actions) {
     getDecorator().setTitleActions(actions);
   }
 

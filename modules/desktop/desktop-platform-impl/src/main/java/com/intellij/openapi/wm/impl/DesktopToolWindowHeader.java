@@ -28,6 +28,7 @@ import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.UIBundle;
+import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.JBUI;
@@ -107,41 +108,78 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
   private final ToolWindow myToolWindow;
 
-  private final DefaultActionGroup myAdditionalActionGroup = new DefaultActionGroup();
+  private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
+  private final DefaultActionGroup myActionGroupWest = new DefaultActionGroup();
 
-  private ActionToolbar myToolbar;
+  private final ActionToolbar myToolbar;
+  private ActionToolbar myToolbarWest;
+  private final JPanel myWestPanel;
 
   public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
     super(new BorderLayout());
 
     myToolWindow = toolWindow;
 
-    JPanel westPanel = new JPanel() {
+    myWestPanel = new NonOpaquePanel() {
       @Override
       public void doLayout() {
-        if (getComponentCount() > 0) {
+        if (getComponentCount() == 1) {
           Rectangle r = getBounds();
+
           Insets insets = getInsets();
 
           Component c = getComponent(0);
           Dimension size = c.getPreferredSize();
-          if (size.width < (r.width - insets.left - insets.right)) {
+          if (size.width < r.width - insets.left - insets.right) {
             c.setBounds(insets.left, insets.top, size.width, r.height - insets.top - insets.bottom);
-          } else {
+          }
+          else {
             c.setBounds(insets.left, insets.top, r.width - insets.left - insets.right, r.height - insets.top - insets.bottom);
           }
         }
+        else if (getComponentCount() > 1) {
+          Rectangle r = getBounds();
+
+          Component c = getComponent(0);
+
+          Dimension min = c.getMinimumSize();
+          Dimension size = c.getPreferredSize();
+
+          int width2 = getComponentCount() > 1 ? getComponent(1).getMinimumSize().width : 0;
+
+          if (min.width > r.width - width2) {
+            c.setBounds(0, 0, min.width, r.height);
+          }
+          else if (size.width < r.width - width2) {
+            c.setBounds(0, 0, size.width, r.height);
+          }
+          else {
+            c.setBounds(0, 0, r.width - width2, r.height);
+          }
+
+          if (getComponentCount() > 1) {
+            getComponent(1).setBounds(c.getWidth(), 0, getComponent(1).getMinimumSize().width, r.height);
+          }
+        }
+      }
+
+      @Override
+      public Dimension getMinimumSize() {
+        Dimension size = super.getMinimumSize();
+        if (getComponentCount() > 0) {
+          size.width = Math.max(size.width, getComponent(0).getMinimumSize().width + (getComponentCount() > 1 ? getComponent(1).getMinimumSize().width : 0));
+        }
+        return size;
       }
     };
 
-    westPanel.setOpaque(false);
-    add(westPanel, BorderLayout.CENTER);
+    add(myWestPanel, BorderLayout.CENTER);
 
-    westPanel.add(toolWindow.getContentUI().getTabComponent());
+    myWestPanel.add(toolWindow.getContentUI().getTabComponent());
 
-    DesktopToolWindowContentUi.initMouseListeners(westPanel, toolWindow.getContentUI(), true);
+    DesktopToolWindowContentUi.initMouseListeners(myWestPanel, toolWindow.getContentUI(), true);
 
-    myToolbar = ActionManager.getInstance().createActionToolbar("ToolwindowHeader", new DefaultActionGroup(myAdditionalActionGroup, new GearAction(gearProducer), new HideAction()), true);
+    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE, new DefaultActionGroup(myActionGroup, new GearAction(gearProducer), new HideAction()), true);
     myToolbar.setTargetComponent(this);
     myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
     myToolbar.setReservePlaceAutoPopupIcon(false);
@@ -152,14 +190,14 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     add(wrapAndFillVertical(component), BorderLayout.EAST);
 
-    westPanel.addMouseListener(new PopupHandler() {
+    myWestPanel.addMouseListener(new PopupHandler() {
       @Override
       public void invokePopup(final Component comp, final int x, final int y) {
         toolWindow.getContentUI().showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
       }
     });
 
-    westPanel.addMouseListener(new MouseAdapter() {
+    myWestPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         toolWindow.fireActivated();
@@ -196,7 +234,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         mgr.setMaximized(myToolWindow, !mgr.isMaximized(myToolWindow));
         return true;
       }
-    }.installOn(westPanel);
+    }.installOn(myWestPanel);
   }
 
   @Nonnull
@@ -212,13 +250,40 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     removeAll();
   }
 
-  public void setAdditionalTitleActions(AnAction[] actions) {
-    myAdditionalActionGroup.removeAll();
-    myAdditionalActionGroup.addAll(actions);
-    if (actions.length > 0) {
-      myAdditionalActionGroup.addSeparator();
+  private void initWestToolBar(JPanel westPanel) {
+    myToolbarWest = ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE, new DefaultActionGroup(myActionGroupWest), true);
+
+    myToolbarWest.setTargetComponent(this);
+    myToolbarWest.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+    myToolbarWest.setReservePlaceAutoPopupIcon(false);
+
+    JComponent component = myToolbarWest.getComponent();
+    component.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    component.setOpaque(false);
+
+    westPanel.add(component);
+  }
+
+  public void setTabActions(@Nonnull AnAction[] actions) {
+    if (myToolbarWest == null) {
+      initWestToolBar(myWestPanel);
     }
 
+    myActionGroupWest.removeAll();
+    myActionGroupWest.addSeparator();
+    myActionGroupWest.addAll(actions);
+
+    if (myToolbarWest != null) {
+      myToolbarWest.updateActionsImmediately();
+    }
+  }
+
+  public void setAdditionalTitleActions(@Nonnull AnAction[] actions) {
+    myActionGroup.removeAll();
+    myActionGroup.addAll(actions);
+    if (actions.length > 0) {
+      myActionGroup.addSeparator();
+    }
     if (myToolbar != null) {
       myToolbar.updateActionsImmediately();
     }
