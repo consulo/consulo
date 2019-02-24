@@ -91,7 +91,7 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.TransactionGuardEx;
 import consulo.fileEditor.impl.EditorsSplitters;
-import consulo.ui.migration.AWTComponentProviderUtil;
+import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.intellij.lang.annotations.JdkConstants;

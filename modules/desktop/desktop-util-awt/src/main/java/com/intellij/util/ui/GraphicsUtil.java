@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.MethodInvocator;
 import com.intellij.util.PairConsumer;
-import consulo.util.ui.PreJava9UIUtil;
+import consulo.desktop.util.awt.laf.PreJava9UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

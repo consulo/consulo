@@ -19,9 +19,9 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.ui.SwingUIDecorator;
-import consulo.ui.laf.MorphColor;
+import consulo.desktop.util.awt.MorphColor;
 import consulo.ui.style.StyleManager;
-import consulo.util.ui.BuildInLookAndFeel;
+import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

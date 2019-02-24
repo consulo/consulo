@@ -40,7 +40,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.impl.ToolWindowPanelImplEx;
-import consulo.ui.migration.AWTComponentProviderUtil;
+import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

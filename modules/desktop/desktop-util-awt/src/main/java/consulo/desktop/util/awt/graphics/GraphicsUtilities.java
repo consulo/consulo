@@ -32,7 +32,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.jdesktop.swingx.graphics;
+package consulo.desktop.util.awt.graphics;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

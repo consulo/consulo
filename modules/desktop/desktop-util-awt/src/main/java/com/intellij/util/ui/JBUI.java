@@ -13,7 +13,7 @@ import com.intellij.util.LazyInitializer.NullableValue;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.util.ui.components.VerticalLayoutPanel;
+import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import gnu.trove.TDoubleObjectHashMap;
 import javax.annotation.Nonnull;
 

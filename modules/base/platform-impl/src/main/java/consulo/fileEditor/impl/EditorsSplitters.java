@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
-import consulo.ui.migration.AWTComponentProvider;
+import consulo.desktop.util.awt.migration.AWTComponentProvider;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

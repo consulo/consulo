@@ -18,8 +18,8 @@ package com.intellij.openapi.ui.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.ImageUtil;
-import org.jdesktop.swingx.graphics.GraphicsUtilities;
-import org.jdesktop.swingx.graphics.ShadowRenderer;
+import consulo.desktop.util.awt.graphics.GraphicsUtilities;
+import consulo.desktop.util.awt.graphics.ShadowRenderer;
 
 import javax.swing.*;
 import java.awt.*;

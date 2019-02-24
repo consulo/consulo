@@ -33,7 +33,7 @@ import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.desktop.internal.image.DesktopLazyImageImpl;
-import consulo.ui.laf.UIModificationTracker;
+import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import consulo.ui.style.StyleManager;

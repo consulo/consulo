@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.desktop.util.awt.laf;
 
 import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.util.ui.UIUtil;

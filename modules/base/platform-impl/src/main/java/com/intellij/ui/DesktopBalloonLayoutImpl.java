@@ -28,7 +28,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import consulo.ui.impl.ToolWindowPanelImplEx;
-import consulo.ui.migration.AWTComponentProviderUtil;
+import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

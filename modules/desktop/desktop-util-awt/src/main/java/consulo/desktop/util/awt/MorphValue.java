@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.laf;
+package consulo.desktop.util.awt;
 
 import com.intellij.util.NotNullProducer;
 
@@ -28,7 +28,7 @@ public class MorphValue<V> {
 
   @Nonnull
   public static <K> MorphValue<K> of(@Nonnull NotNullProducer<K> func) {
-    return new MorphValue<K>(func);
+    return new MorphValue<>(func);
   }
 
   private final NotNullProducer<V> myValueProducer;

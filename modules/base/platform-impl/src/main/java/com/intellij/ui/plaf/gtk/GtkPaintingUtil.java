@@ -16,7 +16,7 @@
 package com.intellij.ui.plaf.gtk;
 
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.GTKPlusUIUtil;
+import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;

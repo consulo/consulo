@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.migration;
-
-import javax.annotation.Nullable;
+package consulo.desktop.util.awt.laf;
 
 /**
  * @author VISTALL
- * @since 2018-05-11
+ * @since 03.03.14
  */
-public interface AWTComponentProvider {
-  @Nullable
-  java.awt.Component getComponent();
+public interface BuildInLookAndFeel {
+  String getID();
+
+  boolean isDark();
 }

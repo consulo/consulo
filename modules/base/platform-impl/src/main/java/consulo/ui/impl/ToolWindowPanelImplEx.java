@@ -17,7 +17,7 @@ package consulo.ui.impl;
 
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.ex.ToolWindowPanel;
-import consulo.ui.migration.AWTComponentProvider;
+import consulo.desktop.util.awt.migration.AWTComponentProvider;
 
 import javax.swing.*;
 

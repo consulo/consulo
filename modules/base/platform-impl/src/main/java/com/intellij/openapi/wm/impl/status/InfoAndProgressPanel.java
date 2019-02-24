@@ -56,7 +56,7 @@ import com.intellij.util.ui.update.Update;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.impl.ToolWindowPanelImplEx;
-import consulo.ui.migration.AWTComponentProviderUtil;
+import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

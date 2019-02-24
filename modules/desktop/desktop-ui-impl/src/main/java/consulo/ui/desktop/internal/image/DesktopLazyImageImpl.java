@@ -18,7 +18,7 @@ package consulo.ui.desktop.internal.image;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.laf.UIModificationTracker;
+import consulo.desktop.util.awt.UIModificationTracker;
 
 import javax.swing.*;
 import java.awt.*;

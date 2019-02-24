@@ -24,8 +24,8 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jdesktop.swingx.graphics.GraphicsUtilities;
-import org.jdesktop.swingx.graphics.ShadowRenderer;
+import consulo.desktop.util.awt.graphics.GraphicsUtilities;
+import consulo.desktop.util.awt.graphics.ShadowRenderer;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

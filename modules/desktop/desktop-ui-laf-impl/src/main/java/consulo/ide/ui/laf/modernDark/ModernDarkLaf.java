@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.util.ui.BuildInLookAndFeel;
+import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;

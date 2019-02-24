@@ -43,7 +43,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.AccessRule;
-import consulo.ui.laf.MorphColor;
+import consulo.desktop.util.awt.MorphColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
