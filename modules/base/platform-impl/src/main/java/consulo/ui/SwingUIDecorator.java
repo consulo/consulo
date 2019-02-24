@@ -38,6 +38,11 @@ public interface SwingUIDecorator extends UIDecorator {
     return UIDecorator.get(supplier, SwingUIDecorator.class);
   }
 
+  @Nonnull
+  static <R> R get(@Nonnull Function<SwingUIDecorator, R> supplier, @Nonnull R defaultValue) {
+    return UIDecorator.get(supplier, SwingUIDecorator.class, defaultValue);
+  }
+
   @Nullable
   default Color getSidebarColor() {
     return null;

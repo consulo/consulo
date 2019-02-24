@@ -76,6 +76,26 @@ public interface UIDecorator {
     throw new IllegalArgumentException("Null value");
   }
 
+  @Nonnull
+  static <R, U extends UIDecorator> R get(Function<U, R> supplier, Class<U> clazz, @Nonnull R defaultValue) {
+    for (UIDecorator decorator : ourDecorators.getValue()) {
+      if (!decorator.isAvaliable()) {
+        continue;
+      }
+
+      U u = ObjectUtil.tryCast(decorator, clazz);
+      if (u == null) {
+        continue;
+      }
+
+      R fun = supplier.apply(u);
+      if (fun != null) {
+        return fun;
+      }
+    }
+    return defaultValue;
+  }
+
   boolean isAvaliable();
 
   default boolean isDark() {

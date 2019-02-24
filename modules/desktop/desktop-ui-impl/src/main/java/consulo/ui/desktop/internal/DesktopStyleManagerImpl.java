@@ -43,7 +43,7 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
       return GTKPlusUIUtil.isDarkTheme();
     }
 
-    return SwingUIDecorator.get(SwingUIDecorator::isDark);
+    return SwingUIDecorator.get(SwingUIDecorator::isDark, Boolean.FALSE);
   });
 
   public DesktopStyleManagerImpl() {
