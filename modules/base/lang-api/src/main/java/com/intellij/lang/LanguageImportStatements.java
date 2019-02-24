@@ -20,7 +20,9 @@
 package com.intellij.lang;
 
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,8 +34,10 @@ public class LanguageImportStatements extends LanguageExtension<ImportOptimizer>
     super("com.intellij.lang.importOptimizer");
   }
 
+  @Nonnull
+  @RequiredReadAction
   public Set<ImportOptimizer> forFile(PsiFile file) {
-    Set<ImportOptimizer> optimizers = new HashSet<ImportOptimizer>();
+    Set<ImportOptimizer> optimizers = new HashSet<>();
     for (PsiFile psiFile : file.getViewProvider().getAllFiles()) {
       List<ImportOptimizer> langOptimizers = allForLanguage(psiFile.getLanguage());
       for (ImportOptimizer optimizer : langOptimizers) {

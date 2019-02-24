@@ -552,13 +552,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     if (text.isEmpty()) {
       return text;
     }
+    // bundle will return value like !some.key! if not found in bunde
     if (text.charAt(0) == '!' && text.charAt(text.length() - 1) == '!') {
-      if (myApplication.isInternal()) {
-        return text;
-      }
-      else {
-        return "";
-      }
+      return "";
     }
     else {
       return text;

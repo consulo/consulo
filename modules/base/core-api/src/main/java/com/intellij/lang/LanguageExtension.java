@@ -43,8 +43,9 @@ public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
     IN_LANGUAGE_CACHE = Key.create("EXTENSIONS_IN_LANGUAGE_"+epName);
   }
 
+  @Nonnull
   @Override
-  protected String keyToString(final Language key) {
+  protected String keyToString(@Nonnull final Language key) {
     return key.getID();
   }
 

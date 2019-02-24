@@ -18,6 +18,8 @@ package com.intellij.codeInsight.actions;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.idea.ActionsBundle;
+import com.intellij.lang.ImportOptimizer;
 import com.intellij.lang.LanguageImportStatements;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -30,24 +32,66 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
+import com.intellij.util.KeyedLazyInstance;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class OptimizeImportsAction extends AnAction {
-  private static final @NonNls String HELP_ID = "editing.manageImports";
+  private static final String HELP_ID = "editing.manageImports";
+
   private static final String NO_IMPORTS_OPTIMIZED = "Unused imports not found";
   private static boolean myProcessVcsChangedFilesInTests;
 
+  public OptimizeImportsAction() {
+    List<KeyedLazyInstance<ImportOptimizer>> extensions = LanguageImportStatements.INSTANCE.getExtensions();
 
+    updatePresentation(getTemplatePresentation(), extensions.stream().map(KeyedLazyInstance::getInstance).collect(Collectors.toList()));
+  }
+
+  private void updatePresentation(Presentation presentation, List<ImportOptimizer> importOptimizers) {
+    Set<String> actionNames = new LinkedHashSet<>();
+    Set<String> actionDescriptions = new LinkedHashSet<>();
+    for (ImportOptimizer importOptimizer : importOptimizers) {
+      actionNames.add(importOptimizer.getActionName());
+      actionDescriptions.add(importOptimizer.getActionDescription());
+    }
+
+    if (!actionNames.isEmpty() && !actionDescriptions.isEmpty()) {
+      presentation.setText(StringUtil.join(actionNames, " | "));
+      presentation.setDescription(StringUtil.join(actionDescriptions, " | "));
+    }
+    else {
+      presentation.setText(ActionsBundle.message("not.action.OptimizeImports.text"));
+      presentation.setDescription(ActionsBundle.message("not.action.OptimizeImports.description"));
+    }
+  }
+
+  @RequiredUIAccess
+  private void updatePresentationForFiles(@Nonnull Presentation presentation, boolean enabled, @Nonnull List<PsiFile> files) {
+    presentation.setEnabled(enabled);
+
+    List<ImportOptimizer> importOptimizers = new ArrayList<>(files.size());
+    for (PsiFile file : files) {
+      importOptimizers.addAll(LanguageImportStatements.INSTANCE.forFile(file));
+    }
+
+    updatePresentation(presentation, importOptimizers);
+  }
+
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent event) {
+  public void actionPerformed(@Nonnull AnActionEvent event) {
     actionPerformedImpl(event.getDataContext());
   }
 
+  @RequiredUIAccess
   public static void actionPerformedImpl(final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -61,7 +105,7 @@ public class OptimizeImportsAction extends AnAction {
     PsiFile file = null;
     PsiDirectory dir;
 
-    if (editor != null){
+    if (editor != null) {
       file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (file == null) return;
       dir = file.getContainingDirectory();
@@ -73,7 +117,7 @@ public class OptimizeImportsAction extends AnAction {
       }
       return;
     }
-    else{
+    else {
       Project projectContext = dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT);
       Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
@@ -111,7 +155,7 @@ public class OptimizeImportsAction extends AnAction {
       else if (element instanceof PsiDirectory) {
         dir = (PsiDirectory)element;
       }
-      else{
+      else {
         file = element.getContainingFile();
         if (file == null) return;
         dir = file.getContainingDirectory();
@@ -131,23 +175,20 @@ public class OptimizeImportsAction extends AnAction {
       processOnlyVcsChangedFiles = dialog.isProcessOnlyVcsChangedFiles();
     }
 
-    if (processDirectory){
+    if (processDirectory) {
       new OptimizeImportsProcessor(project, dir, true, processOnlyVcsChangedFiles).run();
     }
-    else{
+    else {
       final OptimizeImportsProcessor optimizer = new OptimizeImportsProcessor(project, file);
       if (editor != null && EditorSettingsExternalizable.getInstance().getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION) {
         optimizer.setCollectInfo(true);
-        optimizer.setPostRunnable(new Runnable() {
-          @Override
-          public void run() {
-            LayoutCodeInfoCollector collector = optimizer.getInfoCollector();
-            if (collector != null) {
-              String info = collector.getOptimizeImportsNotification();
-              if (!editor.isDisposed() && editor.getComponent().isShowing()) {
-                String message = info != null ? info : NO_IMPORTS_OPTIMIZED;
-                FileInEditorProcessor.showHint(editor, StringUtil.capitalize(message), null);
-              }
+        optimizer.setPostRunnable(() -> {
+          LayoutCodeInfoCollector collector = optimizer.getInfoCollector();
+          if (collector != null) {
+            String info = collector.getOptimizeImportsNotification();
+            if (!editor.isDisposed() && editor.getComponent().isShowing()) {
+              String message = info != null ? info : NO_IMPORTS_OPTIMIZED;
+              FileInEditorProcessor.showHint(editor, StringUtil.capitalize(message), null);
             }
           }
         });
@@ -156,29 +197,34 @@ public class OptimizeImportsAction extends AnAction {
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent event){
+  public void update(@Nonnull AnActionEvent event) {
+    Presentation presentation = event.getPresentation();
     if (!LanguageImportStatements.INSTANCE.hasAnyExtensions()) {
-      event.getPresentation().setVisible(false);
+      presentation.setVisible(false);
       return;
     }
 
-    Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    if (project == null){
-      presentation.setEnabled(false);
+    if (project == null) {
+      updatePresentationForFiles(presentation, false, Collections.emptyList());
       return;
     }
 
     final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    List<PsiFile> psiFiles = new ArrayList<>();
 
     final Editor editor = BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(CommonDataKeys.EDITOR), false);
-    if (editor != null){
+    if (editor != null) {
       PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-      if (file == null || !isOptimizeImportsAvailable(file)){
-        presentation.setEnabled(false);
+      if (file == null || !isOptimizeImportsAvailable(file)) {
+        updatePresentationForFiles(presentation, false, Collections.singletonList(file));
         return;
+      }
+      else {
+        psiFiles.add(file);
       }
     }
     else if (files != null && ReformatCodeAction.containsAtLeastOneFile(files)) {
@@ -186,15 +232,16 @@ public class OptimizeImportsAction extends AnAction {
       for (VirtualFile virtualFile : files) {
         PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
         if (file == null) {
-          presentation.setEnabled(false);
+          updatePresentationForFiles(presentation, false, Collections.emptyList());
           return;
         }
+        psiFiles.add(file);
         if (isOptimizeImportsAvailable(file)) {
           anyHasOptimizeImports = true;
         }
       }
       if (!anyHasOptimizeImports) {
-        presentation.setEnabled(false);
+        updatePresentationForFiles(presentation, false, psiFiles);
         return;
       }
     }
@@ -202,27 +249,27 @@ public class OptimizeImportsAction extends AnAction {
       // skip. Both directories and single files are supported.
     }
     else {
-      if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null &&
-          dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
+      if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null && dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
         PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
-        if (element == null){
-          presentation.setEnabled(false);
+        if (element == null) {
+          updatePresentationForFiles(presentation, false, Collections.emptyList());
           return;
         }
 
-        if (!(element instanceof PsiDirectory)){
+        if (!(element instanceof PsiDirectory)) {
           PsiFile file = element.getContainingFile();
-          if (file == null || !isOptimizeImportsAvailable(file)){
-            presentation.setEnabled(false);
+          if (file == null || !isOptimizeImportsAvailable(file)) {
+            updatePresentationForFiles(presentation, false, Collections.singletonList(file));
             return;
           }
         }
       }
     }
 
-    presentation.setEnabled(true);
+    updatePresentationForFiles(presentation, true, psiFiles);
   }
 
+  @RequiredUIAccess
   private static boolean isOptimizeImportsAvailable(final PsiFile file) {
     return !LanguageImportStatements.INSTANCE.forFile(file).isEmpty();
   }
@@ -279,7 +326,7 @@ public class OptimizeImportsAction extends AnAction {
 
       myOnlyVcsCheckBox.setEnabled(myContextHasChanges);
       myOnlyVcsCheckBox.setSelected(myContextHasChanges && lastRunVcsChangedTextEnabled);
-      myOnlyVcsCheckBox.setBorder(new EmptyBorder(0, 10 , 0, 0));
+      myOnlyVcsCheckBox.setBorder(new EmptyBorder(0, 10, 0, 0));
       panel.add(myOnlyVcsCheckBox);
       return panel;
     }

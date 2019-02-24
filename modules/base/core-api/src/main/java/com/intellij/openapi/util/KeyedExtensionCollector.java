@@ -30,9 +30,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -42,7 +42,8 @@ public class KeyedExtensionCollector<T, KeyT> {
   private final Map<String, List<T>> myExplicitExtensions = new THashMap<String, List<T>>();
   private final ConcurrentMap<String, List<T>> myCache = ContainerUtil.newConcurrentMap();
 
-  @NonNls private final String lock;
+  @NonNls
+  private final String lock;
 
   private ExtensionPoint<KeyedLazyInstance<T>> myPoint;
   private final String myEpName;
@@ -186,8 +187,7 @@ public class KeyedExtensionCollector<T, KeyT> {
           synchronized (lock) {
             if (bean.getKey() == null) {
               if (pluginDescriptor != null) {
-                throw new PluginException("No key specified for extension of class " + bean.getInstance().getClass(),
-                                          pluginDescriptor.getPluginId());
+                throw new PluginException("No key specified for extension of class " + bean.getInstance().getClass(), pluginDescriptor.getPluginId());
               }
               LOG.error("No key specified for extension of class " + bean.getInstance().getClass());
               return;
@@ -223,9 +223,18 @@ public class KeyedExtensionCollector<T, KeyT> {
     }
   }
 
+  @Nonnull
+  public List<KeyedLazyInstance<T>> getExtensions() {
+    synchronized (lock) {
+      final ExtensionPoint<KeyedLazyInstance<T>> point = getPoint();
+      return point != null ? Arrays.asList(point.getExtensions()) : Collections.emptyList();
+    }
+  }
+
   public void addListener(@Nonnull ExtensionPointListener<T> listener) {
     myListeners.add(listener);
   }
+
   public void addListener(@Nonnull final ExtensionPointListener<T> listener, @Nonnull Disposable parent) {
     myListeners.add(listener);
     Disposer.register(parent, new Disposable() {
