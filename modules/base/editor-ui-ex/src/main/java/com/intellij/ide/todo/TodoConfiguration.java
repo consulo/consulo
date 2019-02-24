@@ -78,6 +78,7 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
     }
   }
 
+  @Deprecated
   public static TodoConfiguration getInstance() {
     return ServiceManager.getService(TodoConfiguration.class);
   }
