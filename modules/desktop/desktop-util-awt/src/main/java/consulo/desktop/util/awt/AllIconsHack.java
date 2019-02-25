@@ -17,7 +17,6 @@ package consulo.desktop.util.awt;
 
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ReflectionUtil;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.swing.*;
 
@@ -32,8 +31,9 @@ public class AllIconsHack {
 
   private static NotNullLazyValue<Icon> Tree_white_right_arrow_value = NotNullLazyValue.createValue(() -> {
     try {
-      Class<?> macClazz = Class.forName("com.intellij.icons.AllIcons$Mac");
-      return ReflectionUtil.getStaticFieldValue(macClazz, SwingImageRef.class, "Tree_white_right_arrow");
+      Class macClazz = Class.forName("com.intellij.icons.AllIcons$Mac");
+      Class swingImageRef = Class.forName("consulo.ui.migration.SwingImageRef");
+      return (Icon)ReflectionUtil.getStaticFieldValue(macClazz, swingImageRef, "Tree_white_right_arrow");
     }
     catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
@@ -42,8 +42,9 @@ public class AllIconsHack {
 
   private static NotNullLazyValue<Icon> Tree_white_down_arrow_value = NotNullLazyValue.createValue(() -> {
     try {
-      Class<?> macClazz = Class.forName("com.intellij.icons.AllIcons$Mac");
-      return ReflectionUtil.getStaticFieldValue(macClazz, SwingImageRef.class, "Tree_white_down_arrow");
+      Class macClazz = Class.forName("com.intellij.icons.AllIcons$Mac");
+      Class swingImageRef = Class.forName("consulo.ui.migration.SwingImageRef");
+      return (Icon)ReflectionUtil.getStaticFieldValue(macClazz, swingImageRef, "Tree_white_down_arrow");
     }
     catch (ClassNotFoundException e) {
       throw new RuntimeException(e);

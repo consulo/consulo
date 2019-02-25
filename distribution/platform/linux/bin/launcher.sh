@@ -127,7 +127,6 @@ IDE_JVM_ARGS=""
 ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
 
 CLASSPATH="$IDE_HOME/lib/consulo-desktop-bootstrap.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-extensions.jar"
 CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util.jar"
 CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util-rt.jar"
 CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jdom.jar"

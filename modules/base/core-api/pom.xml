@@ -41,11 +41,6 @@
       <artifactId>consulo-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-extensions</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <!--TODO [VISTALL] desktop dependency in platform, we need remove it -->
     <dependency>
       <groupId>${project.groupId}</groupId>

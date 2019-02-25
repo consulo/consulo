@@ -43,7 +43,7 @@ HANDLE hSingleInstanceWatcherThread;
 const int FILE_MAPPING_SIZE = 16000;
 
 #define BOOT "consulo-desktop-boot.jar"
-#define BOOTCLASSPATH "consulo-desktop-bootstrap.jar;consulo-extensions.jar;consulo-util.jar;consulo-util-rt.jar;jdom.jar;trove4j.jar;jna.jar;jna-platform.jar"
+#define BOOTCLASSPATH "consulo-desktop-bootstrap.jar;consulo-util.jar;consulo-util-rt.jar;jdom.jar;trove4j.jar;jna.jar;jna-platform.jar"
 #define CONSULO_JRE "CONSULO_JRE"
 
 #ifdef _M_X64
