@@ -18,7 +18,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>1.8</java.level>
   </properties>
 
   <dependencies>

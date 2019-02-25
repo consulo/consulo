@@ -29,11 +29,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-ui-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-rt</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -45,11 +40,6 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>trove4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>eawtstub</artifactId>
-      <optional>true</optional>
     </dependency>
     <!--external-->
     <dependency>
