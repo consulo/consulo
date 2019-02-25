@@ -39,6 +39,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
+import com.intellij.psi.LanguageFileViewProviders;
 import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.ui.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
@@ -48,6 +49,8 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.application.options.PathMacrosService;
 import consulo.extensions.ExtensionExtender;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.lang.LanguageVersionDefines;
+import consulo.lang.LanguageVersionResolvers;
 import consulo.psi.tree.ASTCompositeFactory;
 import consulo.psi.tree.ASTLazyFactory;
 import consulo.psi.tree.ASTLeafFactory;
@@ -99,6 +102,9 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
     registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
     registerExtensionPoint(area, LanguageSubstitutors.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
+    registerExtensionPoint(area, LanguageVersionResolvers.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
+    registerExtensionPoint(area, LanguageVersionDefines.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
+    registerExtensionPoint(area, LanguageFileViewProviders.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
 
     registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
     registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
