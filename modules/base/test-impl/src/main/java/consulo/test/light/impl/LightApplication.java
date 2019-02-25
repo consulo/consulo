@@ -39,9 +39,11 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.ui.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
+import com.intellij.util.KeyedLazyInstanceEP;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.options.PathMacrosService;
+import consulo.extensions.ExtensionExtender;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.psi.tree.ASTCompositeFactory;
 import consulo.psi.tree.ASTLazyFactory;
@@ -93,6 +95,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
 
     registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
+    registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
   }
 
   private <T> void registerExtension(ExtensionsAreaImpl area, ExtensionPointName<T> extensionPointName, T value) {
@@ -100,7 +103,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(value));
   }
 
-  private void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<?> name, Class<?> aClass) {
+  private <T> void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<T> name, Class<? extends T> aClass) {
     ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
     area.registerExtensionPoint(name.getName(), aClass.getName(), new UndefinedPluginDescriptor(), kind);
   }

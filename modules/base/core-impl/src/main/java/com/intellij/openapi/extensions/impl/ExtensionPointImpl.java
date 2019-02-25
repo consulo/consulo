@@ -18,7 +18,6 @@ package com.intellij.openapi.extensions.impl;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -52,8 +51,6 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   private static final Logger LOG = Logger.getInstance(ExtensionPointImpl.class);
   private static final StringInterner INTERNER = new StringInterner();
-
-  private static final ExtensionPointName<KeyedLazyInstanceEP<ExtensionExtender>> ourExtenderEpName = ExtensionPointName.create("com.intellij.extensionExtender");
 
   private final ComponentManager myComponentManager;
   private final String myName;
@@ -142,13 +139,13 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   @SuppressWarnings("unchecked")
   private List<ExtensionExtender<T>> getExtenders() {
     // do not extend extender
-    if (ourExtenderEpName.getName().equals(myName)) {
+    if (ExtensionExtender.EP_NAME.getName().equals(myName)) {
       return Collections.emptyList();
     }
 
     List<ExtensionExtender<T>> extenders = new SmartList<>();
 
-    for (KeyedLazyInstanceEP<ExtensionExtender> ep : ourExtenderEpName.getExtensionList()) {
+    for (KeyedLazyInstanceEP<ExtensionExtender> ep : ExtensionExtender.EP_NAME.getExtensionList()) {
       if (myName.equals(ep.getKey())) {
         try {
           ExtensionExtender extender = ep.getInstance();

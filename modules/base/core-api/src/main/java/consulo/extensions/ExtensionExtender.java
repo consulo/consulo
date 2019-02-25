@@ -16,13 +16,15 @@
 package consulo.extensions;
 
 import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.util.KeyedLazyInstanceEP;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
  * Extension extender. It will add additional memebers for select extension. It will be called once when extension cache builded.
- *
+ * <p>
  * You can't removed those items from extensions later
  *
  * <extensionExtender key='com.intellij.someExtension' implementationClass='SomeExtender' />
@@ -31,5 +33,7 @@ import java.util.function.Consumer;
  * @since 2019-02-25
  */
 public interface ExtensionExtender<T> {
+  ExtensionPointName<KeyedLazyInstanceEP<ExtensionExtender>> EP_NAME = ExtensionPointName.create("com.intellij.extensionExtender");
+
   void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<T> consumer);
 }
