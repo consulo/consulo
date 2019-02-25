@@ -15,17 +15,17 @@
  */
 package consulo.extensions;
 
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -52,7 +52,7 @@ public abstract class CompositeExtensionPointName<T> {
   public static <E> CompositeExtensionPointName<E> modulePoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
     return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
       @Override
-      protected boolean validateArea(@Nullable AreaInstance areaInstance) {
+      protected boolean validateArea(@Nullable ComponentManager areaInstance) {
         return areaInstance instanceof Module;
       }
     };
@@ -62,7 +62,7 @@ public abstract class CompositeExtensionPointName<T> {
   public static <E> CompositeExtensionPointName<E> projectPoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
     return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
       @Override
-      protected boolean validateArea(@Nullable AreaInstance areaInstance) {
+      protected boolean validateArea(@Nullable ComponentManager areaInstance) {
         return areaInstance instanceof Project;
       }
     };
@@ -220,17 +220,17 @@ public abstract class CompositeExtensionPointName<T> {
 
     @Nullable
     @Override
-    protected E getCompositeValue(@Nullable AreaInstance areaInstance) {
+    protected E getCompositeValue(@Nullable ComponentManager areaInstance) {
       return myCompositeValue;
     }
 
     @Override
-    protected void putCompositeValue(@Nullable AreaInstance areaInstance, E compositeValue) {
+    protected void putCompositeValue(@Nullable ComponentManager areaInstance, E compositeValue) {
       myCompositeValue = compositeValue;
     }
 
     @Override
-    protected boolean validateArea(@Nullable AreaInstance areaInstance) {
+    protected boolean validateArea(@Nullable ComponentManager areaInstance) {
       return areaInstance == null;
     }
   }
@@ -245,13 +245,13 @@ public abstract class CompositeExtensionPointName<T> {
 
     @Nullable
     @Override
-    protected E getCompositeValue(@Nullable AreaInstance areaInstance) {
+    protected E getCompositeValue(@Nullable ComponentManager areaInstance) {
       assert areaInstance instanceof UserDataHolder;
       return ((UserDataHolder)areaInstance).getUserData(myCompositeValueKey);
     }
 
     @Override
-    protected void putCompositeValue(@Nullable AreaInstance areaInstance, E compositeValue) {
+    protected void putCompositeValue(@Nullable ComponentManager areaInstance, E compositeValue) {
       assert areaInstance instanceof UserDataHolder;
       ((UserDataHolder)areaInstance).putUserData(myCompositeValueKey, compositeValue);
     }
@@ -266,7 +266,7 @@ public abstract class CompositeExtensionPointName<T> {
   }
 
   @Nonnull
-  private T buildCompositeValue(@Nullable AreaInstance areaInstance) {
+  private T buildCompositeValue(@Nullable ComponentManager areaInstance) {
     final T[] extensions = Extensions.getExtensions(myName, areaInstance);
 
     InvocationHandler handler = new MyInvocationHandler<T>(myName, extensions);
@@ -276,11 +276,11 @@ public abstract class CompositeExtensionPointName<T> {
   }
 
   @Nullable
-  protected abstract T getCompositeValue(@Nullable AreaInstance areaInstance);
+  protected abstract T getCompositeValue(@Nullable ComponentManager areaInstance);
 
-  protected abstract void putCompositeValue(@Nullable AreaInstance areaInstance, T compositeValue);
+  protected abstract void putCompositeValue(@Nullable ComponentManager areaInstance, T compositeValue);
 
-  protected abstract boolean validateArea(@Nullable AreaInstance areaInstance);
+  protected abstract boolean validateArea(@Nullable ComponentManager areaInstance);
 
   @Nonnull
   public T composite() {
@@ -288,7 +288,7 @@ public abstract class CompositeExtensionPointName<T> {
   }
 
   @Nonnull
-  public T composite(@Nullable AreaInstance areaInstance) {
+  public T composite(@Nullable ComponentManager areaInstance) {
     if (!validateArea(areaInstance)) {
       throw new IllegalArgumentException("Wrong area instance for '" + myName + "' extension point");
     }

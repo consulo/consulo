@@ -16,6 +16,7 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.ComponentManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,13 +27,15 @@ import javax.annotation.Nullable;
 public interface ExtensionPoint<T> {
   @Nonnull
   String getName();
-  AreaInstance getArea();
+
+  ComponentManager getArea();
 
   void registerExtension(@Nonnull T extension);
   void registerExtension(@Nonnull T extension, @Nonnull LoadingOrder order);
 
   @Nonnull
   T[] getExtensions();
+
   boolean hasAnyExtensions();
 
   @Nullable

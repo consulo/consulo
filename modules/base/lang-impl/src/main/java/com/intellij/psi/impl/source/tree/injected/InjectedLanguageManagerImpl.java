@@ -57,9 +57,9 @@ import com.intellij.util.containers.MultiMap;
 import consulo.lang.injection.MultiHostInjectorExtensionPoint;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -89,7 +89,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     myProject = project;
     myDumbService = dumbService;
 
-    final ExtensionPoint<MultiHostInjectorExtensionPoint> multiPoint = Extensions.getArea(project).getExtensionPoint(MultiHostInjector.EP_NAME);
+    final ExtensionPoint<MultiHostInjectorExtensionPoint> multiPoint = project.getExtensionsArea().getExtensionPoint(MultiHostInjector.EP_NAME);
     multiPoint.addExtensionPointListener(new ExtensionPointListener<MultiHostInjectorExtensionPoint>() {
       @Override
       public void extensionAdded(@Nonnull MultiHostInjectorExtensionPoint ep, @Nullable PluginDescriptor pluginDescriptor) {

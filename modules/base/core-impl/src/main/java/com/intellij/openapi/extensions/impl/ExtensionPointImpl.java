@@ -16,6 +16,7 @@
 package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -35,9 +36,9 @@ import java.util.function.Function;
  * @author AKireyev
  */
 public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.extensions.impl.ExtensionPointImpl");
+  private static final Logger LOG = Logger.getInstance(ExtensionPointImpl.class);
 
-  private final AreaInstance myArea;
+  private final ComponentManager myArea;
   private final String myName;
   private final String myClassName;
   private final Kind myKind;
@@ -58,7 +59,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   // TODO [VISTALL] support locking
   private boolean myLocked;
 
-  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, AreaInstance area, @Nonnull PluginDescriptor descriptor) {
+  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, ComponentManager area, @Nonnull PluginDescriptor descriptor) {
     synchronized (INTERNER) {
       myName = INTERNER.intern(name);
     }
@@ -79,7 +80,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   }
 
   @Override
-  public AreaInstance getArea() {
+  public ComponentManager getArea() {
     return myArea;
   }
 

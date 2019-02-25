@@ -16,23 +16,28 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.components.ComponentManager;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@DeprecationInfo("Use com.intellij.openapi.extensions.ExtensionPointName")
 public class Extensions {
   private Extensions() {
   }
 
   @Nonnull
+  @Deprecated
   public static ExtensionsArea getRootArea() {
     return Application.get().getExtensionsArea();
   }
 
   @Nonnull
-  public static ExtensionsArea getArea(@Nullable AreaInstance areaInstance) {
-    return areaInstance == null ? getRootArea() : areaInstance.getExtensionsArea();
+  @Deprecated
+  public static ExtensionsArea getArea(@Nullable ComponentManager componentManager) {
+    return componentManager == null ? getRootArea() : componentManager.getExtensionsArea();
   }
 
   @Nonnull
@@ -45,21 +50,21 @@ public class Extensions {
   @SuppressWarnings({"unchecked"})
   @Deprecated
   public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return (T[])getExtensions(extensionPointName.getName(), Application.get());
+    return extensionPointName.getExtensions();
   }
 
   @Nonnull
   @SuppressWarnings({"unchecked"})
   @Deprecated
-  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance) {
-    return Extensions.<T>getExtensions(extensionPointName.getName(), areaInstance);
+  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName, @Nullable ComponentManager areaInstance) {
+    return areaInstance == null ? getExtensions(extensionPointName) : areaInstance.getExtensions(extensionPointName);
   }
 
   @Nonnull
   @Deprecated
-  public static <T> T[] getExtensions(String extensionPointName, @Nullable AreaInstance areaInstance) {
-    ExtensionsArea area = getArea(areaInstance);
-    ExtensionPoint<T> extensionPoint = area.getExtensionPoint(extensionPointName);
+  public static <T> T[] getExtensions(String extensionPointName, @Nullable ComponentManager target) {
+    ComponentManager componentManager = target == null ? Application.get() : target;
+    ExtensionPoint<T> extensionPoint = componentManager.getExtensionsArea().getExtensionPoint(extensionPointName);
     return extensionPoint.getExtensions();
   }
 
@@ -77,7 +82,7 @@ public class Extensions {
 
   @Nonnull
   @Deprecated
-  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance, @Nonnull Class<U> extClass) {
+  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, ComponentManager areaInstance, @Nonnull Class<U> extClass) {
     for (T t : getExtensions(extensionPointName, areaInstance)) {
       if (extClass.isInstance(t)) {
         //noinspection unchecked

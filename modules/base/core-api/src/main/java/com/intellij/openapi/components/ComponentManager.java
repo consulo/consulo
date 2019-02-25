@@ -17,7 +17,6 @@ package com.intellij.openapi.components;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.project.Project;
@@ -36,7 +35,7 @@ import javax.annotation.Nonnull;
  * @see Application
  * @see Project
  */
-public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner, AreaInstance{
+public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner {
   default void initNotLazyServices() {
     throw new UnsupportedOperationException();
   }
@@ -51,7 +50,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     throw new UnsupportedOperationException();
   }
 
-  @Override
   @Nonnull
   default ExtensionsArea getExtensionsArea() {
     throw new UnsupportedOperationException();

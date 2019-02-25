@@ -25,7 +25,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
@@ -57,8 +56,8 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;
 import consulo.util.JWindowAsUIWindowHack;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -70,8 +69,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @Singleton
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
@@ -511,7 +510,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
       myNorthPanel.setVisible(
               UISettings.getInstance().SHOW_NAVIGATION_BAR && !(myContainer instanceof DockContainer.Dialog) && !UISettings.getInstance().PRESENTATION_MODE);
 
-      IdeRootPaneNorthExtension[] extensions = Extensions.getArea(myProject).getExtensionPoint(IdeRootPaneNorthExtension.EP_NAME).getExtensions();
+      IdeRootPaneNorthExtension[] extensions = IdeRootPaneNorthExtension.EP_NAME.getExtensions(myProject);
       HashSet<String> processedKeys = new HashSet<>();
       for (IdeRootPaneNorthExtension each : extensions) {
         processedKeys.add(each.getKey());

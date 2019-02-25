@@ -18,7 +18,7 @@ package com.intellij.internal;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.AreaInstance;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -39,7 +39,7 @@ public class DumpExtensionsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    List<AreaInstance> areas = new ArrayList<>();
+    List<ComponentManager> areas = new ArrayList<>();
     areas.add(Application.get());
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
@@ -50,13 +50,13 @@ public class DumpExtensionsAction extends DumbAwareAction {
       }
     }
     System.out.print(areas.size() + " extension areas: ");
-    for (AreaInstance area : areas) {
+    for (ComponentManager area : areas) {
       System.out.print(area + " ");
     }
     System.out.println("\n");
 
     List<ExtensionPoint> points = new ArrayList<>();
-    for (AreaInstance area : areas) {
+    for (ComponentManager area : areas) {
       points.addAll(Arrays.asList(area.getExtensionsArea().getExtensionPoints()));
     }
     System.out.println(points.size() + " extension points: ");

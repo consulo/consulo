@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
 import gnu.trove.THashMap;
@@ -38,11 +39,11 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
 
   private final Map<String, ExtensionPointImpl> myExtensionPoints = new THashMap<>();
 
-  private final AreaInstance myAreaInstance;
+  private final ComponentManager myAreaInstance;
 
   private boolean myLocked;
 
-  public ExtensionsAreaImpl(AreaInstance areaInstance) {
+  public ExtensionsAreaImpl(ComponentManager areaInstance) {
     myCreationTrace = DEBUG_REGISTRATION ? new Throwable("Area creation trace") : null;
     myAreaInstance = areaInstance;
   }

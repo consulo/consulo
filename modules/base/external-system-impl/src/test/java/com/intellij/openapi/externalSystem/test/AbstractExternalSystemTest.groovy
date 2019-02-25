@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.test
 
+import com.intellij.openapi.application.Application
 import com.intellij.testFramework.SkipInHeadlessEnvironment
 import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture
@@ -50,7 +51,7 @@ abstract class AbstractExternalSystemTest extends UsefulTestCase {
     projectDir.mkdirs();
     
     externalSystemManager = new TestExternalSystemManager(project)
-    def area = Extensions.getArea(null)
+    def area = Application.get().getExtensionsArea();
     externalSystemManagerEP = area.getExtensionPoint(ExternalSystemManager.EP_NAME)
     externalSystemManagerEP.registerExtension(externalSystemManager)
   }

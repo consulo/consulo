@@ -22,7 +22,6 @@ import com.intellij.mock.MockResolveScopeManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Disposer;
@@ -95,11 +94,11 @@ public class CoreProjectEnvironment {
   }
 
   public <T> void registerProjectExtensionPoint(final ExtensionPointName<T> extensionPointName, final Class<? extends T> aClass) {
-    CoreApplicationEnvironment.registerExtensionPoint(Extensions.getArea(myProject), extensionPointName, aClass);
+    CoreApplicationEnvironment.registerExtensionPoint(myProject.getExtensionsArea(), extensionPointName, aClass);
   }
 
   public <T> void addProjectExtension(final ExtensionPointName<T> name, final T extension) {
-    final ExtensionPoint<T> extensionPoint = Extensions.getArea(myProject).getExtensionPoint(name);
+    final ExtensionPoint<T> extensionPoint = myProject.getExtensionsArea().getExtensionPoint(name);
     extensionPoint.registerExtension(extension);
     Disposer.register(myParentDisposable, new Disposable() {
       @Override

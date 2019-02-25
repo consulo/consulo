@@ -16,14 +16,17 @@
 
 package com.intellij.openapi.extensions;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author mike
  */
-@SuppressWarnings("deprecation")
 public class ExtensionPointName<T> {
   private final String myName;
 
@@ -46,15 +49,21 @@ public class ExtensionPointName<T> {
 
   @Nonnull
   public T[] getExtensions() {
-    return Extensions.getExtensions(this);
+    return getExtensions(Application.get());
   }
 
   @Nonnull
-  public T[] getExtensions(@Nonnull AreaInstance areaInstance) {
-    return Extensions.getExtensions(this, areaInstance);
+  public T[] getExtensions(@Nonnull ComponentManager componentManager) {
+    return componentManager.getExtensions(this);
   }
 
-  public <V extends T> V findExtension(Class<V> instanceOf) {
-    return ContainerUtil.findInstance(getExtensions(), instanceOf);
+  @Nullable
+  public <V extends T> V findExtension(@Nonnull Class<V> instanceOf) {
+    return findExtension(Application.get(), instanceOf);
+  }
+
+  @Nullable
+  public <V extends T> V findExtension(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
+    return ContainerUtil.findInstance(getExtensions(componentManager), instanceOf);
   }
 }
