@@ -27,7 +27,6 @@ import com.intellij.openapi.progress.util.ReadTask;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
@@ -38,7 +37,6 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
-import consulo.editor.notifications.EditorNotificationProviders;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,14 +54,6 @@ public class EditorNotificationsImpl extends EditorNotifications {
   private static final ExecutorService ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
   private final MergingUpdateQueue myUpdateMerger;
   private final Project myProject;
-
-  private final NotNullLazyValue<List<EditorNotificationProvider<?>>> myProvidersValue = new NotNullLazyValue<List<EditorNotificationProvider<?>>>() {
-    @Nonnull
-    @Override
-    protected List<EditorNotificationProvider<?>> compute() {
-      return EditorNotificationProviders.createProviders(myProject);
-    }
-  };
 
   @Inject
   public EditorNotificationsImpl(Project project) {
@@ -149,7 +139,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
       public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
         if (isOutdated()) return null;
 
-        final List<EditorNotificationProvider<?>> providers = DumbService.getInstance(myProject). filterByDumbAwareness(myProvidersValue.getValue());
+        final List<EditorNotificationProvider<?>> providers = DumbService.getInstance(myProject). filterByDumbAwareness(EditorNotificationProvider.EP_NAME.getExtensionList());
 
         final List<Runnable> updates = ContainerUtil.newArrayList();
         for (final FileEditor editor : editors) {

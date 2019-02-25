@@ -19,10 +19,9 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
-
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -31,7 +30,7 @@ import javax.swing.*;
  * @since 12.11.2015
  */
 public interface EditorNotificationProvider<T extends JComponent> {
-  ExtensionPointName<EditorNotificationProvider<?>> EP_NAME = new ExtensionPointName<EditorNotificationProvider<?>>("com.intellij.editorNotificationProvider");
+  ExtensionPointName<EditorNotificationProvider<?>> EP_NAME = ExtensionPointName.create("com.intellij.editorNotificationProvider");
 
   @Nonnull
   Key<T> getKey();
