@@ -117,4 +117,9 @@ public class KeyedExtensionCollector<T, KeyT> {
 
     return result;
   }
+
+  @Nonnull
+  public final ExtensionPointName<KeyedLazyInstance<T>> getExtensionPointName() {
+    return myEPName;
+  }
 }

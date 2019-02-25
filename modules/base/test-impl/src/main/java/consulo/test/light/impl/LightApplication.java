@@ -19,6 +19,8 @@ import com.intellij.concurrency.JobLauncher;
 import com.intellij.ide.UiActivityMonitor;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
+import com.intellij.lang.LanguageExtensionPoint;
+import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import com.intellij.openapi.Disposable;
@@ -93,6 +95,8 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
     registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
     registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
+
+    registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
 
     registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
     registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
