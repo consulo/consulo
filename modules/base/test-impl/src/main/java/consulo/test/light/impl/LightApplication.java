@@ -28,7 +28,6 @@ import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.extensions.impl.UndefinedPluginDescriptor;
@@ -36,12 +35,10 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.ui.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.options.PathMacrosService;
@@ -52,6 +49,7 @@ import consulo.psi.tree.ASTLeafFactory;
 import consulo.psi.tree.impl.DefaultASTCompositeFactory;
 import consulo.psi.tree.impl.DefaultASTLazyFactory;
 import consulo.psi.tree.impl.DefaultASTLeafFactory;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -74,9 +72,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     myLastDisposable = lastDisposable;
 
     ApplicationManager.setApplication(this, myLastDisposable);
-
-    // reset area
-    Disposer.register(myLastDisposable, () -> Extensions.setRootArea(null));
   }
 
   @Override
@@ -124,11 +119,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     builder.bind(TreeUIHelper.class).to(LightTreeUIHelper.class);
     builder.bind(UiActivityMonitor.class).to(LightUiActivityMonitor.class);
     builder.bind(TreeAnchorizer.class).to(TreeAnchorizer.class);
-  }
-
-  @Override
-  protected void maybeSetRootArea() {
-    Extensions.setRootArea(getExtensionsArea());
   }
 
   @Override

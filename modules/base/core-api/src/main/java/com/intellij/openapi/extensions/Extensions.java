@@ -15,32 +15,24 @@
  */
 package com.intellij.openapi.extensions;
 
+import com.intellij.openapi.application.Application;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class Extensions {
-  private static ExtensionsArea ourRootArea;
-
-  public static void setRootArea(@Nullable ExtensionsArea extensionsArea) {
-    ourRootArea = extensionsArea;
-  }
-
   private Extensions() {
   }
 
   @Nonnull
   public static ExtensionsArea getRootArea() {
-    return ourRootArea;
+    return Application.get().getExtensionsArea();
   }
 
   @Nonnull
   public static ExtensionsArea getArea(@Nullable AreaInstance areaInstance) {
-    if (areaInstance == null) {
-      return ourRootArea;
-    }
-    return areaInstance.getExtensionsArea();
+    return areaInstance == null ? getRootArea() : areaInstance.getExtensionsArea();
   }
 
   @Nonnull
@@ -53,7 +45,7 @@ public class Extensions {
   @SuppressWarnings({"unchecked"})
   @Deprecated
   public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return (T[])getExtensions(extensionPointName.getName(), null);
+    return (T[])getExtensions(extensionPointName.getName(), Application.get());
   }
 
   @Nonnull

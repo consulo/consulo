@@ -169,8 +169,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     myExtensionsArea = new ExtensionsAreaImpl(this);
 
-    maybeSetRootArea();
-
     registerExtensionPointsAndExtensions(myExtensionsArea);
 
     myExtensionsArea.setLocked();
@@ -206,9 +204,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
-  }
-
-  protected void maybeSetRootArea() {
   }
 
   @Nonnull

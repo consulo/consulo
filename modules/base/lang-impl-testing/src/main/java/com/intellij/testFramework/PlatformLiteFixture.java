@@ -34,7 +34,6 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    Extensions.setRootArea(null);
   }
 
   public static MockApplicationEx getApplication() {

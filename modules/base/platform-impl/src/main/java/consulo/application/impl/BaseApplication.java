@@ -24,7 +24,10 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationListener;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
@@ -34,13 +37,8 @@ import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import consulo.components.impl.PlatformComponentManagerImpl;
-import consulo.components.impl.stores.ApplicationStoreImpl;
-import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.StoreUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -60,11 +58,15 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
+import consulo.components.impl.PlatformComponentManagerImpl;
+import consulo.components.impl.stores.ApplicationStoreImpl;
+import consulo.components.impl.stores.IApplicationStore;
+import consulo.components.impl.stores.StoreUtil;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -192,14 +194,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     myStartTime = System.currentTimeMillis();
 
     PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
-
-    // reset area
-    Disposer.register(myLastDisposable, () -> Extensions.setRootArea(null));
-  }
-
-  @Override
-  protected void maybeSetRootArea() {
-    Extensions.setRootArea(getExtensionsArea());
   }
 
   @Override
