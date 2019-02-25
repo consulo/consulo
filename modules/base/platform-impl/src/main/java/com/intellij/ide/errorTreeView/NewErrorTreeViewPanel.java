@@ -17,7 +17,9 @@ package com.intellij.ide.errorTreeView;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
-import com.intellij.ide.actions.*;
+import com.intellij.ide.actions.ExportToTextFileToolbarAction;
+import com.intellij.ide.actions.NextOccurenceToolbarAction;
+import com.intellij.ide.actions.PreviousOccurenceToolbarAction;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.errorTreeView.impl.ErrorViewTextExporter;
 import com.intellij.openapi.actionSystem.*;
@@ -43,10 +45,10 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.ui.MutableErrorTreeView;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -61,7 +63,6 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   protected static final Logger LOG = Logger.getInstance("#com.intellij.ide.errorTreeView.NewErrorTreeViewPanel");
   private volatile String myProgressText = "";
   private volatile float myFraction = 0.0f;
-  private final boolean myCreateExitAction;
   private ErrorViewStructure myErrorViewStructure;
   private ErrorViewTreeBuilder myBuilder;
   private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
@@ -74,8 +75,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     boolean isProcessStopped();
   }
 
-  private ActionToolbar myLeftToolbar;
-  private ActionToolbar myRightToolbar;
+  private ActionToolbar myToolbar;
   private final TreeExpander myTreeExpander = new MyTreeExpander();
   private ExporterToTextFile myExporterToTextFile;
   protected Project myProject;
@@ -105,7 +105,6 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   public NewErrorTreeViewPanel(Project project, String helpId, boolean createExitAction, boolean createToolbar, @Nullable Runnable rerunAction) {
     myProject = project;
     myHelpId = helpId;
-    myCreateExitAction = createExitAction;
     myConfiguration = ErrorTreeViewConfiguration.getInstance(project);
     setLayout(new BorderLayout());
 
@@ -282,13 +281,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   }
 
   @Override
-  public void addMessage(int type,
-                         @Nonnull String[] text,
-                         @Nullable VirtualFile underFileGroup,
-                         @Nullable VirtualFile file,
-                         int line,
-                         int column,
-                         @Nullable Object data) {
+  public void addMessage(int type, @Nonnull String[] text, @Nullable VirtualFile underFileGroup, @Nullable VirtualFile file, int line, int column, @Nullable Object data) {
     if (myIsDisposed) {
       return;
     }
@@ -414,7 +407,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     return myProcessController.isProcessStopped();
   }
 
-  public void close() {
+  private void close() {
     MessageView messageView = MessageView.SERVICE.getInstance(myProject);
     Content content = messageView.getContentManager().getContent(this);
     if (content != null) {
@@ -507,50 +500,43 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     }
   }
 
-  private JPanel createToolbarPanel(@Nullable Runnable rerunAction) {
-    AnAction closeMessageViewAction = new CloseTabToolbarAction() {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        close();
-      }
-    };
-
-    DefaultActionGroup leftUpdateableActionGroup = new DefaultActionGroup();
+  private JComponent createToolbarPanel(@Nullable Runnable rerunAction) {
+    DefaultActionGroup group = new DefaultActionGroup();
+    addActionsBefore(group);
     if (rerunAction != null) {
-      leftUpdateableActionGroup.add(new RerunAction(rerunAction, closeMessageViewAction));
+      group.add(new RerunAction(rerunAction));
     }
 
-    leftUpdateableActionGroup.add(new StopAction());
-    if (myCreateExitAction) {
-      leftUpdateableActionGroup.add(closeMessageViewAction);
-    }
-    leftUpdateableActionGroup.add(new PreviousOccurenceToolbarAction(this));
-    leftUpdateableActionGroup.add(new NextOccurenceToolbarAction(this));
-    leftUpdateableActionGroup.add(new ExportToTextFileToolbarAction(myExporterToTextFile));
-    leftUpdateableActionGroup.add(new ContextHelpAction(myHelpId));
+    group.add(new StopAction());
 
-    DefaultActionGroup rightUpdateableActionGroup = new DefaultActionGroup();
-    fillRightToolbarGroup(rightUpdateableActionGroup);
 
-    JPanel toolbarPanel = new JPanel(new GridLayout(1, 2));
-    final ActionManager actionManager = ActionManager.getInstance();
-    myLeftToolbar = actionManager.createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, leftUpdateableActionGroup, false);
-    toolbarPanel.add(myLeftToolbar.getComponent());
-    myRightToolbar = actionManager.createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, rightUpdateableActionGroup, false);
-    toolbarPanel.add(myRightToolbar.getComponent());
+    group.add(new PreviousOccurenceToolbarAction(this));
+    group.add(new NextOccurenceToolbarAction(this));
 
-    return toolbarPanel;
-  }
-
-  protected void fillRightToolbarGroup(DefaultActionGroup group) {
     group.add(CommonActionsManager.getInstance().createExpandAllAction(myTreeExpander, this));
     group.add(CommonActionsManager.getInstance().createCollapseAllAction(myTreeExpander, this));
+
     if (canHideWarningsOrInfos()) {
       group.add(new ShowInfosAction());
       group.add(new ShowWarningsAction());
     }
     group.add(myAutoScrollToSourceHandler.createToggleAction());
+
+    addActionsBefore(group);
+
+    group.add(new ExportToTextFileToolbarAction(myExporterToTextFile));
+
+    addActionsAfter(group);
+
+    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, group, false);
+
+    return myToolbar.getComponent();
+  }
+
+  protected void addActionsBefore(DefaultActionGroup group) {
+  }
+
+  public void addActionsAfter(DefaultActionGroup group) {
   }
 
   @Override
@@ -585,18 +571,17 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
   private class RerunAction extends AnAction {
     private final Runnable myRerunAction;
-    private final AnAction myCloseAction;
 
-    public RerunAction(@Nonnull Runnable rerunAction, @Nonnull AnAction closeAction) {
+    public RerunAction(@Nonnull Runnable rerunAction) {
       super(IdeBundle.message("action.refresh"), null, AllIcons.Actions.Rerun);
       myRerunAction = rerunAction;
-      myCloseAction = closeAction;
     }
 
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      myCloseAction.actionPerformed(e);
+      close();
+
       myRerunAction.run();
     }
 
@@ -619,8 +604,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       if (canControlProcess()) {
         stopProcess();
       }
-      myLeftToolbar.updateActionsImmediately();
-      myRightToolbar.updateActionsImmediately();
+      myToolbar.updateActionsImmediately();
     }
 
     @RequiredUIAccess

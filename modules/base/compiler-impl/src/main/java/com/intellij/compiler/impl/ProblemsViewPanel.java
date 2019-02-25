@@ -17,13 +17,9 @@ package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.HelpID;
-import com.intellij.compiler.ProblemsView;
-import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   public ProblemsViewPanel(Project project) {
@@ -32,16 +28,8 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   }
 
   @Override
-  protected void fillRightToolbarGroup(DefaultActionGroup group) {
-    super.fillRightToolbarGroup(group);
+  public void addActionsAfter(DefaultActionGroup group) {
     group.add(new CompilerPropertiesAction());
-    group.add(new CloseTabToolbarAction() {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        ProblemsView.getInstance(myProject).showOrHide(true);
-      }
-    });
   }
 
   @Override
