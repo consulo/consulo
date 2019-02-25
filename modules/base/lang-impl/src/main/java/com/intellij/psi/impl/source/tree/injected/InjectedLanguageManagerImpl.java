@@ -30,12 +30,8 @@ import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointListener;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
@@ -71,7 +67,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Singleton
 public class InjectedLanguageManagerImpl extends InjectedLanguageManager implements Disposable {
-  private static final Logger LOG = Logger.getInstance(InjectedLanguageManagerImpl.class);
   @SuppressWarnings("RedundantStringConstructorCall")
   static final Object ourInjectionPsiLock = new String("injectionPsiLock");
 
@@ -89,31 +84,12 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     myProject = project;
     myDumbService = dumbService;
 
-    final ExtensionPoint<MultiHostInjectorExtensionPoint> multiPoint = project.getExtensionsArea().getExtensionPoint(MultiHostInjector.EP_NAME);
-    multiPoint.addExtensionPointListener(new ExtensionPointListener<MultiHostInjectorExtensionPoint>() {
-      @Override
-      public void extensionAdded(@Nonnull MultiHostInjectorExtensionPoint ep, @Nullable PluginDescriptor pluginDescriptor) {
-        registerMultiHostInjector(ep.getInstance(project), ep.getKey());
-      }
+    for (MultiHostInjectorExtensionPoint ep : MultiHostInjector.EP_NAME.getExtensionList(project)) {
+      registerMultiHostInjector(ep.getInstance(project), ep.getKey());
+    }
 
-      @Override
-      public void extensionRemoved(@Nonnull MultiHostInjectorExtensionPoint ep, @Nullable PluginDescriptor pluginDescriptor) {
-        unregisterMultiHostInjector(ep.getInstance(project));
-      }
-    }, this);
-    final ExtensionPointListener<LanguageInjector> myListener = new ExtensionPointListener<LanguageInjector>() {
-      @Override
-      public void extensionAdded(@Nonnull LanguageInjector extension, @Nullable PluginDescriptor pluginDescriptor) {
-        psiManagerInjectorsChanged();
-      }
+    psiManagerInjectorsChanged();
 
-      @Override
-      public void extensionRemoved(@Nonnull LanguageInjector extension, @Nullable PluginDescriptor pluginDescriptor) {
-        psiManagerInjectorsChanged();
-      }
-    };
-    final ExtensionPoint<LanguageInjector> psiManagerPoint = Extensions.getRootArea().getExtensionPoint(LanguageInjector.EXTENSION_POINT_NAME);
-    psiManagerPoint.addExtensionPointListener(myListener, this);
     myProgress = new DaemonProgressIndicator();
     project.getMessageBus().connect(this).subscribe(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC, new DaemonCodeAnalyzer.DaemonListenerAdapter() {
       @Override
@@ -140,10 +116,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   }
 
   @Override
-  public void enumerateEx(@Nonnull PsiElement host,
-                          @Nonnull PsiFile containingFile,
-                          boolean probeUp,
-                          @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
+  public void enumerateEx(@Nonnull PsiElement host, @Nonnull PsiFile containingFile, boolean probeUp, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     InjectedLanguageUtil.enumerate(host, containingFile, probeUp, visitor);
   }
 
@@ -204,8 +177,8 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   }
 
   public void psiManagerInjectorsChanged() {
-    LanguageInjector[] extensions = Extensions.getExtensions(LanguageInjector.EXTENSION_POINT_NAME);
-    if (extensions.length == 0) {
+    List<LanguageInjector> extensions = LanguageInjector.EXTENSION_POINT_NAME.getExtensionList();
+    if (extensions.isEmpty()) {
       MultiHostInjector prev = myPsiManagerRegisteredInjectorsAdapter.getAndSet(null);
       if (prev != null) {
         unregisterMultiHostInjector(prev);

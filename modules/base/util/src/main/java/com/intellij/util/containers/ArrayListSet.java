@@ -22,18 +22,22 @@ import java.util.Iterator;
 public class ArrayListSet<E> extends AbstractSet<E> {
   private final ArrayList<E> myList = new ArrayList<E>();
 
+  @Override
   public Iterator<E> iterator() {
     return myList.iterator();
   }
 
+  @Override
   public int size() {
     return myList.size();
   }
 
+  @Override
   public boolean contains(Object object) {
     return myList.contains(object);
   }
 
+  @Override
   public boolean add(E e) {
     if (!myList.contains(e)){
       myList.add(e);
@@ -44,10 +48,12 @@ public class ArrayListSet<E> extends AbstractSet<E> {
     }
   }
 
+  @Override
   public boolean remove(Object object) {
     return myList.remove(object);
   }
 
+  @Override
   public void clear() {
     myList.clear();
   }

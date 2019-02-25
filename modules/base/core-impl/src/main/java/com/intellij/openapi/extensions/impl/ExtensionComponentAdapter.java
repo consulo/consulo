@@ -33,13 +33,13 @@ import java.util.function.Function;
 public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
   public static final ExtensionComponentAdapter[] EMPTY_ARRAY = new ExtensionComponentAdapter[0];
 
-  private T myComponentInstance;
+  protected T myComponentInstance;
+  protected Class<T> myImplementationClass;
+
   private final String myImplementationClassName;
   private final Element myExtensionElement;
   private final PluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
-  private Class<T> myImplementationClass;
-  private boolean myNotificationSent = false;
 
   public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
     myImplementationClassName = implementationClass;
@@ -137,14 +137,6 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
       }
     }
     return myImplementationClass;
-  }
-
-  public boolean isNotificationSent() {
-    return myNotificationSent;
-  }
-
-  public void setNotificationSent(boolean notificationSent) {
-    myNotificationSent = notificationSent;
   }
 
   @Override

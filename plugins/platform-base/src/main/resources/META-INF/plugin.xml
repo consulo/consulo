@@ -103,6 +103,10 @@
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="PROJECT"/>
     <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="MODULE"/>
 
+    <extensionPoint name="extensionExtender" beanClass="com.intellij.util.KeyedLazyInstanceEP">
+      <with attribute="implementationClass" implements="consulo.extensions.ExtensionExtender"/>
+    </extensionPoint>
+
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
@@ -136,7 +140,7 @@
     <extensionPoint name="fileTypeFactory"
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
 
-    <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem" />
+    <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem"/>
 
     <extensionPoint name="keymapExtension"
                     interface="com.intellij.openapi.keymap.KeymapExtension"/>
@@ -421,7 +425,7 @@
                     interface="com.intellij.psi.codeStyle.CodeStyleSettingsProvider"/>
 
     <extensionPoint name="codeStyleIndentHelperExtension"
-                    interface="consulo.consulo.psi.impl.source.codeStyle.IndentHelperExtension" />
+                    interface="consulo.consulo.psi.impl.source.codeStyle.IndentHelperExtension"/>
 
     <extensionPoint name="daemon.highlightInfoFilter"
                     interface="com.intellij.codeInsight.daemon.impl.HighlightInfoFilter"/>
@@ -1209,17 +1213,17 @@
                         serviceImplementation="com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
-                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl" />
+                        serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
 
     <applicationService serviceInterface="com.intellij.openapi.project.DefaultProjectFactory"
                         serviceImplementation="com.intellij.openapi.project.impl.DefaultProjectFactoryImpl" lazy="false"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings" />
-    <applicationService serviceImplementation="com.intellij.openapi.actionSystem.impl.MouseGestureManager" />
+    <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings"/>
+    <applicationService serviceImplementation="com.intellij.openapi.actionSystem.impl.MouseGestureManager"/>
 
-    <applicationService serviceInterface="com.intellij.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl" />
+    <applicationService serviceInterface="com.intellij.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl"/>
 
     <undoProvider implementation="consulo.command.impl.ApplicationFileUndoProvider"/>
     <projectUndoProvider implementation="consulo.command.impl.ProjectFileUndoProvider"/>
@@ -1350,7 +1354,7 @@
 
     <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings"/>
     <applicationService serviceImplementation="com.intellij.openapi.util.registry.RegistryState"/>
-    <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider" />
+    <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider"/>
     <applicationService serviceImplementation="consulo.ide.actions.webSearch.WebSearchOptions"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
@@ -1557,7 +1561,7 @@
 
 
     <projectService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
-                        serviceImplementation="com.intellij.packaging.impl.elements.PackagingElementFactoryImpl"/>
+                    serviceImplementation="com.intellij.packaging.impl.elements.PackagingElementFactoryImpl"/>
 
 
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.OrderEntryAppearanceService"
@@ -1739,9 +1743,9 @@
     <projectService serviceInterface="com.intellij.codeInsight.lookup.LookupManager"
                     serviceImplementation="com.intellij.codeInsight.lookup.impl.LookupManagerImpl"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.editor.impl.DocumentMarkupModelManager" />
+    <projectService serviceImplementation="com.intellij.openapi.editor.impl.DocumentMarkupModelManager"/>
 
-    <projectService serviceImplementation="consulo.compiler.CompilerPathsManager" />
+    <projectService serviceImplementation="consulo.compiler.CompilerPathsManager"/>
 
     <applicationService serviceInterface="com.intellij.psi.meta.MetaDataRegistrar"
                         serviceImplementation="com.intellij.psi.impl.meta.MetaRegistry"/>
@@ -1954,7 +1958,7 @@
     <moduleService serviceInterface="com.intellij.openapi.roots.ModuleFileIndex"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <moduleService serviceInterface="com.intellij.openapi.roots.ModuleRootManager"
-                   serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl" />
+                   serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>
 
@@ -2613,12 +2617,12 @@
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
 
-    <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false" />
+    <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false"/>
 
-    <projectService serviceInterface="com.intellij.problems.WolfTheProblemSolver" serviceImplementation="com.intellij.codeInsight.problems.WolfTheProblemSolverImpl" lazy="false" />
+    <projectService serviceInterface="com.intellij.problems.WolfTheProblemSolver" serviceImplementation="com.intellij.codeInsight.problems.WolfTheProblemSolverImpl" lazy="false"/>
 
-    <lang.formatter.restriction implementation="com.intellij.formatting.ExcludedFileFormattingRestriction" />
+    <lang.formatter.restriction implementation="com.intellij.formatting.ExcludedFileFormattingRestriction"/>
 
-    <codeStyleIndentHelperExtension implementation="consulo.consulo.psi.impl.source.codeStyle.DefaultIndentHelperExtension" order="last" />
+    <codeStyleIndentHelperExtension implementation="consulo.consulo.psi.impl.source.codeStyle.DefaultIndentHelperExtension" order="last"/>
   </extensions>
 </idea-plugin>

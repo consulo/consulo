@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.externalSystem.test
 
-import com.intellij.openapi.application.Application
 import com.intellij.testFramework.SkipInHeadlessEnvironment
 import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture
@@ -53,7 +52,7 @@ abstract class AbstractExternalSystemTest extends UsefulTestCase {
     externalSystemManager = new TestExternalSystemManager(project)
     def area = Application.get().getExtensionsArea();
     externalSystemManagerEP = area.getExtensionPoint(ExternalSystemManager.EP_NAME)
-    externalSystemManagerEP.registerExtension(externalSystemManager)
+    //externalSystemManagerEP.registerExtension(externalSystemManager)
   }
 
   private static void ensureTempDirCreated() {
@@ -71,7 +70,7 @@ abstract class AbstractExternalSystemTest extends UsefulTestCase {
     project = null
     UIUtil.invokeAndWaitIfNeeded {
       try {
-        externalSystemManagerEP.unregisterExtension(externalSystemManager)
+        //externalSystemManagerEP.unregisterExtension(externalSystemManager)
         testFixture.tearDown();
         testFixture = null;
       }

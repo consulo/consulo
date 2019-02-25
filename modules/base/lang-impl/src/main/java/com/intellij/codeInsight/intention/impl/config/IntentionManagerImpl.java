@@ -28,12 +28,8 @@ import com.intellij.codeInspection.actions.CleanupInspectionIntention;
 import com.intellij.codeInspection.actions.RunInspectionIntention;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointListener;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -55,7 +51,7 @@ import java.util.List;
  */
 @Singleton
 public class IntentionManagerImpl extends IntentionManager implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionManagerImpl");
+  private static final Logger LOG = Logger.getInstance(IntentionManagerImpl.class);
 
   private final List<IntentionAction> myActions = ContainerUtil.createLockFreeCopyOnWriteList();
   private final IntentionManagerSettings mySettings;
@@ -68,18 +64,9 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
     addAction(new EditInspectionToolsSettingsInSuppressedPlaceIntention());
 
-    final ExtensionPoint<IntentionActionBean> point = Application.get().getExtensionsArea().getExtensionPoint(EP_INTENTION_ACTIONS);
-
-    point.addExtensionPointListener(new ExtensionPointListener<IntentionActionBean>() {
-      @Override
-      public void extensionAdded(@Nonnull final IntentionActionBean extension, @Nullable final PluginDescriptor pluginDescriptor) {
-        registerIntentionFromBean(extension);
-      }
-
-      @Override
-      public void extensionRemoved(@Nonnull final IntentionActionBean extension, @Nullable final PluginDescriptor pluginDescriptor) {
-      }
-    });
+    for (IntentionActionBean bean : EP_INTENTION_ACTIONS.getExtensionList()) {
+      registerIntentionFromBean(bean);
+    }
   }
 
   private void registerIntentionFromBean(@Nonnull final IntentionActionBean extension) {

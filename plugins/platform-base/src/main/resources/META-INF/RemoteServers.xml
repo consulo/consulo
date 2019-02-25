@@ -25,11 +25,7 @@
     </group>
   </actions>
 
-  <application-components>
-    <component>
-      <implementation-class>com.intellij.remoteServer.impl.configuration.deployment.DeployToServerConfigurationTypesRegistrar</implementation-class>
-    </component>
-  </application-components>
+
   <project-components>
     <component>
       <implementation-class>com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowOpener</implementation-class>
@@ -57,5 +53,7 @@
 
     <projectService serviceInterface="com.intellij.remoteServer.runtime.ui.RemoteServersView"
                     serviceImplementation="com.intellij.remoteServer.impl.runtime.ui.RemoteServersViewImpl" />
+
+    <extensionExtender key="com.intellij.configurationType" implementationClass="com.intellij.remoteServer.impl.configuration.deployment.DeployToServerConfigurationTypesRegistrar" />
   </extensions>
 </idea-plugin>

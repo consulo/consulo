@@ -15,19 +15,17 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.intellij.util.NullableFunction;
-import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author peter
  */
-public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPointListener<Extension> {
+public abstract class SmartExtensionPoint<Extension, V> {
   private final Collection<V> myExplicitExtensions;
   private ExtensionPoint<Extension> myExtensionPoint;
   private List<V> myCache;
@@ -61,38 +59,14 @@ public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPoint
     synchronized (myExplicitExtensions) {
       if (myCache == null) {
         myExtensionPoint = getExtensionPoint();
-        myExtensionPoint.addExtensionPointListener(this);
-        myCache = new ArrayList<V>(myExplicitExtensions);
-        myCache.addAll(ContainerUtil.mapNotNull(myExtensionPoint.getExtensions(), new NullableFunction<Extension, V>() {
-          @Override
-          @Nullable
-          public V fun(final Extension extension) {
-            return getExtension(extension);
-          }
-        }));
+        List<V> list = new ArrayList<>();
+        list.addAll(myExtensionPoint.getExtensionList().stream().map(this::getExtension).collect(Collectors.toList()));
+        list.addAll(myExplicitExtensions);
+
+        myCache = list;
+        return list;
       }
       return myCache;
     }
   }
-
-  @Override
-  public final void extensionAdded(@Nonnull final Extension extension, @Nullable final PluginDescriptor pluginDescriptor) {
-    dropCache();
-  }
-
-  public final void dropCache() {
-    synchronized (myExplicitExtensions) {
-      if (myCache != null) {
-        myCache = null;
-        myExtensionPoint.removeExtensionPointListener(this);
-        myExtensionPoint = null;
-      }
-    }
-  }
-
-  @Override
-  public final void extensionRemoved(@Nonnull final Extension extension, @Nullable final PluginDescriptor pluginDescriptor) {
-    dropCache();
-  }
-
 }

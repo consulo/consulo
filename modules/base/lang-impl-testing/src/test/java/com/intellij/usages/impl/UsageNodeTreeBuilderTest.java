@@ -40,6 +40,7 @@ import com.intellij.usages.rules.UsageGroupingRuleProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.image.Image;
+import org.junit.Ignore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -122,7 +123,7 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
         return AnAction.EMPTY_ARRAY;
       }
     };
-    point.registerExtension(provider);
+   // point.registerExtension(provider);
     try {
       UsageViewImpl usageView = new UsageViewImpl(getProject(), presentation, UsageTarget.EMPTY_ARRAY, null);
       Disposer.register(getTestRootDisposable(), usageView);
@@ -134,7 +135,7 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
       return usageView.getRoot();
     }
     finally {
-      point.unregisterExtension(provider);
+     // point.unregisterExtension(provider);
     }
   }
 

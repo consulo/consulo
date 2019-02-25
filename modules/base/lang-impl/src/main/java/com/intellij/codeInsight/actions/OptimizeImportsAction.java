@@ -32,7 +32,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.util.KeyedLazyInstance;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 
@@ -41,7 +40,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class OptimizeImportsAction extends AnAction {
   private static final String HELP_ID = "editing.manageImports";
@@ -50,9 +48,9 @@ public class OptimizeImportsAction extends AnAction {
   private static boolean myProcessVcsChangedFilesInTests;
 
   public OptimizeImportsAction() {
-    List<KeyedLazyInstance<ImportOptimizer>> extensions = LanguageImportStatements.INSTANCE.getExtensions();
+    List<ImportOptimizer> extensions = LanguageImportStatements.INSTANCE.getExtensions();
 
-    updatePresentation(getTemplatePresentation(), extensions.stream().map(KeyedLazyInstance::getInstance).collect(Collectors.toList()));
+    updatePresentation(getTemplatePresentation(), extensions);
   }
 
   private void updatePresentation(Presentation presentation, List<ImportOptimizer> importOptimizers) {

@@ -929,15 +929,6 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
   }
 
   public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> epName, final T extension) {
-    assertInitialized();
-    final ExtensionPoint<T> extensionPoint = area.getExtensionPoint(epName);
-    extensionPoint.registerExtension(extension);
-    disposeOnTearDown(new Disposable() {
-      @Override
-      public void dispose() {
-        extensionPoint.unregisterExtension(extension);
-      }
-    });
   }
 
   @Override

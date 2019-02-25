@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.extensions;
+package consulo.test.light.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
+import org.jdom.Element;
 
-public interface ExtensionPointListener<T> {
-  void extensionAdded(@Nonnull T extension, @Nullable final PluginDescriptor pluginDescriptor);
-  void extensionRemoved(@Nonnull T extension, @Nullable final PluginDescriptor pluginDescriptor);
+/**
+ * @author VISTALL
+ * @since 2019-02-25
+ */
+class SimpleInstanceComponentAdapter<T> extends ExtensionComponentAdapter<T> {
+  @SuppressWarnings("unchecked")
+  SimpleInstanceComponentAdapter(T value) {
+    super(value.getClass().getName(), new Element("instance"), null, false);
+    myComponentInstance = value;
+    myImplementationClass = (Class<T>)value.getClass();
+  }
 }

@@ -19,10 +19,12 @@ package com.intellij.openapi.extensions;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author mike
@@ -30,12 +32,14 @@ import javax.annotation.Nullable;
 public class ExtensionPointName<T> {
   private final String myName;
 
+  @Deprecated
+  @DeprecationInfo("Use #create()")
   public ExtensionPointName(@NonNls final String name) {
     myName = name;
   }
 
   public static <T> ExtensionPointName<T> create(@NonNls final String name) {
-    return new ExtensionPointName<T>(name);
+    return new ExtensionPointName<>(name);
   }
 
   public String getName() {
@@ -48,13 +52,33 @@ public class ExtensionPointName<T> {
   }
 
   @Nonnull
+  @Deprecated
   public T[] getExtensions() {
     return getExtensions(Application.get());
   }
 
   @Nonnull
+  @Deprecated
   public T[] getExtensions(@Nonnull ComponentManager componentManager) {
     return componentManager.getExtensions(this);
+  }
+
+  public boolean hasAnyExtensions() {
+    return hasAnyExtensions(Application.get());
+  }
+
+  public boolean hasAnyExtensions(@Nonnull ComponentManager manager) {
+    return manager.getExtensionsArea().getExtensionPoint(this).hasAnyExtensions();
+  }
+
+  @Nonnull
+  public List<T> getExtensionList() {
+    return getExtensionList(Application.get());
+  }
+
+  @Nonnull
+  public List<T> getExtensionList(@Nonnull ComponentManager componentManager) {
+    return componentManager.getExtensionList(this);
   }
 
   @Nullable
@@ -64,6 +88,6 @@ public class ExtensionPointName<T> {
 
   @Nullable
   public <V extends T> V findExtension(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
-    return ContainerUtil.findInstance(getExtensions(componentManager), instanceOf);
+    return ContainerUtil.findInstance(getExtensionList(componentManager), instanceOf);
   }
 }

@@ -48,5 +48,7 @@
                 icon="/toolwindows/toolWindowCommander.png"
                 factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
     <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>
+
+    <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
   </extensions>
 </idea-plugin>

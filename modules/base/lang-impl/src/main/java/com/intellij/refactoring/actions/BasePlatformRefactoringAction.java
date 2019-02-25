@@ -22,17 +22,15 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.ExtensionPointListener;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.ElementsHandler;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -40,26 +38,7 @@ import java.util.List;
  */
 public abstract class BasePlatformRefactoringAction extends BaseRefactoringAction {
   private Boolean myHidden = null;
-  private final Condition<RefactoringSupportProvider> myCondition = new Condition<RefactoringSupportProvider>() {
-    @Override
-    public boolean value(RefactoringSupportProvider provider) {
-      return getRefactoringHandler(provider) != null;
-    }
-  };
-
-  public BasePlatformRefactoringAction() {
-    LanguageRefactoringSupport.INSTANCE.addListener(new ExtensionPointListener<RefactoringSupportProvider>() {
-      @Override
-      public void extensionAdded(@Nonnull RefactoringSupportProvider extension, @Nullable PluginDescriptor pluginDescriptor) {
-        myHidden = null;
-      }
-
-      @Override
-      public void extensionRemoved(@Nonnull RefactoringSupportProvider extension, @Nullable PluginDescriptor pluginDescriptor) {
-        myHidden = null;
-      }
-    });
-  }
+  private final Condition<RefactoringSupportProvider> myCondition = provider -> getRefactoringHandler(provider) != null;
 
   @Override
   protected final RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {

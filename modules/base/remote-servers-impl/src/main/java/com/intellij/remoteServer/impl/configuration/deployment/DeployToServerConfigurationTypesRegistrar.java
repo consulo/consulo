@@ -16,22 +16,23 @@
 package com.intellij.remoteServer.impl.configuration.deployment;
 
 import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.remoteServer.ServerType;
+import consulo.extensions.ExtensionExtender;
 
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
+import java.util.function.Consumer;
 
 /**
  * @author nik
  */
 @Singleton
-public class DeployToServerConfigurationTypesRegistrar {
-  public DeployToServerConfigurationTypesRegistrar() {
-    //todo[nik] improve this: configuration types should be loaded lazily
-    ExtensionPoint<ConfigurationType> point = Extensions.getRootArea().getExtensionPoint(ConfigurationType.CONFIGURATION_TYPE_EP);
-    for (ServerType serverType : ServerType.EP_NAME.getExtensions()) {
-      point.registerExtension(new DeployToServerConfigurationType(serverType));
+public class DeployToServerConfigurationTypesRegistrar implements ExtensionExtender<ConfigurationType> {
+  @Override
+  public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<ConfigurationType> consumer) {
+    for (ServerType serverType : ServerType.EP_NAME.getExtensionList()) {
+      consumer.accept(new DeployToServerConfigurationType(serverType));
     }
   }
 }

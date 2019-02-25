@@ -31,7 +31,6 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CoreCommandProcessor;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.ExtensionsArea;
@@ -42,7 +41,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.util.ClassExtension;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
@@ -245,13 +243,7 @@ public class CoreApplicationEnvironment {
   }
 
   private <T,U> void doAddExplicitExtension(@Nonnull final KeyedExtensionCollector<T,U> instance, @Nonnull final U key, @Nonnull final T object) {
-    instance.addExplicitExtension(key, object);
-    Disposer.register(myParentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        instance.removeExplicitExtension(key, object);
-      }
-    });
+
   }
 
   public <T> void addExplicitExtension(@Nonnull final ClassExtension<T> instance, @Nonnull final Class aClass, @Nonnull final T object) {
@@ -259,14 +251,6 @@ public class CoreApplicationEnvironment {
   }
 
   public <T> void addExtension(@Nonnull ExtensionPointName<T> name, @Nonnull final T extension) {
-    final ExtensionPoint<T> extensionPoint = Extensions.getRootArea().getExtensionPoint(name);
-    extensionPoint.registerExtension(extension);
-    Disposer.register(myParentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        extensionPoint.unregisterExtension(extension);
-      }
-    });
   }
 
 

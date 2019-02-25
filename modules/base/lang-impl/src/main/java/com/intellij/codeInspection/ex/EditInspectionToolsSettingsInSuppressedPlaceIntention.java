@@ -20,7 +20,6 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -28,9 +27,9 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -57,8 +56,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
     int offset = editor.getCaretModel().getOffset();
     PsiElement element = file.findElementAt(offset);
     while (element != null && !(element instanceof PsiFile)) {
-      for (InspectionExtensionsFactory factory : Extensions
-        .getExtensions(InspectionExtensionsFactory.EP_NAME)) {
+      for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
         final String suppressedIds = factory.getSuppressedInspectionIdsIn(element);
         if (suppressedIds != null) {
           String text = element.getText();

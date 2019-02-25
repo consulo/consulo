@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public abstract class AbstractExtensionPointBean implements PluginAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.extensions.AbstractExtensionPointBean");
+  private static final Logger LOG = Logger.getInstance(AbstractExtensionPointBean.class);
   protected PluginDescriptor myPluginDescriptor;
 
   @Override

@@ -15,38 +15,39 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ComponentManager;
+import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.lang.reflect.Array;
+import java.util.List;
 
 /**
  * @author AKireyev
  */
 public interface ExtensionPoint<T> {
+  enum Kind {
+    INTERFACE,
+    BEAN_CLASS
+  }
+
   @Nonnull
   String getName();
 
-  ComponentManager getArea();
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  @Deprecated
+  @DeprecationInfo("Use #getExtensionList()")
+  default T[] getExtensions() {
+    List<T> list = getExtensionList();
+    return list.toArray((T[])Array.newInstance(getExtensionClass(), list.size()));
+  }
 
-  void registerExtension(@Nonnull T extension);
-  void registerExtension(@Nonnull T extension, @Nonnull LoadingOrder order);
+  default boolean hasAnyExtensions() {
+    return !getExtensionList().isEmpty();
+  }
 
   @Nonnull
-  T[] getExtensions();
-
-  boolean hasAnyExtensions();
-
-  @Nullable
-  T getExtension();
-  boolean hasExtension(@Nonnull T extension);
-
-  void unregisterExtension(@Nonnull T extension);
-
-  void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener, @Nonnull Disposable parentDisposable);
-  void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener);
-  void removeExtensionPointListener(@Nonnull ExtensionPointListener<T> extensionPointListener);
+  List<T> getExtensionList();
 
   @Nonnull
   Class<T> getExtensionClass();
@@ -56,6 +57,4 @@ public interface ExtensionPoint<T> {
 
   @Nonnull
   String getClassName();
-
-  enum Kind {INTERFACE, BEAN_CLASS}
 }

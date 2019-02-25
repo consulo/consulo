@@ -40,8 +40,8 @@ public abstract class XDebuggerTestCase extends PlatformTestCase {
   protected void initApplication() throws Exception {
     super.initApplication();
     final ExtensionPoint<XBreakpointType> point = getBreakpointTypes();
-    point.registerExtension(MY_LINE_BREAKPOINT_TYPE);
-    point.registerExtension(MY_SIMPLE_BREAKPOINT_TYPE);
+   // point.registerExtension(MY_LINE_BREAKPOINT_TYPE);
+   // point.registerExtension(MY_SIMPLE_BREAKPOINT_TYPE);
   }
 
   private static ExtensionPoint<XBreakpointType> getBreakpointTypes() {
@@ -50,8 +50,8 @@ public abstract class XDebuggerTestCase extends PlatformTestCase {
 
   @Override
   protected void tearDown() throws Exception {
-    getBreakpointTypes().unregisterExtension(MY_LINE_BREAKPOINT_TYPE);
-    getBreakpointTypes().unregisterExtension(MY_SIMPLE_BREAKPOINT_TYPE);
+    //getBreakpointTypes().unregisterExtension(MY_LINE_BREAKPOINT_TYPE);
+    //getBreakpointTypes().unregisterExtension(MY_SIMPLE_BREAKPOINT_TYPE);
     super.tearDown();
   }
 

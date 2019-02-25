@@ -16,7 +16,6 @@
 package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -148,14 +147,5 @@ public class DummyProject extends UserDataHolderBase implements Project {
 
   @Override
   public void dispose() {
-  }
-
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    throw new UnsupportedOperationException("getExtensions()");
-  }
-
-  public ComponentConfig getConfig(Class componentImplementation) {
-    throw new UnsupportedOperationException("Method getConfig not implemented in " + getClass());
   }
 }

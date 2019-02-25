@@ -14,6 +14,7 @@ import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.JBUI;
+import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
@@ -59,7 +60,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
 
   @Override
   public JComponent createOptionsPanel() {
-    mySettingsPanel.add(BorderLayout.CENTER, myConfigurable.createComponent());
+    mySettingsPanel.add(BorderLayout.CENTER, ConfigurableUIMigrationUtil.createComponent(myConfigurable));
     myTestConnectionButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {

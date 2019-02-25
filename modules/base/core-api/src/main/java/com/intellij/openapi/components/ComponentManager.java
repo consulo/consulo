@@ -27,6 +27,7 @@ import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Provides access to components. Serves as a base interface for {@link Application}
@@ -71,7 +72,15 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   boolean isDisposed();
 
   @Nonnull
-  <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName);
+  @Deprecated
+  default <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
+    return getExtensionsArea().getExtensionPoint(extensionPointName).getExtensions();
+  }
+
+  @Nonnull
+  default <T> List<T> getExtensionList(@Nonnull ExtensionPointName<T> extensionPointName) {
+    return getExtensionsArea().getExtensionPoint(extensionPointName).getExtensionList();
+  }
 
   /**
    * @return condition for this component being disposed.

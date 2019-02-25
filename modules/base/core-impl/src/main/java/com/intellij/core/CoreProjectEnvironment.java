@@ -98,14 +98,7 @@ public class CoreProjectEnvironment {
   }
 
   public <T> void addProjectExtension(final ExtensionPointName<T> name, final T extension) {
-    final ExtensionPoint<T> extensionPoint = myProject.getExtensionsArea().getExtensionPoint(name);
-    extensionPoint.registerExtension(extension);
-    Disposer.register(myParentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        extensionPoint.unregisterExtension(extension);
-      }
-    });
+
   }
 
 

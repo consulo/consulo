@@ -34,12 +34,12 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.InjectingPoint;
 import consulo.injecting.key.InjectingKey;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
 
@@ -215,9 +215,12 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     ExtensionPointName<ServiceDescriptor> ep = getServiceExtensionPointName();
     if (ep != null) {
       ExtensionPointImpl<ServiceDescriptor> extensionPoint = (ExtensionPointImpl<ServiceDescriptor>)myExtensionsArea.getExtensionPoint(ep);
-      // there no injector at that level
-      ServiceDescriptor[] descriptors = extensionPoint.getExtensions(aClass -> new ServiceDescriptor());
-      for (ServiceDescriptor descriptor : descriptors) {
+      // there no injector at that level - build it via hardcode
+      List<ServiceDescriptor> descriptorList = extensionPoint.buildUnsafe(aClass -> new ServiceDescriptor());
+      // and cache it
+      extensionPoint.setExtensionCache(descriptorList);
+
+      for (ServiceDescriptor descriptor : extensionPoint.getExtensionList()) {
         InjectingKey<Object> key = InjectingKey.of(descriptor.getInterface(), getTargetClassLoader(descriptor.getPluginDescriptor()));
         InjectingKey<Object> implKey = InjectingKey.of(descriptor.getImplementation(), getTargetClassLoader(descriptor.getPluginDescriptor()));
 
@@ -345,12 +348,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public ExtensionsArea getExtensionsArea() {
     return myExtensionsArea;
-  }
-
-  @Nonnull
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    return myExtensionsArea.getExtensionPoint(extensionPointName).getExtensions();
   }
 
   @Override

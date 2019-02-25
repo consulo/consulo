@@ -97,7 +97,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   private <T> void registerExtension(ExtensionsAreaImpl area, ExtensionPointName<T> extensionPointName, T value) {
     ExtensionPointImpl<T> point = (ExtensionPointImpl<T>)area.getExtensionPoint(extensionPointName);
-    point.registerExtension(value);
+    point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(value));
   }
 
   private void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<?> name, Class<?> aClass) {

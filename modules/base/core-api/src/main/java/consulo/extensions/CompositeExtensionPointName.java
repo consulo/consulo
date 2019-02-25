@@ -15,13 +15,13 @@
  */
 package consulo.extensions;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -33,6 +33,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -52,8 +53,8 @@ public abstract class CompositeExtensionPointName<T> {
   public static <E> CompositeExtensionPointName<E> modulePoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
     return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
       @Override
-      protected boolean validateArea(@Nullable ComponentManager areaInstance) {
-        return areaInstance instanceof Module;
+      protected boolean validateArea(@Nullable ComponentManager componentManager) {
+        return componentManager instanceof Module;
       }
     };
   }
@@ -62,8 +63,8 @@ public abstract class CompositeExtensionPointName<T> {
   public static <E> CompositeExtensionPointName<E> projectPoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
     return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
       @Override
-      protected boolean validateArea(@Nullable ComponentManager areaInstance) {
-        return areaInstance instanceof Project;
+      protected boolean validateArea(@Nullable ComponentManager componentManager) {
+        return componentManager instanceof Project;
       }
     };
   }
@@ -74,10 +75,10 @@ public abstract class CompositeExtensionPointName<T> {
   }
 
   private static class MyInvocationHandler<T> implements InvocationHandler {
-    private final String myName;
-    private final T[] myExtensions;
+    private final ExtensionPointName<T> myName;
+    private final List<T> myExtensions;
 
-    public MyInvocationHandler(String name, T[] extensions) {
+    public MyInvocationHandler(ExtensionPointName<T> name, List<T> extensions) {
       myName = name;
       myExtensions = extensions;
     }
@@ -220,18 +221,18 @@ public abstract class CompositeExtensionPointName<T> {
 
     @Nullable
     @Override
-    protected E getCompositeValue(@Nullable ComponentManager areaInstance) {
+    protected E getCompositeValue(@Nullable ComponentManager componentManager) {
       return myCompositeValue;
     }
 
     @Override
-    protected void putCompositeValue(@Nullable ComponentManager areaInstance, E compositeValue) {
+    protected void putCompositeValue(@Nullable ComponentManager componentManager, E compositeValue) {
       myCompositeValue = compositeValue;
     }
 
     @Override
-    protected boolean validateArea(@Nullable ComponentManager areaInstance) {
-      return areaInstance == null;
+    protected boolean validateArea(@Nullable ComponentManager componentManager) {
+      return componentManager == null;
     }
   }
 
@@ -245,42 +246,40 @@ public abstract class CompositeExtensionPointName<T> {
 
     @Nullable
     @Override
-    protected E getCompositeValue(@Nullable ComponentManager areaInstance) {
-      assert areaInstance instanceof UserDataHolder;
-      return ((UserDataHolder)areaInstance).getUserData(myCompositeValueKey);
+    protected E getCompositeValue(@Nullable ComponentManager componentManager) {
+      return componentManager.getUserData(myCompositeValueKey);
     }
 
     @Override
-    protected void putCompositeValue(@Nullable ComponentManager areaInstance, E compositeValue) {
-      assert areaInstance instanceof UserDataHolder;
-      ((UserDataHolder)areaInstance).putUserData(myCompositeValueKey, compositeValue);
+    protected void putCompositeValue(@Nullable ComponentManager componentManager, E compositeValue) {
+      componentManager.putUserData(myCompositeValueKey, compositeValue);
     }
   }
 
-  private final String myName;
+  private final ExtensionPointName<T> myName;
   private final Class<T> myClazz;
 
   protected CompositeExtensionPointName(@Nonnull String name, @Nonnull Class<T> clazz) {
-    myName = name;
+    myName = ExtensionPointName.create(name);
     myClazz = clazz;
   }
 
   @Nonnull
-  private T buildCompositeValue(@Nullable ComponentManager areaInstance) {
-    final T[] extensions = Extensions.getExtensions(myName, areaInstance);
+  private T buildCompositeValue(@Nullable ComponentManager componentManager) {
+    final List<T> extensions = myName.getExtensionList(componentManager == null ? Application.get() : componentManager);
 
-    InvocationHandler handler = new MyInvocationHandler<T>(myName, extensions);
+    InvocationHandler handler = new MyInvocationHandler<>(myName, extensions);
 
     //noinspection unchecked
     return (T)Proxy.newProxyInstance(myClazz.getClassLoader(), new Class[]{myClazz}, handler);
   }
 
   @Nullable
-  protected abstract T getCompositeValue(@Nullable ComponentManager areaInstance);
+  protected abstract T getCompositeValue(@Nullable ComponentManager componentManager);
 
-  protected abstract void putCompositeValue(@Nullable ComponentManager areaInstance, T compositeValue);
+  protected abstract void putCompositeValue(@Nullable ComponentManager componentManager, T compositeValue);
 
-  protected abstract boolean validateArea(@Nullable ComponentManager areaInstance);
+  protected abstract boolean validateArea(@Nullable ComponentManager componentManager);
 
   @Nonnull
   public T composite() {

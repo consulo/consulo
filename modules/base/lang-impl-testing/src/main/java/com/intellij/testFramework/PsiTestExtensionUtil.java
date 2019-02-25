@@ -16,15 +16,16 @@
 package com.intellij.testFramework;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.extensions.*;
-import com.intellij.openapi.util.Disposer;
-
-import java.lang.reflect.Modifier;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.LoadingOrder;
 
 /**
  * @author VISTALL
  * @since 15:42/24.06.13
  */
+@Deprecated
 public class PsiTestExtensionUtil {
 
   public static <T> void registerExtension(final ExtensionPointName<T> name, final T t, final Disposable parentDisposable) {
@@ -35,15 +36,7 @@ public class PsiTestExtensionUtil {
                                            final ExtensionPointName<T> name,
                                            final T t,
                                            final Disposable parentDisposable) {
-    final ExtensionPoint<T> extensionPoint = area.getExtensionPoint(name.getName());
-    registerExtensionPointIfNeed(area, name, (Class<T>)t.getClass());
-    extensionPoint.registerExtension(t);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        extensionPoint.unregisterExtension(t);
-      }
-    });
+
   }
 
   public static <T> void registerExtension(final ExtensionsArea area,
@@ -51,16 +44,7 @@ public class PsiTestExtensionUtil {
                                            final T t,
                                            final Disposable parentDisposable,
                                            LoadingOrder loadingOrder) {
-    final ExtensionPoint<T> extensionPoint = area.getExtensionPoint(name.getName());
-    registerExtensionPointIfNeed(area, name, (Class<T>)t.getClass());
-    extensionPoint.registerExtension(t, loadingOrder);
 
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        extensionPoint.unregisterExtension(t);
-      }
-    });
   }
 
   public static <T> void registerExtensionPointIfNeed(final ExtensionPointName<T> extensionPointName, final Class<T> aClass) {
@@ -70,12 +54,6 @@ public class PsiTestExtensionUtil {
   public static <T> void registerExtensionPointIfNeed(final ExtensionsArea area,
                                                       final ExtensionPointName<T> extensionPointName,
                                                       final Class<? extends T> aClass) {
-    final String name = extensionPointName.getName();
-    if (!area.hasExtensionPoint(name)) {
-      ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0
-                                 ? ExtensionPoint.Kind.INTERFACE
-                                 : ExtensionPoint.Kind.BEAN_CLASS;
-      //area.registerExtensionPoint(name, aClass.getName(), kind);
-    }
+
   }
 }
