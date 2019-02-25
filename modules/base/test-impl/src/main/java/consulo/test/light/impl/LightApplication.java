@@ -39,6 +39,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
+import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.ui.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
 import com.intellij.util.KeyedLazyInstanceEP;
@@ -97,6 +98,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
 
     registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
+    registerExtensionPoint(area, LanguageSubstitutors.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
 
     registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
     registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
