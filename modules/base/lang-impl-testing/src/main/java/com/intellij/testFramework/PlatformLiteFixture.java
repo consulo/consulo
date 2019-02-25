@@ -18,12 +18,14 @@ package com.intellij.testFramework;
 import com.intellij.mock.MockApplicationEx;
 import com.intellij.mock.MockProjectEx;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.*;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Modifier;
 
 /**
  * @author yole
@@ -82,9 +84,9 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
 
   protected <T> void registerExtensionPoint(final ExtensionsArea area, final ExtensionPointName<T> extensionPointName, final Class<? extends T> aClass) {
     final String name = extensionPointName.getName();
-    if (!area.hasExtensionPoint(name)) {
-      ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
-      //area.registerExtensionPoint(name, aClass.getName(), kind);
-    }
+    //if (!area.hasExtensionPoint(name)) {
+    //  ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
+    //  //area.registerExtensionPoint(name, aClass.getName(), kind);
+    //}
   }
 }

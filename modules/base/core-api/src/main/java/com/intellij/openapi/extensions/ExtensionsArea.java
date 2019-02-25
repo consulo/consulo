@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
  * @author AKireyev
  */
 public interface ExtensionsArea  {
-  boolean hasExtensionPoint(@NonNls @Nonnull String extensionPointName);
-
   @Nonnull
   <T> ExtensionPoint<T> getExtensionPoint(@NonNls @Nonnull String extensionPointName);
 

@@ -196,8 +196,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     return myExtensionPoints.values().toArray(new ExtensionPoint[myExtensionPoints.size()]);
   }
 
-  @Override
-  public boolean hasExtensionPoint(@Nonnull String extensionPointName) {
+  private boolean hasExtensionPoint(@Nonnull String extensionPointName) {
     return myExtensionPoints.containsKey(extensionPointName);
   }
 }
