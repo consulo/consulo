@@ -15,8 +15,6 @@
  */
 package consulo.ide.ui.laf.modernWhite;
 
-import consulo.jna.DwmApi;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;

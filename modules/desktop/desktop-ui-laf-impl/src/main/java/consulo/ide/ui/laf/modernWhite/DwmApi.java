@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.jna;
+package consulo.ide.ui.laf.modernWhite;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
