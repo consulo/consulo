@@ -107,10 +107,10 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     @SuppressWarnings("SSBasedInspection")
     @Override
-    public void setVisible(boolean b) {
-      super.setVisible(b);
+    public void setVisible(boolean value) {
+      super.setVisible(value);
 
-      if (b && myRestoreFullScreen) {
+      if (value && myRestoreFullScreen) {
         SwingUtilities.invokeLater(() -> {
           toggleFullScreen(true);
           if (SystemInfo.isMacOSLion) {

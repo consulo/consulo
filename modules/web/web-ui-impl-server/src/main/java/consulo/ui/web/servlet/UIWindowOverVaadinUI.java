@@ -16,6 +16,7 @@
 package consulo.ui.web.servlet;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
@@ -162,6 +163,8 @@ class UIWindowOverVaadinUI implements Window {
   @Override
   public void close() {
     myUI.close();
+
+    Disposer.dispose(this);
   }
 
   @Nullable

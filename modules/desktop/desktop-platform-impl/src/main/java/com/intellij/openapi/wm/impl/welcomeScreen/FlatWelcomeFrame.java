@@ -108,6 +108,19 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
   }
 
   @Override
+  public void setVisible(boolean value) {
+    if (myDisposed) {
+      throw new IllegalArgumentException("Already disposed");
+    }
+
+    super.setVisible(value);
+
+    if (!value) {
+      Disposer.dispose(this);
+    }
+  }
+
+  @Override
   public void dispose() {
     if (myDisposed) {
       return;

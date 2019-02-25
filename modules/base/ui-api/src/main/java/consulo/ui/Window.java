@@ -67,6 +67,9 @@ public interface Window extends Component {
   @RequiredUIAccess
   void show();
 
+  /**
+   * Close and dispose resources. Window can't be opened second time
+   */
   @RequiredUIAccess
   void close();
 }
