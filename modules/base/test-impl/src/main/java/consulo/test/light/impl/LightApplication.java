@@ -103,7 +103,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(value));
   }
 
-  private <T> void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<T> name, Class<? extends T> aClass) {
+  private void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName name, Class aClass) {
     ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
     area.registerExtensionPoint(name.getName(), aClass.getName(), new UndefinedPluginDescriptor(), kind);
   }
