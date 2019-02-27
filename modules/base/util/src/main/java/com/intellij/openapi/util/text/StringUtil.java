@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.Introspector;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -855,9 +854,17 @@ public class StringUtil extends StringUtilRt {
     return out.toString();
   }
 
-  @Contract(pure = true)
-  public static String decapitalize(String s) {
-    return Introspector.decapitalize(s);
+  @Contract(value = "null -> null", pure = true)
+  public static String decapitalize(@Nullable String name) {
+    if (isEmpty(name)) {
+      return name;
+    }
+    if (name.length() > 1 && Character.isUpperCase(name.charAt(1)) && Character.isUpperCase(name.charAt(0))) {
+      return name;
+    }
+    char chars[] = name.toCharArray();
+    chars[0] = Character.toLowerCase(chars[0]);
+    return new String(chars);
   }
 
   @Contract(pure = true)
@@ -2385,13 +2392,13 @@ public class StringUtil extends StringUtilRt {
   @Contract(pure = true)
   public static String getPropertyName(@NonNls @Nonnull String methodName) {
     if (methodName.startsWith("get")) {
-      return Introspector.decapitalize(methodName.substring(3));
+      return decapitalize(methodName.substring(3));
     }
     else if (methodName.startsWith("is")) {
-      return Introspector.decapitalize(methodName.substring(2));
+      return decapitalize(methodName.substring(2));
     }
     else if (methodName.startsWith("set")) {
-      return Introspector.decapitalize(methodName.substring(3));
+      return decapitalize(methodName.substring(3));
     }
     else {
       return null;

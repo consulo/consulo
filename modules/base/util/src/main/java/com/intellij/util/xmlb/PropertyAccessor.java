@@ -16,10 +16,9 @@
 package com.intellij.util.xmlb;
 
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,10 +30,6 @@ class PropertyAccessor implements MutableAccessor {
   private final Method myReadMethod;
   private final Method myWriteMethod;
   private final Type myGenericType;
-
-  public PropertyAccessor(PropertyDescriptor descriptor) {
-    this(descriptor.getName(), descriptor.getPropertyType(), descriptor.getReadMethod(), descriptor.getWriteMethod());
-  }
 
   public PropertyAccessor(String name, Class<?> type, @Nonnull Method readMethod, @Nonnull Method writeMethod) {
     myName = name;

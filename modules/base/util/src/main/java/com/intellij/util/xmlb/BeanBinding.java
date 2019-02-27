@@ -29,17 +29,16 @@ import gnu.trove.TObjectFloatHashMap;
 import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
-import java.beans.Introspector;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 class BeanBinding extends Binding implements MainBinding {
   private static final Map<Class, List<MutableAccessor>> ourAccessorCache = ContainerUtil.createConcurrentSoftValueMap();
@@ -346,7 +345,7 @@ class BeanBinding extends Binding implements MainBinding {
       part = methodName.substring(3, methodName.length());
       isSetter = true;
     }
-    return part.isEmpty() ? null : Pair.create(Introspector.decapitalize(part), isSetter);
+    return part.isEmpty() ? null : Pair.create(StringUtil.decapitalize(part), isSetter);
   }
 
   public String toString() {
