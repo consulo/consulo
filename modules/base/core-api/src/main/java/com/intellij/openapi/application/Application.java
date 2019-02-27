@@ -22,9 +22,9 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
