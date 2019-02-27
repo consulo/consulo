@@ -29,7 +29,6 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -66,13 +65,13 @@ import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.awt.TargetAWT;
+import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
-import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
@@ -88,14 +87,13 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Anton Katilin
@@ -172,8 +170,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   private static final Logger LOG = Logger.getInstance(DesktopToolWindowManagerImpl.class);
 
   private final Map<String, FocusWatcher> myId2FocusWatcher = new HashMap<>();
-
-  private final EditorComponentFocusWatcher myEditorComponentFocusWatcher = new EditorComponentFocusWatcher();
 
   private DesktopIdeFrameImpl myFrame;
 
@@ -494,7 +490,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     appendUpdateToolWindowsPaneCmd(commandsList);
 
     JComponent editorComponent = getEditorComponent(myProject);
-    myEditorComponentFocusWatcher.install(editorComponent);
+    editorComponent.setFocusable(false);
 
     appendSetEditorComponentCmd(editorComponent, commandsList);
     if (myEditorWasActive && AWTComponentProviderUtil.getMark(editorComponent) instanceof EditorsSplitters) {
@@ -557,7 +553,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     // Remove editor component
 
     final JComponent editorComponent = getEditorComponent(myProject);
-    myEditorComponentFocusWatcher.deinstall(editorComponent);
     appendSetEditorComponentCmd(null, commandsList);
     execute(commandsList);
     myFrame = null;
@@ -1172,34 +1167,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     @javax.annotation.Nullable
     public Condition getExpireCondition() {
       return ApplicationManager.getApplication().getDisposed();
-    }
-  }
-
-  private final class EditorComponentFocusWatcher extends FocusWatcher {
-    @Override
-    protected void focusedComponentChanged(final Component component, final AWTEvent cause) {
-      if (myCommandProcessor.getCommandCount() > 0 || component == null) {
-        return;
-      }
-      final KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-      final Component owner = mgr.getFocusOwner();
-
-      if (owner instanceof EditorComponentImpl && cause instanceof FocusEvent) {
-        JFrame frame = WindowManager.getInstance().getFrame(myProject);
-        Component oppositeComponent = ((FocusEvent)cause).getOppositeComponent();
-        if (oppositeComponent != null && UIUtil.getWindow(oppositeComponent) != frame) {
-          return;
-        }
-      }
-
-      IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
-        @Override
-        public void run() {
-          if (mgr.getFocusOwner() == owner) {
-            activateEditorComponent(false);
-          }
-        }
-      });
     }
   }
 
