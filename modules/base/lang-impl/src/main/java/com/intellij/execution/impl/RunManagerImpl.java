@@ -53,7 +53,7 @@ import java.util.*;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
-public class RunManagerImpl extends RunManagerEx implements PersistentStateComponent<Element>, NamedComponent, Disposable {
+public class RunManagerImpl extends RunManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(RunManagerImpl.class);
 
   private final Project myProject;
@@ -934,12 +934,6 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     return null;
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "RunManager";
   }
 
   @Override

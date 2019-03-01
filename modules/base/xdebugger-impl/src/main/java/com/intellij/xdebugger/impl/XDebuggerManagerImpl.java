@@ -27,7 +27,10 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
@@ -55,7 +58,6 @@ import com.intellij.xdebugger.impl.ui.ExecutionPointHighlighter;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.ui.image.Image;
 import consulo.xdebugger.XDebugProcessStarter;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,11 +72,9 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author nik
  */
-@State(name = XDebuggerManagerImpl.COMPONENT_NAME, storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@State(name = "XDebuggerManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
-public class XDebuggerManagerImpl extends XDebuggerManager implements NamedComponent, PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState> {
-  @NonNls
-  public static final String COMPONENT_NAME = "XDebuggerManager";
+public class XDebuggerManagerImpl extends XDebuggerManager implements PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState> {
   private final Project myProject;
   private final XBreakpointManagerImpl myBreakpointManager;
   private final XDebuggerWatchesManager myWatchesManager;
@@ -171,12 +171,6 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements NamedCompo
 
   public Project getProject() {
     return myProject;
-  }
-
-  @Nonnull
-  @Override
-  public String getComponentName() {
-    return COMPONENT_NAME;
   }
 
   @Override
